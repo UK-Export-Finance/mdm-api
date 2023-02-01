@@ -5,15 +5,16 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
+      name: 'mssql-mdm',
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
+      useFactory: async (configService: ConfigService) => ({
         type: 'mssql',
-        host: configService.get<string>('database.mssql.host'),
-        port: configService.get<number>('database.mssql.port'),
-        username: configService.get<string>('database.mssql.username'),
-        password: configService.get<string>('database.mssql.password'),
-        database: configService.get<string>('database.mssql.name'),
+        host: configService.get<string>('database.mssql_mdm.host'),
+        port: configService.get<number>('database.mssql_mdm.port'),
+        username: configService.get<string>('database.mssql_mdm.username'),
+        password: configService.get<string>('database.mssql_mdm.password'),
+        database: configService.get<string>('database.mssql_mdm.name'),
         extra: {
           options: {
             encrypt: true,
@@ -26,4 +27,4 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     }),
   ],
 })
-export class MsSqlDatabaseModule {}
+export class MsSqlMdmDatabaseModule {}
