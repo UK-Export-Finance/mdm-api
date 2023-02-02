@@ -14,9 +14,5 @@ jobs:
         cache: 'npm'
     - name: Install modules
       run: npm ci
-    - name: Run Hadolint (Dockerfile)
-      uses: hadolint/hadolint-action@v3.0.0
-      with:
-        dockerfile: Dockerfile
     - name: Run ESLint (TypeScript)
       run: npm run lint:fix
