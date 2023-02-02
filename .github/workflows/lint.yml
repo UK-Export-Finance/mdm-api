@@ -15,4 +15,4 @@ jobs:
     - name: Install modules
       run: npm ci
     - name: Run ESLint (TypeScript)
-      run: npm run lint:fix
+      run: npm run lint
