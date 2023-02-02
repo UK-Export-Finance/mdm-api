@@ -14,7 +14,7 @@
 - [x] Standardized Editor config
 - [x] Swagger based documentation
 - [x] Config based on ENV variables
-- [x] Automated API versioning (/v1)
+- [x] Automated API versioning `(/v1)`
 - [ ] Automated releases based on conventional commits
 - [ ] Automated version bumps based on commit messages
 - [ ] Configuration for Jest tests
