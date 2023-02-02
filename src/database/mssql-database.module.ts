@@ -7,7 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
+      useFactory: (configService: ConfigService) => ({
         type: 'mssql',
         host: configService.get<string>('database.mssql.host'),
         port: configService.get<number>('database.mssql.port'),
