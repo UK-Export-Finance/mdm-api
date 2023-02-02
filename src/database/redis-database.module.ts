@@ -8,7 +8,7 @@ import * as redisStore from 'cache-manager-redis-store';
       imports: [ConfigModule],
       inject: [ConfigService],
       isGlobal: true,
-      useFactory: async (configService: ConfigService) => ({
+      useFactory: (configService: ConfigService) => ({
         store: redisStore,
         host: configService.get<string>('database.redis.host'),
         port: configService.get<string>('database.redis.port'),
@@ -16,9 +16,9 @@ import * as redisStore from 'cache-manager-redis-store';
         password: configService.get<string>('database.redis.password'),
         no_ready_check: true,
       }),
-    })
+    }),
   ],
   exports: [CacheModule],
-  providers: []
+  providers: [],
 })
 export class RedisCacheModule {}

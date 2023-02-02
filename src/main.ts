@@ -42,15 +42,19 @@ const main = async () => {
   SwaggerDocs(app);
 
   app.useGlobalInterceptors(new TransformInterceptor());
-  app.use(compression({ filter: (req, res) => {
-    if (req.headers['x-no-compression']) {
-      // don't compress responses with this request header
-      return false
-    }
+  app.use(
+    compression({
+      filter: (req, res) => {
+        if (req.headers['x-no-compression']) {
+          // don't compress responses with this request header
+          return false;
+        }
 
-    // fallback to standard filter function
-    return compression.filter(req, res)
-  } }))
+        // fallback to standard filter function
+        return compression.filter(req, res);
+      },
+    }),
+  );
 
   logger.log(`==========================================================`);
   logger.log(`NestJS app will serve on port ${port}`, 'NestApplication');

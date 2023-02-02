@@ -1,2 +1,2 @@
-export * from './mssql-database.module'
-export * from './redis-database.module'
+export * from './mssql-database.module';
+export * from './redis-database.module';
