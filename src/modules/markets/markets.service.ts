@@ -14,7 +14,7 @@ export class MarketsService {
   async findAll(active?: string): Promise<MarketEntity[]> {
     let spResults = await this.marketsRepository.query('CIS_USP_READ_MARKETS');
 
-    if (active !== undefined) {
+    if (active) {
       if (active === 'true') {
         spResults = spResults.filter((results) => results.ACTIVE_IND === 'Y');
       } else {
