@@ -42,7 +42,7 @@ export class NumbersController {
     description: 'UKEF ID to check',
     example: '0030052431',
   })
-  findOne(@Query('type', new ParseIntPipe()) type: number, @Query('ukefId', new ValidateUkefId()) ukefIdString: string): Promise<any> {
+  findOne(@Query('type', new ParseIntPipe()) type: number, @Query('ukefId', new ValidateUkefId()) ukefIdString: string): Promise<UkefId> {
     return this.numberService.findOne(type, ukefIdString);
   }
 }
