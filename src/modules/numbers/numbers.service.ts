@@ -12,7 +12,8 @@ export class NumbersService {
   ) {}
 
   create(createUkefIdDto: CreateUkefIdDto[]): Promise<UkefId[]> {
-    // TODO: Make Number generator generate calls run synchronously, it would be slower, but new UkefIds would be in order.
+    // TODO: DB calls are async and will generate IDs that are not in order. Extra code to order ids is required, or calls need to be made in async order.
+    // TODO: new IDs of type 1 and 2 could be checked if they are used in ACBS. ACBS might be down, but generation still should work.
     const activeRequests = createUkefIdDto.map((createNumber) => {
       return this.numberRepository
         .query('sp_NUMBER_GENERATOR @0, @1, @2', [createNumber.numberTypeId, createNumber.requestingSystem, createNumber.createdBy])

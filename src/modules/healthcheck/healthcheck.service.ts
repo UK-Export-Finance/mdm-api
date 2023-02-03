@@ -22,8 +22,8 @@ export class HealthcheckService {
   }
 
   // test
-  async triggerTestSqlError(): Promise<string> {
-    await this.numberRepository.query('TRIGGER SQL ERROR');
-    return 'An error should be thrown';
+  triggerTestSqlError(): Promise<string> {
+    // TODO: fix error handling and loging for this and similar DB errors.
+    return this.numberRepository.query('TRIGGER SQL ERROR');
   }
 }
