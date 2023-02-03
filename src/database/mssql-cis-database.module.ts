@@ -9,12 +9,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        type: 'mssql',
         host: configService.get<string>('database.mssql_cis.host'),
         port: configService.get<number>('database.mssql_cis.port'),
         username: configService.get<string>('database.mssql_cis.username'),
         password: configService.get<string>('database.mssql_cis.password'),
         database: configService.get<string>('database.mssql_cis.name'),
+        type: 'mssql',
         extra: {
           options: {
             encrypt: true,

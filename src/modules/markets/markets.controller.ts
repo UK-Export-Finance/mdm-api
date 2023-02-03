@@ -1,8 +1,7 @@
-import { Controller, Get, Version, CacheInterceptor, UseInterceptors, Query } from '@nestjs/common';
+import { Controller, Get, CacheInterceptor, UseInterceptors, Query, ParseBoolPipe } from '@nestjs/common';
 import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { MarketsService } from './markets.service';
 import { MarketEntity } from './entities/market.entity';
-import { CacheTTL } from '@nestjs/common/cache';
 
 @ApiBearerAuth()
 @ApiTags('markets')
@@ -12,9 +11,9 @@ export class MarketsController {
 
   @UseInterceptors(CacheInterceptor)
   @Get()
-  @Version('1')
   @ApiParam({
     name: 'active',
+    type: 'boolean',
     required: false,
     description: 'Optional filtering by field "active"',
   })
@@ -23,7 +22,8 @@ export class MarketsController {
     description: 'Get all markets (aka countries)',
     type: MarketEntity,
   })
-  findAll(@Query("active") active?: string): Promise<MarketEntity[]> {
-    return this.marketService.findAllUsingSP(active);
+  findAll(@Query('active') active?: string): Promise<MarketEntity[]> {
+    // TODO: active could be boolean, but we need to support optional (undefined) state to return active and not active markets.
+    return this.marketService.findAll(active);
   }
 }

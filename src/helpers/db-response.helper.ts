@@ -1,10 +1,8 @@
-import {Injectable} from '@nestjs/common';
-
+import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class DbResponseHelper {
-
   /**
    * Get field name map. Map is generated from repository metadata.
    */
@@ -26,21 +24,20 @@ export class DbResponseHelper {
   }
 
   /**
-   * Rename field in array with database resoults.
-   * 
+   * Rename field in array with database results.
+   *
    * Store procedure calls will have results that use Database field naming convention.
    */
-  static renameDbResultFields(repository: Repository<any>, fieldNameMap: object, dbResults: any[]): any[] {
-    const propertiesMap = repository.metadata.propertiesMap;
-    return dbResults.map(dbEntry => {
-      let renamedObject = {}
-      Object.keys(propertiesMap).forEach(function(key, index) {
+  static renameDbResultFields(repository: Repository<any>, fieldNameMap: object, dbResults: object[]): any[] {
+    const { propertiesMap } = repository.metadata;
+    return dbResults.map((dbEntry) => {
+      const renamedObject = {};
+      Object.keys(propertiesMap).forEach((key, index) => {
         if (fieldNameMap[key]) {
           renamedObject[key] = dbEntry[fieldNameMap[key]];
         }
       });
       return renamedObject;
-    })
+    });
   }
-
 }

@@ -1,10 +1,5 @@
 import { CacheInterceptor, Controller, Get, UseInterceptors } from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { NumberTypesService } from './number-types.service';
 import { NumberType } from './entities/number-type.entity';
 
@@ -19,10 +14,10 @@ export class NumberTypesController {
   @ApiOperation({ summary: 'Get all Number generator types' })
   @ApiResponse({
     status: 200,
-    description: 'The found records',
+    description: 'Get all Number generator types',
     type: NumberType,
   })
-  async findAll(): Promise<any> {
+  findAll(): Promise<any> {
     return this.numberTypeService.findAll();
   }
 }

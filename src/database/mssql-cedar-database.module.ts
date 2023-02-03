@@ -8,13 +8,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       name: 'mssql-cedar',
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
-        type: 'mssql',
+      useFactory: (configService: ConfigService) => ({
         host: configService.get<string>('database.mssql_cedar.host'),
         port: configService.get<number>('database.mssql_cedar.port'),
         username: configService.get<string>('database.mssql_cedar.username'),
         password: configService.get<string>('database.mssql_cedar.password'),
         database: configService.get<string>('database.mssql_cedar.name'),
+        type: 'mssql',
         extra: {
           options: {
             encrypt: true,

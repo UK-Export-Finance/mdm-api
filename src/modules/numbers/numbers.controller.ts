@@ -1,14 +1,9 @@
-import { Body, Controller, Get, Query, Post, UseInterceptors, CacheInterceptor } from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiBody,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { Body, Controller, Get, Query, Post, UseInterceptors, CacheInterceptor, ValidationPipe, UsePipes, ParseArrayPipe, ParseIntPipe } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags, ApiParam } from '@nestjs/swagger';
 import { NumbersService } from './numbers.service';
-import { CreateNumberDto } from './dto/create-number.dto';
-import { UkefNumber } from './entities/number.entity';
+import { CreateUkefIdDto } from './dto/create-ukef-id.dto';
+import { UkefId } from './entities/ukef-id.entity';
+import { ValidateUkefId } from '../../helpers/validate-ukef-id.helpers';
 
 @ApiBearerAuth()
 @ApiTags('numbers')
@@ -18,24 +13,36 @@ export class NumbersController {
 
   @Post()
   @ApiOperation({ summary: 'Create Number' })
-  @ApiBody({ type: [CreateNumberDto]})
+  @ApiBody({ type: [CreateUkefIdDto] })
+  @UsePipes(ValidationPipe)
   @ApiResponse({ status: 201, description: 'Created.' })
-  async create(@Body() ukefIDRecord: CreateNumberDto[]): Promise<UkefNumber[]> {
-    const createResult = await this.numberService.create(ukefIDRecord);
-    return createResult;
+  create(@Body(new ParseArrayPipe({ items: CreateUkefIdDto })) CreateUkefIdDtos: CreateUkefIdDto[]): Promise<UkefId[]> {
+    return this.numberService.create(CreateUkefIdDtos);
   }
 
   @Get()
   @UseInterceptors(CacheInterceptor)
-  @ApiOperation({ summary: 'Get information about UKEF Id' })
+  @ApiOperation({ summary: 'Get information about UKEF ID' })
   @ApiResponse({
     status: 200,
     description: 'The found record',
-    type: Number,
+    type: UkefId,
   })
-  async findOne(@Query('typeId') typeId: number, @Query('number') ukefID: string): Promise<any> {
-    const UkefIdInfo = await this.numberService.findOne(typeId, ukefID);
-    return [UkefIdInfo];
+  @ApiParam({
+    name: 'type',
+    required: true,
+    type: 'int',
+    description: 'Id of number type. Common types are: 1 for Deal/Facility, 2 for Party, 8 for Covenant',
+    example: 1,
+  })
+  @ApiParam({
+    name: 'ukefID',
+    type: 'string',
+    required: true,
+    description: 'UKEF ID to check',
+    example: '0030052431',
+  })
+  findOne(@Query('type', new ParseIntPipe()) type: number, @Query('ukefId', new ValidateUkefId()) ukefIdString: string): Promise<any> {
+    return this.numberService.findOne(type, ukefIdString);
   }
-
 }

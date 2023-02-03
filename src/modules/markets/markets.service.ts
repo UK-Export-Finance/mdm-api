@@ -7,27 +7,25 @@ import { DbResponseHelper } from '../../helpers/db-response.helper';
 @Injectable()
 export class MarketsService {
   constructor(
-    @InjectRepository(MarketEntity, "mssql-cis")
+    @InjectRepository(MarketEntity, 'mssql-cis')
     private readonly marketsRepository: Repository<MarketEntity>,
   ) {}
 
-
-  async findAllUsingSP(active?: string): Promise<MarketEntity[]> {
-    let spResults = await this.marketsRepository.query('CIS_USP_READ_MARKETS')
+  async findAll(active?: string): Promise<MarketEntity[]> {
+    let spResults = await this.marketsRepository.query('CIS_USP_READ_MARKETS');
 
     if (active !== undefined) {
       if (active === 'true') {
-        spResults = spResults.filter(results => results.ACTIVE_IND == 'Y')
+        spResults = spResults.filter((results) => results.ACTIVE_IND === 'Y');
       } else {
-        spResults = spResults.filter(results => results.ACTIVE_IND != 'Y')
+        spResults = spResults.filter((results) => results.ACTIVE_IND !== 'Y');
       }
     }
 
     const fieldMap = DbResponseHelper.getApiNameToDbNameMap(this.marketsRepository);
 
-    const renamedResults = DbResponseHelper.renameDbResultFields(this.marketsRepository, fieldMap, spResults)
+    const renamedResults = DbResponseHelper.renameDbResultFields(this.marketsRepository, fieldMap, spResults);
 
     return renamedResults;
   }
-
 }
