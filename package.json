@@ -1,8 +1,8 @@
 {
-  "name": "nestjs-app",
+  "name": "mdm-api",
   "version": "0.0.1",
-  "description": "NestJS base template",
-  "author": "Gabriel Ignat",
+  "description": "MDM Api using nestjs",
+  "author": "UKEF",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -13,6 +13,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --tsc --watch",
+    "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/src/main",
     "lint": "eslint ./src --ext .ts",
     "lint:fix": "eslint ./src --ext .ts --fix",

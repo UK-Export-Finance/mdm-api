@@ -5,15 +5,16 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
+      name: 'mssql-cedar',
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
+        host: configService.get<string>('database.mssql_cedar.host'),
+        port: configService.get<number>('database.mssql_cedar.port'),
+        username: configService.get<string>('database.mssql_cedar.username'),
+        password: configService.get<string>('database.mssql_cedar.password'),
+        database: configService.get<string>('database.mssql_cedar.name'),
         type: 'mssql',
-        host: configService.get<string>('database.mssql.host'),
-        port: configService.get<number>('database.mssql.port'),
-        username: configService.get<string>('database.mssql.username'),
-        password: configService.get<string>('database.mssql.password'),
-        database: configService.get<string>('database.mssql.name'),
         extra: {
           options: {
             encrypt: true,
@@ -26,4 +27,4 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     }),
   ],
 })
-export class MsSqlDatabaseModule {}
+export class MsSqlCedarDatabaseModule {}

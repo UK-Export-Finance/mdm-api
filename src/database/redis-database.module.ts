@@ -9,6 +9,7 @@ import * as redisStore from 'cache-manager-redis-store';
       inject: [ConfigService],
       isGlobal: true,
       useFactory: (configService: ConfigService) => ({
+        ttl: configService.get<number>('database.redis.ttl'),
         store: redisStore,
         host: configService.get<string>('database.redis.host'),
         port: configService.get<string>('database.redis.port'),

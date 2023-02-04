@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MdmModule } from './modules/mdm.module';
-import { MsSqlDatabaseModule, RedisCacheModule } from './database';
+import { MsSqlMdmDatabaseModule, MsSqlCedarDatabaseModule, MsSqlCisDatabaseModule, MsSqlNumberGeneratorDatabaseModule, RedisCacheModule } from './database';
 import config from './config';
 
 @Module({
@@ -10,7 +10,10 @@ import config from './config';
       isGlobal: true,
       load: [...config],
     }),
-    MsSqlDatabaseModule,
+    MsSqlMdmDatabaseModule,
+    MsSqlCedarDatabaseModule,
+    MsSqlCisDatabaseModule,
+    MsSqlNumberGeneratorDatabaseModule,
     RedisCacheModule,
     MdmModule,
   ],
