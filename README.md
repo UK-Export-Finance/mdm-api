@@ -29,7 +29,7 @@
 - [ ] Add security headers
 - [ ] Deployment pipelines
 
-### Installation
+## Installation
 
 ```bash
 npm install
