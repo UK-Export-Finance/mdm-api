@@ -55,15 +55,12 @@ module.exports = {
       },
     ],
     'no-console': ['error', { allow: ['info', 'error'] }],
-    'no-underscore-dangle': ['error', { allow: ['_id'] }],
     'import/no-named-as-default': 'off',
     'import/extensions': 'off',
     'implicit-arrow-linebreak': 'off',
     'import/newline-after-import': 'off',
-    'import/first': 'off',
     'import/prefer-default-export': 'off',
     'consistent-return': 'off',
-    'import/order': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
@@ -73,5 +70,12 @@ module.exports = {
     'require-await': 'error',
     'no-useless-constructor': 'off',
     'class-methods-use-this': 'off',
+    'object-curly-newline': [
+      'error',
+      {
+        consistent: true,
+      },
+    ],
   },
+  ignorePatterns: ['**/node_modules/**', 'jest.config.js'],
 };
