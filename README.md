@@ -15,7 +15,7 @@
 - [x] Swagger based documentation
 - [x] Config based on ENV variables
 - [x] Automated API versioning `(/v1)`
-- [x] Configuration for Jest tests
+- [x] Configuration for `Jest` tests
 - [ ] Automated releases based on conventional commits
 - [ ] Automated version bumps based on commit messages
 - [ ] Alias paths
