@@ -16,8 +16,9 @@
 - [x] Config based on ENV variables
 - [x] Automated API versioning `(/v1)`
 - [x] Configuration for `Jest` tests
-- [ ] Automated releases based on conventional commits
-- [ ] Automated version bumps based on commit messages
+- [x] Automated releases based on conventional commits
+- [x] Automated version bumps based on commit messages
+- [ ] Configuration for Jest tests
 - [ ] Alias paths
 - [ ] CodeCov to analyse the test coverage
 - [ ] Add rate-limiting
