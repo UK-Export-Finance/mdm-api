@@ -1,8 +1,8 @@
-### Description
+# Description
 
 [NestJS](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-#### Features
+## Features
 
 - [x] MSSQL TypeORM setup
 - [x] Dockerised application using NodeJS v19
@@ -15,6 +15,7 @@
 - [x] Swagger based documentation
 - [x] Config based on ENV variables
 - [x] Automated API versioning `(/v1)`
+- [x] Configuration for `Jest` tests
 - [x] Automated releases based on conventional commits
 - [x] Automated version bumps based on commit messages
 - [ ] Configuration for Jest tests
@@ -29,10 +30,10 @@
 - [ ] Add security headers
 - [ ] Deployment pipelines
 
-### Installation
+## Installation
 
 ```bash
-$ npm install
+npm install
 ```
 
 ### Running the service (dev)
@@ -62,7 +63,7 @@ $ npm run api-test
 To simplify the generation of new resources, you can use the boilerplate [CRUD](https://docs.nestjs.com/recipes/crud-generator)
 
 ```bash
-$ nest g resource users
+nest g resource users
 ```
 
 ### Writing Conventional Commits
