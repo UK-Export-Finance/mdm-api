@@ -1,16 +1,16 @@
-import { VersioningType, ValidationPipe, Logger } from '@nestjs/common';
+import { VersioningType, ValidationPipe, Logger as NestLogger } from '@nestjs/common';
 import { NestFactory, NestApplication } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import compression from 'compression';
+import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
 
 import { MainModule } from './main.module';
 import { TransformInterceptor } from './helpers';
 import { SwaggerDocs } from './swagger';
 
 const main = async () => {
-  const app: NestApplication = await NestFactory.create(MainModule);
+  const app: NestApplication = await NestFactory.create(MainModule, { bufferLogs: true });
   const configService = app.get<ConfigService>(ConfigService);
-  const logger = new Logger();
 
   const env: string = configService.get<string>('app.env');
   process.env.NODE_ENV = env;
@@ -42,6 +42,9 @@ const main = async () => {
   SwaggerDocs(app);
 
   app.useGlobalInterceptors(new TransformInterceptor());
+  app.useGlobalInterceptors(new LoggerErrorInterceptor());
+  app.useLogger(app.get(Logger));
+
   app.use(
     compression({
       filter: (req, res) => {
@@ -56,8 +59,9 @@ const main = async () => {
     }),
   );
 
+  const logger = new NestLogger();
   logger.log(`==========================================================`);
-  logger.log(`NestJS app will serve on port ${port}`, 'NestApplication');
+  logger.log(`Main app will serve on PORT ${port}`, 'MainApplication');
   logger.log(`==========================================================`);
   await app.listen(port);
 };
