@@ -1,4 +1,4 @@
-import { Controller, Get, CacheInterceptor, UseInterceptors, Query, ParseBoolPipe } from '@nestjs/common';
+import { Controller, Get, Query, ParseBoolPipe } from '@nestjs/common';
 import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { MarketsService } from './markets.service';
 import { MarketEntity } from './entities/market.entity';
@@ -9,7 +9,6 @@ import { MarketEntity } from './entities/market.entity';
 export class MarketsController {
   constructor(private readonly marketService: MarketsService) {}
 
-  @UseInterceptors(CacheInterceptor)
   @Get()
   @ApiParam({
     name: 'active',

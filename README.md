@@ -6,7 +6,6 @@
 
 - [x] MSSQL TypeORM setup
 - [x] Dockerised application using NodeJS v19
-- [x] Redis cache
 - [x] Conventional commits using Husky
 - [x] Code formatting (using Prettier)
 - [x] Code linting (using ESLint)
