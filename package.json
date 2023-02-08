@@ -1,6 +1,6 @@
 {
   "name": "mdm-api",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "MDM Api using nestjs",
   "author": "UKEF",
   "private": true,
