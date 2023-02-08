@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Query, Post, UseInterceptors, CacheInterceptor, ValidationPipe, UsePipes, ParseArrayPipe, ParseIntPipe } from '@nestjs/common';
+import { Body, Controller, Get, Query, Post, ValidationPipe, UsePipes, ParseArrayPipe, ParseIntPipe } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags, ApiParam } from '@nestjs/swagger';
 import { NumbersService } from './numbers.service';
 import { CreateUkefIdDto } from './dto/create-ukef-id.dto';
@@ -21,7 +21,6 @@ export class NumbersController {
   }
 
   @Get()
-  @UseInterceptors(CacheInterceptor)
   @ApiOperation({ summary: 'Get information about UKEF ID' })
   @ApiResponse({
     status: 200,
