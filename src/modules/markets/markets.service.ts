@@ -15,7 +15,7 @@ export class MarketsService {
     let spResults = await this.marketsRepository.query('CIS_USP_READ_MARKETS');
 
     if (active) {
-      if (active === 'true') {
+      if (active === 'Y') {
         spResults = spResults.filter((results) => results.ACTIVE_IND === 'Y');
       } else {
         spResults = spResults.filter((results) => results.ACTIVE_IND !== 'Y');
