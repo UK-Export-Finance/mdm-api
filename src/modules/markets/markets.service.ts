@@ -1,8 +1,8 @@
+import { DbResponseHelper } from '@mdm/helpers/db-response.helper';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { DbResponseHelper } from '../../helpers/db-response.helper';
 import { MarketEntity } from './entities/market.entity';
 
 @Injectable()

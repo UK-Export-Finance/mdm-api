@@ -1,8 +1,7 @@
+import { HealthcheckModule } from '@mdm/module/healthcheck/healthcheck.module';
+import { MarketsModule } from '@mdm/module/markets/markets.module';
+import { NumbersModule } from '@mdm/module/numbers/numbers.module';
 import { Module } from '@nestjs/common';
-
-import { HealthcheckModule } from './healthcheck/healthcheck.module';
-import { MarketsModule } from './markets/markets.module';
-import { NumbersModule } from './numbers/numbers.module';
 
 @Module({
   imports: [NumbersModule, HealthcheckModule, MarketsModule],

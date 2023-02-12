@@ -1,5 +1,5 @@
-import config from '@mdm/config/';
-import { MsSqlCedarDatabaseModule, MsSqlCisDatabaseModule, MsSqlMdmDatabaseModule, MsSqlNumberGeneratorDatabaseModule } from '@mdm/database/';
+import config from '@mdm/config';
+import { MsSqlCedarDatabaseModule, MsSqlCisDatabaseModule, MsSqlMdmDatabaseModule, MsSqlNumberGeneratorDatabaseModule } from '@mdm/database';
 import { MdmModule } from '@mdm/module/mdm.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';

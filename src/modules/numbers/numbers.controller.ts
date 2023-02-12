@@ -1,7 +1,7 @@
+import { ValidateUkefId } from '@mdm/helpers/validate-ukef-id.helper';
 import { Body, Controller, Get, ParseArrayPipe, ParseIntPipe, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { ValidateUkefId } from '../../helpers/validate-ukef-id.helpers';
 import { CreateUkefIdDto } from './dto/create-ukef-id.dto';
 import { UkefId } from './entities/ukef-id.entity';
 import { NumbersService } from './numbers.service';

@@ -11,18 +11,15 @@
     "build:prod": "rimraf dist/ && npm run build",
     "clean": "rimraf dist/",
     "copyfiles": "copyfiles -u 1 public/* dist/public",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "postinstall": "husky install",
     "lint": "eslint ./src --ext .ts",
     "lint:fix": "eslint ./src --ext .ts --fix",
     "prepare": "husky install",
-    "sort": "npx sort-package-json",
     "start": "nest start",
     "start:debug": "nest start --debug --watch",
     "start:dev": "nest start --tsc --watch",
     "start:prod": "node dist/src/main",
-    "test": "jest",
-    "type-check": "tsc --noEmit --noErrorTruncation --pretty false --incremental false -p tsconfig.build.json"
+    "test": "jest"
   },
   "dependencies": {
     "@nestjs/common": "^9.3.8",

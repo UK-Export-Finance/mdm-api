@@ -1,9 +1,8 @@
+import { MarketEntity } from '@mdm/module/markets/entities/market.entity';
+import { UkefId } from '@mdm/module/numbers/entities/ukef-id.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-
-import { MarketEntity } from '../markets/entities/market.entity';
-import { UkefId } from '../numbers/entities/ukef-id.entity';
 
 @Injectable()
 export class HealthcheckService {
