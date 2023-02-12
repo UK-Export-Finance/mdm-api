@@ -16,12 +16,10 @@
   "words": [
     "Typeorm",
     "codeql",
-    "flickr",
     "huskyrc",
     "mdm",
     "isready",
     "nestjs",
-    "oneof",
     "typeorm",
     "venv",
     "typescript",
@@ -30,7 +28,8 @@
     "acbs",
     "ecgd",
     "ESRA",
-    "pino"
+    "pino",
+    "Dockerised"
   ],
   "dictionaries": [
     "en_US",

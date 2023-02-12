@@ -27,7 +27,7 @@
       "@mdm/config/*": ["src/config/index"],
       "@mdm/database/*": ["src/database/index"],
       "@mdm/helpers/*": ["src/helpers/*"],
-      "@mdm/module/*": ["src/modules/*"],
+      "@mdm/module/*": ["src/modules/*"]
     }
   },
   "include": [

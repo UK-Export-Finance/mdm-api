@@ -8,7 +8,8 @@
 - [x] Dockerised application using NodeJS v19
 - [x] Conventional commits using Husky
 - [x] Code formatting (using Prettier)
-- [x] Code linting (using ESLint)
+- [x] Code linting (using ESLint and Lint-staged)
+- [x] Code spell checking (using `cspell`)
 - [x] Renovate (update NPM packages automatically)
 - [x] Standardized Editor config
 - [x] Swagger based documentation
@@ -18,7 +19,7 @@
 - [x] Automated releases based on conventional commits
 - [x] Automated version bumps based on commit messages
 - [x] Add logging using `Pino.js`
-- [ ] Alias paths
+- [x] Alias paths
 - [ ] CodeCov to analyse the test coverage
 - [ ] Add rate-limiting
 - [ ] Add Auth guards
