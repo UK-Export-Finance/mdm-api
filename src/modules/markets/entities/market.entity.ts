@@ -1,6 +1,6 @@
+import { ClassSerializerInterceptor, UseInterceptors } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, PrimaryColumn } from 'typeorm';
-import { ClassSerializerInterceptor, UseInterceptors } from '@nestjs/common';
 
 @Entity({
   name: 'ODS_MARKETS',
@@ -59,11 +59,11 @@ export class MarketEntity {
 
   @Column({ name: 'ESRA_ID' })
   @ApiProperty({ example: 1, description: '' })
-  ESRAClasificationId: number;
+  ESRAClassificationId: number;
 
   @Column({ name: 'ESRA_DESC' })
   @ApiProperty({ example: 'Standard Risk', description: '' })
-  ESRAClasificationDesc: string;
+  ESRAClassificationDesc: string;
 
   @Column({ name: 'CASH_COVER_AVAILABILITY_ID' })
   @ApiProperty({ example: 1, description: '' })
@@ -78,6 +78,6 @@ export class MarketEntity {
   NBIIssue: string;
 
   @Column({ name: 'ACTIVE_IND' })
-  @ApiProperty({ example: 'Y', description: 'Markets might be not active, filter wuth query parameter "active"' })
+  @ApiProperty({ example: 'Y', description: 'Markets might be not active, filter with query parameter "active"' })
   active: string;
 }

@@ -9,7 +9,7 @@ export class ValidateUkefId implements PipeTransform<string> {
     if (value === '') {
       throw new BadRequestException(`Field ${metadata.data} is empty`);
     }
-    if (typeof value !== 'string' || /^[\d]{10}$/.test(value) === false) {
+    if (typeof value !== 'string' || /^\d{10}$/.test(value) === false) {
       throw new BadRequestException(`Field ${metadata.data} is not valid UKEF ID`);
     }
     return value;

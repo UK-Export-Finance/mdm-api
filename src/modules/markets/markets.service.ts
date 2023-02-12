@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { MarketEntity } from './entities/market.entity';
+
 import { DbResponseHelper } from '../../helpers/db-response.helper';
+import { MarketEntity } from './entities/market.entity';
 
 @Injectable()
 export class MarketsService {

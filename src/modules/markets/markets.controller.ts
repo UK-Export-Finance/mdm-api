@@ -1,7 +1,8 @@
-import { Controller, Get, Query, ParseBoolPipe } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { MarketsService } from './markets.service';
+
 import { MarketEntity } from './entities/market.entity';
+import { MarketsService } from './markets.service';
 
 @ApiBearerAuth()
 @ApiTags('markets')

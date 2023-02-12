@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+
 import { MarketEntity } from '../markets/entities/market.entity';
 import { UkefId } from '../numbers/entities/ukef-id.entity';
 
