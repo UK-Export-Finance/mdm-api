@@ -38,6 +38,11 @@ npm install
 ### Running the service (dev)
 
 ```bash
+# start the local SQL database
+$ docker compose -f docker-compose.db.yml up --build
+```
+
+```bash
 # using docker-compose
 $ docker compose up --build
 ```
