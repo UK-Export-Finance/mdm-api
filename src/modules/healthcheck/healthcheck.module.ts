@@ -1,14 +1,12 @@
-import { MarketEntity } from '@mdm/module/markets/entities/market.entity';
-import { UkefId } from '@mdm/module/numbers/entities/ukef-id.entity';
+import { MsSqlCedarDatabaseModule, MsSqlCisDatabaseModule, MsSqlMdmDatabaseModule, MsSqlNumberGeneratorDatabaseModule } from '@mdm/database';
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { TerminusModule } from '@nestjs/terminus';
 
 import { HealthcheckController } from './healthcheck.controller';
-import { HealthcheckService } from './healthcheck.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UkefId], 'mssql-number-generator'), TypeOrmModule.forFeature([MarketEntity], 'mssql-cis')],
+  imports: [MsSqlMdmDatabaseModule, MsSqlCedarDatabaseModule, MsSqlCisDatabaseModule, MsSqlNumberGeneratorDatabaseModule, TerminusModule],
   controllers: [HealthcheckController],
-  providers: [HealthcheckService],
+  providers: [],
 })
 export class HealthcheckModule {}
