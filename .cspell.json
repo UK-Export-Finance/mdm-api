@@ -1,0 +1,54 @@
+{
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/vscode-extension/**",
+    "**/.git/**",
+    "**/coverage/**",
+    ".vscode",
+    ".gitignore",
+    "package-lock.json",
+    "report",
+    "dist/**"
+  ],
+  "language": "en",
+  "noConfigSearch": true,
+  "allowCompoundWords": true,
+  "words": [
+    "Typeorm",
+    "codeql",
+    "huskyrc",
+    "mdm",
+    "isready",
+    "nestjs",
+    "typeorm",
+    "venv",
+    "typescript",
+    "ukef",
+    "dtos",
+    "acbs",
+    "ecgd",
+    "ESRA",
+    "pino",
+    "Dockerised"
+  ],
+  "dictionaries": [
+    "en-gb",
+    "companies",
+    "softwareTerms",
+    "misc",
+    "lorem-ipsum",
+    "typescript",
+    "node",
+    "bash",
+    "npm"
+  ],
+  "languageSettings": [
+    {
+      "languageId": "commit-msg",
+      "ignoreRegExpList": [
+        "/^#.*/gm"
+      ]
+    }
+  ],
+  "version": "0.2"
+}

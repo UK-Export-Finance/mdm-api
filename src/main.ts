@@ -1,12 +1,11 @@
-import { VersioningType, ValidationPipe, Logger as NestLogger } from '@nestjs/common';
-import { NestFactory, NestApplication } from '@nestjs/core';
+import { TransformInterceptor } from '@mdm/helpers';
+import { MainModule } from '@mdm/main.module';
+import { SwaggerDocs } from '@mdm/swagger';
+import { Logger as NestLogger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { NestApplication, NestFactory } from '@nestjs/core';
 import compression from 'compression';
 import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
-
-import { MainModule } from './main.module';
-import { TransformInterceptor } from './helpers';
-import { SwaggerDocs } from './swagger';
 
 const main = async () => {
   const app: NestApplication = await NestFactory.create(MainModule, { bufferLogs: true });

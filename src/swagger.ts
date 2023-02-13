@@ -2,8 +2,8 @@ import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestApplication } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { SwaggerTheme } from 'swagger-themes';
 import basicAuth from 'express-basic-auth';
+import { SwaggerTheme } from 'swagger-themes';
 
 export const SwaggerDocs = (app: NestApplication) => {
   const configService = app.get(ConfigService);
