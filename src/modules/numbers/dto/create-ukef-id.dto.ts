@@ -1,6 +1,5 @@
-// class-validator is part of swagger.
-import { IsInt, IsNotEmpty, IsString, Max } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsInt, IsNotEmpty, IsString, Max } from 'class-validator';
 
 export class CreateUkefIdDto {
   @IsInt()
