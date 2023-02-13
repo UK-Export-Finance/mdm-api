@@ -9,6 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
+        name: 'mssql-mdm',
         host: configService.get<string>('database.mssql_mdm.host'),
         port: configService.get<number>('database.mssql_mdm.port'),
         username: configService.get<string>('database.mssql_mdm.username'),

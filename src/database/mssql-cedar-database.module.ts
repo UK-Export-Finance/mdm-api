@@ -9,6 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
+        name: 'mssql-cedar',
         host: configService.get<string>('database.mssql_cedar.host'),
         port: configService.get<number>('database.mssql_cedar.port'),
         username: configService.get<string>('database.mssql_cedar.username'),
