@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -7,6 +7,8 @@ import { UkefId } from './entities/ukef-id.entity';
 
 @Injectable()
 export class NumbersService {
+  private readonly logger = new Logger();
+
   constructor(
     @InjectRepository(UkefId, 'mssql-number-generator')
     private readonly numberRepository: Repository<UkefId>,
@@ -28,11 +30,25 @@ export class NumbersService {
   }
 
   async findOne(type: number, ukefIdString: string): Promise<UkefId> {
-    const dbNumber = await this.numberRepository.query('USP_STP_GET_AUTONUMBER @0, @1', [type, ukefIdString]);
-    if (!dbNumber[0]) {
-      throw new NotFoundException('UKEF ID is not found');
+    try {
+      const dbNumber = await this.numberRepository.query('USP_STP_GET_AUTONUMBER @0, @1', [type, ukefIdString]);
+      if (!dbNumber[0]) {
+        throw new NotFoundException('UKEF ID is not found');
+      }
+      if (dbNumber[0]?.ERR && dbNumber[0].ERR === 'INVALID NUMBER TYPE') {
+        throw new BadRequestException('Invalid UKEF ID type');
+      }
+      return this.mapFieldsFromDbToApi(dbNumber[0]);
+    } catch (err) {
+      if (err instanceof NotFoundException || err instanceof BadRequestException) {
+        throw err;
+      } else {
+        // We need to log original error or it will be lost.
+        this.logger.error(err);
+        // Return generic 500.
+        throw new InternalServerErrorException();
+      }
     }
-    return this.mapFieldsFromDbToApi(dbNumber[0]);
   }
 
   /**

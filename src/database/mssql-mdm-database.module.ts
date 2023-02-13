@@ -20,6 +20,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
           options: {
             encrypt: true,
             trustServerCertificate: true,
+            useUTC: true,
           },
         },
         autoLoadEntities: true,

@@ -1,7 +1,7 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { MainModule } from '../src/main.module';
 
+import { MainModule } from '../src/main.module';
 
 export class CreateApp {
   // NestJs app initialisation happens in /src/main.ts, here is some duplication of same process.
@@ -11,9 +11,7 @@ export class CreateApp {
       imports: [MainModule],
     }).compile();
 
-    let app: INestApplication;
-
-    app = moduleFixture.createNestApplication();
+    const app = moduleFixture.createNestApplication();
 
     // Validation pipeline is require to check validations.
     app.useGlobalPipes(
@@ -29,6 +27,4 @@ export class CreateApp {
     await app.init();
     return app;
   }
-
 }
-
