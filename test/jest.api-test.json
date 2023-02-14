@@ -5,5 +5,12 @@
   "testRegex": ".api-test.ts$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "moduleNameMapper": {
+    "@mdm/config/(.*)": "<rootDir>/../src/config/$1",
+    "@mdm/database/(.*)": "<rootDir>/../src/database/$1",
+    "@mdm/helpers/(.*)": "<rootDir>/../src/helpers/$1",
+    "@mdm/module/(.*)": "<rootDir>/../src/modules/$1",
+    "@mdm/(.*)": "<rootDir>/../src/$1"
   }
 }
