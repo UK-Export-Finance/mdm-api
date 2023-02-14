@@ -1,65 +1,38 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-
-import { HealthcheckService } from './healthcheck.service';
+import { HealthCheck, HealthCheckService, MemoryHealthIndicator, TypeOrmHealthIndicator } from '@nestjs/terminus';
+import { InjectDataSource } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
 
 @ApiBearerAuth()
 @ApiTags('healthcheck')
 @Controller('')
 export class HealthcheckController {
-  constructor(private readonly healthcheckService: HealthcheckService) {}
-
-  @Get('live')
-  @ApiOperation({ summary: 'live' })
-  @ApiResponse({ status: 200, description: 'Check if this api is running' })
-  live(): object {
-    return {
-      status: 200,
-      message: 'Online',
-      datetime: new Date().toISOString(),
-    };
-  }
-
-  @Get('healthcheck')
-  @ApiOperation({ summary: 'Alias for /ready' })
-  @ApiResponse({ status: 200, description: 'Check if this api is running' })
-  healthcheck(): object {
-    return this.ready();
-  }
+  constructor(
+    @InjectDataSource('mssql-number-generator')
+    private numberGenerator: DataSource,
+    @InjectDataSource('mssql-cedar')
+    private cedar: DataSource,
+    @InjectDataSource('mssql-cis')
+    private cis: DataSource,
+    @InjectDataSource('mssql-mdm')
+    private mdm: DataSource,
+    private health: HealthCheckService,
+    private db: TypeOrmHealthIndicator,
+    private readonly mem: MemoryHealthIndicator,
+  ) {}
 
   @Get('ready')
-  @ApiOperation({ summary: 'ready' })
+  @HealthCheck()
   @ApiResponse({ status: 200, description: 'Check if this api can access dependencies' })
-  async ready(): Promise<object> {
-    return {
-      status: 200,
-      message: 'Ready',
-      datetime: new Date().toISOString(),
-      tests: {
-        databases: await this.healthcheckService.checkAllDatabases(),
-      },
-    };
-  }
-
-  @Get('force-sql-error')
-  @ApiOperation({ summary: 'Test how errors are handled, what response is returned' })
-  @ApiResponse({
-    status: 200,
-    description: 'Test SQL error',
-    type: Number,
-  })
-  triggerTestSqlError(): Promise<string>[] {
-    return [this.healthcheckService.triggerTestSqlError()];
-  }
-
-  @Get('force-exception-error')
-  @ApiOperation({ summary: 'Test how errors are handled, what response is returned' })
-  @ApiResponse({
-    status: 200,
-    description: 'Test Exception error',
-    type: Number,
-  })
-  triggerExceptionError(): Promise<object>[] {
-    throw new Error('NEW generic exception');
+  @ApiOperation({ summary: 'ready' })
+  check() {
+    return this.health.check([
+      () => this.db.pingCheck('mssql-number-generator', { connection: this.numberGenerator }),
+      () => this.db.pingCheck('mssql-cedar', { connection: this.cedar }),
+      () => this.db.pingCheck('mssql-cis', { connection: this.cis }),
+      () => this.db.pingCheck('mssql-mdm', { connection: this.mdm }),
+      () => this.mem.checkHeap('mem_heap', 512 * 2 ** 20 /* 512 MB */),
+    ]);
   }
 }
