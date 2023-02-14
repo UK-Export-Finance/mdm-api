@@ -29,7 +29,8 @@
     "ecgd",
     "ESRA",
     "pino",
-    "Dockerised"
+    "Dockerised",
+    "CILC"
   ],
   "dictionaries": [
     "en-gb",
