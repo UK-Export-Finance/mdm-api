@@ -18,7 +18,7 @@ export class NumbersController {
   @UsePipes(ValidationPipe)
   @ApiResponse({ status: 201, description: 'Created.' })
   create(@Body(new ParseArrayPipe({ items: CreateUkefIdDto, optional: false })) CreateUkefIdDtos: CreateUkefIdDto[]): Promise<UkefId[]> {
-    if (CreateUkefIdDtos.length === 0) {
+    if (!CreateUkefIdDtos.length) {
       throw new BadRequestException('Request payload is empty');
     }
     return this.numberService.create(CreateUkefIdDtos);
