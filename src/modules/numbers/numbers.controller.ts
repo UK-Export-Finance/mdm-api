@@ -1,8 +1,8 @@
-import { ValidateUkefId } from '@mdm/helpers/validate-ukef-id.helper';
-import { Body, Controller, Get, ParseArrayPipe, ParseIntPipe, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, ParseArrayPipe, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { CreateUkefIdDto } from './dto/create-ukef-id.dto';
+import { GetNumbersQueryDto } from './dto/get-numbers-query.dto';
 import { UkefId } from './entities/ukef-id.entity';
 import { NumbersService } from './numbers.service';
 
@@ -17,7 +17,10 @@ export class NumbersController {
   @ApiBody({ type: [CreateUkefIdDto] })
   @UsePipes(ValidationPipe)
   @ApiResponse({ status: 201, description: 'Created.' })
-  create(@Body(new ParseArrayPipe({ items: CreateUkefIdDto })) CreateUkefIdDtos: CreateUkefIdDto[]): Promise<UkefId[]> {
+  create(@Body(new ParseArrayPipe({ items: CreateUkefIdDto, optional: false })) CreateUkefIdDtos: CreateUkefIdDto[]): Promise<UkefId[]> {
+    if (!CreateUkefIdDtos.length) {
+      throw new BadRequestException('Request payload is empty');
+    }
     return this.numberService.create(CreateUkefIdDtos);
   }
 
@@ -42,7 +45,7 @@ export class NumbersController {
     description: 'UKEF ID to check',
     example: '0030052431',
   })
-  findOne(@Query('type', new ParseIntPipe()) type: number, @Query('ukefId', new ValidateUkefId()) ukefIdString: string): Promise<UkefId> {
-    return this.numberService.findOne(type, ukefIdString);
+  findOne(@Query() query: GetNumbersQueryDto): Promise<UkefId> {
+    return this.numberService.findOne(query.type, query.ukefId);
   }
 }

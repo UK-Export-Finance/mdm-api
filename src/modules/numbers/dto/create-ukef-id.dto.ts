@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsNotEmpty, IsString, Max } from 'class-validator';
+import { IsInt, IsNotEmpty, IsString, Max, MaxLength } from 'class-validator';
 
 export class CreateUkefIdDto {
   @IsInt()
@@ -10,11 +10,13 @@ export class CreateUkefIdDto {
 
   @IsString()
   @IsNotEmpty()
+  @MaxLength(60)
   @ApiProperty({ example: 'ECGD\\jsmith', description: 'User if it is known' })
   readonly createdBy: string;
 
   @IsString()
   @IsNotEmpty()
+  @MaxLength(60)
   @ApiProperty({ example: 'NodeJs/App' })
   readonly requestingSystem: string;
 }
