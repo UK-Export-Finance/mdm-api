@@ -1,7 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity({ name: 'NBR_TYPES', database: 'NUMBER_GENERATION', schema: 'dbo' })
+@Entity({
+  name: 'NBR_TYPES',
+  schema: 'dbo',
+})
 export class NumberType {
   /**
    * Number type id.
@@ -36,7 +39,7 @@ export class NumberType {
 
   @Column({ name: 'CREATED_BY_USER' })
   @ApiProperty()
-  createdBy: Date;
+  createdBy: string;
 
   @Column({ name: 'CREATED_DATETIME' })
   @ApiProperty()
@@ -44,7 +47,7 @@ export class NumberType {
 
   @Column({ name: 'UPD_USER' })
   @ApiProperty()
-  updatedBy: Date;
+  updatedBy: string;
 
   @Column({ name: 'UPD_DATETIME' })
   @ApiProperty()
