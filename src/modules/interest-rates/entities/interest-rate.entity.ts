@@ -4,7 +4,6 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({
   name: 'DWR_INT_RATE',
-  database: 'cedar',
   schema: 'dbo',
 })
 @UseInterceptors(ClassSerializerInterceptor)
