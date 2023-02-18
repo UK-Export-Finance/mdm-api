@@ -121,7 +121,7 @@
   "overrides": [
     {
       "files": [
-        "**/*.spec.ts"
+        "**/*.spec.ts", "**/*.api-test.ts"
       ],
       "extends": [
         "plugin:jest/recommended",

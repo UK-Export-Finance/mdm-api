@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 
 import { InterestRatesEntity } from './entities/interest-rate.entity';
 import { InterestRatesService } from './interest-rates.service';

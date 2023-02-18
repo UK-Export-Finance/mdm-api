@@ -15,13 +15,13 @@ describe('Numbers', () => {
 
   it(`GET /number-types`, async () => {
     const { status, body } = await api.get('/number-types');
-    expect(status).toEqual(200);
+    expect(status).toBe(200);
     expect(body).toEqual(getNumberTypesExpectation);
   });
 
   it(`GET /numbers?type=1&ukefId=0030581069`, async () => {
     const { status, body } = await api.get('/numbers?type=1&ukefId=0030581069');
-    expect(status).toEqual(404);
+    expect(status).toBe(404);
     expect(body.error).toMatch('Not Found');
   });
 
@@ -38,22 +38,22 @@ describe('Numbers', () => {
     ];
     // Generate
     const postResponse = await api.post(postNumbersPayload).to('/numbers');
-    expect(postResponse.status).toEqual(201);
+    expect(postResponse.status).toBe(201);
 
     // Test
     const getResponse = await api.get('/numbers?type=' + postResponse.body[0].type + '&ukefId=' + postResponse.body[0].maskedId);
-    expect(getResponse.status).toEqual(200);
+    expect(getResponse.status).toBe(200);
     expect(postResponse.body[0]).toEqual(getResponse.body);
   });
 
   it(`GET /numbers?type=2&ukefId=0030581069`, async () => {
     const { status } = await api.get('/numbers?type=2&ukefId=0030581069');
-    expect(status).toEqual(404);
+    expect(status).toBe(404);
   });
 
   it(`GET /numbers?type=a&ukefId=a`, async () => {
     const { status, body } = await api.get('/numbers?type=a&ukefId=a');
-    expect(status).toEqual(400);
+    expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
     expect(body.message).toContain('type must be an integer number');
     expect(body.message).toContain('ukefId must match /^\\d{10}$/ regular expression');
@@ -61,7 +61,7 @@ describe('Numbers', () => {
 
   it(`GET /numbers?type=null&ukefId=null`, async () => {
     const { status, body } = await api.get('/numbers?type=null&ukefId=null');
-    expect(status).toEqual(400);
+    expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
     expect(body.message).toContain('type must be an integer number');
     expect(body.message).toContain('ukefId must match /^\\d{10}$/ regular expression');
@@ -69,7 +69,7 @@ describe('Numbers', () => {
 
   it(`GET /numbers?type=undefined&ukefId=undefined`, async () => {
     const { status, body } = await api.get('/numbers?type=undefined&ukefId=undefined');
-    expect(status).toEqual(400);
+    expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
     expect(body.message).toContain('type must be an integer number');
     expect(body.message).toContain('ukefId must match /^\\d{10}$/ regular expression');
@@ -77,14 +77,14 @@ describe('Numbers', () => {
 
   it(`GET /numbers?type=a&ukefId=0030581069`, async () => {
     const { status, body } = await api.get('/numbers?type=a&ukefId=0030581069');
-    expect(status).toEqual(400);
+    expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
     expect(body.message).toContain('type must be an integer number');
   });
 
   it(`GET /numbers?type=3&ukefId=0030581069`, async () => {
     const { status, body } = await api.get('/numbers?type=3&ukefId=0030581069');
-    expect(status).toEqual(400);
+    expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
     expect(body.message).toMatch('Invalid UKEF ID type');
   });
@@ -98,14 +98,14 @@ describe('Numbers', () => {
       },
     ];
     const { status, body } = await api.post(payload).to('/numbers');
-    expect(status).toEqual(201);
+    expect(status).toBe(201);
     expect(body).toHaveLength(1);
     expect(body[0].id).toBeDefined();
     expect(body[0].maskedId).toMatch(/^\d*$/);
-    expect(body[0].type).toEqual(1);
-    expect(body[0].createdBy).toEqual('Jest');
+    expect(body[0].type).toBe(1);
+    expect(body[0].createdBy).toBe('Jest');
     expect(body[0].createdDatetime).toBeDefined();
-    expect(body[0].requestingSystem).toEqual('Jest 1 - Deal');
+    expect(body[0].requestingSystem).toBe('Jest 1 - Deal');
   });
 
   it(`POST /numbers single, long values`, async () => {
@@ -117,14 +117,14 @@ describe('Numbers', () => {
       },
     ];
     const { status, body } = await api.post(payload).to('/numbers');
-    expect(status).toEqual(201);
+    expect(status).toBe(201);
     expect(body).toHaveLength(1);
     expect(body[0].id).toBeDefined();
     expect(body[0].maskedId).toMatch(/^\d*$/);
-    expect(body[0].type).toEqual(1);
-    expect(body[0].createdBy).toEqual('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mau');
+    expect(body[0].type).toBe(1);
+    expect(body[0].createdBy).toBe('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mau');
     expect(body[0].createdDatetime).toBeDefined();
-    expect(body[0].requestingSystem).toEqual('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mau');
+    expect(body[0].requestingSystem).toBe('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mau');
   });
 
   it(`POST /numbers single, long value error`, async () => {
@@ -136,7 +136,7 @@ describe('Numbers', () => {
       },
     ];
     const { status, body } = await api.post(payload).to('/numbers');
-    expect(status).toEqual(400);
+    expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
     expect(body.message).toContain('createdBy must be shorter than or equal to 60 characters');
     expect(body.message).toContain('createdBy must be shorter than or equal to 60 characters');
@@ -145,7 +145,7 @@ describe('Numbers', () => {
   it(`POST /numbers single, missing fields`, async () => {
     const payload = [{}];
     const { status, body } = await api.post(payload).to('/numbers');
-    expect(status).toEqual(400);
+    expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
     expect(body.message).toContain('numberTypeId should not be empty');
     expect(body.message).toContain('createdBy should not be empty');
@@ -155,7 +155,7 @@ describe('Numbers', () => {
   it(`POST /numbers single, empty payload`, async () => {
     const payload = '';
     const { status, body } = await api.post(payload).to('/numbers');
-    expect(status).toEqual(400);
+    expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
     expect(body.message).toMatch('Validation failed (parsable array expected)');
   });
@@ -163,15 +163,15 @@ describe('Numbers', () => {
   it(`POST /numbers single, empty array`, async () => {
     const payload = [];
     const { status, body } = await api.post(payload).to('/numbers');
-    expect(status).toEqual(400);
+    expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
     expect(body.message).toMatch('Request payload is empty');
   });
 
-  it(`POST /numbers single, empty array`, async () => {
+  it(`POST /numbers single, not parsable array`, async () => {
     const payload = '[]';
     const { status, body } = await api.post(payload).to('/numbers');
-    expect(status).toEqual(400);
+    expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
     expect(body.message).toMatch('Validation failed (parsable array expected)');
   });
@@ -179,7 +179,7 @@ describe('Numbers', () => {
   it(`POST /numbers single, bad json`, async () => {
     const payload = 'asd';
     const { status, body } = await api.post(payload).to('/numbers');
-    expect(status).toEqual(400);
+    expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
     expect(body.message).toMatch('Validation failed (parsable array expected)');
   });
@@ -208,7 +208,7 @@ describe('Numbers', () => {
       },
     ];
     const { status, body } = await api.post(payload).to('/numbers');
-    expect(status).toEqual(201);
+    expect(status).toBe(201);
     expect(body).toHaveLength(4);
 
     /* eslint-disable security/detect-object-injection */
