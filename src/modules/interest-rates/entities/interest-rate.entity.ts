@@ -46,7 +46,7 @@ export class InterestRatesEntity {
 
   @Column({ name: 'EFFECTIVE_TO_DATETIME', type: 'timestamp' })
   @ApiProperty({ example: '2010-03-15 00:00:00.000' })
-  effectiveTo: Date;
+  effectiveTo: string;
 
   @Column({ name: 'DATE_CREATED_DATETIME', type: 'timestamp' })
   @ApiProperty({ example: 'Middle East & North Africa', description: '' })

@@ -6,7 +6,7 @@ import { InterestRatesController } from './interest-rates.controller';
 import { InterestRatesService } from './interest-rates.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([InterestRatesEntity], 'mssql-cis')],
+  imports: [TypeOrmModule.forFeature([InterestRatesEntity], 'mssql-cedar')],
   controllers: [InterestRatesController],
   providers: [InterestRatesService],
 })
