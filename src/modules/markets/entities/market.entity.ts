@@ -4,7 +4,6 @@ import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity({
   name: 'ODS_MARKETS',
-  database: 'cis',
   schema: 'dbo',
 })
 @UseInterceptors(ClassSerializerInterceptor)

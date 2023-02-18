@@ -1,18 +1,18 @@
 import { INestApplication } from '@nestjs/common';
-import { CreateApp } from '../createApp';
 
-const getMarketsExpectation = require('./expected-responses/GET-markets.json');
-const getMarketsActiveYExpectation = require('./expected-responses/GET-markets-query-active-Y.json');
-const getMarketsActiveNExpectation = require('./expected-responses/GET-markets-query-active-N.json');
+import { Api } from '../api';
+import { CreateApp } from '../createApp';
+import getMarketsExpectation from './expected-responses/GET-markets.json';
+import getMarketsActiveNExpectation from './expected-responses/GET-markets-query-active-N.json';
+import getMarketsActiveYExpectation from './expected-responses/GET-markets-query-active-Y.json';
 
 describe('Markets', () => {
-
   let app: INestApplication;
   let api;
 
   beforeAll(async () => {
     app = await new CreateApp().init();
-    api = require('../api')(app.getHttpServer());
+    api = new Api(app.getHttpServer());
   });
 
   it(`GET /markets`, async () => {

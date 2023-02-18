@@ -1,7 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity({ name: 'UNIQUE_NUMBER_DEAL_FACILITY', database: 'NUMBER_GENERATION', schema: 'dbo' })
+@Entity({
+  name: 'UNIQUE_NUMBER_DEAL_FACILITY',
+  schema: 'dbo',
+})
 export class UkefId {
   /**
    * UKEF ID record from "NUMBER_GENERATION" DB
