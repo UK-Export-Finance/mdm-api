@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.2.0...v1.3.0) (2023-02-20)
+
+
+### Features
+
+* **API-82:** Improved GHA ([#21](https://github.com/UK-Export-Finance/mdm-api/issues/21)) ([217b682](https://github.com/UK-Export-Finance/mdm-api/commit/217b682cd72b376baa94076d73e9a455dac08538))
+
 ## [1.2.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.1.0...v1.2.0) (2023-02-20)
 
 
