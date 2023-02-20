@@ -1,15 +1,17 @@
 #!/usr/bin/env bash
 RED='\033[1;31m'
 GREEN='\033[1;32m'
+BLUE='\033[1;34m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
 printf "📝 Deployment strategy:\n"
 printf "=======================\n\n"
 printf "${YELLOW}0. Infrastructure 🔧${NC}\n"
-printf "${RED}1. Development 🚀${NC}\n"
-printf "${RED}2. Production 🚀${NC}\n"
-printf "${RED}3. ACR Purge 🗑️${NC}\n\n"
+printf "${BLUE}1. Development 🧪${NC}\n"
+printf "${BLUE}2. Staging 💻${NC}\n"
+printf "${RED}3. Production 🚀${NC}\n"
+printf "${RED}4. ACR Purge 🗑️${NC}\n\n"
 
 read selection
 
@@ -66,7 +68,7 @@ else
 fi
 
 #######################################
-# UKEF deployment shell script v0.0.4
-# 22/12/2022
+# UKEF deployment shell script v0.0.5
+# 20/02/2023
 # Abhi Markan
 #######################################
