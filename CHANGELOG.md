@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/UK-Export-Finance/mdm-api/compare/v1.3.0...v1.3.1) (2023-02-20)
+
+
+### Miscellaneous
+
+* **deps:** update szenius/set-timezone action to v1.1 ([#23](https://github.com/UK-Export-Finance/mdm-api/issues/23)) ([51e88c0](https://github.com/UK-Export-Finance/mdm-api/commit/51e88c0c095221055edbcc6f688a2560b8c5d844))
+
 ## [1.3.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.2.0...v1.3.0) (2023-02-20)
 
 
