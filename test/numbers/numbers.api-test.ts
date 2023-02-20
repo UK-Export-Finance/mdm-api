@@ -212,15 +212,91 @@ describe('Numbers', () => {
     expect(body).toHaveLength(4);
 
     /* eslint-disable security/detect-object-injection */
-    for (let i = 0; i++; i < 4) {
-      expect(body[i].id).toBeDefined();
-      expect(body[i].maskedId).toMatch(/^\d*$/);
-      expect(body[i].type).toEqual(payload[i].numberTypeId);
-      expect(body[i].createdBy).toEqual(payload[i].createdBy);
-      expect(body[i].createdDatetime).toBeDefined();
-      expect(body[i].requestingSystem).toEqual(payload[i].requestingSystem);
-    }
+    body.forEach((responseUkefIdRecord, i) => {
+      expect(responseUkefIdRecord.id).toBeDefined();
+      expect(responseUkefIdRecord.maskedId).toMatch(/^\d*$/);
+      expect(responseUkefIdRecord.type).toEqual(payload[i].numberTypeId);
+      expect(responseUkefIdRecord.createdBy).toEqual(payload[i].createdBy);
+      expect(responseUkefIdRecord.createdDatetime).toBeDefined();
+      expect(responseUkefIdRecord.requestingSystem).toEqual(payload[i].requestingSystem);
+    });
     /* eslint-enable security/detect-object-injection */
+  });
+
+  /**
+   * Because of async calls order of new ids might be off, check it.
+   */
+  it(`POST /numbers check order`, async () => {
+    const payload = [
+      {
+        numberTypeId: 1,
+        createdBy: 'Jest',
+        requestingSystem: 'Jest 1 - Deal',
+      },
+      {
+        numberTypeId: 1,
+        createdBy: 'John',
+        requestingSystem: 'Jest 2 - Facility',
+      },
+      {
+        numberTypeId: 1,
+        createdBy: 'John',
+        requestingSystem: 'Jest 3 - Facility',
+      },
+      {
+        numberTypeId: 1,
+        createdBy: 'Sam',
+        requestingSystem: 'Jest 4 - Facility',
+      },
+      {
+        numberTypeId: 1,
+        createdBy: 'Sam',
+        requestingSystem: 'Jest 5 - Facility',
+      },
+      {
+        numberTypeId: 1,
+        createdBy: 'Jest',
+        requestingSystem: 'Jest 6 - Facility',
+      },
+      {
+        numberTypeId: 1,
+        createdBy: 'Jest',
+        requestingSystem: 'Jest 7 - Facility',
+      },
+      {
+        numberTypeId: 2,
+        createdBy: 'Jest',
+        requestingSystem: 'Jest 1 - Party',
+      },
+      {
+        numberTypeId: 2,
+        createdBy: 'Jest',
+        requestingSystem: 'Jest 2 - Party',
+      },
+      {
+        numberTypeId: 2,
+        createdBy: 'Jest',
+        requestingSystem: 'Jest 3 - Party',
+      },
+      {
+        numberTypeId: 2,
+        createdBy: 'Jest',
+        requestingSystem: 'Jest 4 - Party',
+      },
+    ];
+    const { status, body } = await api.post(payload).to('/numbers');
+    expect(status).toEqual(201);
+    expect(body).toHaveLength(payload.length);
+
+    // Go trough results, group by type and keep validating order.
+    body.reduce(function (previousValues, newUkefId) {
+      if (previousValues[newUkefId.type]) {
+        // Comparing two strings
+        expect(previousValues[newUkefId.type] < newUkefId.maskedId).toBeTruthy();
+      }
+      previousValues[newUkefId.type] = newUkefId.maskedId;
+      return previousValues;
+    }, Object.create(null));
   });
 
   afterAll(async () => {
