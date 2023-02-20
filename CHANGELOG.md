@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.2.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.1.0...v1.2.0) (2023-02-20)
+
+
+### Features
+
+* **API-69:** added `/interest-rates` endpoint ([#17](https://github.com/UK-Export-Finance/mdm-api/issues/17)) ([ee7a5f5](https://github.com/UK-Export-Finance/mdm-api/commit/ee7a5f51b6e87db99350de699820bc1ac8b5b06e))
+
+
+### Miscellaneous
+
+* **npm-update:** Package update + NPM minimum version requirement ([a8277b8](https://github.com/UK-Export-Finance/mdm-api/commit/a8277b83b594cef77450c47548bedcc551971be9))
+* **npm-update:** Package updates ([#18](https://github.com/UK-Export-Finance/mdm-api/issues/18)) ([fe1085d](https://github.com/UK-Export-Finance/mdm-api/commit/fe1085d777a97713bb2e057ba9520e3fdd60fc36))
+
 ## [1.1.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.0.0...v1.1.0) (2023-02-17)
 
 
