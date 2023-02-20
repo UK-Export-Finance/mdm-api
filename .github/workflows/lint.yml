@@ -1,18 +1,59 @@
-name: PR - Lint
+# MDM-API Git Hub Actions
+#####################################
+# This GHA is responsible for initiating linting checks
+
+name: Quality Assurance - Lint
+run-name: Executing lint QA on ${{ github.repository }} 🚀
+
 on:
   pull_request:
     branches: [ main ]
+    paths:
+    - 'src/**'
+    - 'test/**'
+
+env:
+  environment: dev
+  timezone: 'Europe/London'
+  node: '18'
 
 jobs:
-  build:
+
+# 1. Setup test infrastructure
+  setup:
+    name: Infrastructure setup 🔧
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ env.environment }}
+      timezone: ${{ env.timezone }}
+    steps:
+    - name: Environment 🧪
+      run: echo "Environment set to ${{ env.environment }}"
+  
+    - name: Timezone 🌐
+      run: echo "Timezone set to ${{ env.timezone }}"
+
+# 2. Lint
+  lint:
+    name: Scanning 🎨
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
-      with:
-        node-version: '18'
-        cache: 'npm'
-    - name: Install modules
-      run: npm ci
-    - name: Run ESLint (TypeScript)
-      run: npm run lint
+      - name: Timezone
+        uses: szenius/set-timezone@v1.0
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+  
+      - name: Repository
+        uses: actions/checkout@v3
+
+      - name: Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.node }}
+
+      - name: Linting
+        working-directory: ./
+        run: |
+          npm run lint
