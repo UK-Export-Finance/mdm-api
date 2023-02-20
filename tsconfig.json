@@ -1,16 +1,20 @@
 {
-  "extends": "@tsconfig/node18/tsconfig.json",
   "compilerOptions": {
+    "rootDirs": ["src"],
+    "outDir": "dist",
+    "lib": ["ES2022"],
+    "target": "ES2022",
     "module": "commonjs",
-    "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es2017",
-    "sourceMap": true,
-    "outDir": "./dist",
-    "baseUrl": "./",
+    "composite": true,
+    "moduleResolution": "node",
+    "declaration": true,
+    "declarationMap": true,
+    "resolveJsonModule": true,
+    "baseUrl": ".",
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,
@@ -18,10 +22,9 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-    "resolveJsonModule": true,
     "esModuleInterop": true,
-    "moduleResolution": "node",
-    "lib": ["ES2015"],
+    "types": ["jest", "node", "@types/jest"],
+    "sourceMap": true,
     "paths": {
       "@mdm/*": ["src/*"],
       "@mdm/config/*": ["src/config/index"],
@@ -30,15 +33,9 @@
       "@mdm/module/*": ["src/modules/*"]
     }
   },
-  "include": [
-    "src",
-    "test",
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "*coverage",
-    "logs",
-    "scripts",
-  ]
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
+  },
+  "include": ["./src/**/*", "./test/*", "./test/**/*"]
 }

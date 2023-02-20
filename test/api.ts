@@ -1,9 +1,6 @@
-///* eslint-disable */
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 
-// This type is required to set variable of type MultipartValue.
-type FormData = string | boolean | number;
 export class Api {
   app: INestApplication;
 
@@ -15,11 +12,11 @@ export class Api {
     return request(this.app).get(url);
   }
 
-  post(data) {
+  post(data: string | object) {
     return { to: (url: string) => request(this.app).post(url).send(data) };
   }
 
-  postEach(list) {
+  postEach(list: any) {
     return {
       to: async (url: string) => {
         const results = [];
@@ -35,33 +32,13 @@ export class Api {
     };
   }
 
-  put(data) {
+  put(data: string | object) {
     return { to: (url: string) => request(this.app).put(url).send(data) };
   }
 
-  putMultipartForm(data: FormData[], files = []) {
-    return {
-      to: (url) => {
-        const apiRequest = request(this.app).put(url);
-
-        if (files.length) {
-          files.forEach((file) => apiRequest.attach(file.fieldname, file.filepath));
-        }
-
-        Object.entries(data).forEach(([fieldname, value]) => {
-          apiRequest.field(fieldname, value);
-        });
-
-        return apiRequest;
-      },
-    };
-  }
-
-  remove(data) {
+  remove(data: string | object) {
     return {
       to: (url: string) => request(this.app).delete(url).send(data),
     };
   }
 }
-
-///* eslint-enable */
