@@ -1,14 +1,23 @@
+# MDM-API Git Hub Actions
+#####################################
+# This GHA is responsible for release version updates.
+
 name: Automated release
+run-name: Executing release on ${{ github.repository }} 🚀
 
 on:
   push:
     branches: [ main ]
 
 jobs:
+
+  # 1. `package.json`, `README.md` and `CHANGELOG.md` updates
   release:
+
+    name: Release setup 🔧
     runs-on: ubuntu-latest
     steps:
-      - name: Release a new version 🚀
+      - name: New release ⚡️
         uses: google-github-actions/release-please-action@v3
         id: release
         with:
