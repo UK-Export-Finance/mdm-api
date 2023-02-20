@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 RED='\033[1;31m'
 GREEN='\033[1;32m'
-BLUE='\033[1;34m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
@@ -53,11 +52,11 @@ if [ -n "$selection" ]; then
 
     # Deploy
     git checkout -b "${destination}"
-    git push -f --set-upstream origin $destination
+    git push -f --set-upstream origin "${destination}"
 
     # Clean up
     git checkout "${branch}"
-    git branch -d $destination
+    git branch -d "${destination}"
     printf "\n\n✅ ${destination} deployment initiated, switched to ${branch}.\n\n"
     fi
 
