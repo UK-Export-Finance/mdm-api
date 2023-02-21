@@ -12,8 +12,8 @@ describe('Numbers', () => {
     api = new Api(app.getHttpServer());
   });
 
-  it(`GET /numbers?type=1&ukefId=0030581069`, async () => {
-    const { status, body } = await api.get('/numbers?type=1&ukefId=0030581069');
+  it(`GET /numbers?type=1&ukefId=0010581069`, async () => {
+    const { status, body } = await api.get('/numbers?type=1&ukefId=0010581069');
     expect(status).toBe(404);
     expect(body.error).toMatch('Not Found');
   });

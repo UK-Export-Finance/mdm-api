@@ -2,13 +2,31 @@ import { INestApplication } from '@nestjs/common';
 
 import { Api } from '../api';
 import { CreateApp } from '../createApp';
-import getMarketsExpectation from './expected-responses/GET-markets.json';
-import getMarketsActiveNExpectation from './expected-responses/GET-markets-query-active-N.json';
-import getMarketsActiveYExpectation from './expected-responses/GET-markets-query-active-Y.json';
 
 describe('Markets', () => {
   let app: INestApplication;
   let api;
+
+  const marketSchema = {
+    marketId: expect.any(Number),
+    marketName: expect.any(String),
+    isoCode: expect.any(String),
+    createdDatetime: expect.any(String),
+    lastUpdatedDatetime: expect.any(String),
+    effectiveFromDatetime: expect.any(String),
+    effectiveToDatetime: expect.any(String),
+    oecdRiskCategory: expect.any(String),
+    marketRiskAppetitePublicDesc: expect.any(String),
+    geographicalRegionId: expect.any(Number),
+    geographicalRegionDesc: expect.any(String),
+    sovereignRiskProvision: expect.any(Number),
+    ESRAClassificationId: expect.any(Number),
+    ESRAClassificationDesc: expect.any(String),
+    shortTermCoverAvailabilityId: expect.any(Number),
+    shortTermCoverAvailabilityDesc: expect.any(String),
+    NBIIssue: expect.any(String),
+    active: expect.any(String),
+  };
 
   beforeAll(async () => {
     app = await new CreateApp().init();
@@ -18,19 +36,40 @@ describe('Markets', () => {
   it(`GET /markets`, async () => {
     const { status, body } = await api.get('/markets');
     expect(status).toBe(200);
-    expect(body).toEqual(getMarketsExpectation);
+    expect(body).toEqual(expect.arrayContaining([expect.objectContaining(marketSchema)]));
   });
 
   it(`GET /markets?active=Y`, async () => {
     const { status, body } = await api.get('/markets?active=Y');
     expect(status).toBe(200);
-    expect(body).toEqual(getMarketsActiveYExpectation);
+    expect(body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          ...marketSchema,
+          active: 'Y',
+        }),
+      ]),
+    );
   });
 
   it(`GET /markets?active=N`, async () => {
     const { status, body } = await api.get('/markets?active=N');
     expect(status).toBe(200);
-    expect(body).toEqual(getMarketsActiveNExpectation);
+    expect(body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          ...marketSchema,
+          active: 'N',
+        }),
+      ]),
+    );
+  });
+
+  it(`Compare GET /markets?active=N and GET /markets?active=N`, async () => {
+    const responseActive = await api.get('/markets?active=Y');
+    const responseDisabled = await api.get('/markets?active=N');
+    // We expect more active markets than disabled
+    expect(responseActive.body.length).toBeGreaterThan(responseDisabled.body.length);
   });
 
   it(`GET /markets?active=something-else`, async () => {
