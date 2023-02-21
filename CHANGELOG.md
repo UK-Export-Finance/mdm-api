@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.4.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.3.1...v1.4.0) (2023-02-21)
+
+
+### Features
+
+* ensure new ids are in order ([cb3981f](https://github.com/UK-Export-Finance/mdm-api/commit/cb3981f28c485658fbc7c7fda2c1d3664d334dec))
+* ensure new ids are in order ([#20](https://github.com/UK-Export-Finance/mdm-api/issues/20)) ([fac35c4](https://github.com/UK-Export-Finance/mdm-api/commit/fac35c4d043fdd84b0d986f4bf77f9a777198605))
+* make markets API tests more generic ([#27](https://github.com/UK-Export-Finance/mdm-api/issues/27)) ([5447121](https://github.com/UK-Export-Finance/mdm-api/commit/54471212c9e9e645593a7e986b2fe5a0654e6f1c))
+
+
+### Bug Fixes
+
+* extra check DB response ([8f4aa41](https://github.com/UK-Export-Finance/mdm-api/commit/8f4aa4151cf31b7c89ea36f03395fb438216b0f4))
+* lint error ([f334fb4](https://github.com/UK-Export-Finance/mdm-api/commit/f334fb4e6ea0b646bc6a5b29afca9991254e7de9))
+* **POST-number--ids-should-be-sorted:** Added npm ci beforing lint execution ([7276ff7](https://github.com/UK-Export-Finance/mdm-api/commit/7276ff73553ab87e478319299e4ee529c926545b))
+* removed GET `/number-types` endpoint ([#25](https://github.com/UK-Export-Finance/mdm-api/issues/25)) ([683d88e](https://github.com/UK-Export-Finance/mdm-api/commit/683d88ea931d8e1d9a8ca9a1b78273708d1b10eb))
+
 ## [1.3.1](https://github.com/UK-Export-Finance/mdm-api/compare/v1.3.0...v1.3.1) (2023-02-20)
 
 
