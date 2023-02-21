@@ -285,15 +285,17 @@ describe('Numbers', () => {
       },
     ];
     const { status, body } = await api.post(payload).to('/numbers');
-    expect(status).toEqual(201);
+    expect(status).toBe(201);
     expect(body).toHaveLength(payload.length);
 
     // Go trough results, group by type and keep validating order.
     body.reduce(function (previousValues, newUkefId) {
-      if (previousValues[newUkefId.type]) {
-        // Comparing two strings
-        expect(previousValues[newUkefId.type] < newUkefId.maskedId).toBeTruthy();
+      if (!previousValues[newUkefId.type]) {
+        // First call for this type, initialize.
+        previousValues[newUkefId.type] = '';
       }
+      // Comparing two strings
+      expect(previousValues[newUkefId.type] < newUkefId.maskedId).toBeTruthy();
       previousValues[newUkefId.type] = newUkefId.maskedId;
       return previousValues;
     }, Object.create(null));
