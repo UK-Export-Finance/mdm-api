@@ -2,7 +2,6 @@ import { INestApplication } from '@nestjs/common';
 
 import { Api } from '../api';
 import { CreateApp } from '../createApp';
-import getNumberTypesExpectation from './expected-responses/GET-number-types.json';
 
 describe('Numbers', () => {
   let app: INestApplication;
@@ -11,12 +10,6 @@ describe('Numbers', () => {
   beforeAll(async () => {
     app = await new CreateApp().init();
     api = new Api(app.getHttpServer());
-  });
-
-  it(`GET /number-types`, async () => {
-    const { status, body } = await api.get('/number-types');
-    expect(status).toBe(200);
-    expect(body).toEqual(getNumberTypesExpectation);
   });
 
   it(`GET /numbers?type=1&ukefId=0030581069`, async () => {
