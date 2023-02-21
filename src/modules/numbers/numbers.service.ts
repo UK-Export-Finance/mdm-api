@@ -34,7 +34,7 @@ export class NumbersService {
   async findOne(type: number, ukefIdString: string): Promise<UkefId> {
     try {
       const dbNumber = await this.numberRepository.query('USP_STP_GET_AUTONUMBER @0, @1', [type, ukefIdString]);
-      if (!dbNumber[0]) {
+      if (dbNumber && !dbNumber[0]) {
         throw new NotFoundException('UKEF ID is not found');
       }
       if (dbNumber[0]?.ERR === 'INVALID NUMBER TYPE') {
