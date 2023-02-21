@@ -109,14 +109,12 @@ describe('Markets', () => {
   it(`GET /markets?active=something-else`, async () => {
     const { status, body } = await api.get('/markets?active=something-else');
     expect(status).toBe(400);
-    expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
     expect(body.message[0]).toMatch('active must be one of the following values: Y, N');
   });
 
   it(`GET /markets?active=`, async () => {
     const { status, body } = await api.get('/markets?active=');
-    expect(status).toBe(400);
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
     expect(body.message[0]).toMatch('active must be one of the following values: Y, N');
@@ -125,14 +123,12 @@ describe('Markets', () => {
   it(`GET /markets?active=null`, async () => {
     const { status, body } = await api.get('/markets?active=null');
     expect(status).toBe(400);
-    expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
     expect(body.message[0]).toMatch('active must be one of the following values: Y, N');
   });
 
   it(`GET /markets?active=undefined`, async () => {
     const { status, body } = await api.get('/markets?active=undefined');
-    expect(status).toBe(400);
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
     expect(body.message[0]).toMatch('active must be one of the following values: Y, N');
