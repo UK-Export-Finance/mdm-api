@@ -28,9 +28,9 @@ export class UkefId {
 
   @Column({ name: 'CREATED_DATETIME' })
   @ApiProperty({ example: '2021-11-30T09:44:04.15Z', description: 'Created timestamp' })
-  createdDatetime: string;
+  createdDatetime: Date;
 
   @Column({ name: 'REQUESTING_SYSTEM' })
   @ApiProperty({ example: 'NodeJs/App' })
-  requestingSystem: Date;
+  requestingSystem: string;
 }

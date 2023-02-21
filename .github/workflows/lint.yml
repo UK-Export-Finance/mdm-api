@@ -53,7 +53,10 @@ jobs:
         with:
           node-version: ${{ env.node }}
 
+      - name: Dependencies
+        working-directory: ./
+        run: npm ci
+
       - name: Linting
         working-directory: ./
-        run: |
-          npm run lint
+        run: npm run lint
