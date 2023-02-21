@@ -7,6 +7,27 @@ describe('Markets', () => {
   let app: INestApplication;
   let api;
 
+  const marketSchema = {
+    marketId: expect.any(Number),
+    marketName: expect.any(String),
+    isoCode: expect.any(String),
+    createdDatetime: expect.any(String),
+    lastUpdatedDatetime: expect.any(String),
+    effectiveFromDatetime: expect.any(String),
+    effectiveToDatetime: expect.any(String),
+    oecdRiskCategory: expect.any(String),
+    marketRiskAppetitePublicDesc: expect.any(String),
+    geographicalRegionId: expect.any(Number),
+    geographicalRegionDesc: expect.any(String),
+    sovereignRiskProvision: expect.any(Number),
+    ESRAClassificationId: expect.any(Number),
+    ESRAClassificationDesc: expect.any(String),
+    shortTermCoverAvailabilityId: expect.any(Number),
+    shortTermCoverAvailabilityDesc: expect.any(String),
+    NBIIssue: expect.any(String),
+    active: expect.any(String),
+  };
+
   beforeAll(async () => {
     app = await new CreateApp().init();
     api = new Api(app.getHttpServer());
@@ -15,30 +36,7 @@ describe('Markets', () => {
   it(`GET /markets`, async () => {
     const { status, body } = await api.get('/markets');
     expect(status).toBe(200);
-    expect(body).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          marketId: expect.any(Number),
-          marketName: expect.any(String),
-          isoCode: expect.any(String),
-          createdDatetime: expect.any(String),
-          lastUpdatedDatetime: expect.any(String),
-          effectiveFromDatetime: expect.any(String),
-          effectiveToDatetime: expect.any(String),
-          oecdRiskCategory: expect.any(String),
-          marketRiskAppetitePublicDesc: expect.any(String),
-          geographicalRegionId: expect.any(Number),
-          geographicalRegionDesc: expect.any(String),
-          sovereignRiskProvision: expect.any(Number),
-          ESRAClassificationId: expect.any(Number),
-          ESRAClassificationDesc: expect.any(String),
-          shortTermCoverAvailabilityId: expect.any(Number),
-          shortTermCoverAvailabilityDesc: expect.any(String),
-          NBIIssue: expect.any(String),
-          active: expect.any(String),
-        }),
-      ]),
-    );
+    expect(body).toEqual(expect.arrayContaining([expect.objectContaining(marketSchema)]));
   });
 
   it(`GET /markets?active=Y`, async () => {
@@ -47,23 +45,7 @@ describe('Markets', () => {
     expect(body).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          marketId: expect.any(Number),
-          marketName: expect.any(String),
-          isoCode: expect.any(String),
-          createdDatetime: expect.any(String),
-          lastUpdatedDatetime: expect.any(String),
-          effectiveFromDatetime: expect.any(String),
-          effectiveToDatetime: expect.any(String),
-          oecdRiskCategory: expect.any(String),
-          marketRiskAppetitePublicDesc: expect.any(String),
-          geographicalRegionId: expect.any(Number),
-          geographicalRegionDesc: expect.any(String),
-          sovereignRiskProvision: expect.any(Number),
-          ESRAClassificationId: expect.any(Number),
-          ESRAClassificationDesc: expect.any(String),
-          shortTermCoverAvailabilityId: expect.any(Number),
-          shortTermCoverAvailabilityDesc: expect.any(String),
-          NBIIssue: expect.any(String),
+          ...marketSchema,
           active: 'Y',
         }),
       ]),
@@ -76,23 +58,7 @@ describe('Markets', () => {
     expect(body).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          marketId: expect.any(Number),
-          marketName: expect.any(String),
-          isoCode: expect.any(String),
-          createdDatetime: expect.any(String),
-          lastUpdatedDatetime: expect.any(String),
-          effectiveFromDatetime: expect.any(String),
-          effectiveToDatetime: expect.any(String),
-          oecdRiskCategory: expect.any(String),
-          marketRiskAppetitePublicDesc: expect.any(String),
-          geographicalRegionId: expect.any(Number),
-          geographicalRegionDesc: expect.any(String),
-          sovereignRiskProvision: expect.any(Number),
-          ESRAClassificationId: expect.any(Number),
-          ESRAClassificationDesc: expect.any(String),
-          shortTermCoverAvailabilityId: expect.any(Number),
-          shortTermCoverAvailabilityDesc: expect.any(String),
-          NBIIssue: expect.any(String),
+          ...marketSchema,
           active: 'N',
         }),
       ]),
