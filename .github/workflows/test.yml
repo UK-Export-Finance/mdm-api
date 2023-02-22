@@ -1,0 +1,65 @@
+# MDM-API Git Hub Actions
+#####################################
+# This GHA is responsible for initiating various test suites
+# upon a PR creation. Following test suites are executed:
+# 1. Unit tests (Jest)
+# 2. API tests (Jest)
+
+name: Quality Assurance - Tests
+run-name: Executing test QA on ${{ github.repository }} 🚀
+
+on:
+  pull_request:
+    branches: [ main-application ]
+    paths:
+    - 'src/**'
+
+env:
+  environment: dev
+  timezone: 'Europe/London'
+  node: '18'
+
+jobs:
+
+# 1. Setup test infrastructure
+  setup:
+    name: Infrastructure setup 🔧
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ env.environment }}
+      timezone: ${{ env.timezone }}
+    steps:
+    - name: Environment 🧪
+      run: echo "Environment set to ${{ env.environment }}"
+  
+    - name: Timezone 🌐
+      run: echo "Timezone set to ${{ env.timezone }}"
+
+# 2. Unit tests
+  unit-tests:
+    name: Unit 👷
+    needs: setup
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Timezone
+        uses: szenius/set-timezone@v1.0
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+
+      - name: Repository
+        uses: actions/checkout@v3
+
+      - name: Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.node }}
+
+      - name: Dependencies
+        working-directory: ./
+        run: npm ci
+
+      - name: Execute
+        working-directory: ./
+        run: npm run test
