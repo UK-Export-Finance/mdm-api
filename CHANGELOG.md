@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.4.0...v1.5.0) (2023-02-22)
+
+
+### Features
+
+* **unit-test:** Unit testing on GHA ([#28](https://github.com/UK-Export-Finance/mdm-api/issues/28)) ([fd15ee4](https://github.com/UK-Export-Finance/mdm-api/commit/fd15ee42a8b068536ad76b308f008b63b8413712))
+
 ## [1.4.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.3.1...v1.4.0) (2023-02-21)
 
 
