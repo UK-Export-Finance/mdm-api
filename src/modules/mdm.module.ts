@@ -6,7 +6,7 @@ import { NumbersModule } from '@ukef/module/numbers/numbers.module';
 import { SectorIndustriesModule } from '@ukef/module/sector-industries/sector-industries.module';
 
 @Module({
-  imports: [NumbersModule, HealthcheckModule, MarketsModule, InterestRatesModule, SectorIndustriesModule],
-  exports: [NumbersModule, HealthcheckModule, MarketsModule, InterestRatesModule, SectorIndustriesModule],
+  imports: [ConstantsModule, HealthcheckModule, InterestRatesModule, MarketsModule, NumbersModule, SectorIndustriesModule],
+  exports: [ConstantsModule, HealthcheckModule, InterestRatesModule, MarketsModule, NumbersModule, SectorIndustriesModule],
 })
 export class MdmModule {}

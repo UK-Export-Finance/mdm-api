@@ -1,0 +1,50 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
+import { AfterLoad, Column, Entity, PrimaryColumn } from 'typeorm';
+
+@Entity({
+  name: 'SPI_COEFFICIENT',
+  schema: 'dbo',
+})
+export class ConstantSpiEntity {
+  /**
+   * Constant results from CIS SP
+   * @example
+   */
+  @PrimaryColumn({ name: 'DWD_COEFFICIENT_ID' })
+  id: number;
+
+  @Column({
+    name: 'COEFFICIENT_CATEGORY',
+    transformer: {
+      to: (value: string) => value,
+      from: (value: string) => value.toString(),
+    },
+  })
+  @ApiProperty({ examples: ['C', 'Quality of Product'] })
+  category: string;
+
+  @Column({ name: 'COEFFICIENT_SUB_CATEGORY' })
+  @ApiProperty({ example: 'SOV/CCO' })
+  subCategory: string;
+
+  @Column({ name: 'OECD_RISK_CATEGORY_CALC' })
+  @ApiProperty({ example: '1' })
+  oecdRiskCategory: string;
+
+  @Column({ name: 'VALUE' })
+  @ApiProperty({ example: 0.09 })
+  value: number;
+
+  @Column({ name: 'CONST_QUALITY_GRADE' })
+  @ApiProperty({ example: 'Above Standard' })
+  constQualityGrade: string;
+
+  @Column({ name: 'CONST_REPAYMENT_FREQUENCY' })
+  @ApiProperty({ example: 2 })
+  constRepaymentFrequency: number;
+
+  @Column({ name: 'CONST_INTEREST_RATE' })
+  @ApiProperty({ example: 4 })
+  constInterestRate: number;
+}
