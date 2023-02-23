@@ -56,7 +56,7 @@ describe('Sector industries', () => {
   });
 
   it(`GET /sector-industries?ukefSectorId=1234`, async () => {
-    const { status, body } = await api.get('/sector-industries?ukefSectorId=1234');
+    const { status } = await api.get('/sector-industries?ukefSectorId=1234');
     expect(status).toBe(404);
   });
 

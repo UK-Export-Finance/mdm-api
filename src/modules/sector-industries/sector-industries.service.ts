@@ -14,17 +14,16 @@ export class SectorIndustriesService {
 
   async find(ukefSectorIdInput, ukefIndustryId): Promise<SectorIndustryEntity[]> {
     try {
-      let whereConditions: object;
+      let query: object = { effectiveTo: Equal(new Date('9999-12-31 00:00:00.000')) };
 
-      whereConditions = { effectiveTo: Equal(new Date('9999-12-31 00:00:00.000')) };
       if (ukefSectorIdInput) {
-        whereConditions = { ...whereConditions, ukefSectorId: ukefSectorIdInput };
+        query = { ...query, ukefSectorId: ukefSectorIdInput };
       }
       if (ukefIndustryId) {
-        whereConditions = { ...whereConditions, ukefIndustryId: ukefIndustryId };
+        query = { ...query, ukefIndustryId: ukefIndustryId };
       }
 
-      const results = await this.sectorIndustries.find({ where: whereConditions });
+      const results = await this.sectorIndustries.find({ where: query });
 
       if (results && !results[0]) {
         throw new NotFoundException('No results for your search criteria');
@@ -33,6 +32,7 @@ export class SectorIndustriesService {
       return results;
     } catch (err) {
       if (err instanceof NotFoundException) {
+        this.logger.warn(err);
         throw err;
       } else {
         this.logger.error(err);
