@@ -14,6 +14,7 @@ describe('AppController (e2e)', () => {
 
   it(`GET /ready`, async () => {
     const { status } = await api.get('/ready');
+
     expect(status).toBe(200);
   });
 

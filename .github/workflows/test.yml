@@ -62,4 +62,4 @@ jobs:
 
       - name: Execute
         working-directory: ./
-        run: npm run test
+        run: npm run unit-test
