@@ -11,7 +11,7 @@ describe('SectorIndustriesController', () => {
   let sectorIndustriesController: SectorIndustriesController;
   let sectorIndustriesService: SectorIndustriesService;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [SectorIndustriesController],
       providers: [
