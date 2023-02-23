@@ -21,6 +21,7 @@ const config: JestConfigWithTsJest = {
       testMatch: ['**/*.test.ts'],
       transform: { '^.+\\.(ts|tsx)?$': ['ts-jest', { useESM: true }] },
       ...defaultSettings,
+      rootDir: 'src', // Since unit tests are created inside `src`
     },
     {
       displayName: 'API',
