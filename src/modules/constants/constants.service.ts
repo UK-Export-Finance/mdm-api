@@ -23,7 +23,6 @@ export class ConstantsService {
       }
 
       const fieldMap = DbResponseHelper.getApiNameToDbNameMap(this.constantsCisRepository);
-
       const renamedResults = DbResponseHelper.renameDbResultFields(this.constantsCisRepository, fieldMap, spResults);
 
       // Transform results to match logic in old implementation.

@@ -1,16 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
-import { AfterLoad, Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity({
   name: 'SPI_COEFFICIENT',
   schema: 'dbo',
 })
 export class ConstantSpiEntity {
-  /**
-   * Constant results from CIS SP
-   * @example
-   */
   @PrimaryColumn({ name: 'DWD_COEFFICIENT_ID' })
   id: number;
 
@@ -41,10 +36,10 @@ export class ConstantSpiEntity {
   constQualityGrade: string;
 
   @Column({ name: 'CONST_REPAYMENT_FREQUENCY' })
-  @ApiProperty({ example: 2 })
+  @ApiProperty({ example: 2, description: 'At the moment values is same for all records.' })
   constRepaymentFrequency: number;
 
   @Column({ name: 'CONST_INTEREST_RATE' })
-  @ApiProperty({ example: 4 })
+  @ApiProperty({ example: 4, description: 'At the moment values is same for all records.' })
   constInterestRate: number;
 }
