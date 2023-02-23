@@ -23,12 +23,12 @@ export class SectorIndustriesController {
     name: 'ukefIndustryId',
     type: 'string',
     required: false,
-    description: 'Search by UKEF Industry id, most likely returns 1 result.',
+    description: 'Search by UKEF Industry id, most likely returns 1 result',
     example: '35220',
   })
   @ApiResponse({
     status: 200,
-    type: SectorIndustryEntity,
+    type: [SectorIndustryEntity],
   })
   find(@Query() query: GetSectorIndustriesQueryDto): Promise<SectorIndustryEntity[]> {
     return this.sectorIndustriesService.find(query.ukefSectorId, query.ukefIndustryId);

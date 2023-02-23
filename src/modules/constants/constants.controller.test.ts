@@ -7,7 +7,7 @@ import { GetConstantsSpiQueryDto } from './dto/get-constants-spi-query.dto';
 
 const chance = new Chance();
 
-describe('ConstantsService', () => {
+describe('ConstantsController', () => {
   let constantsController: ConstantsController;
   let constantsService: ConstantsService;
 

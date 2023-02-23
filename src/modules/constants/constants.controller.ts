@@ -16,21 +16,21 @@ export class ConstantsController {
   @ApiResponse({
     status: 200,
     description: 'The found record',
-    type: ConstantSpiEntity,
+    type: [ConstantSpiEntity],
   })
   @ApiParam({
     name: 'oecdRiskCategory',
     required: false,
     type: 'int',
-    description: 'Country risk category',
+    description: 'Country risk category. Values from 0 to 7',
     example: 1,
   })
   @ApiParam({
     name: 'category',
     type: 'string',
     required: false,
-    description: 'Constant category/type/group',
-    example: ['C', 'Quality of Product'],
+    description: 'Constant category/type/group. Values: A, B, C, Quality of Product, Percentage of Cover',
+    example: 'C',
   })
   find(@Query() query: GetConstantsSpiQueryDto): Promise<ConstantSpiEntity[]> {
     return this.constantsService.find(query.oecdRiskCategory, query.category);

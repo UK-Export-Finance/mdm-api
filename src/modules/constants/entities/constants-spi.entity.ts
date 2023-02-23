@@ -16,7 +16,7 @@ export class ConstantSpiEntity {
       from: (value: string) => value.toString(),
     },
   })
-  @ApiProperty({ examples: ['C', 'Quality of Product'] })
+  @ApiProperty({ examples: ['A', 'B', 'C', 'Quality of Product', 'Percentage of Cover'] })
   category: string;
 
   @Column({ name: 'COEFFICIENT_SUB_CATEGORY' })
@@ -24,7 +24,7 @@ export class ConstantSpiEntity {
   subCategory: string;
 
   @Column({ name: 'OECD_RISK_CATEGORY_CALC' })
-  @ApiProperty({ example: '1' })
+  @ApiProperty({ example: '1', description: 'Values are 0 to 7' })
   oecdRiskCategory: string;
 
   @Column({ name: 'VALUE' })

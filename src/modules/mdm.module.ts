@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConstantsModule } from '@ukef/module/constants/constants.module';
 import { HealthcheckModule } from '@ukef/module/healthcheck/healthcheck.module';
 import { InterestRatesModule } from '@ukef/module/interest-rates/interest-rates.module';
 import { MarketsModule } from '@ukef/module/markets/markets.module';

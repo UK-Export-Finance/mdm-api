@@ -12,7 +12,7 @@ export class InterestRatesController {
   @Get()
   @ApiResponse({
     status: 200,
-    type: InterestRatesEntity,
+    type: [InterestRatesEntity],
   })
   findAll(): Promise<InterestRatesEntity[]> {
     return this.interestRatesService.findAll();
