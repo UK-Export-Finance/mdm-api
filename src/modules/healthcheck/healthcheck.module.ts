@@ -1,6 +1,6 @@
-import { MsSqlCedarDatabaseModule, MsSqlCisDatabaseModule, MsSqlMdmDatabaseModule, MsSqlNumberGeneratorDatabaseModule } from '@mdm/database';
 import { Module } from '@nestjs/common';
 import { TerminusModule } from '@nestjs/terminus';
+import { MsSqlCedarDatabaseModule, MsSqlCisDatabaseModule, MsSqlMdmDatabaseModule, MsSqlNumberGeneratorDatabaseModule } from '@ukef/database';
 
 import { HealthcheckController } from './healthcheck.controller';
 

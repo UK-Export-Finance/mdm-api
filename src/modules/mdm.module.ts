@@ -1,9 +1,9 @@
-import { HealthcheckModule } from '@mdm/module/healthcheck/healthcheck.module';
-import { InterestRatesModule } from '@mdm/module/interest-rates/interest-rates.module';
-import { MarketsModule } from '@mdm/module/markets/markets.module';
-import { NumbersModule } from '@mdm/module/numbers/numbers.module';
-import { SectorIndustriesModule } from '@mdm/module/sector-industries/sector-industries.module';
 import { Module } from '@nestjs/common';
+import { HealthcheckModule } from '@ukef/module/healthcheck/healthcheck.module';
+import { InterestRatesModule } from '@ukef/module/interest-rates/interest-rates.module';
+import { MarketsModule } from '@ukef/module/markets/markets.module';
+import { NumbersModule } from '@ukef/module/numbers/numbers.module';
+import { SectorIndustriesModule } from '@ukef/module/sector-industries/sector-industries.module';
 
 @Module({
   imports: [NumbersModule, HealthcheckModule, MarketsModule, InterestRatesModule, SectorIndustriesModule],

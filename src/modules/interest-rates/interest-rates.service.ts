@@ -1,5 +1,6 @@
 import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { DATE } from '@ukef/constants';
 import { Equal, Repository } from 'typeorm';
 
 import { InterestRatesEntity } from './entities/interest-rate.entity';
@@ -14,7 +15,7 @@ export class InterestRatesService {
 
   findAll(): Promise<InterestRatesEntity[]> {
     try {
-      return this.interestRates.find({ where: { effectiveTo: Equal('9999-12-31 00:00:00.000') } });
+      return this.interestRates.find({ where: { effectiveTo: Equal(DATE.MAXIMUM_LIMIT) } });
     } catch (err) {
       this.logger.error(err);
       throw new InternalServerErrorException();

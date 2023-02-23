@@ -1,5 +1,11 @@
 #!/usr/bin/env sh
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
 . "$(dirname -- "$0")/_/husky.sh"
 
 npx commitlint --edit $1
 npx lint-staged
+
+printf "\n\n${YELLOW}Lint check 🎨${NC}\n\n"
+npm run lint

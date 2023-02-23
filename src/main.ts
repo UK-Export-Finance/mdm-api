@@ -1,9 +1,9 @@
-import { TransformInterceptor } from '@mdm/helpers';
-import { MainModule } from '@mdm/main.module';
-import { SwaggerDocs } from '@mdm/swagger';
 import { Logger as NestLogger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestApplication, NestFactory } from '@nestjs/core';
+import { TransformInterceptor } from '@ukef/helpers';
+import { MainModule } from '@ukef/main.module';
+import { SwaggerDocs } from '@ukef/swagger';
 import compression from 'compression';
 import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
 
