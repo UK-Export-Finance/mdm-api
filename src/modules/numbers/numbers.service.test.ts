@@ -1,7 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { Repository } from 'typeorm';
 
-import { UkefId } from './entities/ukef-id.entity';
 import { NumbersService } from './numbers.service';
 
 describe('NumbersService', () => {

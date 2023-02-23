@@ -1,20 +1,13 @@
 {
+  "extends": "@tsconfig/node18/tsconfig.json",
   "compilerOptions": {
-    "rootDirs": ["src"],
-    "outDir": "dist",
-    "lib": ["ES2022"],
-    "target": "ES2022",
     "module": "commonjs",
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "composite": true,
-    "moduleResolution": "node",
-    "declaration": true,
-    "declarationMap": true,
-    "resolveJsonModule": true,
-    "baseUrl": ".",
+    "outDir": "./dist",
+    "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,
@@ -22,7 +15,15 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
+    "resolveJsonModule": true,
     "esModuleInterop": true,
+    "moduleResolution": "node",
+    "rootDirs": ["src"],
+    "lib": ["ES2022"],
+    "target": "ES2022",
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
     "types": ["jest", "node", "@types/jest"],
     "sourceMap": true,
     "paths": {
@@ -33,9 +34,6 @@
       "@mdm/module/*": ["src/modules/*"]
     }
   },
-  "ts-node": {
-    "esm": true,
-    "experimentalSpecifierResolution": "node"
-  },
-  "include": ["./src/**/*", "./test/*", "./test/**/*"]
+  "include": ["src", "test", "jest.config.ts"],
+  "exclude": ["node_modules", "dist", "*coverage", "logs", "scripts"]
 }

@@ -14,6 +14,7 @@ describe('Interest rates', () => {
 
   it(`GET /interest-rates`, async () => {
     const { status, body } = await api.get('/interest-rates');
+
     expect(status).toBe(200);
     expect(body).toEqual(
       expect.arrayContaining([
