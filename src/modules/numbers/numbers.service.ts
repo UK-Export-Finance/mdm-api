@@ -43,6 +43,7 @@ export class NumbersService {
       return this.mapFieldsFromDbToApi(dbNumber[0]);
     } catch (err) {
       if (err instanceof NotFoundException || err instanceof BadRequestException) {
+        this.logger.warn(err);
         throw err;
       } else {
         // We need to log original error or it will be lost.
