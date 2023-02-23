@@ -1,3 +1,4 @@
+import { DATE } from '@mdm/constants';
 import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Equal, Repository } from 'typeorm';
@@ -14,7 +15,7 @@ export class SectorIndustriesService {
 
   async find(ukefSectorIdInput, ukefIndustryId): Promise<SectorIndustryEntity[]> {
     try {
-      let query: object = { effectiveTo: Equal(new Date('9999-12-31 00:00:00.000')) };
+      let query: object = { effectiveTo: Equal(new Date(DATE.MAXIMUM_LIMIT)) };
 
       if (ukefSectorIdInput) {
         query = { ...query, ukefSectorId: ukefSectorIdInput };

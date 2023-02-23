@@ -7,6 +7,7 @@ const defaultSettings = {
   testEnvironment: 'node',
   moduleFileExtensions: ['ts', 'js', 'json', 'node'],
   moduleNameMapper: {
+    '@mdm/constants/(.*)': '<rootDir>/../src/constants/$1',
     '@mdm/config/(.*)': '<rootDir>/../src/config/$1',
     '@mdm/helpers/(.*)': '<rootDir>/../src/helpers/$1',
     '@mdm/module/(.*)': '<rootDir>/../src/modules/$1',

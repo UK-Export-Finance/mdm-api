@@ -1,3 +1,4 @@
+import { DATE } from '@mdm/constants';
 import { ClassSerializerInterceptor, UseInterceptors } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, PrimaryColumn } from 'typeorm';
@@ -33,7 +34,7 @@ export class MarketEntity {
   effectiveFromDatetime: Date;
 
   @Column({ name: 'EFFECTIVE_FROM_DATE' })
-  @ApiProperty({ example: '9999-12-31T00:00:00.000Z', description: 'Effective from' })
+  @ApiProperty({ example: DATE.MAXIMUM_TIMEZONE_LIMIT, description: 'Effective from' })
   effectiveToDatetime: Date;
 
   @Column({ name: 'OECD_RISK_CATEGORY_DESC' })

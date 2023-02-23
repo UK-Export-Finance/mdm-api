@@ -28,6 +28,7 @@
     "sourceMap": true,
     "paths": {
       "@mdm/*": ["src/*"],
+      "@mdm/constants/*": ["src/constants/index"],
       "@mdm/config/*": ["src/config/index"],
       "@mdm/database/*": ["src/database/index"],
       "@mdm/helpers/*": ["src/helpers/*"],
