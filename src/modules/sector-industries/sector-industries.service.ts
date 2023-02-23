@@ -1,4 +1,4 @@
-import { DATE } from '@mdm/constants';
+import { DATE } from '@ukef/constants';
 import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Equal, Repository } from 'typeorm';

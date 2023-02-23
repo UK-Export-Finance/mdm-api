@@ -1,6 +1,6 @@
-import config from '@mdm/config';
-import { MsSqlCedarDatabaseModule, MsSqlCisDatabaseModule, MsSqlMdmDatabaseModule, MsSqlNumberGeneratorDatabaseModule } from '@mdm/database';
-import { MdmModule } from '@mdm/module/mdm.module';
+import config from '@ukef/config';
+import { MsSqlCedarDatabaseModule, MsSqlCisDatabaseModule, MsSqlMdmDatabaseModule, MsSqlNumberGeneratorDatabaseModule } from '@ukef/database';
+import { MdmModule } from '@ukef/module/mdm.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { LoggerModule } from 'nestjs-pino';

@@ -1,4 +1,4 @@
-import { DATE } from '@mdm/constants';
+import { DATE } from '@ukef/constants';
 import { ClassSerializerInterceptor, UseInterceptors } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, PrimaryColumn } from 'typeorm';

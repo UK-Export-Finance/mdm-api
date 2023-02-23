@@ -27,12 +27,12 @@
     "types": ["jest", "node", "@types/jest"],
     "sourceMap": true,
     "paths": {
-      "@mdm/*": ["src/*"],
-      "@mdm/constants/*": ["src/constants/index"],
-      "@mdm/config/*": ["src/config/index"],
-      "@mdm/database/*": ["src/database/index"],
-      "@mdm/helpers/*": ["src/helpers/*"],
-      "@mdm/module/*": ["src/modules/*"]
+      "@ukef/*": ["src/*"],
+      "@ukef/constants/*": ["src/constants/index"],
+      "@ukef/config/*": ["src/config/index"],
+      "@ukef/database/*": ["src/database/index"],
+      "@ukef/helpers/*": ["src/helpers/*"],
+      "@ukef/module/*": ["src/modules/*"]
     }
   },
   "include": ["src", "test", "jest.config.ts"],
