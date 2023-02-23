@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.5.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.4.0...v1.5.0) (2023-02-23)
+
+
+### Features
+
+* added GET `/sector-industries` endpoint ([#30](https://github.com/UK-Export-Finance/mdm-api/issues/30)) ([67d8a92](https://github.com/UK-Export-Finance/mdm-api/commit/67d8a92770dd86f8b5c73e658ecf0e132b72a455))
+* get sector industries, old endpoint was GET /map-industry-sector ([17ca19f](https://github.com/UK-Export-Finance/mdm-api/commit/17ca19f68801c31afd1f0a59826090ad4c25da80))
+* **unit-test:** Unit testing on GHA ([#28](https://github.com/UK-Export-Finance/mdm-api/issues/28)) ([fd15ee4](https://github.com/UK-Export-Finance/mdm-api/commit/fd15ee42a8b068536ad76b308f008b63b8413712))
+
+
+### Bug Fixes
+
+* **API-82:** Consistent testing approach ([#31](https://github.com/UK-Export-Finance/mdm-api/issues/31)) ([5f2aa6e](https://github.com/UK-Export-Finance/mdm-api/commit/5f2aa6eb41af4a61408048ad4a1ffccaeff7f7b1))
+* fix test preparation ([50f2dc6](https://github.com/UK-Export-Finance/mdm-api/commit/50f2dc690422c48a956fe3e1d2248255bf6498b6))
+* sector-industry code improvements based on PR comments ([5da452c](https://github.com/UK-Export-Finance/mdm-api/commit/5da452c661b16ac0d13536ecd23c5e3fc7f4ea63))
+
 ## [1.4.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.3.1...v1.4.0) (2023-02-21)
 
 
