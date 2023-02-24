@@ -29,7 +29,7 @@ export class NumbersController {
   @ApiResponse({
     status: 200,
     description: 'The found record',
-    type: UkefId,
+    type: [UkefId],
   })
   @ApiParam({
     name: 'type',

@@ -32,7 +32,8 @@
     "pino",
     "Dockerised",
     "CILC",
-    "BBALIBOR"
+    "BBALIBOR",
+    "szenius"
   ],
   "dictionaries": [
     "en-gb",

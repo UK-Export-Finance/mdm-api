@@ -127,7 +127,7 @@ describe('NumbersService', () => {
     findOne: jest.fn((entity) => entity),
   }));
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module = await Test.createTestingModule({
       providers: [NumbersService, { provide: 'mssql-number-generator_UkefIdRepository', useFactory: repositoryMockFactory }],
     }).compile();
