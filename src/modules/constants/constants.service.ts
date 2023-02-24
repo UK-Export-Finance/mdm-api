@@ -1,8 +1,8 @@
 import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { DbResponseHelper } from '@ukef/helpers/db-response.helper';
 import { Repository } from 'typeorm';
 
-import { DbResponseHelper } from '../../helpers/db-response.helper';
 import { ConstantSpiEntity } from './entities/constants-spi.entity';
 
 @Injectable()
