@@ -40,9 +40,8 @@ const main = async () => {
   // Swagger docs
   SwaggerDocs(app);
 
-  app.useGlobalInterceptors(new TransformInterceptor());
-  app.useGlobalInterceptors(new LoggerErrorInterceptor());
   app.useLogger(app.get(Logger));
+  app.useGlobalInterceptors(new TransformInterceptor());
 
   app.use(
     compression({

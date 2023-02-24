@@ -13,15 +13,15 @@ export class SectorIndustriesService {
     private readonly sectorIndustries: Repository<SectorIndustryEntity>,
   ) {}
 
-  async find(ukefSectorIdInput, ukefIndustryId): Promise<SectorIndustryEntity[]> {
+  async find(ukefSectorId: string, ukefIndustryId: string): Promise<SectorIndustryEntity[]> {
     try {
       let query: object = { effectiveTo: Equal(new Date(DATE.MAXIMUM_LIMIT)) };
 
-      if (ukefSectorIdInput) {
-        query = { ...query, ukefSectorId: ukefSectorIdInput };
+      if (ukefSectorId) {
+        query = { ...query, ukefSectorId };
       }
       if (ukefIndustryId) {
-        query = { ...query, ukefIndustryId: ukefIndustryId };
+        query = { ...query, ukefIndustryId };
       }
 
       const results = await this.sectorIndustries.find({ where: query });
