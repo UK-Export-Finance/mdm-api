@@ -48,11 +48,11 @@ export class CurrenciesController {
     name: 'exchangeRateDate',
     required: false,
     type: 'string',
-    description: 'retrieve the exchange rate for a specific date',
+    description: 'Retrieve the exchange rate for a specific date',
     example: '2021-01-26',
   })
   findCurrencyExchange(@Query() query: GetCurrencyExchangeDto): Promise<CurrencyExchangeEntity[]> {
-    return this.currenciesService.findOneExchange(query.source, query.target, query.exchangeRateDate);
+    return this.currenciesService.findOneExchangeRate(query.source, query.target, query.exchangeRateDate);
   }
 
   @ApiResponse({

@@ -50,7 +50,7 @@ export class CurrenciesService {
     }
   }
 
-  async findOneExchange(source: string, target: string, exchangeRateDate?: string): Promise<CurrencyExchangeEntity[]> {
+  async findOneExchangeRate(source: string, target: string, exchangeRateDate?: string): Promise<CurrencyExchangeEntity[]> {
     try {
       const results = await this.currencyExchange.query('USP_READ_CURRENCY_EXCHANGE_RATE @0, @1, @2', [source, target, exchangeRateDate]);
 
