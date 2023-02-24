@@ -1,10 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import Chance from 'chance';
 
 import { CurrenciesController } from './currencies.controller';
 import { CurrenciesService } from './currencies.service';
-import { GetCurrencyExchangeDto } from './dto/get-currency-exchange.dto';
-const chance = new Chance();
 
 describe('CurrenciesController', () => {
   let currencyController: CurrenciesController;

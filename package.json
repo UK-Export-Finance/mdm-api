@@ -6,6 +6,7 @@
   "license": "MIT",
   "author": "UKEF",
   "scripts": {
+    "api-test": "jest --selectProjects API",
     "prebuild": "rimraf dist",
     "build": "nest build && npm run copyfiles",
     "build:prod": "rimraf dist/ && npm run build",
@@ -19,11 +20,10 @@
     "start:debug": "nest start --debug --watch",
     "start:dev": "nest start --tsc --watch",
     "start:prod": "node dist/src/main",
-    "unit-test": "jest --selectProjects Unit",
-    "api-test": "jest --selectProjects API",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "unit-test": "jest --selectProjects Unit"
   },
   "dependencies": {
     "@nestjs/common": "^9.3.8",
