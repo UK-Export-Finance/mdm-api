@@ -44,8 +44,15 @@ export class CurrenciesController {
     description: 'The target currency for exchange rate - Use ISO 3 alpha currency code standard',
     example: 'AED',
   })
+  @ApiParam({
+    name: 'exchangeRateDate',
+    required: false,
+    type: 'string',
+    description: 'retrieve the exchange rate for a specific date',
+    example: '2021-01-26',
+  })
   findCurrencyExchange(@Query() query: GetCurrencyExchangeDto): Promise<CurrencyExchangeEntity[]> {
-    return this.currenciesService.findOneExchange(query.source, query.target);
+    return this.currenciesService.findOneExchange(query.source, query.target, query.exchangeRateDate);
   }
 
   @ApiResponse({
