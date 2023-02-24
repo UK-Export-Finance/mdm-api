@@ -58,8 +58,4 @@ export class CurrencyExchangeEntity {
   @Column({ name: 'EFFECTIVE_FROM_DATETIME', type: 'timestamp' })
   @ApiProperty({ example: '2010-03-15 00:00:00.000' })
   effectiveFrom: string;
-
-  // @OneToOne(() => DWDCurrencyEntity)
-  // @JoinColumn()
-  // currency: DWDCurrencyEntity;
 }
