@@ -12,35 +12,35 @@ export class CurrencyExchangeEntity {
   id: number;
 
   @Column({ name: 'SOURCE_CURRENCY_ID' })
-  @ApiProperty({ example: 'EUROS' })
+  @ApiProperty({ example: '12' })
   sourceCurrencyId: string;
 
   @Column({ name: 'TARGET_CURRENCY_ID' })
-  @ApiProperty({ example: 'EUR', description: 'Currency ISO code' })
+  @ApiProperty({ example: '37', description: 'Currency ISO code' })
   targetCurrencyId: string;
 
-  @Column({ name: 'SOURCE_TARGET_CURRENCY_PAIR', type: 'timestamp' })
-  @ApiProperty({ example: '2010-03-15 16:13:34.000' })
+  @Column({ name: 'SOURCE_TARGET_CURRENCY_PAIR' })
+  @ApiProperty({ example: 'USD-USD X-RATE' })
   currencyPair: number;
 
-  @Column({ name: 'PX_BID_PRICE', type: 'timestamp' })
-  @ApiProperty({ example: '2010-03-15 00:00:00.000' })
+  @Column({ name: 'PX_BID_PRICE' })
+  @ApiProperty({ example: '1' })
   bidPrice: string;
 
-  @Column({ name: 'PX_ASK_PRICE', type: 'timestamp' })
-  @ApiProperty({ example: '2010-03-15 00:00:00.000' })
+  @Column({ name: 'PX_ASK_PRICE' })
+  @ApiProperty({ example: '1' })
   askPrice: string;
 
-  @Column({ name: 'PX_LAST_PRICE', type: 'timestamp' })
-  @ApiProperty({ example: '2010-03-15 00:00:00.000' })
+  @Column({ name: 'PX_LAST_PRICE' })
+  @ApiProperty({ example: '1' })
   lastPrice: string;
 
-  @Column({ name: 'PX_MID_PRICE', type: 'timestamp' })
-  @ApiProperty({ example: '2010-03-15 00:00:00.000' })
+  @Column({ name: 'PX_MID_PRICE' })
+  @ApiProperty({ example: '1' })
   midPrice: string;
 
-  @Column({ name: 'SOURCE_ERROR_CODE', type: 'timestamp' })
-  @ApiProperty({ example: '2010-03-15 00:00:00.000' })
+  @Column({ name: 'SOURCE_ERROR_CODE' })
+  @ApiProperty({ example: '0' })
   errorCode: string;
 
   @Column({ name: 'DATE_CREATED_DATETIME', type: 'timestamp' })
