@@ -81,20 +81,20 @@ describe('Constants SPI', () => {
     expect(body.message).toContain('category must match /^[a-zA-Z ]{1,20}$/ regular expression');
   });
 
+  // category=null is accepted as correct text input.
   it(`GET /constants/spi?oecdRiskCategory=null&category=null`, async () => {
-    const { status, body } = await api.get('/constants/spi?oecdRiskCategory=aaa&category=Some long not existing category;yes');
+    const { status, body } = await api.get('/constants/spi?oecdRiskCategory=null&category=null');
     expect(status).toBe(400);
     expect(body.message).toContain('oecdRiskCategory must not be greater than 7');
     expect(body.message).toContain('oecdRiskCategory must be an integer number');
-    expect(body.message).toContain('category must match /^[a-zA-Z ]{1,20}$/ regular expression');
   });
 
+  // category=undefined is accepted as correct text input.
   it(`GET /constants/spi?oecdRiskCategory=undefined&category=undefined`, async () => {
-    const { status, body } = await api.get('/constants/spi?oecdRiskCategory=aaa&category=Some long not existing category;yes');
+    const { status, body } = await api.get('/constants/spi?oecdRiskCategory=undefined&category=undefined');
     expect(status).toBe(400);
     expect(body.message).toContain('oecdRiskCategory must not be greater than 7');
     expect(body.message).toContain('oecdRiskCategory must be an integer number');
-    expect(body.message).toContain('category must match /^[a-zA-Z ]{1,20}$/ regular expression');
   });
 
   afterAll(async () => {
