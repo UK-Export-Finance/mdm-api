@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.6.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.5.0...v1.6.0) (2023-02-24)
+
+
+### Features
+
+* **API-83:** GET `/constants/spi` ([#38](https://github.com/UK-Export-Finance/mdm-api/issues/38)) ([689c424](https://github.com/UK-Export-Finance/mdm-api/commit/689c424f9d64937b34e001c769f7bde44a68935b))
+* new endpoint GET `/exposure-period` ([#39](https://github.com/UK-Export-Finance/mdm-api/issues/39)) ([71344f3](https://github.com/UK-Export-Finance/mdm-api/commit/71344f347b1790f40e4fa01888b17bd427f28418))
+
+
+### Miscellaneous
+
+* **deps:** update szenius/set-timezone action to v1.1 ([2697267](https://github.com/UK-Export-Finance/mdm-api/commit/26972672ccf38133e0b1185d7574fac33595ca1b))
+* **deps:** update szenius/set-timezone action to v1.1 ([#36](https://github.com/UK-Export-Finance/mdm-api/issues/36)) ([e5a52ac](https://github.com/UK-Export-Finance/mdm-api/commit/e5a52acb0765d96e412abb0bf4ae0a2c3c8d1448))
+
 ## [1.5.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.4.0...v1.5.0) (2023-02-23)
 
 
