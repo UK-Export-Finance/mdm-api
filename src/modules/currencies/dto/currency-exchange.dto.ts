@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsISO4217CurrencyCode, IsString } from 'class-validator';
+import { IsDateString, IsISO4217CurrencyCode, IsOptional } from 'class-validator';
 
 export class GetCurrencyExchangeDto {
   @IsISO4217CurrencyCode()
@@ -10,7 +10,8 @@ export class GetCurrencyExchangeDto {
   @ApiProperty({ example: 'AED' })
   readonly target: string;
 
-  @IsString()
+  @IsDateString()
+  @IsOptional()
   @ApiProperty({ example: '2021-01-26' })
   readonly exchangeRateDate: string;
 }

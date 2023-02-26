@@ -1,5 +1,6 @@
 import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { DATABASE } from '@ukef/constants';
 import { DbResponseHelper } from '@ukef/helpers/db-response.helper';
 import { Repository } from 'typeorm';
 
@@ -10,7 +11,7 @@ export class ConstantsService {
   private readonly logger = new Logger();
 
   constructor(
-    @InjectRepository(ConstantSpiEntity, 'mssql-cis')
+    @InjectRepository(ConstantSpiEntity, DATABASE.CIS)
     private readonly constantsCisRepository: Repository<ConstantSpiEntity>,
   ) {}
 

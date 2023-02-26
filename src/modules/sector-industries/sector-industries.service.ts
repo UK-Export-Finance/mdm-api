@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DATE } from '@ukef/constants';
+import { DATABASE, DATE } from '@ukef/constants';
 import { Equal, Repository } from 'typeorm';
 
 import { SectorIndustryEntity } from './entities/sector-industry.entity';
@@ -9,7 +9,7 @@ import { SectorIndustryEntity } from './entities/sector-industry.entity';
 export class SectorIndustriesService {
   private readonly logger = new Logger();
   constructor(
-    @InjectRepository(SectorIndustryEntity, 'mssql-mdm')
+    @InjectRepository(SectorIndustryEntity, DATABASE.MDM)
     private readonly sectorIndustries: Repository<SectorIndustryEntity>,
   ) {}
 

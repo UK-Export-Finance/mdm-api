@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { CurrenciesController } from './currencies.controller';
 import { CurrenciesService } from './currencies.service';
+import { GetCurrencyExchangeDto } from './dto';
 
 describe('CurrenciesController', () => {
   let currencyController: CurrenciesController;
@@ -16,6 +17,8 @@ describe('CurrenciesController', () => {
           provide: CurrenciesService,
           useValue: {
             findAll: jest.fn().mockResolvedValue([{}]),
+            findOne: jest.fn().mockResolvedValue([{}]),
+            findExchangeRate: jest.fn().mockResolvedValue([{}]),
           },
         },
       ],
@@ -36,6 +39,23 @@ describe('CurrenciesController', () => {
       currencyController.findAll();
 
       expect(currencyService.findAll).toHaveBeenCalled();
+    });
+  });
+
+  describe('fineOne()', () => {
+    it('should return one currency', () => {
+      currencyController.findOne({ isoCode: 'GBP' });
+
+      expect(currencyService.findOne).toHaveBeenCalled();
+    });
+  });
+
+  describe('findCurrencyExchange()', () => {
+    it('should return currency exchange rate', () => {
+      const query = new GetCurrencyExchangeDto();
+      currencyController.findExchangeRate(query);
+
+      expect(currencyService.findExchangeRate).toHaveBeenCalled();
     });
   });
 });

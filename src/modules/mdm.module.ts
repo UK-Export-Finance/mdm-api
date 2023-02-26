@@ -19,6 +19,15 @@ import { SectorIndustriesModule } from '@ukef/module/sector-industries/sector-in
     SectorIndustriesModule,
     CurrenciesModule,
   ],
-  exports: [ConstantsModule, ExposurePeriodModule, HealthcheckModule, InterestRatesModule, MarketsModule, NumbersModule, SectorIndustriesModule],
+  exports: [
+    ConstantsModule,
+    ExposurePeriodModule,
+    HealthcheckModule,
+    InterestRatesModule,
+    MarketsModule,
+    NumbersModule,
+    SectorIndustriesModule,
+    CurrenciesModule,
+  ],
 })
 export class MdmModule {}

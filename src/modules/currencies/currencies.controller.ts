@@ -1,8 +1,8 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { CurrenciesService } from './currencies.service';
-import { GetCurrencyExchangeDto } from './dto/get-currency-exchange.dto';
+import { CurrencyDto, GetCurrencyExchangeDto } from './dto';
 import { CurrencyEntity } from './entities/currency.entity';
 import { CurrencyExchangeEntity } from './entities/currency-exchange.entity';
 
@@ -23,44 +23,55 @@ export class CurrenciesController {
 
   @Get('exchange')
   @ApiOperation({
-    summary: 'Get the Active exchange rate based on the provided source and target exchange rates. Query parameters are mandatory for this endpoint.',
+    summary: 'Get the Active exchange rate based on source and target exchange rates. Query parameters are mandatory for this endpoint.',
   })
   @ApiResponse({
     status: 200,
     description: 'Get the Active exchange rate',
     type: GetCurrencyExchangeDto,
   })
-  @ApiParam({
+  @ApiQuery({
     name: 'source',
     required: true,
     type: 'string',
-    description: 'The source currency for exchange rate - Use ISO 3 alpha currency code standard',
+    description: 'Source currency for exchange rate - Use ISO 3 alpha currency code standard',
     example: 'GBP',
   })
-  @ApiParam({
+  @ApiQuery({
     name: 'target',
     required: true,
     type: 'string',
-    description: 'The target currency for exchange rate - Use ISO 3 alpha currency code standard',
+    description: 'Target currency for exchange rate - Use ISO 3 alpha currency code standard',
     example: 'AED',
   })
-  @ApiParam({
+  @ApiQuery({
     name: 'exchangeRateDate',
     required: false,
     type: 'string',
     description: 'Retrieve the exchange rate for a specific date',
     example: '2021-01-26',
   })
-  findCurrencyExchange(@Query() query: GetCurrencyExchangeDto): Promise<CurrencyExchangeEntity[]> {
-    return this.currenciesService.findOneExchangeRate(query.source, query.target, query.exchangeRateDate);
+  findExchangeRate(@Query() query: GetCurrencyExchangeDto): Promise<CurrencyExchangeEntity[]> {
+    return this.currenciesService.findExchangeRate(query.source, query.target, query.exchangeRateDate);
   }
 
+  @Get(':isoCode')
+  @ApiOperation({
+    summary: 'Get the currency details based on ISO Code',
+  })
   @ApiResponse({
     status: 200,
-    description: 'Get currency by ISO Code',
+    description: 'Currency details based on ISO Code',
+    type: [CurrencyEntity],
   })
-  @Get(':isoCode')
-  findOne(@Param('isoCode') isoCode: string): Promise<CurrencyEntity[]> {
-    return this.currenciesService.findOne(isoCode);
+  @ApiParam({
+    name: 'isoCode',
+    required: true,
+    type: 'string',
+    description: 'ISO Code',
+    example: 'GBP',
+  })
+  findOne(@Param() param: CurrencyDto): Promise<CurrencyEntity[]> {
+    return this.currenciesService.findOne(param.isoCode);
   }
 }

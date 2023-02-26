@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DATE } from '@ukef/constants';
+import { DATABASE, DATE } from '@ukef/constants';
 import { DbResponseHelper } from '@ukef/helpers/db-response.helper';
 import { DataSource, Equal, Repository } from 'typeorm';
 
@@ -11,17 +11,18 @@ import { CurrencyExchangeEntity } from './entities/currency-exchange.entity';
 export class CurrenciesService {
   private readonly logger = new Logger();
   constructor(
-    @InjectRepository(CurrencyEntity, 'mssql-mdm')
+    @InjectRepository(CurrencyEntity, DATABASE.MDM)
     private readonly currency: Repository<CurrencyEntity>,
-    @InjectRepository(CurrencyExchangeEntity, 'mssql-cedar')
+    @InjectRepository(CurrencyExchangeEntity, DATABASE.CEDAR)
     private readonly currencyExchange: DataSource,
-    @InjectRepository(CurrencyExchangeEntity, 'mssql-cedar')
+    @InjectRepository(CurrencyExchangeEntity, DATABASE.CEDAR)
     private readonly currencyExchangeRepository: Repository<CurrencyExchangeEntity>,
   ) {}
 
-  findAll(): Promise<CurrencyEntity[]> {
+  async findAll(): Promise<CurrencyEntity[]> {
     try {
-      return this.currency.find({ order: { id: 'ASC' } });
+      const result = await this.currency.find({ order: { id: 'ASC' } });
+      return result;
     } catch (err) {
       this.logger.error(err);
       throw new InternalServerErrorException();
@@ -50,7 +51,7 @@ export class CurrenciesService {
     }
   }
 
-  async findOneExchangeRate(source: string, target: string, exchangeRateDate?: string): Promise<CurrencyExchangeEntity[]> {
+  async findExchangeRate(source: string, target: string, exchangeRateDate?: string): Promise<CurrencyExchangeEntity[]> {
     try {
       const results = await this.currencyExchange.query('USP_READ_CURRENCY_EXCHANGE_RATE @0, @1, @2', [source, target, exchangeRateDate]);
 

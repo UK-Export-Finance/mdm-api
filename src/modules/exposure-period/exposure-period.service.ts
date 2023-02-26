@@ -1,5 +1,6 @@
 import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
+import { DATABASE } from '@ukef/constants';
 import { DataSource } from 'typeorm';
 
 import { ExposurePeriodDto } from './dto/exposure-period.dto';
@@ -9,7 +10,7 @@ export class ExposurePeriodService {
   private readonly logger = new Logger();
 
   constructor(
-    @InjectDataSource('mssql-mdm')
+    @InjectDataSource(DATABASE.MDM)
     private readonly mdmDataSource: DataSource,
   ) {}
 

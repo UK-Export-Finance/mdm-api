@@ -1,6 +1,6 @@
 import { ClassSerializerInterceptor, UseInterceptors } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({
   name: 'DWD_CURRENCY_EXCHANGE_RATE',
@@ -48,14 +48,14 @@ export class CurrencyExchangeEntity {
   created: string;
 
   @Column({ name: 'DATE_LAST_UPDATED_DATETIME', type: 'timestamp' })
-  @ApiProperty({ example: '2010-03-15 00:00:00.000' })
+  @ApiProperty({ example: '2010-03-16 00:00:00.000' })
   updated: string;
-
-  @Column({ name: 'EFFECTIVE_TO_DATETIME', type: 'timestamp' })
-  @ApiProperty({ example: '2010-03-15 00:00:00.000' })
-  effectiveTo: string;
 
   @Column({ name: 'EFFECTIVE_FROM_DATETIME', type: 'timestamp' })
   @ApiProperty({ example: '2010-03-15 00:00:00.000' })
   effectiveFrom: string;
+
+  @Column({ name: 'EFFECTIVE_TO_DATETIME', type: 'timestamp' })
+  @ApiProperty({ example: '2010-03-18 00:00:00.000' })
+  effectiveTo: string;
 }

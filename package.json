@@ -6,7 +6,7 @@
   "license": "MIT",
   "author": "UKEF",
   "scripts": {
-    "api-test": "jest --selectProjects API",
+    "api-test": "jest --selectProjects=API --detectOpenHandles --forceExit",
     "prebuild": "rimraf dist",
     "build": "nest build && npm run copyfiles",
     "build:prod": "rimraf dist/ && npm run build",
