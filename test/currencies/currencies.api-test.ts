@@ -90,6 +90,16 @@ describe('Currencies', () => {
       });
     });
 
+    it('should return 400 on GET `/currencies/exchange`', async () => {
+      const { status, body } = await api.get('/currencies/exchange');
+      expect(status).toBe(400);
+      expect(body).toEqual({
+        statusCode: 400,
+        message: ['source must be a valid ISO4217 currency code', 'target must be a valid ISO4217 currency code'],
+        error: 'Bad Request',
+      });
+    });
+
     it('should return 400 on GET `/currencies/exchange?source=GBP`', async () => {
       const { status, body } = await api.get('/currencies/exchange?source=GBP');
       expect(status).toBe(400);

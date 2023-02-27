@@ -8,7 +8,7 @@ describe('CurrenciesController', () => {
   let currencyController: CurrenciesController;
   let currencyService: CurrenciesService;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [CurrenciesController],
       providers: [
