@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { DATABASE } from '@ukef/constants';
 import { Repository } from 'typeorm';
 
 import { CreateUkefIdDto } from './dto/create-ukef-id.dto';
@@ -10,7 +11,7 @@ export class NumbersService {
   private readonly logger = new Logger();
 
   constructor(
-    @InjectRepository(UkefId, 'mssql-number-generator')
+    @InjectRepository(UkefId, DATABASE.NUMBER_GENERATOR)
     private readonly numberRepository: Repository<UkefId>,
   ) {}
 
@@ -46,9 +47,7 @@ export class NumbersService {
         this.logger.warn(err);
         throw err;
       } else {
-        // We need to log original error or it will be lost.
         this.logger.error(err);
-        // Return generic 500.
         throw new InternalServerErrorException();
       }
     }

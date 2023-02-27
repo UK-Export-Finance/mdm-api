@@ -1,5 +1,6 @@
 import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { DATABASE } from '@ukef/constants';
 import { DbResponseHelper } from '@ukef/helpers/db-response.helper';
 import { Repository } from 'typeorm';
 
@@ -10,7 +11,7 @@ export class MarketsService {
   private readonly logger = new Logger();
 
   constructor(
-    @InjectRepository(MarketEntity, 'mssql-cis')
+    @InjectRepository(MarketEntity, DATABASE.CIS)
     private readonly marketsRepository: Repository<MarketEntity>,
   ) {}
 
@@ -20,9 +21,9 @@ export class MarketsService {
 
       if (active) {
         if (active === 'Y') {
-          spResults = spResults.filter((results) => results.ACTIVE_IND === 'Y');
+          spResults = spResults.filter((results: { ACTIVE_IND: string }) => results.ACTIVE_IND === 'Y');
         } else {
-          spResults = spResults.filter((results) => results.ACTIVE_IND !== 'Y');
+          spResults = spResults.filter((results: { ACTIVE_IND: string }) => results.ACTIVE_IND !== 'Y');
         }
       }
 
@@ -32,9 +33,7 @@ export class MarketsService {
 
       return renamedResults;
     } catch (err) {
-      // We need to log original error or it will be lost.
       this.logger.error(err);
-      // Return generic 500.
       throw new InternalServerErrorException();
     }
   }

@@ -5,7 +5,7 @@ import { TransformInterceptor } from '@ukef/helpers';
 import { MainModule } from '@ukef/main.module';
 import { SwaggerDocs } from '@ukef/swagger';
 import compression from 'compression';
-import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
+import { Logger } from 'nestjs-pino';
 
 const main = async () => {
   const app: NestApplication = await NestFactory.create(MainModule, { bufferLogs: true });
@@ -40,9 +40,8 @@ const main = async () => {
   // Swagger docs
   SwaggerDocs(app);
 
-  app.useGlobalInterceptors(new TransformInterceptor());
-  app.useGlobalInterceptors(new LoggerErrorInterceptor());
   app.useLogger(app.get(Logger));
+  app.useGlobalInterceptors(new TransformInterceptor());
 
   app.use(
     compression({

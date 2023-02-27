@@ -6,7 +6,7 @@
   "license": "MIT",
   "author": "UKEF",
   "scripts": {
-    "api-test": "jest --selectProjects API",
+    "api-test": "jest --selectProjects=API --detectOpenHandles --forceExit",
     "prebuild": "rimraf dist",
     "build": "nest build && npm run copyfiles",
     "build:prod": "rimraf dist/ && npm run build",
@@ -36,6 +36,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "compression": "^1.7.4",
+    "date-fns": "^2.29.3",
     "dotenv": "^16.0.3",
     "express-basic-auth": "^1.2.1",
     "mssql": "^9.1.1",

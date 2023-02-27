@@ -1,15 +1,16 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { DATABASE } from '@ukef/constants';
 
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
-      name: 'mssql-cis',
+      name: DATABASE.CIS,
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        name: 'mssql-cis',
+        name: DATABASE.CIS,
         host: configService.get<string>('database.mssql_cis.host'),
         port: configService.get<number>('database.mssql_cis.port'),
         username: configService.get<string>('database.mssql_cis.username'),

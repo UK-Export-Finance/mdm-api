@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DATE } from '@ukef/constants';
+import { DATABASE, DATE } from '@ukef/constants';
 import { Equal, Repository } from 'typeorm';
 
 import { InterestRatesEntity } from './entities/interest-rate.entity';
@@ -9,7 +9,7 @@ import { InterestRatesEntity } from './entities/interest-rate.entity';
 export class InterestRatesService {
   private readonly logger = new Logger();
   constructor(
-    @InjectRepository(InterestRatesEntity, 'mssql-cedar')
+    @InjectRepository(InterestRatesEntity, DATABASE.CEDAR)
     private readonly interestRates: Repository<InterestRatesEntity>,
   ) {}
 
