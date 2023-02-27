@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DATE } from '@ukef/constants';
+import { DATABASE, DATE } from '@ukef/constants';
 import { Equal, Repository } from 'typeorm';
 
 import { SectorIndustryEntity } from './entities/sector-industry.entity';
@@ -9,19 +9,19 @@ import { SectorIndustryEntity } from './entities/sector-industry.entity';
 export class SectorIndustriesService {
   private readonly logger = new Logger();
   constructor(
-    @InjectRepository(SectorIndustryEntity, 'mssql-mdm')
+    @InjectRepository(SectorIndustryEntity, DATABASE.MDM)
     private readonly sectorIndustries: Repository<SectorIndustryEntity>,
   ) {}
 
-  async find(ukefSectorIdInput, ukefIndustryId): Promise<SectorIndustryEntity[]> {
+  async find(ukefSectorId: string, ukefIndustryId: string): Promise<SectorIndustryEntity[]> {
     try {
       let query: object = { effectiveTo: Equal(new Date(DATE.MAXIMUM_LIMIT)) };
 
-      if (ukefSectorIdInput) {
-        query = { ...query, ukefSectorId: ukefSectorIdInput };
+      if (ukefSectorId) {
+        query = { ...query, ukefSectorId };
       }
       if (ukefIndustryId) {
-        query = { ...query, ukefIndustryId: ukefIndustryId };
+        query = { ...query, ukefIndustryId };
       }
 
       const results = await this.sectorIndustries.find({ where: query });

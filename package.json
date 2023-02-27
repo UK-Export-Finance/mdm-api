@@ -6,6 +6,7 @@
   "license": "MIT",
   "author": "UKEF",
   "scripts": {
+    "api-test": "jest --selectProjects=API --detectOpenHandles --forceExit",
     "prebuild": "rimraf dist",
     "build": "nest build && npm run copyfiles",
     "build:prod": "rimraf dist/ && npm run build",
@@ -19,11 +20,10 @@
     "start:debug": "nest start --debug --watch",
     "start:dev": "nest start --tsc --watch",
     "start:prod": "node dist/src/main",
-    "unit-test": "jest --selectProjects Unit",
-    "api-test": "jest --selectProjects API",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "unit-test": "jest --selectProjects Unit"
   },
   "dependencies": {
     "@nestjs/common": "^9.3.8",
@@ -36,6 +36,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "compression": "^1.7.4",
+    "date-fns": "^2.29.3",
     "dotenv": "^16.0.3",
     "express-basic-auth": "^1.2.1",
     "mssql": "^9.1.1",

@@ -2,6 +2,7 @@ import { Controller, Get } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { HealthCheck, HealthCheckService, MemoryHealthIndicator, TypeOrmHealthIndicator } from '@nestjs/terminus';
 import { InjectDataSource } from '@nestjs/typeorm';
+import { DATABASE } from '@ukef/constants';
 import { DataSource } from 'typeorm';
 
 @ApiBearerAuth()
@@ -9,13 +10,13 @@ import { DataSource } from 'typeorm';
 @Controller('')
 export class HealthcheckController {
   constructor(
-    @InjectDataSource('mssql-number-generator')
+    @InjectDataSource(DATABASE.NUMBER_GENERATOR)
     private numberGenerator: DataSource,
-    @InjectDataSource('mssql-cedar')
+    @InjectDataSource(DATABASE.CEDAR)
     private cedar: DataSource,
-    @InjectDataSource('mssql-cis')
+    @InjectDataSource(DATABASE.CIS)
     private cis: DataSource,
-    @InjectDataSource('mssql-mdm')
+    @InjectDataSource(DATABASE.MDM)
     private mdm: DataSource,
     private health: HealthCheckService,
     private db: TypeOrmHealthIndicator,
@@ -28,10 +29,10 @@ export class HealthcheckController {
   @ApiOperation({ summary: 'ready' })
   check() {
     return this.health.check([
-      () => this.db.pingCheck('mssql-number-generator', { connection: this.numberGenerator }),
-      () => this.db.pingCheck('mssql-cedar', { connection: this.cedar }),
-      () => this.db.pingCheck('mssql-cis', { connection: this.cis }),
-      () => this.db.pingCheck('mssql-mdm', { connection: this.mdm }),
+      () => this.db.pingCheck(DATABASE.NUMBER_GENERATOR, { connection: this.numberGenerator }),
+      () => this.db.pingCheck(DATABASE.CEDAR, { connection: this.cedar }),
+      () => this.db.pingCheck(DATABASE.CIS, { connection: this.cis }),
+      () => this.db.pingCheck(DATABASE.MDM, { connection: this.mdm }),
       () => this.mem.checkHeap('mem_heap', 512 * 2 ** 20 /* 512 MB */),
     ]);
   }

@@ -3,6 +3,8 @@
  * Following constants are served:
  *
  * 1. Date
+ * 2. Database name
  */
 
-export * from './date';
+export * from './database-name.constant';
+export * from './date.constant';
