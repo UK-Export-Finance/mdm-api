@@ -34,7 +34,7 @@ export class CurrenciesController {
     name: 'source',
     required: true,
     type: 'string',
-    description: 'Source currency for exchange rate - Use ISO 3 alpha currency code standard',
+    description: 'Source currency for exchange rate - Use ISO 3 alpha currency code standard. Only GBP and USD currencies are supported',
     example: 'GBP',
   })
   @ApiQuery({
