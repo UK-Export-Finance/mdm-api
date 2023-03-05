@@ -8,10 +8,10 @@ import { AuthService } from '../auth.service';
 @Injectable()
 export class ApiKeyStrategy extends PassportStrategy(HeaderAPIKeyStrategy, 'x-api-key') {
   constructor(private authService: AuthService, private configService: ConfigService) {
-    const headerKeyApiKey = configService.get<string>('app.apiKeyStrategy');
+    const headerKeyApiKey: string = configService.get<string>('app.apiKeyStrategy');
     super({ header: headerKeyApiKey, prefix: '' }, true, (apiKey: string, done: (arg0: UnauthorizedException, arg1: boolean) => void) => {
-      const checkKey = this.authService.validateApiKey(apiKey);
-      if (checkKey) {
+      const hasValidKey: boolean = this.authService.validateApiKey(apiKey);
+      if (hasValidKey) {
         done(null, true);
       }
       done(new UnauthorizedException(), null);
