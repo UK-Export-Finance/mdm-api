@@ -15,6 +15,6 @@ export default registerAs(
     globalPrefix: '/api',
     port: process.env.HTTP_PORT ? Number.parseInt(process.env.HTTP_PORT, 10) : 3003,
     apiKey: process.env.API_KEY,
-    apiKeyStrategy: process.env.HEADER_API_KEY_STRATEGY,
+    apiKeyStrategy: process.env.API_KEY_STRATEGY,
   }),
 );
