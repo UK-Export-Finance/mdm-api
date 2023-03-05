@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from '@ukef/auth/auth.module';
+import { AuthService } from '@ukef/auth/auth.service';
 import config from '@ukef/config';
-import { MsSqlCedarDatabaseModule, MsSqlCisDatabaseModule, MsSqlMdmDatabaseModule, MsSqlNumberGeneratorDatabaseModule } from '@ukef/database';
+import { DatabaseModule } from '@ukef/database/database.module';
 import { MdmModule } from '@ukef/module/mdm.module';
 import { LoggerModule } from 'nestjs-pino';
 
@@ -24,13 +26,11 @@ import { LoggerModule } from 'nestjs-pino';
         },
       },
     }),
-    MsSqlMdmDatabaseModule,
-    MsSqlCedarDatabaseModule,
-    MsSqlCisDatabaseModule,
-    MsSqlNumberGeneratorDatabaseModule,
+    AuthModule,
+    DatabaseModule,
     MdmModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [AuthService],
 })
 export class MainModule {}
