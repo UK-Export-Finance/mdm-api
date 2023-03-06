@@ -145,16 +145,27 @@ describe('Premium schedules', () => {
     expect(body.error).toMatch('Bad Request');
     expect(body.message).toContain('facilityURN should not be empty');
     expect(body.message).toContain('facilityURN must be an integer number');
+    expect(body.message).toContain('productGroup must be longer than or equal to 2 characters');
+    expect(body.message).toContain('productGroup must be a string');
     expect(body.message).toContain('productGroup should not be empty');
     expect(body.message).toContain('premiumTypeId should not be empty');
+    expect(body.message).toContain('premiumTypeId must be a number conforming to the specified constraints');
     expect(body.message).toContain('premiumFrequencyId should not be empty');
-    expect(body.message).toContain('guaranteeExpiryDate must be a valid ISO 8601 date string');
+    expect(body.message).toContain('premiumFrequencyId must be a number conforming to the specified constraints');
+    expect(body.message).toContain('guaranteeCommencementDate should not be empty');
     expect(body.message).toContain('guaranteeCommencementDate must be a valid ISO 8601 date string');
+    expect(body.message).toContain('guaranteeExpiryDate should not be empty');
+    expect(body.message).toContain('guaranteeExpiryDate must be a valid ISO 8601 date string');
     expect(body.message).toContain('guaranteePercentage should not be empty');
+    expect(body.message).toContain('guaranteePercentage must be a number conforming to the specified constraints');
     expect(body.message).toContain('guaranteeFeePercentage should not be empty');
+    expect(body.message).toContain('guaranteeFeePercentage must be a number conforming to the specified constraints');
     expect(body.message).toContain('dayBasis should not be empty');
+    expect(body.message).toContain('dayBasis must be a string');
     expect(body.message).toContain('exposurePeriod should not be empty');
+    expect(body.message).toContain('exposurePeriod must be a number conforming to the specified constraints');
     expect(body.message).toContain('maximumLiability should not be empty');
+    expect(body.message).toContain('maximumLiability must be a number conforming to the specified constraints');
   });
 
   afterAll(async () => {
