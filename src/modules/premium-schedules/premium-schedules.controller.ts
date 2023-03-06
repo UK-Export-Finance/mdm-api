@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, HttpStatus, Param, ParseArrayPipe, Post, Res } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Param, ParseArrayPipe, Post, Res } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 
@@ -28,6 +28,7 @@ export class PremiumSchedulesController {
   }
 
   @Get('premium/segments/:facilityId')
+  @ApiOperation({ summary: 'Return previously generated Premium Schedule sequence/segments (aka Income exposures)' })
   @ApiResponse({
     status: 200,
     type: [PremiumScheduleEntity],
