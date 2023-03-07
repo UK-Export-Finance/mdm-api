@@ -13,8 +13,8 @@
     "clean": "rimraf dist/",
     "copyfiles": "copyfiles -u 1 public/* dist/public",
     "postinstall": "husky install",
-    "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint . --ext .ts --fix",
+    "lint": "eslint ./src --ext .ts",
+    "lint:fix": "eslint ./src --ext .ts --fix",
     "prepare": "husky install",
     "start": "nest start",
     "start:debug": "nest start --debug --watch",
@@ -23,7 +23,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:watch": "jest --watch",
-    "unit-test": "jest --selectProjects=Unit --detectOpenHandles"
+    "unit-test": "jest --selectProjects=Unit"
   },
   "dependencies": {
     "@nestjs/common": "^9.3.9",

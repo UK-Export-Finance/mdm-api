@@ -1,11 +1,10 @@
-import { Logger } from '@nestjs/common';
+import { INestApplication, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { NestApplication } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import basicAuth from 'express-basic-auth';
 import { SwaggerTheme } from 'swagger-themes';
 
-export const SwaggerDocs = (app: NestApplication) => {
+export const SwaggerDocs = (app: INestApplication) => {
   const configService = app.get(ConfigService);
   const logger = new Logger();
   const theme = new SwaggerTheme('v3');

@@ -1,5 +1,5 @@
 {
-  "*.ts": ["eslint --fix"],
+  "*.ts": ["eslint ./src --ext .ts --fix"],
   "package.json": ["sort-package-json"],
   "*": ["cspell lint --no-summary --no-progress --no-must-find-files"]
 }
