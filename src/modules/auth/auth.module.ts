@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 
 import { AuthService } from './auth.service';
-import { ApiKeyStrategy } from './strategy/apikey.strategy';
+import { ApiKeyStrategy } from './strategy/api-key.strategy';
 
 @Module({
   imports: [PassportModule],

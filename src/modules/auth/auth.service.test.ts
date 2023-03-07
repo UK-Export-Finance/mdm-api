@@ -4,7 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import Chance from 'chance';
 
 import { AuthService } from './auth.service';
-import { ApiKeyStrategy } from './strategy/apikey.strategy';
+import { ApiKeyStrategy } from './strategy/api-key.strategy';
 
 describe('AuthService', () => {
   let spyService: AuthService;

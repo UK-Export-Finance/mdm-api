@@ -4,6 +4,7 @@ import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@ne
 import { ConstantsService } from './constants.service';
 import { GetConstantsSpiQueryDto } from './dto/get-constants-spi-query.dto';
 import { ConstantSpiEntity } from './entities/constants-spi.entity';
+
 @ApiBearerAuth()
 @ApiTags('constants')
 @Controller('constants')

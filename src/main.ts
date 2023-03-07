@@ -1,7 +1,7 @@
 import { Logger as NestLogger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestApplication, NestFactory } from '@nestjs/core';
-import { ApiKeyAuthGuard } from '@ukef/auth/guard/apiKey.guard';
+import { ApiKeyAuthGuard } from '@ukef/auth/guard/api-key.guard';
 import { TransformInterceptor } from '@ukef/helpers';
 import { MainModule } from '@ukef/main.module';
 import { SwaggerDocs } from '@ukef/swagger';

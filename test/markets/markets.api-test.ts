@@ -68,7 +68,7 @@ describe('Markets', () => {
     );
   });
 
-  it(`compares GET /markets?active=Y and GET /markets?active=N`, async () => {
+  it(`returns more results from GET /markets?active=Y than GET /markets?active=N`, async () => {
     const responseActive = await api.get('/markets?active=Y');
     const responseDisabled = await api.get('/markets?active=N');
 
