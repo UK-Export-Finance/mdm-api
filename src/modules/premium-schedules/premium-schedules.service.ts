@@ -80,10 +80,13 @@ export class PremiumSchedulesService {
       const renamedResults = DbResponseHelper.renameDbResultFields(this.premiumSchedulesRepository, fieldMap, spResults);
 
       // Transform results to match logic in old implementation.
-      // Remove time part of field calculationDate.
-      renamedResults.forEach((result) => (result.calculationDate = result.calculationDate.toISOString().split('T')[0]));
+      const transformedResults = renamedResults.map((result) => {
+        // Remove time part of Date field calculationDate.
+        result.calculationDate = result.calculationDate.toISOString().split('T')[0];
+        return result;
+      });
 
-      return renamedResults;
+      return transformedResults;
     } catch (err) {
       this.logger.error(err);
       throw new InternalServerErrorException();

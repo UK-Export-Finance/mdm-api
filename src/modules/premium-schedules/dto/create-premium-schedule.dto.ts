@@ -1,31 +1,39 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Length, MaxLength } from 'class-validator';
+import { IsDateString, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Length, Matches, Max, Min } from 'class-validator';
 
 export class CreatePremiumScheduleDto {
   @IsInt()
   @IsNotEmpty()
-  @ApiProperty({ example: 10588388, description: 'Can be BS or EW' })
+  @ApiProperty({
+    example: 30000425,
+    description: 'UKEF id for Facility, but without 00 at beginning. Usually UKEF id is string, but in this endpoint it is number',
+  })
   readonly facilityURN: number;
 
   @IsString()
   @IsNotEmpty()
-  @Length(2, 2)
-  @ApiProperty({ example: 'BS', description: 'Can be BS or EW' })
+  @Length(2)
+  @Matches(/^(EW|BS)$/)
+  @ApiProperty({ example: 'BS', description: 'Two products are accepted: EW and BS' })
   readonly productGroup: string;
 
   @IsNumber()
   @IsNotEmpty()
+  @Min(1)
+  @Max(3)
   @ApiProperty({
     example: 1,
-    description: 'Premium type concerns how we are being paid... In Arrears, In advance or one lump sum. See MASTER_DATA.dbo.WF_PREMIUM_TYPE',
+    description: 'Premium type concerns how we are being paid. It can be: 1 -> In advance, 2 -> In Arrears or 3-> At Maturity.',
   })
   readonly premiumTypeId: number;
 
   @IsNumber()
   @IsNotEmpty()
+  @Min(1)
+  @Max(3)
   @ApiProperty({
     example: 1,
-    description: 'length of each exposure period. Monthly, Quarterly, semi- Annual or Annual. See MASTER_DATA.dbo.WF_PREMIUM_FREQUENCY',
+    description: 'Payment frequency. It can be: 1 -> Monthly, 2 -> Quarterly, 3-> Semi-annually or 4 -> Annually',
   })
   readonly premiumFrequencyId: number;
 
@@ -41,7 +49,7 @@ export class CreatePremiumScheduleDto {
 
   @IsNumber()
   @IsNotEmpty()
-  @ApiProperty({ example: 80, description: 'percentage covered, expecting whole number i.e. if 90% expecting the number 90' })
+  @ApiProperty({ example: 80, description: 'Percentage covered, expecting whole number i.e. if 90% expecting the number 90' })
   readonly guaranteePercentage: number;
 
   @IsNumber()
@@ -51,8 +59,8 @@ export class CreatePremiumScheduleDto {
 
   @IsString()
   @IsNotEmpty()
-  @MaxLength(3)
-  @ApiProperty({ example: '360', description: '360 or 365.  UK or US calendar' })
+  @Length(3)
+  @ApiProperty({ example: '360', description: '360 or 365. UK or US calendar' })
   readonly dayBasis: string;
 
   @IsNumber()

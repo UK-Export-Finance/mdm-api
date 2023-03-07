@@ -8,7 +8,7 @@ const chance = new Chance();
 
 describe('Premium schedules', () => {
   let app: INestApplication;
-  let api;
+  let api: Api;
 
   const premiumScheduleSchema = {
     id: expect.any(Number),

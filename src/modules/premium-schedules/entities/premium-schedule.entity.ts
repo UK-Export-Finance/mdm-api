@@ -14,7 +14,7 @@ export class PremiumScheduleEntity {
   @Column({ name: 'FACILITY_ID' })
   @ApiProperty({
     example: '30000425',
-    description: 'UKEF id for Facility to check. Usually this id would be string starting 00, but in this endpoint implementation is a bit wrong.',
+    description: 'UKEF id for Facility, but without 00 at beginning',
   })
   facilityURN: string;
 
