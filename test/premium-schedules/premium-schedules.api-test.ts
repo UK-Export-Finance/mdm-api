@@ -32,7 +32,7 @@ describe('Premium schedules', () => {
     api = new Api(app.getHttpServer());
   });
 
-  it(`GET /premium/segments/12345678`, async () => {
+  it('GET /premium/segments/12345678', async () => {
     const { status, body } = await api.get('/premium/segments/12345678');
 
     // Not generated yet.
@@ -43,7 +43,7 @@ describe('Premium schedules', () => {
   /**
    * To get existing premium schedules we need to generate them first.
    */
-  it(`POST /premium/schedule and then GET /premium/segments/{facilityId}`, async () => {
+  it('POST /premium/schedule and then GET /premium/segments/{facilityId}', async () => {
     const createSchedules = [
       {
         facilityURN: chance.natural({ min: 10000000, max: 99999999 }),
@@ -75,7 +75,7 @@ describe('Premium schedules', () => {
     expect(getResponse.body).toEqual(expect.arrayContaining([expect.objectContaining(premiumScheduleSchema)]));
   });
 
-  it(`POST /premium/schedule`, async () => {
+  it('POST /premium/schedule', async () => {
     const createSchedules = [
       {
         facilityURN: chance.natural({ min: 10000000, max: 99999999 }),
@@ -99,19 +99,19 @@ describe('Premium schedules', () => {
     expect(postResponse.body).toEqual(expect.arrayContaining([expect.objectContaining(premiumScheduleSchema)]));
   });
 
-  it(`GET /premium/segments/null`, async () => {
+  it('GET /premium/segments/null', async () => {
     const { status, body } = await api.get('/premium/segments/null');
     expect(status).toBe(400);
     expect(body.message).toContain('facilityId must match /^\\d{8,10}$/ regular expression');
   });
 
-  it(`GET /premium/segments/undefined`, async () => {
+  it('GET /premium/segments/undefined', async () => {
     const { status, body } = await api.get('/premium/segments/undefined');
     expect(status).toBe(400);
     expect(body.message).toContain('facilityId must match /^\\d{8,10}$/ regular expression');
   });
 
-  it(`POST /premium/schedule, empty array`, async () => {
+  it('POST /premium/schedule, empty array', async () => {
     const payload = [];
     const { status, body } = await api.post(payload).to('/premium/schedule');
 
@@ -120,7 +120,7 @@ describe('Premium schedules', () => {
     expect(body.message).toMatch('Request payload is empty');
   });
 
-  it(`POST /premium/schedule, not parsable array`, async () => {
+  it('POST /premium/schedule, not parsable array', async () => {
     const payload = '[]';
     const { status, body } = await api.post(payload).to('/premium/schedule');
 
@@ -129,7 +129,7 @@ describe('Premium schedules', () => {
     expect(body.message).toMatch('Validation failed (parsable array expected)');
   });
 
-  it(`POST /premium/schedule, bad json`, async () => {
+  it('POST /premium/schedule, bad json', async () => {
     const payload = 'asd';
     const { status, body } = await api.post(payload).to('/premium/schedule');
 
@@ -138,7 +138,7 @@ describe('Premium schedules', () => {
     expect(body.message).toMatch('Validation failed (parsable array expected)');
   });
 
-  it(`POST /premium/schedule, field validation`, async () => {
+  it('POST /premium/schedule, field validation', async () => {
     const payload = [{}];
     const { status, body } = await api.post(payload).to('/premium/schedule');
 
