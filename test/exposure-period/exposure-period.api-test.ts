@@ -1,4 +1,5 @@
 import { INestApplication } from '@nestjs/common';
+import { PRODUCTS } from '@ukef/constants';
 
 import { Api } from '../api';
 import { CreateApp } from '../createApp';
@@ -12,26 +13,26 @@ describe('Exposure period', () => {
     api = new Api(app.getHttpServer());
   });
 
-  it('GET /exposure-period?startdate=2017-07-04&enddate=2018-07-04&productgroup=EW', async () => {
-    const { status, body } = await api.get('/exposure-period?startdate=2017-07-04&enddate=2018-07-04&productgroup=EW');
+  it(`GET /exposure-period?startdate=2017-07-04&enddate=2018-07-04&productgroup=${PRODUCTS.EW}`, async () => {
+    const { status, body } = await api.get(`/exposure-period?startdate=2017-07-04&enddate=2018-07-04&productgroup=${PRODUCTS.EW}`);
     expect(status).toBe(200);
     expect(body.exposurePeriod).toBe(12);
   });
 
-  it('GET /exposure-period?startdate=2017-07-04&enddate=2018-07-05&productgroup=EW', async () => {
-    const { status, body } = await api.get('/exposure-period?startdate=2017-07-04&enddate=2018-07-05&productgroup=EW');
+  it(`GET /exposure-period?startdate=2017-07-04&enddate=2018-07-05&productgroup=${PRODUCTS.EW}`, async () => {
+    const { status, body } = await api.get(`/exposure-period?startdate=2017-07-04&enddate=2018-07-05&productgroup=${PRODUCTS.EW}`);
     expect(status).toBe(200);
     expect(body.exposurePeriod).toBe(13);
   });
 
-  it('GET /exposure-period?startdate=2017-07-04&enddate=2018-07-04&productgroup=BS', async () => {
-    const { status, body } = await api.get('/exposure-period?startdate=2017-07-04&enddate=2018-07-04&productgroup=BS');
+  it(`GET /exposure-period?startdate=2017-07-04&enddate=2018-07-04&productgroup=${PRODUCTS.BS}`, async () => {
+    const { status, body } = await api.get(`/exposure-period?startdate=2017-07-04&enddate=2018-07-04&productgroup=${PRODUCTS.BS}`);
     expect(status).toBe(200);
     expect(body.exposurePeriod).toBe(13);
   });
 
-  it('GET /exposure-period?startdate=2017-07-04&enddate=2018-07-05&productgroup=BS', async () => {
-    const { status, body } = await api.get('/exposure-period?startdate=2017-07-04&enddate=2018-07-05&productgroup=BS');
+  it(`GET /exposure-period?startdate=2017-07-04&enddate=2018-07-05&productgroup=${PRODUCTS.BS}`, async () => {
+    const { status, body } = await api.get(`/exposure-period?startdate=2017-07-04&enddate=2018-07-05&productgroup=${PRODUCTS.BS}`);
     expect(status).toBe(200);
     expect(body.exposurePeriod).toBe(13);
   });
@@ -48,43 +49,43 @@ describe('Exposure period', () => {
    */
 
   // EW Start is EOM
-  it('GET /exposure-period?startdate=2017-03-31&enddate=2017-04-01&productgroup=EW', async () => {
-    const { status, body } = await api.get('/exposure-period?startdate=2017-03-31&enddate=2017-04-01&productgroup=EW');
+  it(`GET /exposure-period?startdate=2017-03-31&enddate=2017-04-01&productgroup=${PRODUCTS.EW}`, async () => {
+    const { status, body } = await api.get(`/exposure-period?startdate=2017-03-31&enddate=2017-04-01&productgroup=${PRODUCTS.EW}`);
     expect(status).toBe(200);
     expect(body.exposurePeriod).toBe(1);
   });
 
   // BS Start is EOM
-  it('GET /exposure-period?startdate=2017-03-31&enddate=2017-04-29&productgroup=BS', async () => {
-    const { status, body } = await api.get('/exposure-period?startdate=2017-03-31&enddate=2017-04-29&productgroup=BS');
+  it(`GET /exposure-period?startdate=2017-03-31&enddate=2017-04-29&productgroup=${PRODUCTS.BS}`, async () => {
+    const { status, body } = await api.get(`/exposure-period?startdate=2017-03-31&enddate=2017-04-29&productgroup=${PRODUCTS.BS}`);
     expect(status).toBe(200);
     expect(body.exposurePeriod).toBe(1);
   });
 
   // EW Start is EOM, end is EOM
-  it('GET /exposure-period?startdate=2017-03-31&enddate=2017-04-30&productgroup=EW', async () => {
-    const { status, body } = await api.get('/exposure-period?startdate=2017-03-31&enddate=2017-04-30&productgroup=EW');
+  it(`GET /exposure-period?startdate=2017-03-31&enddate=2017-04-30&productgroup=${PRODUCTS.EW}`, async () => {
+    const { status, body } = await api.get(`/exposure-period?startdate=2017-03-31&enddate=2017-04-30&productgroup=${PRODUCTS.EW}`);
     expect(status).toBe(200);
     expect(body.exposurePeriod).toBe(1);
   });
 
   // BS Start is EOM, end is EOM, +1 for exposure
-  it('GET /exposure-period?startdate=2017-03-31&enddate=2017-04-30&productgroup=BS', async () => {
-    const { status, body } = await api.get('/exposure-period?startdate=2017-03-31&enddate=2017-04-30&productgroup=BS');
+  it(`GET /exposure-period?startdate=2017-03-31&enddate=2017-04-30&productgroup=${PRODUCTS.BS}`, async () => {
+    const { status, body } = await api.get(`/exposure-period?startdate=2017-03-31&enddate=2017-04-30&productgroup=${PRODUCTS.BS}`);
     expect(status).toBe(200);
     expect(body.exposurePeriod).toBe(2);
   });
 
   // EW Start DOM = End DOM
-  it('GET /exposure-period?startdate=2017-03-05&enddate=2017-04-05&productgroup=EW', async () => {
-    const { status, body } = await api.get('/exposure-period?startdate=2017-03-05&enddate=2017-04-05&productgroup=EW');
+  it(`GET /exposure-period?startdate=2017-03-05&enddate=2017-04-05&productgroup=${PRODUCTS.EW}`, async () => {
+    const { status, body } = await api.get(`/exposure-period?startdate=2017-03-05&enddate=2017-04-05&productgroup=${PRODUCTS.EW}`);
     expect(status).toBe(200);
     expect(body.exposurePeriod).toBe(1);
   });
 
   // BS Start DOM = End DOM, +1 for exposure
-  it('GET /exposure-period?startdate=2017-03-05&enddate=2017-04-05&productgroup=BS', async () => {
-    const { status, body } = await api.get('/exposure-period?startdate=2017-03-05&enddate=2017-04-05&productgroup=BS');
+  it(`GET /exposure-period?startdate=2017-03-05&enddate=2017-04-05&productgroup=${PRODUCTS.BS}`, async () => {
+    const { status, body } = await api.get(`/exposure-period?startdate=2017-03-05&enddate=2017-04-05&productgroup=${PRODUCTS.BS}`);
     expect(status).toBe(200);
     expect(body.exposurePeriod).toBe(2);
   });
@@ -92,7 +93,7 @@ describe('Exposure period', () => {
   // Input error handling checks
 
   it('GET /exposure-period', async () => {
-    const { status, body } = await api.get('/exposure-period');
+    const { status, body } = await api.get(`/exposure-period`);
     expect(status).toBe(400);
     expect(body.message).toContain('startdate must be a Date instance');
     expect(body.message).toContain('enddate must be a Date instance');
@@ -101,7 +102,7 @@ describe('Exposure period', () => {
   });
 
   it('GET /exposure-period?startdate=2017-01-32&enddate=2017-02-32&productgroup=test', async () => {
-    const { status, body } = await api.get('/exposure-period?startdate=2017-01-32&enddate=2017-02-32&productgroup=test');
+    const { status, body } = await api.get(`/exposure-period?startdate=2017-01-32&enddate=2017-02-32&productgroup=test`);
     expect(status).toBe(400);
     expect(body.message).toContain('startdate must be a Date instance');
     expect(body.message).toContain('enddate must be a Date instance');
@@ -109,7 +110,7 @@ describe('Exposure period', () => {
   });
 
   it('GET /exposure-period?startdate=null&enddate=null&productgroup=null', async () => {
-    const { status, body } = await api.get('/exposure-period?startdate=null&enddate=null&productgroup=null');
+    const { status, body } = await api.get(`/exposure-period?startdate=null&enddate=null&productgroup=null`);
     expect(status).toBe(400);
     expect(body.message).toContain('startdate must be a Date instance');
     expect(body.message).toContain('enddate must be a Date instance');
@@ -117,7 +118,7 @@ describe('Exposure period', () => {
   });
 
   it('GET /exposure-period?startdate=undefined&enddate=undefined&productgroup=undefined', async () => {
-    const { status, body } = await api.get('/exposure-period?startdate=undefined&enddate=undefined&productgroup=undefined');
+    const { status, body } = await api.get(`/exposure-period?startdate=undefined&enddate=undefined&productgroup=undefined`);
     expect(status).toBe(400);
     expect(body.message).toContain('startdate must be a Date instance');
     expect(body.message).toContain('enddate must be a Date instance');

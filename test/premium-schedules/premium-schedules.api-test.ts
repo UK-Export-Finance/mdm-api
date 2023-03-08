@@ -1,4 +1,5 @@
 import { INestApplication } from '@nestjs/common';
+import { PRODUCTS } from '@ukef/constants';
 import Chance from 'chance';
 
 import { Api } from '../api';
@@ -46,7 +47,7 @@ describe('Premium schedules', () => {
     const createSchedules = [
       {
         facilityURN: chance.natural({ min: 10000000, max: 99999999 }),
-        productGroup: 'BS',
+        productGroup: PRODUCTS.BS,
         premiumTypeId: 1,
         premiumFrequencyId: 1,
         guaranteeCommencementDate: '2021-01-19',
@@ -78,7 +79,7 @@ describe('Premium schedules', () => {
     const createSchedules = [
       {
         facilityURN: chance.natural({ min: 10000000, max: 99999999 }),
-        productGroup: 'BS',
+        productGroup: PRODUCTS.BS,
         premiumTypeId: 1,
         premiumFrequencyId: 1,
         guaranteeCommencementDate: '2023-01-19',
