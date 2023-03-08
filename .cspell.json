@@ -33,7 +33,9 @@
     "Dockerised",
     "CILC",
     "BBALIBOR",
-    "szenius"
+    "szenius",
+    "EWCS",
+    "NVARCHAR"
   ],
   "dictionaries": [
     "en-gb",

@@ -17,11 +17,11 @@ export class NumbersController {
   @ApiBody({ type: [CreateUkefIdDto] })
   @UsePipes(ValidationPipe)
   @ApiResponse({ status: 201, description: 'Created.' })
-  create(@Body(new ParseArrayPipe({ items: CreateUkefIdDto, optional: false })) CreateUkefIdDtos: CreateUkefIdDto[]): Promise<UkefId[]> {
-    if (!CreateUkefIdDtos.length) {
+  create(@Body(new ParseArrayPipe({ items: CreateUkefIdDto, optional: false })) createUkefIdDtos: CreateUkefIdDto[]): Promise<UkefId[]> {
+    if (!createUkefIdDtos.length) {
       throw new BadRequestException('Request payload is empty');
     }
-    return this.numberService.create(CreateUkefIdDtos);
+    return this.numberService.create(createUkefIdDtos);
   }
 
   @Get()
