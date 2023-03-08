@@ -5,7 +5,7 @@ import { CreateApp } from '../createApp';
 
 describe('Numbers', () => {
   let app: INestApplication;
-  let api;
+  let api: Api;
 
   beforeAll(async () => {
     app = await new CreateApp().init();

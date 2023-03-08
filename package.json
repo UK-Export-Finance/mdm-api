@@ -6,7 +6,7 @@
   "license": "MIT",
   "author": "UKEF",
   "scripts": {
-    "api-test": "jest --selectProjects=API --detectOpenHandles --forceExit",
+    "api-test": "jest --selectProjects=API",
     "prebuild": "rimraf dist",
     "build": "nest build && npm run copyfiles",
     "build:prod": "rimraf dist/ && npm run build",
@@ -23,12 +23,13 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:watch": "jest --watch",
-    "unit-test": "jest --selectProjects Unit"
+    "unit-test": "jest --selectProjects=Unit"
   },
   "dependencies": {
     "@nestjs/common": "^9.3.9",
     "@nestjs/config": "^2.3.1",
     "@nestjs/core": "^9.3.9",
+    "@nestjs/passport": "^9.0.3",
     "@nestjs/platform-express": "^9.3.9",
     "@nestjs/swagger": "^6.2.1",
     "@nestjs/terminus": "^9.2.1",
@@ -41,6 +42,8 @@
     "express-basic-auth": "^1.2.1",
     "mssql": "^9.1.1",
     "nestjs-pino": "^3.1.2",
+    "passport": "^0.6.0",
+    "passport-headerapikey": "^1.2.2",
     "pino-http": "^8.3.3",
     "pino-pretty": "^9.4.0",
     "reflect-metadata": "^0.1.13",
@@ -87,7 +90,7 @@
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "eslint-plugin-switch-case": "^1.1.2",
     "husky": "^8.0.3",
-    "jest": "29.4.3",
+    "jest": "29.5.0",
     "lint-staged": "^13.1.2",
     "prettier": "^2.8.4",
     "sort-package-json": "^2.4.1",

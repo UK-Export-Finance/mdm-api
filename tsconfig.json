@@ -30,9 +30,10 @@
       "@ukef/*": ["src/*"],
       "@ukef/constants/*": ["src/constants/index"],
       "@ukef/config/*": ["src/config/index"],
-      "@ukef/database/*": ["src/database/index"],
+      "@ukef/database/*": ["src/modules/database/*"],
       "@ukef/helpers/*": ["src/helpers/*"],
-      "@ukef/module/*": ["src/modules/*"]
+      "@ukef/module/*": ["src/modules/*"],
+      "@ukef/auth/*": ["src/modules/auth/*"]
     }
   },
   "include": ["src", "test", "jest.config.ts"],

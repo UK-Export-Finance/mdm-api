@@ -9,8 +9,10 @@ const defaultSettings = {
   moduleNameMapper: {
     '@ukef/constants/(.*)': '<rootDir>/../src/constants/$1',
     '@ukef/config/(.*)': '<rootDir>/../src/config/$1',
+    '@ukef/database/(.*)': '<rootDir>/../src/modules/database/$1',
     '@ukef/helpers/(.*)': '<rootDir>/../src/helpers/$1',
     '@ukef/module/(.*)': '<rootDir>/../src/modules/$1',
+    '@ukef/auth/(.*)': '<rootDir>/../src/modules/auth/$1',
     '@ukef/(.*)': '<rootDir>/../src/$1',
   },
 };
@@ -22,7 +24,7 @@ const config: JestConfigWithTsJest = {
       testMatch: ['**/*.test.ts'],
       transform: { '^.+\\.(ts|tsx)?$': ['ts-jest', { useESM: true }] },
       ...defaultSettings,
-      rootDir: 'src', // Since unit tests are created inside `src`
+      rootDir: 'src',
     },
     {
       displayName: 'API',
