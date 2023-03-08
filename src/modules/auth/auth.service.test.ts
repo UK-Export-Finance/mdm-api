@@ -7,7 +7,7 @@ import { AuthService } from './auth.service';
 import { ApiKeyStrategy } from './strategy/api-key.strategy';
 
 describe('AuthService', () => {
-  let authsService: AuthService;
+  let authService: AuthService;
   const chance = new Chance();
 
   beforeAll(async () => {
@@ -16,29 +16,29 @@ describe('AuthService', () => {
       providers: [AuthService, ApiKeyStrategy, ConfigService],
     }).compile();
 
-    authsService = app.get<AuthService>(AuthService);
+    authService = app.get<AuthService>(AuthService);
   });
 
   it('should be defined', () => {
-    expect(authsService).toBeDefined();
+    expect(authService).toBeDefined();
   });
 
   it('should return `false` when API Key is invalid', () => {
     const key = chance.word();
-    const result = authsService.validateApiKey(key);
+    const result = authService.validateApiKey(key);
 
     expect(result).toBe(false);
   });
 
   it('should return `false` when API Key is not provided', () => {
-    const result = authsService.validateApiKey('');
+    const result = authService.validateApiKey('');
 
     expect(result).toBe(false);
   });
 
   it('should return `true` when API Key is valid', () => {
     const { API_KEY } = process.env;
-    const result = authsService.validateApiKey(API_KEY);
+    const result = authService.validateApiKey(API_KEY);
 
     expect(result).toBe(true);
   });
