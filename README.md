@@ -1,34 +1,3 @@
-# Description
-
-[NestJS](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Features
-
-- [x] MSSQL TypeORM setup
-- [x] Dockerised application using NodeJS v19
-- [x] Conventional commits using Husky
-- [x] Code formatting (using Prettier)
-- [x] Code linting (using ESLint and Lint-staged)
-- [x] Code spell checking (using `cspell`)
-- [x] Renovate (update NPM packages automatically)
-- [x] Standardized Editor config
-- [x] Swagger based documentation
-- [x] Config based on ENV variables
-- [x] Automated API versioning `(/v1)`
-- [x] Configuration for `Jest` tests
-- [x] Automated releases based on conventional commits
-- [x] Automated version bumps based on commit messages
-- [x] Add logging using `Pino.js`
-- [x] Alias paths
-- [ ] CodeCov to analyse the test coverage
-- [ ] Add rate-limiting
-- [ ] Add Auth guards
-- [ ] Configure Compodoc
-- [ ] Add health checks
-- [ ] Add hot reloading for local Docker development
-- [ ] Add security headers
-- [ ] Deployment pipelines
-
 ## Installation
 
 ```bash
@@ -43,12 +12,12 @@ $ docker compose -f docker-compose.db.yml up --build
 ```
 
 ```bash
-# using docker-compose
+# start the NestJS application using docker-compose
 $ docker compose up --build
 ```
 
 ```bash
-# without docker-compose
+# start the NestJS application using npm
 $ npm run start:dev
 ```
 
@@ -56,7 +25,7 @@ $ npm run start:dev
 
 ```bash
 # unit tests
-$ npm run test
+$ npm run unit-test
 
 # api tests
 $ npm run api-test
@@ -80,6 +49,10 @@ this.logger.error({ id: 'your message here' }, 'context-name');
 this.logger.log({ id: 'your message here' }, 'context-name');
 
 ```
+
+### Authentication
+The Master Data Management API requires an API Key in order to access its resources.
+This can be achieved by providing a randomised API Key as an environment variable (`API_KEY`) and a strategy (`API_KEY_STRATEGY`) which defines the name of the header passed to the API
 
 ### Writing Conventional Commits
 

@@ -5,7 +5,7 @@ import { CreateApp } from '../createApp';
 
 describe('Markets', () => {
   let app: INestApplication;
-  let api;
+  let api: Api;
 
   const marketSchema = {
     marketId: expect.any(Number),
@@ -68,7 +68,7 @@ describe('Markets', () => {
     );
   });
 
-  it(`Compare GET /markets?active=N and GET /markets?active=N`, async () => {
+  it(`returns more results from GET /markets?active=Y than GET /markets?active=N`, async () => {
     const responseActive = await api.get('/markets?active=Y');
     const responseDisabled = await api.get('/markets?active=N');
 
