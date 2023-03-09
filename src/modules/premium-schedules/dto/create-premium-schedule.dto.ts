@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Length, Matches, Max, Min } from 'class-validator';
+import { ENUMS } from '@ukef/constants';
+import { IsDateString, IsEnum, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Length, Max, Min } from 'class-validator';
 
 export class CreatePremiumScheduleDto {
   @IsInt()
@@ -13,7 +14,7 @@ export class CreatePremiumScheduleDto {
   @IsString()
   @IsNotEmpty()
   @Length(2)
-  @Matches(/^(EW|BS)$/)
+  @IsEnum(ENUMS.PRODUCTS)
   @ApiProperty({ example: 'BS', description: 'Two products are accepted: EW and BS' })
   readonly productGroup: string;
 
