@@ -12,7 +12,7 @@ export class GetExposurePeriodQueryDto {
   public enddate: Date;
 
   @IsString()
-  @ApiProperty({ example: 'EW', description: 'Two products are accepted: EW and BS' })
   @IsEnum(ENUMS.PRODUCTS)
+  @ApiProperty({ example: 'EW', description: 'Two products are accepted: EW and BS' })
   public productgroup: string;
 }

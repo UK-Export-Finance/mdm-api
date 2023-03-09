@@ -97,7 +97,7 @@ describe('Exposure period', () => {
     expect(status).toBe(400);
     expect(body.message).toContain('startdate must be a Date instance');
     expect(body.message).toContain('enddate must be a Date instance');
-    expect(body.message).toContain('productgroup must match /^(EW|BS)$/ regular expression');
+    expect(body.message).toContain('productgroup must be one of the following values: EW, BS');
     expect(body.message).toContain('productgroup must be a string');
   });
 
@@ -106,7 +106,7 @@ describe('Exposure period', () => {
     expect(status).toBe(400);
     expect(body.message).toContain('startdate must be a Date instance');
     expect(body.message).toContain('enddate must be a Date instance');
-    expect(body.message).toContain('productgroup must match /^(EW|BS)$/ regular expression');
+    expect(body.message).toContain('productgroup must be one of the following values: EW, BS');
   });
 
   it('GET /exposure-period?startdate=null&enddate=null&productgroup=null', async () => {
@@ -114,7 +114,7 @@ describe('Exposure period', () => {
     expect(status).toBe(400);
     expect(body.message).toContain('startdate must be a Date instance');
     expect(body.message).toContain('enddate must be a Date instance');
-    expect(body.message).toContain('productgroup must match /^(EW|BS)$/ regular expression');
+    expect(body.message).toContain('productgroup must be one of the following values: EW, BS');
   });
 
   it('GET /exposure-period?startdate=undefined&enddate=undefined&productgroup=undefined', async () => {
@@ -122,7 +122,13 @@ describe('Exposure period', () => {
     expect(status).toBe(400);
     expect(body.message).toContain('startdate must be a Date instance');
     expect(body.message).toContain('enddate must be a Date instance');
-    expect(body.message).toContain('productgroup must match /^(EW|BS)$/ regular expression');
+    expect(body.message).toContain('productgroup must be one of the following values: EW, BS');
+  });
+
+  it('GET /exposure-period?startdate=2017-03-05&enddate=2017-04-05&productgroup=new', async () => {
+    const { status, body } = await api.get('/exposure-period?startdate=2017-03-05&enddate=2017-04-05&productgroup=new');
+    expect(status).toBe(400);
+    expect(body.message).toContain('productgroup must be one of the following values: EW, BS');
   });
 
   afterAll(async () => {
