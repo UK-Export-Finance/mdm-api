@@ -1,5 +1,5 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { GetYieldRatesQueryDto } from './dto/get-yield-rates-query.dto';
 import { YieldRateEntity } from './entities/yield-rate.entity';

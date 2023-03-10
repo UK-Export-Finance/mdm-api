@@ -1,5 +1,5 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { GetSectorIndustriesQueryDto } from './dto/get-sector-industries-query.dto';
 import { SectorIndustryEntity } from './entities/sector-industry.entity';

@@ -1,5 +1,5 @@
-import { BadRequestException, Body, Controller, Get, ParseArrayPipe, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { BadRequestException, Body, Controller, Get, ParseArrayPipe, Post, Query } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { CreateUkefIdDto } from './dto/create-ukef-id.dto';
 import { GetNumbersQueryDto } from './dto/get-numbers-query.dto';

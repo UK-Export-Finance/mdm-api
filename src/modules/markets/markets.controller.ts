@@ -1,8 +1,7 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { MarketsQueryDto } from './dto/markets-query.dto';
-import { QueryParamActiveEnum } from './dto/query-param-active-enum';
 import { MarketEntity } from './entities/market.entity';
 import { MarketsService } from './markets.service';
 

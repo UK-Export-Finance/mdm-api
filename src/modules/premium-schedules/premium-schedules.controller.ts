@@ -1,5 +1,5 @@
 import { BadRequestException, Body, Controller, Get, Param, ParseArrayPipe, Post, Res } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 
 import { CreatePremiumScheduleDto } from './dto/create-premium-schedule.dto';
