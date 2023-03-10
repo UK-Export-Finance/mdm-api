@@ -1,9 +1,8 @@
 import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DATABASE } from '@ukef/constants';
+import { DATABASE, DATE } from '@ukef/constants';
 import { Equal, LessThanOrEqual, MoreThan, Repository } from 'typeorm';
 
-import { DATE } from '../../constants/date.constant';
 import { YieldRateEntity } from './entities/yield-rate.entity';
 
 @Injectable()
