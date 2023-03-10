@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.7.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.6.0...v1.7.0) (2023-03-10)
+
+
+### Features
+
+* added authentication using API Key ([#44](https://github.com/UK-Export-Finance/mdm-api/issues/44)) ([29340ef](https://github.com/UK-Export-Finance/mdm-api/commit/29340ef413aa13bed6eb80cc6ca702bc074fb74d))
+* added GET `/currencies`, `/currencies/{isoCode}` and `/currencies/exchange` endpoints ([#40](https://github.com/UK-Export-Finance/mdm-api/issues/40)) ([8cf909e](https://github.com/UK-Export-Finance/mdm-api/commit/8cf909e822563b206909fc68ffeb100ef4289964))
+* **APIM-151:** global enum introduction ([#49](https://github.com/UK-Export-Finance/mdm-api/issues/49)) ([23ba2fa](https://github.com/UK-Export-Finance/mdm-api/commit/23ba2facf4827259a165af747bffe4e2ba2694c2))
+* **APIM-90-91:** post and get premium schedules ([#45](https://github.com/UK-Export-Finance/mdm-api/issues/45)) ([ee4842c](https://github.com/UK-Export-Finance/mdm-api/commit/ee4842c20f3074ada7dac58fc5a912a07726d6c8))
+* **APIM-96:** added GET `/yield-rates` endpoint ([#50](https://github.com/UK-Export-Finance/mdm-api/issues/50)) ([5f0e318](https://github.com/UK-Export-Finance/mdm-api/commit/5f0e3180d87793ad0785028ac5a77fd2515da19b))
+
+
+### Bug Fixes
+
+* **deps:** update dependency tsconfig-paths to v4 ([#43](https://github.com/UK-Export-Finance/mdm-api/issues/43)) ([218af2f](https://github.com/UK-Export-Finance/mdm-api/commit/218af2f2319af45931a3dc705c86c1540d481252))
+
+
+### Miscellaneous
+
+* **deps:** update dependency jest to v29.5.0 ([#48](https://github.com/UK-Export-Finance/mdm-api/issues/48)) ([93122d7](https://github.com/UK-Export-Finance/mdm-api/commit/93122d773d10deeb91aba8e6cccaa101f75459d3))
+* **deps:** updated all NPM packages ([#41](https://github.com/UK-Export-Finance/mdm-api/issues/41)) ([5d7952c](https://github.com/UK-Export-Finance/mdm-api/commit/5d7952caf1f142e1e033c6461f81310d6d5572f7))
+* **npm-update:** dependencies update ([#47](https://github.com/UK-Export-Finance/mdm-api/issues/47)) ([c7ed54e](https://github.com/UK-Export-Finance/mdm-api/commit/c7ed54e97e82f97c4649a1caea40d577010f6890))
+
 ## [1.6.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.5.0...v1.6.0) (2023-02-24)
 
 
