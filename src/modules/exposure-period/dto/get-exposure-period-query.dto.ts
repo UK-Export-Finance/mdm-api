@@ -1,14 +1,24 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsString, Matches } from 'class-validator';
+import { IsDateString, IsString, Matches, MaxLength } from 'class-validator';
 
 export class GetExposurePeriodQueryDto {
-  @IsDate()
-  @ApiProperty({ example: '2017-07-04' })
-  public startdate: Date;
+  @IsDateString({ strict: true })
+  // Max length validation blocks dates with time.
+  @MaxLength(10, { message: '$property should use format YYYY-MM-DD' })
+  @ApiProperty({
+    example: '2017-07-04',
+    description: 'Guarantee commencement date for a facility',
+  })
+  public startdate: string;
 
-  @IsDate()
-  @ApiProperty({ example: '2018-07-04' })
-  public enddate: Date;
+  @IsDateString({ strict: true })
+  // Max length validation blocks dates with time.
+  @MaxLength(10, { message: '$property should use format YYYY-MM-DD' })
+  @ApiProperty({
+    example: '2018-07-04',
+    description: 'Guarantee expiry date for a facility',
+  })
+  public enddate: string;
 
   @IsString()
   @ApiProperty({ example: 'EW', description: 'Two products are accepted: EW and BS' })

@@ -15,7 +15,6 @@ export class PremiumSchedulesController {
   @Post('premium/schedule')
   @ApiOperation({ summary: 'Create Premium Schedule sequence (aka Income exposure)' })
   @ApiBody({ type: [CreatePremiumScheduleDto] })
-  @ApiResponse({ status: 201, description: 'Created.' })
   create(
     @Res({ passthrough: true }) res: Response,
     @Body(new ParseArrayPipe({ items: CreatePremiumScheduleDto, optional: false })) createPremiumSchedule: CreatePremiumScheduleDto[],
@@ -32,13 +31,6 @@ export class PremiumSchedulesController {
   @ApiResponse({
     status: 200,
     type: [PremiumScheduleEntity],
-  })
-  @ApiParam({
-    name: 'facilityId',
-    required: true,
-    type: 'string',
-    description: 'UKEF facility id',
-    example: '10588388',
   })
   find(@Param() param: GetPremiumScheduleParamDto): Promise<PremiumScheduleEntity[]> {
     return this.premiumSchedulesService.find(param.facilityId);

@@ -94,33 +94,41 @@ describe('Exposure period', () => {
   it('GET /exposure-period', async () => {
     const { status, body } = await api.get('/exposure-period');
     expect(status).toBe(400);
-    expect(body.message).toContain('startdate must be a Date instance');
-    expect(body.message).toContain('enddate must be a Date instance');
+    expect(body.message).toContain('startdate must be a valid ISO 8601 date string');
+    expect(body.message).toContain('enddate must be a valid ISO 8601 date string');
     expect(body.message).toContain('productgroup must match /^(EW|BS)$/ regular expression');
     expect(body.message).toContain('productgroup must be a string');
+  });
+
+  it('Should fail Feb 29 and Feb 30 - GET /exposure-period?startdate=2017-02-29&enddate=2017-02-30&productgroup=test', async () => {
+    const { status, body } = await api.get('/exposure-period?startdate=2017-02-29&enddate=2017-02-30&productgroup=test');
+    expect(status).toBe(400);
+    expect(body.message).toContain('startdate must be a valid ISO 8601 date string');
+    expect(body.message).toContain('enddate must be a valid ISO 8601 date string');
+    expect(body.message).toContain('productgroup must match /^(EW|BS)$/ regular expression');
   });
 
   it('GET /exposure-period?startdate=2017-01-32&enddate=2017-02-32&productgroup=test', async () => {
     const { status, body } = await api.get('/exposure-period?startdate=2017-01-32&enddate=2017-02-32&productgroup=test');
     expect(status).toBe(400);
-    expect(body.message).toContain('startdate must be a Date instance');
-    expect(body.message).toContain('enddate must be a Date instance');
+    expect(body.message).toContain('startdate must be a valid ISO 8601 date string');
+    expect(body.message).toContain('enddate must be a valid ISO 8601 date string');
     expect(body.message).toContain('productgroup must match /^(EW|BS)$/ regular expression');
   });
 
   it('GET /exposure-period?startdate=null&enddate=null&productgroup=null', async () => {
     const { status, body } = await api.get('/exposure-period?startdate=null&enddate=null&productgroup=null');
     expect(status).toBe(400);
-    expect(body.message).toContain('startdate must be a Date instance');
-    expect(body.message).toContain('enddate must be a Date instance');
+    expect(body.message).toContain('startdate must be a valid ISO 8601 date string');
+    expect(body.message).toContain('enddate must be a valid ISO 8601 date string');
     expect(body.message).toContain('productgroup must match /^(EW|BS)$/ regular expression');
   });
 
   it('GET /exposure-period?startdate=undefined&enddate=undefined&productgroup=undefined', async () => {
     const { status, body } = await api.get('/exposure-period?startdate=undefined&enddate=undefined&productgroup=undefined');
     expect(status).toBe(400);
-    expect(body.message).toContain('startdate must be a Date instance');
-    expect(body.message).toContain('enddate must be a Date instance');
+    expect(body.message).toContain('startdate must be a valid ISO 8601 date string');
+    expect(body.message).toContain('enddate must be a valid ISO 8601 date string');
     expect(body.message).toContain('productgroup must match /^(EW|BS)$/ regular expression');
   });
 

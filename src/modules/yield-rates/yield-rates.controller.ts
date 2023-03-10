@@ -16,13 +16,6 @@ export class YieldRatesController {
     status: 200,
     type: [YieldRateEntity],
   })
-  // @ApiParam({
-  //   name: 'searchDate',
-  //   required: false,
-  //   type: 'Date',
-  //   //description: 'Filter yield rates for specific date. Can go back to 2010-03-15',
-  //   example: '2023-03-02',
-  // })
   find(@Query() query: GetYieldRatesQueryDto): Promise<YieldRateEntity[]> {
     return this.yieldRatesService.find(query.searchDate);
   }

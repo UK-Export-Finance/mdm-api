@@ -30,27 +30,6 @@ export class CurrenciesController {
     description: 'Get the Active exchange rate',
     type: GetCurrencyExchangeDto,
   })
-  @ApiQuery({
-    name: 'source',
-    required: true,
-    type: 'string',
-    description: 'Source currency for exchange rate - Use ISO 3 alpha currency code standard. Only GBP and USD currencies are supported',
-    example: 'GBP',
-  })
-  @ApiQuery({
-    name: 'target',
-    required: true,
-    type: 'string',
-    description: 'Target currency for exchange rate - Use ISO 3 alpha currency code standard',
-    example: 'AED',
-  })
-  @ApiQuery({
-    name: 'exchangeRateDate',
-    required: false,
-    type: 'string',
-    description: 'Retrieve the exchange rate for a specific date',
-    example: '2021-01-26',
-  })
   findExchangeRate(@Query() query: GetCurrencyExchangeDto): Promise<CurrencyExchangeEntity[]> {
     return this.currenciesService.findExchangeRate(query.source, query.target, query.exchangeRateDate);
   }
@@ -63,13 +42,6 @@ export class CurrenciesController {
     status: 200,
     description: 'Currency details based on ISO Code',
     type: [CurrencyEntity],
-  })
-  @ApiParam({
-    name: 'isoCode',
-    required: true,
-    type: 'string',
-    description: 'ISO Code',
-    example: 'GBP',
   })
   findOne(@Param() param: CurrencyDto): Promise<CurrencyEntity[]> {
     return this.currenciesService.findOne(param.isoCode);

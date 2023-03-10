@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsISO8601, IsOptional, MaxLength } from 'class-validator';
+import { IsDateString, IsOptional, MaxLength } from 'class-validator';
 
 export class GetYieldRatesQueryDto {
-  @IsDateString()
-  // Max length allows dates without time.
+  @IsDateString({ strict: true })
+  // Max length validation blocks dates with time.
   @MaxLength(10, { message: '$property should use format YYYY-MM-DD' })
   @IsOptional()
   @ApiProperty({

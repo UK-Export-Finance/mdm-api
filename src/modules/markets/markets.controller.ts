@@ -13,13 +13,6 @@ export class MarketsController {
   constructor(private readonly marketService: MarketsService) {}
 
   @Get()
-  @ApiParam({
-    name: 'active',
-    type: 'string',
-    required: false,
-    description: 'Optional filtering by field "active". If parameter is not provided result will include active and not active markets',
-    enum: QueryParamActiveEnum,
-  })
   @ApiResponse({
     status: 200,
     description: 'Get all markets (aka countries)',
