@@ -23,7 +23,7 @@ export class YieldRatesService {
       const results = await this.yieldRateRepository.find({
         where: query,
       });
-      if (results && !results[0]) {
+      if (!results.length) {
         throw new NotFoundException('No Yield rates found');
       }
       return results;

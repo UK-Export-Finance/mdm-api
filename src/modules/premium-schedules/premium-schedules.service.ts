@@ -18,14 +18,14 @@ export class PremiumSchedulesService {
 
   async find(facilityId: string): Promise<PremiumScheduleEntity[]> {
     try {
-      const spResults = await this.premiumSchedulesRepository.find({
+      const results = await this.premiumSchedulesRepository.find({
         where: { facilityURN: Equal(facilityId), isActive: Equal('Y') },
         order: { period: 'ASC' },
       });
-      if (spResults && !spResults[0]) {
+      if (!results.length) {
         throw new NotFoundException('Premium Schedules are not found');
       }
-      return spResults;
+      return results;
     } catch (err) {
       if (err instanceof NotFoundException) {
         this.logger.warn(err);
