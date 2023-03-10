@@ -106,7 +106,7 @@ describe('Exposure period', () => {
     expect(status).toBe(400);
     expect(body.message).toContain('startdate must be a valid ISO 8601 date string');
     expect(body.message).toContain('enddate must be a valid ISO 8601 date string');
-    expect(body.message).toContain('productgroup must match /^(EW|BS)$/ regular expression');
+    expect(body.message).toContain('productgroup must be one of the following values: EW, BS');
   });
 
   it('GET /exposure-period?startdate=2017-01-32&enddate=2017-02-32&productgroup=test', async () => {
