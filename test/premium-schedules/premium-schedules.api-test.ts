@@ -1,4 +1,5 @@
 import { INestApplication } from '@nestjs/common';
+import { PRODUCTS } from '@ukef/constants';
 import Chance from 'chance';
 
 import { Api } from '../api';
@@ -31,7 +32,7 @@ describe('Premium schedules', () => {
     api = new Api(app.getHttpServer());
   });
 
-  it(`GET /premium/segments/12345678`, async () => {
+  it('GET /premium/segments/12345678', async () => {
     const { status, body } = await api.get('/premium/segments/12345678');
 
     // Not generated yet.
@@ -42,11 +43,11 @@ describe('Premium schedules', () => {
   /**
    * To get existing premium schedules we need to generate them first.
    */
-  it(`POST /premium/schedule and then GET /premium/segments/{facilityId}`, async () => {
+  it('POST /premium/schedule and then GET /premium/segments/{facilityId}', async () => {
     const createSchedules = [
       {
         facilityURN: chance.natural({ min: 10000000, max: 99999999 }),
-        productGroup: 'BS',
+        productGroup: PRODUCTS.BS,
         premiumTypeId: 1,
         premiumFrequencyId: 1,
         guaranteeCommencementDate: '2021-01-19',
@@ -74,11 +75,11 @@ describe('Premium schedules', () => {
     expect(getResponse.body).toEqual(expect.arrayContaining([expect.objectContaining(premiumScheduleSchema)]));
   });
 
-  it(`POST /premium/schedule`, async () => {
+  it('POST /premium/schedule as BSS', async () => {
     const createSchedules = [
       {
         facilityURN: chance.natural({ min: 10000000, max: 99999999 }),
-        productGroup: 'BS',
+        productGroup: PRODUCTS.BS,
         premiumTypeId: 1,
         premiumFrequencyId: 1,
         guaranteeCommencementDate: '2023-01-19',
@@ -98,19 +99,94 @@ describe('Premium schedules', () => {
     expect(postResponse.body).toEqual(expect.arrayContaining([expect.objectContaining(premiumScheduleSchema)]));
   });
 
-  it(`GET /premium/segments/null`, async () => {
+  it('POST /premium/schedule as EWCS', async () => {
+    const createSchedules = [
+      {
+        facilityURN: chance.natural({ min: 10000000, max: 99999999 }),
+        productGroup: PRODUCTS.BS,
+        premiumTypeId: 1,
+        premiumFrequencyId: 1,
+        guaranteeCommencementDate: '2023-01-19',
+        guaranteeExpiryDate: '2023-02-19',
+        guaranteePercentage: 80,
+        guaranteeFeePercentage: 1.35,
+        dayBasis: '360',
+        exposurePeriod: 1,
+        cumulativeAmount: null,
+        maximumLiability: 40000,
+      },
+    ];
+    const postResponse = await api.post(createSchedules).to('/premium/schedule');
+
+    expect(postResponse.status).toBe(201);
+    expect(postResponse.body).toHaveLength(1);
+    expect(postResponse.body).toEqual(expect.arrayContaining([expect.objectContaining(premiumScheduleSchema)]));
+  });
+
+  it('POST /premium/schedule with unidentified `productGroup`', async () => {
+    const createSchedules = [
+      {
+        facilityURN: chance.natural({ min: 10000000, max: 99999999 }),
+        productGroup: 'NEW',
+        premiumTypeId: 1,
+        premiumFrequencyId: 1,
+        guaranteeCommencementDate: '2023-01-19',
+        guaranteeExpiryDate: '2023-02-19',
+        guaranteePercentage: 80,
+        guaranteeFeePercentage: 1.35,
+        dayBasis: '360',
+        exposurePeriod: 1,
+        cumulativeAmount: null,
+        maximumLiability: 40000,
+      },
+    ];
+    const { status, body } = await api.post(createSchedules).to('/premium/schedule');
+
+    expect(status).toBe(400);
+    expect(body.error).toMatch('Bad Request');
+    expect(body.message).toContain('productGroup must be one of the following values: EW, BS');
+  });
+
+  it('POST /premium/schedule with an empty `productGroup`', async () => {
+    const createSchedules = [
+      {
+        facilityURN: chance.natural({ min: 10000000, max: 99999999 }),
+        productGroup: '',
+        premiumTypeId: 1,
+        premiumFrequencyId: 1,
+        guaranteeCommencementDate: '2023-01-19',
+        guaranteeExpiryDate: '2023-02-19',
+        guaranteePercentage: 80,
+        guaranteeFeePercentage: 1.35,
+        dayBasis: '360',
+        exposurePeriod: 1,
+        cumulativeAmount: null,
+        maximumLiability: 40000,
+      },
+    ];
+
+    const { status, body } = await api.post(createSchedules).to('/premium/schedule');
+
+    expect(status).toBe(400);
+    expect(body.error).toMatch('Bad Request');
+    expect(body.message).toContain('productGroup must be one of the following values: EW, BS');
+    expect(body.message).toContain('productGroup must be longer than or equal to 2 characters');
+    expect(body.message).toContain('productGroup should not be empty');
+  });
+
+  it('GET /premium/segments/null', async () => {
     const { status, body } = await api.get('/premium/segments/null');
     expect(status).toBe(400);
     expect(body.message).toContain('facilityId must match /^\\d{8,10}$/ regular expression');
   });
 
-  it(`GET /premium/segments/undefined`, async () => {
+  it('GET /premium/segments/undefined', async () => {
     const { status, body } = await api.get('/premium/segments/undefined');
     expect(status).toBe(400);
     expect(body.message).toContain('facilityId must match /^\\d{8,10}$/ regular expression');
   });
 
-  it(`POST /premium/schedule, empty array`, async () => {
+  it('POST /premium/schedule, empty array', async () => {
     const payload = [];
     const { status, body } = await api.post(payload).to('/premium/schedule');
 
@@ -119,7 +195,7 @@ describe('Premium schedules', () => {
     expect(body.message).toMatch('Request payload is empty');
   });
 
-  it(`POST /premium/schedule, not parsable array`, async () => {
+  it('POST /premium/schedule, not parsable array', async () => {
     const payload = '[]';
     const { status, body } = await api.post(payload).to('/premium/schedule');
 
@@ -128,7 +204,7 @@ describe('Premium schedules', () => {
     expect(body.message).toMatch('Validation failed (parsable array expected)');
   });
 
-  it(`POST /premium/schedule, bad json`, async () => {
+  it('POST /premium/schedule, bad json', async () => {
     const payload = 'asd';
     const { status, body } = await api.post(payload).to('/premium/schedule');
 
@@ -137,7 +213,7 @@ describe('Premium schedules', () => {
     expect(body.message).toMatch('Validation failed (parsable array expected)');
   });
 
-  it(`POST /premium/schedule, field validation`, async () => {
+  it('POST /premium/schedule, field validation', async () => {
     const payload = [{}];
     const { status, body } = await api.post(payload).to('/premium/schedule');
 

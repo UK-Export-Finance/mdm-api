@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsString, Matches, MaxLength } from 'class-validator';
+import { ENUMS } from '@ukef/constants';
+import { IsDateString, IsEnum, IsString, MaxLength } from 'class-validator';
 
 export class GetExposurePeriodQueryDto {
   @IsDateString({ strict: true })
@@ -21,7 +22,7 @@ export class GetExposurePeriodQueryDto {
   public enddate: string;
 
   @IsString()
+  @IsEnum(ENUMS.PRODUCTS)
   @ApiProperty({ example: 'EW', description: 'Two products are accepted: EW and BS' })
-  @Matches(/^(EW|BS)$/)
   public productgroup: string;
 }
