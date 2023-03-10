@@ -14,7 +14,7 @@ export class ExposurePeriodService {
     private readonly mdmDataSource: DataSource,
   ) {}
 
-  async calculate(startDate: Date, endDate: Date, productGroup: string): Promise<ExposurePeriodDto> {
+  async calculate(startDate: string, endDate: string, productGroup: string): Promise<ExposurePeriodDto> {
     try {
       // TODO: SP USP_MDM_READ_EXPOSURE_PERIOD is not using data/tables from DB. Calculation could be moved to Javascript.
       const spResults = await this.mdmDataSource.query('USP_MDM_READ_EXPOSURE_PERIOD @0, @1, @2', [startDate, endDate, productGroup]);

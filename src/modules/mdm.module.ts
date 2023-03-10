@@ -10,12 +10,14 @@ import { MarketsModule } from '@ukef/module/markets/markets.module';
 import { NumbersModule } from '@ukef/module/numbers/numbers.module';
 import { PremiumSchedulesModule } from '@ukef/module/premium-schedules/premium-schedules.module';
 import { SectorIndustriesModule } from '@ukef/module/sector-industries/sector-industries.module';
+import { YieldRatesModule } from '@ukef/module/yield-rates/yield-rates.module';
 
 @Module({
   imports: [
     AuthModule,
     DatabaseModule,
     ConstantsModule,
+    CurrenciesModule,
     ExposurePeriodModule,
     HealthcheckModule,
     InterestRatesModule,
@@ -23,12 +25,13 @@ import { SectorIndustriesModule } from '@ukef/module/sector-industries/sector-in
     NumbersModule,
     PremiumSchedulesModule,
     SectorIndustriesModule,
-    CurrenciesModule,
+    YieldRatesModule,
   ],
   exports: [
     AuthModule,
     DatabaseModule,
     ConstantsModule,
+    CurrenciesModule,
     ExposurePeriodModule,
     HealthcheckModule,
     InterestRatesModule,
@@ -36,7 +39,7 @@ import { SectorIndustriesModule } from '@ukef/module/sector-industries/sector-in
     NumbersModule,
     PremiumSchedulesModule,
     SectorIndustriesModule,
-    CurrenciesModule,
+    YieldRatesModule,
   ],
 })
 export class MdmModule {}
