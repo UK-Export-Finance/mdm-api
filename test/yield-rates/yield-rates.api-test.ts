@@ -46,7 +46,7 @@ describe('Interest rates', () => {
   });
 
   // UKEF at the moment has yield rates since 2010-03-15, maybe some old data will be retired in future.
-  it(`returns 404 for GET /yield-rates?searchDate=2010-03-14`, async () => {
+  it(`returns 404 for any date past 2010-03-15 where the yield data does not exist`, async () => {
     const { status } = await api.get('/yield-rates?searchDate=2010-03-14');
     expect(status).toBe(404);
   });
