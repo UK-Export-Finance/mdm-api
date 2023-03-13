@@ -2,12 +2,10 @@ import { INestApplication, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import basicAuth from 'express-basic-auth';
-import { SwaggerTheme } from 'swagger-themes';
 
 export const SwaggerDocs = (app: INestApplication) => {
   const configService = app.get(ConfigService);
   const logger = new Logger();
-  const theme = new SwaggerTheme('v3');
 
   const docName: string = configService.get<string>('doc.name');
   const docDesc: string = configService.get<string>('doc.description');
@@ -28,7 +26,6 @@ export const SwaggerDocs = (app: INestApplication) => {
 
   const options = {
     explorer: true,
-    customCss: theme.getBuffer('dark'),
     customSiteTitle: docName,
   };
 
