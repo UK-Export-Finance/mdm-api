@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.7.1](https://github.com/UK-Export-Finance/mdm-api/compare/v1.7.0...v1.7.1) (2023-03-14)
+
+
+### Bug Fixes
+
+* **deps:** update dependency pino-pretty to v10 ([b07bb5d](https://github.com/UK-Export-Finance/mdm-api/commit/b07bb5d0cadcb290539716de2b0139109e3b4de8))
+* **deps:** update dependency pino-pretty to v10 ([#54](https://github.com/UK-Export-Finance/mdm-api/issues/54)) ([ac0bb48](https://github.com/UK-Export-Finance/mdm-api/commit/ac0bb4824d4758617eff547a4e35c1b3d36d7b92))
+
+
+### Miscellaneous
+
+* **deps:** update all NPM packages ([#51](https://github.com/UK-Export-Finance/mdm-api/issues/51)) ([3959eec](https://github.com/UK-Export-Finance/mdm-api/commit/3959eec3ed3dcf6068d158a46ecc4c8ef8947942))
+* **deps:** update dependency @types/jest to v29.4.1 ([9377f2f](https://github.com/UK-Export-Finance/mdm-api/commit/9377f2f6f7b62e52069f763876ca67ca5e55ce61))
+* **deps:** update dependency @types/jest to v29.4.1 ([#53](https://github.com/UK-Export-Finance/mdm-api/issues/53)) ([4d6572d](https://github.com/UK-Export-Finance/mdm-api/commit/4d6572d02dcf045b640dabb0e6528bd9112bb613))
+
 ## [1.7.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.6.0...v1.7.0) (2023-03-10)
 
 
