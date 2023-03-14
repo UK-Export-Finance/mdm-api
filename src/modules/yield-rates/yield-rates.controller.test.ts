@@ -1,17 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import Chance from 'chance';
-import { Response } from 'express';
 
 import { YieldRatesController } from './yield-rates.controller';
 import { YieldRatesService } from './yield-rates.service';
 
 const chance = new Chance();
-
-// Minimal mock of express Response. "as any" is required to get around Typescript type check.
-// TODO: this can be rewritten to use mock library.
-const mockResponseObject = {
-  set: jest.fn().mockReturnValue({}),
-} as any as Response;
 
 describe('YieldRatesController', () => {
   let yieldRatesController: YieldRatesController;
