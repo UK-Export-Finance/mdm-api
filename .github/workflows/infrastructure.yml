@@ -1,8 +1,13 @@
 # This GHA is responsible for `APIM` supporting infrastructure
 # creation and configuration using `az cli` bash scripting.
 #
+# Standard Azure naming convention has been followed.
+# https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/resource-naming
+#
 # Following Azure services are consumed:
-# 1. Azure Container App Environment - https://learn.microsoft.com/en-us/azure/container-apps/environment
+# 1. Azure Resource Group - https://learn.microsoft.com/en-us/cli/azure/group?view=azure-cli-latest#az-group-create
+# 2. Azure Container Registry - https://learn.microsoft.com/en-us/cli/azure/acr?view=azure-cli-latest#az-acr-create
+# 
 #
 # Execution
 # *********
@@ -34,14 +39,20 @@ jobs:
     outputs:
       environment: ${{ env.environment }}
       timezone: ${{ env.timezone }}
-      type: preprod
-      type_tag: Pre-production
     steps:
     - name: Environment 🧪
       run: echo "Environment set to ${{ env.environment }}"
 
     - name: Timezone 🌐
       run: echo "Timezone set to ${{ env.timezone }}"
+
+    - name: Target 💫
+      if: contains('["dev", "staging"]', ${{ env.target }})
+      run: echo "type=Pre-production" >> $GITHUB_ENV
+
+    - name: Target 💫
+      if: contains('["prod"]', ${{ env.target }})
+      run: echo "type=Production" >> $GITHUB_ENV
 
 # 2. Base infrastructure creation
   base:
@@ -62,12 +73,23 @@ jobs:
         inlineScript: |
           az configure --defaults location=${{ vars.REGION }}
           az configure --defaults group=${{ vars.GROUP }}
+          az configure --defaults tags="Environment=${{ env.type }}"
+          az configure --defaults tags="Product=${{ env.product }}"
 
     - name: Resource Group 🏗️
       uses: azure/cli@v1.0.0
       with:
         inlineScript: az group create 
           \--location ${{ vars.REGION }} 
-          \--name rg-${{ env.product }}-${{ needs.setup.outputs.type }}-001
-          \--tags "Environment=${{ needs.setup.outputs.type }}"
-          \--tags "Product=${{ env.product }}"
+          \--name rg-${{ env.product }}-${{ needs.setup.outputs.environment }}-001
+
+    
+    - name: ACR 📦️
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az acr create
+            \--name acr-${{ env.product  }}-${{ needs.setup.outputs.environment }}-${{ vars.REGION }}-001
+            \--sku Standard
+            \--admin-enabled true
+            \--allow-exports false
