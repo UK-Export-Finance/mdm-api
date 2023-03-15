@@ -62,12 +62,12 @@ jobs:
       if: ${{ 'prod' == env.target }}
       run: echo "type=Production" >> $GITHUB_ENV
 
-    - name: Azure Login 🔐
+    - name: Azure login 🔐
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Azure Defaults ✨
+    - name: Azure defaults ✨
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
