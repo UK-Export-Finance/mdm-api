@@ -59,14 +59,14 @@ jobs:
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
-          az configure --defaults location=${{ var.REGION }}
-          az configure --defaults group=${{ var.GROUP }}
+          az configure --defaults location=${{ vars.REGION }}
+          az configure --defaults group=${{ vars.GROUP }}
 
     - name: Resource Group 🏗️
       uses: azure/cli@v1.0.0
       with:
         inlineScript: az group create \
-          --location ${{ var.REGION }} \
+          --location ${{ vars.REGION }} \
           --name rg-${{ env.product }}-${{ needs.setup.outputs.type }}-001 \
           --tags "Environment=${{ needs.setup.outputs.type }}" \
           --tags "Product=${{ env.product }}"
