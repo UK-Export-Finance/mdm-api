@@ -23,7 +23,7 @@ env:
   environment: infrastructure
   timezone: 'Europe/London'
   # Deployment environment i.e., `dev`, `staging`, `prod` 
-  plan: ${{ env.environment }}
+  plan: ${{ vars.environment }}
 
 jobs:
 
