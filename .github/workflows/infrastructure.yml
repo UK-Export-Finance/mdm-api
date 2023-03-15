@@ -1,0 +1,53 @@
+# This GHA is responsible for `APIM` supporting infrastructure
+# creation and configuration using `az cli` bash scripting.
+#
+# Following Azure services are consumed:
+# 1. Azure Container App Environment - https://learn.microsoft.com/en-us/azure/container-apps/environment
+#
+# Execution
+# *********
+# GHA is only invoked when following conditions are satisfied:
+# 1. Push to the `infrastructure` branch only.
+# 2. Exact file path matches `.github/workflows/infrastructure.yml`.
+
+name: Infrastructure 🔨
+run-name: APIM base infrastructure build on ${{ runner.name }}  ${{ runner.os }} from ${{ github.repository }}
+
+on:
+  push:
+    branches: [  APIM-149-ia-c-dev-environment ]
+    paths: [ .github/workflows/infrastructure.yml ]
+
+env:
+  product: APIM
+  environment: infrastructure
+  timezone: 'Europe/London'
+  # Deployment environment i.e., `dev`, `staging`, `prod` 
+  plan: ${{ env.environment }}
+
+jobs:
+
+# 1. Setup infrastructure variables
+  setup:
+    name: Setup 🔧
+    runs-on: [ self-hosted, APIM, infrastructure ]
+    outputs:
+      environment: ${{ env.environment }}
+      timezone: ${{ env.timezone }}
+    steps:
+    - name: Environment 🧪
+      run: echo "Environment set to ${{ env.environment }}"
+
+    - name: Timezone 🌐
+      run: echo "Timezone set to ${{ env.timezone }}"
+
+# 2. Base infrastructure creation
+  base:
+    name: Base 🧱
+    needs: setup
+    environment: ${{ needs.setup.outputs.environment }}
+    runs-on: [ self-hosted, APIM, infrastructure ]
+    steps:
+
+    - name: Azure Login 🔐
+      run: echo ${{ env.plan }}
