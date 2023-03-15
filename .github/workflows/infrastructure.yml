@@ -34,6 +34,7 @@ jobs:
     outputs:
       environment: ${{ env.environment }}
       timezone: ${{ env.timezone }}
+      type: preprod
     steps:
     - name: Environment 🧪
       run: echo "Environment set to ${{ env.environment }}"
@@ -50,4 +51,22 @@ jobs:
     steps:
 
     - name: Azure Login 🔐
-      run: echo ${{ env.plan }}
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Azure Defaults ✨
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=${{ var.REGION }}
+          az configure --defaults group=${{ var.GROUP }}
+
+    - name: Resource Group 🏗️
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: az group create \
+          --location ${{ var.REGION }} \
+          --name rg-${{ env.product }}-${{ needs.setup.outputs.type }}-001 \
+          --tags "Environment=${{ needs.setup.outputs.type }}" \
+          --tags "Product=${{ env.product }}"
