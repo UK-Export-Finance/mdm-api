@@ -11,7 +11,7 @@
 # 2. Exact file path matches `.github/workflows/infrastructure.yml`.
 
 name: Infrastructure 🔨
-run-name: APIM base infrastructure build on ${{ runner.name }}  ${{ runner.os }} from ${{ github.repository }}
+run-name: APIM base infrastructure build from ${{ github.repository }}
 
 on:
   push:
