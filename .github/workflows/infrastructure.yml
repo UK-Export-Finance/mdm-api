@@ -89,7 +89,6 @@ jobs:
       with:
         inlineScript: |
           az acr create \
-          --name acr-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001 \
+          --name cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001 \
           --sku Standard \
-          --admin-enabled true \
-          --allow-exports false
+          --admin-enabled true
