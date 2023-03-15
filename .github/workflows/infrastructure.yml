@@ -55,11 +55,11 @@ jobs:
     steps:
 
     - name: Pre-production 💫
-      if: contains('["dev", "staging"]', ${{ env.target }})
+      if: contains('["dev", "staging"]', env.target)
       run: echo "type=Pre-production" >> $GITHUB_ENV
 
     - name: Production 💫
-      if: contains('["prod"]', ${{ env.target }})
+      if: ${{ 'prod' == env.target }}
       run: echo "type=Production" >> $GITHUB_ENV
 
     - name: Azure Login 🔐
@@ -89,7 +89,7 @@ jobs:
       with:
         inlineScript: |
           az acr create
-            \--name acr-${{ env.product  }}-${{ env.target }}-${{ vars.REGION }}-001
+            \--name acr-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001
             \--sku Standard
             \--admin-enabled true
             \--allow-exports false
