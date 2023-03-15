@@ -46,14 +46,6 @@ jobs:
     - name: Timezone 🌐
       run: echo "Timezone set to ${{ env.timezone }}"
 
-    - name: Target 💫
-      if: contains('["dev", "staging"]', ${{ env.target }})
-      run: echo "type=Pre-production" >> $GITHUB_ENV
-
-    - name: Target 💫
-      if: contains('["prod"]', ${{ env.target }})
-      run: echo "type=Production" >> $GITHUB_ENV
-
 # 2. Base infrastructure creation
   base:
     name: Base 🧱
@@ -61,6 +53,14 @@ jobs:
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [ self-hosted, APIM, infrastructure ]
     steps:
+
+    - name: Pre-production 💫
+      if: contains('["dev", "staging"]', ${{ env.target }})
+      run: echo "type=Pre-production" >> $GITHUB_ENV
+
+    - name: Production 💫
+      if: contains('["prod"]', ${{ env.target }})
+      run: echo "type=Production" >> $GITHUB_ENV
 
     - name: Azure Login 🔐
       uses: azure/login@v1
@@ -81,7 +81,7 @@ jobs:
       with:
         inlineScript: az group create 
           \--location ${{ vars.REGION }} 
-          \--name rg-${{ env.product }}-${{ needs.setup.outputs.environment }}-001
+          \--name rg-${{ env.product }}-${{ env.target }}-001
 
     
     - name: ACR 📦️
@@ -89,7 +89,7 @@ jobs:
       with:
         inlineScript: |
           az acr create
-            \--name acr-${{ env.product  }}-${{ needs.setup.outputs.environment }}-${{ vars.REGION }}-001
+            \--name acr-${{ env.product  }}-${{ env.target }}-${{ vars.REGION }}-001
             \--sku Standard
             \--admin-enabled true
             \--allow-exports false
