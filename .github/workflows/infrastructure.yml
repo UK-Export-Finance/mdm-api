@@ -35,6 +35,7 @@ jobs:
       environment: ${{ env.environment }}
       timezone: ${{ env.timezone }}
       type: preprod
+      type_tag: Pre-production
     steps:
     - name: Environment 🧪
       run: echo "Environment set to ${{ env.environment }}"
@@ -65,6 +66,8 @@ jobs:
     - name: Resource Group 🏗️
       uses: azure/cli@v1.0.0
       with:
-        inlineScript: az group create --location ${{ vars.REGION }} --name rg-${{ env.product }}-${{ needs.setup.outputs.type }}-001 \
-          --tags "Environment=${{ needs.setup.outputs.type }}" \
-          --tags "Product=${{ env.product }}"
+        inlineScript: az group create 
+          \--location ${{ vars.REGION }} 
+          \--name rg-${{ env.product }}-${{ needs.setup.outputs.type }}-001
+          \--tags "Environment=${{ needs.setup.outputs.type }}"
+          \--tags "Product=${{ env.product }}"
