@@ -26,10 +26,6 @@ on:
     branches: [  APIM-149-ia-c-dev-environment ]
     paths: [ .github/workflows/infrastructure.yml ]
 
-permissions:
-      id-token: write
-      contents: read
-
 env:
   product: apim
   environment: infrastructure
@@ -77,10 +73,7 @@ jobs:
     - name: Login 🔐
       uses: azure/login@v1
       with:
-          client-id: ${{ secrets.CLIENT_ID }}
-          tenant-id: ${{ secrets.TENANT_ID }}
-          subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
-          enable-AzPSSession: true
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Azure defaults ✨
       uses: azure/cli@v1.0.0
