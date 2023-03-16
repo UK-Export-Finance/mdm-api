@@ -103,14 +103,16 @@ jobs:
           az acr create \
           --name cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001 \
           --sku Standard \
-          --admin-enabled true
+          --admin-enabled true \
+          --tags ${{ env.tags }}
 
     - name: Container app environment 🗃️
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
           az containerapp env create \
-          --name cae-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001
+          --name cae-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001 \
+          --tags ${{ env.tags }}
 
     
     - name: Container app - MDM 📄
@@ -121,12 +123,12 @@ jobs:
           --name ca-mdm-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001 \
           --environment cae-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001 \
           --registry-server cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001.azurecr.io \
-          --registry-username test \
-          --registry-password test \
-          --image cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001.azurecr.io/mdm:${{ env.target }} \
+          --registry-username $(az acr credentials show -n cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001 --query username) \
+          --registry-password $(az acr credentials show -n cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001 --query passwords[0].value) \
           --cpu 0.25 \
           --memory 0.5Gi \
           --min-replicas 1 \
           --ingress internal \
           --target-port ${{ vars.MDM_PORT }} \
-          --revision-suffix ${{ vars.REVISION_SUFFIX }}
+          --revision-suffix ${{ vars.REVISION_SUFFIX }} \
+          --tags ${{ env.tags }}
