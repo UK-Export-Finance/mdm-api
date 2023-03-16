@@ -126,7 +126,8 @@ jobs:
           --cpu 0.25 \
           --memory 0.5Gi \
           --min-replicas 1 \
-          --ingress internal
+          --ingress internal \
+          --target-port ${{ env.MDM_PORT }}
 
     - name: Container app - TFS 📄
       uses: azure/cli@v1.0.0
@@ -139,7 +140,8 @@ jobs:
           --cpu 0.25 \
           --memory 0.5Gi \
           --min-replicas 1 \
-          --ingress internal
+          --ingress internal \
+          --target-port ${{ env.TFS_PORT }}
 
     - name: Container app - eStore 📄
       uses: azure/cli@v1.0.0
@@ -152,4 +154,5 @@ jobs:
           --cpu 0.25 \
           --memory 0.5Gi \
           --min-replicas 1 \
-          --ingress internal
+          --ingress internal \
+          --target-port ${{ env.ESTORE_PORT }}
