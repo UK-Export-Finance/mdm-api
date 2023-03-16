@@ -111,9 +111,6 @@ jobs:
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
-          # AZ name space registration
-          az provider register --namespace Microsoft.App
-          # CAE
           az containerapp env create \
           --name cae-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001 \
 
@@ -122,9 +119,6 @@ jobs:
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
-          # AZ name space registration
-          az provider register --namespace Microsoft.App
-          # CA
           az containerapp create \
           --name ca-mdm-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001 \
           --environment cae-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001 \
@@ -138,9 +132,6 @@ jobs:
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
-          # AZ name space registration
-          az provider register --namespace Microsoft.App
-          # CA        
           az containerapp create \
           --name ca-tfs-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001 \
           --environment cae-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001 \
@@ -153,10 +144,7 @@ jobs:
     - name: Container app - eStore 📄
       uses: azure/cli@v1.0.0
       with:
-        inlineScript: |
-          # AZ name space registration
-          az provider register --namespace Microsoft.App
-          # CA        
+        inlineScript: |      
           az containerapp create \
           --name ca-estore-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001 \
           --environment cae-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001 \
