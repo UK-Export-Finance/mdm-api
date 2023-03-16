@@ -131,3 +131,37 @@ jobs:
           --ingress internal \
           --target-port ${{ vars.MDM_PORT }} \
           --tags ${{ env.tags }}
+
+    - name: Container app - TFS 📄
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az containerapp create \
+          --name ca-tfs-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001 \
+          --environment cae-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001 \
+          --registry-server cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001.azurecr.io \
+          --registry-username $(az acr credential show -n cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001 --query username) \
+          --registry-password $(az acr credential show -n cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001 --query passwords[0].value) \
+          --cpu 0.25 \
+          --memory 0.5Gi \
+          --min-replicas 1 \
+          --ingress internal \
+          --target-port ${{ vars.TFS_PORT }} \
+          --tags ${{ env.tags }}
+
+    - name: Container app - ESTORE 📄
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az containerapp create \
+          --name ca-estore-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001 \
+          --environment cae-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001 \
+          --registry-server cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001.azurecr.io \
+          --registry-username $(az acr credential show -n cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001 --query username) \
+          --registry-password $(az acr credential show -n cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001 --query passwords[0].value) \
+          --cpu 0.25 \
+          --memory 0.5Gi \
+          --min-replicas 1 \
+          --ingress internal \
+          --target-port ${{ vars.ESTORE_PORT }} \
+          --tags ${{ env.tags }}
