@@ -4,8 +4,6 @@
 # Standard Azure naming convention has been followed:
 # https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/resource-naming
 #
-# Azure container app namespace migration:
-# https://github.com/microsoft/azure-container-apps/issues/109
 #
 # Following Azure services are consumed:
 # 1. Azure resource group - https://learn.microsoft.com/en-us/cli/azure/group?view=azure-cli-latest#az-group-create
@@ -81,11 +79,11 @@ jobs:
           az configure --defaults group=rg-${{ env.product }}-${{ env.target }}-001
 
           # Tags
-          az configure --defaults tags="
-          Environment=${{ env.type }} \
-          Product=${{ env.product }} \
-          Region=${{ vars.REGION }} \
-          Team=Development"
+          az configure --defaults tags="\
+          'Environment=${{ env.type }}' \
+          'Product=${{ env.product }}' \
+          'Region=${{ vars.REGION }}' \
+          'Team=Development'"
 
           # AZ CLI extensions upgrade
           az extension add --name containerapp --upgrade
@@ -127,7 +125,7 @@ jobs:
           --memory 0.5Gi \
           --min-replicas 1 \
           --ingress internal \
-          --target-port ${{ env.MDM_PORT }}
+          --target-port ${{ vars.MDM_PORT }}
 
     - name: Container app - TFS 📄
       uses: azure/cli@v1.0.0
@@ -141,7 +139,7 @@ jobs:
           --memory 0.5Gi \
           --min-replicas 1 \
           --ingress internal \
-          --target-port ${{ env.TFS_PORT }}
+          --target-port ${{ vars.TFS_PORT }}
 
     - name: Container app - eStore 📄
       uses: azure/cli@v1.0.0
@@ -155,4 +153,4 @@ jobs:
           --memory 0.5Gi \
           --min-replicas 1 \
           --ingress internal \
-          --target-port ${{ env.ESTORE_PORT }}
+          --target-port ${{ vars.ESTORE_PORT }}
