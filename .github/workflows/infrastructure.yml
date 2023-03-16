@@ -70,9 +70,9 @@ jobs:
       run: echo "type=production" >> $GITHUB_ENV
 
     - name: Tags 🔖
-      run: echo "tags=Environment=${{ env.type }} \
+      run: echo "tags='Environment=${{ env.type }} \
        Product=${{ env.product }} \
-       Region=${{ vars.REGION }}"  >> $GITHUB_ENV
+       Region=${{ vars.REGION }}'"  >> $GITHUB_ENV
 
     - name: Login 🔐
       uses: azure/login@v1
@@ -80,6 +80,7 @@ jobs:
           client-id: ${{ secrets.CLIENT_ID }}
           tenant-id: ${{ secrets.TENANT_ID }}
           subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
+          enable-AzPSSession: true
 
     - name: Azure defaults ✨
       uses: azure/cli@v1.0.0
