@@ -130,5 +130,4 @@ jobs:
           --min-replicas 1 \
           --ingress internal \
           --target-port ${{ vars.MDM_PORT }} \
-          --revision-suffix ${{ vars.REVISION_SUFFIX }} \
           --tags ${{ env.tags }}
