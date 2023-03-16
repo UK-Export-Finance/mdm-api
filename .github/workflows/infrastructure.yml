@@ -1,12 +1,17 @@
 # This GHA is responsible for `APIM` supporting infrastructure
 # creation and configuration using `az cli` bash scripting.
 #
-# Standard Azure naming convention has been followed.
+# Standard Azure naming convention has been followed:
 # https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/resource-naming
 #
+# Azure container app namespace migration:
+# https://github.com/microsoft/azure-container-apps/issues/109
+#
 # Following Azure services are consumed:
-# 1. Azure Resource Group - https://learn.microsoft.com/en-us/cli/azure/group?view=azure-cli-latest#az-group-create
-# 2. Azure Container Registry - https://learn.microsoft.com/en-us/cli/azure/acr?view=azure-cli-latest#az-acr-create
+# 1. Azure resource group - https://learn.microsoft.com/en-us/cli/azure/group?view=azure-cli-latest#az-group-create
+# 2. Azure container registry - https://learn.microsoft.com/en-us/cli/azure/acr?view=azure-cli-latest#az-acr-create
+# 3. Azure container app environment - https://learn.microsoft.com/en-us/azure/container-apps/environment
+# 4. Azure container app - https://learn.microsoft.com/en-us/azure/container-apps/containers
 # 
 #
 # Execution
@@ -62,7 +67,7 @@ jobs:
       if: ${{ 'prod' == env.target }}
       run: echo "type=Production" >> $GITHUB_ENV
 
-    - name: Azure login 🔐
+    - name: Login 🔐
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
@@ -75,6 +80,10 @@ jobs:
           az configure --defaults group=rg-${{ env.product }}-${{ env.target }}-001
           az configure --defaults tags="Environment=${{ env.type }}"
           az configure --defaults tags="Product=${{ env.product }}"
+          # AZ CLI extensions upgrade
+          az extension add --name containerapp --upgrade
+          # AZ name space registration
+          az provider register --namespace Microsoft.App
 
     - name: Resource group 🏗️
       uses: azure/cli@v1.0.0
@@ -84,7 +93,7 @@ jobs:
           --name rg-${{ env.product }}-${{ env.target }}-001
 
     
-    - name: Azure container registry 📦️
+    - name: Container registry 📦️
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
@@ -92,3 +101,50 @@ jobs:
           --name cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001 \
           --sku Standard \
           --admin-enabled true
+
+    - name: Container app environment 🗃️
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az containerapp env create \
+          --name cae-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001 \
+
+    
+    - name: Container app - MDM 📄
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az containerapp create \
+          --name ca-mdm-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001 \
+          --environment cae-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001 \
+          --image cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001.azurecr.io/mdm:${{ env.target }} \
+          --cpu 0.25 \
+          --memory 0.5Gi \
+          --min-replicas 1 \
+          --ingress internal
+
+    - name: Container app - TFS 📄
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az containerapp create \
+          --name ca-tfs-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001 \
+          --environment cae-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001 \
+          --image cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001.azurecr.io/tfs:${{ env.target }} \
+          --cpu 0.25 \
+          --memory 0.5Gi \
+          --min-replicas 1 \
+          --ingress internal
+
+    - name: Container app - eStore 📄
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az containerapp create \
+          --name ca-estore-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001 \
+          --environment cae-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001 \
+          --image cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001.azurecr.io/estore:${{ env.target }} \
+          --cpu 0.25 \
+          --memory 0.5Gi \
+          --min-replicas 1 \
+          --ingress internal
