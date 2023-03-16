@@ -33,7 +33,7 @@ env:
   # Deployment environment target i.e., `dev`, `staging`, `prod` 
   target: ${{ vars.environment }}
   # Tags
-  tags: 'Environment=${{ env.type }}'
+  tags: Environment=${{ env.type }}
 
 jobs:
 
