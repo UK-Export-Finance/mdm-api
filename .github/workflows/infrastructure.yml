@@ -66,7 +66,7 @@ jobs:
       run: echo "type=production" >> $GITHUB_ENV
 
     - name: Tags 🔖
-      run: echo tags='Purpose=${{ env.type }}' \
+      run: echo tags='Environment=${{ env.type }}' \
         'Product=${{ env.product }}' \
         'Region=${{ vars.REGION }}' \
         'Team=development' >> $GITHUB_ENV
@@ -103,16 +103,14 @@ jobs:
           az acr create \
           --name cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001 \
           --sku Standard \
-          --admin-enabled true \
-          --tags ${{ env.tags }}
+          --admin-enabled true
 
     - name: Container app environment 🗃️
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
           az containerapp env create \
-          --name cae-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001 \
-          --tags ${{ env.tags }}
+          --name cae-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001
 
     
     - name: Container app - MDM 📄
@@ -131,5 +129,4 @@ jobs:
           --min-replicas 1 \
           --ingress internal \
           --target-port ${{ vars.MDM_PORT }} \
-          --revision-suffix ${{ vars.REVISION_SUFFIX }} \
-          --tags ${{ env.tags }}
+          --revision-suffix ${{ vars.REVISION_SUFFIX }}
