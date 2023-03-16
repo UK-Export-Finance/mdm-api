@@ -59,11 +59,11 @@ jobs:
 
     - name: Pre-production 💫
       if: contains('["dev", "staging"]', env.target)
-      run: echo "type=preproduction" >> $GITHUB_ENV
+      run: echo "type=Pre-production" >> $GITHUB_ENV
 
     - name: Production 💫
       if: ${{ 'prod' == env.target }}
-      run: echo "type=production" >> $GITHUB_ENV
+      run: echo "type=Production" >> $GITHUB_ENV
 
     - name: Tags 🔖
       run: echo tags='Environment=${{ env.type }}' \
