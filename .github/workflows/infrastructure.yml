@@ -33,10 +33,7 @@ env:
   # Deployment environment target i.e., `dev`, `staging`, `prod` 
   target: ${{ vars.environment }}
   # Tags
-  tags: Environment=${{ env.type }} \
-        Product=${{ env.product }} \
-        Region=${{ vars.REGION }} \
-        Team=Development"
+  tags: 'Environment=${{ env.type }}'
 
 jobs:
 
