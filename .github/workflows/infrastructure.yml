@@ -26,6 +26,10 @@ on:
     branches: [  APIM-149-ia-c-dev-environment ]
     paths: [ .github/workflows/infrastructure.yml ]
 
+permissions:
+      id-token: write
+      contents: read
+
 env:
   product: apim
   environment: infrastructure
@@ -59,21 +63,23 @@ jobs:
 
     - name: Pre-production 💫
       if: contains('["dev", "staging"]', env.target)
-      run: echo "type=Pre-production" >> $GITHUB_ENV
+      run: echo "type=preproduction" >> $GITHUB_ENV
 
     - name: Production 💫
       if: ${{ 'prod' == env.target }}
-      run: echo "type=Production" >> $GITHUB_ENV
+      run: echo "type=production" >> $GITHUB_ENV
 
     - name: Tags 🔖
       run: echo "tags=Environment=${{ env.type }} \
-        Product=${{ env.product }} \
-        Region=${{ vars.REGION }}"  >> $GITHUB_ENV
+       Product=${{ env.product }} \
+       Region=${{ vars.REGION }}"  >> $GITHUB_ENV
 
     - name: Login 🔐
       uses: azure/login@v1
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+          client-id: ${{ secrets.CLIENT_ID }}
+          tenant-id: ${{ secrets.TENANT_ID }}
+          subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
 
     - name: Azure defaults ✨
       uses: azure/cli@v1.0.0
