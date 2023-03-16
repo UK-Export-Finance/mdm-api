@@ -66,7 +66,7 @@ jobs:
       run: echo "type=production" >> $GITHUB_ENV
 
     - name: Tags 🔖
-      run: echo tags='Environment=${{ env.type }}' \
+      run: echo tags='Purpose=${{ env.type }}' \
         'Product=${{ env.product }}' \
         'Region=${{ vars.REGION }}' \
         'Team=development' >> $GITHUB_ENV
@@ -111,7 +111,8 @@ jobs:
       with:
         inlineScript: |
           az containerapp env create \
-          --name cae-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001
+          --name cae-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001 \
+          --tags ${{ env.tags }}
 
     
     - name: Container app - MDM 📄
