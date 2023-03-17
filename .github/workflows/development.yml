@@ -92,12 +92,17 @@ jobs:
         password: $(az acr credential show -n ${{ env.cr }} --query passwords[0].value | tr -d '"')
 
     - name: Artifact 'latest' 🗃️
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v1
       with:
-        push: true
-        tags: ${{ env.acr }}/${{ env.name }}:${{ env.from }}
+        registry: ${{ env.acr }}
+        username: $(az acr credential show -n ${{ env.cr }} --query username | tr -d '"')
+        password: $(az acr credential show -n ${{ env.cr }} --query passwords[0].value | tr -d '"')
+        repository: ${{ env.name }}
+        path: ${{ env.name }}
+        tags: ${{ env.from }}
         build_args:
           GITHUB_SHA=${{ github.sha }}
+        add_git_labels: true
 
     - name: Artifact '${{ env.environment }}' 🗃️
       run: |
