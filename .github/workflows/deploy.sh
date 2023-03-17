@@ -8,10 +8,8 @@ NC='\033[0m'
 printf "📝 Deployment strategy:\n"
 printf "=======================\n\n"
 printf "${YELLOW}0. Infrastructure 🔧${NC}\n"
-printf "${BLUE}1. Development 🧪${NC}\n"
-printf "${BLUE}2. Staging 💻${NC}\n"
-printf "${RED}3. Production 🚀${NC}\n"
-printf "${RED}4. ACR Purge 🗑️${NC}\n\n"
+printf "${BLUE}1. Deployment 🧪${NC}\n"
+printf "${RED}2. ACR Purge 🗑️${NC}\n\n"
 
 read selection
 
@@ -25,20 +23,15 @@ if [ -n "$selection" ]; then
     ############### DEVELOPMENT ###############
     elif [ "$selection" = "1" ]
     then
-    destination=dev
-    branch=main-application
-    ############### PRODUCTION ###############
-    elif [ "$selection" = "2" ]
-    then
-    destination=prod
+    destination=deployment
     branch=main
     ############### ACR PURGE ###############
-    elif [ "$selection" = "3" ]
+    elif [ "$selection" = "2" ]
     then
     destination=""
     branch=""
-    az acr run --cmd "acr purge --filter 'get-a-quote:.*' --ago 15d" --registry mdm-development /dev/null
-    az acr run --cmd "acr purge --filter 'get-a-quote:.*' --ago 15d" --registry mdm-production /dev/null
+    az acr run --cmd "acr purge --filter 'get-a-quote:.*' --ago 15d" --registry ${env.APIM_ACR} /dev/null
+    az acr run --cmd "acr purge --filter 'get-a-quote:.*' --ago 15d" --registry ${env.APIM_ACR} /dev/null
     ############### ACR PURGE ###############
     fi
 

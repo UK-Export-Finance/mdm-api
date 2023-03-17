@@ -1,0 +1,114 @@
+# This GHA is responsible for `APIM` deployment.
+# Deployment is initiated using `az cli` bash script.
+#
+# Standard Azure naming convention has been followed:
+# https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/resource-naming
+#
+#
+# Following Azure services are consumed:
+# 1. Azure resource group - https://learn.microsoft.com/en-us/cli/azure/group?view=azure-cli-latest#az-group-create
+# 2. Azure container registry - https://learn.microsoft.com/en-us/cli/azure/acr?view=azure-cli-latest#az-acr-create
+# 3. Azure container app environment - https://learn.microsoft.com/en-us/azure/container-apps/environment
+# 4. Azure container app - https://learn.microsoft.com/en-us/azure/container-apps/containers
+# 
+#
+# Execution
+# *********
+# GHA is only invoked when following conditions are satisfied:
+# 1. Push to the `deployment` branch only.
+# 2. Any modifications inside `src` directory
+
+name: Deployment 🚀
+run-name: APIM ${{ vars.environment }} deployment from ${{ github.repository }}
+
+on:
+  push:
+    branches: [  APIM-149-ia-c-dev-environment ]
+    paths:
+    - 'src/**'
+
+env:
+  product: apim
+  environment: deployment
+  timezone: 'Europe/London'
+  # Deployment environment target i.e., `dev`, `staging`, `prod` 
+  target: ${{ vars.environment }}
+  # Base artifact
+  from: latest
+
+jobs:
+
+# 1. Setup deployment variables
+  setup:
+    name: Setup 🔧
+    runs-on: [ self-hosted, APIM, deployment ]
+    outputs:
+      environment: ${{ env.environment }}
+      timezone: ${{ env.timezone }}
+    steps:
+    - name: Environment 🧪
+      run: echo "Environment set to ${{ env.environment }}"
+
+    - name: Timezone 🌐
+      run: echo "Timezone set to ${{ env.timezone }}"
+
+# 2. MDM micro-service deployment
+  mdm:
+    name: MDM 📦️
+    needs: setup
+    environment: ${{ needs.setup.outputs.environment }}
+    env:
+      name: mdm
+    runs-on: [ self-hosted, APIM, deployment ]
+    steps:
+
+    - name: Repository 🗃️
+      uses: actions/checkout@v3
+
+    - name: Azure 🔐
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Defaults ✨
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          # Basic
+          az configure --defaults location=${{ vars.REGION }}
+          az configure --defaults group=rg-${{ env.product }}-${{ env.target }}-001
+          az configure --default containerapp=ca-mdm-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001
+
+    - name: ACR 🔐
+      uses: azure/docker-login@v1
+      with:
+        login-server: $(az acr show -n cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001 --query loginServer)
+        username: $(az acr credential show -n cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001 --query username)
+        password: $(az acr credential show -n cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001 --query passwords[0].value)
+
+    - name: latest 🗃️
+      uses: docker/build-push-action@v1
+      with:
+        registry: $(az acr show -n cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001 --query loginServer)
+        username: $(az acr credential show -n cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001 --query username)
+        password: $(az acr credential show -n cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001 --query passwords[0].value)
+        repository: ${{ env.name }}
+        path: src/${{ env.name }}
+        tags: ${{ env.from }}
+        build_args:
+          GITHUB_SHA=${{ github.sha }}
+        add_git_labels: true
+
+    - name: ${{ env.target }} 🗃️
+      run: |
+        docker pull $(az acr show -n cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001 --query loginServer)/${{ env.name }}:${{ env.from }}
+        docker tag $(az acr show -n cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001 --query loginServer)/${{ env.name }}:${{ env.from }} $(az acr show -n cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001 --query loginServer)/${{ env.name }}:${{ env.target }}
+        docker push $(az acr show -n cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001 --query loginServer)/${{ env.name }}:${{ env.target }}
+
+    - name: Revisions 🔀
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az containerapp update \
+          --image $(az acr show -n cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001 --query loginServer)/${{ env.name }}:${{ env.target }}
+
