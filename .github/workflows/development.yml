@@ -41,8 +41,8 @@ jobs:
     name: Setup 🔧
     runs-on: [ self-hosted, APIM, deployment ]
     outputs:
-      environment: ${{ env.environment }}
       product: ${{ env.product }}
+      environment: ${{ env.environment }}
       timezone: ${{ env.timezone }}
     steps:
     - name: Environment 🧪
@@ -80,37 +80,21 @@ jobs:
           az configure --defaults group=rg-${{ env.product }}-${{ env.environment }}-001
           az configure --default containerapp=ca-mdm-${{ env.product }}-${{ env.environment }}-${{ vars.REGION }}-001
 
-    - name: Azure CLI 🧵
-      run: |
-        echo acr=$(az acr show -n ${{ env.cr }} --query loginServer | tr -d '"') >> $GITHUB_ENV
-        echo username=$(az acr credential show -n ${{ env.cr }} --query username | tr -d '"') >> $GITHUB_ENV
-        echo password=$(az acr credential show -n ${{ env.cr }} --query passwords[0].value | tr -d '"') >> $GITHUB_ENV
-
     - name: ACR 🔐
       uses: azure/docker-login@v1
       with:
-        login-server: ${{ env.acr }}
-        username: ${{ env.username }}
-        password: ${{ env.password }}
+        login-server: $(az acr show -n ${{ env.cr }} --query loginServer | tr -d '"')
+        username: $(az acr credential show -n ${{ env.cr }} --query username | tr -d '"')
+        password: $(az acr credential show -n ${{ env.cr }} --query passwords[0].value | tr -d '"')
 
-    - name: Artifact 'latest' 🗃️
-      uses: docker/build-push-action@v1
-      with:
-        registry: ${{ env.acr }}
-        username: ${{ env.username }}
-        password: ${{ env.password }}
-        repository: ${{ env.name }}
-        path: ${{ env.name }}
-        tags: ${{ env.from }}
-        build_args:
-          GITHUB_SHA=${{ github.sha }}
-        add_git_labels: true
-
-    - name: Artifact '${{ env.environment }}' 🗃️
+    - name: Artifacts 🗃️
       run: |
-        docker pull ${{ env.acr }}/${{ env.name }}:${{ env.from }}
-        docker tag ${{ env.acr }}/${{ env.name }}:${{ env.from }} ${{ env.acr }}/${{ env.name }}:${{ env.environment }}
-        docker push ${{ env.acr }}/${{ env.name }}:${{ env.environment }}
+        docker build -t mdm ./dist
+        docker tag mdm $(az acr show -n ${{ env.cr }} --query loginServer | tr -d '"')/${{ env.name }}:${{ env.from }}
+        docker push $(az acr show -n ${{ env.cr }} --query loginServer | tr -d '"')/${{ env.name }}:${{ env.from }}
+        docker pull $(az acr show -n ${{ env.cr }} --query loginServer | tr -d '"')/${{ env.name }}:${{ env.from }}
+        docker tag $(az acr show -n ${{ env.cr }} --query loginServer | tr -d '"')/${{ env.name }}:${{ env.from }} $(az acr show -n ${{ env.cr }} --query loginServer | tr -d '"')/${{ env.name }}:${{ env.environment }}
+        docker push $(az acr show -n ${{ env.cr }} --query loginServer | tr -d '"')/${{ env.name }}:${{ env.environment }}
 
     - name: Secrets 🔒️
       uses: azure/cli@v1.0.0
@@ -163,5 +147,5 @@ jobs:
       with:
         inlineScript: |
           az containerapp update \
-          --image ${{ env.acr }}/${{ env.name }}:${{ env.environment }}
+          --image $(az acr show -n ${{ env.cr }} --query loginServer | tr -d '"')/${{ env.name }}:${{ env.environment }}
 
