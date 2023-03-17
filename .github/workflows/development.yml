@@ -89,7 +89,7 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         push: true
-        tags: $(az acr show -n cr${{ env.product }}${{ env.environment }}${{ vars.REGION }}001 --query loginServer)/${{ env.name }}:${{ env.from }}
+        tags: $($(az acr show -n cr${{ env.product }}${{ env.environment }}${{ vars.REGION }}001 --query loginServer))/${{ env.name }}:${{ env.from }}
         build_args:
           GITHUB_SHA=${{ github.sha }}
 
