@@ -85,20 +85,15 @@ jobs:
         username: $(az acr credential show -n cr${{ env.product }}${{ env.environment }}${{ vars.REGION }}001 --query username)
         password: $(az acr credential show -n cr${{ env.product }}${{ env.environment }}${{ vars.REGION }}001 --query passwords[0].value)
 
-    - name: latest 🗃️
-      uses: docker/build-push-action@v1
+    - name: Artifact 'latest' 🗃️
+      uses: docker/build-push-action@v4
       with:
-        registry: $(az acr show -n cr${{ env.product }}${{ env.environment }}${{ vars.REGION }}001 --query loginServer)
-        username: $(az acr credential show -n cr${{ env.product }}${{ env.environment }}${{ vars.REGION }}001 --query username)
-        password: $(az acr credential show -n cr${{ env.product }}${{ env.environment }}${{ vars.REGION }}001 --query passwords[0].value)
-        repository: ${{ env.name }}
-        path: src/${{ env.name }}
-        tags: ${{ env.from }}
+        push: true
+        tags: $(az acr show -n cr${{ env.product }}${{ env.environment }}${{ vars.REGION }}001 --query loginServer)/${{ env.name }}:${{ env.from }}
         build_args:
           GITHUB_SHA=${{ github.sha }}
-        add_git_labels: true
 
-    - name: ${{ env.environment }} 🗃️
+    - name: Artifact '${{ env.environment }}' 🗃️
       run: |
         docker pull $(az acr show -n cr${{ env.product }}${{ env.environment }}${{ vars.REGION }}001 --query loginServer)/${{ env.name }}:${{ env.from }}
         docker tag $(az acr show -n cr${{ env.product }}${{ env.environment }}${{ vars.REGION }}001 --query loginServer)/${{ env.name }}:${{ env.from }} $(az acr show -n cr${{ env.product }}${{ env.environment }}${{ vars.REGION }}001 --query loginServer)/${{ env.name }}:${{ env.environment }}
