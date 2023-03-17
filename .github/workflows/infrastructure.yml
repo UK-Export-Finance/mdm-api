@@ -65,7 +65,7 @@ jobs:
       if: ${{ 'prod' == env.target }}
       run: echo "type=Production" >> $GITHUB_ENV
 
-    - name: Tags 🔖
+    - name: Tags 🏷️
       run: echo tags='Environment=${{ env.type }}' \
         'Product=${{ env.product }}' \
         'Region=${{ vars.REGION }}' \

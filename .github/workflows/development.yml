@@ -78,10 +78,13 @@ jobs:
           az configure --defaults group=rg-${{ env.product }}-${{ env.environment }}-001
           az configure --default containerapp=ca-mdm-${{ env.product }}-${{ env.environment }}-${{ vars.REGION }}-001
 
+    - name: Environment 🧵
+      run: echo "acr=$(az acr show -n cr${{ env.product }}${{ env.environment }}${{ vars.REGION }}001 --query loginServer)" >> $GITHUB_ENV
+
     - name: ACR 🔐
       uses: azure/docker-login@v1
       with:
-        login-server: $(az acr show -n cr${{ env.product }}${{ env.environment }}${{ vars.REGION }}001 --query loginServer)
+        login-server: ${{ env.acr }}
         username: $(az acr credential show -n cr${{ env.product }}${{ env.environment }}${{ vars.REGION }}001 --query username)
         password: $(az acr credential show -n cr${{ env.product }}${{ env.environment }}${{ vars.REGION }}001 --query passwords[0].value)
 
@@ -89,15 +92,15 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         push: true
-        tags: $($(az acr show -n cr${{ env.product }}${{ env.environment }}${{ vars.REGION }}001 --query loginServer))/${{ env.name }}:${{ env.from }}
+        tags: ${{ env.acr }}/${{ env.name }}:${{ env.from }}
         build_args:
           GITHUB_SHA=${{ github.sha }}
 
     - name: Artifact '${{ env.environment }}' 🗃️
       run: |
-        docker pull $(az acr show -n cr${{ env.product }}${{ env.environment }}${{ vars.REGION }}001 --query loginServer)/${{ env.name }}:${{ env.from }}
-        docker tag $(az acr show -n cr${{ env.product }}${{ env.environment }}${{ vars.REGION }}001 --query loginServer)/${{ env.name }}:${{ env.from }} $(az acr show -n cr${{ env.product }}${{ env.environment }}${{ vars.REGION }}001 --query loginServer)/${{ env.name }}:${{ env.environment }}
-        docker push $(az acr show -n cr${{ env.product }}${{ env.environment }}${{ vars.REGION }}001 --query loginServer)/${{ env.name }}:${{ env.environment }}
+        docker pull ${{ env.acr }}/${{ env.name }}:${{ env.from }}
+        docker tag ${{ env.acr }}/${{ env.name }}:${{ env.from }} ${{ env.acr }}/${{ env.name }}:${{ env.environment }}
+        docker push ${{ env.acr }}/${{ env.name }}:${{ env.environment }}
 
     - name: Secrets 🔒️
       uses: azure/cli@v1.0.0
@@ -150,5 +153,5 @@ jobs:
       with:
         inlineScript: |
           az containerapp update \
-          --image $(az acr show -n cr${{ env.product }}${{ env.environment }}${{ vars.REGION }}001 --query loginServer)/${{ env.name }}:${{ env.environment }}
+          --image ${{ env.acr }}/${{ env.name }}:${{ env.environment }}
 
