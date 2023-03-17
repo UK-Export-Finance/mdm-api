@@ -7,4 +7,4 @@ mkdir -p /run/openrc/
 touch /run/openrc/softlevel
 
 echo "Intialising API..."
-CMD [ "node", "dist/main.js" ]
+npm run start:prod
