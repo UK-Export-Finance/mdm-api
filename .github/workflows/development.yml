@@ -78,14 +78,11 @@ jobs:
           az configure --defaults group=rg-${{ env.product }}-${{ env.environment }}-001
           az configure --default containerapp=ca-mdm-${{ env.product }}-${{ env.environment }}-${{ vars.REGION }}-001
 
-    - name: Environment 🧵
+    - name: Azure CLI 🧵
       run: echo cr=cr${{ env.product }}${{ env.environment }}${{ vars.REGION }}001 >> $GITHUB_ENV
 
-    - name: Environment 🧵
-      run: echo acr="$(az acr show -n ${{ env.cr }} --query loginServer)" \
-        acr2='$(az acr show -n ${{ env.cr }} --query loginServer)' \
-        acr3=$(az acr show -n env.cr --query loginServer) \
-        acr4=$(az acr show -n ${{ env.cr }} --query loginServer) >> $GITHUB_ENV
+    - name: Azure CLI 🧵
+      run: echo acr=$(az acr show -n ${{ env.cr }} --query loginServer) >> $GITHUB_ENV
 
     - name: ACR 🔐
       uses: azure/docker-login@v1
