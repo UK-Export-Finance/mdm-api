@@ -8,8 +8,10 @@ NC='\033[0m'
 printf "📝 Deployment strategy:\n"
 printf "=======================\n\n"
 printf "${YELLOW}0. Infrastructure 🔧${NC}\n"
-printf "${BLUE}1. Deployment 🧪${NC}\n"
-printf "${RED}2. ACR Purge 🗑️${NC}\n\n"
+printf "${BLUE}1. Development 🧪${NC}\n"
+printf "${BLUE}2. Staging 💻${NC}\n"
+printf "${RED}3. Production 🚀${NC}\n"
+printf "${RED}4. ACR Purge 🗑️${NC}\n\n"
 
 read selection
 
@@ -23,10 +25,15 @@ if [ -n "$selection" ]; then
     ############### DEVELOPMENT ###############
     elif [ "$selection" = "1" ]
     then
-    destination=deployment
+    destination=dev
+    branch=main-application
+    ############### PRODUCTION ###############
+    elif [ "$selection" = "2" ]
+    then
+    destination=prod
     branch=main
     ############### ACR PURGE ###############
-    elif [ "$selection" = "2" ]
+    elif [ "$selection" = "3" ]
     then
     destination=""
     branch=""
