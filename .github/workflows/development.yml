@@ -81,7 +81,6 @@ jobs:
           # Basic
           az configure --defaults location=${{ vars.REGION }}
           az configure --defaults group=rg-${{ env.product }}-${{ env.environment }}-001
-          az configure --default containerapp=ca-mdm-${{ env.product }}-${{ env.environment }}-${{ vars.REGION }}-001
 
     - name: ACR 🔐
       uses: azure/docker-login@v1
@@ -102,7 +101,9 @@ jobs:
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
-          az containerapp secret set --secrets\
+          az containerapp secret set \
+          --name ca-mdm-${{ env.product }}-${{ env.environment }}-${{ vars.REGION }}-001 \
+          --secrets \
           PORT: ${{ secrets.PORT }} \
           NODE_ENV: ${{ secrets.NODE_ENV }} \
           TZ: ${{ secrets.TZ }} \
@@ -149,5 +150,6 @@ jobs:
       with:
         inlineScript: |
           az containerapp update \
+          --name ca-mdm-${{ env.product }}-${{ env.environment }}-${{ vars.REGION }}-001 \
           --image ${{ env.acr }}/${{ env.name }}:${{ env.environment }}
 
