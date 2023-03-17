@@ -97,6 +97,14 @@ jobs:
         docker push ${{ env.acr }}/${{ env.name }}:${{ github.sha }}
         docker push ${{ env.acr }}/${{ env.name }}:${{ env.from }}
 
+    - name: Revisions 🔀
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az containerapp update \
+          --name ca-mdm-${{ env.product }}-${{ env.environment }}-${{ vars.REGION }}-001 \
+          --image ${{ env.acr }}/${{ env.name }}:${{ env.environment }}
+
     - name: Secrets 🔒️
       uses: azure/cli@v1.0.0
       with:
@@ -144,12 +152,4 @@ jobs:
           DATABASE_NAME: ${{ secrets.DATABASE_NAME }} \
           API_KEY: ${{ secrets.API_KEY }} \
           API_KEY_STRATEGY: ${{ secrets.API_KEY_STRATEGY }}
-
-    - name: Revisions 🔀
-      uses: azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az containerapp update \
-          --name ca-mdm-${{ env.product }}-${{ env.environment }}-${{ vars.REGION }}-001 \
-          --image ${{ env.acr }}/${{ env.name }}:${{ env.environment }}
 
