@@ -89,7 +89,7 @@ jobs:
 
     - name: Artifacts 🗃️
       run: |
-        docker build -t mdm ./dist
+        docker build -t mdm ./
         docker tag mdm $(az acr show -n ${{ env.cr }} --query loginServer | tr -d '"')/${{ env.name }}:${{ env.from }}
         docker push $(az acr show -n ${{ env.cr }} --query loginServer | tr -d '"')/${{ env.name }}:${{ env.from }}
         docker pull $(az acr show -n ${{ env.cr }} --query loginServer | tr -d '"')/${{ env.name }}:${{ env.from }}
