@@ -84,10 +84,15 @@ jobs:
       uses: azure/docker-login@v1
       with:
         login-server: $(az acr show -n ${{ env.cr }} --query loginServer | tr -d '"')
-        username: $(az acr credential show -n ${{ env.cr }} --query username | tr -d '"')
-        password: $(az acr credential show -n ${{ env.cr }} --query passwords[0].value | tr -d '"')
-    - run: |
-        docker build . -t $(az acr show -n ${{ env.cr }} --query loginServer | tr -d '"')/${{ env.name }}:${{ env.from }}
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+    
+    - name: Artifacts 🗃️
+      run: |
+        docker build . \
+        -t $(az acr show -n ${{ env.cr }} --query loginServer | tr -d '"')/${{ env.name }}:${{ github.sha }} \
+        -t $(az acr show -n ${{ env.cr }} --query loginServer | tr -d '"')/${{ env.name }}:${{ env.from }}
+        docker push $(az acr show -n ${{ env.cr }} --query loginServer | tr -d '"')/${{ env.name }}:${{ github.sha }}
         docker push $(az acr show -n ${{ env.cr }} --query loginServer | tr -d '"')/${{ env.name }}:${{ env.from }}
 
     - name: Secrets 🔒️
