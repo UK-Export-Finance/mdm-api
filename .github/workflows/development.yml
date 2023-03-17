@@ -103,7 +103,7 @@ jobs:
         inlineScript: |
           az containerapp update \
           --name ca-mdm-${{ env.product }}-${{ env.environment }}-${{ vars.REGION }}-001 \
-          --image ${{ env.acr }}/${{ env.name }}:${{ env.environment }}
+          --image ${{ env.acr }}/${{ env.name }}:${{ env.from }}
 
     - name: Secrets 🔒️
       uses: azure/cli@v1.0.0
