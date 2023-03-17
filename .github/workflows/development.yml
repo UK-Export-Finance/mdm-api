@@ -58,6 +58,7 @@ jobs:
     env:
       name: mdm
       environmet: ${{ needs.setup.outputs.environment }}
+      cr: cr${{ env.product }}${{ env.environment }}${{ vars.REGION }}001
     runs-on: [ self-hosted, APIM, deployment ]
     steps:
 
@@ -79,24 +80,24 @@ jobs:
           az configure --default containerapp=ca-mdm-${{ env.product }}-${{ env.environment }}-${{ vars.REGION }}-001
 
     - name: Azure CLI 🧵
-      run: echo cr=cr${{ env.product }}${{ env.environment }}${{ vars.REGION }}001 >> $GITHUB_ENV
-
-    - name: Azure CLI 🧵
-      run: echo acr=$(az acr show -n ${{ env.cr }} --query loginServer | tr -d '"') >> $GITHUB_ENV
+      run: |
+        echo acr=$(az acr show -n ${{ env.cr }} --query loginServer | tr -d '"') >> $GITHUB_ENV
+        echo username=$(az acr credential show -n ${{ env.cr }} --query username | tr -d '"') >> $GITHUB_ENV
+        echo password=$(az acr credential show -n ${{ env.cr }} --query passwords[0].value | tr -d '"') >> $GITHUB_ENV
 
     - name: ACR 🔐
       uses: azure/docker-login@v1
       with:
         login-server: ${{ env.acr }}
-        username: $(az acr credential show -n ${{ env.cr }} --query username | tr -d '"')
-        password: $(az acr credential show -n ${{ env.cr }} --query passwords[0].value | tr -d '"')
+        username: ${{ env.username }}
+        password: ${{ env.password }}
 
     - name: Artifact 'latest' 🗃️
       uses: docker/build-push-action@v1
       with:
         registry: ${{ env.acr }}
-        username: $(az acr credential show -n ${{ env.cr }} --query username | tr -d '"')
-        password: $(az acr credential show -n ${{ env.cr }} --query passwords[0].value | tr -d '"')
+        username: ${{ env.username }}
+        password: ${{ env.password }}
         repository: ${{ env.name }}
         path: ${{ env.name }}
         tags: ${{ env.from }}
