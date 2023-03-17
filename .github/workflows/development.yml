@@ -79,9 +79,6 @@ jobs:
           az configure --defaults location=${{ vars.REGION }}
           az configure --defaults group=rg-${{ env.product }}-${{ env.environment }}-001
           az configure --default containerapp=ca-mdm-${{ env.product }}-${{ env.environment }}-${{ vars.REGION }}-001
-    - run: |
-        docker build . -t $(az acr show -n ${{ env.cr }} --query loginServer | tr -d '"')/${{ env.name }}:${{ env.from }}
-        docker push $(az acr show -n ${{ env.cr }} --query loginServer | tr -d '"')/${{ env.name }}:${{ env.from }}
 
     - name: ACR 🔐
       uses: azure/docker-login@v1
@@ -89,6 +86,9 @@ jobs:
         login-server: $(az acr show -n ${{ env.cr }} --query loginServer | tr -d '"')
         username: $(az acr credential show -n ${{ env.cr }} --query username | tr -d '"')
         password: $(az acr credential show -n ${{ env.cr }} --query passwords[0].value | tr -d '"')
+    - run: |
+        docker build . -t $(az acr show -n ${{ env.cr }} --query loginServer | tr -d '"')/${{ env.name }}:${{ env.from }}
+        docker push $(az acr show -n ${{ env.cr }} --query loginServer | tr -d '"')/${{ env.name }}:${{ env.from }}
 
     - name: Secrets 🔒️
       uses: azure/cli@v1.0.0
