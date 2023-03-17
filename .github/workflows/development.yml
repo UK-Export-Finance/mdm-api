@@ -42,6 +42,7 @@ jobs:
     runs-on: [ self-hosted, APIM, deployment ]
     outputs:
       environment: ${{ env.environment }}
+      product: ${{ env.product }}
       timezone: ${{ env.timezone }}
     steps:
     - name: Environment 🧪
@@ -58,7 +59,7 @@ jobs:
     env:
       name: mdm
       environmet: ${{ needs.setup.outputs.environment }}
-      cr: cr${{ env.product }}${{ env.environment }}${{ vars.REGION }}001
+      cr: cr${{ needs.setup.outputs.product }}${{ needs.setup.outputs.environment }}${{ vars.REGION }}001
     runs-on: [ self-hosted, APIM, deployment ]
     steps:
 
