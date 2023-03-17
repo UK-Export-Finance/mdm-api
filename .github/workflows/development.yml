@@ -82,14 +82,14 @@ jobs:
       run: echo cr=cr${{ env.product }}${{ env.environment }}${{ vars.REGION }}001 >> $GITHUB_ENV
 
     - name: Azure CLI 🧵
-      run: echo acr=$(az acr show -n ${{ env.cr }} --query loginServer) >> $GITHUB_ENV
+      run: echo acr=$(az acr show -n ${{ env.cr }} --query loginServer | tr -d '"') >> $GITHUB_ENV
 
     - name: ACR 🔐
       uses: azure/docker-login@v1
       with:
         login-server: ${{ env.acr }}
-        username: $(az acr credential show -n ${{ env.cr }} --query username)
-        password: $(az acr credential show -n ${{ env.cr }} --query passwords[0].value)
+        username: $(az acr credential show -n ${{ env.cr }} --query username | tr -d '"')
+        password: $(az acr credential show -n ${{ env.cr }} --query passwords[0].value | tr -d '"')
 
     - name: Artifact 'latest' 🗃️
       uses: docker/build-push-action@v4
