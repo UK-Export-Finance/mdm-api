@@ -144,5 +144,4 @@ jobs:
           "DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}" \
           "DATABASE_NAME=${{ secrets.DATABASE_NAME }}" \
           "API_KEY=${{ secrets.API_KEY }}" \
-          "API_KEY_STRATEGY=${{ secrets.API_KEY_STRATEGY "}}
-
+          "API_KEY_STRATEGY=${{ secrets.API_KEY_STRATEGY }}"
