@@ -103,53 +103,46 @@ jobs:
         inlineScript: |
           az containerapp update \
           --name ca-mdm-${{ env.product }}-${{ env.environment }}-${{ vars.REGION }}-001 \
-          --image ${{ env.acr }}/${{ env.name }}:${{ env.from }}
-
-    - name: Secrets 🔒️
-      uses: azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az containerapp secret set \
-          --name ca-mdm-${{ env.product }}-${{ env.environment }}-${{ vars.REGION }}-001 \
-          --secrets \
-          PORT=${{ secrets.PORT }} \
-          NODE_ENV=${{ secrets.NODE_ENV }} \
-          TZ=${{ secrets.TZ }} \
-          SWAGGER_USER=${{ secrets.SWAGGER_USER }} \
-          SWAGGER_PASSWORD=${{ secrets.SWAGGER_PASSWORD }} \
-          DATABASE_MDM_HOST=${{ secrets.DATABASE_MDM_HOST }} \
-          DATABASE_MDM_PORT=${{ secrets.DATABASE_MDM_PORT }} \
-          DATABASE_MDM_USERNAME=${{ secrets.DATABASE_MDM_USERNAME }} \
-          DATABASE_MDM_PASSWORD=${{ secrets.DATABASE_MDM_PASSWORD }} \
-          DATABASE_MDM_NAME=${{ secrets.DATABASE_MDM_NAME }} \
-          DATABASE_NUMBER_GENERATOR_HOST=${{ secrets.DATABASE_NUMBER_GENERATOR_HOST }} \
-          DATABASE_NUMBER_GENERATOR_PORT=${{ secrets.DATABASE_NUMBER_GENERATOR_PORT }} \
-          DATABASE_NUMBER_GENERATOR_USERNAME=${{ secrets.DATABASE_NUMBER_GENERATOR_USERNAME }} \
-          DATABASE_NUMBER_GENERATOR_PASSWORD=${{ secrets.DATABASE_NUMBER_GENERATOR_PASSWORD }} \
-          DATABASE_NUMBER_GENERATOR_NAME=${{ secrets.DATABASE_NUMBER_GENERATOR_NAME }} \
-          DATABASE_CEDAR_HOST=${{ secrets.DATABASE_CEDAR_HOST }} \
-          DATABASE_CEDAR_PORT=${{ secrets.DATABASE_CEDAR_PORT }} \
-          DATABASE_CEDAR_USERNAME=${{ secrets.DATABASE_CEDAR_USERNAME }} \
-          DATABASE_CEDAR_PASSWORD=${{ secrets.DATABASE_CEDAR_PASSWORD }} \
-          DATABASE_CEDAR_NAME=${{ secrets.DATABASE_CEDAR_NAME }} \
-          DATABASE_LOCAL_CEDAR_HOST=${{ secrets.DATABASE_LOCAL_CEDAR_HOST }} \
-          DATABASE_LOCAL_CEDAR_PORT=${{ secrets.DATABASE_LOCAL_CEDAR_PORT }} \
-          DATABASE_LOCAL_CEDAR_USERNAME=${{ secrets.DATABASE_LOCAL_CEDAR_USERNAME }} \
-          DATABASE_LOCAL_CEDAR_PASSWORD=${{ secrets.DATABASE_LOCAL_CEDAR_PASSWORD }} \
-          DATABASE_LOCAL_CEDAR_NAME=${{ secrets.DATABASE_LOCAL_CEDAR_NAME }} \
-          DATABASE_CIS_HOST=${{ secrets.DATABASE_CIS_HOST }} \
-          DATABASE_CIS_PORT=${{ secrets.DATABASE_CIS_PORT }} \
-          DATABASE_CIS_USERNAME=${{ secrets.DATABASE_CIS_USERNAME }} \
-          DATABASE_CIS_PASSWORD=${{ secrets.DATABASE_CIS_PASSWORD }} \
-          DATABASE_CIS_NAME=${{ secrets.DATABASE_CIS_NAME }} \
-          REDIS_TTL=${{ secrets.REDIS_TTL }} \
-          REDIS_HOST=${{ secrets.REDIS_HOST }} \
-          REDIS_PORT=${{ secrets.REDIS_PORT }} \
-          DATABASE_HOST=${{ secrets.DATABASE_HOST }} \
-          DATABASE_PORT=${{ secrets.DATABASE_PORT }} \
-          DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} \
-          DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }} \
-          DATABASE_NAME=${{ secrets.DATABASE_NAME }} \
-          API_KEY=${{ secrets.API_KEY }} \
-          API_KEY_STRATEGY=${{ secrets.API_KEY_STRATEGY }}
+          --image ${{ env.acr }}/${{ env.name }}:${{ env.from }} \
+          --set-env-vars \
+          "PORT=${{ secrets.PORT }}" \
+          "NODE_ENV=${{ secrets.NODE_ENV }}" \
+          "TZ=${{ secrets.TZ }}" \
+          "SWAGGER_USER=${{ secrets.SWAGGER_USER }}" \
+          "SWAGGER_PASSWORD=${{ secrets.SWAGGER_PASSWORD }}" \
+          "DATABASE_MDM_HOST=${{ secrets.DATABASE_MDM_HOST }}" \
+          "DATABASE_MDM_PORT=${{ secrets.DATABASE_MDM_PORT }}" \
+          "DATABASE_MDM_USERNAME=${{ secrets.DATABASE_MDM_USERNAME }}" \
+          "DATABASE_MDM_PASSWORD=${{ secrets.DATABASE_MDM_PASSWORD }}" \
+          "DATABASE_MDM_NAME=${{ secrets.DATABASE_MDM_NAME }}" \
+          "DATABASE_NUMBER_GENERATOR_HOST=${{ secrets.DATABASE_NUMBER_GENERATOR_HOST }}" \
+          "DATABASE_NUMBER_GENERATOR_PORT=${{ secrets.DATABASE_NUMBER_GENERATOR_PORT }}" \
+          "DATABASE_NUMBER_GENERATOR_USERNAME=${{ secrets.DATABASE_NUMBER_GENERATOR_USERNAME }}" \
+          "DATABASE_NUMBER_GENERATOR_PASSWORD=${{ secrets.DATABASE_NUMBER_GENERATOR_PASSWORD }}" \
+          "DATABASE_NUMBER_GENERATOR_NAME=${{ secrets.DATABASE_NUMBER_GENERATOR_NAME }}" \
+          "DATABASE_CEDAR_HOST=${{ secrets.DATABASE_CEDAR_HOST }}" \
+          "DATABASE_CEDAR_PORT=${{ secrets.DATABASE_CEDAR_PORT }}" \
+          "DATABASE_CEDAR_USERNAME=${{ secrets.DATABASE_CEDAR_USERNAME }}" \
+          "DATABASE_CEDAR_PASSWORD=${{ secrets.DATABASE_CEDAR_PASSWORD }}" \
+          "DATABASE_CEDAR_NAME=${{ secrets.DATABASE_CEDAR_NAME }}" \
+          "DATABASE_LOCAL_CEDAR_HOST=${{ secrets.DATABASE_LOCAL_CEDAR_HOST }}" \
+          "DATABASE_LOCAL_CEDAR_PORT=${{ secrets.DATABASE_LOCAL_CEDAR_PORT }}" \
+          "DATABASE_LOCAL_CEDAR_USERNAME=${{ secrets.DATABASE_LOCAL_CEDAR_USERNAME }}" \
+          "DATABASE_LOCAL_CEDAR_PASSWORD=${{ secrets.DATABASE_LOCAL_CEDAR_PASSWORD }}" \
+          "DATABASE_LOCAL_CEDAR_NAME=${{ secrets.DATABASE_LOCAL_CEDAR_NAME }}" \
+          "DATABASE_CIS_HOST=${{ secrets.DATABASE_CIS_HOST }}" \
+          "DATABASE_CIS_PORT=${{ secrets.DATABASE_CIS_PORT }}" \
+          "DATABASE_CIS_USERNAME=${{ secrets.DATABASE_CIS_USERNAME }}" \
+          "DATABASE_CIS_PASSWORD=${{ secrets.DATABASE_CIS_PASSWORD }}" \
+          "DATABASE_CIS_NAME=${{ secrets.DATABASE_CIS_NAME }}" \
+          "REDIS_TTL=${{ secrets.REDIS_TTL }}" \
+          "REDIS_HOST=${{ secrets.REDIS_HOST }}" \
+          "REDIS_PORT=${{ secrets.REDIS_PORT }}" \
+          "DATABASE_HOST=${{ secrets.DATABASE_HOST }}" \
+          "DATABASE_PORT=${{ secrets.DATABASE_PORT }}" \
+          "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" \
+          "DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}" \
+          "DATABASE_NAME=${{ secrets.DATABASE_NAME }}" \
+          "API_KEY=${{ secrets.API_KEY }}" \
+          "API_KEY_STRATEGY=${{ secrets.API_KEY_STRATEGY "}}
 
