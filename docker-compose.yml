@@ -7,6 +7,9 @@ services:
     container_name: api
     restart: always
     command: npm run start:prod
+    extra_hosts:
+      - "${DATABASE_MDM_HOST}:${DATABASE_MDM_IP}"
+      - "${DATABASE_CEDAR_HOST}:${DATABASE_CEDAR_IP}"
     ports:
       - 3000:3000
     volumes:

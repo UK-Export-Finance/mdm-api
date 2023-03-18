@@ -1,5 +1,9 @@
+.env
+.prettierrc.json
+.eslintignore
 Dockerfile
 .dockerignore
 node_modules
 npm-debug.log
 dist
+README.md

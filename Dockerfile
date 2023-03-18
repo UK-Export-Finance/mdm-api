@@ -21,6 +21,6 @@ COPY . .
 RUN npm run build
 
 # Execute Script
-ADD init.sh /bin/init.sh
+COPY init.sh /bin/init.sh
 RUN chmod 755 /bin/init.sh
 ENTRYPOINT ["/bin/init.sh"]
