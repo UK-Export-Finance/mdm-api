@@ -59,7 +59,7 @@ jobs:
     env:
       name: mdm
       environment: ${{ needs.setup.outputs.environment }}
-      cr: cr${{ needs.setup.outputs.product }}${{ needs.setup.outputs.environment }}${{ vars.REGION }}001
+      cr: cr${{ needs.setup.outputs.product }}${{ needs.setup.outputs.environment }}001
     runs-on: [ self-hosted, APIM, deployment ]
     steps:
 
@@ -102,7 +102,7 @@ jobs:
       with:
         inlineScript: |
           az containerapp update \
-          --name ca-mdm-${{ env.product }}-${{ env.environment }}-${{ vars.REGION }}-001 \
+          --name ca-mdm-${{ env.product }}-${{ env.environment }}-001 \
           --image ${{ env.acr }}/${{ env.name }}:${{ env.from }} \
           --set-env-vars \
           "PORT=${{ secrets.PORT }}" \

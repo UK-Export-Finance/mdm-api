@@ -8,12 +8,15 @@ ENV GITHUB_SHA=$GITHUB_SHA
 # Alpine Linux install packages
 RUN apk add bash openrc curl \
   && rm -rf /var/cache/apk/*
+RUN openrc
+RUN mkdir -p /run/openrc/
+RUN touch /run/openrc/softlevel
 
 WORKDIR /app
 
-
 # NPM
 COPY --chown=node:node package*.json ./
+RUN npm i -g npm@latest
 RUN npm ci --omit=dev --legacy-peer-deps
 RUN npm cache clean --force
 

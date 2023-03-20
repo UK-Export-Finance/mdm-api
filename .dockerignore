@@ -11,7 +11,6 @@
 .gitignore
 .husky
 .lintstagedrc.json
-.npmrc
 .prettierignore
 .prettierrc.json
 .whitesource
@@ -26,6 +25,5 @@ docker-compose.yml
 jest.config.ts
 node_modules
 renovate.json
-tsconfig.build.json
 npm-debug.log
 test

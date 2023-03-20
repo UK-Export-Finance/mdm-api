@@ -68,7 +68,6 @@ jobs:
     - name: Tags 🏷️
       run: echo tags='Environment=${{ env.type }}' \
         'Product=${{ env.product }}' \
-        'Region=${{ vars.REGION }}' \
         'Team=development' >> $GITHUB_ENV
 
     - name: Login 🔐
@@ -101,7 +100,7 @@ jobs:
       with:
         inlineScript: |
           az acr create \
-          --name cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001 \
+          --name cr${{ env.product }}${{ env.target }}001 \
           --sku Standard \
           --admin-enabled true \
           --tags ${{ env.tags }}
@@ -111,7 +110,7 @@ jobs:
       with:
         inlineScript: |
           az containerapp env create \
-          --name cae-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001 \
+          --name cae-${{ env.product }}-${{ env.target }}-001 \
           --tags ${{ env.tags }}
 
     
@@ -120,10 +119,10 @@ jobs:
       with:
         inlineScript: |
           az containerapp create \
-          --name ca-mdm-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001 \
-          --environment cae-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001 \
-          --registry-server cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001.azurecr.io \
-          --registry-username $(az acr credential show -n cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001 --query username | tr -d '"') \
+          --name ca-mdm-${{ env.product }}-${{ env.target }}-001 \
+          --environment cae-${{ env.product }}-${{ env.target }}-001 \
+          --registry-server cr${{ env.product }}${{ env.target }}001.azurecr.io \
+          --registry-username $(az acr credential show -n cr${{ env.product }}${{ env.target }}001 --query username | tr -d '"') \
           --cpu 1.0 \
           --memory 2.0Gi \
           --min-replicas 1 \
@@ -139,10 +138,10 @@ jobs:
       with:
         inlineScript: |
           az containerapp create \
-          --name ca-tfs-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001 \
-          --environment cae-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001 \
-          --registry-server cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001.azurecr.io \
-          --registry-username $(az acr credential show -n cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001 --query username | tr -d '"') \
+          --name ca-tfs-${{ env.product }}-${{ env.target }}-001 \
+          --environment cae-${{ env.product }}-${{ env.target }}-001 \
+          --registry-server cr${{ env.product }}${{ env.target }}001.azurecr.io \
+          --registry-username $(az acr credential show -n cr${{ env.product }}${{ env.target }}001 --query username | tr -d '"') \
           --cpu 1.0 \
           --memory 2.0Gi \
           --min-replicas 1 \
@@ -158,10 +157,10 @@ jobs:
       with:
         inlineScript: |
           az containerapp create \
-          --name ca-estore-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001 \
-          --environment cae-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001 \
-          --registry-server cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001.azurecr.io \
-          --registry-username $(az acr credential show -n cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001 --query username | tr -d '"') \
+          --name ca-estore-${{ env.product }}-${{ env.target }}-001 \
+          --environment cae-${{ env.product }}-${{ env.target }}-001 \
+          --registry-server cr${{ env.product }}${{ env.target }}001.azurecr.io \
+          --registry-username $(az acr credential show -n cr${{ env.product }}${{ env.target }}001 --query username | tr -d '"') \
           --cpu 1.0 \
           --memory 2.0Gi \
           --min-replicas 1 \
