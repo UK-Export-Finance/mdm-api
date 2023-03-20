@@ -77,7 +77,7 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Azure defaults ✨
-      uses: azure/cli@v1.0.0
+      uses: Azure/cli@v1.0.7
       with:
         inlineScript: |
           # Basic
@@ -88,7 +88,7 @@ jobs:
           az extension add --name containerapp --upgrade
 
     - name: Resource group 🏗️
-      uses: azure/cli@v1.0.0
+      uses: Azure/cli@v1.0.7
       with:
         inlineScript: |
           az group create \
@@ -97,7 +97,7 @@ jobs:
 
     
     - name: Container registry 📦️
-      uses: azure/cli@v1.0.0
+      uses: Azure/cli@v1.0.7
       with:
         inlineScript: |
           az acr create \
@@ -107,7 +107,7 @@ jobs:
           --tags ${{ env.tags }}
 
     - name: Container app environment 🗃️
-      uses: azure/cli@v1.0.0
+      uses: Azure/cli@v1.0.7
       with:
         inlineScript: |
           az containerapp env create \
@@ -116,7 +116,7 @@ jobs:
 
     
     - name: Container app - MDM 📄
-      uses: azure/cli@v1.0.0
+      uses: Azure/cli@v1.0.7
       with:
         inlineScript: |
           az containerapp create \
@@ -124,9 +124,10 @@ jobs:
           --environment cae-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001 \
           --registry-server cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001.azurecr.io \
           --registry-username $(az acr credential show -n cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001 --query username | tr -d '"') \
-          --cpu 0.25 \
-          --memory 0.5Gi \
+          --cpu 1.0 \
+          --memory 2.0Gi \
           --min-replicas 1 \
+          -max-replicas 4 \
           --ingress internal \
           --target-port ${{ vars.MDM_PORT }} \
           --revision-suffix ${{ vars.REVISION_SUFFIX }} \
@@ -135,7 +136,7 @@ jobs:
           --tags ${{ env.tags }}
 
     - name: Container app - TFS 📄
-      uses: azure/cli@v1.0.0
+      uses: Azure/cli@v1.0.7
       with:
         inlineScript: |
           az containerapp create \
@@ -143,9 +144,10 @@ jobs:
           --environment cae-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001 \
           --registry-server cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001.azurecr.io \
           --registry-username $(az acr credential show -n cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001 --query username | tr -d '"') \
-          --cpu 0.25 \
-          --memory 0.5Gi \
+          --cpu 1.0 \
+          --memory 2.0Gi \
           --min-replicas 1 \
+          -max-replicas 4 \
           --ingress internal \
           --target-port ${{ vars.TFS_PORT }} \
           --revision-suffix ${{ vars.REVISION_SUFFIX }} \
@@ -154,7 +156,7 @@ jobs:
           --tags ${{ env.tags }}
 
     - name: Container app - ESTORE 📄
-      uses: azure/cli@v1.0.0
+      uses: Azure/cli@v1.0.7
       with:
         inlineScript: |
           az containerapp create \
@@ -162,9 +164,10 @@ jobs:
           --environment cae-${{ env.product }}-${{ env.target }}-${{ vars.REGION }}-001 \
           --registry-server cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001.azurecr.io \
           --registry-username $(az acr credential show -n cr${{ env.product }}${{ env.target }}${{ vars.REGION }}001 --query username | tr -d '"') \
-          --cpu 0.25 \
-          --memory 0.5Gi \
+          --cpu 1.0 \
+          --memory 2.0Gi \
           --min-replicas 1 \
+          -max-replicas 4 \
           --ingress internal \
           --target-port ${{ vars.ESTORE_PORT }} \
           --revision-suffix ${{ vars.REVISION_SUFFIX }} \

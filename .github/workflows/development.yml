@@ -75,7 +75,7 @@ jobs:
       run: echo acr=$(az acr show -n ${{ env.cr }} --query loginServer | tr -d '"') >> $GITHUB_ENV
 
     - name: Defaults ✨
-      uses: azure/cli@v1.0.0
+      uses: Azure/cli@v1.0.7
       with:
         inlineScript: |
           # Basic
@@ -98,7 +98,7 @@ jobs:
         docker push ${{ env.acr }}/${{ env.name }}:${{ env.from }}
 
     - name: Revisions 🔀
-      uses: azure/cli@v1.0.0
+      uses: Azure/cli@v1.0.7
       with:
         inlineScript: |
           az containerapp update \
@@ -125,23 +125,10 @@ jobs:
           "DATABASE_CEDAR_USERNAME=${{ secrets.DATABASE_CEDAR_USERNAME }}" \
           "DATABASE_CEDAR_PASSWORD=${{ secrets.DATABASE_CEDAR_PASSWORD }}" \
           "DATABASE_CEDAR_NAME=${{ secrets.DATABASE_CEDAR_NAME }}" \
-          "DATABASE_LOCAL_CEDAR_HOST=${{ secrets.DATABASE_LOCAL_CEDAR_HOST }}" \
-          "DATABASE_LOCAL_CEDAR_PORT=${{ secrets.DATABASE_LOCAL_CEDAR_PORT }}" \
-          "DATABASE_LOCAL_CEDAR_USERNAME=${{ secrets.DATABASE_LOCAL_CEDAR_USERNAME }}" \
-          "DATABASE_LOCAL_CEDAR_PASSWORD=${{ secrets.DATABASE_LOCAL_CEDAR_PASSWORD }}" \
-          "DATABASE_LOCAL_CEDAR_NAME=${{ secrets.DATABASE_LOCAL_CEDAR_NAME }}" \
           "DATABASE_CIS_HOST=${{ secrets.DATABASE_CIS_HOST }}" \
           "DATABASE_CIS_PORT=${{ secrets.DATABASE_CIS_PORT }}" \
           "DATABASE_CIS_USERNAME=${{ secrets.DATABASE_CIS_USERNAME }}" \
           "DATABASE_CIS_PASSWORD=${{ secrets.DATABASE_CIS_PASSWORD }}" \
           "DATABASE_CIS_NAME=${{ secrets.DATABASE_CIS_NAME }}" \
-          "REDIS_TTL=${{ secrets.REDIS_TTL }}" \
-          "REDIS_HOST=${{ secrets.REDIS_HOST }}" \
-          "REDIS_PORT=${{ secrets.REDIS_PORT }}" \
-          "DATABASE_HOST=${{ secrets.DATABASE_HOST }}" \
-          "DATABASE_PORT=${{ secrets.DATABASE_PORT }}" \
-          "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" \
-          "DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}" \
-          "DATABASE_NAME=${{ secrets.DATABASE_NAME }}" \
           "API_KEY=${{ secrets.API_KEY }}" \
           "API_KEY_STRATEGY=${{ secrets.API_KEY_STRATEGY }}"
