@@ -77,7 +77,7 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Azure defaults ✨
-      uses: Azure/cli@v1.0.4
+      uses: Azure/cli@1.0.4
       with:
         inlineScript: |
           # Basic
@@ -88,7 +88,7 @@ jobs:
           az extension add --name containerapp --upgrade
 
     - name: Resource group 🏗️
-      uses: Azure/cli@v1.0.4
+      uses: Azure/cli@1.0.4
       with:
         inlineScript: |
           az group create \
@@ -97,7 +97,7 @@ jobs:
 
     
     - name: Container registry 📦️
-      uses: Azure/cli@v1.0.4
+      uses: Azure/cli@1.0.4
       with:
         inlineScript: |
           az acr create \
@@ -107,7 +107,7 @@ jobs:
           --tags ${{ env.tags }}
 
     - name: Container app environment 🗃️
-      uses: Azure/cli@v1.0.4
+      uses: Azure/cli@1.0.4
       with:
         inlineScript: |
           az containerapp env create \
@@ -116,7 +116,7 @@ jobs:
 
     
     - name: Container app - MDM 📄
-      uses: Azure/cli@v1.0.4
+      uses: Azure/cli@1.0.4
       with:
         inlineScript: |
           az containerapp create \
@@ -136,7 +136,7 @@ jobs:
           --tags ${{ env.tags }}
 
     - name: Container app - TFS 📄
-      uses: Azure/cli@v1.0.4
+      uses: Azure/cli@1.0.4
       with:
         inlineScript: |
           az containerapp create \
@@ -156,7 +156,7 @@ jobs:
           --tags ${{ env.tags }}
 
     - name: Container app - ESTORE 📄
-      uses: Azure/cli@v1.0.4
+      uses: Azure/cli@1.0.4
       with:
         inlineScript: |
           az containerapp create \
