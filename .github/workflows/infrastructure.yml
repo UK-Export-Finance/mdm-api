@@ -77,7 +77,7 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Azure defaults ✨
-      uses: Azure/cli@1.0.4
+      uses: Azure/cli@1.0.6
       with:
         inlineScript: |
           # Basic
@@ -88,7 +88,7 @@ jobs:
           az extension add --name containerapp --upgrade
 
     - name: Resource group 🏗️
-      uses: Azure/cli@1.0.4
+      uses: Azure/cli@1.0.6
       with:
         inlineScript: |
           az group create \
@@ -97,7 +97,7 @@ jobs:
 
     
     - name: Container registry 📦️
-      uses: Azure/cli@1.0.4
+      uses: Azure/cli@1.0.6
       with:
         inlineScript: |
           az acr create \
@@ -107,7 +107,7 @@ jobs:
           --tags ${{ env.tags }}
 
     - name: Container app environment 🗃️
-      uses: Azure/cli@1.0.4
+      uses: Azure/cli@1.0.6
       with:
         inlineScript: |
           az containerapp env create \
@@ -116,7 +116,7 @@ jobs:
 
     
     - name: Container app - MDM 📄
-      uses: Azure/cli@1.0.4
+      uses: Azure/cli@1.0.6
       with:
         inlineScript: |
           az containerapp create \
@@ -127,7 +127,7 @@ jobs:
           --cpu 1.0 \
           --memory 2.0Gi \
           --min-replicas 1 \
-          -max-replicas 4 \
+          --max-replicas 4 \
           --ingress internal \
           --target-port ${{ vars.MDM_PORT }} \
           --revision-suffix ${{ vars.REVISION_SUFFIX }} \
@@ -136,7 +136,7 @@ jobs:
           --tags ${{ env.tags }}
 
     - name: Container app - TFS 📄
-      uses: Azure/cli@1.0.4
+      uses: Azure/cli@1.0.6
       with:
         inlineScript: |
           az containerapp create \
@@ -147,7 +147,7 @@ jobs:
           --cpu 1.0 \
           --memory 2.0Gi \
           --min-replicas 1 \
-          -max-replicas 4 \
+          --max-replicas 4 \
           --ingress internal \
           --target-port ${{ vars.TFS_PORT }} \
           --revision-suffix ${{ vars.REVISION_SUFFIX }} \
@@ -156,7 +156,7 @@ jobs:
           --tags ${{ env.tags }}
 
     - name: Container app - ESTORE 📄
-      uses: Azure/cli@1.0.4
+      uses: Azure/cli@1.0.6
       with:
         inlineScript: |
           az containerapp create \
@@ -167,7 +167,7 @@ jobs:
           --cpu 1.0 \
           --memory 2.0Gi \
           --min-replicas 1 \
-          -max-replicas 4 \
+          --max-replicas 4 \
           --ingress internal \
           --target-port ${{ vars.ESTORE_PORT }} \
           --revision-suffix ${{ vars.REVISION_SUFFIX }} \
