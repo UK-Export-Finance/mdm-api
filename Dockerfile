@@ -11,11 +11,12 @@ RUN apk add bash openrc curl \
 
 # Node setup
 WORKDIR /app
-COPY package.json .
-RUN npm i --omit=dev --legacy-peer-deps
-RUN npm i -g npm@latest
-RUN npm cache clean --force
+
 COPY . .
+
+RUN npm i -g npm@latest
+RUN npm ci --omit=dev --legacy-peer-deps
+RUN npm cache clean --force
 
 # Build
 RUN npm run build

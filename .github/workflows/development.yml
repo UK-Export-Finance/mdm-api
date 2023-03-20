@@ -58,7 +58,7 @@ jobs:
     environment: ${{ needs.setup.outputs.environment }}
     env:
       name: mdm
-      environmet: ${{ needs.setup.outputs.environment }}
+      environment: ${{ needs.setup.outputs.environment }}
       cr: cr${{ needs.setup.outputs.product }}${{ needs.setup.outputs.environment }}${{ vars.REGION }}001
     runs-on: [ self-hosted, APIM, deployment ]
     steps:

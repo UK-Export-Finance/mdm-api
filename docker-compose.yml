@@ -11,7 +11,7 @@ services:
       - "${DATABASE_MDM_HOST}:${DATABASE_MDM_IP}"
       - "${DATABASE_CEDAR_HOST}:${DATABASE_CEDAR_IP}"
     ports:
-      - 3000:3000
+      - ${PORT}:${PORT}
     volumes:
       - ./:/app/src:rw
     environment:
