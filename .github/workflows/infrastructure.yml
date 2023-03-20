@@ -130,7 +130,6 @@ jobs:
           --max-replicas 4 \
           --ingress internal \
           --target-port ${{ vars.MDM_PORT }} \
-          --revision-suffix ${{ vars.REVISION_SUFFIX }} \
           --revisions-mode multiple \
           --transport http2 \
           --tags ${{ env.tags }}
@@ -150,7 +149,6 @@ jobs:
           --max-replicas 4 \
           --ingress internal \
           --target-port ${{ vars.TFS_PORT }} \
-          --revision-suffix ${{ vars.REVISION_SUFFIX }} \
           --revisions-mode multiple \
           --transport http2 \
           --tags ${{ env.tags }}
@@ -170,7 +168,6 @@ jobs:
           --max-replicas 4 \
           --ingress internal \
           --target-port ${{ vars.ESTORE_PORT }} \
-          --revision-suffix ${{ vars.REVISION_SUFFIX }} \
           --revisions-mode multiple \
           --transport http2 \
           --tags ${{ env.tags }}
