@@ -4,6 +4,8 @@ FROM node:19.8-alpine3.16
 # Variables
 ARG GITHUB_SHA
 ENV GITHUB_SHA=$GITHUB_SHA
+ARG PORT
+ENV PORT=$PORT
 
 # Alpine Linux install packages
 RUN apk add bash openrc curl \
@@ -26,10 +28,9 @@ COPY --chown=node:node . .
 # Build
 RUN npm run build
 
-# Execute Script
-COPY init.sh /bin/init.sh
-RUN chmod 755 /bin/init.sh
-
 # Non-root user
 USER node
-ENTRYPOINT ["/bin/init.sh"]
+CMD ["npm", "run", "start:prod"]
+
+# Healthcheck for orchestrator
+HEALTHCHECK CMD curl --fail http://localhost:${PORT} || exit 1
