@@ -24,7 +24,7 @@
     "composite": true,
     "declaration": true,
     "declarationMap": true,
-    "types": ["jest", "node", "@types/jest"],
+    "types": ["node"],
     "sourceMap": true,
     "paths": {
       "@ukef/*": ["src/*"],
@@ -36,6 +36,20 @@
       "@ukef/auth/*": ["src/modules/auth/*"]
     }
   },
-  "include": ["src", "test", "jest.config.ts"],
-  "exclude": ["node_modules", "dist", "*coverage", "logs", "scripts"]
+  "include": ["src", "jest.config.ts"],
+  "exclude": [
+    // NPM
+    "node_modules",
+    // Unit, API and E2E tests
+    "test",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    // Build
+    "dist",
+    // Docker
+    "docker-compose*.yml",
+    "Dockerfile",
+    // Logs
+    "logs"
+  ]
 }

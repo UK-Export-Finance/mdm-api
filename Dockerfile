@@ -1,5 +1,5 @@
-# Node Alpine Docker Image
-FROM node:18.9-alpine3.16
+# NPM 9.5.1 Alpine linux image
+FROM node:19.8-alpine3.16
 
 # Variables
 ARG GITHUB_SHA
