@@ -3,6 +3,7 @@
 #
 # Standard Azure naming convention has been followed:
 # https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/resource-naming
+# A minor modification to standard naming convention has been made to not include region.
 #
 #
 # Following Azure services are consumed:
