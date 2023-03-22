@@ -3,7 +3,7 @@
 ###################
 
 # NPM 9.5.1 Alpine linux image
-FROM node:19.8-alpine3.16 As build
+FROM node:19.8-alpine3.16 AS build
 
 # Alpine Linux install packages
 RUN apk add bash openrc curl \
@@ -39,7 +39,7 @@ USER node
 ###################
 
 # NPM 9.5.1 Alpine linux image
-FROM node:19.8-alpine3.16 As production
+FROM node:19.8-alpine3.16 AS production
 
 WORKDIR /app
 
