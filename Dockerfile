@@ -43,9 +43,6 @@ FROM node:19.8-alpine3.16 As production
 
 WORKDIR /app
 
-# Remove `src`
-RUN rm -rf ./src
-
 # Copy from `build` to `prod`
 COPY --chown=node:node --from=build /app/package*.json .
 COPY --chown=node:node --from=build /app/node_modules ./node_modules
