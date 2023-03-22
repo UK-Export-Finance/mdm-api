@@ -1,11 +1,9 @@
-# NPM 9.5.1 Alpine linux image
-FROM node:19.8-alpine3.16
+###################
+# 1. BUILD
+###################
 
-# Variables
-ARG GITHUB_SHA
-ENV GITHUB_SHA=$GITHUB_SHA
-ARG PORT
-ENV PORT=$PORT
+# NPM 9.5.1 Alpine linux image
+FROM node:19.8-alpine3.16 As build
 
 # Alpine Linux install packages
 RUN apk add bash openrc curl \
@@ -17,16 +15,38 @@ RUN touch /run/openrc/softlevel
 WORKDIR /app
 
 # NPM
-COPY --chown=node:node package*.json ./
-RUN npm ci --omit=dev --legacy-peer-deps
+COPY --chown=node:node package*.json .
+RUN npm ci --legacy-peer-deps
 RUN npm cache clean --force
 
 # Copy application
 COPY --chown=node:node . .
 
-# Build
+# Build with all dependencies
 RUN npm run build
+ 
+ # Lean NPM - Only install `dependencies`
+ # `devDependencies` will still be resolved inside `package-lock.json`,
+ # however they will not be installed inside `node_modules` directory.
+ RUN npm ci --legacy-peer-deps --omit=dev
+
 
 # Non-root user
 USER node
+
+###################
+# 2. PRODUCTION
+###################
+
+# NPM 9.5.1 Alpine linux image
+FROM node:19.8-alpine3.16 As production
+
+# Remove `src`
+RUN rm -rf /app/src
+
+# Copy from `build` to `prod`
+COPY --chown=node:node --from=build /app/package*.json .
+COPY --chown=node:node --from=build /app/node_modules .
+COPY --chown=node:node --from=build /app/dist .
+
 CMD ["npm", "run", "start:prod"]
