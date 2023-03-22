@@ -18,7 +18,6 @@ WORKDIR /app
 
 # NPM
 COPY --chown=node:node package*.json ./
-RUN npm i -g npm@latest
 RUN npm ci --omit=dev --legacy-peer-deps
 RUN npm cache clean --force
 
@@ -31,6 +30,3 @@ RUN npm run build
 # Non-root user
 USER node
 CMD ["npm", "run", "start:prod"]
-
-# Healthcheck for orchestrator
-HEALTHCHECK CMD curl --fail http://localhost:${PORT} || exit 1
