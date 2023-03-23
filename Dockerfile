@@ -2,8 +2,8 @@
 # 1. BUILD
 ###################
 
-# NPM 9.5.1 Alpine linux image
-FROM node:19.8-alpine3.16 AS build
+# NPM 8.19.1 Alpine linux image
+FROM node:18.9-alpine3.16 AS build
 
 # Alpine Linux install packages
 RUN apk add bash openrc curl \
