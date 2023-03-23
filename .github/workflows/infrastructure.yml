@@ -9,8 +9,9 @@
 # Following Azure services are consumed:
 # 1. Azure resource group - https://learn.microsoft.com/en-us/cli/azure/group?view=azure-cli-latest#az-group-create
 # 2. Azure container registry - https://learn.microsoft.com/en-us/cli/azure/acr?view=azure-cli-latest#az-acr-create
-# 3. Azure container app environment - https://learn.microsoft.com/en-us/azure/container-apps/environment
-# 4. Azure container app - https://learn.microsoft.com/en-us/azure/container-apps/containers
+# 3. Azure virtual network - https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-overview
+# 4. Azure container app environment - https://learn.microsoft.com/en-us/azure/container-apps/environment
+# 5. Azure container app - https://learn.microsoft.com/en-us/azure/container-apps/containers
 # 
 #
 # Execution
@@ -106,13 +107,26 @@ jobs:
           --admin-enabled true \
           --tags ${{ env.tags }}
 
+    - name: Virtual network 🧵
+      uses: Azure/cli@1.0.4
+      with:
+        inlineScript: |
+          az network vnet create \
+          --name vnet-${{ env.product }}-001 \
+          --address-prefix ${{ secrets.VNET_ADDRESS_PREFIX }} \
+          --ddos-protection 1 \
+          --enable-encryption 1 \
+          --subnet-name snet-${{ env.product }}-001 \
+          --subnet-prefixes ${{ secrets.VNET_SUBNET_PREFIX }} \
+          --tags ${{ env.tags }}
+
     - name: Container app environment 🗃️
       uses: Azure/cli@1.0.4
       with:
         inlineScript: |
           az containerapp env create \
           --name cae-${{ env.product }}-${{ env.target }}-001 \
-          --infrastructure-subnet-resource-id ${{ secrets.VNET_ID }} \
+          --infrastructure-subnet-resource-id $(az network vnet subnet show --name snet-${{ env.product }}-001 --vnet-name vnet-${{ env.product }}-001 --query 'id' -o tsv) \
           --internal-only true \
           --tags ${{ env.tags }}
 
