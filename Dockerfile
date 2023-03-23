@@ -15,7 +15,8 @@ RUN touch /run/openrc/softlevel
 WORKDIR /app
 
 # NPM
-COPY --chown=node:node package*.json .
+COPY --chown=node:node package.json .
+COPY --chown=node:node package-lock.json .
 RUN npm ci --legacy-peer-deps
 RUN npm cache clean --force
 
@@ -44,7 +45,8 @@ FROM node:19.8-alpine3.16 AS production
 WORKDIR /app
 
 # Copy from `build` to `prod`
-COPY --chown=node:node --from=build /app/package*.json .
+COPY --chown=node:node --from=build /app/package.json .
+COPY --chown=node:node --from=build /app/package-lock.json .
 COPY --chown=node:node --from=build /app/node_modules ./node_modules
 COPY --chown=node:node --from=build /app/dist ./dist
 
