@@ -114,7 +114,6 @@ jobs:
           az network vnet create \
           --name vnet-${{ env.product }}-001 \
           --address-prefix ${{ secrets.VNET_ADDRESS_PREFIX }} \
-          --ddos-protection 1 \
           --enable-encryption 1 \
           --subnet-name snet-${{ env.product }}-001 \
           --subnet-prefixes ${{ secrets.VNET_SUBNET_PREFIX }} \

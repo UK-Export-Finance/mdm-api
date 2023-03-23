@@ -47,7 +47,8 @@
     "typescript",
     "ukef",
     "venv",
-    "VNET"
+    "VNET",
+    "snet"
   ],
   "dictionaries": [
     "en-gb",
