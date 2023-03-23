@@ -127,8 +127,7 @@ jobs:
           --vnet-name vnet-${{ env.product }}-001 \
           --allow-forwarded-traffic 1 \
           --allow-vnet-access 1 \
-          --remote-vnet ${{ secrets.VNET_PEER_REMOTE_ID }} \
-          --tags ${{ env.tags }}
+          --remote-vnet ${{ secrets.VNET_PEER_REMOTE_ID }}
 
     - name: Container app environment 🗃️
       uses: Azure/cli@1.0.4
