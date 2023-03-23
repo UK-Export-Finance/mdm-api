@@ -117,6 +117,18 @@ jobs:
           --subnet-name snet-${{ env.product }}-001 \
           --subnet-prefixes ${{ secrets.VNET_SUBNET_PREFIX }} \
           --tags ${{ env.tags }}
+          
+    - name: VNET peer 🔀
+      uses: Azure/cli@1.0.4
+      with:
+        inlineScript: |
+          az network vnet peering create \
+          --name vnet-peer-${{ env.product }}-001 \
+          --vnet-name vnet-${{ env.product }}-001 \
+          --allow-forwarded-traffic 1 \
+          --allow-vnet-access 1 \
+          --remote-vnet ${{ secrets.VNET_PEER_REMOTE_ID }} \
+          --tags ${{ env.tags }}
 
     - name: Container app environment 🗃️
       uses: Azure/cli@1.0.4
