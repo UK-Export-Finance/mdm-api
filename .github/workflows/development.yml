@@ -110,10 +110,10 @@ jobs:
           "TZ=${{ secrets.TZ }}" \
           "SWAGGER_USER=${{ secrets.SWAGGER_USER }}" \
           "SWAGGER_PASSWORD=${{ secrets.SWAGGER_PASSWORD }}" \
-          "DATABASE_HOST=${{ secrets.DATABASE_MDM_HOST }}" \
-          "DATABASE_PORT=${{ secrets.DATABASE_MDM_PORT }}" \
-          "DATABASE_USERNAME=${{ secrets.DATABASE_MDM_USERNAME }}" \
-          "DATABASE_PASSWORD=${{ secrets.DATABASE_MDM_PASSWORD }}" \
+          "DATABASE_HOST=${{ secrets.DATABASE_HOST }}" \
+          "DATABASE_PORT=${{ secrets.DATABASE_PORT }}" \
+          "DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}" \
+          "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" \
           "DATABASE_MDM_NAME=${{ secrets.DATABASE_MDM_NAME }}" \
           "DATABASE_NUMBER_GENERATOR_NAME=${{ secrets.DATABASE_NUMBER_GENERATOR_NAME }}" \
           "DATABASE_CEDAR_NAME=${{ secrets.DATABASE_CEDAR_NAME }}" \
