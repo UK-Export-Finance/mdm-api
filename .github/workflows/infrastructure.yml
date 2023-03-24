@@ -23,6 +23,7 @@
 #
 # TO-DO
 # *****
+# 0. Add --internal-only true \ to CAE
 # 1. Add delete locks
 # 2. Add log workspace
 # 3. Add Insight
@@ -147,8 +148,6 @@ jobs:
           az containerapp env create \
           --name cae-${{ env.product }}-${{ env.target }}-001 \
           --infrastructure-subnet-resource-id $(az network vnet subnet show --name snet-${{ env.product }}-001 --vnet-name vnet-${{ env.product }}-001 --query 'id' -o tsv) \
-          # TO-DO: Enable below post APIM establishment
-          # --internal-only true \
           --tags ${{ env.tags }}
 
     
