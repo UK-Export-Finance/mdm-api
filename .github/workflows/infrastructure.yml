@@ -20,6 +20,16 @@
 # GHA is only invoked when following conditions are satisfied:
 # 1. Push to the `infrastructure` branch only.
 # 2. Exact file path matches `.github/workflows/infrastructure.yml`.
+#
+# TO-DO
+# *****
+# 1. Add delete locks
+# 2. Add log workspace
+# 3. Add Insight
+# 4. Add monitor
+# 5. Add API management service
+# 6. Add Key vault
+#
 
 name: Infrastructure 🔨
 run-name: APIM base infrastructure build from ${{ github.repository }}
