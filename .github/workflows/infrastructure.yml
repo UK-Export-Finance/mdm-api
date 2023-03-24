@@ -128,7 +128,7 @@ jobs:
           --vnet-name vnet-${{ env.product }}-001 \
           --allow-forwarded-traffic 1 \
           --allow-vnet-access 1 \
-          --remote-vnet ${{ secrets.VNET_PEER_REMOTE_ID }}
+          --remote-vnet $(az network vnet show --subscription ${{ secrets.REMOTE_VNET_SUBSCRIPTION }} --resource-group ${{ secrets.VNET_REMOTE_RESOURCE_GROUP }} --name ${{ secrets.REMOTE_VNET }} --query 'id' -o tsv)
 
     - name: Container app environment 🗃️
       uses: Azure/cli@1.0.4
@@ -137,7 +137,8 @@ jobs:
           az containerapp env create \
           --name cae-${{ env.product }}-${{ env.target }}-001 \
           --infrastructure-subnet-resource-id $(az network vnet subnet show --name snet-${{ env.product }}-001 --vnet-name vnet-${{ env.product }}-001 --query 'id' -o tsv) \
-          --internal-only true \
+          # TO-DO: Enable below post APIM establishment
+          # --internal-only true \
           --tags ${{ env.tags }}
 
     
