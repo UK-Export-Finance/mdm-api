@@ -10,8 +10,9 @@
 # 1. Azure resource group - https://learn.microsoft.com/en-us/cli/azure/group?view=azure-cli-latest#az-group-create
 # 2. Azure container registry - https://learn.microsoft.com/en-us/cli/azure/acr?view=azure-cli-latest#az-acr-create
 # 3. Azure virtual network - https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-overview
-# 4. Azure container app environment - https://learn.microsoft.com/en-us/azure/container-apps/environment
-# 5. Azure container app - https://learn.microsoft.com/en-us/azure/container-apps/containers
+# 4. Azure virtual network peer - https://learn.microsoft.com/en-us/cli/azure/network/vnet/peering?view=azure-cli-latest
+# 5. Azure container app environment - https://learn.microsoft.com/en-us/azure/container-apps/environment
+# 6. Azure container app - https://learn.microsoft.com/en-us/azure/container-apps/containers
 # 
 #
 # Execution
