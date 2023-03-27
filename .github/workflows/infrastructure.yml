@@ -37,7 +37,7 @@ run-name: APIM base infrastructure build from ${{ github.repository }}
 
 on:
   push:
-    branches: [ APIM-149-ia-c-dev-environment ]
+    branches: [ infrastructure ]
     paths: [ .github/workflows/infrastructure.yml ]
 
 env:
