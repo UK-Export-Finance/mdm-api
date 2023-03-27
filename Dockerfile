@@ -6,11 +6,8 @@
 FROM node:18.9-alpine3.16 AS build
 
 # Alpine Linux install packages
-RUN apk add bash openrc curl \
-  && rm -rf /var/cache/apk/*
-RUN openrc
-RUN mkdir -p /run/openrc/
-RUN touch /run/openrc/softlevel
+RUN apk add bash curl
+RUN rm -rf /var/cache/apk/*
 
 WORKDIR /app
 
