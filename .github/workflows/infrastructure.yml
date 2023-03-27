@@ -156,7 +156,7 @@ jobs:
       with:
         inlineScript: |
           az containerapp create \
-          --name ca-mdm-${{ env.product }}-${{ env.target }}-001 \
+          --name ca-${{ env.product }}-mdm-${{ env.target }}-001 \
           --environment cae-${{ env.product }}-${{ env.target }}-001 \
           --registry-server cr${{ env.product }}${{ env.target }}001.azurecr.io \
           --registry-username $(az acr credential show -n cr${{ env.product }}${{ env.target }}001 --query username | tr -d '"') \
