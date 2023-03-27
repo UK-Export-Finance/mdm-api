@@ -1,51 +1,38 @@
-version: "3.8"
+version: '3.8'
 services:
   api:
-    container_name: api
-    image: mdm-api
     build:
-      dockerfile: Dockerfile
       context: .
-      target: development
-    volumes:
-      - .:/app/src:rw
-    env_file:
-      - .env
-    environment:
-      PORT: 3003
-      DATABASE_MDM_HOST: ${DATABASE_MDM_HOST}
-      DATABASE_MDM_PORT: ${DATABASE_MDM_PORT}
-      DATABASE_MDM_USERNAME: ${DATABASE_MDM_USERNAME}
-      DATABASE_MDM_PASSWORD: ${DATABASE_MDM_PASSWORD}
-      DATABASE_MDM_NAME: ${DATABASE_MDM_NAME}
-      DATABASE_NUMBER_GENERATOR_HOST: ${DATABASE_NUMBER_GENERATOR_HOST}
-      DATABASE_NUMBER_GENERATOR_PORT: ${DATABASE_NUMBER_GENERATOR_PORT}
-      DATABASE_NUMBER_GENERATOR_USERNAME: ${DATABASE_NUMBER_GENERATOR_USERNAME}
-      DATABASE_NUMBER_GENERATOR_PASSWORD: ${DATABASE_NUMBER_GENERATOR_PASSWORD}
-      DATABASE_NUMBER_GENERATOR_NAME: ${DATABASE_NUMBER_GENERATOR_NAME}
-      DATABASE_CEDAR_HOST: ${DATABASE_CEDAR_HOST}
-      DATABASE_CEDAR_PORT: ${DATABASE_CEDAR_PORT}
-      DATABASE_CEDAR_USERNAME: ${DATABASE_CEDAR_USERNAME}
-      DATABASE_CEDAR_PASSWORD: ${DATABASE_CEDAR_PASSWORD}
-      DATABASE_CEDAR_NAME: ${DATABASE_CEDAR_NAME}
-      DATABASE_CIS_HOST: ${DATABASE_CIS_HOST}
-      DATABASE_CIS_PORT: ${DATABASE_CIS_PORT}
-      DATABASE_CIS_USERNAME: ${DATABASE_CIS_USERNAME}
-      DATABASE_CIS_PASSWORD: ${DATABASE_CIS_PASSWORD}
-      DATABASE_CIS_NAME: ${DATABASE_CIS_NAME}
-      REDIS_HOST: ${REDIS_HOST}
-      REDIS_PORT: ${REDIS_PORT}
-      SWAGGER_PASSWORD: ${SWAGGER_PASSWORD}
-      SWAGGER_USER: ${SWAGGER_USER}
-      NODE_ENV: development
-      TZ: Europe/London
-    command: npm run start:dev
+    image: api
+    container_name: api
     restart: always
+    command: npm run start:prod
+    extra_hosts:
+      - "${DATABASE_HOST}:${DATABASE_IP}"
     ports:
-      - 3003:3003
+      - ${PORT}:${PORT}
+    volumes:
+      - ./:/app/src:rw
+    environment:
+      PORT:
+      NODE_ENV:
+      TZ:
+      SWAGGER_USER:
+      SWAGGER_PASSWORD:
+      DATABASE_HOST:
+      DATABASE_PORT:
+      DATABASE_USERNAME:
+      DATABASE_PASSWORD:
+      DATABASE_MDM_NAME:
+      DATABASE_NUMBER_GENERATOR_NAME:
+      DATABASE_CEDAR_NAME:
+      DATABASE_CIS_NAME:
+      API_KEY:
+      API_KEY_STRATEGY:
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3003"]
-      interval: 1m30s
-      timeout: 10s
+      test: ["CMD", "curl", "-f", "http://localhost:${PORT}"]
       retries: 3
-      start_period: 40s
+      interval: 60s
+      timeout: 10s
+      start_period: 30s
+

@@ -1,0 +1,127 @@
+# This GHA is responsible for APIM `dev`` deployment.
+# Deployment is initiated using `az cli` bash script.
+#
+# Standard Azure naming convention has been followed:
+# https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/resource-naming
+#
+#
+# Following Azure services are consumed:
+# 1. Azure resource group - https://learn.microsoft.com/en-us/cli/azure/group?view=azure-cli-latest#az-group-create
+# 2. Azure container registry - https://learn.microsoft.com/en-us/cli/azure/acr?view=azure-cli-latest#az-acr-create
+# 3. Azure container app environment - https://learn.microsoft.com/en-us/azure/container-apps/environment
+# 4. Azure container app - https://learn.microsoft.com/en-us/azure/container-apps/containers
+# 
+#
+# Execution
+# *********
+# GHA is only invoked when following conditions are satisfied:
+# 1. Push to the `dev` branch only.
+# 2. Any modifications inside `src` directory
+
+name: Deployment 🚀
+run-name: APIM dev deployment for ${{ github.repository }}
+
+on:
+  push:
+    branches: [ infrastructure ]
+    paths:
+    - 'src/**'
+    - 'package.json'
+    - 'package-lock.json'
+    - 'Dockerfile'
+    - 'tsconfig.json'
+    - 'tsconfig.build.json'
+
+env:
+  product: apim
+  environment: dev
+  timezone: 'Europe/London'
+  # Base artifact
+  from: latest
+
+jobs:
+
+# 1. Setup deployment variables
+  setup:
+    name: Setup 🔧
+    runs-on: [ self-hosted, APIM, deployment ]
+    outputs:
+      product: ${{ env.product }}
+      environment: ${{ env.environment }}
+      timezone: ${{ env.timezone }}
+    steps:
+    - name: Environment 🧪
+      run: echo "Environment set to ${{ env.environment }}"
+
+    - name: Timezone 🌐
+      run: echo "Timezone set to ${{ env.timezone }}"
+
+# 2. MDM micro-service deployment
+  mdm:
+    name: MDM 📦️
+    needs: setup
+    environment: ${{ needs.setup.outputs.environment }}
+    env:
+      name: mdm
+      environment: ${{ needs.setup.outputs.environment }}
+      cr: cr${{ needs.setup.outputs.product }}${{ needs.setup.outputs.environment }}001
+    runs-on: [ self-hosted, APIM, deployment ]
+    steps:
+
+    - name: Repository 🗃️
+      uses: actions/checkout@v3
+
+    - name: Azure 🔐
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: CLI 📝
+      run: echo acr=$(az acr show -n ${{ env.cr }} --query loginServer | tr -d '"') >> $GITHUB_ENV
+
+    - name: Defaults ✨
+      uses: Azure/cli@1.0.4
+      with:
+        inlineScript: |
+          # Basic
+          az configure --defaults location=${{ vars.REGION }}
+          az configure --defaults group=rg-${{ env.product }}-${{ env.environment }}-001
+
+    - name: ACR 🔐
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ env.acr }}
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+    
+    - name: Artifacts 🗃️
+      run: |
+        docker build . \
+        -t ${{ env.acr }}/${{ env.name }}:${{ github.sha }} \
+        -t ${{ env.acr }}/${{ env.name }}:${{ env.from }}
+        docker push ${{ env.acr }}/${{ env.name }}:${{ github.sha }}
+        docker push ${{ env.acr }}/${{ env.name }}:${{ env.from }}
+
+    - name: Revisions 🔀
+      uses: Azure/cli@1.0.4
+      with:
+        inlineScript: |
+          az containerapp update \
+          --name ca-mdm-${{ env.product }}-${{ env.environment }}-001 \
+          --image ${{ env.acr }}/${{ env.name }}:${{ env.from }} \
+          --set-env-vars \
+          "PORT=${{ secrets.PORT }}" \
+          "NODE_ENV=${{ secrets.NODE_ENV }}" \
+          "TZ=${{ secrets.TZ }}" \
+          "SWAGGER_USER=${{ secrets.SWAGGER_USER }}" \
+          "SWAGGER_PASSWORD=${{ secrets.SWAGGER_PASSWORD }}" \
+          "DATABASE_HOST=${{ secrets.DATABASE_HOST }}" \
+          "DATABASE_PORT=${{ secrets.DATABASE_PORT }}" \
+          "DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}" \
+          "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" \
+          "DATABASE_MDM_NAME=${{ secrets.DATABASE_MDM_NAME }}" \
+          "DATABASE_NUMBER_GENERATOR_NAME=${{ secrets.DATABASE_NUMBER_GENERATOR_NAME }}" \
+          "DATABASE_CEDAR_NAME=${{ secrets.DATABASE_CEDAR_NAME }}" \
+          "DATABASE_CIS_NAME=${{ secrets.DATABASE_CIS_NAME }}" \
+          "API_KEY=${{ secrets.API_KEY }}" \
+          "API_KEY_STRATEGY=${{ secrets.API_KEY_STRATEGY }}"

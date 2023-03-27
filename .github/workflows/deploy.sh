@@ -37,8 +37,7 @@ if [ -n "$selection" ]; then
     then
     destination=""
     branch=""
-    az acr run --cmd "acr purge --filter 'get-a-quote:.*' --ago 15d" --registry mdm-development /dev/null
-    az acr run --cmd "acr purge --filter 'get-a-quote:.*' --ago 15d" --registry mdm-production /dev/null
+    az acr run --cmd "acr purge --filter 'get-a-quote:.*' --ago 15d" --registry "${env.APIM_MDM_ACR}" /dev/null
     ############### ACR PURGE ###############
     fi
 
