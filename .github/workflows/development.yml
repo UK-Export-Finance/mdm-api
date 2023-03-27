@@ -29,7 +29,6 @@ on:
     - 'package.json'
     - 'package-lock.json'
     - 'Dockerfile'
-    - 'docker-compose.yml'
     - 'tsconfig.json'
     - 'tsconfig.build.json'
 
