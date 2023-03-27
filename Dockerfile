@@ -3,7 +3,7 @@
 ###################
 
 # NPM 8.19.1 Alpine linux image
-FROM node:18.9-alpine3.16 AS build
+FROM node:18.15-alpine3.16 AS build
 
 # Alpine Linux install packages
 RUN apk add bash curl
