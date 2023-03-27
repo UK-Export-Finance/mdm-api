@@ -23,7 +23,7 @@ run-name: APIM dev deployment for ${{ github.repository }}
 
 on:
   push:
-    branches: [ infrastructure ]
+    branches: [ dev ]
     paths:
     - 'src/**'
     - 'package.json'
