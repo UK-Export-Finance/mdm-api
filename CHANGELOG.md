@@ -1,5 +1,32 @@
 # Changelog
 
+## [1.8.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.7.0...v1.8.0) (2023-03-27)
+
+
+### Features
+
+* **APIM-149:** APIM IaC ([#58](https://github.com/UK-Export-Finance/mdm-api/issues/58)) ([78663ce](https://github.com/UK-Export-Finance/mdm-api/commit/78663ce899b634b38a011431f18f2b9520e98f6e))
+
+
+### Bug Fixes
+
+* **CVE-2023-28154:** webpack updated to 5.76.2 ([#61](https://github.com/UK-Export-Finance/mdm-api/issues/61)) ([97e9380](https://github.com/UK-Export-Finance/mdm-api/commit/97e938043a708fbb4297b804c0366582fd60b18e))
+* **deps:** update dependency pino-pretty to v10 ([b07bb5d](https://github.com/UK-Export-Finance/mdm-api/commit/b07bb5d0cadcb290539716de2b0139109e3b4de8))
+* **deps:** update dependency pino-pretty to v10 ([#54](https://github.com/UK-Export-Finance/mdm-api/issues/54)) ([ac0bb48](https://github.com/UK-Export-Finance/mdm-api/commit/ac0bb4824d4758617eff547a4e35c1b3d36d7b92))
+* **deps:** update dependency typescript to v5 ([#60](https://github.com/UK-Export-Finance/mdm-api/issues/60)) ([4f9ade5](https://github.com/UK-Export-Finance/mdm-api/commit/4f9ade5902362f2721ef82e7a3aaf574335acf38))
+
+
+### Miscellaneous
+
+* **deps:** update all NPM packages ([#51](https://github.com/UK-Export-Finance/mdm-api/issues/51)) ([3959eec](https://github.com/UK-Export-Finance/mdm-api/commit/3959eec3ed3dcf6068d158a46ecc4c8ef8947942))
+* **deps:** update dependency @types/jest to v29.4.1 ([9377f2f](https://github.com/UK-Export-Finance/mdm-api/commit/9377f2f6f7b62e52069f763876ca67ca5e55ce61))
+* **deps:** update dependency @types/jest to v29.4.1 ([#53](https://github.com/UK-Export-Finance/mdm-api/issues/53)) ([4d6572d](https://github.com/UK-Export-Finance/mdm-api/commit/4d6572d02dcf045b640dabb0e6528bd9112bb613))
+* **deps:** update dependency @types/jest to v29.5.0 ([#59](https://github.com/UK-Export-Finance/mdm-api/issues/59)) ([31efdce](https://github.com/UK-Export-Finance/mdm-api/commit/31efdce8b47e68e7a2be84503bf30e7b8d35c63e))
+* **deps:** update szenius/set-timezone action to v1.2 ([#62](https://github.com/UK-Export-Finance/mdm-api/issues/62)) ([4a6a220](https://github.com/UK-Export-Finance/mdm-api/commit/4a6a2202326c8b529eab323c68a4a7c0ade51f64))
+* **npm-update:** dependencies updates ([#63](https://github.com/UK-Export-Finance/mdm-api/issues/63)) ([edb908d](https://github.com/UK-Export-Finance/mdm-api/commit/edb908dab55a40cb497832177a931449d8581cf2))
+* **npm-update:** dependency update ([39c709b](https://github.com/UK-Export-Finance/mdm-api/commit/39c709be2961298a6cbecf1ed3066cea1a8be2a4))
+* **npm-update:** dependency update ([#57](https://github.com/UK-Export-Finance/mdm-api/issues/57)) ([2dde79b](https://github.com/UK-Export-Finance/mdm-api/commit/2dde79bd931063d6535cbfa8a77a0a87760b43f0))
+
 ## [1.7.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.6.0...v1.7.0) (2023-03-10)
 
 
