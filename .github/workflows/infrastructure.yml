@@ -129,7 +129,8 @@ jobs:
           --subnet-name snet-${{ env.product }}-001 \
           --subnet-prefixes ${{ secrets.VNET_SUBNET_PREFIX }} \
           --tags ${{ env.tags }}
-          
+    
+    # TODO: APIM-168
     # - name: VNET peer 🔀
     #   uses: Azure/cli@1.0.4
     #   with:
