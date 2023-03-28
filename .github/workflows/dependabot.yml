@@ -14,7 +14,7 @@ updates:
     schedule:
       interval: 'daily'
     labels:
-     - 'chore'
+      - 'chore'
 
   # Root Dockerfile
   - package-ecosystem: 'docker'
@@ -22,7 +22,7 @@ updates:
     schedule:
       interval: 'daily'
     labels:
-    - 'chore'
+      - 'chore'
 
   # Git Hub Actions
   #  Set the directory to `/` for
@@ -32,4 +32,4 @@ updates:
     schedule:
       interval: 'daily'
     labels:
-    - 'chore'
+      - 'chore'
