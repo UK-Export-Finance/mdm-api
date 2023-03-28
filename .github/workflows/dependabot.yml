@@ -1,0 +1,35 @@
+# MDM Git Hub Actions
+#####################################
+# Automatic daily dependencies updates
+# for the following services:
+# 1. NPM
+# 2. Docker
+# 3. GHA
+
+version: 2
+updates:
+  # Root package-*.json files
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'daily'
+    labels:
+     - 'chore'
+
+  # Root Dockerfile
+  - package-ecosystem: 'docker'
+    directory: '/'
+    schedule:
+      interval: 'daily'
+    labels:
+    - 'chore'
+
+  # Git Hub Actions
+  #  Set the directory to `/` for
+  # .github/workflows GHA files
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'daily'
+    labels:
+    - 'chore'
