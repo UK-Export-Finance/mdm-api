@@ -27,13 +27,18 @@ if [ -n "$selection" ]; then
     then
     destination=dev
     branch=main
-    ############### PRODUCTION ###############
+    ############### STAGING ###############
     elif [ "$selection" = "2" ]
+    then
+    destination=staging
+    branch=main
+    ############### PRODUCTION ###############
+    elif [ "$selection" = "3" ]
     then
     destination=prod
     branch=main
     ############### ACR PURGE ###############
-    elif [ "$selection" = "3" ]
+    elif [ "$selection" = "4" ]
     then
     destination=""
     branch=""
