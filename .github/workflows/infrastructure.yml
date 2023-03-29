@@ -74,13 +74,15 @@ jobs:
 
     - name: Pre-production 💫
       if: contains('["dev", "staging"]', env.target)
-      run: echo type=Preproduction \
-       sku=Developer >> $GITHUB_ENV
+      run: |
+          echo "type=Preproduction" >> $GITHUB_ENV 
+          echo "sku=Developer" >> $GITHUB_ENV 
 
     - name: Production 💫
       if: ${{ 'prod' == env.target }}
-      run: echo type=Production \
-       sku=${{ secrets.APIM_PLAN }} >> $GITHUB_ENV
+      run: |
+        echo "type=Production" >> $GITHUB_ENV
+        echo "sku=${{ secrets.APIM_PLAN }}" >> $GITHUB_ENV
 
     - name: Tags 🏷️
       run: echo tags='Environment=${{ env.type }}' \
