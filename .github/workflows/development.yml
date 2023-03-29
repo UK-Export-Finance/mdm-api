@@ -80,7 +80,7 @@ jobs:
       run: echo acr=$(az acr show -n ${{ env.cr }} --query loginServer | tr -d '"') >> $GITHUB_ENV
 
     - name: Defaults ✨
-      uses: Azure/cli@1.0.4
+      uses: Azure/cli@v1.0.7
       with:
         inlineScript: |
           # Basic
@@ -103,7 +103,7 @@ jobs:
         docker push ${{ env.acr }}/${{ env.name }}:${{ env.from }}
 
     - name: Revisions 🔀
-      uses: Azure/cli@1.0.4
+      uses: Azure/cli@v1.0.7
       with:
         inlineScript: |
           az containerapp update \

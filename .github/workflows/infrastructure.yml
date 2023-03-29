@@ -90,7 +90,7 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Azure defaults ✨
-      uses: Azure/cli@1.0.4
+      uses: Azure/cli@v1.0.7
       with:
         inlineScript: |
           # Basic
@@ -101,7 +101,7 @@ jobs:
           az extension add --name containerapp --upgrade
 
     - name: Resource group 🏗️
-      uses: Azure/cli@1.0.4
+      uses: Azure/cli@v1.0.7
       with:
         inlineScript: |
           az group create \
@@ -110,7 +110,7 @@ jobs:
 
     
     - name: Container registry 📦️
-      uses: Azure/cli@1.0.4
+      uses: Azure/cli@v1.0.7
       with:
         inlineScript: |
           az acr create \
@@ -120,7 +120,7 @@ jobs:
           --tags ${{ env.tags }}
 
     - name: Virtual network 🧵
-      uses: Azure/cli@1.0.4
+      uses: Azure/cli@v1.0.7
       with:
         inlineScript: |
           az network vnet create \
@@ -132,7 +132,7 @@ jobs:
     
     # TODO: APIM-168
     # - name: VNET peer 🔀
-    #   uses: Azure/cli@1.0.4
+    #   uses: Azure/cli@v1.0.7
     #   with:
     #     inlineScript: |
     #       az network vnet peering create \
@@ -143,7 +143,7 @@ jobs:
     #       --allow-vnet-access 1
 
     - name: Container app environment 🗃️
-      uses: Azure/cli@1.0.4
+      uses: Azure/cli@v1.0.7
       with:
         inlineScript: |
           az containerapp env create \
@@ -153,7 +153,7 @@ jobs:
 
     
     - name: Container app - MDM 📄
-      uses: Azure/cli@1.0.4
+      uses: Azure/cli@v1.0.7
       with:
         inlineScript: |
           az containerapp create \
