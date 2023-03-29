@@ -181,7 +181,7 @@ jobs:
       with:
         inlineScript: |
           az apim create \
-          --name apim-${{ env.target }} \
+          --name apim-${{ env.product }}-${{ env.target }} \
           --publisher-email ${{ secrets.NOTIFICATION }} \
           --publisher-name UKEF \
           --public-network-access true \
