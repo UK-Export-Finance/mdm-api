@@ -174,7 +174,7 @@ jobs:
           --transport http2 \
           --tags ${{ env.tags }}
 
-    - name: APIM ⚡️
+    - name: API management ⚡️
       uses: Azure/cli@1.0.4
       with:
         inlineScript: |
@@ -184,6 +184,6 @@ jobs:
           --publisher-name UKEF \
           --public-network-access true \
           --sku-capacity 1 \
-          --sku-name ${{ env.sku }}
+          --sku-name ${{ env.sku }} \
           --no-wait \
           --tags ${{ env.tags }}
