@@ -13,6 +13,7 @@
 # 4. Azure virtual network peer - https://learn.microsoft.com/en-us/cli/azure/network/vnet/peering?view=azure-cli-latest
 # 5. Azure container app environment - https://learn.microsoft.com/en-us/azure/container-apps/environment
 # 6. Azure container app - https://learn.microsoft.com/en-us/azure/container-apps/containers
+# 7. Azure API management - https://learn.microsoft.com/en-us/azure/api-management/api-management-key-concepts
 # 
 #
 # Execution
@@ -28,16 +29,16 @@
 # 2. Add log workspace
 # 3. Add Insight
 # 4. Add monitor
-# 5. Add API management service
-# 6. Add Key vault
-# 7. Add VNET peer (x-subscription RBAC SP)
+# 5. Add Key vault
+# 6. Add VNET peer (x-subscription RBAC SP)
 
 name: Infrastructure 🔨
 run-name: APIM base infrastructure build from ${{ github.repository }}
 
 on:
   push:
-    branches: [ infrastructure ]
+    # branches: [ infrastructure ]
+    branches: [ APIM-162-set-up-azure-api-management ]
     paths: [ .github/workflows/infrastructure.yml ]
 
 env:
@@ -73,11 +74,13 @@ jobs:
 
     - name: Pre-production 💫
       if: contains('["dev", "staging"]', env.target)
-      run: echo "type=Preproduction" >> $GITHUB_ENV
+      run: echo 'type=Preproduction' \
+        'sku=Developer' >> $GITHUB_ENV
 
     - name: Production 💫
       if: ${{ 'prod' == env.target }}
-      run: echo "type=Production" >> $GITHUB_ENV
+      run: echo 'type=Production' \
+        'sku=${{ secrets.APIM_PLAN }}' >> $GITHUB_ENV
 
     - name: Tags 🏷️
       run: echo tags='Environment=${{ env.type }}' \
@@ -169,4 +172,18 @@ jobs:
           --target-port ${{ vars.MDM_PORT }} \
           --revisions-mode multiple \
           --transport http2 \
+          --tags ${{ env.tags }}
+
+    - name: APIM ⚡️
+      uses: Azure/cli@1.0.4
+      with:
+        inlineScript: |
+          az apim create \
+          --name apim-${{ env.product }}-${{ env.target }} \
+          --publisher-email ${{ secrets.NOTIFICATION }} \
+          --publisher-name UKEF \
+          --public-network-access true \
+          --sku-capacity 1 \
+          --sku-name ${{ env.sku }}
+          --no-wait \
           --tags ${{ env.tags }}
