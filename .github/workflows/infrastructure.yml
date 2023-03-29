@@ -74,13 +74,13 @@ jobs:
 
     - name: Pre-production 💫
       if: contains('["dev", "staging"]', env.target)
-      run: echo 'type=Preproduction' \
-        'sku=Developer' >> $GITHUB_ENV
+      run: echo type=Preproduction \
+       sku=Developer >> $GITHUB_ENV
 
     - name: Production 💫
       if: ${{ 'prod' == env.target }}
-      run: echo 'type=Production' \
-        'sku=${{ secrets.APIM_PLAN }}' >> $GITHUB_ENV
+      run: echo type=Production \
+       sku=${{ secrets.APIM_PLAN }} >> $GITHUB_ENV
 
     - name: Tags 🏷️
       run: echo tags='Environment=${{ env.type }}' \
@@ -179,7 +179,7 @@ jobs:
       with:
         inlineScript: |
           az apim create \
-          --name apim-${{ env.product }}-${{ env.target }} \
+          --name apim-${{ env.target }} \
           --publisher-email ${{ secrets.NOTIFICATION }} \
           --publisher-name UKEF \
           --public-network-access true \
