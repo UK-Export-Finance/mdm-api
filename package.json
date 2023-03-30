@@ -42,7 +42,7 @@
     "pino-pretty": "^10.0.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.0",
-    "tsconfig-paths": "^4.1.2",
+    "tsconfig-paths": "^4.2.0",
     "tslib": "^2.5.0",
     "typeorm": "^0.3.12",
     "typeorm-extension": "^2.6.2",
