@@ -3,6 +3,8 @@ import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import basicAuth from 'express-basic-auth';
 
+import { AUTH } from './constants';
+
 export const SwaggerDocs = (app: INestApplication) => {
   const configService = app.get(ConfigService);
   const logger = new Logger();
@@ -12,7 +14,19 @@ export const SwaggerDocs = (app: INestApplication) => {
   const docVersion: string = configService.get<string>('doc.version');
   const docPrefix: string = configService.get<string>('doc.prefix');
 
-  const documentBuild = new DocumentBuilder().setTitle(docName).setDescription(docDesc).setVersion(docVersion).build();
+  const securityName = 'ApiKeyHeader';
+
+  const documentBuild = new DocumentBuilder()
+    .setTitle(docName)
+    .setDescription(docDesc)
+    .setVersion(docVersion)
+    .addSecurity(securityName, {
+      type: 'apiKey',
+      in: 'header',
+      name: AUTH.STRATEGY,
+    })
+    .addSecurityRequirements(securityName)
+    .build();
 
   app.use(
     ['/docs', '/docs-json', '/docs-yaml'],

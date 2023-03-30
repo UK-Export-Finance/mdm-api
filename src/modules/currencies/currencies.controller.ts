@@ -1,12 +1,11 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { CurrenciesService } from './currencies.service';
 import { CurrencyDto, GetCurrencyExchangeDto } from './dto';
 import { CurrencyEntity } from './entities/currency.entity';
 import { CurrencyExchangeEntity } from './entities/currency-exchange.entity';
 
-@ApiBearerAuth()
 @ApiTags('currencies')
 @Controller('currencies')
 export class CurrenciesController {
