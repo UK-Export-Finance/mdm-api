@@ -1,11 +1,10 @@
 import { Controller, Get } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { HealthCheck, HealthCheckService, MemoryHealthIndicator, TypeOrmHealthIndicator } from '@nestjs/terminus';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DATABASE } from '@ukef/constants';
 import { DataSource } from 'typeorm';
 
-@ApiBearerAuth()
 @ApiTags('healthcheck')
 @Controller('')
 export class HealthcheckController {

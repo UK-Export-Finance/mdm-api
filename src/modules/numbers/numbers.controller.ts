@@ -1,12 +1,11 @@
 import { BadRequestException, Body, Controller, Get, ParseArrayPipe, Post, Query } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { CreateUkefIdDto } from './dto/create-ukef-id.dto';
 import { GetNumbersQueryDto } from './dto/get-numbers-query.dto';
 import { UkefId } from './entities/ukef-id.entity';
 import { NumbersService } from './numbers.service';
 
-@ApiBearerAuth()
 @ApiTags('numbers')
 @Controller('numbers')
 export class NumbersController {

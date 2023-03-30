@@ -1,11 +1,10 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { ExposurePeriodDto } from './dto/exposure-period.dto';
 import { GetExposurePeriodQueryDto } from './dto/get-exposure-period-query.dto';
 import { ExposurePeriodService } from './exposure-period.service';
 
-@ApiBearerAuth()
 @ApiTags('exposure-period')
 @Controller('exposure-period')
 export class ExposurePeriodController {
