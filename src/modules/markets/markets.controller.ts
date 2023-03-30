@@ -1,11 +1,10 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { MarketsQueryDto } from './dto/markets-query.dto';
 import { MarketEntity } from './entities/market.entity';
 import { MarketsService } from './markets.service';
 
-@ApiBearerAuth()
 @ApiTags('markets')
 @Controller('markets')
 export class MarketsController {
