@@ -27,9 +27,7 @@
 # 2. Add log workspace
 # 3. Add Insight
 # 4. Add monitor
-# 5. Add API management service
-# 6. Add Key vault
-# 7. Add VNET peer (x-subscription RBAC SP)
+# 5. Add Key vault
 
 name: Infrastructure 🔨
 run-name: APIM base infrastructure build from ${{ github.repository }}
