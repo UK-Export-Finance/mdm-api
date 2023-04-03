@@ -25,7 +25,7 @@
     "@nestjs/core": "^9.3.12",
     "@nestjs/passport": "^9.0.3",
     "@nestjs/platform-express": "^9.3.12",
-    "@nestjs/swagger": "^6.2.1",
+    "@nestjs/swagger": "^6.3.0",
     "@nestjs/terminus": "^9.2.2",
     "@nestjs/typeorm": "^9.0.1",
     "class-transformer": "^0.5.1",
@@ -45,7 +45,7 @@
     "tsconfig-paths": "^4.2.0",
     "tslib": "^2.5.0",
     "typeorm": "^0.3.12",
-    "typeorm-extension": "^2.6.2",
+    "typeorm-extension": "^2.7.0",
     "typescript": "^5.0.3"
   },
   "devDependencies": {
