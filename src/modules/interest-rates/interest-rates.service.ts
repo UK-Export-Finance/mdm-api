@@ -15,7 +15,7 @@ export class InterestRatesService {
 
   findAll(): Promise<InterestRatesEntity[]> {
     try {
-      return this.interestRates.find({ where: { effectiveTo: Equal(DATE.MAXIMUM_LIMIT) } });
+      return this.interestRates.find({ where: { effectiveTo: Equal(new Date(DATE.MAXIMUM_LIMIT)) } });
     } catch (err) {
       this.logger.error(err);
       throw new InternalServerErrorException();

@@ -1,5 +1,5 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { MarketsQueryDto } from './dto/markets-query.dto';
 import { MarketEntity } from './entities/market.entity';
@@ -11,9 +11,12 @@ export class MarketsController {
   constructor(private readonly marketService: MarketsService) {}
 
   @Get()
+  @ApiOperation({
+    summary: 'Get all markets (aka countries)',
+  })
   @ApiResponse({
     status: 200,
-    description: 'Get all markets (aka countries)',
+    description: 'All markets',
     type: MarketEntity,
   })
   findAll(@Query() query: MarketsQueryDto): Promise<MarketEntity[]> {

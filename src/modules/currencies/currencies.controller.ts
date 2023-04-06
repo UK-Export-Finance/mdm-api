@@ -12,9 +12,13 @@ export class CurrenciesController {
   constructor(private readonly currenciesService: CurrenciesService) {}
 
   @Get()
+  @ApiOperation({
+    summary: 'Get all currencies',
+  })
   @ApiResponse({
     status: 200,
-    description: 'Get all currencies',
+    description: 'All currencies',
+    type: [CurrencyEntity],
   })
   findAll(): Promise<CurrencyEntity[]> {
     return this.currenciesService.findAll();
@@ -26,7 +30,7 @@ export class CurrenciesController {
   })
   @ApiResponse({
     status: 200,
-    description: 'Get the Active exchange rate',
+    description: 'Active exchange rate',
     type: GetCurrencyExchangeDto,
   })
   findExchangeRate(@Query() query: GetCurrencyExchangeDto): Promise<CurrencyExchangeEntity[]> {
