@@ -6,14 +6,11 @@
 ### Features
 
 * adding authentication header to swagger ui, removing wrong auth… ([#82](https://github.com/UK-Export-Finance/mdm-api/issues/82)) ([d8d50d9](https://github.com/UK-Export-Finance/mdm-api/commit/d8d50d96738e9c26d234598547eca43dd3e6f58e))
-* **dependabot:** added dependabot.yml GHA ([107a821](https://github.com/UK-Export-Finance/mdm-api/commit/107a8216d5506f9365080cfc8aea2010363da323))
 * **dependabot:** added dependabot.yml GHA ([84c3ca8](https://github.com/UK-Export-Finance/mdm-api/commit/84c3ca82eec63b6d90ad758f9e0e2272d11ea0eb))
-* **dependabot:** added dependabot.yml GHA ([#71](https://github.com/UK-Export-Finance/mdm-api/issues/71)) ([a28c1ef](https://github.com/UK-Export-Finance/mdm-api/commit/a28c1efcdcb6a8ce1d54e7af81996bfa9e4c9f2c))
 
 
 ### Bug Fixes
 
-* **dependabot:** moved to correct location ([4897aab](https://github.com/UK-Export-Finance/mdm-api/commit/4897aabff90fdd6d43db0d8936ea42e3f8434739))
 * **deployment:** updated branch names ([#69](https://github.com/UK-Export-Finance/mdm-api/issues/69)) ([f1b6b8f](https://github.com/UK-Export-Finance/mdm-api/commit/f1b6b8f5fcd4a9cb0d59400f0dfc4e1c3c1b1091))
 
 
