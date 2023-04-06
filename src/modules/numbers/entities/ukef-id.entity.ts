@@ -11,11 +11,11 @@ export class UkefId {
    * @example
    */
   @PrimaryGeneratedColumn({ name: 'DEAL_FACILITY_ID' })
-  @ApiProperty({ example: '20057861', description: "Internal id, don't use" })
+  @ApiProperty({ example: 20057861, description: 'Internal id' })
   id?: number;
 
   @Column({ name: 'DEAL_FACILITY_ID_MASK' })
-  @ApiProperty({ example: '0030570680', description: 'UKEF ID to use' })
+  @ApiProperty({ example: '0030570680', description: 'UKEF ID' })
   maskedId: string;
 
   @Column({ name: 'NBR_TYPE_ID' })

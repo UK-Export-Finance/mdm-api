@@ -31,7 +31,7 @@ export class CurrenciesService {
   async findOne(isoCode: string): Promise<CurrencyEntity[]> {
     try {
       const results = await this.currency.find({
-        where: { effectiveTo: Equal(DATE.MAXIMUM_LIMIT), isoCode },
+        where: { effectiveTo: Equal(new Date(DATE.MAXIMUM_LIMIT)), isoCode },
         order: { id: 'ASC' },
       });
 

@@ -58,7 +58,7 @@ export class YieldRateEntity {
 
   @Column({ name: 'EFFECTIVE_TO_DATETIME', type: 'timestamp' })
   @ApiProperty({ example: DATE.MAXIMUM_TIMEZONE_LIMIT })
-  effectiveTo: string;
+  effectiveTo: Date;
 
   @Column({ name: 'EFFECTIVE_FROM_DATETIME', type: 'timestamp' })
   @ApiProperty({ example: '2023-02-27T00:00:00.000Z' })
