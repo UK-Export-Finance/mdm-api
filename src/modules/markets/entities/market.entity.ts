@@ -38,7 +38,7 @@ export class MarketEntity {
   effectiveToDatetime: Date;
 
   @Column({ name: 'OECD_RISK_CATEGORY_DESC' })
-  @ApiProperty({ example: 5, description: '' })
+  @ApiProperty({ example: 5, description: 'OECD risk category description' })
   oecdRiskCategory: number;
 
   @Column({ name: 'MARKET_RISK_APPETITE_PUBLIC_DESC' })
@@ -46,7 +46,7 @@ export class MarketEntity {
   marketRiskAppetitePublicDesc: string;
 
   @Column({ name: 'GEOGRAPHICAL_REGION_ID' })
-  @ApiProperty({ example: 14, description: '' })
+  @ApiProperty({ example: 14, description: 'Geographical region Id' })
   geographicalRegionId: number;
 
   @Column({ name: 'GEOGRAPHICAL_REGION_DESC' })
@@ -62,7 +62,7 @@ export class MarketEntity {
   ESRAClassificationId: number; // TODO: Once live, Notify Tony of the typo update
 
   @Column({ name: 'ESRA_DESC' })
-  @ApiProperty({ example: 'Standard Risk', description: '' })
+  @ApiProperty({ example: 'Standard Risk', description: 'ESRA description' })
   ESRAClassificationDesc: string; // TODO: Once live, Notify Tony of the typo update
 
   @Column({ name: 'CASH_COVER_AVAILABILITY_ID' })

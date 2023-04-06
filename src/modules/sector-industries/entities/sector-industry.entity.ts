@@ -84,18 +84,18 @@ export class SectorIndustryEntity {
   acbsIndustryName: string;
 
   @Column({ name: 'DATE_CREATED_DATETIME' })
-  @ApiProperty({ example: '2010-03-15 00:00:00.000' })
+  @ApiProperty({ example: '2010-03-15T16:20:16.870Z' })
   created: Date;
 
   @Column({ name: 'DATE_LAST_UPDATED_DATETIME', type: 'timestamp' })
-  @ApiProperty({ example: '2010-03-15 00:00:00.000' })
+  @ApiProperty({ example: '2010-03-15T16:20:16.867Z' })
   updated: Date;
 
   @Column({ name: 'EFFECTIVE_FROM_DATETIME', type: 'timestamp' })
-  @ApiProperty({ example: '2010-03-15 00:00:00.000' })
+  @ApiProperty({ example: '2010-03-15T16:20:16.870Z' })
   effectiveFrom: Date;
 
   @Column({ name: 'EFFECTIVE_TO_DATETIME', type: 'timestamp' })
-  @ApiProperty({ example: '2010-03-15 00:00:00.000' })
+  @ApiProperty({ example: '9999-12-31T00:00:00.000Z' })
   effectiveTo: Date;
 }
