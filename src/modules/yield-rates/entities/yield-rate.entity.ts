@@ -45,7 +45,7 @@ export class YieldRateEntity {
   sourceUpdateTimestamp: string;
 
   @Column({ name: 'YIELD_INDEX' })
-  @ApiProperty({ example: 'EESWE3 Currency' })
+  @ApiProperty({ example: 'EESWE3 Curncy' })
   yieldIndex: string;
 
   @Column({ name: 'DATE_CREATED_DATETIME', type: 'timestamp' })
