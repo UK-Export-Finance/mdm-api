@@ -195,7 +195,6 @@ jobs:
             --public-network-access true \
             --sku-capacity 1 \
             --sku-name ${{ vars.APIM_PLAN }} \
-            --no-wait \
             --tags ${{ env.tags }}
 
   # 3. APIM configuration
