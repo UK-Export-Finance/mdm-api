@@ -59,11 +59,11 @@ export class MarketEntity {
 
   @Column({ name: 'ESRA_ID' })
   @ApiProperty({ example: 1, description: 'ESRA id' })
-  ESRAClassificationId: number; // TODO: Once live, Notify Tony of the typo update
+  ESRAClassificationId: number;
 
   @Column({ name: 'ESRA_DESC' })
   @ApiProperty({ example: 'Standard Risk', description: 'ESRA description' })
-  ESRAClassificationDesc: string; // TODO: Once live, Notify Tony of the typo update
+  ESRAClassificationDesc: string;
 
   @Column({ name: 'CASH_COVER_AVAILABILITY_ID' })
   @ApiProperty({ example: 1, description: 'Cash cover availability id' })
