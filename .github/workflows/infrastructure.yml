@@ -238,11 +238,10 @@ jobs:
             az apim product create \
             --service-name apim-${{ env.environment }}-${{ env.target }}-001 \
             --product-name apim-${{ env.product }}-mdm \
-            --description Master database management endpoints \
+            --description 'Master database management endpoints' \
             --state published \
             --approval-required true \
-            --subscription-required true \
-            --no-wait
+            --subscription-required true
       
       - name: Product TFS ➕
         uses: Azure/cli@1.0.4
@@ -251,11 +250,10 @@ jobs:
             az apim product create \
             --service-name apim-${{ env.environment }}-${{ env.target }}-001 \
             --product-name apim-${{ env.product }}-tfs \
-            --description Trade finance system endpoints \
+            --description 'Trade finance system endpoints' \
             --state published \
             --approval-required true \
-            --subscription-required true \
-            --no-wait
+            --subscription-required true
 
       - name: Product eStore ➕
         uses: Azure/cli@1.0.4
@@ -267,5 +265,4 @@ jobs:
             --description eStore document management system endpoints \
             --state published \
             --approval-required true \
-            --subscription-required true \
-            --no-wait
+            --subscription-required true
