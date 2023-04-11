@@ -261,7 +261,7 @@ jobs:
             az apim product create \
             --service-name apim-${{ env.environment }}-${{ env.target }}-001 \
             --product-name apim-${{ env.product }}-estore \
-            --description eStore document management system endpoints \
+            --description 'eStore document management system endpoints' \
             --state published \
             --approval-required true \
             --subscription-required true
