@@ -145,7 +145,9 @@ jobs:
             --name vnet-peer-${{ env.product }}-001 \
             --vnet-name  ${{ secrets.REMOTE_VNET }} \
             --remote-vnet $(az network vnet show --name vnet-${{ env.product }}-001 --query 'id' -o tsv) \
-            --allow-vnet-access 1
+            --allow-vnet-access 1 \
+            --subscription ${{ secrets.REMOTE_VNET_SUBSCRIPTION }} \
+            --resource-group ${{ secrets.VNET_REMOTE_RESOURCE_GROUP }}
 
             # Fetch peering state
             echo "Peering state: $(az network vnet peering show \
