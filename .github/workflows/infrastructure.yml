@@ -142,8 +142,8 @@ jobs:
 
             # Remote VNET peer
             az network vnet peering create \
-            --name ${{ secrets.REMOTE_VNET }} \
-            --vnet-name vnet-${{ env.product }}-001 \
+            --name vnet-peer-${{ env.product }}-001 \
+            --vnet-name  ${{ secrets.REMOTE_VNET }} \
             --remote-vnet $(az network vnet show --name vnet-${{ env.product }}-001 --query 'id' -o tsv) \
             --allow-vnet-access 1
 
