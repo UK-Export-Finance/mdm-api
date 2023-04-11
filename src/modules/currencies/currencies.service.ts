@@ -62,13 +62,7 @@ export class CurrenciesService {
       const fieldMap = DbResponseHelper.getApiNameToDbNameMap(this.currencyExchangeRepository);
       const renamedResults = DbResponseHelper.renameDbResultFields(this.currencyExchangeRepository, fieldMap, results);
 
-      // Transform results to match logic in old implementation.
-      const transformedResults = renamedResults.map((result) => {
-        if (result.category === result.subCategory) result.subCategory = '';
-        return result;
-      });
-
-      return transformedResults;
+      return renamedResults;
     } catch (err) {
       if (err instanceof NotFoundException) {
         this.logger.warn(err);

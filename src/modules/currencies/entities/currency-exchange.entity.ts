@@ -40,10 +40,6 @@ export class CurrencyExchangeEntity {
   @ApiProperty({ example: 1 })
   midPrice: number;
 
-  @Column({ name: 'SOURCE_ERROR_CODE' })
-  @ApiProperty({ example: 0 })
-  errorCode: number;
-
   @Column({ name: 'DATE_CREATED_DATETIME', type: 'timestamp' })
   @ApiProperty({ example: '2021-01-26T16:21:25.000Z' })
   created: Date;
