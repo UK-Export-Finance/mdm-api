@@ -34,8 +34,10 @@ run-name: APIM base infrastructure build from ${{ github.repository }}
 
 on:
   push:
-    # branches: [ infrastructure ]
-    branches: [ (APIM-162-set-up-azure-api-management ]
+    branches:
+      - infrastructure
+      # TODO: Remove pre PR merge
+      - APIM-162-set-up-azure-api-management
     paths: [ .github/workflows/infrastructure.yml ]
 
 env:
