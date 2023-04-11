@@ -133,12 +133,25 @@ jobs:
         uses: Azure/cli@1.0.4
         with:
           inlineScript: |
+            # Local VNET peer
             az network vnet peering create \
             --name vnet-peer-${{ env.product }}-001 \
             --vnet-name vnet-${{ env.product }}-001 \
             --remote-vnet $(az network vnet show --subscription ${{ secrets.REMOTE_VNET_SUBSCRIPTION }} --resource-group ${{ secrets.VNET_REMOTE_RESOURCE_GROUP }} --name ${{ secrets.REMOTE_VNET }} --query 'id' -o tsv) \
-            --allow-forwarded-traffic 1 \
             --allow-vnet-access 1
+
+            # Remote VNET peer
+            az network vnet peering create \
+            --name ${{ secrets.REMOTE_VNET }} \
+            --vnet-name vnet-${{ env.product }}-001 \
+            --remote-vnet $(az network vnet show --name vnet-peer-${{ env.product }}-001 --query 'id' -o tsv) \
+            --allow-vnet-access 1
+
+            # Fetch peering state
+            echo "Peering state: $(az network vnet peering show \
+            --name vnet-peer-${{ env.product }}-001 \
+            --vnet-name vnet-${{ env.product }}-001 \
+            --query peeringState)"
 
       - name: Container app environment 🗃️
         uses: Azure/cli@1.0.4
