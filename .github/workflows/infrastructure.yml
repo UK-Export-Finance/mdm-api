@@ -134,7 +134,7 @@ jobs:
         with:
           inlineScript: |
             az network vnet peering create \
-            --name vnet-peer-${{ env.product }}-${{ github.sha }}-001 \
+            --name vnet-peer-${{ env.product }}-001 \
             --vnet-name vnet-${{ env.product }}-001 \
             --remote-vnet $(az network vnet show --subscription ${{ secrets.REMOTE_VNET_SUBSCRIPTION }} --resource-group ${{ secrets.VNET_REMOTE_RESOURCE_GROUP }} --name ${{ secrets.REMOTE_VNET }} --query 'id' -o tsv) \
             --allow-forwarded-traffic 1 \
@@ -179,7 +179,7 @@ jobs:
             --publisher-name UKEF \
             --public-network-access true \
             --sku-capacity 1 \
-            --sku-name ${{ env.sku }} \
+            --sku-name ${{ vars.APIM_PLAN }} \
             --no-wait \
             --tags ${{ env.tags }}
 
