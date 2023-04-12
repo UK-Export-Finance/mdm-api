@@ -2,8 +2,7 @@
 # 1. BUILD
 ###################
 
-# NPM 9.5.1 Alpine linux image
-FROM node:19.8.1-alpine3.16 AS build
+FROM node:19.9-alpine3.16 AS build
 
 # Alpine Linux install packages
 RUN apk add bash curl
@@ -36,8 +35,7 @@ USER node
 # 2. PRODUCTION
 ###################
 
-# NPM 9.5.1 Alpine linux image
-FROM node:19.8.1-alpine3.16 AS production
+FROM node:19.9-alpine3.16 AS production
 
 WORKDIR /app
 

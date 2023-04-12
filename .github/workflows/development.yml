@@ -110,7 +110,7 @@ jobs:
       with:
         inlineScript: |
           az containerapp update \
-          --name ca-mdm-${{ env.product }}-${{ env.environment }}-001 \
+          --name ca-${{ env.product }}-mdm-${{ env.environment }}-001 \
           --image ${{ env.acr }}/${{ env.name }}:${{ env.from }} \
           --set-env-vars \
           "PORT=${{ secrets.PORT }}" \
