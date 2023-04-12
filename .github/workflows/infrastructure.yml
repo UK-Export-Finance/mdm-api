@@ -162,7 +162,6 @@ jobs:
             az containerapp env create \
             --name cae-${{ env.product }}-${{ env.target }}-001 \
             --infrastructure-subnet-resource-id $(az network vnet subnet show --name snet-${{ env.product }}-001 --vnet-name vnet-${{ env.product }}-001 --query 'id' -o tsv) \
-            --internal-only true \
             --tags ${{ env.tags }}
 
       - name: Container app - MDM 📄
@@ -178,7 +177,7 @@ jobs:
             --memory 2.0Gi \
             --min-replicas 1 \
             --max-replicas 4 \
-            --ingress internal \
+            --ingress external \
             --target-port ${{ vars.MDM_PORT }} \
             --revisions-mode multiple \
             --transport http2 \
@@ -197,7 +196,53 @@ jobs:
             --sku-name ${{ vars.APIM_PLAN }} \
             --tags ${{ env.tags }}
 
-  # 3. APIM configuration
+  # 3. Container app configuration
+  ca:
+    name: CA configuration 🔧
+    needs: base
+    environment: ${{ needs.base.outputs.environment }}
+    runs-on: [ self-hosted, APIM, infrastructure]
+    steps:
+      - name: Pre-production 💫
+        if: contains('["dev", "staging"]', env.target)
+        run: echo "type=Preproduction" >> $GITHUB_ENV
+
+      - name: Production 💫
+        if: ${{ 'prod' == env.target }}
+        run: echo "type=Production" >> $GITHUB_ENV
+
+      - name: Tags 🏷️
+        run: echo tags='Environment=${{ env.type }}' \
+          'Product=${{ env.product }}' \
+          'Team=development' >> $GITHUB_ENV
+
+      - name: Login 🔐
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Azure defaults ✨
+        uses: Azure/cli@1.0.4
+        with:
+          inlineScript: |
+            # Basic
+            az configure --defaults location=${{ vars.REGION }}
+            az configure --defaults group=rg-${{ env.product }}-${{ env.target }}-001
+
+      - name: IP restriction
+        uses: Azure/cli@1.0.4
+        with:
+          inlineScript: |
+            # Add APIM public IP
+            az containerapp ingress access-restriction set \
+            --name ca-${{ env.product }}-mdm-${{ env.target }}-001 \
+            --action Allow \
+            --ip-address $(az apim show --name apim-infrastructure-dev-001 --query publicIpAddresses -o tsv) \
+            --rule-name APIM \
+            --description 'Allow APIM public IP address'
+
+
+  # 4. APIM configuration
   apim:
     name: APIM configuration 🔧
     needs: base
