@@ -9,6 +9,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @UseInterceptors(ClassSerializerInterceptor)
 export class InterestRatesEntity {
   @PrimaryGeneratedColumn({ name: 'INT_RATE_ID' })
+  @ApiProperty({ example: 1234 })
   id: number;
 
   @Column({ name: 'INT_RATE_CATEGORY' })
@@ -31,7 +32,7 @@ export class InterestRatesEntity {
   @ApiProperty({ example: 'EUR' })
   currency: string;
 
-  @Column({ name: 'INTEREST_RATE', type: 'float' })
+  @Column({ name: 'INTEREST_RATE', type: 'decimal' })
   @ApiProperty({ example: 1.20125 })
   interestRate: number;
 
@@ -40,18 +41,18 @@ export class InterestRatesEntity {
   bukKey: string;
 
   @Column({ name: 'EFFECTIVE_FROM_DATETIME', type: 'timestamp' })
-  @ApiProperty({ example: '2010-03-15 00:00:00.000' })
+  @ApiProperty({ example: '2023-04-03T00:00:00.000Z' })
   effectiveFrom: Date;
 
   @Column({ name: 'EFFECTIVE_TO_DATETIME', type: 'timestamp' })
-  @ApiProperty({ example: '2010-03-15 00:00:00.000' })
-  effectiveTo: string;
+  @ApiProperty({ example: '9999-12-31T00:00:00.000Z' })
+  effectiveTo: Date;
 
   @Column({ name: 'DATE_CREATED_DATETIME', type: 'timestamp' })
-  @ApiProperty({ example: 'Middle East & North Africa', description: '' })
+  @ApiProperty({ example: '2022-03-31T16:30:08.463Z' })
   created: Date;
 
   @Column({ name: 'DATE_LAST_UPDATED_DATETIME', type: 'timestamp' })
-  @ApiProperty({ example: 0, description: '' })
+  @ApiProperty({ example: '2022-03-31T16:30:08.463Z' })
   updated: Date;
 }

@@ -9,53 +9,50 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @UseInterceptors(ClassSerializerInterceptor)
 export class CurrencyExchangeEntity {
   @PrimaryGeneratedColumn({ name: 'EXCHANGE_RATE_ID' })
+  @ApiProperty({ example: 221 })
   id: number;
 
   @Column({ name: 'SOURCE_CURRENCY_ID' })
-  @ApiProperty({ example: '12' })
-  sourceCurrencyId: string;
+  @ApiProperty({ example: 12 })
+  sourceCurrencyId: number;
 
   @Column({ name: 'TARGET_CURRENCY_ID' })
-  @ApiProperty({ example: '37', description: 'Currency ISO code' })
-  targetCurrencyId: string;
+  @ApiProperty({ example: 37, description: 'Currency ISO code' })
+  targetCurrencyId: number;
 
   @Column({ name: 'SOURCE_TARGET_CURRENCY_PAIR' })
   @ApiProperty({ example: 'USD-USD X-RATE' })
-  currencyPair: number;
+  currencyPair: string;
 
   @Column({ name: 'PX_BID_PRICE' })
-  @ApiProperty({ example: '1' })
-  bidPrice: string;
+  @ApiProperty({ example: 1 })
+  bidPrice: number;
 
   @Column({ name: 'PX_ASK_PRICE' })
-  @ApiProperty({ example: '1' })
-  askPrice: string;
+  @ApiProperty({ example: 1 })
+  askPrice: number;
 
   @Column({ name: 'PX_LAST_PRICE' })
-  @ApiProperty({ example: '1' })
-  lastPrice: string;
+  @ApiProperty({ example: 1 })
+  lastPrice: number;
 
   @Column({ name: 'PX_MID_PRICE' })
-  @ApiProperty({ example: '1' })
-  midPrice: string;
-
-  @Column({ name: 'SOURCE_ERROR_CODE' })
-  @ApiProperty({ example: '0' })
-  errorCode: string;
+  @ApiProperty({ example: 1 })
+  midPrice: number;
 
   @Column({ name: 'DATE_CREATED_DATETIME', type: 'timestamp' })
-  @ApiProperty({ example: '2010-03-15 00:00:00.000' })
-  created: string;
+  @ApiProperty({ example: '2021-01-26T16:21:25.000Z' })
+  created: Date;
 
   @Column({ name: 'DATE_LAST_UPDATED_DATETIME', type: 'timestamp' })
-  @ApiProperty({ example: '2010-03-16 00:00:00.000' })
-  updated: string;
+  @ApiProperty({ example: '2021-01-27T16:21:32.000Z' })
+  updated: Date;
 
   @Column({ name: 'EFFECTIVE_FROM_DATETIME', type: 'timestamp' })
-  @ApiProperty({ example: '2010-03-15 00:00:00.000' })
-  effectiveFrom: string;
+  @ApiProperty({ example: '2021-01-26T00:00:00.000Z' })
+  effectiveFrom: Date;
 
   @Column({ name: 'EFFECTIVE_TO_DATETIME', type: 'timestamp' })
-  @ApiProperty({ example: '2010-03-18 00:00:00.000' })
-  effectiveTo: string;
+  @ApiProperty({ example: '2021-01-26T23:59:59.000Z' })
+  effectiveTo: Date;
 }

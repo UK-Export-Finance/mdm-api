@@ -8,9 +8,9 @@ import { Column, Entity, PrimaryColumn } from 'typeorm';
   schema: 'dbo',
 })
 @UseInterceptors(ClassSerializerInterceptor)
-// We don't have DB column names because SP is used.
 export class MarketEntity {
   @PrimaryColumn({ name: 'COUNTRY_ID' })
+  @ApiProperty({ example: 112 })
   marketId?: number;
 
   @Column({ name: 'COUNTRY_NAME' })
@@ -22,59 +22,59 @@ export class MarketEntity {
   isoCode: string;
 
   @Column({ name: 'DATE_CREATED' })
-  @ApiProperty({ example: '2021-11-09T09:39:31.000Z', description: 'Created' })
-  createdDatetime: string;
+  @ApiProperty({ example: '2021-11-09T09:39:31.000Z', description: 'Date created' })
+  createdDatetime: Date;
 
   @Column({ name: 'DATE_UPDATED' })
-  @ApiProperty({ example: '2021-11-09T09:39:31.000Z', description: 'Updated' })
+  @ApiProperty({ example: '2021-11-09T09:39:31.000Z', description: 'Date updated' })
   lastUpdatedDatetime: Date;
 
   @Column({ name: 'EFFECTIVE_TO_DATE' })
-  @ApiProperty({ example: '2021-11-09T09:39:31.000Z', description: 'Effective to' })
+  @ApiProperty({ example: '2021-11-09T09:39:31.000Z', description: 'Effective to date' })
   effectiveFromDatetime: Date;
 
   @Column({ name: 'EFFECTIVE_FROM_DATE' })
-  @ApiProperty({ example: DATE.MAXIMUM_TIMEZONE_LIMIT, description: 'Effective from' })
+  @ApiProperty({ example: DATE.MAXIMUM_TIMEZONE_LIMIT, description: 'Effective from date' })
   effectiveToDatetime: Date;
 
   @Column({ name: 'OECD_RISK_CATEGORY_DESC' })
-  @ApiProperty({ example: 5, description: '' })
+  @ApiProperty({ example: 5, description: 'OECD risk category description' })
   oecdRiskCategory: number;
 
   @Column({ name: 'MARKET_RISK_APPETITE_PUBLIC_DESC' })
-  @ApiProperty({ example: 'At least £4bn', description: '' })
+  @ApiProperty({ example: 'At least £4bn', description: 'Market risk appetite' })
   marketRiskAppetitePublicDesc: string;
 
   @Column({ name: 'GEOGRAPHICAL_REGION_ID' })
-  @ApiProperty({ example: 14, description: '' })
+  @ApiProperty({ example: 14, description: 'Geographical region Id' })
   geographicalRegionId: number;
 
   @Column({ name: 'GEOGRAPHICAL_REGION_DESC' })
-  @ApiProperty({ example: 'Middle East & North Africa', description: '' })
+  @ApiProperty({ example: 'Middle East & North Africa', description: 'Geographical region' })
   geographicalRegionDesc: string;
 
   @Column({ name: 'SOVEREIGN_RISK_PROVISION' })
-  @ApiProperty({ example: 0, description: '' })
+  @ApiProperty({ example: 0, description: 'Sovereign risk' })
   sovereignRiskProvision: number;
 
   @Column({ name: 'ESRA_ID' })
-  @ApiProperty({ example: 1, description: '' })
-  ESRAClassificationId: number; // TODO: Once live, Notify Tony of the typo update
+  @ApiProperty({ example: 1, description: 'ESRA id' })
+  ESRAClassificationId: number;
 
   @Column({ name: 'ESRA_DESC' })
-  @ApiProperty({ example: 'Standard Risk', description: '' })
-  ESRAClassificationDesc: string; // TODO: Once live, Notify Tony of the typo update
+  @ApiProperty({ example: 'Standard Risk', description: 'ESRA description' })
+  ESRAClassificationDesc: string;
 
   @Column({ name: 'CASH_COVER_AVAILABILITY_ID' })
-  @ApiProperty({ example: 1, description: '' })
+  @ApiProperty({ example: 1, description: 'Cash cover availability id' })
   shortTermCoverAvailabilityId: number;
 
   @Column({ name: 'CASH_COVER_AVAILABILITY_DESC' })
-  @ApiProperty({ example: 'Yes', description: '' })
+  @ApiProperty({ example: 'Yes', description: 'Cash cover availability description' })
   shortTermCoverAvailabilityDesc: string;
 
   @Column({ name: 'NBI_ISSUE' })
-  @ApiProperty({ example: 'Y', description: '' })
+  @ApiProperty({ example: 'Y', description: 'NBI issue' })
   NBIIssue: string;
 
   @Column({ name: 'ACTIVE_IND' })

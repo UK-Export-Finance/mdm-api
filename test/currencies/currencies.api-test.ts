@@ -17,12 +17,10 @@ describe('Currencies', () => {
       askPrice: expect.any(Number),
       lastPrice: expect.any(Number),
       midPrice: expect.any(Number),
-      errorCode: expect.any(Number),
       created: expect.any(String),
       updated: expect.any(String),
       effectiveFrom: expect.any(String),
       effectiveTo: expect.any(String),
-      subCategory: expect.any(String),
     }),
   ]);
 

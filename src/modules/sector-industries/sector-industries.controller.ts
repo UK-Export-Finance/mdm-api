@@ -15,6 +15,7 @@ export class SectorIndustriesController {
   @ApiResponse({
     status: 200,
     type: [SectorIndustryEntity],
+    description: 'UKEF sectors/industries',
   })
   find(@Query() query: GetSectorIndustriesQueryDto): Promise<SectorIndustryEntity[]> {
     return this.sectorIndustriesService.find(query.ukefSectorId, query.ukefIndustryId);

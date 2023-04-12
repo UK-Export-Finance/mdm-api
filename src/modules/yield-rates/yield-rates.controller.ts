@@ -11,10 +11,11 @@ export class YieldRatesController {
   constructor(private readonly yieldRatesService: YieldRatesService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Yield rates are updated daily from bloomberg.' })
+  @ApiOperation({ summary: 'Get Yield rates. These are updated daily from bloomberg' })
   @ApiResponse({
     status: 200,
     type: [YieldRateEntity],
+    description: 'Returned Yield rates',
   })
   find(@Query() query: GetYieldRatesQueryDto): Promise<YieldRateEntity[]> {
     return this.yieldRatesService.find(query.searchDate);

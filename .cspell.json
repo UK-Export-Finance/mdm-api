@@ -41,14 +41,15 @@
     "npmrc",
     "NVARCHAR",
     "pino",
+    "pinojs",
+    "snet",
     "szenius",
     "typeorm",
     "Typeorm",
     "typescript",
     "ukef",
     "venv",
-    "VNET",
-    "snet"
+    "VNET"
   ],
   "dictionaries": [
     "en-gb",

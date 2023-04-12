@@ -26,8 +26,8 @@ export class SectorIndustriesService {
 
       const results = await this.sectorIndustries.find({ where: query });
 
-      if (results && !results[0]) {
-        throw new NotFoundException('No results for your search criteria');
+      if (!results.length) {
+        throw new NotFoundException('No results found for your search criteria');
       }
 
       return results;

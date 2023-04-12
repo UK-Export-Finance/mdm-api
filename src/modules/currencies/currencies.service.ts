@@ -31,7 +31,7 @@ export class CurrenciesService {
   async findOne(isoCode: string): Promise<CurrencyEntity[]> {
     try {
       const results = await this.currency.find({
-        where: { effectiveTo: Equal(DATE.MAXIMUM_LIMIT), isoCode },
+        where: { effectiveTo: Equal(new Date(DATE.MAXIMUM_LIMIT)), isoCode },
         order: { id: 'ASC' },
       });
 
@@ -62,13 +62,7 @@ export class CurrenciesService {
       const fieldMap = DbResponseHelper.getApiNameToDbNameMap(this.currencyExchangeRepository);
       const renamedResults = DbResponseHelper.renameDbResultFields(this.currencyExchangeRepository, fieldMap, results);
 
-      // Transform results to match logic in old implementation.
-      const transformedResults = renamedResults.map((result) => {
-        if (result.category === result.subCategory) result.subCategory = '';
-        return result;
-      });
-
-      return transformedResults;
+      return renamedResults;
     } catch (err) {
       if (err instanceof NotFoundException) {
         this.logger.warn(err);

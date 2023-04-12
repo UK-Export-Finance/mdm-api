@@ -44,19 +44,19 @@ export class PremiumScheduleEntity {
   daysInPeriod: number;
 
   @Column({ name: 'EFFECTIVE_FROM_DATETIME', type: 'timestamp' })
-  @ApiProperty({ example: '2023-02-27 00:00:00.000' })
+  @ApiProperty({ example: '2023-02-27T00:00:00.000Z' })
   effectiveFrom: Date;
 
   @Column({ name: 'EFFECTIVE_TO_DATETIME', type: 'timestamp' })
-  @ApiProperty({ example: '2024-02-27 00:00:00.000' })
+  @ApiProperty({ example: '2023-02-27T00:00:00.000Z' })
   effectiveTo: string;
 
   @Column({ name: 'DATE_CREATED_DATETIME', type: 'timestamp' })
-  @ApiProperty({ example: '2023-02-27 00:00:00.000' })
+  @ApiProperty({ example: '2023-02-27T00:00:00.000Z' })
   created: Date;
 
   @Column({ name: 'DATE_LAST_UPDATED_DATETIME', type: 'timestamp' })
-  @ApiProperty({ example: '2023-02-27 00:00:00.000' })
+  @ApiProperty({ example: '2023-02-27T00:00:00.000Z' })
   updated: Date;
 
   @Column({ name: 'CURRENT_INDICATOR' })
