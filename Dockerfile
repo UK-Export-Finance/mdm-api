@@ -16,7 +16,6 @@ COPY --chown=node:node package-lock.json .
 RUN npm ci --legacy-peer-deps
 RUN npm cache clean --force
 
-# Copy application
 COPY --chown=node:node . .
 
 # Build with all dependencies
