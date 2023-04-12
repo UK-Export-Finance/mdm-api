@@ -180,8 +180,46 @@ jobs:
             --ingress external \
             --target-port ${{ vars.MDM_PORT }} \
             --revisions-mode multiple \
-            --transport http2 \
+            --transport auto \
             --tags ${{ env.tags }}
+
+      - name: Container app - TFS 📄
+        uses: Azure/cli@1.0.4
+        with:
+          inlineScript: |
+            az containerapp create \
+            --name ca-${{ env.product }}-tfs-${{ env.target }}-001 \
+            --environment cae-${{ env.product }}-${{ env.target }}-001 \
+            --registry-server cr${{ env.product }}${{ env.target }}001.azurecr.io \
+            --registry-username $(az acr credential show -n cr${{ env.product }}${{ env.target }}001 --query username | tr -d '"') \
+            --cpu 1.0 \
+            --memory 2.0Gi \
+            --min-replicas 1 \
+            --max-replicas 4 \
+            --ingress external \
+            --target-port ${{ vars.MDM_PORT }} \
+            --revisions-mode multiple \
+            --transport auto \
+            --tags ${{ env.tags }}
+
+      - name: Container app - ESTORE 📄
+        uses: Azure/cli@1.0.4
+        with:
+          inlineScript: |
+            az containerapp create \
+            --name ca-${{ env.product }}-estore-${{ env.target }}-001 \
+            --environment cae-${{ env.product }}-${{ env.target }}-001 \
+            --registry-server cr${{ env.product }}${{ env.target }}001.azurecr.io \
+            --registry-username $(az acr credential show -n cr${{ env.product }}${{ env.target }}001 --query username | tr -d '"') \
+            --cpu 1.0 \
+            --memory 2.0Gi \
+            --min-replicas 1 \
+            --max-replicas 4 \
+            --ingress external \
+            --target-port ${{ vars.MDM_PORT }} \
+            --revisions-mode multiple \
+            --transport auto \
+            --tags ${{ env.tags }}              
 
       - name: API management ⚡️
         uses: Azure/cli@1.0.4
@@ -198,7 +236,7 @@ jobs:
 
   # 3. Container app configuration
   ca:
-    name: CA configuration 🔧
+    name: Container app 🔧
     needs: base
     environment: ${{ needs.base.outputs.environment }}
     runs-on: [ self-hosted, APIM, infrastructure]
@@ -234,17 +272,34 @@ jobs:
         with:
           inlineScript: |
             # Add APIM public IP
+
+            # MDM
             az containerapp ingress access-restriction set \
             --name ca-${{ env.product }}-mdm-${{ env.target }}-001 \
             --action Allow \
             --ip-address $(az apim show --name apim-infrastructure-dev-001 --query publicIpAddresses -o tsv) \
             --rule-name APIM \
             --description 'Allow APIM public IP address'
+          
+            # TFS
+            az containerapp ingress access-restriction set \
+            --name ca-${{ env.product }}-tfs-${{ env.target }}-001 \
+            --action Allow \
+            --ip-address $(az apim show --name apim-infrastructure-dev-001 --query publicIpAddresses -o tsv) \
+            --rule-name APIM \
+            --description 'Allow APIM public IP address'
 
+            # ESTORE
+            az containerapp ingress access-restriction set \
+            --name ca-${{ env.product }}-estore-${{ env.target }}-001 \
+            --action Allow \
+            --ip-address $(az apim show --name apim-infrastructure-dev-001 --query publicIpAddresses -o tsv) \
+            --rule-name APIM \
+            --description 'Allow APIM public IP address'
 
   # 4. APIM configuration
   apim:
-    name: APIM configuration 🔧
+    name: API management 🔧
     needs: base
     environment: ${{ needs.base.outputs.environment }}
     runs-on: [ self-hosted, APIM, infrastructure]
@@ -275,7 +330,7 @@ jobs:
             az configure --defaults location=${{ vars.REGION }}
             az configure --defaults group=rg-${{ env.product }}-${{ env.target }}-001
       
-      - name: Product MDM ➕
+      - name: MDM - Product ➕
         uses: Azure/cli@1.0.4
         with:
           inlineScript: |
@@ -287,7 +342,7 @@ jobs:
             --approval-required true \
             --subscription-required true
       
-      - name: Product TFS ➕
+      - name: TFS - Product ➕
         uses: Azure/cli@1.0.4
         with:
           inlineScript: |
@@ -299,7 +354,7 @@ jobs:
             --approval-required true \
             --subscription-required true
 
-      - name: Product eStore ➕
+      - name: eStore - Product ➕
         uses: Azure/cli@1.0.4
         with:
           inlineScript: |
@@ -310,3 +365,46 @@ jobs:
             --state published \
             --approval-required true \
             --subscription-required true
+
+      - name: MDM - API import ⬇️
+        uses: Azure/cli@1.0.4
+        with:
+          inlineScript: |
+            az apim api import \
+            --display-name 'MDM' \
+            --description 'Master database management endpoints' \
+            --service-url $(az containerapp show --name ca-${{ env.product }}-mdm-${{ env.target }}-001 --query properties.latestRevisionFqdn -o tsv)\
+            --path '' \
+            --service-name apim-${{ env.environment }}-${{ env.target }}-001 \
+            --specification-format OpenApiJson \
+            --api-type http \
+            --api-version ${{ vars.API_VERSION }} \
+            --protocols https \
+            --subscription-required true
+
+      - name: MDM - Product + API 🧱
+        uses: Azure/cli@1.0.4
+        with:
+          inlineScript: |
+            az apim product api add \
+            --service-name apim-${{ env.environment }}-${{ env.target }}-001 \
+            --api-id $(az apim api list --service-name apim-${{ env.environment }}-${{ env.target }}-001 --filter-display-name 'mdm' --top 1 --query [0].name -o tsv) \
+            --product-id $(az apim product list --service-name apim-${{ env.environment }}-${{ env.target }}-001 --query '[?contains(displayName, `apim-${{ env.product }}-mdm`)].name' -o tsv)
+
+      - name: TFS - Product + API 🧱
+        uses: Azure/cli@1.0.4
+        with:
+          inlineScript: |
+            az apim product api add \
+            --service-name apim-${{ env.environment }}-${{ env.target }}-001 \
+            --api-id $(az apim api list --service-name apim-${{ env.environment }}-${{ env.target }}-001 --filter-display-name 'tfs' --top 1 --query [0].name -o tsv) \
+            --product-id $(az apim product list --service-name apim-${{ env.environment }}-${{ env.target }}-001 --query '[?contains(displayName, `apim-${{ env.product }}-tfs`)].name' -o tsv)
+            
+      - name: ESTORE - Product + API 🧱
+        uses: Azure/cli@1.0.4
+        with:
+          inlineScript: |
+            az apim product api add \
+            --service-name apim-${{ env.environment }}-${{ env.target }}-001 \
+            --api-id $(az apim api list --service-name apim-${{ env.environment }}-${{ env.target }}-001 --filter-display-name 'estore' --top 1 --query [0].name -o tsv) \
+            --product-id $(az apim product list --service-name apim-${{ env.environment }}-${{ env.target }}-001 --query '[?contains(displayName, `apim-${{ env.product }}-estore`)].name' -o tsv)
