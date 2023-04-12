@@ -2,7 +2,7 @@
 # 1. BUILD
 ###################
 
-# NPM 8.19.1 Alpine linux image
+# NPM 9.5.1 Alpine linux image
 FROM node:19.8.1-alpine3.16 AS build
 
 # Alpine Linux install packages

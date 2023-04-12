@@ -23,7 +23,10 @@ run-name: APIM dev deployment for ${{ github.repository }}
 
 on:
   push:
-    branches: [ dev ]
+    branches:
+     - dev
+    # TODO: Remove pre PR merge
+     - APIM-162-set-up-azure-api-management
     paths:
     - 'src/**'
     - 'package.json'
