@@ -16,7 +16,7 @@ export class ConstantSpiEntity {
       from: (value: string) => value.toString(),
     },
   })
-  @ApiProperty({ examples: ['A', 'B', 'C', 'Quality of Product', 'Percentage of Cover'] })
+  @ApiProperty({ example: 'A, B, C, Quality of Product, Percentage of Cover' })
   category: string;
 
   @Column({ name: 'COEFFICIENT_SUB_CATEGORY' })
