@@ -36,8 +36,6 @@ on:
   push:
     branches:
       - infrastructure
-      # TODO: Remove pre PR merge
-      - APIM-162-set-up-azure-api-management
     paths: [ .github/workflows/infrastructure.yml ]
 
 env:
