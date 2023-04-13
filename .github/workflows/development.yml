@@ -113,7 +113,7 @@ jobs:
           az containerapp update \
           --name ca-${{ env.product }}-mdm-${{ env.environment }}-001 \
           --image ${{ env.acr }}/${{ env.name }}:${{ env.from }} \
-          --revision-suffix ${{ github.sha }} \
+          --revision-suffix v${{ github.run_number }} \
           --set-env-vars \
           "PORT=${{ secrets.PORT }}" \
           "NODE_ENV=${{ secrets.NODE_ENV }}" \
