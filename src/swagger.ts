@@ -39,6 +39,8 @@ export const SwaggerDocs = (app: INestApplication) => {
   );
 
   const options = {
+    // Swagger introduces custom URLs for JSON export https://github.com/nestjs/swagger/pull/2273
+    jsonDocumentUrl: 'openapi/json',
     explorer: true,
     customSiteTitle: docName,
   };
