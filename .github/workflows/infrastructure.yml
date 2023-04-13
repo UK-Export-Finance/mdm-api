@@ -380,7 +380,7 @@ jobs:
             --api-type http \
             --protocols https \
             --subscription-required true \
-            --specification-url 'https://$(az containerapp show --name ca-${{ env.product }}-mdm-${{ env.target }}-001 --query properties.latestRevisionFqdn -o tsv)/openapi/json'
+            --specification-url https://$(az containerapp show --name ca-${{ env.product }}-mdm-${{ env.target }}-001 --query properties.latestRevisionFqdn -o tsv)/openapi/json
 
       - name: TFS - API import ⬇️
         uses: Azure/cli@1.0.4
@@ -396,7 +396,7 @@ jobs:
             --api-type http \
             --protocols https \
             --subscription-required true \
-            --specification-url 'https://$(az containerapp show --name ca-${{ env.product }}-mdm-${{ env.target }}-001 --query properties.latestRevisionFqdn -o tsv)/openapi/json'
+            --specification-url https://$(az containerapp show --name ca-${{ env.product }}-mdm-${{ env.target }}-001 --query properties.latestRevisionFqdn -o tsv)/openapi/json
             
       - name: ESTORE - API import ⬇️
         uses: Azure/cli@1.0.4
@@ -412,7 +412,7 @@ jobs:
             --api-type http \
             --protocols https \
             --subscription-required true \
-            --specification-url 'https://$(az containerapp show --name ca-${{ env.product }}-mdm-${{ env.target }}-001 --query properties.latestRevisionFqdn -o tsv)/openapi/json'             
+            --specification-url https://$(az containerapp show --name ca-${{ env.product }}-mdm-${{ env.target }}-001 --query properties.latestRevisionFqdn -o tsv)/openapi/json
 
       - name: MDM - Product + API 🧱
         uses: Azure/cli@1.0.4
