@@ -34,6 +34,7 @@ on:
     - 'Dockerfile'
     - 'tsconfig.json'
     - 'tsconfig.build.json'
+    - '.github/workflows/development.yml'
 
 env:
   product: apim
