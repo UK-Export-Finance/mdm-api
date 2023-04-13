@@ -373,7 +373,7 @@ jobs:
             az apim api import \
             --display-name 'MDM' \
             --description 'Master database management endpoints' \
-            --service-url https://$(az containerapp show --name ca-${{ env.product }}-mdm-${{ env.target }}-001 --query properties.latestRevisionFqdn -o tsv)\
+            --service-url https://$(az containerapp show --name ca-${{ env.product }}-mdm-${{ env.target }}-001 --query properties.latestRevisionFqdn -o tsv) \
             --path 'mdm' \
             --service-name apim-${{ env.environment }}-${{ env.target }}-001 \
             --specification-format OpenApi \
@@ -389,7 +389,7 @@ jobs:
             az apim api import \
             --display-name 'TFS' \
             --description 'Trade finance system endpoints' \
-            --service-url https://$(az containerapp show --name ca-${{ env.product }}-mdm-${{ env.target }}-001 --query properties.latestRevisionFqdn -o tsv)\
+            --service-url https://$(az containerapp show --name ca-${{ env.product }}-mdm-${{ env.target }}-001 --query properties.latestRevisionFqdn -o tsv) \
             --path 'tfs' \
             --service-name apim-${{ env.environment }}-${{ env.target }}-001 \
             --specification-format OpenApi \
@@ -405,7 +405,7 @@ jobs:
             az apim api import \
             --display-name 'ESTORE' \
             --description 'eStore endpoints' \
-            --service-url https://$(az containerapp show --name ca-${{ env.product }}-mdm-${{ env.target }}-001 --query properties.latestRevisionFqdn -o tsv)\
+            --service-url https://$(az containerapp show --name ca-${{ env.product }}-mdm-${{ env.target }}-001 --query properties.latestRevisionFqdn -o tsv) \
             --path 'estore' \
             --service-name apim-${{ env.environment }}-${{ env.target }}-001 \
             --specification-format OpenApi \
