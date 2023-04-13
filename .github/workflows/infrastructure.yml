@@ -373,14 +373,46 @@ jobs:
             az apim api import \
             --display-name 'MDM' \
             --description 'Master database management endpoints' \
-            --service-url $(az containerapp show --name ca-${{ env.product }}-mdm-${{ env.target }}-001 --query properties.latestRevisionFqdn -o tsv)\
-            --path '' \
+            --service-url https://$(az containerapp show --name ca-${{ env.product }}-mdm-${{ env.target }}-001 --query properties.latestRevisionFqdn -o tsv)\
+            --path 'mdm' \
             --service-name apim-${{ env.environment }}-${{ env.target }}-001 \
-            --specification-format OpenApiJson \
+            --specification-format OpenApi \
             --api-type http \
-            --api-version ${{ vars.API_VERSION }} \
             --protocols https \
-            --subscription-required true
+            --subscription-required true \
+            --specification-url 'https://$(az containerapp show --name ca-${{ env.product }}-mdm-${{ env.target }}-001 --query properties.latestRevisionFqdn -o tsv)/openapi/json'
+
+      - name: TFS - API import ⬇️
+        uses: Azure/cli@1.0.4
+        with:
+          inlineScript: |
+            az apim api import \
+            --display-name 'TFS' \
+            --description 'Trade finance system endpoints' \
+            --service-url https://$(az containerapp show --name ca-${{ env.product }}-mdm-${{ env.target }}-001 --query properties.latestRevisionFqdn -o tsv)\
+            --path 'tfs' \
+            --service-name apim-${{ env.environment }}-${{ env.target }}-001 \
+            --specification-format OpenApi \
+            --api-type http \
+            --protocols https \
+            --subscription-required true \
+            --specification-url 'https://$(az containerapp show --name ca-${{ env.product }}-mdm-${{ env.target }}-001 --query properties.latestRevisionFqdn -o tsv)/openapi/json'
+            
+      - name: ESTORE - API import ⬇️
+        uses: Azure/cli@1.0.4
+        with:
+          inlineScript: |
+            az apim api import \
+            --display-name 'ESTORE' \
+            --description 'eStore endpoints' \
+            --service-url https://$(az containerapp show --name ca-${{ env.product }}-mdm-${{ env.target }}-001 --query properties.latestRevisionFqdn -o tsv)\
+            --path 'estore' \
+            --service-name apim-${{ env.environment }}-${{ env.target }}-001 \
+            --specification-format OpenApi \
+            --api-type http \
+            --protocols https \
+            --subscription-required true \
+            --specification-url 'https://$(az containerapp show --name ca-${{ env.product }}-mdm-${{ env.target }}-001 --query properties.latestRevisionFqdn -o tsv)/openapi/json'             
 
       - name: MDM - Product + API 🧱
         uses: Azure/cli@1.0.4
