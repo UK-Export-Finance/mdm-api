@@ -71,7 +71,11 @@ export class CreatePremiumScheduleDto {
 
   @IsNumber()
   @IsOptional()
-  @ApiProperty({ example: null, description: 'Optional EWCS Exposure ONLY, this is the cumulative amount drawn on the first disbursement. NULL if not EWCS' })
+  @ApiProperty({
+    required: false,
+    example: null,
+    description: 'Optional EWCS Exposure ONLY, this is the cumulative amount drawn on the first disbursement. NULL if not EWCS',
+  })
   readonly cumulativeAmount: number;
 
   @IsNumber()
