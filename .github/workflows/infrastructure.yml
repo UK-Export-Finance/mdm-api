@@ -175,45 +175,7 @@ jobs:
             --target-port ${{ vars.MDM_PORT }} \
             --revisions-mode multiple \
             --transport auto \
-            --tags ${{ env.tags }}
-
-      - name: Container app - TFS 📄
-        uses: Azure/cli@v1.0.7
-        with:
-          inlineScript: |
-            az containerapp create \
-            --name ca-${{ env.product }}-tfs-${{ env.target }}-${{ vars.VERSION }} \
-            --environment cae-${{ env.product }}-${{ env.target }}-${{ vars.VERSION }} \
-            --registry-server cr${{ env.product }}${{ env.target }}${{ vars.VERSION }}.azurecr.io \
-            --registry-username $(az acr credential show -n cr${{ env.product }}${{ env.target }}${{ vars.VERSION }} --query username | tr -d '"') \
-            --cpu 1.0 \
-            --memory 2.0Gi \
-            --min-replicas 1 \
-            --max-replicas 4 \
-            --ingress external \
-            --target-port ${{ vars.MDM_PORT }} \
-            --revisions-mode multiple \
-            --transport auto \
-            --tags ${{ env.tags }}
-
-      - name: Container app - ESTORE 📄
-        uses: Azure/cli@v1.0.7
-        with:
-          inlineScript: |
-            az containerapp create \
-            --name ca-${{ env.product }}-estore-${{ env.target }}-${{ vars.VERSION }} \
-            --environment cae-${{ env.product }}-${{ env.target }}-${{ vars.VERSION }} \
-            --registry-server cr${{ env.product }}${{ env.target }}${{ vars.VERSION }}.azurecr.io \
-            --registry-username $(az acr credential show -n cr${{ env.product }}${{ env.target }}${{ vars.VERSION }} --query username | tr -d '"') \
-            --cpu 1.0 \
-            --memory 2.0Gi \
-            --min-replicas 1 \
-            --max-replicas 4 \
-            --ingress external \
-            --target-port ${{ vars.MDM_PORT }} \
-            --revisions-mode multiple \
-            --transport auto \
-            --tags ${{ env.tags }}              
+            --tags ${{ env.tags }}  
 
       - name: API management ⚡️
         uses: Azure/cli@v1.0.7
@@ -274,22 +236,7 @@ jobs:
             --ip-address $(az apim show --name apim-infrastructure-dev-${{ vars.VERSION }} --query publicIpAddresses -o tsv) \
             --rule-name APIM \
             --description 'Allow APIM public IP address'
-          
-            # TFS
-            az containerapp ingress access-restriction set \
-            --name ca-${{ env.product }}-tfs-${{ env.target }}-${{ vars.VERSION }} \
-            --action Allow \
-            --ip-address $(az apim show --name apim-infrastructure-dev-${{ vars.VERSION }} --query publicIpAddresses -o tsv) \
-            --rule-name APIM \
-            --description 'Allow APIM public IP address'
 
-            # ESTORE
-            az containerapp ingress access-restriction set \
-            --name ca-${{ env.product }}-estore-${{ env.target }}-${{ vars.VERSION }} \
-            --action Allow \
-            --ip-address $(az apim show --name apim-infrastructure-dev-${{ vars.VERSION }} --query publicIpAddresses -o tsv) \
-            --rule-name APIM \
-            --description 'Allow APIM public IP address'
 
   # 4. APIM configuration
   apim:
@@ -335,30 +282,6 @@ jobs:
             --state published \
             --approval-required true \
             --subscription-required true
-      
-      - name: TFS - Product ➕
-        uses: Azure/cli@v1.0.7
-        with:
-          inlineScript: |
-            az apim product create \
-            --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} \
-            --product-name apim-${{ env.product }}-tfs \
-            --description 'Trade finance system endpoints' \
-            --state published \
-            --approval-required true \
-            --subscription-required true
-
-      - name: eStore - Product ➕
-        uses: Azure/cli@v1.0.7
-        with:
-          inlineScript: |
-            az apim product create \
-            --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} \
-            --product-name apim-${{ env.product }}-estore \
-            --description 'eStore document management system endpoints' \
-            --state published \
-            --approval-required true \
-            --subscription-required true
 
       - name: MDM - API import ⬇️
         uses: Azure/cli@v1.0.7
@@ -376,38 +299,6 @@ jobs:
             --subscription-required true \
             --specification-url https://$(az containerapp show --name ca-${{ env.product }}-mdm-${{ env.target }}-${{ vars.VERSION }} --query properties.latestRevisionFqdn -o tsv)/openapi/json
 
-      - name: TFS - API import ⬇️
-        uses: Azure/cli@v1.0.7
-        with:
-          inlineScript: |
-            az apim api import \
-            --display-name 'TFS' \
-            --description 'Trade finance system endpoints' \
-            --service-url https://$(az containerapp show --name ca-${{ env.product }}-mdm-${{ env.target }}-${{ vars.VERSION }} --query properties.latestRevisionFqdn -o tsv) \
-            --path 'tfs' \
-            --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} \
-            --specification-format OpenApi \
-            --api-type http \
-            --protocols https \
-            --subscription-required true \
-            --specification-url https://$(az containerapp show --name ca-${{ env.product }}-mdm-${{ env.target }}-${{ vars.VERSION }} --query properties.latestRevisionFqdn -o tsv)/openapi/json
-            
-      - name: ESTORE - API import ⬇️
-        uses: Azure/cli@v1.0.7
-        with:
-          inlineScript: |
-            az apim api import \
-            --display-name 'ESTORE' \
-            --description 'eStore endpoints' \
-            --service-url https://$(az containerapp show --name ca-${{ env.product }}-mdm-${{ env.target }}-${{ vars.VERSION }} --query properties.latestRevisionFqdn -o tsv) \
-            --path 'estore' \
-            --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} \
-            --specification-format OpenApi \
-            --api-type http \
-            --protocols https \
-            --subscription-required true \
-            --specification-url https://$(az containerapp show --name ca-${{ env.product }}-mdm-${{ env.target }}-${{ vars.VERSION }} --query properties.latestRevisionFqdn -o tsv)/openapi/json
-
       - name: MDM - Product + API 🧱
         uses: Azure/cli@v1.0.7
         with:
@@ -416,21 +307,3 @@ jobs:
             --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} \
             --api-id $(az apim api list --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} --filter-display-name 'mdm' --top 1 --query [0].name -o tsv) \
             --product-id $(az apim product list --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} --query '[?contains(displayName, `apim-${{ env.product }}-mdm`)].name' -o tsv)
-
-      - name: TFS - Product + API 🧱
-        uses: Azure/cli@v1.0.7
-        with:
-          inlineScript: |
-            az apim product api add \
-            --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} \
-            --api-id $(az apim api list --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} --filter-display-name 'tfs' --top 1 --query [0].name -o tsv) \
-            --product-id $(az apim product list --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} --query '[?contains(displayName, `apim-${{ env.product }}-tfs`)].name' -o tsv)
-            
-      - name: ESTORE - Product + API 🧱
-        uses: Azure/cli@v1.0.7
-        with:
-          inlineScript: |
-            az apim product api add \
-            --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} \
-            --api-id $(az apim api list --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} --filter-display-name 'estore' --top 1 --query [0].name -o tsv) \
-            --product-id $(az apim product list --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} --query '[?contains(displayName, `apim-${{ env.product }}-estore`)].name' -o tsv)
