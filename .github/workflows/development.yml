@@ -66,7 +66,6 @@ jobs:
     env:
       name: mdm
       environment: ${{ needs.setup.outputs.environment }}
-      cr: cr${{ needs.setup.outputs.product }}${{ needs.setup.outputs.environment }}001
     runs-on: [ self-hosted, APIM, deployment ]
     steps:
 
@@ -79,7 +78,7 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: CLI 📝
-      run: echo acr=$(az acr show -n ${{ env.cr }} --query loginServer | tr -d '"') >> $GITHUB_ENV
+      run: echo acr=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query loginServer | tr -d '"') >> $GITHUB_ENV
 
     - name: Defaults ✨
       uses: Azure/cli@v1.0.7
@@ -109,7 +108,7 @@ jobs:
       with:
         inlineScript: |
           az containerapp update \
-          --name ca-${{ env.product }}-mdm-${{ env.environment }}-001 \
+          --name $(az resource list --resource-type 'Microsoft.App/containerApps' --query '[?contains(name, `${{ env.name }}`)].name' -o tsv) \
           --image ${{ env.acr }}/${{ env.name }}:${{ env.from }} \
           --revision-suffix v${{ github.run_number }} \
           --set-env-vars \
