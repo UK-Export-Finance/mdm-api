@@ -2,8 +2,7 @@
 # 1. BUILD
 ###################
 
-# NPM 8.19.1 Alpine linux image
-FROM node:18.15-alpine3.16 AS build
+FROM node:19.9-alpine3.16 AS build
 
 # Alpine Linux install packages
 RUN apk add bash curl
@@ -17,7 +16,6 @@ COPY --chown=node:node package-lock.json .
 RUN npm ci --legacy-peer-deps
 RUN npm cache clean --force
 
-# Copy application
 COPY --chown=node:node . .
 
 # Build with all dependencies
@@ -36,7 +34,6 @@ USER node
 # 2. PRODUCTION
 ###################
 
-# NPM 9.5.1 Alpine linux image
 FROM node:19.9-alpine3.16 AS production
 
 WORKDIR /app

@@ -29,7 +29,7 @@ export const SwaggerDocs = (app: INestApplication) => {
     .build();
 
   app.use(
-    ['/docs', '/docs-json', '/docs-yaml'],
+    ['/docs'],
     basicAuth({
       challenge: true,
       users: {
@@ -39,6 +39,8 @@ export const SwaggerDocs = (app: INestApplication) => {
   );
 
   const options = {
+    jsonDocumentUrl: 'openapi/json',
+    yamlDocumentUrl: 'openapi/yaml',
     explorer: true,
     customSiteTitle: docName,
   };

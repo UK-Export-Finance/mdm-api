@@ -61,3 +61,7 @@ The most important prefixes you should have in mind are:
 1. `fix:` which represents bug fixes, and correlates to a [SemVer](https://semver.org/) **patch**.
 2. `feat:` which represents a new feature, and correlates to a [SemVer](https://semver.org/) **minor**.
 3. `feat!:`, `fix!:` or `refactor!:`, etc., which represent a breaking change (indicated by the `!`) and will result in a [SemVer](https://semver.org/) **major**.
+
+
+### Swagger
+Custom URL (https://github.com/nestjs/swagger/pull/2273) for OpenAPI 3.0 JSON export has been added to swagger options to allow to API import in respective resources.
