@@ -1,5 +1,34 @@
 # Changelog
 
+## [1.10.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.9.0...v1.10.0) (2023-04-14)
+
+
+### Features
+
+* **APIM-162:** API management instance ([#78](https://github.com/UK-Export-Finance/mdm-api/issues/78)) ([225737b](https://github.com/UK-Export-Finance/mdm-api/commit/225737b33bfd48008a8981adc12b975bb482549c))
+
+
+### Bug Fixes
+
+* **APIM-197:** fixed currency exchange issues ([#107](https://github.com/UK-Export-Finance/mdm-api/issues/107)) ([9165c49](https://github.com/UK-Export-Finance/mdm-api/commit/9165c498e09d07e0b4b9aed951092c09b4550db2))
+* bug apim-203 added specification parameter to make optional fields optional in spec ([addec9d](https://github.com/UK-Export-Finance/mdm-api/commit/addec9d5aaf74275ed59151c1066ad57a7f3ed4e))
+* bug apim-203 make optional fields optional in spec ([#113](https://github.com/UK-Export-Finance/mdm-api/issues/113)) ([334e6ef](https://github.com/UK-Export-Finance/mdm-api/commit/334e6efc8d4c78bfb9517e36fe11c1487b318fe7))
+
+
+### Miscellaneous
+
+* **deps-dev:** Bump @commitlint/cli from 17.5.1 to 17.6.0 ([#111](https://github.com/UK-Export-Finance/mdm-api/issues/111)) ([244a575](https://github.com/UK-Export-Finance/mdm-api/commit/244a575570cb8fb420167654c6f1282b4f60b4cd))
+* **deps-dev:** Bump @commitlint/config-conventional from 17.4.4 to 17.6.0 ([#110](https://github.com/UK-Export-Finance/mdm-api/issues/110)) ([3c677f3](https://github.com/UK-Export-Finance/mdm-api/commit/3c677f3054020163757b605247b7e1a799015b80))
+* **deps-dev:** Bump @nestjs/cli from 9.3.0 to 9.4.0 ([#112](https://github.com/UK-Export-Finance/mdm-api/issues/112)) ([fc14e74](https://github.com/UK-Export-Finance/mdm-api/commit/fc14e747e367f714c090b0e74e39c6ff42ca00fb))
+* **deps-dev:** Bump @typescript-eslint/eslint-plugin from 5.57.1 to 5.58.0 ([#105](https://github.com/UK-Export-Finance/mdm-api/issues/105)) ([bcfeb18](https://github.com/UK-Export-Finance/mdm-api/commit/bcfeb18650ad2cba97728e139a5210cca5c66a05))
+* **deps-dev:** Bump @typescript-eslint/parser from 5.57.1 to 5.58.0 ([#106](https://github.com/UK-Export-Finance/mdm-api/issues/106)) ([28bbed6](https://github.com/UK-Export-Finance/mdm-api/commit/28bbed6afd156542061f646fa44153c574cd9b48))
+* **deps-dev:** bump eslint from 8.37.0 to 8.38.0 ([#101](https://github.com/UK-Export-Finance/mdm-api/issues/101)) ([1033d02](https://github.com/UK-Export-Finance/mdm-api/commit/1033d020d08e14dc7665493a8bcedf9490903b9f))
+* **deps-dev:** bump lint-staged from 13.2.0 to 13.2.1 ([#103](https://github.com/UK-Export-Finance/mdm-api/issues/103)) ([f1c287c](https://github.com/UK-Export-Finance/mdm-api/commit/f1c287cf4dc7345527b4ce4ba804787c191a3312))
+* **deps:** bump typeorm from 0.3.12 to 0.3.13 ([#98](https://github.com/UK-Export-Finance/mdm-api/issues/98)) ([e3d85b9](https://github.com/UK-Export-Finance/mdm-api/commit/e3d85b95e8f88a86aadab5f22e7b71bba8788734))
+* **deps:** bump typeorm from 0.3.13 to 0.3.14 ([#102](https://github.com/UK-Export-Finance/mdm-api/issues/102)) ([719d738](https://github.com/UK-Export-Finance/mdm-api/commit/719d73858064955c1497c3c27d13bc1818961649))
+* **deps:** bump typescript from 5.0.3 to 5.0.4 ([#104](https://github.com/UK-Export-Finance/mdm-api/issues/104)) ([4995c24](https://github.com/UK-Export-Finance/mdm-api/commit/4995c2421e86449e3240f75061f6150e0bbecc38))
+* **deps:** update node.js to v19.9 ([#108](https://github.com/UK-Export-Finance/mdm-api/issues/108)) ([874010c](https://github.com/UK-Export-Finance/mdm-api/commit/874010c6405db0ec388d3328fd0d33dc5d09afe7))
+
 ## [1.9.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.8.0...v1.9.0) (2023-04-06)
 
 
