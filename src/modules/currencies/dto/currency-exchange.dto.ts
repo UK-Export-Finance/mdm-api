@@ -17,6 +17,7 @@ export class GetCurrencyExchangeDto {
   readonly target: string;
 
   @ApiProperty({
+    required: false,
     example: '2021-01-26',
     description: 'Retrieve the exchange rate for a specific date',
   })
