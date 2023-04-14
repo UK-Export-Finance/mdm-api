@@ -21,7 +21,6 @@
 # GHA is only invoked when following conditions are satisfied:
 # 1. Push to the `infrastructure` branch only.
 # 2. Exact file path matches `.github/workflows/infrastructure.yml`.
-#
 
 name: Infrastructure 🔨
 run-name: APIM base infrastructure build from ${{ github.repository }}
@@ -32,7 +31,7 @@ on:
       - infrastructure
       - APIM-162-set-up-azure-api-management
 
-    paths: [ .github/workflows/infrastructure.yml ]
+    paths: [.github/workflows/infrastructure.yml]
 
 env:
   product: apim
@@ -45,7 +44,7 @@ jobs:
   # 1. Setup infrastructure variables
   setup:
     name: Setup 🔧
-    runs-on: [ self-hosted, APIM, infrastructure ]
+    runs-on: [self-hosted, APIM, infrastructure]
     outputs:
       environment: ${{ env.environment }}
       timezone: ${{ env.timezone }}
@@ -63,7 +62,7 @@ jobs:
     environment: ${{ needs.setup.outputs.environment }}
     outputs:
       environment: ${{ env.environment }}
-    runs-on: [ self-hosted, APIM, infrastructure ]
+    runs-on: [self-hosted, APIM, infrastructure]
     steps:
       - name: Pre-production 💫
         if: contains('["dev", "staging"]', env.target)
@@ -175,7 +174,7 @@ jobs:
             --target-port ${{ vars.MDM_PORT }} \
             --revisions-mode multiple \
             --transport auto \
-            --tags ${{ env.tags }}  
+            --tags ${{ env.tags }}
 
       - name: API management ⚡️
         uses: Azure/cli@v1.0.7
@@ -195,7 +194,7 @@ jobs:
     name: Container app 🔧
     needs: base
     environment: ${{ needs.base.outputs.environment }}
-    runs-on: [ self-hosted, APIM, infrastructure]
+    runs-on: [self-hosted, APIM, infrastructure]
     steps:
       - name: Pre-production 💫
         if: contains('["dev", "staging"]', env.target)
@@ -237,13 +236,12 @@ jobs:
             --rule-name APIM \
             --description 'Allow APIM public IP address'
 
-
   # 4. APIM configuration
   apim:
     name: API management 🔧
     needs: base
     environment: ${{ needs.base.outputs.environment }}
-    runs-on: [ self-hosted, APIM, infrastructure]
+    runs-on: [self-hosted, APIM, infrastructure]
     steps:
       - name: Pre-production 💫
         if: contains('["dev", "staging"]', env.target)
@@ -270,7 +268,7 @@ jobs:
             # Basic
             az configure --defaults location=${{ vars.REGION }}
             az configure --defaults group=rg-${{ env.product }}-${{ env.target }}-${{ vars.VERSION }}
-      
+
       - name: MDM - Product ➕
         uses: Azure/cli@v1.0.7
         with:
