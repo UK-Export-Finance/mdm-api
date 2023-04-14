@@ -86,7 +86,7 @@ jobs:
         inlineScript: |
           # Basic
           az configure --defaults location=${{ vars.REGION }}
-          az configure --defaults group=rg-${{ env.product }}-${{ env.environment }}-001
+          az configure --defaults group=${{ vars.RESOURCE }}
 
     - name: ACR 🔐
       uses: azure/docker-login@v1
