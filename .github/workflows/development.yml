@@ -25,6 +25,8 @@ on:
   push:
     branches:
      - dev
+     - APIM-162-set-up-azure-api-management
+
     paths:
     - 'src/**'
     - 'package.json'

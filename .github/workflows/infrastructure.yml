@@ -30,6 +30,8 @@ on:
   push:
     branches:
       - infrastructure
+      - APIM-162-set-up-azure-api-management
+
     paths: [ .github/workflows/infrastructure.yml ]
 
 env:
