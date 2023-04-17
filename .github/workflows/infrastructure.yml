@@ -1,4 +1,4 @@
-# This GHA is responsible for `APIM` supporting infrastructure
+# This GHA is responsible for `APIM` (MDM) supporting infrastructure
 # creation and configuration using `az cli` bash scripting.
 #
 # Standard Azure naming convention has been followed:
@@ -21,6 +21,12 @@
 # GHA is only invoked when following conditions are satisfied:
 # 1. Push to the `infrastructure` branch only.
 # 2. Exact file path matches `.github/workflows/infrastructure.yml`.
+#
+# Flow
+# ****
+# MDM (https://github.com/UK-Export-Finance/mdm-api) infrastructure.yml will be the first execution
+# for `APIM` infrastructure estate, subsequently followed by `TFS` and `ESTORE`.
+#
 
 name: Infrastructure 🔨
 run-name: APIM base infrastructure build from ${{ github.repository }}
