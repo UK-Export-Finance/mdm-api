@@ -28,14 +28,26 @@
     "sourceMap": true,
     "paths": {
       "@ukef/*": ["src/*"],
-      "@ukef/constants/*": ["src/constants/index"],
-      "@ukef/config/*": ["src/config/index"],
+      "@ukef/constants/*": ["src/constants/*"],
+      "@ukef/config/*": ["src/config/*"],
       "@ukef/database/*": ["src/modules/database/*"],
       "@ukef/helpers/*": ["src/helpers/*"],
-      "@ukef/module/*": ["src/modules/*"],
-      "@ukef/auth/*": ["src/modules/auth/*"]
+      "@ukef/modules/*": ["src/modules/*"],
+      "@ukef/auth/*": ["src/modules/auth/*"],
+      "@ukef/swagger/*": ["src/swagger"],
+      "@ukef-test/*": ["test/*"],
     }
   },
-  "include": ["src", "test", "jest.config.ts"],
-  "exclude": ["node_modules", "dist", "*coverage", "logs", "scripts"]
+  "include": [
+    "src",
+    "test",
+    "jest.config.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "*coverage",
+    "logs",
+    "scripts",
+  ]
 }

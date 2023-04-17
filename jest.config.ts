@@ -11,7 +11,7 @@ const defaultSettings = {
     '@ukef/config/(.*)': '<rootDir>/../src/config/$1',
     '@ukef/database/(.*)': '<rootDir>/../src/modules/database/$1',
     '@ukef/helpers/(.*)': '<rootDir>/../src/helpers/$1',
-    '@ukef/module/(.*)': '<rootDir>/../src/modules/$1',
+    '@ukef/modules/(.*)': '<rootDir>/../src/modules/$1',
     '@ukef/auth/(.*)': '<rootDir>/../src/modules/auth/$1',
     '@ukef/(.*)': '<rootDir>/../src/$1',
   },
