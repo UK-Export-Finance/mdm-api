@@ -4,7 +4,7 @@ services:
     build:
       context: .
     image: api
-    container_name: api
+    container_name: mdm/api
     restart: always
     command: npm run start:prod
     extra_hosts:
