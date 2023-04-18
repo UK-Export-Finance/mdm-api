@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import config from '@ukef/config';
-import { MdmModule } from '@ukef/module/mdm.module';
+import { MdmModule } from '@ukef/modules/mdm.module';
 import { LoggerModule } from 'nestjs-pino';
 
 @Module({
