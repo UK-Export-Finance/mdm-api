@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.10.2](https://github.com/UK-Export-Finance/mdm-api/compare/v1.10.1...v1.10.2) (2023-04-24)
+
+
+### Miscellaneous
+
+* **deps-dev:** Bump @types/node from 18.15.13 to 18.16.0 ([#132](https://github.com/UK-Export-Finance/mdm-api/issues/132)) ([d858559](https://github.com/UK-Export-Finance/mdm-api/commit/d858559a9d5a0f589bc864587ac10bd538d23e7d))
+* **deps-dev:** Bump eslint from 8.38.0 to 8.39.0 ([#130](https://github.com/UK-Export-Finance/mdm-api/issues/130)) ([b550a4e](https://github.com/UK-Export-Finance/mdm-api/commit/b550a4e6a4a0f94288c5869f95f08ac93e48f866))
+* **deps-dev:** Bump prettier from 2.8.7 to 2.8.8 ([#131](https://github.com/UK-Export-Finance/mdm-api/issues/131)) ([9143a5d](https://github.com/UK-Export-Finance/mdm-api/commit/9143a5d0436335094374080918dedbf8e05ec0d3))
+
 ## [1.10.1](https://github.com/UK-Export-Finance/mdm-api/compare/v1.10.0...v1.10.1) (2023-04-21)
 
 
