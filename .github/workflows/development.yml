@@ -111,7 +111,7 @@ jobs:
           az containerapp update \
           --name $(az resource list --resource-type 'Microsoft.App/containerApps' --query '[?contains(name, `${{ env.name }}`)].name' -o tsv) \
           --image ${{ env.acr }}/${{ env.name }}:${{ env.from }} \
-          --revision-suffix v${{ github.run_number }} \
+          --revision-suffix v${{ github.run_id }} \
           --set-env-vars \
           "PORT=${{ secrets.PORT }}" \
           "NODE_ENV=${{ secrets.NODE_ENV }}" \
