@@ -23,7 +23,7 @@ export class MarketsController {
     const results: GetMarketsDto[] = await this.marketService.findAll(query.active);
     const mappedResults: GetMarketsDto[] = results.map((market: any) => ({
       ...market,
-      oecdRiskCategory: parseInt(market.oecdRiskCategory, 10),
+      oecdRiskCategory: parseInt(market.oecdRiskCategory.replace(/\D/g, ''), 10),
     }));
     return mappedResults;
   }
