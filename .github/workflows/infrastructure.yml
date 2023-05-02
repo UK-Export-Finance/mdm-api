@@ -327,6 +327,7 @@ jobs:
             # Associate UKS route table to default subnet
             az network vnet subnet update \
             --name snet-${{ env.product }}-${{ vars.VERSION }} \
+            --vnet-name vnet-${{ env.product }}-${{ vars.VERSION }} \
             --route-table route-${{ env.product }}-uks
 
   # 4. Container app configuration
