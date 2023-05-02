@@ -251,8 +251,8 @@ jobs:
             az containerapp env create \
             --name cae-${{ env.product }}-${{ env.target }}-${{ vars.VERSION }} \
             --infrastructure-subnet-resource-id $(az network vnet subnet show --name snet-${{ env.product }}-${{ vars.VERSION }} --vnet-name vnet-${{ env.product }}-${{ vars.VERSION }} --query 'id' -o tsv) \
-            --logs-workspace-id log-${{ env.product }}-${{ env.target }}-${{ vars.VERSION }} \
-            --logs-workspace-key $( az monitor log-analytics workspace get-shared-keys --name log-${{ env.product }}-${{ env.target }}-${{ vars.VERSION }} --query primarySharedKey -o tsv) \
+            --logs-workspace-id $(az monitor log-analytics workspace show --name log-${{ env.product }}-${{ env.target }}-${{ vars.VERSION }} --query customerId -o tsv) \
+            --logs-workspace-key $(az monitor log-analytics workspace get-shared-keys --name log-${{ env.product }}-${{ env.target }}-${{ vars.VERSION }} --query primarySharedKey -o tsv) \
             --tags ${{ env.tags }}
 
       - name: Container app - MDM 📄
