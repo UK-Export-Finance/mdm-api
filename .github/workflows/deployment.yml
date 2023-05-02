@@ -27,6 +27,8 @@ on:
      - dev
      - staging
      - production
+    #TODO: Remove below pre merge
+     - feat/staging
 
     paths:
     - 'src/**'
