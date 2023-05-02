@@ -1,4 +1,4 @@
-# This GHA is responsible for APIM `dev`` deployment.
+# This GHA is responsible for APIM deployment.
 # Deployment is initiated using `az cli` bash script.
 #
 # Standard Azure naming convention has been followed:
@@ -15,16 +15,18 @@
 # Execution
 # *********
 # GHA is only invoked when following conditions are satisfied:
-# 1. Push to the `dev` branch only.
+# 1. Push to the `dev`, `staging` and `production` branches only.
 # 2. Any modifications inside `src` directory
 
 name: Deployment 🚀
-run-name: APIM dev deployment for ${{ github.repository }}
+run-name: APIM deployment for ${{ github.repository }}
 
 on:
   push:
     branches:
      - dev
+     - staging
+     - production
 
     paths:
     - 'src/**'
@@ -33,7 +35,7 @@ on:
     - 'Dockerfile'
     - 'tsconfig.json'
     - 'tsconfig.build.json'
-    - '.github/workflows/development.yml'
+    - '.github/workflows/deployment.yml'
 
 env:
   product: apim

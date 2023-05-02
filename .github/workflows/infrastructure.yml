@@ -446,7 +446,7 @@ jobs:
             az apim product create \
             --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} \
             --product-name apim-${{ env.product }}-mdm \
-            --description ${{ vars.DESCRIPTION }} \
+            --description '${{ vars.DESCRIPTION }}' \
             --state published \
             --approval-required true \
             --subscription-required true
@@ -457,7 +457,7 @@ jobs:
           inlineScript: |
             az apim api import \
             --display-name 'MDM' \
-            --description ${{ vars.DESCRIPTION }} \
+            --description '${{ vars.DESCRIPTION }}' \
             --service-url https://$(az containerapp show --name ca-${{ env.product }}-mdm-${{ env.target }}-${{ vars.VERSION }} --query properties.latestRevisionFqdn -o tsv) \
             --path 'mdm' \
             --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} \
