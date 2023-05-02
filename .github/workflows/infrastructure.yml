@@ -340,12 +340,6 @@ jobs:
         if: ${{ 'prod' == env.target }}
         run: echo "type=Production" >> $GITHUB_ENV
 
-      - name: APIM defaults ✨
-        run: |
-         echo product_starter=$(az apim product list --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} --query '[?contains(displayName, `Starter`)].name' -o tsv) >> $GITHUB_ENV
-         echo product_unlimited=$(az apim product list --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} --query '[?contains(displayName, `Unlimited`)].name' -o tsv) >> $GITHUB_ENV
-         echo api_echo=$(az apim api list --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} --filter-display-name 'Echo API' --top 1 --query [0].name -o tsv) >> $GITHUB_ENV
-
       - name: Login 🔐
         uses: azure/login@v1
         with:
@@ -358,6 +352,12 @@ jobs:
             # Basic
             az configure --defaults location=${{ vars.REGION }}
             az configure --defaults group=rg-${{ env.product }}-${{ env.target }}-${{ vars.VERSION }}
+
+      - name: APIM defaults ✨
+        run: |
+         echo product_starter=$(az apim product list --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} --query '[?contains(displayName, `Starter`)].name' -o tsv) >> $GITHUB_ENV
+         echo product_unlimited=$(az apim product list --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} --query '[?contains(displayName, `Unlimited`)].name' -o tsv) >> $GITHUB_ENV
+         echo api_echo=$(az apim api list --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} --filter-display-name 'Echo API' --top 1 --query [0].name -o tsv) >> $GITHUB_ENV
 
       - name: IP restriction 🔒️
         uses: Azure/cli@v1.0.7
@@ -435,9 +435,13 @@ jobs:
             az configure --defaults location=${{ vars.REGION }}
             az configure --defaults group=rg-${{ env.product }}-${{ env.target }}-${{ vars.VERSION }}
 
+      - name: APIM defaults ✨
+        run: |
+         echo product_mdm=$(az apim product list --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} --query '[?contains(displayName, `mdm`)].name' -o tsv) >> $GITHUB_ENV
+
       - name: MDM - Product ➕
         uses: Azure/cli@v1.0.7
-        if: $(az apim product list --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} --query '[?contains(displayName, `mdm`)].name' -o tsv) != ''
+        if: ${{ '' == env.product_mdm }}
         with:
           inlineScript: |
             az apim product create \
