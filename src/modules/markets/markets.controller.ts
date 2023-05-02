@@ -19,12 +19,7 @@ export class MarketsController {
     description: 'All markets',
     type: MarketEntity,
   })
-  async findAll(@Query() query: MarketsQueryDto): Promise<MarketEntity[]> {
-    const results = await this.marketService.findAll(query.active);
-    const mappedResults = results.map((market: any) => ({
-      ...market,
-      oecdRiskCategory: parseInt(market.oecdRiskCategory.replace(/\D/g, ''), 10),
-    }));
-    return mappedResults;
+  findAll(@Query() query: MarketsQueryDto): Promise<MarketEntity[]> {
+    return this.marketService.findAll(query.active);
   }
 }
