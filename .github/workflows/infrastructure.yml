@@ -181,8 +181,23 @@ jobs:
             az network vnet peering create \
             --name vnet-peer-uks-${{ env.product }}-${{ vars.VERSION }} \
             --vnet-name vnet-${{ env.product }}-${{ vars.VERSION }} \
-            --remote-vnet $(az network vnet show --subscription ${{ secrets.REMOTE_VNET_SUBSCRIPTION_UKS }} --resource-group ${{ secrets.REMOTE_VNET_RESOURCE_GROUP_UKS }} --name ${{ secrets.REMOTE_VNET_NAME_UKS }} --query 'id' -o tsv) \
+            --remote-vnet $(az network vnet show --subscription ${{ secrets.REMOTE_VNET_SUBSCRIPTION_AMI }} --resource-group ${{ secrets.REMOTE_VNET_RESOURCE_GROUP_AMI }} --name ${{ secrets.REMOTE_VNET_NAME_AMI }} --query 'id' -o tsv) \
             --allow-vnet-access 1
+
+            # Remote VNET peer
+            az network vnet peering create \
+            --name vnet-peer-uks-${{ env.product }}-${{ vars.VERSION }} \
+            --vnet-name  ${{ secrets.REMOTE_VNET_NAME_UKS }} \
+            --remote-vnet $(az network vnet show --name vnet-${{ env.product }}-${{ vars.VERSION }} --query 'id' -o tsv) \
+            --allow-vnet-access 1 \
+            --subscription ${{ secrets.REMOTE_VNET_SUBSCRIPTION_UKS }} \
+            --resource-group ${{ secrets.REMOTE_VNET_RESOURCE_GROUP_UKS }}
+
+            # Fetch peering state
+            echo "Peering state: $(az network vnet peering show \
+            --vnet-name vnet-${{ env.product }}-${{ vars.VERSION }} \
+            --name vnet-peer-uks-${{ env.product }}-${{ vars.VERSION }} \
+            --query peeringState)"
 
       - name: VNET Peer - AMI 🔀
         uses: Azure/cli@v1.0.7
