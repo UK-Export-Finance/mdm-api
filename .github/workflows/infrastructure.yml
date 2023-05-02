@@ -171,39 +171,6 @@ jobs:
             --subnet-prefixes ${{ secrets.VNET_SUBNET_PREFIX }} \
             --tags ${{ env.tags }}
 
-      - name: VNET Peer - AMI 🔀
-        uses: Azure/cli@v1.0.7
-        with:
-          inlineScript: |
-            # Azure Managed Instance (AMI) SQL DB VNET peering
-
-            # Local VNET peer
-            az network vnet peering create \
-            --name vnet-peer-ami-${{ env.product }}-${{ vars.VERSION }} \
-            --vnet-name vnet-${{ env.product }}-${{ vars.VERSION }} \
-            --remote-vnet $(az network vnet show --subscription ${{ secrets.REMOTE_VNET_SUBSCRIPTION_AMI }} --resource-group ${{ secrets.REMOTE_VNET_RESOURCE_GROUP_AMI }} --name ${{ secrets.REMOTE_VNET_NAME_AMI }} --query 'id' -o tsv) \
-            --allow-vnet-access 1
-
-            # Remote VNET peer
-            az network vnet peering create \
-            --name vnet-peer-ami-${{ env.product }}-${{ vars.VERSION }} \
-            --vnet-name  ${{ secrets.REMOTE_VNET_NAME_AMI }} \
-            --remote-vnet $(az network vnet show --name vnet-${{ env.product }}-${{ vars.VERSION }} --query 'id' -o tsv) \
-            --allow-vnet-access 1 \
-            --subscription ${{ secrets.REMOTE_VNET_SUBSCRIPTION_AMI }} \
-            --resource-group ${{ secrets.REMOTE_VNET_RESOURCE_GROUP_AMI }}
-
-            # Fetch peering state
-            echo "Peering state: $(az network vnet peering show \
-            --vnet-name vnet-${{ env.product }}-${{ vars.VERSION }} \
-            --name vnet-peer-ami-${{ env.product }}-${{ vars.VERSION }} \
-            --query peeringState)"
-
-      - name: Login 🔐
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
       - name: VNET Peer - UKS 🔀
         uses: Azure/cli@v1.0.7
         with:
@@ -230,6 +197,34 @@ jobs:
             echo "Peering state: $(az network vnet peering show \
             --vnet-name vnet-${{ env.product }}-${{ vars.VERSION }} \
             --name vnet-peer-uks-${{ env.product }}-${{ vars.VERSION }} \
+            --query peeringState)"
+
+      - name: VNET Peer - AMI 🔀
+        uses: Azure/cli@v1.0.7
+        with:
+          inlineScript: |
+            # Azure Managed Instance (AMI) SQL DB VNET peering
+
+            # Local VNET peer
+            az network vnet peering create \
+            --name vnet-peer-ami-${{ env.product }}-${{ vars.VERSION }} \
+            --vnet-name vnet-${{ env.product }}-${{ vars.VERSION }} \
+            --remote-vnet $(az network vnet show --subscription ${{ secrets.REMOTE_VNET_SUBSCRIPTION_AMI }} --resource-group ${{ secrets.REMOTE_VNET_RESOURCE_GROUP_AMI }} --name ${{ secrets.REMOTE_VNET_NAME_AMI }} --query 'id' -o tsv) \
+            --allow-vnet-access 1
+
+            # Remote VNET peer
+            az network vnet peering create \
+            --name vnet-peer-ami-${{ env.product }}-${{ vars.VERSION }} \
+            --vnet-name  ${{ secrets.REMOTE_VNET_NAME_AMI }} \
+            --remote-vnet $(az network vnet show --name vnet-${{ env.product }}-${{ vars.VERSION }} --query 'id' -o tsv) \
+            --allow-vnet-access 1 \
+            --subscription ${{ secrets.REMOTE_VNET_SUBSCRIPTION_AMI }} \
+            --resource-group ${{ secrets.REMOTE_VNET_RESOURCE_GROUP_AMI }}
+
+            # Fetch peering state
+            echo "Peering state: $(az network vnet peering show \
+            --vnet-name vnet-${{ env.product }}-${{ vars.VERSION }} \
+            --name vnet-peer-ami-${{ env.product }}-${{ vars.VERSION }} \
             --query peeringState)"
 
       - name: Route table 🌐
