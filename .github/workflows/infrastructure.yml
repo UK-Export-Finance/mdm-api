@@ -377,29 +377,33 @@ jobs:
             --rule-name APIM \
             --description 'Allow APIM public IP address'
 
-      - name: Delete default
+      - name: Delete - Starter product
         uses: Azure/cli@v1.0.7
+        if: contains('Starter', $(az apim product list --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} --query '[?contains(displayName, `Starter`)].name' -o tsv))
         with:
           inlineScript: |
-            # Delete default products and associated subscription:
-            
-            # 1. Starter
             az apim product delete \
             --product-id $(az apim product list --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} --query '[?contains(displayName, `Starter`)].name' -o tsv) \
             --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} \
             --delete-subscriptions true \
             --yes
 
-            # 2. Unlimited
+      - name: Delete - Unlimited product
+        uses: Azure/cli@v1.0.7
+        if: contains('Unlimited', $(az apim product list --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} --query '[?contains(displayName, `Unlimited`)].name' -o tsv))
+        with:
+          inlineScript: |
             az apim product delete \
             --product-id $(az apim product list --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} --query '[?contains(displayName, `Unlimited`)].name' -o tsv) \
             --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} \
             --delete-subscriptions true \
             --yes
 
-            # Delete default API
-
-            # 1. Echo API
+      - name: Delete - Echo API
+        uses: Azure/cli@v1.0.7
+        if: contains('Echo', $(az apim api list --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} --filter-display-name 'Echo API' --top 1 --query [0].name -o tsv))
+        with:
+          inlineScript: |
             az apim api delete \
             --api-id $(az apim api list --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} --filter-display-name 'Echo API' --top 1 --query [0].name -o tsv) \
             --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} \
