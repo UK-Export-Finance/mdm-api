@@ -199,6 +199,11 @@ jobs:
             --name vnet-peer-ami-${{ env.product }}-${{ vars.VERSION }} \
             --query peeringState)"
 
+      - name: Login 🔐
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       - name: VNET Peer - UKS 🔀
         uses: Azure/cli@v1.0.7
         with:
