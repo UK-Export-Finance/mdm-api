@@ -269,7 +269,7 @@ jobs:
             --min-replicas 1 \
             --max-replicas 4 \
             --ingress external \
-            --target-port ${{ vars.TFS_PORT }} \
+            --target-port ${{ vars.PORT }} \
             --revisions-mode multiple \
             --transport auto \
             --tags ${{ env.tags }}
