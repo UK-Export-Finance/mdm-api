@@ -15,7 +15,7 @@ describe('Markets', () => {
     lastUpdatedDatetime: expect.any(String),
     effectiveFromDatetime: expect.any(String),
     effectiveToDatetime: expect.any(String),
-    oecdRiskCategory: expect.any(String),
+    oecdRiskCategory: expect.any(Number),
     marketRiskAppetitePublicDesc: expect.any(String),
     geographicalRegionId: expect.any(Number),
     geographicalRegionDesc: expect.any(String),

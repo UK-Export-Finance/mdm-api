@@ -4,7 +4,7 @@ import { DATE } from '@ukef/constants';
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity({
-  name: 'ODS_MARKETS',
+  name: 'CIS_USP_READ_MARKETS',
   schema: 'dbo',
 })
 @UseInterceptors(ClassSerializerInterceptor)
