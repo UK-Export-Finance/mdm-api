@@ -379,7 +379,7 @@ jobs:
 
       - name: Delete - Starter product
         uses: Azure/cli@v1.0.7
-        if: contains('Starter', $(az apim product list --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} --query '[?contains(displayName, `Starter`)].name' -o tsv))
+        if: contains('Starter', az apim product list --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} --query '[?contains(displayName, `Starter`)].name' -o tsv)
         with:
           inlineScript: |
             az apim product delete \
