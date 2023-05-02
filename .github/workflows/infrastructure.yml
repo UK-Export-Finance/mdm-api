@@ -379,7 +379,7 @@ jobs:
 
       - name: Delete - Starter product
         uses: Azure/cli@v1.0.7
-        if: contains('Starter', az apim product list --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} --query '[?contains(displayName, `Starter`)].name' -o tsv)
+        if: $(az apim product list --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} --query '[?contains(displayName, `Starter`)].name' -o tsv) != ''
         with:
           inlineScript: |
             az apim product delete \
@@ -390,7 +390,7 @@ jobs:
 
       - name: Delete - Unlimited product
         uses: Azure/cli@v1.0.7
-        if: contains('Unlimited', $(az apim product list --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} --query '[?contains(displayName, `Unlimited`)].name' -o tsv))
+        if: $(az apim product list --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} --query '[?contains(displayName, `Unlimited`)].name' -o tsv) != ''
         with:
           inlineScript: |
             az apim product delete \
@@ -401,7 +401,7 @@ jobs:
 
       - name: Delete - Echo API
         uses: Azure/cli@v1.0.7
-        if: contains('Echo', $(az apim api list --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} --filter-display-name 'Echo API' --top 1 --query [0].name -o tsv))
+        if: $(az apim api list --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} --filter-display-name 'Echo API' --top 1 --query [0].name -o tsv) != ''
         with:
           inlineScript: |
             az apim api delete \
@@ -446,6 +446,7 @@ jobs:
 
       - name: MDM - Product ➕
         uses: Azure/cli@v1.0.7
+        if: $(az apim product list --service-name apim-${{ env.environment }}-${{ env.target }}-${{ vars.VERSION }} --query '[?contains(displayName, `mdm`)].name' -o tsv) != ''
         with:
           inlineScript: |
             az apim product create \
