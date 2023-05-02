@@ -1,8 +1,8 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { GetMarketsDto } from './dto/get-markets.dto';
 import { MarketsQueryDto } from './dto/markets-query.dto';
+import { MarketEntity } from './entities/market.entity';
 import { MarketsService } from './markets.service';
 
 @ApiTags('markets')
@@ -17,11 +17,11 @@ export class MarketsController {
   @ApiResponse({
     status: 200,
     description: 'All markets',
-    type: GetMarketsDto,
+    type: MarketEntity,
   })
-  async findAll(@Query() query: MarketsQueryDto): Promise<GetMarketsDto[]> {
-    const results: GetMarketsDto[] = await this.marketService.findAll(query.active);
-    const mappedResults: GetMarketsDto[] = results.map((market: any) => ({
+  async findAll(@Query() query: MarketsQueryDto): Promise<MarketEntity[]> {
+    const results = await this.marketService.findAll(query.active);
+    const mappedResults = results.map((market: any) => ({
       ...market,
       oecdRiskCategory: parseInt(market.oecdRiskCategory.replace(/\D/g, ''), 10),
     }));
