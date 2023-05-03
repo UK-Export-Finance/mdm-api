@@ -18,8 +18,8 @@
 # 1. Push to the `dev`, `staging` and `production` branches only.
 # 2. Any modifications inside `src` directory
 
-name: ${{ vars.TARGET }} deployment 🚀
-run-name: APIM deployment for ${{ github.repository }}
+name: Deployment 🚀
+run-name: ${{ vars.TARGET }} - APIM deployment for ${{ github.repository }}
 
 on:
   push:
