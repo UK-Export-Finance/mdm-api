@@ -97,7 +97,7 @@ jobs:
       uses: azure/docker-login@v1
       with:
         login-server: ${{ env.ACR }}
-        username: ${{ secrets.ACR_USERNAME }}
+        username: "$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query name -o tsv)"
         password: ${{ secrets.ACR_PASSWORD }}
     
     - name: Artifacts 🗃️
