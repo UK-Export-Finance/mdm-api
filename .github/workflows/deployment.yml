@@ -49,7 +49,7 @@ jobs:
 
 # 1. Setup deployment variables
   setup:
-    name: ${{ vars.TARGET }} Setup 🔧
+    name: Setup 🔧
     runs-on: [ self-hosted, APIM, deployment ]
     outputs:
       product: ${{ env.PRODUCT }}
@@ -82,7 +82,9 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: CLI 📝
-      run: echo ACR=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query loginServer | tr -d '"') >> $GITHUB_ENV
+      run: |
+        echo ACR_SERVER=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query loginServer | tr -d '"') >> $GITHUB_ENV
+        echo ACR_USER=$(az acr show -n ${{ env.ACR_SERVER}} --quer name -o tsv) >> $GITHUB_ENV
 
     - name: Defaults ✨
       uses: Azure/cli@v1.0.7
@@ -95,17 +97,17 @@ jobs:
     - name: ACR 🔐
       uses: azure/docker-login@v1
       with:
-        login-server: ${{ env.ACR }}
-        username: $(az acr show -n ${{ env.ACR }} --query name -o tsv)
+        login-server: ${{ env.ACR_SERVER }}
+        username: ${{ env.ACR_USER }}
         password: ${{ secrets.ACR_PASSWORD }}
     
     - name: Artifacts 🗃️
       run: |
         docker build . \
-        -t ${{ env.ACR }}/${{ env.NAME }}:${{ github.sha }} \
-        -t ${{ env.ACR }}/${{ env.NAME }}:${{ env.FROM }}
-        docker push ${{ env.ACR }}/${{ env.NAME }}:${{ github.sha }}
-        docker push ${{ env.ACR }}/${{ env.NAME }}:${{ env.FROM }}
+        -t ${{ env.ACR_SERVER }}/${{ env.NAME }}:${{ github.sha }} \
+        -t ${{ env.ACR_SERVER }}/${{ env.NAME }}:${{ env.FROM }}
+        docker push ${{ env.ACR_SERVER }}/${{ env.NAME }}:${{ github.sha }}
+        docker push ${{ env.ACR_SERVER }}/${{ env.NAME }}:${{ env.FROM }}
 
     - name: Revisions 🔀
       uses: Azure/cli@v1.0.7
@@ -113,7 +115,7 @@ jobs:
         inlineScript: |
           az containerapp update \
           --name $(az resource list --resource-type 'Microsoft.App/containerApps' --query '[?contains(name, `${{ env.NAME }}`)].name' -o tsv) \
-          --image ${{ env.ACR }}/${{ env.NAME }}:${{ env.FROM }} \
+          --image ${{ env.ACR_SERVER }}/${{ env.NAME }}:${{ env.FROM }} \
           --revision-suffix v${{ github.run_id }} \
           --set-env-vars \
           "PORT=${{ secrets.PORT }}" \
