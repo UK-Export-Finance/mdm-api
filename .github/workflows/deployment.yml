@@ -98,7 +98,7 @@ jobs:
       uses: azure/docker-login@v1
       with:
         login-server: ${{ env.ACR_SERVER }}
-        username: ${{ secrets.ACR_USERNAME }}
+        username: ${{ env.ACR_USER }}
         password: ${{ secrets.ACR_PASSWORD }}
     
     - name: Artifacts 🗃️
