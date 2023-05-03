@@ -261,7 +261,7 @@ jobs:
             --name ca-${{ env.PRODUCT }}-mdm-${{ env.TARGET }}-${{ vars.VERSION }} \
             --environment cae-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }} \
             --registry-server cr${{ env.PRODUCT }}${{ env.TARGET }}${{ vars.VERSION }}.azurecr.io \
-            --registry-username $(az acr credential show -n cr${{ env.PRODUCT }}${{ env.TARGET }}${{ vars.VERSION }} --query username | tr -d '"') \
+            --registry-username $(az acr credential show -n cr${{ env.PRODUCT }}${{ env.TARGET }}${{ vars.VERSION }} --query username -o tsv) \
             --cpu 1.0 \
             --memory 2.0Gi \
             --min-replicas 1 \
