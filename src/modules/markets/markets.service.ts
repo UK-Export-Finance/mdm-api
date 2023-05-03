@@ -17,21 +17,25 @@ export class MarketsService {
 
   async findAll(active?: string): Promise<MarketEntity[]> {
     try {
-      let spResults = await this.marketsRepository.query('CIS_USP_READ_MARKETS');
+      let results = await this.marketsRepository.query('CIS_USP_READ_MARKETS');
 
       if (active) {
         if (active === 'Y') {
-          spResults = spResults.filter((results: { ACTIVE_IND: string }) => results.ACTIVE_IND === 'Y');
+          results = results.filter((results: { ACTIVE_IND: string }) => results.ACTIVE_IND === 'Y');
         } else {
-          spResults = spResults.filter((results: { ACTIVE_IND: string }) => results.ACTIVE_IND !== 'Y');
+          results = results.filter((results: { ACTIVE_IND: string }) => results.ACTIVE_IND !== 'Y');
         }
       }
 
       const fieldMap = DbResponseHelper.getApiNameToDbNameMap(this.marketsRepository);
+      const renamedFields = DbResponseHelper.renameDbResultFields(this.marketsRepository, fieldMap, results);
 
-      const renamedResults = DbResponseHelper.renameDbResultFields(this.marketsRepository, fieldMap, spResults);
+      const mappedResults = renamedFields.map((market: any) => ({
+        ...market,
+        oecdRiskCategory: parseInt(market.oecdRiskCategory.replace(/\D/g, ''), 10),
+      }));
 
-      return renamedResults;
+      return mappedResults;
     } catch (err) {
       this.logger.error(err);
       throw new InternalServerErrorException();
