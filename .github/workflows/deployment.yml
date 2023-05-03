@@ -1,4 +1,4 @@
-# This GHA is responsible for APIM `dev`` deployment.
+# This GHA is responsible for APIM deployment.
 # Deployment is initiated using `az cli` bash script.
 #
 # Standard Azure naming convention has been followed:
@@ -15,16 +15,18 @@
 # Execution
 # *********
 # GHA is only invoked when following conditions are satisfied:
-# 1. Push to the `dev` branch only.
+# 1. Push to the `dev`, `staging` and `production` branches only.
 # 2. Any modifications inside `src` directory
 
 name: Deployment 🚀
-run-name: APIM dev deployment for ${{ github.repository }}
+run-name: APIM deployment for ${{ github.repository }}
 
 on:
   push:
     branches:
      - dev
+     - staging
+     - production
 
     paths:
     - 'src/**'
@@ -33,14 +35,14 @@ on:
     - 'Dockerfile'
     - 'tsconfig.json'
     - 'tsconfig.build.json'
-    - '.github/workflows/development.yml'
+    - '.github/workflows/deployment.yml'
 
 env:
-  product: apim
-  environment: dev
-  timezone: 'Europe/London'
+  PRODUCT: apim
+  ENVIRONMENT: dev
+  TIMEZONE: 'Europe/London'
   # Base artifact
-  from: latest
+  FROM: latest
 
 jobs:
 
@@ -49,15 +51,15 @@ jobs:
     name: Setup 🔧
     runs-on: [ self-hosted, APIM, deployment ]
     outputs:
-      product: ${{ env.product }}
-      environment: ${{ env.environment }}
-      timezone: ${{ env.timezone }}
+      product: ${{ env.PRODUCT }}
+      environment: ${{ env.ENVIRONMENT }}
+      timezone: ${{ env.TIMEZONE }}
     steps:
     - name: Environment 🧪
-      run: echo "Environment set to ${{ env.environment }}"
+      run: echo "Environment set to ${{ env.ENVIRONMENT }}"
 
     - name: Timezone 🌐
-      run: echo "Timezone set to ${{ env.timezone }}"
+      run: echo "Timezone set to ${{ env.TIMEZONE }}"
 
 # 2. MDM micro-service deployment
   mdm:
@@ -65,8 +67,8 @@ jobs:
     needs: setup
     environment: ${{ needs.setup.outputs.environment }}
     env:
-      name: mdm
-      environment: ${{ needs.setup.outputs.environment }}
+      NAME: mdm
+      ENVIRONMENT: ${{ needs.setup.outputs.environment }}
     runs-on: [ self-hosted, APIM, deployment ]
     steps:
 
@@ -79,7 +81,7 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: CLI 📝
-      run: echo acr=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query loginServer | tr -d '"') >> $GITHUB_ENV
+      run: echo ACR=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query loginServer | tr -d '"') >> $GITHUB_ENV
 
     - name: Defaults ✨
       uses: Azure/cli@v1.0.7
@@ -92,25 +94,25 @@ jobs:
     - name: ACR 🔐
       uses: azure/docker-login@v1
       with:
-        login-server: ${{ env.acr }}
+        login-server: ${{ env.ACR }}
         username: ${{ secrets.ACR_USERNAME }}
         password: ${{ secrets.ACR_PASSWORD }}
     
     - name: Artifacts 🗃️
       run: |
         docker build . \
-        -t ${{ env.acr }}/${{ env.name }}:${{ github.sha }} \
-        -t ${{ env.acr }}/${{ env.name }}:${{ env.from }}
-        docker push ${{ env.acr }}/${{ env.name }}:${{ github.sha }}
-        docker push ${{ env.acr }}/${{ env.name }}:${{ env.from }}
+        -t ${{ env.ACR }}/${{ env.NAME }}:${{ github.sha }} \
+        -t ${{ env.ACR }}/${{ env.NAME }}:${{ env.FROM }}
+        docker push ${{ env.ACR }}/${{ env.NAME }}:${{ github.sha }}
+        docker push ${{ env.ACR }}/${{ env.NAME }}:${{ env.FROM }}
 
     - name: Revisions 🔀
       uses: Azure/cli@v1.0.7
       with:
         inlineScript: |
           az containerapp update \
-          --name $(az resource list --resource-type 'Microsoft.App/containerApps' --query '[?contains(name, `${{ env.name }}`)].name' -o tsv) \
-          --image ${{ env.acr }}/${{ env.name }}:${{ env.from }} \
+          --name $(az resource list --resource-type 'Microsoft.App/containerApps' --query '[?contains(name, `${{ env.NAME }}`)].name' -o tsv) \
+          --image ${{ env.ACR }}/${{ env.NAME }}:${{ env.FROM }} \
           --revision-suffix v${{ github.run_id }} \
           --set-env-vars \
           "PORT=${{ secrets.PORT }}" \
