@@ -84,7 +84,7 @@ jobs:
     - name: CLI 📝
       run: |
         echo ACR_SERVER=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query loginServer -o tsv) >> $GITHUB_ENV
-        echo ACR_USER=$(az acr show -n ${{ env.ACR_SERVER}} --query name -o tsv) >> $GITHUB_ENV
+        echo ACR_USER=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query name -o tsv) >> $GITHUB_ENV
 
     - name: Defaults ✨
       uses: Azure/cli@v1.0.7
