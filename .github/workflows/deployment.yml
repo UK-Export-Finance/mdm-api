@@ -19,7 +19,7 @@
 # 2. Any modifications inside `src` directory
 
 name: Deployment 🚀
-run-name: ${{ vars.TARGET }} - APIM deployment for ${{ github.repository }}
+run-name: APIM deployment for ${{ github.repository }}
 
 on:
   push:
@@ -49,7 +49,7 @@ jobs:
 
 # 1. Setup deployment variables
   setup:
-    name: Setup 🔧
+    name: ${{ vars.TARGET }} Setup 🔧
     runs-on: [ self-hosted, APIM, deployment ]
     outputs:
       product: ${{ env.PRODUCT }}
@@ -96,7 +96,7 @@ jobs:
       uses: azure/docker-login@v1
       with:
         login-server: ${{ env.ACR }}
-        username: ${{ secrets.ACR_USERNAME }}
+        username: $(az acr show -n ${{ env.ACR }} --query name -o tsv)
         password: ${{ secrets.ACR_PASSWORD }}
     
     - name: Artifacts 🗃️
