@@ -27,7 +27,6 @@ on:
      - dev
      - staging
      - production
-     - fix/deployment
 
     paths:
     - 'src/**'
