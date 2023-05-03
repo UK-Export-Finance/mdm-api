@@ -18,7 +18,7 @@
 # 1. Push to the `dev`, `staging` and `production` branches only.
 # 2. Any modifications inside `src` directory
 
-name: Deployment 🚀
+name: ${{ vars.TARGET }} deployment 🚀
 run-name: APIM deployment for ${{ github.repository }}
 
 on:
@@ -27,6 +27,7 @@ on:
      - dev
      - staging
      - production
+     - fix/deployment
 
     paths:
     - 'src/**'
@@ -89,7 +90,7 @@ jobs:
         inlineScript: |
           # Basic
           az configure --defaults location=${{ vars.REGION }}
-          az configure --defaults group=${{ vars.RESOURCE }}
+          az configure --defaults group=rg-${{ env.PRODUCT }}-${{ vars.TARGET }}-${{ vars.VERSION }}
 
     - name: ACR 🔐
       uses: azure/docker-login@v1
