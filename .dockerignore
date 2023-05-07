@@ -14,7 +14,6 @@
 .prettierignore
 .prettierrc.json
 .whitesource
-nest-cli.json
 CHANGELOG.md
 Dockerfile
 LICENSE
