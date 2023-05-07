@@ -15,7 +15,7 @@ COPY --chown=node:node package*.json .
 RUN npm ci --legacy-peer-deps --ignore-scripts
 RUN npm cache clean --force
 
-COPY --chown=node:node src src
+COPY --chown=node:node src .
 COPY --chown=node:node tsconfig*.json .
 COPY --chown=node:node nest-cli.json .
 
