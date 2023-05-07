@@ -35,25 +35,25 @@ describe('CurrenciesController', () => {
   });
 
   describe('findAll()', () => {
-    it('should return all currencies', () => {
-      currencyController.findAll();
+    it('should return all currencies', async () => {
+      await currencyController.findAll();
 
       expect(currencyService.findAll).toHaveBeenCalled();
     });
   });
 
   describe('fineOne()', () => {
-    it('should return one currency', () => {
-      currencyController.findOne({ isoCode: 'GBP' });
+    it('should return one currency', async () => {
+      await currencyController.findOne({ isoCode: 'GBP' });
 
       expect(currencyService.findOne).toHaveBeenCalled();
     });
   });
 
   describe('findCurrencyExchange()', () => {
-    it('should return currency exchange rate', () => {
+    it('should return currency exchange rate', async () => {
       const query = new GetCurrencyExchangeDto();
-      currencyController.findExchangeRate(query);
+      await currencyController.findExchangeRate(query);
 
       expect(currencyService.findExchangeRate).toHaveBeenCalled();
     });

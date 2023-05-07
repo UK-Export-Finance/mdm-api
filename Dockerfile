@@ -11,12 +11,13 @@ RUN rm -rf /var/cache/apk/*
 WORKDIR /app
 
 # NPM
-COPY --chown=node:node package.json .
-COPY --chown=node:node package-lock.json .
-RUN npm ci --legacy-peer-deps
+COPY --chown=node:node package*.json .
+RUN npm ci --legacy-peer-deps --ignore-scripts
 RUN npm cache clean --force
 
-COPY --chown=node:node . .
+COPY --chown=node:node src src
+COPY --chown=node:node tsconfig*.json .
+COPY --chown=node:node nest-cli.json .
 
 # Build with all dependencies
 RUN npm run build
@@ -24,7 +25,7 @@ RUN npm run build
 # Lean NPM - Only install `dependencies`
 # `devDependencies` will still be resolved inside `package-lock.json`,
 # however they will not be installed inside `node_modules` directory.
-RUN npm ci --legacy-peer-deps --omit=dev
+RUN npm ci --legacy-peer-deps --omit=dev --ignore-scripts
 
 # Non-root user
 USER node
