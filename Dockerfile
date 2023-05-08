@@ -16,6 +16,7 @@ RUN npm ci --legacy-peer-deps --ignore-scripts
 RUN npm cache clean --force
 
 COPY --chown=node:node src src
+COPY --chown=node:node nest-cli.json nest-cli.json
 COPY --chown=node:node tsconfig*.json .
 
 # Build with all dependencies
