@@ -65,7 +65,7 @@
     "@typescript-eslint/parser": "^5.59.2",
     "chance": "^1.1.11",
     "cspell": "^6.31.1",
-    "eslint": "^8.39.0",
+    "eslint": "^8.40.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^17.0.0",
     "eslint-config-airbnb-typescript-prettier": "^5.0.0",
