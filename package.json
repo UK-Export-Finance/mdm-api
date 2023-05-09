@@ -1,6 +1,6 @@
 {
   "name": "mdm-api",
-  "version": "1.11.0",
+  "version": "1.11.1",
   "private": true,
   "description": "Master Data Management API",
   "license": "MIT",
