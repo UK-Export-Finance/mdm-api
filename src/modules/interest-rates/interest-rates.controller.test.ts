@@ -48,8 +48,8 @@ describe('InterestRatesController', () => {
   });
 
   describe('findAll()', () => {
-    it('should return all interest rates', () => {
-      interestRatesController.findAll();
+    it('should return all interest rates', async () => {
+      await interestRatesController.findAll();
 
       expect(interestRatesService.findAll).toHaveBeenCalled();
     });

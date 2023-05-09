@@ -38,9 +38,9 @@ describe('ConstantsController', () => {
   });
 
   describe('find()', () => {
-    it('should return all constants', () => {
+    it('should return all constants', async () => {
       const query = new GetExposurePeriodQueryDto();
-      exposurePeriodController.find(query);
+      await exposurePeriodController.find(query);
 
       expect(exposurePeriodService.calculate).toHaveBeenCalled();
     });
