@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.11.1](https://github.com/UK-Export-Finance/mdm-api/compare/v1.11.0...v1.11.1) (2023-05-09)
+
+
+### Bug Fixes
+
+* lint fixes based on sonarcloud ([#159](https://github.com/UK-Export-Finance/mdm-api/issues/159)) ([547f468](https://github.com/UK-Export-Finance/mdm-api/commit/547f468f2df39fb0e378693a9b5d19055e5e1d74))
+
+
+### Miscellaneous
+
+* **deps-dev:** Bump @commitlint/cli from 17.6.1 to 17.6.3 ([#157](https://github.com/UK-Export-Finance/mdm-api/issues/157)) ([0fa2016](https://github.com/UK-Export-Finance/mdm-api/commit/0fa2016b3f13f07d14169aebc276e0e2e143b2c3))
+* **deps-dev:** Bump @commitlint/config-conventional from 17.6.1 to 17.6.3 ([#155](https://github.com/UK-Export-Finance/mdm-api/issues/155)) ([62ce765](https://github.com/UK-Export-Finance/mdm-api/commit/62ce765248dda846c590af47885c886598fe824a))
+* **deps-dev:** Bump @types/node from 18.16.3 to 20.0.0 ([#156](https://github.com/UK-Export-Finance/mdm-api/issues/156)) ([be7cef0](https://github.com/UK-Export-Finance/mdm-api/commit/be7cef0870f2311b04be491a5bbc068bd9ab939c))
+* **deps-dev:** Bump @types/node from 20.0.0 to 20.1.0 ([#161](https://github.com/UK-Export-Finance/mdm-api/issues/161)) ([efe1ebd](https://github.com/UK-Export-Finance/mdm-api/commit/efe1ebdf3b54a9c5ad1dedf0b29cd74d0dd127d1))
+* **deps-dev:** Bump @types/node from 20.1.0 to 20.1.1 ([#162](https://github.com/UK-Export-Finance/mdm-api/issues/162)) ([4200de8](https://github.com/UK-Export-Finance/mdm-api/commit/4200de8fb2a3e487b87e6b6980262827ae3c6e7d))
+* **deps-dev:** Bump @typescript-eslint/eslint-plugin from 5.59.2 to 5.59.5 ([#163](https://github.com/UK-Export-Finance/mdm-api/issues/163)) ([84fd7ab](https://github.com/UK-Export-Finance/mdm-api/commit/84fd7ab7f8f8e976a4b7458900930bb0b88ea44d))
+* **deps-dev:** Bump @typescript-eslint/parser from 5.59.2 to 5.59.5 ([#164](https://github.com/UK-Export-Finance/mdm-api/issues/164)) ([a5c19b1](https://github.com/UK-Export-Finance/mdm-api/commit/a5c19b1df215af2ca22cf776cab93cc8c73aef60))
+* **deps-dev:** Bump eslint from 8.39.0 to 8.40.0 ([#160](https://github.com/UK-Export-Finance/mdm-api/issues/160)) ([3cc7d44](https://github.com/UK-Export-Finance/mdm-api/commit/3cc7d4457bff85cf04720416a6ccfd08bcd57fb5))
+* **deps:** update node.js to v20.1 ([#153](https://github.com/UK-Export-Finance/mdm-api/issues/153)) ([e54aced](https://github.com/UK-Export-Finance/mdm-api/commit/e54aced965ad612d038bfae2c714485c3b1cb7c0))
+
 ## [1.11.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.10.2...v1.11.0) (2023-05-03)
 
 
