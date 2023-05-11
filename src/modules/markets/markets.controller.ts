@@ -20,6 +20,6 @@ export class MarketsController {
     type: MarketEntity,
   })
   findAll(@Query() query: MarketsQueryDto): Promise<MarketEntity[]> {
-    return this.marketService.findAll(query.active);
+    return this.marketService.find(query.active, query.search);
   }
 }
