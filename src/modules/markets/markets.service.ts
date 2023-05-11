@@ -15,7 +15,7 @@ export class MarketsService {
     private readonly marketsRepository: Repository<MarketEntity>,
   ) {}
 
-  async findAll(active?: string): Promise<MarketEntity[]> {
+  async find(active?: string, search?: string): Promise<MarketEntity[]> {
     try {
       let results = await this.marketsRepository.query('CIS_USP_READ_MARKETS');
 
@@ -25,6 +25,14 @@ export class MarketsService {
         } else {
           results = results.filter((results: { ACTIVE_IND: string }) => results.ACTIVE_IND !== 'Y');
         }
+      }
+
+      if (search) {
+        const searchLowerCase = search.toLowerCase();
+        results = results.filter(
+          (results: { COUNTRY_NAME: string; ISO_CODE: string }) =>
+            results.COUNTRY_NAME.toLowerCase().indexOf(searchLowerCase) !== -1 || results.ISO_CODE.toLowerCase().indexOf(searchLowerCase) !== -1,
+        );
       }
 
       const fieldMap = DbResponseHelper.getApiNameToDbNameMap(this.marketsRepository);

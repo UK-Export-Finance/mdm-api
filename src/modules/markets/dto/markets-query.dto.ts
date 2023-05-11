@@ -13,4 +13,12 @@ export class MarketsQueryDto {
     enum: QueryParamActiveEnum,
   })
   public active: string;
+
+  @IsOptional()
+  @ApiProperty({
+    required: false,
+    example: 'korea',
+    description: 'Optional filtering by fields "marketName" or "isoCode". Partial matches are allowed and search is not case sensitive',
+  })
+  public search: string;
 }

@@ -19,7 +19,7 @@ export class ExposurePeriodService {
       // TODO: SP USP_MDM_READ_EXPOSURE_PERIOD is not using data/tables from DB. Calculation could be moved to Javascript.
       const results = await this.mdmDataSource.query('USP_MDM_READ_EXPOSURE_PERIOD @0, @1, @2', [startDate, endDate, productGroup]);
 
-      if (!results.Length || typeof results[0].EXPOSURE_PERIOD === 'undefined') {
+      if (!results.length || typeof results[0].EXPOSURE_PERIOD === 'undefined') {
         throw new InternalServerErrorException('No exposure period result from USP_MDM_READ_EXPOSURE_PERIOD');
       }
 
