@@ -51,9 +51,9 @@ describe('SectorIndustriesController', () => {
   });
 
   describe('find()', () => {
-    it('should return all sector industry records', async () => {
+    it('should return all sector industry records', () => {
       const query = new GetSectorIndustriesQueryDto();
-      await sectorIndustriesController.find(query);
+      sectorIndustriesController.find(query);
 
       expect(sectorIndustriesService.find).toHaveBeenCalled();
     });

@@ -58,17 +58,17 @@ describe('PremiumSchedulesController', () => {
   });
 
   describe('create()', () => {
-    it('should create schedule rates', async () => {
+    it('should create schedule rates', () => {
       const createSchedules = new CreatePremiumScheduleDto();
-      await premiumSchedulesController.create(mockResponseObject, [createSchedules]);
+      premiumSchedulesController.create(mockResponseObject, [createSchedules]);
 
       expect(premiumSchedulesService.create).toHaveBeenCalled();
     });
   });
 
   describe('find()', () => {
-    it('should find premium schedules for Facility id', async () => {
-      await premiumSchedulesController.find({ facilityId: chance.natural({ min: 10000000, max: 99999999 }).toString() });
+    it('should find premium schedules for Facility id', () => {
+      premiumSchedulesController.find({ facilityId: chance.natural({ min: 10000000, max: 99999999 }).toString() });
 
       expect(premiumSchedulesService.find).toHaveBeenCalled();
     });
