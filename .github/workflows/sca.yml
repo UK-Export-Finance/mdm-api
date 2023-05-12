@@ -14,7 +14,7 @@ on:
     branches: [ main ]
 
 env:
-  environment: 'cicd'
+  environment: 'qa'
   timezone: 'Europe/London'
 
 jobs:
