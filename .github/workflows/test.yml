@@ -15,9 +15,9 @@ on:
     - '**'
 
 env:
-  environment: dev
+  environment: 'cicd'
   timezone: 'Europe/London'
-  node: '18'
+  node: ${{ vars.NODE_VERSION }}
 
 jobs:
 
