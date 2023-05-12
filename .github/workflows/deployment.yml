@@ -24,9 +24,7 @@ run-name: APIM deployment for ${{ github.repository }}
 on:
   push:
     branches:
-     - dev
-     - staging
-     - production
+     - deployment
 
     paths:
     - 'src/**'
@@ -84,6 +82,7 @@ jobs:
       run: |
         echo ACR=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query loginServer -o tsv) >> $GITHUB_ENV
         echo ACR_USER=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query name -o tsv) >> $GITHUB_ENV
+        echo CA_NAME=$(az resource list --resource-type 'Microsoft.App/containerApps' --query '[?contains(name, `${{ env.NAME }}`)].name' -o tsv) >> $GITHUB_ENV
 
     - name: Defaults ✨
       uses: Azure/cli@v1.0.7
@@ -113,7 +112,7 @@ jobs:
       with:
         inlineScript: |
           az containerapp update \
-          --name $(az resource list --resource-type 'Microsoft.App/containerApps' --query '[?contains(name, `${{ env.NAME }}`)].name' -o tsv) \
+          --name ${{ env.CA_NAME }} \
           --image ${{ env.ACR }}/${{ env.NAME }}:${{ env.FROM }} \
           --revision-suffix v${{ github.run_id }} \
           --set-env-vars \
