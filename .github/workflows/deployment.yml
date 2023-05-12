@@ -112,7 +112,7 @@ jobs:
       with:
         inlineScript: |
           az containerapp update \
-          --name ${{ env.CA_NAME }} \
+          --container-name ${{ env.CA_NAME }} \
           --image ${{ env.ACR }}/${{ env.NAME }}:${{ env.FROM }} \
           --revision-suffix v${{ github.run_id }} \
           --set-env-vars \

@@ -23,7 +23,7 @@ if [ -n "$selection" ]; then
     ############### DEPLOYMENT ###############
     elif [ "$selection" = "1" ]
     then
-    destination=dev
+    destination=deployment
     branch=main
     ############### ACR PURGE ###############
     elif [ "$selection" = "2" ]
