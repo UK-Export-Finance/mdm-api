@@ -16,7 +16,7 @@ COPY --chown=node:node package-lock.json .
 RUN npm ci --legacy-peer-deps
 
 COPY --chown=node:node src src
-COPY --chown=node:node nest-cli.json nest-cli.json
+COPY --chown=node:node nest-cli.json .
 COPY --chown=node:node tsconfig.json .
 COPY --chown=node:node tsconfig.build.json .
 
