@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.12.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.11.1...v1.12.0) (2023-05-12)
+
+
+### Features
+
+* **APIM-310:** added new query parameter 'search' to GET /markets ([#167](https://github.com/UK-Export-Finance/mdm-api/issues/167)) ([8476b5c](https://github.com/UK-Export-Finance/mdm-api/commit/8476b5c3a4beda52e61b5a8ab7d6ac6614fa0b35))
+
+
+### Bug Fixes
+
+* **iac:** added missing argument ([#173](https://github.com/UK-Export-Finance/mdm-api/issues/173)) ([ae86545](https://github.com/UK-Export-Finance/mdm-api/commit/ae865459e3fbae4d9056a55e51b86a05862d3804))
+
+
+### Miscellaneous
+
+* **deps-dev:** Bump @tsconfig/node20 from 1.0.0 to 1.0.1 ([#169](https://github.com/UK-Export-Finance/mdm-api/issues/169)) ([d137c51](https://github.com/UK-Export-Finance/mdm-api/commit/d137c51c06c029ab753ba7b56ec5b29ffe7cbd92))
+* **deps-dev:** Bump @types/node from 20.1.1 to 20.1.2 ([#165](https://github.com/UK-Export-Finance/mdm-api/issues/165)) ([58c5fac](https://github.com/UK-Export-Finance/mdm-api/commit/58c5fac9ed1ff2abc0a50a6ebb7aebbc4b887a33))
+* **deps-dev:** Bump @types/node from 20.1.2 to 20.1.3 ([#170](https://github.com/UK-Export-Finance/mdm-api/issues/170)) ([22606c7](https://github.com/UK-Export-Finance/mdm-api/commit/22606c7dddb717d3a1a272f37218706fad3102d6))
+* **deps:** Bump typeorm from 0.3.15 to 0.3.16 ([#166](https://github.com/UK-Export-Finance/mdm-api/issues/166)) ([1271818](https://github.com/UK-Export-Finance/mdm-api/commit/1271818213d54d90ab8809b4190243aaa2c210c1))
+
 ## [1.11.1](https://github.com/UK-Export-Finance/mdm-api/compare/v1.11.0...v1.11.1) (2023-05-09)
 
 
