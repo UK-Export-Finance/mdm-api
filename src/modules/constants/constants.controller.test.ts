@@ -45,9 +45,9 @@ describe('ConstantsController', () => {
   });
 
   describe('find()', () => {
-    it('should return all constants', () => {
+    it('should return all constants', async () => {
       const query = new GetConstantsSpiQueryDto();
-      constantsController.find(query);
+      await constantsController.find(query);
 
       expect(constantsService.find).toHaveBeenCalled();
     });

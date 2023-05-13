@@ -51,7 +51,7 @@ Dockerfile is used to build and run a Node.js application in a containerized env
 #### Stage 1: `Build`
 It specifies the base image as `node:19.9-alpine3.16`, which is a minimalistic image of Node.js 19.9 running on Alpine Linux 3.16. The RUN command installs bash and curl packages, then deletes the cache to reduce the image size.
 
-The `WORKDIR` command sets the working directory to `/app`. The `COPY` command copies package.json and package-lock.json to the /app directory, followed by the npm ci command, which installs the dependencies listed in package.json while ensuring compatibility with peer dependencies. The npm cache clean command removes the npm cache.
+The `WORKDIR` command sets the working directory to `/app`. The `COPY` command copies package.json and package-lock.json to the /app directory, followed by the npm ci command, which installs the dependencies listed in package.json while ensuring compatibility with peer dependencies.
 The COPY command copies the rest of the files in the current directory to the /app directory. The `npm run build` command builds the application.
 Finally, the npm ci command installs **only** the dependencies listed in `package.json`, ignoring the `devDependencies`, thus reducing the final build image size.
 

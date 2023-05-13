@@ -14,9 +14,11 @@ WORKDIR /app
 COPY --chown=node:node package.json .
 COPY --chown=node:node package-lock.json .
 RUN npm ci --legacy-peer-deps
-RUN npm cache clean --force
 
-COPY --chown=node:node . .
+COPY --chown=node:node src src
+COPY --chown=node:node nest-cli.json .
+COPY --chown=node:node tsconfig.json .
+COPY --chown=node:node tsconfig.build.json .
 
 # Build with all dependencies
 RUN npm run build

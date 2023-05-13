@@ -50,8 +50,8 @@ describe('YieldRatesController', () => {
   });
 
   describe('find()', () => {
-    it('should call service find function', () => {
-      yieldRatesController.find({ searchDate: '2023-03-02' });
+    it('should call service find function', async () => {
+      await yieldRatesController.find({ searchDate: '2023-03-02' });
 
       expect(yieldRatesService.find).toHaveBeenCalled();
     });
