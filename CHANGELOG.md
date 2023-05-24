@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.13.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.12.1...v1.13.0) (2023-05-24)
+
+
+### Features
+
+* **eslint:** added destructure eslint rule ([#206](https://github.com/UK-Export-Finance/mdm-api/issues/206)) ([8b03027](https://github.com/UK-Export-Finance/mdm-api/commit/8b030275b2fb9f44f8e8a39d445bbebb9cb3bf20))
+
+
+### Miscellaneous
+
+* **deps-dev:** Bump @nestjs/testing from 9.4.1 to 9.4.2 ([#204](https://github.com/UK-Export-Finance/mdm-api/issues/204)) ([e4cdbc8](https://github.com/UK-Export-Finance/mdm-api/commit/e4cdbc8ba253755cc52e0ad5d37f2adbc406554c))
+* **deps-dev:** Bump @typescript-eslint/eslint-plugin from 5.59.6 to 5.59.7 ([#199](https://github.com/UK-Export-Finance/mdm-api/issues/199)) ([b3a4b28](https://github.com/UK-Export-Finance/mdm-api/commit/b3a4b2810d2581c4588f1b819f15cac529f754f4))
+* **deps-dev:** Bump @typescript-eslint/parser from 5.59.6 to 5.59.7 ([#198](https://github.com/UK-Export-Finance/mdm-api/issues/198)) ([cfe2be1](https://github.com/UK-Export-Finance/mdm-api/commit/cfe2be14be2b2e90646d22ba54b2284adfd35fc8))
+* **deps-dev:** Bump ts-loader from 9.4.2 to 9.4.3 ([#203](https://github.com/UK-Export-Finance/mdm-api/issues/203)) ([f8f1384](https://github.com/UK-Export-Finance/mdm-api/commit/f8f138492ffec340672b275a31f4f94ee4ac659b))
+* **deps:** Bump @nestjs/common from 9.4.1 to 9.4.2 ([#205](https://github.com/UK-Export-Finance/mdm-api/issues/205)) ([2a3580b](https://github.com/UK-Export-Finance/mdm-api/commit/2a3580b09757658bf4926419cdfc25e893ae9565))
+* **deps:** Bump @nestjs/core from 9.4.1 to 9.4.2 ([#202](https://github.com/UK-Export-Finance/mdm-api/issues/202)) ([1ffbbac](https://github.com/UK-Export-Finance/mdm-api/commit/1ffbbac228aa8cab99e42f118e17b9a3d1075274))
+* **deps:** Bump @nestjs/platform-express from 9.4.1 to 9.4.2 ([#201](https://github.com/UK-Export-Finance/mdm-api/issues/201)) ([626faa7](https://github.com/UK-Export-Finance/mdm-api/commit/626faa77193d6f48974eaa9d79c59097435abba3))
+
 ## [1.12.1](https://github.com/UK-Export-Finance/mdm-api/compare/v1.12.0...v1.12.1) (2023-05-22)
 
 
