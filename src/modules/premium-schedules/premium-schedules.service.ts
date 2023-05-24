@@ -83,7 +83,7 @@ export class PremiumSchedulesService {
       const transformedResults = renamedResults.map((result) => {
         // Remove time part of Date field calculationDate.
         const [timestamp] = result.calculationDate.toISOString().split('T');
-        result.timestamp = timestamp;
+        result.calculationDate = timestamp;
 
         return result;
       });
