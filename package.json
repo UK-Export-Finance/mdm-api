@@ -20,7 +20,7 @@
     "unit-test": "jest --selectProjects=Unit"
   },
   "dependencies": {
-    "@nestjs/common": "^9.4.1",
+    "@nestjs/common": "^9.4.2",
     "@nestjs/config": "^2.3.2",
     "@nestjs/core": "^9.4.2",
     "@nestjs/passport": "^9.0.3",
