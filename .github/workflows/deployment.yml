@@ -10,7 +10,7 @@
 # 2. Azure container registry - https://learn.microsoft.com/en-us/cli/azure/acr?view=azure-cli-latest#az-acr-create
 # 3. Azure container app environment - https://learn.microsoft.com/en-us/azure/container-apps/environment
 # 4. Azure container app - https://learn.microsoft.com/en-us/azure/container-apps/containers
-# 
+#
 #
 # Execution
 # *********
@@ -24,16 +24,18 @@ run-name: APIM deployment for ${{ github.repository }}
 on:
   push:
     branches:
-     - deployment
+      - deployment
+      #TODO: Remove below pre-merge
+      - feat/APIM-261/iac/post-deployment
 
     paths:
-    - 'src/**'
-    - 'package.json'
-    - 'package-lock.json'
-    - 'Dockerfile'
-    - 'tsconfig.json'
-    - 'tsconfig.build.json'
-    - '.github/workflows/deployment.yml'
+      - 'src/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'Dockerfile'
+      - 'tsconfig.json'
+      - 'tsconfig.build.json'
+      - '.github/workflows/deployment.yml'
 
 env:
   PRODUCT: apim
@@ -43,23 +45,22 @@ env:
   FROM: latest
 
 jobs:
-
-# 1. Setup deployment variables
+  # 1. Setup deployment variables
   setup:
     name: Setup 🔧
-    runs-on: [ self-hosted, APIM, deployment ]
+    runs-on: [self-hosted, APIM, deployment]
     outputs:
       product: ${{ env.PRODUCT }}
       environment: ${{ env.ENVIRONMENT }}
       timezone: ${{ env.TIMEZONE }}
     steps:
-    - name: Environment 🧪
-      run: echo "Environment set to ${{ env.ENVIRONMENT }}"
+      - name: Environment 🧪
+        run: echo "Environment set to ${{ env.ENVIRONMENT }}"
 
-    - name: Timezone 🌐
-      run: echo "Timezone set to ${{ env.TIMEZONE }}"
+      - name: Timezone 🌐
+        run: echo "Timezone set to ${{ env.TIMEZONE }}"
 
-# 2. MDM micro-service deployment
+  # 2. MDM micro-service deployment
   mdm:
     name: MDM 📦️
     needs: setup
@@ -67,71 +68,82 @@ jobs:
     env:
       NAME: mdm
       ENVIRONMENT: ${{ needs.setup.outputs.environment }}
-    runs-on: [ self-hosted, APIM, deployment ]
+    runs-on: [self-hosted, APIM, deployment]
     steps:
+      - name: Repository 🗃️
+        uses: actions/checkout@v3
 
-    - name: Repository 🗃️
-      uses: actions/checkout@v3
+      - name: Azure 🔐
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Azure 🔐
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: CLI 📝
+        run: |
+          echo ACR=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query loginServer -o tsv) >> $GITHUB_ENV
+          echo ACR_USER=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query name -o tsv) >> $GITHUB_ENV
+          echo CA_NAME=$(az resource list --resource-type 'Microsoft.App/containerApps' --query '[?contains(name, `${{ env.NAME }}`)].name' -o tsv) >> $GITHUB_ENV
 
-    - name: CLI 📝
-      run: |
-        echo ACR=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query loginServer -o tsv) >> $GITHUB_ENV
-        echo ACR_USER=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query name -o tsv) >> $GITHUB_ENV
-        echo CA_NAME=$(az resource list --resource-type 'Microsoft.App/containerApps' --query '[?contains(name, `${{ env.NAME }}`)].name' -o tsv) >> $GITHUB_ENV
+      - name: Defaults ✨
+        uses: Azure/cli@v1.0.7
+        with:
+          inlineScript: |
+            # Basic
+            az configure --defaults location=${{ vars.REGION }}
+            az configure --defaults group=rg-${{ env.PRODUCT }}-${{ vars.TARGET }}-${{ vars.VERSION }}
 
-    - name: Defaults ✨
-      uses: Azure/cli@v1.0.7
-      with:
-        inlineScript: |
-          # Basic
-          az configure --defaults location=${{ vars.REGION }}
-          az configure --defaults group=rg-${{ env.PRODUCT }}-${{ vars.TARGET }}-${{ vars.VERSION }}
+      - name: ACR 🔐
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ env.ACR }}
+          username: ${{ env.ACR_USER }}
+          password: ${{ secrets.ACR_PASSWORD }}
 
-    - name: ACR 🔐
-      uses: azure/docker-login@v1
-      with:
-        login-server: ${{ env.ACR }}
-        username: ${{ env.ACR_USER }}
-        password: ${{ secrets.ACR_PASSWORD }}
-    
-    - name: Artifacts 🗃️
-      run: |
-        docker build . \
-        -t ${{ env.ACR }}/${{ env.NAME }}:${{ github.sha }} \
-        -t ${{ env.ACR }}/${{ env.NAME }}:${{ env.FROM }}
-        docker push ${{ env.ACR }}/${{ env.NAME }}:${{ github.sha }}
-        docker push ${{ env.ACR }}/${{ env.NAME }}:${{ env.FROM }}
+      - name: Artifacts 🗃️
+        run: |
+          docker build . \
+          -t ${{ env.ACR }}/${{ env.NAME }}:${{ github.sha }} \
+          -t ${{ env.ACR }}/${{ env.NAME }}:${{ env.FROM }}
+          docker push ${{ env.ACR }}/${{ env.NAME }}:${{ github.sha }}
+          docker push ${{ env.ACR }}/${{ env.NAME }}:${{ env.FROM }}
 
-    - name: Revisions 🔀
-      uses: Azure/cli@v1.0.7
-      with:
-        inlineScript: |
-          az containerapp update \
-          --name ${{ env.CA_NAME }} \
-          --container-name ${{ env.CA_NAME }} \
-          --image ${{ env.ACR }}/${{ env.NAME }}:${{ env.FROM }} \
-          --revision-suffix v${{ github.run_id }} \
-          --set-env-vars \
-          "PORT=${{ secrets.PORT }}" \
-          "NODE_ENV=${{ secrets.NODE_ENV }}" \
-          "TZ=${{ secrets.TZ }}" \
-          "SWAGGER_USER=${{ secrets.SWAGGER_USER }}" \
-          "SWAGGER_PASSWORD=${{ secrets.SWAGGER_PASSWORD }}" \
-          "DATABASE_PORT=${{ secrets.DATABASE_PORT }}" \
-          "DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}" \
-          "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" \
-          "DATABASE_MDM_HOST=${{ secrets.DATABASE_MDM_HOST }}" \
-          "DATABASE_MDM_NAME=${{ secrets.DATABASE_MDM_NAME }}" \
-          "DATABASE_NUMBER_GENERATOR_HOST=${{ secrets.DATABASE_NUMBER_GENERATOR_HOST }}" \
-          "DATABASE_NUMBER_GENERATOR_NAME=${{ secrets.DATABASE_NUMBER_GENERATOR_NAME }}" \
-          "DATABASE_CEDAR_HOST=${{ secrets.DATABASE_CEDAR_HOST }}" \
-          "DATABASE_CEDAR_NAME=${{ secrets.DATABASE_CEDAR_NAME }}" \
-          "DATABASE_CIS_HOST=${{ secrets.DATABASE_CIS_HOST }}" \
-          "DATABASE_CIS_NAME=${{ secrets.DATABASE_CIS_NAME }}" \
-          "API_KEY=${{ secrets.API_KEY }}" \
-          "API_KEY_STRATEGY=${{ secrets.API_KEY_STRATEGY }}"
+      - name: Revisions 🔀
+        uses: Azure/cli@v1.0.7
+        with:
+          inlineScript: |
+            az containerapp update \
+            --name ${{ env.CA_NAME }} \
+            --container-name ${{ env.CA_NAME }} \
+            --image ${{ env.ACR }}/${{ env.NAME }}:${{ env.FROM }} \
+            --revision-suffix v${{ github.run_id }} \
+            --set-env-vars \
+            "PORT=${{ secrets.PORT }}" \
+            "NODE_ENV=${{ secrets.NODE_ENV }}" \
+            "TZ=${{ secrets.TZ }}" \
+            "SWAGGER_USER=${{ secrets.SWAGGER_USER }}" \
+            "SWAGGER_PASSWORD=${{ secrets.SWAGGER_PASSWORD }}" \
+            "DATABASE_PORT=${{ secrets.DATABASE_PORT }}" \
+            "DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}" \
+            "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" \
+            "DATABASE_MDM_HOST=${{ secrets.DATABASE_MDM_HOST }}" \
+            "DATABASE_MDM_NAME=${{ secrets.DATABASE_MDM_NAME }}" \
+            "DATABASE_NUMBER_GENERATOR_HOST=${{ secrets.DATABASE_NUMBER_GENERATOR_HOST }}" \
+            "DATABASE_NUMBER_GENERATOR_NAME=${{ secrets.DATABASE_NUMBER_GENERATOR_NAME }}" \
+            "DATABASE_CEDAR_HOST=${{ secrets.DATABASE_CEDAR_HOST }}" \
+            "DATABASE_CEDAR_NAME=${{ secrets.DATABASE_CEDAR_NAME }}" \
+            "DATABASE_CIS_HOST=${{ secrets.DATABASE_CIS_HOST }}" \
+            "DATABASE_CIS_NAME=${{ secrets.DATABASE_CIS_NAME }}" \
+            "API_KEY=${{ secrets.API_KEY }}" \
+            "API_KEY_STRATEGY=${{ secrets.API_KEY_STRATEGY }}"
+
+      - name: Import ⬇️
+        uses: Azure/cli@v1.0.7
+        with:
+          inlineScript: |
+            az apim api import \
+            --path 'mdm' \
+            --service-name apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }} \
+            --specification-format OpenApi \
+            --api-id $(az apim api list --service-name apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }} --filter-display-name 'mdm' --top 1 --query [0].name -o tsv) \
+            --service-url https://$(az containerapp show --name ca-${{ env.PRODUCT }}-mdm-${{ env.TARGET }}-${{ vars.VERSION }} --query properties.latestRevisionFqdn -o tsv) \
+            --specification-url https://$(az containerapp show --name ca-${{ env.PRODUCT }}-mdm-${{ env.TARGET }}-${{ vars.VERSION }} --query properties.latestRevisionFqdn -o tsv)/openapi/json \
