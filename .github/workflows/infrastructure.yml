@@ -472,7 +472,7 @@ jobs:
           inlineScript: |
             az apim product api add \
             --service-name apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }} \
-            --api-id $(az apim api list --service-name apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }} --filter-display-name 'mdm' --top 1 --query [0].name -o tsv) \
+            --api-id $(az apim api list --service-name apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }} --filter-display-name '${{ vars.DESCRIPTION }}' --top 1 --query [0].name -o tsv) \
             --product-id $(az apim product list --service-name apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }} --query '[?contains(displayName, `apim-${{ env.PRODUCT }}-mdm`)].name' -o tsv)
 
       - name: MDM - Policy 🚧
@@ -481,5 +481,5 @@ jobs:
           inlineScript: |
             az rest \
             --method PUT \
-            --uri "https://management.azure.com/subscriptions/$(az account show --query id -o tsv)/resourceGroups/rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}/providers/Microsoft.ApiManagement/service/apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }}/apis/$(az apim api list --service-name apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }} --filter-display-name 'mdm' --top 1 --query [0].name -o tsv)/policies/policy?api-version=2022-09-01-preview" \
+            --uri "https://management.azure.com/subscriptions/$(az account show --query id -o tsv)/resourceGroups/rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}/providers/Microsoft.ApiManagement/service/apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }}/apis/$(az apim api list --service-name apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }} --filter-display-name '${{ vars.DESCRIPTION }}' --top 1 --query [0].name -o tsv)/policies/policy?api-version=2022-09-01-preview" \
             --body ${{ secrets.APIM_POLICY }}
