@@ -136,17 +136,6 @@ jobs:
             "API_KEY=${{ secrets.API_KEY }}" \
             "API_KEY_STRATEGY=${{ secrets.API_KEY_STRATEGY }}"
 
-      - name: Backend 🔀
-        uses: Azure/cli@v1.0.7
-        with:
-          inlineScript: |
-            # Update API service URL
-
-            az apim api update \
-            --service-name ${{ env.APIM }} \
-            --api-id $(az apim api list --service-name ${{ env.APIM }} --filter-display-name '${{ vars.DESCRIPTION }}' --top 1 --query [0].name -o tsv) \
-            --service-url https://$(az containerapp show --name ca-apim-mdm-dev-001 --query properties.latestRevisionFqdn -o tsv)
-
       - name: Import ⬇️
         uses: Azure/cli@v1.0.7
         with:
@@ -154,8 +143,13 @@ jobs:
             # API specification import
 
             az apim api import \
-            --path 'mdm' \
+            --path '${{ env.NAME }}' \
             --service-name ${{ env.APIM }} \
             --specification-format OpenApi \
             --api-id $(az apim api list --service-name ${{ env.APIM }} --filter-display-name '${{ vars.DESCRIPTION }}' --top 1 --query [0].name -o tsv) \
-            --specification-url https://$(az containerapp show --name ${{ env.CA_NAME }} --query properties.latestRevisionFqdn -o tsv)/openapi/json
+            --api-type http \
+            --service-url https://$(az containerapp show --name ${{ env.CA_NAME }} --query properties.latestRevisionFqdn -o tsv) \
+            --protocols https \
+            --specification-url https://$(az containerapp show --name ${{ env.CA_NAME }} --query properties.latestRevisionFqdn -o tsv)/openapi/json \
+            --subscription-required true
+
