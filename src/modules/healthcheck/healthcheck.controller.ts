@@ -22,9 +22,9 @@ export class HealthcheckController {
     private readonly mem: MemoryHealthIndicator,
   ) {}
 
-  @Get('API micro-service health check performs dependent databases connection and memory heap check')
+  @Get('ready')
   @HealthCheck()
-  @ApiResponse({ status: 200, description: 'Check if this api can access dependencies' })
+  @ApiResponse({ status: 200, description: 'API micro-service health check performs dependent databases connection and memory heap check' })
   @ApiOperation({ summary: 'ready' })
   check() {
     return this.health.check([

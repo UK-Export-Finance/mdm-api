@@ -25,7 +25,6 @@ on:
   push:
     branches:
       - deployment
-      - feat/APIM-261/iac/post-deployment
 
     paths:
       - 'src/**'
