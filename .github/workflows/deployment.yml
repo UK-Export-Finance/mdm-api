@@ -16,7 +16,7 @@
 # *********
 # GHA is only invoked when following conditions are satisfied:
 # 1. Push to the `dev`, `staging` and `production` branches only.
-# 2. Any modifications inside `src` directory
+# 2. Any modifications to atleast one of the `paths` targets.
 
 name: Deployment 🚀
 run-name: APIM deployment for ${{ github.repository }}
@@ -27,7 +27,6 @@ on:
       - dev
       - staging
       - production
-      - APIM-207-ia-c-add-monitor
 
     paths:
       - 'src/**'

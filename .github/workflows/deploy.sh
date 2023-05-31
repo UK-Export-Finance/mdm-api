@@ -23,7 +23,7 @@ if [ -n "$selection" ]; then
     ############### DEPLOYMENT ###############
     elif [ "$selection" = "1" ]
     then
-    destination=deployment
+    read destination
     branch=main
     ############### ACR PURGE ###############
     elif [ "$selection" = "2" ]
@@ -60,7 +60,7 @@ else
 fi
 
 #######################################
-# UKEF deployment shell script v0.0.6
-# 11/05/2023
+# UKEF deployment shell script v0.0.7
+# 31/05/2023
 # Abhi Markan
 #######################################
