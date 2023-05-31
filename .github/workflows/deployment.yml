@@ -24,7 +24,10 @@ run-name: APIM deployment for ${{ github.repository }}
 on:
   push:
     branches:
-      - deployment
+      - dev
+      - staging
+      - production
+      - APIM-207-ia-c-add-monitor
 
     paths:
       - 'src/**'
@@ -37,7 +40,7 @@ on:
 
 env:
   PRODUCT: apim
-  ENVIRONMENT: dev
+  ENVIRONMENT: ${{ github.ref_name }}
   TIMEZONE: 'Europe/London'
   # Base artifact
   FROM: latest
@@ -89,7 +92,7 @@ jobs:
           inlineScript: |
             # Basic
             az configure --defaults location=${{ vars.REGION }}
-            az configure --defaults group=rg-${{ env.PRODUCT }}-${{ vars.TARGET }}-${{ vars.VERSION }}
+            az configure --defaults group=rg-${{ env.PRODUCT }}-${{ github.ref_name }}-${{ vars.VERSION }}
 
       - name: ACR 🔐
         uses: azure/docker-login@v1
