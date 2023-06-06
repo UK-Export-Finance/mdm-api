@@ -43,7 +43,7 @@
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
     "tsconfig-paths": "^4.2.0",
-    "tslib": "^2.5.2",
+    "tslib": "^2.5.3",
     "typeorm": "^0.3.16",
     "typeorm-extension": "^2.8.1",
     "typescript": "^5.1.3"
