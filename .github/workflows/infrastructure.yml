@@ -48,7 +48,7 @@
 #
 # NOTE
 # ****
-# 
+#
 # 1. APIM Policy
 # --------------
 # AZ CLI currently do not support APIM policy import natively, recommended solution is via
@@ -68,7 +68,7 @@ on:
 env:
   PRODUCT: apim
   ENVIRONMENT: infrastructure
-  TIMEZONE: "Europe/London"
+  TIMEZONE: 'Europe/London'
   # Deployment environment target i.e., `dev`, `staging`, `prod`
   TARGET: ${{ vars.ENVIRONMENT }}
 
@@ -144,7 +144,7 @@ jobs:
             --query-access Disabled \
             --quota 0.05 \
             --retention-time ${{ vars.LOG_RETENTION_DAY }} \
-            --sku CapacityReservation \
+            --sku ${{ vars.LOG_PLAN }} \
             --tags ${{ env.TAGS }}
 
       - name: Container registry 📦️
@@ -153,7 +153,7 @@ jobs:
           inlineScript: |
             az acr create \
             --name cr${{ env.PRODUCT }}${{ env.TARGET }}${{ vars.VERSION }} \
-            --sku Standard \
+            --sku ${{ vars.ACR_PLAN }} \
             --admin-enabled true \
             --workspace log-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }} \
             --tags ${{ env.TAGS }}
@@ -178,14 +178,14 @@ jobs:
 
             # Local VNET peer
             az network vnet peering create \
-            --name vnet-peer-ami-preprod-${{ env.PRODUCT }}-${{ vars.VERSION }} \
+            --name vnet-peer-ami-${{ env.TARGET }}-${{ env.PRODUCT }}-${{ vars.VERSION }} \
             --vnet-name vnet-${{ env.PRODUCT }}-${{ vars.VERSION }} \
             --remote-vnet $(az network vnet show --subscription ${{ secrets.REMOTE_VNET_SUBSCRIPTION_AMI }} --resource-group ${{ secrets.REMOTE_VNET_RESOURCE_GROUP_AMI }} --name ${{ secrets.REMOTE_VNET_NAME_AMI }} --query 'id' -o tsv) \
             --allow-vnet-access 1
 
             # Remote VNET peer
             az network vnet peering create \
-            --name vnet-peer-ami-preprod-${{ env.PRODUCT }}-${{ vars.VERSION }} \
+            --name vnet-peer-ami-${{ env.TARGET }}-${{ env.PRODUCT }}-${{ vars.VERSION }} \
             --vnet-name  ${{ secrets.REMOTE_VNET_NAME_AMI }} \
             --remote-vnet $(az network vnet show --name vnet-${{ env.PRODUCT }}-${{ vars.VERSION }} --query 'id' -o tsv) \
             --allow-vnet-access 1 \
@@ -195,7 +195,7 @@ jobs:
             # Fetch peering state
             echo "Peering state: $(az network vnet peering show \
             --vnet-name vnet-${{ env.PRODUCT }}-${{ vars.VERSION }} \
-            --name vnet-peer-ami-preprod-${{ env.PRODUCT }}-${{ vars.VERSION }} \
+            --name vnet-peer-ami-${{ env.TARGET }}-${{ env.PRODUCT }}-${{ vars.VERSION }} \
             --query peeringState)"
 
       - name: AMI Production 🔀
@@ -207,14 +207,14 @@ jobs:
 
             # Local VNET peer
             az network vnet peering create \
-            --name vnet-peer-ami-prod-${{ env.PRODUCT }}-${{ vars.VERSION }} \
+            --name vnet-peer-ami-${{ env.TARGET }}-${{ env.PRODUCT }}-${{ vars.VERSION }} \
             --vnet-name vnet-${{ env.PRODUCT }}-${{ vars.VERSION }} \
             --remote-vnet $(az network vnet show --subscription ${{ secrets.REMOTE_VNET_SUBSCRIPTION_AMI_PROD }} --resource-group ${{ secrets.REMOTE_VNET_RESOURCE_GROUP_AMI_PROD }} --name ${{ secrets.REMOTE_VNET_NAME_AMI_PROD }} --query 'id' -o tsv) \
             --allow-vnet-access 1
 
             # Remote VNET peer
             az network vnet peering create \
-            --name vnet-peer-ami-prod-${{ env.PRODUCT }}-${{ vars.VERSION }} \
+            --name vnet-peer-ami-${{ env.TARGET }}-${{ env.PRODUCT }}-${{ vars.VERSION }} \
             --vnet-name  ${{ secrets.REMOTE_VNET_NAME_AMI_PROD }} \
             --remote-vnet $(az network vnet show --name vnet-${{ env.PRODUCT }}-${{ vars.VERSION }} --query 'id' -o tsv) \
             --allow-vnet-access 1 \
@@ -224,7 +224,7 @@ jobs:
             # Fetch peering state
             echo "Peering state: $(az network vnet peering show \
             --vnet-name vnet-${{ env.PRODUCT }}-${{ vars.VERSION }} \
-            --name vnet-peer-ami-prod-${{ env.PRODUCT }}-${{ vars.VERSION }} \
+            --name vnet-peer-ami-${{ env.TARGET }}-${{ env.PRODUCT }}-${{ vars.VERSION }} \
             --query peeringState)"
 
       - name: VNET Peer - VPN 🔀
@@ -383,9 +383,9 @@ jobs:
 
       - name: APIM defaults ✨
         run: |
-         echo PRODUCT_STARTER=$(az apim product list --service-name apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }} --query '[?contains(displayName, `Starter`)].name' -o tsv) >> $GITHUB_ENV
-         echo PRODUCT_UNLIMITED=$(az apim product list --service-name apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }} --query '[?contains(displayName, `Unlimited`)].name' -o tsv) >> $GITHUB_ENV
-         echo API_ECHO=$(az apim api list --service-name apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }} --filter-display-name 'Echo API' --top 1 --query [0].name -o tsv) >> $GITHUB_ENV
+          echo PRODUCT_STARTER=$(az apim product list --service-name apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }} --query '[?contains(displayName, `Starter`)].name' -o tsv) >> $GITHUB_ENV
+          echo PRODUCT_UNLIMITED=$(az apim product list --service-name apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }} --query '[?contains(displayName, `Unlimited`)].name' -o tsv) >> $GITHUB_ENV
+          echo API_ECHO=$(az apim api list --service-name apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }} --filter-display-name 'Echo API' --top 1 --query [0].name -o tsv) >> $GITHUB_ENV
 
       - name: IP restriction 🔒️
         uses: Azure/cli@v1.0.7
@@ -403,7 +403,7 @@ jobs:
 
       - name: Delete - Starter product
         uses: Azure/cli@v1.0.7
-        if:  ${{ '' != env.PRODUCT_STARTER }}
+        if: ${{ '' != env.PRODUCT_STARTER }}
         with:
           inlineScript: |
             az apim product delete \
@@ -433,7 +433,6 @@ jobs:
             --service-name apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }} \
             --delete-revisions true \
             --yes
-
 
   # 5. APIM configuration
   apim:
@@ -465,7 +464,7 @@ jobs:
 
       - name: APIM defaults ✨
         run: |
-         echo PRODUCT_MDM=$(az apim product list --service-name apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }} --query '[?contains(displayName, `mdm`)].name' -o tsv) >> $GITHUB_ENV
+          echo PRODUCT_MDM=$(az apim product list --service-name apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }} --query '[?contains(displayName, `mdm`)].name' -o tsv) >> $GITHUB_ENV
 
       - name: MDM - Product ➕
         uses: Azure/cli@v1.0.7
@@ -502,7 +501,7 @@ jobs:
           inlineScript: |
             az apim product api add \
             --service-name apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }} \
-            --api-id $(az apim api list --service-name apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }} --filter-display-name '${{ vars.DESCRIPTION }}' --top 1 --query [0].name -o tsv) \
+            --api-id $(az apim api list --service-name apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }} --filter-display-name 'MDM' --top 1 --query [0].name -o tsv) \
             --product-id $(az apim product list --service-name apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }} --query '[?contains(displayName, `apim-${{ env.PRODUCT }}-mdm`)].name' -o tsv)
 
       - name: MDM - Policy 🚧
@@ -511,5 +510,5 @@ jobs:
           inlineScript: |
             az rest \
             --method PUT \
-            --uri "https://management.azure.com/subscriptions/$(az account show --query id -o tsv)/resourceGroups/rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}/providers/Microsoft.ApiManagement/service/apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }}/apis/$(az apim api list --service-name apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }} --filter-display-name '${{ vars.DESCRIPTION }}' --top 1 --query [0].name -o tsv)/policies/policy?api-version=2022-09-01-preview" \
+            --uri "https://management.azure.com/subscriptions/$(az account show --query id -o tsv)/resourceGroups/rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}/providers/Microsoft.ApiManagement/service/apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }}/apis/$(az apim api list --service-name apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }} --filter-display-name 'MDM' --top 1 --query [0].name -o tsv)/policies/policy?api-version=2022-09-01-preview" \
             --body ${{ secrets.APIM_POLICY }}
