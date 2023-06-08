@@ -135,8 +135,7 @@ jobs:
             "DATABASE_CEDAR_NAME=${{ secrets.DATABASE_CEDAR_NAME }}" \
             "DATABASE_CIS_HOST=${{ secrets.DATABASE_CIS_HOST }}" \
             "DATABASE_CIS_NAME=${{ secrets.DATABASE_CIS_NAME }}" \
-            "API_KEY=${{ secrets.API_KEY }}" \
-            "API_KEY_STRATEGY=${{ secrets.API_KEY_STRATEGY }}"
+            "API_KEY=${{ secrets.API_KEY }}"
 
       - name: Import ⬇️
         if: ${{ '' != env.API_ID }}

@@ -110,7 +110,7 @@ this.logger.log({ id: 'your message here' }, 'context-name');
 
 ### Authentication
 The Master Database Management API requires an API Key in order to access its resources.
-This can be achieved by providing a randomised API Key as an environment variable (`API_KEY`) and a strategy (`API_KEY_STRATEGY`) which defines the name of the header passed to the API.
+This can be achieved by providing a randomised API Key as an environment variable (`API_KEY`) required for endpoint invocation authentication.
 
 ### Caching
 Currently, only the ID token that is used for authenticating our requests to ACBS is cached.
