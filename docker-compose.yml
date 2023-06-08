@@ -32,7 +32,6 @@ services:
       DATABASE_CEDAR_NAME:
       DATABASE_CIS_NAME:
       API_KEY:
-      API_KEY_STRATEGY:
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:${PORT}"]
       retries: 3
