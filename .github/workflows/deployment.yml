@@ -67,6 +67,7 @@ jobs:
     environment: ${{ needs.setup.outputs.environment }}
     env:
       NAME: mdm
+      NAME_UPPERCASE: MDM
       ENVIRONMENT: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, APIM, deployment]
     steps:
@@ -84,7 +85,7 @@ jobs:
           echo ACR_USER=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query name -o tsv) >> $GITHUB_ENV
           echo CA_NAME=$(az resource list --resource-type 'Microsoft.App/containerApps' --query '[?contains(name, `${{ env.NAME }}`)].name' -o tsv) >> $GITHUB_ENV
           echo APIM=$(az resource list --resource-type 'Microsoft.ApiManagement/service' --query '[0].name' -o tsv) >> $GITHUB_ENV
-          echo API_ID=$(az apim api list --service-name ${{ env.APIM }} --query '[?contains(displayName, `${{ env.NAME }}`)].name' -o tsv) >> $GITHUB_ENV
+          echo API_ID=$(az apim api list --service-name $(az resource list --resource-type 'Microsoft.ApiManagement/service' --query '[0].name' -o tsv) --query '[?contains(displayName, `${{ env.NAME_UPPERCASE }}`)].name' -o tsv) >> $GITHUB_ENV
 
       - name: Defaults ✨
         uses: Azure/cli@v1.0.7
