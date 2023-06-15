@@ -235,14 +235,14 @@ jobs:
 
             # Local VNET peer
             az network vnet peering create \
-            --name vnet-peer-vpn-${{ env.PRODUCT }}-${{ vars.VERSION }} \
+            --name vnet-peer-vpn-${{ env.TARGET }}-${{ env.PRODUCT }}-${{ vars.VERSION }} \
             --vnet-name vnet-${{ env.PRODUCT }}-${{ vars.VERSION }} \
             --remote-vnet $(az network vnet show --subscription ${{ secrets.REMOTE_VNET_SUBSCRIPTION_VPN }} --resource-group ${{ secrets.REMOTE_VNET_RESOURCE_GROUP_VPN }} --name ${{ secrets.REMOTE_VNET_NAME_VPN }} --query 'id' -o tsv) \
             --allow-vnet-access 1
 
             # Remote VNET peer
             az network vnet peering create \
-            --name vnet-peer-vpn-${{ env.PRODUCT }}-${{ vars.VERSION }} \
+            --name vnet-peer-vpn-${{ env.TARGET }}-${{ env.PRODUCT }}-${{ vars.VERSION }} \
             --vnet-name  ${{ secrets.REMOTE_VNET_NAME_VPN }} \
             --remote-vnet $(az network vnet show --name vnet-${{ env.PRODUCT }}-${{ vars.VERSION }} --query 'id' -o tsv) \
             --allow-vnet-access 1 \
@@ -252,7 +252,7 @@ jobs:
             # Fetch peering state
             echo "Peering state: $(az network vnet peering show \
             --vnet-name vnet-${{ env.PRODUCT }}-${{ vars.VERSION }} \
-            --name vnet-peer-vpn-${{ env.PRODUCT }}-${{ vars.VERSION }} \
+            --name vnet-peer-vpn-${{ env.TARGET }}-${{ env.PRODUCT }}-${{ vars.VERSION }} \
             --query peeringState)"
 
       - name: Route table 🌐
