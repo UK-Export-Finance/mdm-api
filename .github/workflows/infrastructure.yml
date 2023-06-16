@@ -169,6 +169,11 @@ jobs:
             --subnet-prefixes ${{ secrets.VNET_SUBNET_PREFIX }} \
             --tags ${{ env.TAGS }}
 
+      - name: Login 🔐
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS_AMI }}
+
       - name: AMI Pre-production 🔀
         if: contains('["dev", "staging"]', env.TARGET)
         uses: Azure/cli@v1.0.7
@@ -227,6 +232,11 @@ jobs:
             --name vnet-peer-ami-${{ env.TARGET }}-${{ env.PRODUCT }}-${{ vars.VERSION }} \
             --query peeringState)"
 
+      - name: Login 🔐
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS_VPN }}
+
       - name: VNET Peer - VPN 🔀
         uses: Azure/cli@v1.0.7
         with:
@@ -254,6 +264,11 @@ jobs:
             --vnet-name vnet-${{ env.PRODUCT }}-${{ vars.VERSION }} \
             --name vnet-peer-vpn-${{ env.TARGET }}-${{ env.PRODUCT }}-${{ vars.VERSION }} \
             --query peeringState)"
+
+      - name: Login 🔐
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Route table 🌐
         uses: Azure/cli@v1.0.7
