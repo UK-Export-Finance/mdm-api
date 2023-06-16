@@ -69,7 +69,7 @@ env:
   PRODUCT: apim
   ENVIRONMENT: infrastructure
   TIMEZONE: 'Europe/London'
-  # Deployment environment target i.e., `dev`, `staging`, `prod`
+  # Deployment environment target i.e., `dev`, `staging`, `production`
   TARGET: ${{ vars.ENVIRONMENT }}
 
 jobs:
@@ -101,7 +101,7 @@ jobs:
         run: echo "TYPE=Preproduction" >> $GITHUB_ENV
 
       - name: Production 💫
-        if: ${{ 'prod' == env.TARGET }}
+        if: ${{ 'production' == env.TARGET }}
         run: echo "TYPE=Production" >> $GITHUB_ENV
 
       - name: Tags 🏷️
@@ -169,6 +169,11 @@ jobs:
             --subnet-prefixes ${{ secrets.VNET_SUBNET_PREFIX }} \
             --tags ${{ env.TAGS }}
 
+      - name: Login 🔐
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS_AMI }}
+
       - name: AMI Pre-production 🔀
         if: contains('["dev", "staging"]', env.TARGET)
         uses: Azure/cli@v1.0.7
@@ -199,7 +204,7 @@ jobs:
             --query peeringState)"
 
       - name: AMI Production 🔀
-        if: ${{ 'prod' == env.TARGET }}
+        if: ${{ 'production' == env.TARGET }}
         uses: Azure/cli@v1.0.7
         with:
           inlineScript: |
@@ -227,6 +232,11 @@ jobs:
             --name vnet-peer-ami-${{ env.TARGET }}-${{ env.PRODUCT }}-${{ vars.VERSION }} \
             --query peeringState)"
 
+      - name: Login 🔐
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS_VPN }}
+
       - name: VNET Peer - VPN 🔀
         uses: Azure/cli@v1.0.7
         with:
@@ -235,14 +245,14 @@ jobs:
 
             # Local VNET peer
             az network vnet peering create \
-            --name vnet-peer-vpn-${{ env.PRODUCT }}-${{ vars.VERSION }} \
+            --name vnet-peer-vpn-${{ env.TARGET }}-${{ env.PRODUCT }}-${{ vars.VERSION }} \
             --vnet-name vnet-${{ env.PRODUCT }}-${{ vars.VERSION }} \
             --remote-vnet $(az network vnet show --subscription ${{ secrets.REMOTE_VNET_SUBSCRIPTION_VPN }} --resource-group ${{ secrets.REMOTE_VNET_RESOURCE_GROUP_VPN }} --name ${{ secrets.REMOTE_VNET_NAME_VPN }} --query 'id' -o tsv) \
             --allow-vnet-access 1
 
             # Remote VNET peer
             az network vnet peering create \
-            --name vnet-peer-vpn-${{ env.PRODUCT }}-${{ vars.VERSION }} \
+            --name vnet-peer-vpn-${{ env.TARGET }}-${{ env.PRODUCT }}-${{ vars.VERSION }} \
             --vnet-name  ${{ secrets.REMOTE_VNET_NAME_VPN }} \
             --remote-vnet $(az network vnet show --name vnet-${{ env.PRODUCT }}-${{ vars.VERSION }} --query 'id' -o tsv) \
             --allow-vnet-access 1 \
@@ -252,8 +262,13 @@ jobs:
             # Fetch peering state
             echo "Peering state: $(az network vnet peering show \
             --vnet-name vnet-${{ env.PRODUCT }}-${{ vars.VERSION }} \
-            --name vnet-peer-vpn-${{ env.PRODUCT }}-${{ vars.VERSION }} \
+            --name vnet-peer-vpn-${{ env.TARGET }}-${{ env.PRODUCT }}-${{ vars.VERSION }} \
             --query peeringState)"
+
+      - name: Login 🔐
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Route table 🌐
         uses: Azure/cli@v1.0.7
@@ -327,7 +342,7 @@ jobs:
         run: echo "TYPE=Preproduction" >> $GITHUB_ENV
 
       - name: Production 💫
-        if: ${{ 'prod' == env.TARGET }}
+        if: ${{ 'production' == env.TARGET }}
         run: echo "TYPE=Production" >> $GITHUB_ENV
 
       - name: Login 🔐
@@ -365,7 +380,7 @@ jobs:
         run: echo "TYPE=Preproduction" >> $GITHUB_ENV
 
       - name: Production 💫
-        if: ${{ 'prod' == env.TARGET }}
+        if: ${{ 'production' == env.TARGET }}
         run: echo "TYPE=Production" >> $GITHUB_ENV
 
       - name: Login 🔐
@@ -446,7 +461,7 @@ jobs:
         run: echo "TYPE=Preproduction" >> $GITHUB_ENV
 
       - name: Production 💫
-        if: ${{ 'prod' == env.TARGET }}
+        if: ${{ 'production' == env.TARGET }}
         run: echo "TYPE=Production" >> $GITHUB_ENV
 
       - name: Login 🔐
