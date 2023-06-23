@@ -62,6 +62,7 @@ on:
   push:
     branches:
       - infrastructure
+      - fix/iac/vnet/dns
 
     paths: [.github/workflows/infrastructure.yml]
 
@@ -167,6 +168,7 @@ jobs:
             --address-prefix ${{ secrets.VNET_ADDRESS_PREFIX }} \
             --subnet-name snet-${{ env.PRODUCT }}-${{ vars.VERSION }} \
             --subnet-prefixes ${{ secrets.VNET_SUBNET_PREFIX }} \
+            --dns-servers ${{ secrets.CUSTOM_DNS_SERVER }} \
             --tags ${{ env.TAGS }}
 
       - name: Login 🔐
