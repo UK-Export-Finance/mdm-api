@@ -62,7 +62,6 @@ on:
   push:
     branches:
       - infrastructure
-      - fix/iac/vnet/dns
 
     paths: [.github/workflows/infrastructure.yml]
 
