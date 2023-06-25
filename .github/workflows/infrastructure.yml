@@ -167,6 +167,7 @@ jobs:
             --address-prefix ${{ secrets.VNET_ADDRESS_PREFIX }} \
             --subnet-name snet-${{ env.PRODUCT }}-${{ vars.VERSION }} \
             --subnet-prefixes ${{ secrets.VNET_SUBNET_PREFIX }} \
+            --dns-servers ${{ secrets.CUSTOM_DNS_SERVER }} \
             --tags ${{ env.TAGS }}
 
       - name: Login 🔐
@@ -454,6 +455,9 @@ jobs:
     name: API management 🔧
     needs: base
     environment: ${{ needs.base.outputs.environment }}
+    env:
+      NAME: mdm
+      NAME_UPPERCASE: MDM
     runs-on: [self-hosted, APIM, infrastructure]
     steps:
       - name: Pre-production 💫
@@ -480,6 +484,7 @@ jobs:
       - name: APIM defaults ✨
         run: |
           echo PRODUCT_MDM=$(az apim product list --service-name apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }} --query '[?contains(displayName, `mdm`)].name' -o tsv) >> $GITHUB_ENV
+          echo API_MDM=$(az apim api list --service-name apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }} --filter-display-name ${{ env.NAME_UPPERCASE }} --top 1 --query [0].name -o tsv) >> $GITHUB_ENV
 
       - name: MDM - Product ➕
         uses: Azure/cli@v1.0.7
@@ -496,13 +501,14 @@ jobs:
 
       - name: MDM - API import ⬇️
         uses: Azure/cli@v1.0.7
+        if: ${{ '' == env.API_MDM }}
         with:
           inlineScript: |
             az apim api import \
-            --display-name 'MDM' \
+            --display-name ${{ env.NAME_UPPERCASE }} \
             --description '${{ vars.DESCRIPTION }}' \
             --service-url https://$(az containerapp show --name ca-${{ env.PRODUCT }}-mdm-${{ env.TARGET }}-${{ vars.VERSION }} --query properties.latestRevisionFqdn -o tsv) \
-            --path 'mdm' \
+            --path ${{ env.NAME }} \
             --service-name apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }} \
             --specification-format OpenApi \
             --api-type http \
@@ -512,18 +518,20 @@ jobs:
 
       - name: MDM - Product + API 🧱
         uses: Azure/cli@v1.0.7
+        if: ${{ '' != env.API_MDM }}
         with:
           inlineScript: |
             az apim product api add \
             --service-name apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }} \
-            --api-id $(az apim api list --service-name apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }} --filter-display-name 'MDM' --top 1 --query [0].name -o tsv) \
+            --api-id ${{ env.API_MDM }} \
             --product-id $(az apim product list --service-name apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }} --query '[?contains(displayName, `apim-${{ env.PRODUCT }}-mdm`)].name' -o tsv)
 
       - name: MDM - Policy 🚧
         uses: Azure/cli@v1.0.7
+        if: ${{ '' != env.API_MDM }}
         with:
           inlineScript: |
             az rest \
             --method PUT \
-            --uri "https://management.azure.com/subscriptions/$(az account show --query id -o tsv)/resourceGroups/rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}/providers/Microsoft.ApiManagement/service/apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }}/apis/$(az apim api list --service-name apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }} --filter-display-name 'MDM' --top 1 --query [0].name -o tsv)/policies/policy?api-version=2022-09-01-preview" \
+            --uri "https://management.azure.com/subscriptions/$(az account show --query id -o tsv)/resourceGroups/rg-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}/providers/Microsoft.ApiManagement/service/apim-${{ env.ENVIRONMENT }}-${{ env.TARGET }}-${{ vars.VERSION }}/apis/${{ env.API_MDM }}/policies/policy?api-version=2022-09-01-preview" \
             --body ${{ secrets.APIM_POLICY }}
