@@ -46,7 +46,7 @@
     "tslib": "^2.5.3",
     "typeorm": "^0.3.17",
     "typeorm-extension": "^2.8.1",
-    "typescript": "^5.1.5"
+    "typescript": "^5.1.6"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.6.5",
