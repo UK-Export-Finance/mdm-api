@@ -27,7 +27,7 @@ describe('InformaticaService', () => {
   const partyUrn = '003' + valueGenerator.stringOfNumericCharacters({ length: 5 });
   const companyRegNo = '0' + valueGenerator.stringOfNumericCharacters({ length: 7 });
   const name = valueGenerator.word();
-  const customerBasePath = '/p-sa-impl-get-account-or-legacy';
+  const customerBasePath = '/account';
   const expectedResponse = [
     {
       partyUrn: partyUrn,
@@ -50,7 +50,7 @@ describe('InformaticaService', () => {
 
     const expectedHttpServiceGetArgs: [string, object] = [expectedPath, { headers: { 'Content-Type': 'application/json' } }];
 
-    it('sends a GET to the Informatica /p-sa-impl-get-account-or-legacy endpoint with the specified request', async () => {
+    it('sends a GET to the Informatica /account endpoint with the specified request', async () => {
       when(httpServiceGet)
         .calledWith(...expectedHttpServiceGetArgs)
         .mockReturnValueOnce(
@@ -111,14 +111,16 @@ describe('InformaticaService', () => {
         statusText: 'Not Found',
         headers: null,
         config: null,
-        data: {
-          error: {
-            errorCode: '404',
-            errorDateTime: '2023-06-30T13:41:33Z',
-            errorMessage: 'Company registration not found',
-            errorDescription: 'Party details request for the requested company registration not found.',
+        data: [
+          {
+            error: {
+              errorCode: '404',
+              errorDateTime: '2023-06-30T13:41:33Z',
+              errorMessage: 'Company registration not found',
+              errorDescription: 'Party details request for the requested company registration not found.',
+            },
           },
-        },
+        ],
       });
 
       when(httpServiceGet)

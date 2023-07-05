@@ -6,10 +6,10 @@ export class GetCustomersResponseItem {
   @ApiProperty({
     description: '',
   })
-  readonly partyUrn: string;
+  readonly partyUrn: string | null;
 
   @ApiProperty({
-    description: '',
+    description: 'Customer company name',
   })
   readonly name: string;
 
@@ -19,22 +19,22 @@ export class GetCustomersResponseItem {
   readonly sfId: string;
 
   @ApiProperty({
-    description: '',
+    description: 'Companies house registration number',
   })
-  readonly companyRegNo: string;
+  readonly companyRegNo: string | null;
+
+  @ApiProperty({
+    description: 'Customer company type',
+  })
+  readonly type: string | null;
+
+  @ApiProperty({
+    description: 'Customer company sub-type',
+  })
+  readonly subtype: string | null;
 
   @ApiProperty({
     description: '',
   })
-  readonly type: string;
-
-  @ApiProperty({
-    description: '',
-  })
-  readonly subtype: string;
-
-  @ApiProperty({
-    description: '',
-  })
-  readonly isLegacyRecord: string;
+  readonly isLegacyRecord: boolean;
 }

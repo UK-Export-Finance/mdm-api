@@ -28,20 +28,6 @@ import { LoggerModule } from 'nestjs-pino';
         },
       }),
     }),
-    // LoggerModule.forRoot({
-    //   pinoHttp: {
-    //     customProps: () => ({
-    //       context: 'HTTP',
-    //     }),
-    //     level: config.get<string>('app.logLevel'),
-    //     transport: {
-    //       target: 'pino-pretty',
-    //       options: {
-    //         singleLine: true,
-    //       },
-    //     },
-    //   },
-    // }),
     MdmModule,
   ],
 })

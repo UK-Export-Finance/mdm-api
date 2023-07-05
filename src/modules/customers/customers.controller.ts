@@ -25,14 +25,12 @@ export class CustomersController {
   })
   getCustomers(@Query() query: GetCustomersQueryDto): Promise<GetCustomersResponse> {
     this.ensureOneIsNotEmpty(query.companyreg, query.name, query.partyUrn);
-
     const backendQuery: GetCustomersInformaticaQueryDto = {
       ...(query.companyreg ? { companyreg: query.companyreg } : {}),
       ...(query.name ? { name: query.name } : {}),
       ...(query.partyUrn ? { partyUrn: query.partyUrn } : {}),
-      ...(query.fallbackToLegacyData ? { includeLegacyData: query.fallbackToLegacyData } : {}),
+      ...{ includeLegacyData: query.fallbackToLegacyData },
     };
-
     return this.customersService.getCustomers(backendQuery);
   }
 

@@ -10,7 +10,6 @@ export class CustomersService {
 
   async getCustomers(backendQuery: GetCustomersInformaticaQueryDto): Promise<GetCustomersResponse> {
     const customersInInformatica = await this.informaticaService.getCustomers(backendQuery);
-
     return customersInInformatica.map(
       (customerInInformatica): GetCustomersResponseItem => ({
         partyUrn: customerInInformatica.partyUrn,

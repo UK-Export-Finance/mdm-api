@@ -44,5 +44,5 @@ export class GetCustomersQueryDto {
       "Determines if the search results will include legacy records. If this value is 'yes' then we search for a Salesforce Account first and if there are no results then we search in legacy data (from the Party DB).",
   })
   @IsEnum(ENUMS.FALLBACK_TO_LEGACY_DATA)
-  public fallbackToLegacyData: FallbackToLegacyDataEnum = ENUMS.FALLBACK_TO_LEGACY_DATA.YES;
+  public fallbackToLegacyData?: FallbackToLegacyDataEnum = ENUMS.FALLBACK_TO_LEGACY_DATA.YES;
 }

@@ -23,8 +23,13 @@ import { InformaticaService } from './informatica.service';
           // "rejectUnauthorized: false" is just for local DEV laptop environment, not for DEV/PROD.
           // to ignore https issues, enable agent and rejectUnauthorized:false bellow.
           // import https from 'https';
+          // import crypto from 'crypto';
           // httpsAgent: new https.Agent({
+          //   // Allow self signed negotiations
           //   rejectUnauthorized: false,
+
+          //   // Allow legacy server
+          //   secureOptions: crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT,
           // }),
         };
       },

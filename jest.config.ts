@@ -29,6 +29,7 @@ const config: JestConfigWithTsJest = {
     },
     {
       displayName: 'API',
+      setupFilesAfterEnv: ['./setup/override-environment-variables.ts'],
       testMatch: ['**/*.api-test.ts'],
       transform: { '^.+\\.(ts|tsx)?$': ['ts-jest', { useESM: true }] },
       ...defaultSettings,

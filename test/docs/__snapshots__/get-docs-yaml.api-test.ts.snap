@@ -1,0 +1,1128 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GET /openapi/yaml matches the snapshot 1`] = `
+"openapi: 3.0.0
+paths:
+  /api/v1/constants/spi:
+    get:
+      operationId: ConstantsController_find
+      summary: >-
+        Get constants required for SPI website to calculate indicative sovereign
+        premium rate
+      parameters:
+        - name: oecdRiskCategory
+          required: false
+          in: query
+          example: 1
+          description: Country risk category. Values from 0 to 7
+          schema:
+            type: number
+        - name: category
+          required: false
+          in: query
+          example: C
+          description: >-
+            Constant category/type/group. Values: A, B, C, Quality of Product,
+            Percentage of Cover
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The found record
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConstantSpiEntity'
+      tags:
+        - constants
+  /api/v1/currencies:
+    get:
+      operationId: CurrenciesController_findAll
+      summary: Get all currencies
+      parameters: []
+      responses:
+        '200':
+          description: All currencies
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CurrencyEntity'
+      tags: &ref_0
+        - currencies
+  /api/v1/currencies/exchange:
+    get:
+      operationId: CurrenciesController_findExchangeRate
+      summary: >-
+        Get the Active exchange rate based on source and target exchange rates.
+        Query parameters are mandatory for this endpoint.
+      parameters:
+        - name: source
+          required: true
+          in: query
+          example: GBP
+          description: >-
+            Source currency for exchange rate - Use ISO 3 alpha currency code
+            standard. Only GBP and USD currencies are supported
+          schema:
+            type: string
+        - name: target
+          required: true
+          in: query
+          example: AED
+          description: >-
+            Target currency for exchange rate - Use ISO 3 alpha currency code
+            standard
+          schema:
+            type: string
+        - name: exchangeRateDate
+          required: false
+          in: query
+          example: '2021-01-26'
+          description: Retrieve the exchange rate for a specific date
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Active exchange rate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCurrencyExchangeDto'
+      tags: *ref_0
+  /api/v1/currencies/{isoCode}:
+    get:
+      operationId: CurrenciesController_findOne
+      summary: Get the currency details based on ISO Code
+      parameters:
+        - name: isoCode
+          required: true
+          in: path
+          example: GBP
+          description: ISO Code
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Currency details based on ISO Code
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CurrencyEntity'
+      tags: *ref_0
+  /api/v1/customers:
+    get:
+      operationId: CustomersController_getCustomers
+      summary: Get customers from salesforce
+      parameters:
+        - name: companyreg
+          required: false
+          in: query
+          example: '06012345'
+          description: >-
+            The company registration number (in the country where the customer
+            is registered) of the customer to search for.
+          schema:
+            type: string
+        - name: partyUrn
+          required: false
+          in: query
+          example: '00302069'
+          description: The unique UKEF id of the customer to search for.
+          schema:
+            pattern: /^\\d{8}$/
+            type: string
+        - name: name
+          required: false
+          in: query
+          example: Testing Systems Ltd
+          description: >-
+            The name of the customer to search for, allows partial matches, not
+            case sensitive.
+          schema:
+            type: string
+        - name: fallbackToLegacyData
+          required: false
+          in: query
+          example: legacy-only
+          description: >-
+            Determines if the search results will include legacy records. If
+            this value is 'yes' then we search for a Salesforce Account first
+            and if there are no results then we search in legacy data (from the
+            Party DB).
+          schema:
+            default: 'yes'
+            enum:
+              - 'yes'
+              - 'no'
+              - legacy-only
+            type: string
+      responses:
+        '200':
+          description: Customers matching search parameters
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetCustomersResponseItem'
+        '404':
+          description: Customer not found.
+      tags:
+        - customers
+  /api/v1/exposure-period:
+    get:
+      operationId: ExposurePeriodController_find
+      summary: Calculate exposure period in months.
+      parameters:
+        - name: startdate
+          required: true
+          in: query
+          example: '2017-07-04'
+          description: Guarantee commencement date for a facility
+          schema:
+            type: string
+        - name: enddate
+          required: true
+          in: query
+          example: '2018-07-04'
+          description: Guarantee expiry date for a facility
+          schema:
+            type: string
+        - name: productgroup
+          required: true
+          in: query
+          example: EW
+          description: 'Two products are accepted: EW and BS'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Calculated exposure period
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExposurePeriodDto'
+      tags:
+        - exposure-period
+  /api/v1/ready:
+    get:
+      operationId: HealthcheckController_check
+      summary: ready
+      parameters: []
+      responses:
+        '200':
+          description: The Health Check is successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  info:
+                    type: object
+                    example: &ref_1
+                      database: &ref_2
+                        status: up
+                    additionalProperties:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                      additionalProperties:
+                        type: string
+                    nullable: true
+                  error:
+                    type: object
+                    example: {}
+                    additionalProperties:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                      additionalProperties:
+                        type: string
+                    nullable: true
+                  details:
+                    type: object
+                    example: *ref_1
+                    additionalProperties:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                      additionalProperties:
+                        type: string
+        '503':
+          description: The Health Check is not successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  info:
+                    type: object
+                    example: *ref_1
+                    additionalProperties:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                      additionalProperties:
+                        type: string
+                    nullable: true
+                  error:
+                    type: object
+                    example:
+                      redis: &ref_3
+                        status: down
+                        message: Could not connect
+                    additionalProperties:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                      additionalProperties:
+                        type: string
+                    nullable: true
+                  details:
+                    type: object
+                    example:
+                      database: *ref_2
+                      redis: *ref_3
+                    additionalProperties:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                      additionalProperties:
+                        type: string
+      tags:
+        - healthcheck
+  /api/v1/interest-rates:
+    get:
+      operationId: InterestRatesController_findAll
+      summary: Get all Interest rates
+      parameters: []
+      responses:
+        '200':
+          description: Active Interest rates
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InterestRatesEntity'
+      tags:
+        - interest-rates
+  /api/v1/markets:
+    get:
+      operationId: MarketsController_findAll
+      summary: Get all markets (aka countries)
+      parameters:
+        - name: active
+          required: false
+          in: query
+          example: 'Y'
+          description: >-
+            Optional filtering by field "active". If parameter is not provided
+            result will include active and not active markets
+          schema:
+            enum:
+              - 'Y'
+              - 'N'
+            type: string
+        - name: search
+          required: false
+          in: query
+          example: korea
+          description: >-
+            Optional filtering by fields "marketName" or "isoCode". Partial
+            matches are allowed and search is not case sensitive
+          schema:
+            type: string
+      responses:
+        '200':
+          description: All markets
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarketEntity'
+      tags:
+        - markets
+  /api/v1/numbers:
+    post:
+      operationId: NumbersController_create
+      summary: Create Number
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CreateUkefIdDto'
+      responses:
+        '201':
+          description: ''
+      tags: &ref_4
+        - numbers
+    get:
+      operationId: NumbersController_findOne
+      summary: Get information about UKEF ID
+      parameters:
+        - name: type
+          required: true
+          in: query
+          example: 1
+          description: >-
+            Id of UKEF ID type. Common types are: 1 for Deal/Facility, 2 for
+            Party, 8 for Covenant
+          schema:
+            type: number
+        - name: ukefId
+          required: true
+          in: query
+          example: '0030052431'
+          description: UKEF ID to check
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The found record
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UkefId'
+      tags: *ref_4
+  /api/v1/premium/schedule:
+    post:
+      operationId: PremiumSchedulesController_create
+      summary: Create Premium Schedule sequence (aka Income exposure)
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CreatePremiumScheduleDto'
+      responses:
+        '201':
+          description: ''
+      tags: &ref_5
+        - premium-schedules
+  /api/v1/premium/segments/{facilityId}:
+    get:
+      operationId: PremiumSchedulesController_find
+      summary: >-
+        Return previously generated Premium Schedule sequence/segments (aka
+        Income exposures)
+      parameters:
+        - name: facilityId
+          required: true
+          in: path
+          example: '30000425'
+          description: UKEF id for Facility, but without 00 at beginning
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PremiumScheduleEntity'
+      tags: *ref_5
+  /api/v1/sector-industries:
+    get:
+      operationId: SectorIndustriesController_find
+      summary: Get UKEF Sectors/Industries Mapping To ACBS Sectors/Industries
+      parameters:
+        - name: ukefSectorId
+          required: false
+          in: query
+          example: '1010'
+          description: Search by UKEF Sector id, returns multiple Industries
+          schema:
+            type: string
+        - name: ukefIndustryId
+          required: false
+          in: query
+          example: '02400'
+          description: Search by UKEF Industry id, most likely returns 1 result
+          schema:
+            type: string
+      responses:
+        '200':
+          description: UKEF sectors/industries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SectorIndustryEntity'
+      tags:
+        - sector-industries
+  /api/v1/yield-rates:
+    get:
+      operationId: YieldRatesController_find
+      summary: Get Yield rates. These are updated daily from bloomberg
+      parameters:
+        - name: searchDate
+          required: false
+          in: query
+          example: '2023-03-01'
+          description: Filter yield rates for specific date. Can go back to 2010-03-15
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Returned Yield rates
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/YieldRateEntity'
+      tags:
+        - yield-rates
+info:
+  title: MDM API Specification
+  description: MDM API documentation
+  version: '1.0'
+  contact: {}
+tags: []
+servers: []
+components:
+  securitySchemes:
+    ApiKeyHeader:
+      type: apiKey
+      in: header
+      name: x-api-key
+  schemas:
+    ConstantSpiEntity:
+      type: object
+      properties:
+        category:
+          type: string
+          example: A
+          description: >-
+            Acceptable values are \`A\`, \`B\`, \`C\`, \`Quality of Product\`,
+            \`Percentage of Cover\`
+        subCategory:
+          type: string
+          example: SOV/CCO
+        oecdRiskCategory:
+          type: string
+          example: '1'
+          description: Values are 0 to 7
+        value:
+          type: number
+          example: 0.09
+        constQualityGrade:
+          type: string
+          example: Above Standard
+        constRepaymentFrequency:
+          type: number
+          example: 2
+          description: At the moment values is same for all records.
+        constInterestRate:
+          type: number
+          example: 4
+          description: At the moment values is same for all records.
+      required:
+        - category
+        - subCategory
+        - oecdRiskCategory
+        - value
+        - constQualityGrade
+        - constRepaymentFrequency
+        - constInterestRate
+    CurrencyEntity:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 221
+        name:
+          type: string
+          example: EUROS
+        isoCode:
+          type: string
+          example: EUR
+          description: Currency ISO code
+        created:
+          format: date-time
+          type: string
+          example: '2017-03-06T16:20:17.000Z'
+        updated:
+          format: date-time
+          type: string
+          example: '2017-03-06T16:20:16.000Z'
+        effectiveFrom:
+          format: date-time
+          type: string
+          example: '2017-03-07T10:44:47.000Z'
+        effectiveTo:
+          format: date-time
+          type: string
+          example: '9999-12-31T00:00:00.000Z'
+        acbsCode:
+          type: string
+          example: '9'
+      required:
+        - id
+        - name
+        - isoCode
+        - created
+        - updated
+        - effectiveFrom
+        - effectiveTo
+        - acbsCode
+    GetCurrencyExchangeDto:
+      type: object
+      properties:
+        source:
+          type: string
+          example: GBP
+          description: >-
+            Source currency for exchange rate - Use ISO 3 alpha currency code
+            standard. Only GBP and USD currencies are supported
+        target:
+          type: string
+          example: AED
+          description: >-
+            Target currency for exchange rate - Use ISO 3 alpha currency code
+            standard
+        exchangeRateDate:
+          type: string
+          example: '2021-01-26'
+          description: Retrieve the exchange rate for a specific date
+      required:
+        - source
+        - target
+    GetCustomersResponseItem:
+      type: object
+      properties:
+        partyUrn:
+          type: string
+          description: ''
+        name:
+          type: string
+          description: Customer company name
+        sfId:
+          type: string
+          description: Uniqueue Salesforce id
+        companyRegNo:
+          type: string
+          description: Companies house registration number
+        type:
+          type: string
+          description: Customer company type
+        subtype:
+          type: string
+          description: Customer company sub-type
+        isLegacyRecord:
+          type: boolean
+          description: ''
+      required:
+        - partyUrn
+        - name
+        - sfId
+        - companyRegNo
+        - type
+        - subtype
+        - isLegacyRecord
+    ExposurePeriodDto:
+      type: object
+      properties:
+        exposurePeriod:
+          type: number
+          example: 12
+          description: Exposure in months
+      required:
+        - exposurePeriod
+    InterestRatesEntity:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1234
+        category:
+          type: string
+          example: LIBOR
+          description: Interest rate category
+        subCategory:
+          type: string
+          example: BBALIBOR
+        termMonths:
+          type: number
+          example: 12
+        sourceTerm:
+          type: string
+          example: 12M
+        currency:
+          type: string
+          example: EUR
+        interestRate:
+          type: number
+          example: 1.20125
+        bukKey:
+          type: string
+          example: BB1234
+        effectiveFrom:
+          format: date-time
+          type: string
+          example: '2023-04-03T00:00:00.000Z'
+        effectiveTo:
+          format: date-time
+          type: string
+          example: '9999-12-31T00:00:00.000Z'
+        created:
+          format: date-time
+          type: string
+          example: '2022-03-31T16:30:08.463Z'
+        updated:
+          format: date-time
+          type: string
+          example: '2022-03-31T16:30:08.463Z'
+      required:
+        - id
+        - category
+        - subCategory
+        - termMonths
+        - sourceTerm
+        - currency
+        - interestRate
+        - bukKey
+        - effectiveFrom
+        - effectiveTo
+        - created
+        - updated
+    MarketEntity:
+      type: object
+      properties:
+        marketId:
+          type: number
+          example: 112
+        marketName:
+          type: string
+          example: Algeria
+          description: Name of the Market/Country
+        isoCode:
+          type: string
+          example: DZA
+        createdDatetime:
+          format: date-time
+          type: string
+          example: '2021-11-09T09:39:31.000Z'
+          description: Date created
+        lastUpdatedDatetime:
+          format: date-time
+          type: string
+          example: '2021-11-09T09:39:31.000Z'
+          description: Date updated
+        effectiveFromDatetime:
+          format: date-time
+          type: string
+          example: '2021-11-09T09:39:31.000Z'
+          description: Effective to date
+        effectiveToDatetime:
+          format: date-time
+          type: string
+          example: '9999-12-31T00:00:00.000Z'
+          description: Effective from date
+        oecdRiskCategory:
+          type: number
+          example: 5
+          description: OECD risk category description
+        marketRiskAppetitePublicDesc:
+          type: string
+          example: At least £4bn
+          description: Market risk appetite
+        geographicalRegionId:
+          type: number
+          example: 14
+          description: Geographical region Id
+        geographicalRegionDesc:
+          type: string
+          example: Middle East & North Africa
+          description: Geographical region
+        sovereignRiskProvision:
+          type: number
+          example: 0
+          description: Sovereign risk
+        ESRAClassificationId:
+          type: number
+          example: 1
+          description: ESRA id
+        ESRAClassificationDesc:
+          type: string
+          example: Standard Risk
+          description: ESRA description
+        shortTermCoverAvailabilityId:
+          type: number
+          example: 1
+          description: Cash cover availability id
+        shortTermCoverAvailabilityDesc:
+          type: string
+          example: 'Yes'
+          description: Cash cover availability description
+        NBIIssue:
+          type: string
+          example: 'Y'
+          description: NBI issue
+        active:
+          type: string
+          example: 'Y'
+          description: Markets might be not active, filter with query parameter "active"
+      required:
+        - marketId
+        - marketName
+        - isoCode
+        - createdDatetime
+        - lastUpdatedDatetime
+        - effectiveFromDatetime
+        - effectiveToDatetime
+        - oecdRiskCategory
+        - marketRiskAppetitePublicDesc
+        - geographicalRegionId
+        - geographicalRegionDesc
+        - sovereignRiskProvision
+        - ESRAClassificationId
+        - ESRAClassificationDesc
+        - shortTermCoverAvailabilityId
+        - shortTermCoverAvailabilityDesc
+        - NBIIssue
+        - active
+    CreateUkefIdDto:
+      type: object
+      properties:
+        numberTypeId:
+          type: number
+          example: 1
+        createdBy:
+          type: string
+          example: ECGD\\jsmith
+          description: User if it is known
+        requestingSystem:
+          type: string
+          example: NodeJs/App
+      required:
+        - numberTypeId
+        - createdBy
+        - requestingSystem
+    UkefId:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 20057861
+          description: Internal id
+        maskedId:
+          type: string
+          example: '0030570680'
+          description: UKEF ID
+        type:
+          type: number
+          example: 1
+        createdBy:
+          type: string
+          example: ECGD\\jsmith
+          description: User if it is known
+        createdDatetime:
+          format: date-time
+          type: string
+          example: '2021-11-30T09:44:04.15Z'
+          description: Created timestamp
+        requestingSystem:
+          type: string
+          example: NodeJs/App
+      required:
+        - id
+        - maskedId
+        - type
+        - createdBy
+        - createdDatetime
+        - requestingSystem
+    CreatePremiumScheduleDto:
+      type: object
+      properties:
+        facilityURN:
+          type: number
+          example: 30000425
+          description: >-
+            UKEF id for Facility, but without 00 at beginning. Usually UKEF id
+            is string, but in this endpoint it is number
+        productGroup:
+          type: string
+          example: BS
+          description: 'Two products are accepted: EW and BS'
+        premiumTypeId:
+          type: number
+          example: 1
+          description: >-
+            Premium type concerns how we are being paid. It can be: 1 -> In
+            advance, 2 -> In Arrears or 3-> At Maturity.
+        premiumFrequencyId:
+          type: number
+          example: 1
+          description: >-
+            Payment frequency. It can be: 1 -> Monthly, 2 -> Quarterly, 3->
+            Semi-annually or 4 -> Annually
+        guaranteeCommencementDate:
+          format: date-time
+          type: string
+          example: '2021-01-19'
+          description: Start date
+        guaranteeExpiryDate:
+          format: date-time
+          type: string
+          example: '2022-05-17'
+          description: End date
+        guaranteePercentage:
+          type: number
+          example: 80
+          description: >-
+            Percentage covered, expecting whole number i.e. if 90% expecting the
+            number 90
+        guaranteeFeePercentage:
+          type: number
+          example: 1.35
+          description: >-
+            UKEF Fee percentage, expecting whole number i.e. if 90% expecting
+            the number 90
+        dayBasis:
+          type: string
+          example: '360'
+          description: 360 or 365. UK or US calendar
+        exposurePeriod:
+          type: number
+          example: 16
+          description: >-
+            How many periods are we exposed to the risk, This is pre-calculated
+            in the Exposure Period Calc
+        cumulativeAmount:
+          type: number
+          example: null
+          description: >-
+            Optional EWCS Exposure ONLY, this is the cumulative amount drawn on
+            the first disbursement. NULL if not EWCS
+        maximumLiability:
+          type: number
+          example: 40000
+          description: Required for BS Exposure
+      required:
+        - facilityURN
+        - productGroup
+        - premiumTypeId
+        - premiumFrequencyId
+        - guaranteeCommencementDate
+        - guaranteeExpiryDate
+        - guaranteePercentage
+        - guaranteeFeePercentage
+        - dayBasis
+        - exposurePeriod
+        - maximumLiability
+    PremiumScheduleEntity:
+      type: object
+      properties:
+        facilityURN:
+          type: string
+          example: '30000425'
+          description: UKEF id for Facility, but without 00 at beginning
+        calculationDate:
+          format: date-time
+          type: string
+          example: '2023-02-27'
+        income:
+          type: number
+          example: 465
+        incomePerDay:
+          type: number
+          example: 15
+        exposure:
+          type: number
+          example: 400000
+        period:
+          type: number
+          example: 1
+        daysInPeriod:
+          type: number
+          example: 31
+        effectiveFrom:
+          format: date-time
+          type: string
+          example: '2023-02-27T00:00:00.000Z'
+        effectiveTo:
+          type: string
+          example: '2023-02-27T00:00:00.000Z'
+        created:
+          format: date-time
+          type: string
+          example: '2023-02-27T00:00:00.000Z'
+        updated:
+          format: date-time
+          type: string
+          example: '2023-02-27T00:00:00.000Z'
+        isActive:
+          type: string
+          example: 'Y'
+          description: >-
+            Can be Y or N. Not active records are just for record tracking. Just
+            active records will be returned.
+      required:
+        - facilityURN
+        - calculationDate
+        - income
+        - incomePerDay
+        - exposure
+        - period
+        - daysInPeriod
+        - effectiveFrom
+        - effectiveTo
+        - created
+        - updated
+        - isActive
+    SectorIndustryEntity:
+      type: object
+      properties:
+        ukefSectorId:
+          type: number
+          example: 1001
+        ukefSectorName:
+          type: string
+          example: Agriculture, Forestry and Fishing
+        internalNo:
+          type: number
+          example: null
+          description: Currently all values are null
+        ukefIndustryId:
+          type: string
+          example: '01140'
+        ukefIndustryName:
+          type: string
+          example: Growing of rice
+        acbsSectorId:
+          type: string
+          example: '03'
+        acbsSectorName:
+          type: string
+          example: 'CIVIL: AGRICULTURE, HORTICULTURE & FISHERIES'
+        acbsIndustryId:
+          type: string
+          example: '0301'
+        acbsIndustryName:
+          type: string
+          example: AGRICULTURE, HORTICULTURE & FISHERIES
+        created:
+          format: date-time
+          type: string
+          example: '2010-03-15T16:20:16.870Z'
+        updated:
+          format: date-time
+          type: string
+          example: '2010-03-15T16:20:16.867Z'
+        effectiveFrom:
+          format: date-time
+          type: string
+          example: '2010-03-15T16:20:16.870Z'
+        effectiveTo:
+          format: date-time
+          type: string
+          example: '9999-12-31T00:00:00.000Z'
+      required:
+        - ukefSectorId
+        - ukefSectorName
+        - internalNo
+        - ukefIndustryId
+        - ukefIndustryName
+        - acbsSectorId
+        - acbsSectorName
+        - acbsIndustryId
+        - acbsIndustryName
+        - created
+        - updated
+        - effectiveFrom
+        - effectiveTo
+    YieldRateEntity:
+      type: object
+      properties:
+        shortName:
+          type: string
+          example: EUR SWAP (ESTR) 3Y
+        pxBidPrice:
+          type: number
+          example: 3.4594
+        pxAskPrice:
+          type: number
+          example: 3.4706
+        pxLastPrice:
+          type: number
+          example: 3.465
+        pxMidPrice:
+          type: number
+          example: 3.465
+        futureMonthYear:
+          type: string
+          example: '      '
+        sourceErrorCode:
+          type: number
+          example: 0
+        sourceUpdateTimestamp:
+          type: string
+          example: '16:01:08'
+        yieldIndex:
+          type: string
+          example: EESWE3 Curncy
+        created:
+          format: date-time
+          type: string
+          example: 2023-02-27T16:29:12.93.027Z
+        updated:
+          format: date-time
+          type: string
+          example: 2023-02-27T16:29:12.93.027Z
+        effectiveTo:
+          format: date-time
+          type: string
+          example: '9999-12-31T00:00:00.000Z'
+        effectiveFrom:
+          format: date-time
+          type: string
+          example: '2023-02-27T00:00:00.000Z'
+      required:
+        - shortName
+        - pxBidPrice
+        - pxAskPrice
+        - pxLastPrice
+        - pxMidPrice
+        - futureMonthYear
+        - sourceErrorCode
+        - sourceUpdateTimestamp
+        - yieldIndex
+        - created
+        - updated
+        - effectiveTo
+        - effectiveFrom
+security:
+  - ApiKeyHeader: []
+"
+`;

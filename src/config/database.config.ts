@@ -32,12 +32,5 @@ export default registerAs(
       password: process.env.DATABASE_PASSWORD,
       name: process.env.DATABASE_CIS_NAME,
     },
-    // redis: {
-    //   host: process.env.REDIS_HOST,
-    //   ttl: process.env.REDIS_TTL || 60,
-    //   port: +process.env.REDIS_PORT || 6379,
-    //   username: process.env.REDIS_USERNAME,
-    //   password: process.env.REDIS_PASSWORD,
-    // },
   }),
 );

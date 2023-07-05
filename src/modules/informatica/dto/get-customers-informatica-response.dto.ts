@@ -7,5 +7,5 @@ export interface GetCustomersInformaticaResponseItem {
   companyRegNo: string;
   type: string;
   subtype: string;
-  isLegacyRecord: string;
+  isLegacyRecord: boolean;
 }
