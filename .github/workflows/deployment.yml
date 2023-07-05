@@ -136,6 +136,11 @@ jobs:
             "DATABASE_CEDAR_NAME=${{ secrets.DATABASE_CEDAR_NAME }}" \
             "DATABASE_CIS_HOST=${{ secrets.DATABASE_CIS_HOST }}" \
             "DATABASE_CIS_NAME=${{ secrets.DATABASE_CIS_NAME }}" \
+            "APIM_INFORMATICA_URL=${{ secrets.APIM_INFORMATICA_URL }}" \
+            "APIM_INFORMATICA_USERNAME=${{ secrets.APIM_INFORMATICA_USERNAME }}" \
+            "APIM_INFORMATICA_PASSWORD=${{ secrets.APIM_INFORMATICA_PASSWORD }}" \
+            "APIM_INFORMATICA_MAX_REDIRECTS=${{ secrets.APIM_INFORMATICA_MAX_REDIRECTS }}" \
+            "APIM_INFORMATICA_TIMEOUT=${{ secrets.APIM_INFORMATICA_TIMEOUT }}" \
             "API_KEY=${{ secrets.API_KEY }}"
 
       - name: Import ⬇️

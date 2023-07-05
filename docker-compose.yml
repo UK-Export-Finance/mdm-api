@@ -31,6 +31,11 @@ services:
       DATABASE_NUMBER_GENERATOR_NAME:
       DATABASE_CEDAR_NAME:
       DATABASE_CIS_NAME:
+      APIM_INFORMATICA_URL:
+      APIM_INFORMATICA_USERNAME:
+      APIM_INFORMATICA_PASSWORD:
+      APIM_INFORMATICA_MAX_REDIRECTS:
+      APIM_INFORMATICA_TIMEOUT:
       API_KEY:
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:${PORT}"]
