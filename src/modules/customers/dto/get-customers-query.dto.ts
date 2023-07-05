@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UKEFID } from '@ukef/constants';
+import { CUSTOMERS, UKEFID } from '@ukef/constants';
 import { ENUMS } from '@ukef/constants/enums';
 import { FallbackToLegacyDataEnum } from '@ukef/constants/enums/fallbackToLegacyData';
 import { IsEnum, IsOptional, Matches, MaxLength, MinLength } from 'class-validator';
@@ -7,7 +7,7 @@ export class GetCustomersQueryDto {
   @IsOptional()
   @ApiProperty({
     required: false,
-    example: '06012345',
+    example: CUSTOMERS.EXAMPLES.COMPANYREG,
     description: 'The company registration number (in the country where the customer is registered) of the customer to search for.',
   })
   @MinLength(8)
@@ -17,7 +17,7 @@ export class GetCustomersQueryDto {
   @IsOptional()
   @ApiProperty({
     required: false,
-    example: '00302069',
+    example: CUSTOMERS.EXAMPLES.PARTYURN,
     description: 'The unique UKEF id of the customer to search for.',
     pattern: UKEFID.PARTY_ID.REGEX.toString(),
   })
@@ -27,7 +27,7 @@ export class GetCustomersQueryDto {
   @IsOptional()
   @ApiProperty({
     required: false,
-    example: 'Testing Systems Ltd',
+    example: CUSTOMERS.EXAMPLES.NAME,
     description: 'The name of the customer to search for, allows partial matches, not case sensitive.',
   })
   @MinLength(2)

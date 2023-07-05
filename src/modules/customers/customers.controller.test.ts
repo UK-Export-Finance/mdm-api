@@ -1,5 +1,5 @@
 import { BadRequestException } from '@nestjs/common';
-import { ENUMS } from '@ukef/constants';
+import { CUSTOMERS, ENUMS } from '@ukef/constants';
 import { GetCustomersGenerator } from '@ukef-test/support/generator/get-customers-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { when } from 'jest-when';
@@ -25,40 +25,40 @@ describe('CustomersController', () => {
   describe('getCustomers', () => {
     it.each([
       {
-        query: { name: 'test', fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES },
+        query: { name: CUSTOMERS.EXAMPLES.NAME, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES },
       },
       {
-        query: { companyreg: '06012345', fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES },
+        query: { companyreg: CUSTOMERS.EXAMPLES.COMPANYREG, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES },
       },
       {
-        query: { partyUrn: '00302069', fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES },
+        query: { partyUrn: CUSTOMERS.EXAMPLES.PARTYURN, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES },
       },
       {
-        query: { name: 'test', fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.NO },
+        query: { name: CUSTOMERS.EXAMPLES.NAME, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.NO },
       },
       {
-        query: { companyreg: '06012345', fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.NO },
+        query: { companyreg: CUSTOMERS.EXAMPLES.COMPANYREG, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.NO },
       },
       {
-        query: { partyUrn: '00302069', fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.NO },
+        query: { partyUrn: CUSTOMERS.EXAMPLES.PARTYURN, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.NO },
       },
       {
-        query: { name: 'test', fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.LEGACY_ONLY },
+        query: { name: CUSTOMERS.EXAMPLES.NAME, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.LEGACY_ONLY },
       },
       {
-        query: { companyreg: '06012345', fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.LEGACY_ONLY },
+        query: { companyreg: CUSTOMERS.EXAMPLES.COMPANYREG, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.LEGACY_ONLY },
       },
       {
-        query: { partyUrn: '00302069', fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.LEGACY_ONLY },
+        query: { partyUrn: CUSTOMERS.EXAMPLES.PARTYURN, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.LEGACY_ONLY },
       },
       {
-        query: { name: 'test' },
+        query: { name: CUSTOMERS.EXAMPLES.NAME },
       },
       {
-        query: { companyreg: '06012345' },
+        query: { companyreg: CUSTOMERS.EXAMPLES.COMPANYREG },
       },
       {
-        query: { partyUrn: '00302069' },
+        query: { partyUrn: CUSTOMERS.EXAMPLES.PARTYURN },
       },
     ])('get customers with query $query', async ({ query }) => {
       const { request, informaticaRequest, getCustomersResponse } = new GetCustomersGenerator(valueGenerator).generate({ numberToGenerate: 1, query });
@@ -78,19 +78,19 @@ describe('CustomersController', () => {
         query: { fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES },
       },
       {
-        query: { incorrectField: 'test' },
+        query: { incorrectField: CUSTOMERS.EXAMPLES.NAME },
       },
       {
-        query: { name: 'test', companyreg: '06012345' },
+        query: { name: CUSTOMERS.EXAMPLES.NAME, companyreg: CUSTOMERS.EXAMPLES.COMPANYREG },
       },
       {
-        query: { name: 'test', partyUrn: '00302069' },
+        query: { name: CUSTOMERS.EXAMPLES.NAME, partyUrn: CUSTOMERS.EXAMPLES.PARTYURN },
       },
       {
-        query: { companyreg: '06012345', partyUrn: '00302069' },
+        query: { companyreg: CUSTOMERS.EXAMPLES.COMPANYREG, partyUrn: CUSTOMERS.EXAMPLES.PARTYURN },
       },
       {
-        query: { name: 'test', companyreg: '06012345', partyUrn: '00302069' },
+        query: { name: CUSTOMERS.EXAMPLES.NAME, companyreg: CUSTOMERS.EXAMPLES.COMPANYREG, partyUrn: CUSTOMERS.EXAMPLES.PARTYURN },
       },
     ])('throws BadRequestException if search parameter (name, companyreg, partyUrn) number is not 1', ({ query }) => {
       const getCustomers = (query) => () => controller.getCustomers(query);

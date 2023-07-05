@@ -6,10 +6,11 @@
  * 2. Database name
  * 3. Auth strategy
  * 4. Products
- * 4. Ukef id
+ * 5. Customers
  */
 
 export * from './auth.constant';
+export * from './customers.constant';
 export * from './database-name.constant';
 export * from './date.constant';
 export * from './enums';

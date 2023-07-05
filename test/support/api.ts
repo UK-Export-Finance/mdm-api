@@ -25,33 +25,6 @@ export class Api {
     return this.request().get(url).auth(username, password);
   }
 
-  // post(url: string, body: string | object): request.Test {
-  //   return this.request().post(url).send(body).set(this.getValidAuthHeader());
-  // }
-
-  // postWithoutAuth(url: string, body: string | object, strategy?: string, key?: string): request.Test {
-  //   const query = this.request().post(url).send(body);
-  //   return this.setQueryWithAuthStrategyIfPresent(query, strategy, key);
-  // }
-
-  // put(url: string, body: string | object): request.Test {
-  //   return this.request().put(url).send(body).set(this.getValidAuthHeader());
-  // }
-
-  // putWithoutAuth(url: string, body: string | object, strategy?: string, key?: string): request.Test {
-  //   const query = this.request().put(url).send(body);
-  //   return this.setQueryWithAuthStrategyIfPresent(query, strategy, key);
-  // }
-
-  // patch(url: string, body: string | object): request.Test {
-  //   return this.request().patch(url).send(body).set(this.getValidAuthHeader());
-  // }
-
-  // patchWithoutAuth(url: string, body: string | object, strategy?: string, key?: string): request.Test {
-  //   const query = this.request().patch(url).send(body);
-  //   return this.setQueryWithAuthStrategyIfPresent(query, strategy, key);
-  // }
-
   destroy(): Promise<void> {
     return this.app.destroy();
   }

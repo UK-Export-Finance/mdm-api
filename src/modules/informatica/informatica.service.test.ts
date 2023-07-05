@@ -72,7 +72,7 @@ describe('InformaticaService', () => {
     it.each([
       {
         query: { name: 'test' },
-        expectedUrlQueryPart: '?name=test',
+        expectedUrlQueryPart: `?name=test`,
       },
       {
         query: { name: 'param one', includeLegacyData: 'param two' },

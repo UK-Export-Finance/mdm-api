@@ -1,6 +1,6 @@
 // import { PROPERTIES } from '@ukef/constants';
 // import { withAcbsAuthenticationApiTests } from '@ukef-test/common-tests/acbs-authentication-api-tests';
-import { ENUMS } from '@ukef/constants';
+import { CUSTOMERS, ENUMS } from '@ukef/constants';
 import { IncorrectAuthArg, withClientAuthenticationTests } from '@ukef-test/common-tests/client-authentication-api-tests';
 import { Api } from '@ukef-test/support/api';
 import { ENVIRONMENT_VARIABLES, TIME_EXCEEDING_INFORMATICA_TIMEOUT } from '@ukef-test/support/environment-variables';
@@ -50,40 +50,40 @@ describe('GET /customers', () => {
 
   it.each([
     {
-      query: { name: 'test', fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES },
+      query: { name: CUSTOMERS.EXAMPLES.NAME, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES },
     },
     {
-      query: { companyreg: '06012345', fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES },
+      query: { companyreg: CUSTOMERS.EXAMPLES.COMPANYREG, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES },
     },
     {
-      query: { partyUrn: '00302069', fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES },
+      query: { partyUrn: CUSTOMERS.EXAMPLES.PARTYURN, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES },
     },
     {
-      query: { name: 'test', fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.NO },
+      query: { name: CUSTOMERS.EXAMPLES.NAME, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.NO },
     },
     {
-      query: { companyreg: '06012345', fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.NO },
+      query: { companyreg: CUSTOMERS.EXAMPLES.COMPANYREG, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.NO },
     },
     {
-      query: { partyUrn: '00302069', fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.NO },
+      query: { partyUrn: CUSTOMERS.EXAMPLES.PARTYURN, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.NO },
     },
     {
-      query: { name: 'test', fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.LEGACY_ONLY },
+      query: { name: CUSTOMERS.EXAMPLES.NAME, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.LEGACY_ONLY },
     },
     {
-      query: { companyreg: '06012345', fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.LEGACY_ONLY },
+      query: { companyreg: CUSTOMERS.EXAMPLES.COMPANYREG, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.LEGACY_ONLY },
     },
     {
-      query: { partyUrn: '00302069', fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.LEGACY_ONLY },
+      query: { partyUrn: CUSTOMERS.EXAMPLES.PARTYURN, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.LEGACY_ONLY },
     },
     {
-      query: { name: 'test' },
+      query: { name: CUSTOMERS.EXAMPLES.NAME },
     },
     {
-      query: { companyreg: '06012345' },
+      query: { companyreg: CUSTOMERS.EXAMPLES.COMPANYREG },
     },
     {
-      query: { partyUrn: '00302069' },
+      query: { partyUrn: CUSTOMERS.EXAMPLES.PARTYURN },
     },
   ])('returns a 200 response with the customers if query is "$query"', async ({ query }) => {
     const { mdmPath, informaticaPath, getCustomersResponse } = new GetCustomersGenerator(valueGenerator).generate({

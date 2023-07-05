@@ -623,25 +623,62 @@ components:
       properties:
         partyUrn:
           type: string
-          description: ''
+          description: The unique UKEF id of the customer
         name:
           type: string
           description: Customer company name
         sfId:
           type: string
-          description: Uniqueue Salesforce id
+          description: The uniqueue Salesforce id
         companyRegNo:
           type: string
-          description: Companies house registration number
+          description: The Companies house registration number
         type:
           type: string
           description: Customer company type
+          enum:
+            - Association
+            - Corporate Overseas
+            - Corporate UK
+            - ECA
+            - Financial Institution Overseas
+            - Financial Institution UK
+            - Non Corporate Overseas
+            - Non Corporate UK
+            - Overseas Government Dept.
+            - Overseas Public Body
+            - UK Government Dept.
+            - UK Public Body
         subtype:
           type: string
           description: Customer company sub-type
+          enum:
+            - Alternative Finance Provider
+            - Bank
+            - Broker
+            - Chamber of Commerce
+            - Consolidated Joint Venture
+            - Cooperative
+            - Corporate Syndicate
+            - Foreign Corporate
+            - Foreign Non Corporate
+            - Incorporated Charity
+            - Insurance Company
+            - Limited
+            - Limited Liability Partnership
+            - Membership Organisation
+            - N/A
+            - Non Corporate Syndicate (where the Syndicate is a legal entity)
+            - Non Incorporated Charity
+            - Partnership
+            - PLC
+            - Professional
+            - Sole Trader
+            - Special Purpose
+            - Trade Association
         isLegacyRecord:
           type: boolean
-          description: ''
+          description: False for Salesforce account record, True for legacy Party DB record
       required:
         - partyUrn
         - name
