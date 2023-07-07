@@ -3,6 +3,7 @@ import { AuthModule } from '@ukef/auth/auth.module';
 import { DatabaseModule } from '@ukef/database/database.module';
 import { ConstantsModule } from '@ukef/modules/constants/constants.module';
 import { CurrenciesModule } from '@ukef/modules/currencies/currencies.module';
+import { CustomersModule } from '@ukef/modules/customers/customers.module';
 import { ExposurePeriodModule } from '@ukef/modules/exposure-period/exposure-period.module';
 import { HealthcheckModule } from '@ukef/modules/healthcheck/healthcheck.module';
 import { InterestRatesModule } from '@ukef/modules/interest-rates/interest-rates.module';
@@ -18,6 +19,7 @@ import { YieldRatesModule } from '@ukef/modules/yield-rates/yield-rates.module';
     DatabaseModule,
     ConstantsModule,
     CurrenciesModule,
+    CustomersModule,
     ExposurePeriodModule,
     HealthcheckModule,
     InterestRatesModule,
@@ -32,6 +34,7 @@ import { YieldRatesModule } from '@ukef/modules/yield-rates/yield-rates.module';
     DatabaseModule,
     ConstantsModule,
     CurrenciesModule,
+    CustomersModule,
     ExposurePeriodModule,
     HealthcheckModule,
     InterestRatesModule,

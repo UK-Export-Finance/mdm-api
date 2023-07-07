@@ -7,6 +7,7 @@ const defaultSettings = {
   testEnvironment: 'node',
   moduleFileExtensions: ['ts', 'js', 'json', 'node'],
   moduleNameMapper: {
+    '@ukef-test/(.*)': '<rootDir>/../test/$1',
     '@ukef/constants/(.*)': '<rootDir>/../src/constants/$1',
     '@ukef/config/(.*)': '<rootDir>/../src/config/$1',
     '@ukef/database/(.*)': '<rootDir>/../src/modules/database/$1',
@@ -28,6 +29,7 @@ const config: JestConfigWithTsJest = {
     },
     {
       displayName: 'API',
+      setupFilesAfterEnv: ['./setup/override-environment-variables.ts'],
       testMatch: ['**/*.api-test.ts'],
       transform: { '^.+\\.(ts|tsx)?$': ['ts-jest', { useESM: true }] },
       ...defaultSettings,
