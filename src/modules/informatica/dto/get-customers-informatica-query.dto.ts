@@ -1,5 +1,5 @@
 export class GetCustomersInformaticaQueryDto {
-  public companyreg?: string;
+  public companyReg?: string;
   public partyUrn?: string;
   public name?: string;
   public includeLegacyData?: string;

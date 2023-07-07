@@ -29,7 +29,7 @@ export class GetCustomersGenerator extends AbstractGenerator<CustomerValues, Gen
   ): GenerateResult {
     const request: GetCustomersQueryDto[] = values.map((v) => {
       let searchParam = {
-        ...(query.companyreg ? { companyreg: query.companyreg } : {}),
+        ...(query.companyReg ? { companyReg: query.companyReg } : {}),
         ...(query.name ? { name: query.name } : {}),
         ...(query.partyUrn ? { partyUrn: query.partyUrn } : {}),
       };
@@ -43,7 +43,7 @@ export class GetCustomersGenerator extends AbstractGenerator<CustomerValues, Gen
     });
 
     const informaticaRequest: GetCustomersInformaticaQueryDto[] = request.map((v) => ({
-      ...(v.companyreg ? { companyreg: v.companyreg } : {}),
+      ...(v.companyReg ? { companyReg: v.companyReg } : {}),
       ...(v.name ? { name: v.name } : {}),
       ...(v.partyUrn ? { partyUrn: v.partyUrn } : {}),
       ...{ includeLegacyData: v.fallbackToLegacyData },

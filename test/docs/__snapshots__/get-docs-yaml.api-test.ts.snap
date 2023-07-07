@@ -118,9 +118,9 @@ paths:
   /api/v1/customers:
     get:
       operationId: CustomersController_getCustomers
-      summary: Get customers from salesforce
+      summary: Get customers from Salesforce
       parameters:
-        - name: companyreg
+        - name: companyReg
           required: false
           in: query
           example: '06012345'

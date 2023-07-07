@@ -42,11 +42,11 @@ describe('InformaticaService', () => {
 
   describe('getCustomers', () => {
     const query: GetCustomersInformaticaQueryDto = {
-      companyreg: companyRegNo,
+      companyReg: companyRegNo,
       includeLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES,
     };
 
-    const expectedPath = `${customerBasePath}?companyreg=${companyRegNo}&includeLegacyData=yes`;
+    const expectedPath = `${customerBasePath}?companyReg=${companyRegNo}&includeLegacyData=yes`;
 
     const expectedHttpServiceGetArgs: [string, object] = [expectedPath, { headers: { 'Content-Type': 'application/json' } }];
 

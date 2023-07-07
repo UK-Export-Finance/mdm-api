@@ -13,7 +13,7 @@ export class CustomersController {
 
   @Get()
   @ApiOperation({
-    summary: 'Get customers from salesforce',
+    summary: 'Get customers from Salesforce',
   })
   @ApiResponse({
     status: 200,
@@ -24,9 +24,9 @@ export class CustomersController {
     description: 'Customer not found.',
   })
   getCustomers(@Query() query: GetCustomersQueryDto): Promise<GetCustomersResponse> {
-    this.ensureOneIsNotEmpty(query.companyreg, query.name, query.partyUrn);
+    this.ensureOneIsNotEmpty(query.companyReg, query.name, query.partyUrn);
     const backendQuery: GetCustomersInformaticaQueryDto = {
-      ...(query.companyreg ? { companyreg: query.companyreg } : {}),
+      ...(query.companyReg ? { companyReg: query.companyReg } : {}),
       ...(query.name ? { name: query.name } : {}),
       ...(query.partyUrn ? { partyUrn: query.partyUrn } : {}),
       ...{ includeLegacyData: query.fallbackToLegacyData },

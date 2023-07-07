@@ -1,5 +1,3 @@
-// import { PROPERTIES } from '@ukef/constants';
-// import { withAcbsAuthenticationApiTests } from '@ukef-test/common-tests/acbs-authentication-api-tests';
 import { CUSTOMERS, ENUMS } from '@ukef/constants';
 import { IncorrectAuthArg, withClientAuthenticationTests } from '@ukef-test/common-tests/client-authentication-api-tests';
 import { Api } from '@ukef-test/support/api';
@@ -53,7 +51,7 @@ describe('GET /customers', () => {
       query: { name: CUSTOMERS.EXAMPLES.NAME, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES },
     },
     {
-      query: { companyreg: CUSTOMERS.EXAMPLES.COMPANYREG, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES },
+      query: { companyReg: CUSTOMERS.EXAMPLES.COMPANYREG, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES },
     },
     {
       query: { partyUrn: CUSTOMERS.EXAMPLES.PARTYURN, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES },
@@ -62,7 +60,7 @@ describe('GET /customers', () => {
       query: { name: CUSTOMERS.EXAMPLES.NAME, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.NO },
     },
     {
-      query: { companyreg: CUSTOMERS.EXAMPLES.COMPANYREG, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.NO },
+      query: { companyReg: CUSTOMERS.EXAMPLES.COMPANYREG, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.NO },
     },
     {
       query: { partyUrn: CUSTOMERS.EXAMPLES.PARTYURN, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.NO },
@@ -71,7 +69,7 @@ describe('GET /customers', () => {
       query: { name: CUSTOMERS.EXAMPLES.NAME, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.LEGACY_ONLY },
     },
     {
-      query: { companyreg: CUSTOMERS.EXAMPLES.COMPANYREG, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.LEGACY_ONLY },
+      query: { companyReg: CUSTOMERS.EXAMPLES.COMPANYREG, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.LEGACY_ONLY },
     },
     {
       query: { partyUrn: CUSTOMERS.EXAMPLES.PARTYURN, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.LEGACY_ONLY },
@@ -80,7 +78,7 @@ describe('GET /customers', () => {
       query: { name: CUSTOMERS.EXAMPLES.NAME },
     },
     {
-      query: { companyreg: CUSTOMERS.EXAMPLES.COMPANYREG },
+      query: { companyReg: CUSTOMERS.EXAMPLES.COMPANYREG },
     },
     {
       query: { partyUrn: CUSTOMERS.EXAMPLES.PARTYURN },
@@ -155,12 +153,12 @@ describe('GET /customers', () => {
       expectedError: 'property extraParameter should not exist',
     },
     {
-      query: { companyreg: valueGenerator.string({ length: 7 }) },
-      expectedError: 'companyreg must be longer than or equal to 8 characters',
+      query: { companyReg: valueGenerator.string({ length: 7 }) },
+      expectedError: 'companyReg must be longer than or equal to 8 characters',
     },
     {
-      query: { companyreg: valueGenerator.string({ length: 11 }) },
-      expectedError: 'companyreg must be shorter than or equal to 10 characters',
+      query: { companyReg: valueGenerator.string({ length: 11 }) },
+      expectedError: 'companyReg must be shorter than or equal to 10 characters',
     },
     {
       query: { partyUrn: valueGenerator.stringOfNumericCharacters({ length: 7 }) },
@@ -191,7 +189,7 @@ describe('GET /customers', () => {
       expectedError: 'One and just one search parameter is required',
     },
     {
-      query: { name: valueGenerator.word(), companyreg: valueGenerator.string({ length: 8 }) },
+      query: { name: valueGenerator.word(), companyReg: valueGenerator.string({ length: 8 }) },
       expectedError: 'One and just one search parameter is required',
     },
   ])('returns a 400 response with error string if query is "$query"', async ({ query, expectedError }) => {

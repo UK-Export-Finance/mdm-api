@@ -12,7 +12,7 @@ export class GetCustomersQueryDto {
   })
   @MinLength(8)
   @MaxLength(10)
-  public companyreg?: string;
+  public companyReg?: string;
 
   @IsOptional()
   @ApiProperty({

@@ -28,7 +28,7 @@ describe('CustomersController', () => {
         query: { name: CUSTOMERS.EXAMPLES.NAME, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES },
       },
       {
-        query: { companyreg: CUSTOMERS.EXAMPLES.COMPANYREG, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES },
+        query: { companyReg: CUSTOMERS.EXAMPLES.COMPANYREG, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES },
       },
       {
         query: { partyUrn: CUSTOMERS.EXAMPLES.PARTYURN, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES },
@@ -37,7 +37,7 @@ describe('CustomersController', () => {
         query: { name: CUSTOMERS.EXAMPLES.NAME, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.NO },
       },
       {
-        query: { companyreg: CUSTOMERS.EXAMPLES.COMPANYREG, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.NO },
+        query: { companyReg: CUSTOMERS.EXAMPLES.COMPANYREG, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.NO },
       },
       {
         query: { partyUrn: CUSTOMERS.EXAMPLES.PARTYURN, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.NO },
@@ -46,7 +46,7 @@ describe('CustomersController', () => {
         query: { name: CUSTOMERS.EXAMPLES.NAME, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.LEGACY_ONLY },
       },
       {
-        query: { companyreg: CUSTOMERS.EXAMPLES.COMPANYREG, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.LEGACY_ONLY },
+        query: { companyReg: CUSTOMERS.EXAMPLES.COMPANYREG, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.LEGACY_ONLY },
       },
       {
         query: { partyUrn: CUSTOMERS.EXAMPLES.PARTYURN, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.LEGACY_ONLY },
@@ -55,7 +55,7 @@ describe('CustomersController', () => {
         query: { name: CUSTOMERS.EXAMPLES.NAME },
       },
       {
-        query: { companyreg: CUSTOMERS.EXAMPLES.COMPANYREG },
+        query: { companyReg: CUSTOMERS.EXAMPLES.COMPANYREG },
       },
       {
         query: { partyUrn: CUSTOMERS.EXAMPLES.PARTYURN },
@@ -81,18 +81,18 @@ describe('CustomersController', () => {
         query: { incorrectField: CUSTOMERS.EXAMPLES.NAME },
       },
       {
-        query: { name: CUSTOMERS.EXAMPLES.NAME, companyreg: CUSTOMERS.EXAMPLES.COMPANYREG },
+        query: { name: CUSTOMERS.EXAMPLES.NAME, companyReg: CUSTOMERS.EXAMPLES.COMPANYREG },
       },
       {
         query: { name: CUSTOMERS.EXAMPLES.NAME, partyUrn: CUSTOMERS.EXAMPLES.PARTYURN },
       },
       {
-        query: { companyreg: CUSTOMERS.EXAMPLES.COMPANYREG, partyUrn: CUSTOMERS.EXAMPLES.PARTYURN },
+        query: { companyReg: CUSTOMERS.EXAMPLES.COMPANYREG, partyUrn: CUSTOMERS.EXAMPLES.PARTYURN },
       },
       {
-        query: { name: CUSTOMERS.EXAMPLES.NAME, companyreg: CUSTOMERS.EXAMPLES.COMPANYREG, partyUrn: CUSTOMERS.EXAMPLES.PARTYURN },
+        query: { name: CUSTOMERS.EXAMPLES.NAME, companyReg: CUSTOMERS.EXAMPLES.COMPANYREG, partyUrn: CUSTOMERS.EXAMPLES.PARTYURN },
       },
-    ])('throws BadRequestException if search parameter (name, companyreg, partyUrn) number is not 1', ({ query }) => {
+    ])('throws BadRequestException if there is more than 1 search parameter (name, companyReg, partyUrn)', ({ query }) => {
       const getCustomers = (query) => () => controller.getCustomers(query);
 
       expect(getCustomers(query)).toThrow('One and just one search parameter is required');
