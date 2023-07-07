@@ -122,6 +122,7 @@ jobs:
             --set-env-vars \
             "PORT=${{ secrets.PORT }}" \
             "NODE_ENV=${{ secrets.NODE_ENV }}" \
+            "LOG_LEVEL=${{ secrets.LOG_LEVEL }}" \
             "TZ=${{ secrets.TZ }}" \
             "SWAGGER_USER=${{ secrets.SWAGGER_USER }}" \
             "SWAGGER_PASSWORD=${{ secrets.SWAGGER_PASSWORD }}" \
