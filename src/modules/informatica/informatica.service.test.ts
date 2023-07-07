@@ -42,11 +42,11 @@ describe('InformaticaService', () => {
 
   describe('getCustomers', () => {
     const query: GetCustomersInformaticaQueryDto = {
-      companyReg: companyRegNo,
+      companyreg: companyRegNo,
       includeLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES,
     };
 
-    const expectedPath = `${customerBasePath}?companyReg=${companyRegNo}&includeLegacyData=yes`;
+    const expectedPath = `${customerBasePath}?companyreg=${companyRegNo}&includeLegacyData=yes`;
 
     const expectedHttpServiceGetArgs: [string, object] = [expectedPath, { headers: { 'Content-Type': 'application/json' } }];
 
@@ -138,7 +138,6 @@ describe('InformaticaService', () => {
       when(httpServiceGet)
         .calledWith(...expectedHttpServiceGetArgs)
         .mockReturnValueOnce(throwError(() => axiosRequestError));
-
       const getCustomersPromise = service.getCustomers(query);
 
       await expect(getCustomersPromise).rejects.toBeInstanceOf(InformaticaException);

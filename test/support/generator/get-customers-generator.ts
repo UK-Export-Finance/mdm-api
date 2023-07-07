@@ -43,7 +43,7 @@ export class GetCustomersGenerator extends AbstractGenerator<CustomerValues, Gen
     });
 
     const informaticaRequest: GetCustomersInformaticaQueryDto[] = request.map((v) => ({
-      ...(v.companyReg ? { companyReg: v.companyReg } : {}),
+      ...(v.companyReg ? { companyreg: v.companyReg } : {}),
       ...(v.name ? { name: v.name } : {}),
       ...(v.partyUrn ? { partyUrn: v.partyUrn } : {}),
       ...{ includeLegacyData: v.fallbackToLegacyData },
