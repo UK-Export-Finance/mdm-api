@@ -1,18 +1,22 @@
-import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DATABASE } from '@ukef/constants';
+import { DATABASE, REDACT_STRINGS, REDACT_STRING_PATHS } from '@ukef/constants';
 import { DbResponseHelper } from '@ukef/helpers/db-response.helper';
 import { Repository } from 'typeorm';
 
 import { ConstantSpiEntity } from './entities/constants-spi.entity';
+import { PinoLogger } from 'nestjs-pino';
+import { redactError } from '@ukef/helpers/redact-errors.helper';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ConstantsService {
-  private readonly logger = new Logger();
 
   constructor(
     @InjectRepository(ConstantSpiEntity, DATABASE.CIS)
     private readonly constantsCisRepository: Repository<ConstantSpiEntity>,
+    private readonly logger: PinoLogger,
+    private readonly config: ConfigService,
   ) {}
 
   async find(oecdRiskCategory: number, category: string): Promise<ConstantSpiEntity[]> {
@@ -35,10 +39,10 @@ export class ConstantsService {
       return transformedResults;
     } catch (err) {
       if (err instanceof NotFoundException) {
-        this.logger.warn(err);
+        this.logger.warn(redactError(this.config.get<boolean>('app.redactLogs'), REDACT_STRING_PATHS, REDACT_STRINGS, err));
         throw err;
       }
-      this.logger.error(err);
+      this.logger.error(redactError(this.config.get<boolean>('app.redactLogs'), REDACT_STRING_PATHS, REDACT_STRINGS, err));
       throw new InternalServerErrorException();
     }
   }

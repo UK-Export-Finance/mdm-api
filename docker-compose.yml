@@ -18,6 +18,7 @@ services:
       PORT:
       NODE_ENV:
       LOG_LEVEL:
+      REDACT_LOGS:
       TZ:
       SWAGGER_USER:
       SWAGGER_PASSWORD:

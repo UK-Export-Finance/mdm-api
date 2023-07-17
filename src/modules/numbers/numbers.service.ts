@@ -1,22 +1,25 @@
 import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DATABASE } from '@ukef/constants';
+import { DATABASE, REDACT_STRINGS, REDACT_STRING_PATHS } from '@ukef/constants';
 import { Repository } from 'typeorm';
 
 import { CreateUkefIdDto } from './dto/create-ukef-id.dto';
 import { UkefId } from './entities/ukef-id.entity';
+import { PinoLogger } from 'nestjs-pino';
+import { redactError } from '@ukef/helpers/redact-errors.helper';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class NumbersService {
-  private readonly logger = new Logger();
 
   constructor(
     @InjectRepository(UkefId, DATABASE.NUMBER_GENERATOR)
     private readonly numberRepository: Repository<UkefId>,
+    private readonly logger: PinoLogger,
+    private readonly config: ConfigService,
   ) {}
 
   async create(createUkefIdDto: CreateUkefIdDto[]): Promise<UkefId[]> {
-    // TODO: DB calls are async and will generate IDs that are not in order. Extra code to order ids is required, or calls need to be made in async order.
     // TODO: new IDs of type 1 and 2 could be checked if they are used in ACBS. ACBS might be down, but generation still should work.
     const activeRequests = createUkefIdDto.map((createNumber) => {
       return this.numberRepository
@@ -44,10 +47,10 @@ export class NumbersService {
       return this.mapFieldsFromDbToApi(dbNumber[0]);
     } catch (err) {
       if (err instanceof NotFoundException || err instanceof BadRequestException) {
-        this.logger.warn(err);
+        this.logger.warn(redactError(this.config.get<boolean>('app.redactLogs'), REDACT_STRING_PATHS, REDACT_STRINGS, err));
         throw err;
       } else {
-        this.logger.error(err);
+        this.logger.error(redactError(this.config.get<boolean>('app.redactLogs'), REDACT_STRING_PATHS, REDACT_STRINGS, err));
         throw new InternalServerErrorException();
       }
     }

@@ -1,18 +1,22 @@
 import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DATABASE } from '@ukef/constants';
+import { DATABASE, REDACT_STRINGS, REDACT_STRING_PATHS } from '@ukef/constants';
 import { DbResponseHelper } from '@ukef/helpers/db-response.helper';
 import { Repository } from 'typeorm';
 
 import { MarketEntity } from './entities/market.entity';
+import { PinoLogger } from 'nestjs-pino';
+import { redactError } from '@ukef/helpers/redact-errors.helper';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class MarketsService {
-  private readonly logger = new Logger();
 
   constructor(
     @InjectRepository(MarketEntity, DATABASE.CIS)
     private readonly marketsRepository: Repository<MarketEntity>,
+    private readonly logger: PinoLogger,
+    private readonly config: ConfigService,
   ) {}
 
   async find(active?: string, search?: string): Promise<MarketEntity[]> {
@@ -44,8 +48,8 @@ export class MarketsService {
       }));
 
       return mappedResults;
-    } catch (err) {
-      this.logger.error(err);
+    } catch (err: any) {
+      this.logger.error(redactError(this.config.get<boolean>('app.redactLogs'), REDACT_STRING_PATHS, REDACT_STRINGS, err));
       throw new InternalServerErrorException();
     }
   }

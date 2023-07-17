@@ -1,15 +1,17 @@
-import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DATABASE, DATE } from '@ukef/constants';
+import { DATABASE, DATE, REDACT_STRINGS, REDACT_STRING_PATHS } from '@ukef/constants';
 import { DbResponseHelper } from '@ukef/helpers/db-response.helper';
 import { DataSource, Equal, Repository } from 'typeorm';
 
 import { CurrencyEntity } from './entities/currency.entity';
 import { CurrencyExchangeEntity } from './entities/currency-exchange.entity';
+import { PinoLogger } from 'nestjs-pino';
+import { redactError } from '@ukef/helpers/redact-errors.helper';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class CurrenciesService {
-  private readonly logger = new Logger();
   constructor(
     @InjectRepository(CurrencyEntity, DATABASE.MDM)
     private readonly currency: Repository<CurrencyEntity>,
@@ -17,6 +19,8 @@ export class CurrenciesService {
     private readonly currencyExchange: DataSource,
     @InjectRepository(CurrencyExchangeEntity, DATABASE.CEDAR)
     private readonly currencyExchangeRepository: Repository<CurrencyExchangeEntity>,
+    private readonly logger: PinoLogger,
+    private readonly config: ConfigService,
   ) {}
 
   async findAll(): Promise<CurrencyEntity[]> {
@@ -65,10 +69,10 @@ export class CurrenciesService {
       return renamedResults;
     } catch (err) {
       if (err instanceof NotFoundException) {
-        this.logger.warn(err);
+        this.logger.warn(redactError(this.config.get<boolean>('app.redactLogs'), REDACT_STRING_PATHS, REDACT_STRINGS, err));
         throw err;
       } else {
-        this.logger.error(err);
+        this.logger.error(redactError(this.config.get<boolean>('app.redactLogs'), REDACT_STRING_PATHS, REDACT_STRINGS, err));
         throw new InternalServerErrorException();
       }
     }

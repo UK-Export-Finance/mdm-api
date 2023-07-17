@@ -1,19 +1,23 @@
 import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DATABASE } from '@ukef/constants';
+import { DATABASE, REDACT_STRINGS, REDACT_STRING_PATHS } from '@ukef/constants';
 import { Response } from 'express';
 import { Equal, Repository } from 'typeorm';
 
 import { DbResponseHelper } from '../../helpers/db-response.helper';
 import { CreatePremiumScheduleDto } from './dto/create-premium-schedule.dto';
 import { PremiumScheduleEntity } from './entities/premium-schedule.entity';
+import { PinoLogger } from 'nestjs-pino';
+import { redactError } from '@ukef/helpers/redact-errors.helper';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class PremiumSchedulesService {
-  private readonly logger = new Logger();
   constructor(
     @InjectRepository(PremiumScheduleEntity, DATABASE.MDM)
     private readonly premiumSchedulesRepository: Repository<PremiumScheduleEntity>,
+    private readonly logger: PinoLogger,
+    private readonly config: ConfigService,
   ) {}
 
   async find(facilityId: string): Promise<PremiumScheduleEntity[]> {
@@ -28,10 +32,10 @@ export class PremiumSchedulesService {
       return results;
     } catch (err) {
       if (err instanceof NotFoundException) {
-        this.logger.warn(err);
+        this.logger.warn(redactError(this.config.get<boolean>('app.redactLogs'), REDACT_STRING_PATHS, REDACT_STRINGS, err));
         throw err;
       } else {
-        this.logger.error(err);
+        this.logger.error(redactError(this.config.get<boolean>('app.redactLogs'), REDACT_STRING_PATHS, REDACT_STRINGS, err));
         throw new InternalServerErrorException();
       }
     }
@@ -88,7 +92,7 @@ export class PremiumSchedulesService {
 
       return transformedResults;
     } catch (err) {
-      this.logger.error(err);
+      this.logger.error(redactError(this.config.get<boolean>('app.redactLogs'), REDACT_STRING_PATHS, REDACT_STRINGS, err));
       throw new InternalServerErrorException();
     }
   }
