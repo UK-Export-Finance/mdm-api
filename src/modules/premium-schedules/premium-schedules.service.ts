@@ -1,9 +1,7 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DATABASE, REDACT_STRING_PATHS, REDACT_STRINGS } from '@ukef/constants';
+import { DATABASE } from '@ukef/constants';
 import { DbResponseHelper } from '@ukef/helpers/db-response.helper';
-import { redactError } from '@ukef/helpers/redact-errors.helper';
 import { Response } from 'express';
 import { PinoLogger } from 'nestjs-pino';
 import { Equal, Repository } from 'typeorm';
@@ -17,7 +15,6 @@ export class PremiumSchedulesService {
     @InjectRepository(PremiumScheduleEntity, DATABASE.MDM)
     private readonly premiumSchedulesRepository: Repository<PremiumScheduleEntity>,
     private readonly logger: PinoLogger,
-    private readonly config: ConfigService,
   ) {}
 
   async find(facilityId: string): Promise<PremiumScheduleEntity[]> {
@@ -32,10 +29,10 @@ export class PremiumSchedulesService {
       return results;
     } catch (err) {
       if (err instanceof NotFoundException) {
-        this.logger.warn(redactError(this.config.get<boolean>('app.redactLogs'), REDACT_STRING_PATHS, REDACT_STRINGS, err));
+        this.logger.warn(err);
         throw err;
       } else {
-        this.logger.error(redactError(this.config.get<boolean>('app.redactLogs'), REDACT_STRING_PATHS, REDACT_STRINGS, err));
+        this.logger.error(err);
         throw new InternalServerErrorException();
       }
     }
@@ -92,7 +89,7 @@ export class PremiumSchedulesService {
 
       return transformedResults;
     } catch (err) {
-      this.logger.error(redactError(this.config.get<boolean>('app.redactLogs'), REDACT_STRING_PATHS, REDACT_STRINGS, err));
+      this.logger.error(err);
       throw new InternalServerErrorException();
     }
   }

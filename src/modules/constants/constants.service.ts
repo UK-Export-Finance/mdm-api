@@ -1,9 +1,7 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DATABASE, REDACT_STRING_PATHS, REDACT_STRINGS } from '@ukef/constants';
+import { DATABASE } from '@ukef/constants';
 import { DbResponseHelper } from '@ukef/helpers/db-response.helper';
-import { redactError } from '@ukef/helpers/redact-errors.helper';
 import { PinoLogger } from 'nestjs-pino';
 import { Repository } from 'typeorm';
 
@@ -15,7 +13,6 @@ export class ConstantsService {
     @InjectRepository(ConstantSpiEntity, DATABASE.CIS)
     private readonly constantsCisRepository: Repository<ConstantSpiEntity>,
     private readonly logger: PinoLogger,
-    private readonly config: ConfigService,
   ) {}
 
   async find(oecdRiskCategory: number, category: string): Promise<ConstantSpiEntity[]> {
@@ -38,10 +35,10 @@ export class ConstantsService {
       return transformedResults;
     } catch (err) {
       if (err instanceof NotFoundException) {
-        this.logger.warn(redactError(this.config.get<boolean>('app.redactLogs'), REDACT_STRING_PATHS, REDACT_STRINGS, err));
+        this.logger.warn(err);
         throw err;
       }
-      this.logger.error(redactError(this.config.get<boolean>('app.redactLogs'), REDACT_STRING_PATHS, REDACT_STRINGS, err));
+      this.logger.error(err);
       throw new InternalServerErrorException();
     }
   }

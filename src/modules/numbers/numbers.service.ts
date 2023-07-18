@@ -1,8 +1,6 @@
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DATABASE, REDACT_STRING_PATHS, REDACT_STRINGS } from '@ukef/constants';
-import { redactError } from '@ukef/helpers/redact-errors.helper';
+import { DATABASE } from '@ukef/constants';
 import { PinoLogger } from 'nestjs-pino';
 import { Repository } from 'typeorm';
 
@@ -15,7 +13,6 @@ export class NumbersService {
     @InjectRepository(UkefId, DATABASE.NUMBER_GENERATOR)
     private readonly numberRepository: Repository<UkefId>,
     private readonly logger: PinoLogger,
-    private readonly config: ConfigService,
   ) {}
 
   async create(createUkefIdDto: CreateUkefIdDto[]): Promise<UkefId[]> {
@@ -46,10 +43,10 @@ export class NumbersService {
       return this.mapFieldsFromDbToApi(dbNumber[0]);
     } catch (err) {
       if (err instanceof NotFoundException || err instanceof BadRequestException) {
-        this.logger.warn(redactError(this.config.get<boolean>('app.redactLogs'), REDACT_STRING_PATHS, REDACT_STRINGS, err));
+        this.logger.warn(err);
         throw err;
       } else {
-        this.logger.error(redactError(this.config.get<boolean>('app.redactLogs'), REDACT_STRING_PATHS, REDACT_STRINGS, err));
+        this.logger.error(err);
         throw new InternalServerErrorException();
       }
     }

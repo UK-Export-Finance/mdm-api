@@ -1,8 +1,6 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { InjectDataSource } from '@nestjs/typeorm';
-import { DATABASE, REDACT_STRING_PATHS, REDACT_STRINGS } from '@ukef/constants';
-import { redactError } from '@ukef/helpers/redact-errors.helper';
+import { DATABASE } from '@ukef/constants';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource } from 'typeorm';
 
@@ -14,7 +12,6 @@ export class ExposurePeriodService {
     @InjectDataSource(DATABASE.MDM)
     private readonly mdmDataSource: DataSource,
     private readonly logger: PinoLogger,
-    private readonly config: ConfigService,
   ) {}
 
   async calculate(startDate: string, endDate: string, productGroup: string): Promise<ExposurePeriodDto> {
@@ -29,10 +26,10 @@ export class ExposurePeriodService {
       return { exposurePeriod: results[0].EXPOSURE_PERIOD };
     } catch (err) {
       if (err instanceof NotFoundException) {
-        this.logger.warn(redactError(this.config.get<boolean>('app.redactLogs'), REDACT_STRING_PATHS, REDACT_STRINGS, err));
+        this.logger.warn(err);
         throw err;
       } else {
-        this.logger.error(redactError(this.config.get<boolean>('app.redactLogs'), REDACT_STRING_PATHS, REDACT_STRINGS, err));
+        this.logger.error(err);
         throw new InternalServerErrorException();
       }
     }

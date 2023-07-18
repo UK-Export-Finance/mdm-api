@@ -1,8 +1,6 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DATABASE, DATE, REDACT_STRING_PATHS, REDACT_STRINGS } from '@ukef/constants';
-import { redactError } from '@ukef/helpers/redact-errors.helper';
+import { DATABASE, DATE } from '@ukef/constants';
 import { PinoLogger } from 'nestjs-pino';
 import { Equal, Repository } from 'typeorm';
 
@@ -14,7 +12,6 @@ export class SectorIndustriesService {
     @InjectRepository(SectorIndustryEntity, DATABASE.MDM)
     private readonly sectorIndustries: Repository<SectorIndustryEntity>,
     private readonly logger: PinoLogger,
-    private readonly config: ConfigService,
   ) {}
 
   async find(ukefSectorId: string, ukefIndustryId: string): Promise<SectorIndustryEntity[]> {
@@ -37,10 +34,10 @@ export class SectorIndustriesService {
       return results;
     } catch (err) {
       if (err instanceof NotFoundException) {
-        this.logger.warn(redactError(this.config.get<boolean>('app.redactLogs'), REDACT_STRING_PATHS, REDACT_STRINGS, err));
+        this.logger.warn(err);
         throw err;
       } else {
-        this.logger.error(redactError(this.config.get<boolean>('app.redactLogs'), REDACT_STRING_PATHS, REDACT_STRINGS, err));
+        this.logger.error(err);
         throw new InternalServerErrorException();
       }
     }

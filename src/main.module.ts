@@ -6,6 +6,8 @@ import { HEADERS_LOG_KEY, OUTGOING_REQUEST_LOG_KEY } from '@ukef/modules/http/ht
 import { MdmModule } from '@ukef/modules/mdm.module';
 import { LoggerModule } from 'nestjs-pino';
 
+import { REDACT_STRING_PATHS, REDACT_STRINGS } from './constants';
+import { redactStringsInLogArgs } from './helpers/redact-strings-in-log-args.helper';
 import { logKeysToRedact } from './logging/log-keys-to-redact';
 import { LoggingInterceptor } from './logging/logging-interceptor.helper';
 
@@ -28,6 +30,11 @@ import { LoggingInterceptor } from './logging/logging-interceptor.helper';
             target: 'pino-pretty',
             options: {
               singleLine: true,
+            },
+          },
+          hooks: {
+            logMethod(inputArgs, method) {
+              return method.apply(this, redactStringsInLogArgs(config.get<boolean>('app.redactLogs'), REDACT_STRING_PATHS, REDACT_STRINGS, inputArgs));
             },
           },
           redact: logKeysToRedact({
@@ -60,7 +67,6 @@ import { LoggingInterceptor } from './logging/logging-interceptor.helper';
     }),
     MdmModule,
   ],
-  controllers: [],
   providers: [{ provide: APP_INTERCEPTOR, useClass: LoggingInterceptor }],
 })
 export class MainModule {}

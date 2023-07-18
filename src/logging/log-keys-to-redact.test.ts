@@ -76,5 +76,33 @@ describe('logKeysToRedact', () => {
       expect(result).toContain(buildKeyToRedact([logKey, 'options', 'cause', 'innerError', sensitiveChildKeys[0]]));
       expect(result).toContain(buildKeyToRedact([logKey, 'options', 'cause', 'innerError', sensitiveChildKeys[1]]));
     });
+
+    it('includes all sensitive child keys of an dbError', () => {
+      const { logKey, sensitiveChildKeys } = options.dbError;
+
+      expect(result).toContain(buildKeyToRedact([logKey, sensitiveChildKeys[0]]));
+      expect(result).toContain(buildKeyToRedact([logKey, sensitiveChildKeys[1]]));
+    });
+
+    it('includes all sensitive child keys of an original dbError', () => {
+      const { logKey, sensitiveChildKeys } = options.dbError;
+
+      expect(result).toContain(buildKeyToRedact([logKey, 'originalError', 'info', sensitiveChildKeys[0]]));
+      expect(result).toContain(buildKeyToRedact([logKey, 'originalError', 'info', sensitiveChildKeys[1]]));
+    });
+
+    it('includes all sensitive child keys of an dbError driverError', () => {
+      const { logKey, sensitiveChildKeys } = options.dbError;
+
+      expect(result).toContain(buildKeyToRedact([logKey, 'driverError', sensitiveChildKeys[0]]));
+      expect(result).toContain(buildKeyToRedact([logKey, 'driverError', sensitiveChildKeys[1]]));
+    });
+
+    it(`includes all sensitive child keys of an dbError driverError's original error`, () => {
+      const { logKey, sensitiveChildKeys } = options.dbError;
+
+      expect(result).toContain(buildKeyToRedact([logKey, 'driverError', 'originalError', 'info', sensitiveChildKeys[0]]));
+      expect(result).toContain(buildKeyToRedact([logKey, 'driverError', 'originalError', 'info', sensitiveChildKeys[1]]));
+    });
   });
 });
