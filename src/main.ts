@@ -2,11 +2,11 @@ import { NestApplication, NestFactory } from '@nestjs/core';
 import { MainModule } from '@ukef/main.module';
 
 import { App } from './app';
-import { ConsoleLoggerWithRedact } from './logging/console-logger-with-redact';
 import { REDACT_STRINGS } from './constants';
+import { ConsoleLoggerWithRedact } from './logging/console-logger-with-redact';
 
 const main = async () => {
-  const logger = new ConsoleLoggerWithRedact( REDACT_STRINGS );
+  const logger = new ConsoleLoggerWithRedact(REDACT_STRINGS);
   const nestApp: NestApplication = await NestFactory.create(MainModule, { logger, bufferLogs: false });
   const app = new App(nestApp);
 

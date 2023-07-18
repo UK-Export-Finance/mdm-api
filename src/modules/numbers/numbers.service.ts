@@ -1,17 +1,16 @@
-import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DATABASE, REDACT_STRINGS, REDACT_STRING_PATHS } from '@ukef/constants';
+import { DATABASE, REDACT_STRING_PATHS, REDACT_STRINGS } from '@ukef/constants';
+import { redactError } from '@ukef/helpers/redact-errors.helper';
+import { PinoLogger } from 'nestjs-pino';
 import { Repository } from 'typeorm';
 
 import { CreateUkefIdDto } from './dto/create-ukef-id.dto';
 import { UkefId } from './entities/ukef-id.entity';
-import { PinoLogger } from 'nestjs-pino';
-import { redactError } from '@ukef/helpers/redact-errors.helper';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class NumbersService {
-
   constructor(
     @InjectRepository(UkefId, DATABASE.NUMBER_GENERATOR)
     private readonly numberRepository: Repository<UkefId>,

@@ -1,12 +1,12 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DATABASE, DATE, REDACT_STRINGS, REDACT_STRING_PATHS } from '@ukef/constants';
+import { DATABASE, DATE, REDACT_STRING_PATHS, REDACT_STRINGS } from '@ukef/constants';
+import { redactError } from '@ukef/helpers/redact-errors.helper';
+import { PinoLogger } from 'nestjs-pino';
 import { Equal, Repository } from 'typeorm';
 
 import { InterestRatesEntity } from './entities/interest-rate.entity';
-import { PinoLogger } from 'nestjs-pino';
-import { redactError } from '@ukef/helpers/redact-errors.helper';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class InterestRatesService {

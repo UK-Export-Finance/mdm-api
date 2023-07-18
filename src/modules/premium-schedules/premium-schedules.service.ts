@@ -1,15 +1,15 @@
-import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DATABASE, REDACT_STRINGS, REDACT_STRING_PATHS } from '@ukef/constants';
+import { DATABASE, REDACT_STRING_PATHS, REDACT_STRINGS } from '@ukef/constants';
+import { DbResponseHelper } from '@ukef/helpers/db-response.helper';
+import { redactError } from '@ukef/helpers/redact-errors.helper';
 import { Response } from 'express';
+import { PinoLogger } from 'nestjs-pino';
 import { Equal, Repository } from 'typeorm';
 
-import { DbResponseHelper } from '../../helpers/db-response.helper';
 import { CreatePremiumScheduleDto } from './dto/create-premium-schedule.dto';
 import { PremiumScheduleEntity } from './entities/premium-schedule.entity';
-import { PinoLogger } from 'nestjs-pino';
-import { redactError } from '@ukef/helpers/redact-errors.helper';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class PremiumSchedulesService {

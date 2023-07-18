@@ -74,4 +74,3 @@ const getDbErrorLogKeysToRedact = ({ logKey, sensitiveChildKeys }: LogKeysToReda
     buildKeyToRedact([logKey, ...driverNestedErrorKey, ...innerErrorKey, childKey]),
   ]);
 };
-

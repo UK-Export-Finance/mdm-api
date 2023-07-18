@@ -1,8 +1,7 @@
 import { ConsoleLogger } from '@nestjs/common';
 
 export class ConsoleLoggerWithRedact extends ConsoleLogger {
-
-  private stringPatternsToRedact: [{searchValue: string | RegExp, replaceValue, string}];
+  private stringPatternsToRedact: [{ searchValue: string | RegExp; replaceValue; string }];
 
   constructor(stringPatternsToRedact) {
     super();
@@ -12,9 +11,9 @@ export class ConsoleLoggerWithRedact extends ConsoleLogger {
   error(message: any, stack?: string, context?: string) {
     let cleanStack = stack;
     if (typeof stack == 'string') {
-      this.stringPatternsToRedact.forEach( (redact) => {
+      this.stringPatternsToRedact.forEach((redact) => {
         cleanStack = stack.replace(redact.searchValue, redact.replaceValue);
-      })
+      });
     }
     super.error(message, cleanStack, context);
   }

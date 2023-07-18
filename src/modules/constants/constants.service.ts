@@ -1,17 +1,16 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DATABASE, REDACT_STRINGS, REDACT_STRING_PATHS } from '@ukef/constants';
+import { DATABASE, REDACT_STRING_PATHS, REDACT_STRINGS } from '@ukef/constants';
 import { DbResponseHelper } from '@ukef/helpers/db-response.helper';
+import { redactError } from '@ukef/helpers/redact-errors.helper';
+import { PinoLogger } from 'nestjs-pino';
 import { Repository } from 'typeorm';
 
 import { ConstantSpiEntity } from './entities/constants-spi.entity';
-import { PinoLogger } from 'nestjs-pino';
-import { redactError } from '@ukef/helpers/redact-errors.helper';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ConstantsService {
-
   constructor(
     @InjectRepository(ConstantSpiEntity, DATABASE.CIS)
     private readonly constantsCisRepository: Repository<ConstantSpiEntity>,
