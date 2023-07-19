@@ -8,6 +8,7 @@ export class ConsoleLoggerWithRedact extends ConsoleLogger {
     this.stringPatternsToRedact = stringPatternsToRedact;
   }
 
+  // Simplified, because has just single signature, function from ConsoleLogger.
   error(message: any, stack?: string, context?: string) {
     let cleanMessage = message;
     let cleanStack = stack;
