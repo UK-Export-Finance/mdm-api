@@ -8,12 +8,12 @@ describe('Redact errors helper', () => {
 
   describe('redactStringsInLogArgs', () => {
     const domain = valueGenerator.httpsUrl();
-    const otherSensitivefield = valueGenerator.word();
-    const message = `ConnectionError: Failed to connect to ${domain}, ${otherSensitivefield}`;
+    const otherSensitiveField = valueGenerator.word();
+    const message = `ConnectionError: Failed to connect to ${domain}, ${otherSensitiveField}`;
     const redactedMessage = `ConnectionError: Failed to connect to [RedactedDomain], [Redacted]`;
     const redactStrings = [
       { searchValue: domain, replaceValue: '[RedactedDomain]' },
-      { searchValue: otherSensitivefield, replaceValue: '[Redacted]' },
+      { searchValue: otherSensitiveField, replaceValue: '[Redacted]' },
     ];
     const args = [
       {
