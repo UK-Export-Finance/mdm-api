@@ -68,6 +68,35 @@ describe('Redact errors helper', () => {
       expect(redacted).toStrictEqual(args);
     });
 
+    it('replaces sensitive data in input object using regex', () => {
+      const redactStrings = [{ searchValue: /(Login failed for user ').*(')/g, replaceValue: '$1[Redacted]$2' }];
+      const otherSensitiveValue = valueGenerator.word();
+      const messageforRegex = `Connection error: Login failed for user '${otherSensitiveValue}'`;
+      const redactedMessage = `Connection error: Login failed for user '[Redacted]'`;
+      const args = [
+        {
+          message: messageforRegex,
+          stack: messageforRegex,
+          originalError: {
+            message: messageforRegex,
+          },
+        },
+      ];
+      const expectedResult = [
+        {
+          message: redactedMessage,
+          stack: redactedMessage,
+          originalError: {
+            message: redactedMessage,
+          },
+        },
+      ];
+
+      const redacted = redactStringsInLogArgs(true, REDACT_STRING_PATHS, redactStrings, args);
+
+      expect(redacted).toStrictEqual(expectedResult);
+    });
+
     it('replaces sensitive data in different input object', () => {
       const args = [
         {
