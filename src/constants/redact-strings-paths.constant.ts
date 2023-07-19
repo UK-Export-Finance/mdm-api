@@ -7,4 +7,6 @@ export const REDACT_STRING_PATHS = [
   'stack',
   'originalError.message',
   'originalError.stack',
+  'err.message',
+  'err.stack',
 ];

@@ -9,12 +9,18 @@ export class ConsoleLoggerWithRedact extends ConsoleLogger {
   }
 
   error(message: any, stack?: string, context?: string) {
+    let cleanMessage = message;
     let cleanStack = stack;
-    if (typeof stack == 'string') {
+    if (typeof message == 'string') {
       this.stringPatternsToRedact.forEach((redact) => {
-        cleanStack = stack.replace(redact.searchValue, redact.replaceValue);
+        cleanMessage = cleanMessage.replace(redact.searchValue, redact.replaceValue);
       });
     }
-    super.error(message, cleanStack, context);
+    if (typeof stack == 'string') {
+      this.stringPatternsToRedact.forEach((redact) => {
+        cleanStack = cleanStack.replace(redact.searchValue, redact.replaceValue);
+      });
+    }
+    super.error(cleanMessage, cleanStack, context);
   }
 }
