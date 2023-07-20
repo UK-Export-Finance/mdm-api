@@ -3,7 +3,7 @@ services:
   api:
     build:
       context: .
-    image: api
+    image: mdm-api
     container_name: mdm-api
     restart: always
     command: npm run start:prod
