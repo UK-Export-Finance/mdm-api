@@ -1,5 +1,82 @@
 # Changelog
 
+## [1.15.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.14.0...v1.15.0) (2023-07-21)
+
+
+### Features
+
+* **APIM-471:** added constants for examples, + cleanup ([d27b131](https://github.com/UK-Export-Finance/mdm-api/commit/d27b131938a5e6a44a903092e505bbeb55fb141e))
+* **APIM-471:** added LOG_LEVEL env var to deployment and github files ([6eaba2e](https://github.com/UK-Export-Finance/mdm-api/commit/6eaba2e1f9f9e8e6414d1630d0078288082c1306))
+* **APIM-471:** added new environment variables to docker files ([3ef1328](https://github.com/UK-Export-Finance/mdm-api/commit/3ef132808e36cc329ad8525f19ab3063b948820d))
+* **APIM-471:** cleanup, rename query var and other PR comments ([1d1787e](https://github.com/UK-Export-Finance/mdm-api/commit/1d1787e976c340ceebd824b2bb414a6995821feb))
+* **APIM-471:** endpoint GET /customers - get information from Salesforce through Informatica REST API ([#280](https://github.com/UK-Export-Finance/mdm-api/issues/280)) ([df5150f](https://github.com/UK-Export-Finance/mdm-api/commit/df5150f590a63cc1e895bea301ff7c1ad117b68c))
+* **APIM-471:** fixed informatica query ([82f620f](https://github.com/UK-Export-Finance/mdm-api/commit/82f620f2349944709d345d2119cc476166b16578))
+* **APIM-471:** tests and changes for endpoint GET /customers ([7b82183](https://github.com/UK-Export-Finance/mdm-api/commit/7b821830c2512d54bde500d7863ef41aea6262e4))
+
+
+### Bug Fixes
+
+* **APIM-531:** fix swagger regex field ([#300](https://github.com/UK-Export-Finance/mdm-api/issues/300)) ([b6d09b7](https://github.com/UK-Export-Finance/mdm-api/commit/b6d09b757b8e1fdac806250cb412956db0bf7279))
+* **APIM-531:** fix swagger regex field ([#313](https://github.com/UK-Export-Finance/mdm-api/issues/313)) ([6e94688](https://github.com/UK-Export-Finance/mdm-api/commit/6e946882c3a8ce9f5cfeee6fd2023fd7ba094155))
+* **deps:** update dependency @nestjs/swagger to v7.1.2 ([#331](https://github.com/UK-Export-Finance/mdm-api/issues/331)) ([db807a6](https://github.com/UK-Export-Finance/mdm-api/commit/db807a68f5020c839f890c2d6b2b525e6ed6ffef))
+* **env:** environment variable update ([#299](https://github.com/UK-Export-Finance/mdm-api/issues/299)) ([3dff5b0](https://github.com/UK-Export-Finance/mdm-api/commit/3dff5b084b8b8a04f8b8c6d75abb7fbee187c077))
+
+
+### Miscellaneous
+
+* **deps-dev:** Bump @commitlint/cli from 17.6.6 to 17.6.7 ([#333](https://github.com/UK-Export-Finance/mdm-api/issues/333)) ([0e038b8](https://github.com/UK-Export-Finance/mdm-api/commit/0e038b828778fcdb822bc03ced45ca74b69bf9e1))
+* **deps-dev:** Bump @commitlint/config-conventional from 17.6.6 to 17.6.7 ([#334](https://github.com/UK-Export-Finance/mdm-api/issues/334)) ([91ef159](https://github.com/UK-Export-Finance/mdm-api/commit/91ef1593a0d7834707961e7cf9a931dca22c6a13))
+* **deps-dev:** Bump @nestjs/cli from 10.1.1 to 10.1.3 ([#287](https://github.com/UK-Export-Finance/mdm-api/issues/287)) ([fb54e6c](https://github.com/UK-Export-Finance/mdm-api/commit/fb54e6c1c9be46ee65572095156e01cfb4a9833a))
+* **deps-dev:** Bump @nestjs/cli from 10.1.8 to 10.1.9 ([26c30cd](https://github.com/UK-Export-Finance/mdm-api/commit/26c30cd816b89c8fa16ad4a7628e43d47b4e8d34))
+* **deps-dev:** Bump @nestjs/cli from 10.1.8 to 10.1.9 ([#320](https://github.com/UK-Export-Finance/mdm-api/issues/320)) ([ed3ea84](https://github.com/UK-Export-Finance/mdm-api/commit/ed3ea84a6f85da5690a641dc23fcb98f79b8f8aa))
+* **deps-dev:** Bump @nestjs/cli from 10.1.9 to 10.1.10 ([#335](https://github.com/UK-Export-Finance/mdm-api/issues/335)) ([1956af3](https://github.com/UK-Export-Finance/mdm-api/commit/1956af3a813d70cb96b925f4d18c193c92338a12))
+* **deps-dev:** Bump @tsconfig/node20 from 1.0.2 to 20.1.0 ([333b439](https://github.com/UK-Export-Finance/mdm-api/commit/333b4395824cf165618da500195af87792dc6ecf))
+* **deps-dev:** Bump @tsconfig/node20 from 1.0.2 to 20.1.0 ([#319](https://github.com/UK-Export-Finance/mdm-api/issues/319)) ([7df6d01](https://github.com/UK-Export-Finance/mdm-api/commit/7df6d014278b084b93434a03ae0acba92a28a5ca))
+* **deps-dev:** Bump @types/jest from 29.5.2 to 29.5.3 ([#304](https://github.com/UK-Export-Finance/mdm-api/issues/304)) ([25fd473](https://github.com/UK-Export-Finance/mdm-api/commit/25fd4734288d0e14391e8920faffa8cc2a4ea700))
+* **deps-dev:** Bump @types/node from 20.4.0 to 20.4.1 ([#298](https://github.com/UK-Export-Finance/mdm-api/issues/298)) ([f1c90c1](https://github.com/UK-Export-Finance/mdm-api/commit/f1c90c1830dffaa66a697f0cd394c0679e408747))
+* **deps-dev:** Bump @types/node from 20.4.1 to 20.4.2 ([#314](https://github.com/UK-Export-Finance/mdm-api/issues/314)) ([826d696](https://github.com/UK-Export-Finance/mdm-api/commit/826d6965898e7da7aeee259a003b5d6b0c6e13ab))
+* **deps-dev:** Bump @typescript-eslint/eslint-plugin ([aec87b6](https://github.com/UK-Export-Finance/mdm-api/commit/aec87b664b29e20a915f9345eea5f97b3e71e49c))
+* **deps-dev:** Bump @typescript-eslint/eslint-plugin from 5.60.1 to 5.61.0 ([#285](https://github.com/UK-Export-Finance/mdm-api/issues/285)) ([003f662](https://github.com/UK-Export-Finance/mdm-api/commit/003f662fcb26f855fe7dd0fb9d67f339f57396b8))
+* **deps-dev:** Bump @typescript-eslint/eslint-plugin from 5.61.0 to 6.0.0 ([#305](https://github.com/UK-Export-Finance/mdm-api/issues/305)) ([28c8eb2](https://github.com/UK-Export-Finance/mdm-api/commit/28c8eb2de4e2d401f272fe8d98bf6b9bda9bf536))
+* **deps-dev:** Bump @typescript-eslint/eslint-plugin from 6.0.0 to 6.1.0 ([#325](https://github.com/UK-Export-Finance/mdm-api/issues/325)) ([7c4d6d9](https://github.com/UK-Export-Finance/mdm-api/commit/7c4d6d937855fc25dfd99e04a448ada6acdf385c))
+* **deps-dev:** Bump @typescript-eslint/parser from 5.60.1 to 5.61.0 ([#283](https://github.com/UK-Export-Finance/mdm-api/issues/283)) ([ef690f8](https://github.com/UK-Export-Finance/mdm-api/commit/ef690f8474871783b11caccf9f477236d1e63099))
+* **deps-dev:** Bump @typescript-eslint/parser from 5.62.0 to 6.0.0 ([2dcab0d](https://github.com/UK-Export-Finance/mdm-api/commit/2dcab0d7ff5789a0d165dd4dc98ca56387556221))
+* **deps-dev:** Bump @typescript-eslint/parser from 5.62.0 to 6.0.0 ([#321](https://github.com/UK-Export-Finance/mdm-api/issues/321)) ([ff84253](https://github.com/UK-Export-Finance/mdm-api/commit/ff842535f8a3f504b82a3eeb337e1bbde123d432))
+* **deps-dev:** Bump @typescript-eslint/parser from 6.0.0 to 6.1.0 ([25743dc](https://github.com/UK-Export-Finance/mdm-api/commit/25743dcc579ad607a4d67a299c5e87e8731a2083))
+* **deps-dev:** Bump @typescript-eslint/parser from 6.0.0 to 6.1.0 ([#326](https://github.com/UK-Export-Finance/mdm-api/issues/326)) ([1ea233a](https://github.com/UK-Export-Finance/mdm-api/commit/1ea233a00f08d028c4f5e8b981dc69180d53ec3a))
+* **deps-dev:** Bump cspell from 6.31.1 to 6.31.2 ([1904167](https://github.com/UK-Export-Finance/mdm-api/commit/1904167b018e5ad78a75c6f8e5e4c48f3a079b2e))
+* **deps-dev:** Bump cspell from 6.31.1 to 6.31.2 ([#323](https://github.com/UK-Export-Finance/mdm-api/issues/323)) ([67abd58](https://github.com/UK-Export-Finance/mdm-api/commit/67abd58fb3359aa4e4e92042f68b3f7cf5655ea5))
+* **deps-dev:** Bump eslint from 8.44.0 to 8.45.0 ([65919e0](https://github.com/UK-Export-Finance/mdm-api/commit/65919e0e2eb9a1338678a6f0fbe370ca40529882))
+* **deps-dev:** Bump eslint from 8.44.0 to 8.45.0 ([#322](https://github.com/UK-Export-Finance/mdm-api/issues/322)) ([a44aa79](https://github.com/UK-Export-Finance/mdm-api/commit/a44aa799f00231ea0fced69f517e507e16f7bc88))
+* **deps-dev:** Bump eslint-config-airbnb-typescript from 17.0.0 to 17.1.0 ([#317](https://github.com/UK-Export-Finance/mdm-api/issues/317)) ([4f2db84](https://github.com/UK-Export-Finance/mdm-api/commit/4f2db842f52eefd49b41ec463adc97b68f6a990f))
+* **deps-dev:** Bump eslint-plugin-jest from 27.2.2 to 27.2.3 ([#315](https://github.com/UK-Export-Finance/mdm-api/issues/315)) ([a0a6b21](https://github.com/UK-Export-Finance/mdm-api/commit/a0a6b2173730c3bd24952734c0fcd7e4e4de15ac))
+* **deps-dev:** Bump eslint-plugin-prettier from 4.2.1 to 5.0.0 ([#311](https://github.com/UK-Export-Finance/mdm-api/issues/311)) ([db652fd](https://github.com/UK-Export-Finance/mdm-api/commit/db652fd22383ee323462508cbb38b0e32c743f9a))
+* **deps-dev:** Bump eslint-plugin-unused-imports from 2.0.0 to 3.0.0 ([#310](https://github.com/UK-Export-Finance/mdm-api/issues/310)) ([f828298](https://github.com/UK-Export-Finance/mdm-api/commit/f828298d47e4e84ae9eb735060a994ee6037f9c5))
+* **deps-dev:** Bump jest from 29.6.0 to 29.6.1 ([f00d7a7](https://github.com/UK-Export-Finance/mdm-api/commit/f00d7a7a832d2e58c6b6f4e5579a60be77ec5494))
+* **deps-dev:** Bump jest from 29.6.0 to 29.6.1 ([#296](https://github.com/UK-Export-Finance/mdm-api/issues/296)) ([573a43c](https://github.com/UK-Export-Finance/mdm-api/commit/573a43c8e0cb638dcd5a49c6f2be2935f14ec174))
+* **deps-dev:** Bump nock from 13.3.1 to 13.3.2 ([#316](https://github.com/UK-Export-Finance/mdm-api/issues/316)) ([eff446c](https://github.com/UK-Export-Finance/mdm-api/commit/eff446c9adb3257e60f8fdc5b2707ba3340a87cf))
+* **deps-dev:** Bump prettier from 2.8.8 to 3.0.0 ([#294](https://github.com/UK-Export-Finance/mdm-api/issues/294)) ([b348897](https://github.com/UK-Export-Finance/mdm-api/commit/b348897494e236a49561839411f58842d8ae640a))
+* **deps-dev:** Bump prettier from 2.8.8 to 3.0.0 ([#307](https://github.com/UK-Export-Finance/mdm-api/issues/307)) ([4b29e63](https://github.com/UK-Export-Finance/mdm-api/commit/4b29e63b81dc563594f723b706908527a03a0067))
+* **deps-dev:** Bump sort-package-json from 2.5.0 to 2.5.1 ([#297](https://github.com/UK-Export-Finance/mdm-api/issues/297)) ([488df4d](https://github.com/UK-Export-Finance/mdm-api/commit/488df4d879af698c27a6b38d32edae35255eb7c4))
+* **deps:** Bump @nestjs/common from 10.0.5 to 10.1.0 ([942060c](https://github.com/UK-Export-Finance/mdm-api/commit/942060c825369f4855471395e9288bc4c55f904e))
+* **deps:** Bump @nestjs/common from 10.0.5 to 10.1.0 ([#327](https://github.com/UK-Export-Finance/mdm-api/issues/327)) ([9b3d196](https://github.com/UK-Export-Finance/mdm-api/commit/9b3d1967e7b2d63376043c29c09cb007057ca214))
+* **deps:** Bump @nestjs/core from 10.0.5 to 10.1.0 ([1e1a872](https://github.com/UK-Export-Finance/mdm-api/commit/1e1a872c83474400fc3f958eefa31b5fc0776c0c))
+* **deps:** Bump @nestjs/core from 10.0.5 to 10.1.0 ([#329](https://github.com/UK-Export-Finance/mdm-api/issues/329)) ([3433ce0](https://github.com/UK-Export-Finance/mdm-api/commit/3433ce0bcf1b737038caa85deef4219f71ffc7ae))
+* **deps:** Bump @nestjs/platform-express from 10.0.5 to 10.1.0 ([3581a17](https://github.com/UK-Export-Finance/mdm-api/commit/3581a171395b9218d250324e6fa1c506667e780f))
+* **deps:** Bump @nestjs/platform-express from 10.0.5 to 10.1.0 ([#328](https://github.com/UK-Export-Finance/mdm-api/issues/328)) ([b2988a4](https://github.com/UK-Export-Finance/mdm-api/commit/b2988a4ca8d100db06f08607e7a0573843d20b83))
+* **deps:** Bump @nestjs/swagger from 7.1.1 to 7.1.2 ([#336](https://github.com/UK-Export-Finance/mdm-api/issues/336)) ([6c7cd60](https://github.com/UK-Export-Finance/mdm-api/commit/6c7cd606597d8e66d87fe82055c43736f7e6e2b0))
+* **deps:** docker node update ([#330](https://github.com/UK-Export-Finance/mdm-api/issues/330)) ([cee9623](https://github.com/UK-Export-Finance/mdm-api/commit/cee96236b38f7778f75d9b9590116cb6949a2a3d))
+* **deps:** update dependency @nestjs/cli to v10.1.3 ([#284](https://github.com/UK-Export-Finance/mdm-api/issues/284)) ([0782f8a](https://github.com/UK-Export-Finance/mdm-api/commit/0782f8ae29ab688b9b41c28d7229d28b80d48bc8))
+* **deps:** update dependency @nestjs/cli to v10.1.7 ([#291](https://github.com/UK-Export-Finance/mdm-api/issues/291)) ([d71fe4e](https://github.com/UK-Export-Finance/mdm-api/commit/d71fe4e271a31d2f275ce4dd03e8d99efaab6a57))
+* **deps:** update dependency @nestjs/cli to v10.1.8 ([#308](https://github.com/UK-Export-Finance/mdm-api/issues/308)) ([2bf093a](https://github.com/UK-Export-Finance/mdm-api/commit/2bf093a6671d6ba4240d979363f530e08a467ffd))
+* **deps:** update dependency @types/jest to v29.5.3 ([#301](https://github.com/UK-Export-Finance/mdm-api/issues/301)) ([b1910cb](https://github.com/UK-Export-Finance/mdm-api/commit/b1910cb8f9e5dbd29bd2ef6fbb8611c952dfea7b))
+* **deps:** update dependency @types/node to v20.4.0 ([#293](https://github.com/UK-Export-Finance/mdm-api/issues/293)) ([a36fa82](https://github.com/UK-Export-Finance/mdm-api/commit/a36fa82326a10470bb0379bfbd4b875a3b5e6252))
+* **deps:** update dependency @typescript-eslint/parser to v5.61.0 ([#281](https://github.com/UK-Export-Finance/mdm-api/issues/281)) ([f2ab74a](https://github.com/UK-Export-Finance/mdm-api/commit/f2ab74a2f62f57221b085c63f770c75f3a325923))
+* **deps:** update dependency jest to v29.6.0 ([#289](https://github.com/UK-Export-Finance/mdm-api/issues/289)) ([966d0ff](https://github.com/UK-Export-Finance/mdm-api/commit/966d0ff6f810839295010ca8096097beed978574))
+* **deps:** update dependency jest to v29.6.1 ([#295](https://github.com/UK-Export-Finance/mdm-api/issues/295)) ([80a589f](https://github.com/UK-Export-Finance/mdm-api/commit/80a589fc9399d127b4307de3da2128adfa166bc0))
+* **deps:** update typescript-eslint monorepo to v5.62.0 ([#302](https://github.com/UK-Export-Finance/mdm-api/issues/302)) ([9cd28a9](https://github.com/UK-Export-Finance/mdm-api/commit/9cd28a9548e2562e1aeba2a1ca253d917d240b55))
+* **dockerfile:** version updates ([#332](https://github.com/UK-Export-Finance/mdm-api/issues/332)) ([d4da75b](https://github.com/UK-Export-Finance/mdm-api/commit/d4da75b29bdd4dd28f7bfaa8132d785e34613722))
+
 ## [1.14.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.13.0...v1.14.0) (2023-07-03)
 
 
