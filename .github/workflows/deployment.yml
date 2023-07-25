@@ -29,18 +29,18 @@ on:
       - production
 
     paths:
-      - 'src/**'
-      - 'package.json'
-      - 'package-lock.json'
-      - 'Dockerfile'
-      - 'tsconfig.json'
-      - 'tsconfig.build.json'
-      - '.github/workflows/deployment.yml'
+      - "src/**"
+      - "package.json"
+      - "package-lock.json"
+      - "Dockerfile"
+      - "tsconfig.json"
+      - "tsconfig.build.json"
+      - ".github/workflows/deployment.yml"
 
 env:
   PRODUCT: apim
   ENVIRONMENT: ${{ github.ref_name }}
-  TIMEZONE: 'Europe/London'
+  TIMEZONE: "Europe/London"
   # Base artifact
   FROM: latest
 
@@ -162,4 +162,3 @@ jobs:
             --protocols https \
             --specification-url https://$(az containerapp show --name ${{ env.CA_NAME }} --query properties.latestRevisionFqdn -o tsv)/openapi/json \
             --subscription-required true
-
