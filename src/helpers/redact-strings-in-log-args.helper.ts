@@ -5,7 +5,7 @@ export const redactStringsInLogArgs = (
   redactLogs: boolean,
   redactPaths: string[],
   redactStrings: { searchValue: string | RegExp; replaceValue: string }[],
-  args: any,
+  args: any[],
 ): any => {
   if (!redactLogs) {
     return args;

@@ -33,7 +33,7 @@ import { LoggingInterceptor } from './logging/logging-interceptor.helper';
             },
           },
           hooks: {
-            logMethod(inputArgs: any, method) {
+            logMethod(inputArgs: any[], method) {
               return method.apply(this, redactStringsInLogArgs(config.get<boolean>('app.redactLogs'), REDACT_STRING_PATHS, REDACT_STRINGS, inputArgs));
             },
           },
