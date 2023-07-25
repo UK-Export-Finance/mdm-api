@@ -7,19 +7,18 @@ run-name: Executing lint QA on ${{ github.repository }} 🚀
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [main]
     paths:
-    - 'src/**'
-    - 'test/**'
+      - "src/**"
+      - "test/**"
 
 env:
-  environment: 'qa'
-  timezone: 'Europe/London'
+  environment: "qa"
+  timezone: "Europe/London"
   node: ${{ vars.NODE_VERSION }}
 
 jobs:
-
-# 1. Setup test infrastructure
+  # 1. Setup test infrastructure
   setup:
     name: Infrastructure setup 🔧
     runs-on: ubuntu-latest
@@ -27,13 +26,13 @@ jobs:
       environment: ${{ env.environment }}
       timezone: ${{ env.timezone }}
     steps:
-    - name: Environment 🧪
-      run: echo "Environment set to ${{ env.environment }}"
-  
-    - name: Timezone 🌐
-      run: echo "Timezone set to ${{ env.timezone }}"
+      - name: Environment 🧪
+        run: echo "Environment set to ${{ env.environment }}"
 
-# 2. Lint
+      - name: Timezone 🌐
+        run: echo "Timezone set to ${{ env.timezone }}"
+
+  # 2. Lint
   lint:
     name: Scanning 🎨
     environment:
@@ -44,7 +43,7 @@ jobs:
         uses: szenius/set-timezone@v1.2
         with:
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
-  
+
       - name: Repository
         uses: actions/checkout@v3
 

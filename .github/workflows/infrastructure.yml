@@ -68,7 +68,7 @@ on:
 env:
   PRODUCT: apim
   ENVIRONMENT: infrastructure
-  TIMEZONE: 'Europe/London'
+  TIMEZONE: "Europe/London"
   # Deployment environment target i.e., `dev`, `staging`, `production`
   TARGET: ${{ vars.ENVIRONMENT }}
 
