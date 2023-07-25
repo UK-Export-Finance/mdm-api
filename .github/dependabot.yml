@@ -9,27 +9,27 @@
 version: 2
 updates:
   # Root package-*.json files
-  - package-ecosystem: 'npm'
-    directory: '/'
+  - package-ecosystem: "npm"
+    directory: "/"
     schedule:
-      interval: 'daily'
+      interval: "daily"
     labels:
-      - 'chore'
+      - "chore"
 
   # Root Dockerfile
-  - package-ecosystem: 'docker'
-    directory: '/'
+  - package-ecosystem: "docker"
+    directory: "/"
     schedule:
-      interval: 'daily'
+      interval: "daily"
     labels:
-      - 'chore'
+      - "chore"
 
   # Git Hub Actions
   #  Set the directory to `/` for
   # .github/workflows GHA files
-  - package-ecosystem: 'github-actions'
-    directory: '/'
+  - package-ecosystem: "github-actions"
+    directory: "/"
     schedule:
-      interval: 'daily'
+      interval: "daily"
     labels:
-      - 'chore'
+      - "chore"

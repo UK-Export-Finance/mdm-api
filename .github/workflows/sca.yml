@@ -11,15 +11,14 @@ run-name: Executing various SCAs on ${{ github.repository }} 🔍️
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 env:
-  environment: 'qa'
-  timezone: 'Europe/London'
+  environment: "qa"
+  timezone: "Europe/London"
 
 jobs:
-
-# 1. Setup test infrastructure
+  # 1. Setup test infrastructure
   setup:
     name: Infrastructure setup 🔧
     runs-on: ubuntu-latest
@@ -27,13 +26,13 @@ jobs:
       environment: ${{ env.environment }}
       timezone: ${{ env.timezone }}
     steps:
-    - name: Environment 🧪
-      run: echo "Environment set to ${{ env.environment }}"
-  
-    - name: Timezone 🌐
-      run: echo "Timezone set to ${{ env.timezone }}"
+      - name: Environment 🧪
+        run: echo "Environment set to ${{ env.environment }}"
 
-# 2. Code quality - SCA
+      - name: Timezone 🌐
+        run: echo "Timezone set to ${{ env.timezone }}"
+
+  # 2. Code quality - SCA
   codacy:
     name: Codacy 🔖
     needs: setup
@@ -42,15 +41,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Repository
-      uses: actions/checkout@v3
+      - name: Repository
+        uses: actions/checkout@v3
 
-    - name: Codacy
-      uses: codacy/codacy-analysis-cli-action@master
-      with:
-        verbose: true
+      - name: Codacy
+        uses: codacy/codacy-analysis-cli-action@master
+        with:
+          verbose: true
 
-# 3. Licensing - SCA
+  # 3. Licensing - SCA
   license:
     name: Licensing ✏️
     needs: setup
@@ -59,10 +58,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Repository
-      uses: actions/checkout@v3
+      - name: Repository
+        uses: actions/checkout@v3
 
-    - name: Fossa
-      uses: fossas/fossa-action@main
-      with:
-        api-key: ${{ secrets.FOSSA_API_KEY }}
+      - name: Fossa
+        uses: fossas/fossa-action@main
+        with:
+          api-key: ${{ secrets.FOSSA_API_KEY }}
