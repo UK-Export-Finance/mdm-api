@@ -29,7 +29,7 @@ import { LoggingInterceptor } from './logging/logging-interceptor.helper';
           transport: {
             target: 'pino-pretty',
             options: {
-              singleLine: config.get<string>('app.singleLineLogLevel'),
+              singleLine: config.get<boolean>('app.singleLineLogLevel'),
             },
           },
           hooks: {
