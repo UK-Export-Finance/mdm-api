@@ -1,16 +1,17 @@
-import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DATABASE, DATE } from '@ukef/constants';
+import { PinoLogger } from 'nestjs-pino';
 import { Equal, LessThanOrEqual, MoreThan, Repository } from 'typeorm';
 
 import { YieldRateEntity } from './entities/yield-rate.entity';
 
 @Injectable()
 export class YieldRatesService {
-  private readonly logger = new Logger();
   constructor(
     @InjectRepository(YieldRateEntity, DATABASE.CEDAR)
     private readonly yieldRateRepository: Repository<YieldRateEntity>,
+    private readonly logger: PinoLogger,
   ) {}
 
   async find(searchDate: string): Promise<YieldRateEntity[]> {

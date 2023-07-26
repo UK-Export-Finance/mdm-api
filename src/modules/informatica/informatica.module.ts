@@ -4,6 +4,7 @@ import { InformaticaConfig, KEY as INFORMATICA_CONFIG_KEY } from '@ukef/config/i
 import { HttpModule } from '@ukef/modules/http/http.module';
 
 import { InformaticaService } from './informatica.service';
+
 @Module({
   imports: [
     HttpModule.registerAsync({

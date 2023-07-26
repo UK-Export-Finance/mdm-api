@@ -1,18 +1,18 @@
-import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DATABASE } from '@ukef/constants';
 import { DbResponseHelper } from '@ukef/helpers/db-response.helper';
+import { PinoLogger } from 'nestjs-pino';
 import { Repository } from 'typeorm';
 
 import { ConstantSpiEntity } from './entities/constants-spi.entity';
 
 @Injectable()
 export class ConstantsService {
-  private readonly logger = new Logger();
-
   constructor(
     @InjectRepository(ConstantSpiEntity, DATABASE.CIS)
     private readonly constantsCisRepository: Repository<ConstantSpiEntity>,
+    private readonly logger: PinoLogger,
   ) {}
 
   async find(oecdRiskCategory: number, category: string): Promise<ConstantSpiEntity[]> {

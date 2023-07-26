@@ -135,7 +135,7 @@ paths:
           example: '00302069'
           description: The unique UKEF id of the customer to search for.
           schema:
-            pattern: /^\\d{8}$/
+            pattern: ^\\d{8}$
             type: string
         - name: name
           required: false

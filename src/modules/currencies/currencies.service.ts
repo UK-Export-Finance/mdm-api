@@ -1,7 +1,8 @@
-import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DATABASE, DATE } from '@ukef/constants';
 import { DbResponseHelper } from '@ukef/helpers/db-response.helper';
+import { PinoLogger } from 'nestjs-pino';
 import { DataSource, Equal, Repository } from 'typeorm';
 
 import { CurrencyEntity } from './entities/currency.entity';
@@ -9,7 +10,6 @@ import { CurrencyExchangeEntity } from './entities/currency-exchange.entity';
 
 @Injectable()
 export class CurrenciesService {
-  private readonly logger = new Logger();
   constructor(
     @InjectRepository(CurrencyEntity, DATABASE.MDM)
     private readonly currency: Repository<CurrencyEntity>,
@@ -17,6 +17,7 @@ export class CurrenciesService {
     private readonly currencyExchange: DataSource,
     @InjectRepository(CurrencyExchangeEntity, DATABASE.CEDAR)
     private readonly currencyExchangeRepository: Repository<CurrencyExchangeEntity>,
+    private readonly logger: PinoLogger,
   ) {}
 
   async findAll(): Promise<CurrencyEntity[]> {

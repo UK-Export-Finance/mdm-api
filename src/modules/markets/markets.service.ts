@@ -1,18 +1,18 @@
-import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DATABASE } from '@ukef/constants';
 import { DbResponseHelper } from '@ukef/helpers/db-response.helper';
+import { PinoLogger } from 'nestjs-pino';
 import { Repository } from 'typeorm';
 
 import { MarketEntity } from './entities/market.entity';
 
 @Injectable()
 export class MarketsService {
-  private readonly logger = new Logger();
-
   constructor(
     @InjectRepository(MarketEntity, DATABASE.CIS)
     private readonly marketsRepository: Repository<MarketEntity>,
+    private readonly logger: PinoLogger,
   ) {}
 
   async find(active?: string, search?: string): Promise<MarketEntity[]> {

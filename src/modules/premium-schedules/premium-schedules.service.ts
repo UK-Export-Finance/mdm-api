@@ -1,19 +1,20 @@
-import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DATABASE } from '@ukef/constants';
+import { DbResponseHelper } from '@ukef/helpers/db-response.helper';
 import { Response } from 'express';
+import { PinoLogger } from 'nestjs-pino';
 import { Equal, Repository } from 'typeorm';
 
-import { DbResponseHelper } from '../../helpers/db-response.helper';
 import { CreatePremiumScheduleDto } from './dto/create-premium-schedule.dto';
 import { PremiumScheduleEntity } from './entities/premium-schedule.entity';
 
 @Injectable()
 export class PremiumSchedulesService {
-  private readonly logger = new Logger();
   constructor(
     @InjectRepository(PremiumScheduleEntity, DATABASE.MDM)
     private readonly premiumSchedulesRepository: Repository<PremiumScheduleEntity>,
+    private readonly logger: PinoLogger,
   ) {}
 
   async find(facilityId: string): Promise<PremiumScheduleEntity[]> {

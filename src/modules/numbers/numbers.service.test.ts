@@ -1,11 +1,12 @@
+import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
+import { PinoLogger } from 'nestjs-pino';
 import { Repository } from 'typeorm';
 
 import { NumbersService } from './numbers.service';
 
 describe('NumbersService', () => {
   let service: NumbersService;
-
   const unSortedUkefIds = [
     {
       id: 201,
@@ -129,9 +130,14 @@ describe('NumbersService', () => {
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      providers: [NumbersService, { provide: 'mssql-number-generator_UkefIdRepository', useFactory: repositoryMockFactory }],
+      providers: [
+        NumbersService,
+        PinoLogger,
+        { provide: 'pino-params', useValue: {} },
+        ConfigService,
+        { provide: 'mssql-number-generator_UkefIdRepository', useFactory: repositoryMockFactory },
+      ],
     }).compile();
-
     service = module.get<NumbersService>(NumbersService);
   });
 
