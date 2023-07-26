@@ -1,8 +1,24 @@
 import { registerAs } from '@nestjs/config';
+import { getIntConfig } from '@ukef/helpers/get-int-config';
 
 import { InvalidConfigException } from './invalid-config.exception';
 
 const validLogLevels = ['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent'];
+
+export interface AppConfig {
+  name: string;
+  env: string;
+  versioning: {
+    enable: boolean;
+    prefix: string;
+    version: string;
+  };
+  globalPrefix: string;
+  port: number;
+  apiKey: string;
+  logLevel: string;
+  redactLogs: boolean;
+}
 
 export default registerAs('app', (): Record<string, any> => {
   const logLevel = process.env.LOG_LEVEL || 'info';
@@ -20,7 +36,7 @@ export default registerAs('app', (): Record<string, any> => {
     },
 
     globalPrefix: '/api',
-    port: process.env.HTTP_PORT ? Number.parseInt(process.env.HTTP_PORT, 10) : 3003,
+    port: getIntConfig(process.env.HTTP_PORT, 3003),
     apiKey: process.env.API_KEY,
     logLevel: process.env.LOG_LEVEL || 'info',
     redactLogs: process.env.REDACT_LOGS !== 'false',
