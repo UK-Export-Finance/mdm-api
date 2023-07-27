@@ -2,7 +2,7 @@ import { InvalidConfigException } from '@ukef/config/invalid-config.exception';
 
 import { getIntConfig } from './get-int-config';
 
-describe('Get integer configuration value Helper', () => {
+describe('GetIntConfig helper', () => {
   describe('getIntConfig returns value', () => {
     it.each([
       { value: undefined, defaultValue: 60, expectedResult: 60 },
