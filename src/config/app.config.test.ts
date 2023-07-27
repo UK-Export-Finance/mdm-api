@@ -129,6 +129,56 @@ describe('appConfig', () => {
     });
   });
 
+  describe('parsing SINGLE_LINE_LOG_FORMAT', () => {
+    it('sets singleLineLogFormat to true if SINGLE_LINE_LOG_FORMAT is true', () => {
+      replaceEnvironmentVariables({
+        SINGLE_LINE_LOG_FORMAT: 'true',
+      });
+
+      const config = appConfig();
+
+      expect(config.singleLineLogFormat).toBe(true);
+    });
+
+    it('sets singleLineLogFormat to false if SINGLE_LINE_LOG_FORMAT is false', () => {
+      replaceEnvironmentVariables({
+        SINGLE_LINE_LOG_FORMAT: 'false',
+      });
+
+      const config = appConfig();
+
+      expect(config.singleLineLogFormat).toBe(false);
+    });
+
+    it('sets singleLineLogFormat to true if SINGLE_LINE_LOG_FORMAT is not specified', () => {
+      replaceEnvironmentVariables({});
+
+      const config = appConfig();
+
+      expect(config.singleLineLogFormat).toBe(true);
+    });
+
+    it('sets singleLineLogFormat to true if SINGLE_LINE_LOG_FORMAT is the empty string', () => {
+      replaceEnvironmentVariables({
+        SINGLE_LINE_LOG_FORMAT: '',
+      });
+
+      const config = appConfig();
+
+      expect(config.singleLineLogFormat).toBe(true);
+    });
+
+    it('sets singleLineLogFormat to true if SINGLE_LINE_LOG_FORMAT is any string other than true or false', () => {
+      replaceEnvironmentVariables({
+        SINGLE_LINE_LOG_FORMAT: valueGenerator.string(),
+      });
+
+      const config = appConfig();
+
+      expect(config.singleLineLogFormat).toBe(true);
+    });
+  });
+
   const replaceEnvironmentVariables = (newEnvVariables: Record<string, string>): void => {
     process.env = newEnvVariables;
   };
