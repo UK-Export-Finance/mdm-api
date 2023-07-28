@@ -121,10 +121,11 @@ jobs:
             --revision-suffix v${{ github.run_id }} \
             --set-env-vars \
             "PORT=${{ secrets.PORT }}" \
-            "NODE_ENV=${{ secrets.NODE_ENV }}" \
-            "LOG_LEVEL=${{ secrets.LOG_LEVEL }}" \
-            "REDACT_LOGS=${{ secrets.REDACT_LOGS }}" \
             "TZ=${{ secrets.TZ }}" \
+            "NODE_ENV=${{ secrets.NODE_ENV }}" \
+            "LOG_LEVEL=${{ vars.LOG_LEVEL }}" \
+            "REDACT_LOGS=${{ vars.REDACT_LOGS }}" \
+            "SINGLE_LINE_LOG_FORMAT=${{ vars.SINGLE_LINE_LOG_FORMAT }}" \
             "SWAGGER_USER=${{ secrets.SWAGGER_USER }}" \
             "SWAGGER_PASSWORD=${{ secrets.SWAGGER_PASSWORD }}" \
             "DATABASE_PORT=${{ secrets.DATABASE_PORT }}" \
