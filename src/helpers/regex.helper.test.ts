@@ -1,6 +1,6 @@
 import { regexToString } from './regex.helper';
 
-describe('Regex Helper', () => {
+describe('Regex helper', () => {
   describe('regexToString', () => {
     it('replaces the leading and trailing forward slashes with an empty string', () => {
       const regex = /test/;

@@ -1,4 +1,5 @@
 import { registerAs } from '@nestjs/config';
+import { getIntConfig } from '@ukef/helpers/get-int-config';
 
 export const KEY = 'informatica';
 
@@ -16,7 +17,7 @@ export default registerAs(
     baseUrl: process.env.APIM_INFORMATICA_URL,
     username: process.env.APIM_INFORMATICA_USERNAME,
     password: process.env.APIM_INFORMATICA_PASSWORD,
-    maxRedirects: parseInt(process.env.APIM_INFORMATICA_MAX_REDIRECTS) || 5,
-    timeout: parseInt(process.env.APIM_INFORMATICA_TIMEOUT) || 30000,
+    maxRedirects: getIntConfig(process.env.APIM_INFORMATICA_MAX_REDIRECTS, 5),
+    timeout: getIntConfig(process.env.APIM_INFORMATICA_TIMEOUT, 30000),
   }),
 );
