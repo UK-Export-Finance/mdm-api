@@ -87,6 +87,11 @@ describe('appConfig', () => {
     defaultConfigValue: boolean;
   }[] = [
     {
+      configPropertyName: 'singleLineLogFormat',
+      environmentVariableName: 'SINGLE_LINE_LOG_FORMAT',
+      defaultConfigValue: true,
+    },
+    {
       configPropertyName: 'redactLogs',
       environmentVariableName: 'REDACT_LOGS',
       defaultConfigValue: true,
