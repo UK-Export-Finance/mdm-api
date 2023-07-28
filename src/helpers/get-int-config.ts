@@ -1,7 +1,7 @@
 import { InvalidConfigException } from '@ukef/config/invalid-config.exception';
 
 // This helper function is used to get integer from configuration.
-export const getIntConfig = (environmentVariable: string, defaultValue?: number): number | undefined => {
+export const getIntConfig = (environmentVariable: string, defaultValue?: number): number => {
   if (typeof environmentVariable === 'undefined') {
     if (typeof defaultValue === 'undefined') {
       throw new InvalidConfigException(`Environment variable is missing and doesn't have default value.`);
