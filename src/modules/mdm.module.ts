@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from '@ukef/auth/auth.module';
 import { DatabaseModule } from '@ukef/database/database.module';
-import { ConstantsModule } from '@ukef/modules/constants/constants.module';
 import { CurrenciesModule } from '@ukef/modules/currencies/currencies.module';
 import { CustomersModule } from '@ukef/modules/customers/customers.module';
 import { ExposurePeriodModule } from '@ukef/modules/exposure-period/exposure-period.module';
@@ -17,7 +16,6 @@ import { YieldRatesModule } from '@ukef/modules/yield-rates/yield-rates.module';
   imports: [
     AuthModule,
     DatabaseModule,
-    ConstantsModule,
     CurrenciesModule,
     CustomersModule,
     ExposurePeriodModule,
@@ -32,7 +30,6 @@ import { YieldRatesModule } from '@ukef/modules/yield-rates/yield-rates.module';
   exports: [
     AuthModule,
     DatabaseModule,
-    ConstantsModule,
     CurrenciesModule,
     CustomersModule,
     ExposurePeriodModule,
