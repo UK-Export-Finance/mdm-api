@@ -43,6 +43,30 @@ describe('Premium schedules', () => {
   /**
    * To get existing premium schedules we need to generate them first.
    */
+  it('POST /premium/schedule as BSS with `At maturity` fee frequency', async () => {
+    const createSchedules = [
+      {
+        facilityURN: chance.natural({ min: 10000000, max: 99999999 }),
+        productGroup: PRODUCTS.BS,
+        premiumTypeId: 1,
+        premiumFrequencyId: 0,
+        guaranteeCommencementDate: '2023-01-19',
+        guaranteeExpiryDate: '2023-02-19',
+        guaranteePercentage: 80,
+        guaranteeFeePercentage: 1.35,
+        dayBasis: '360',
+        exposurePeriod: 1,
+        cumulativeAmount: null,
+        maximumLiability: 40000,
+      },
+    ];
+    const postResponse = await api.post(createSchedules).to('/premium/schedule');
+
+    expect(postResponse.status).toBe(201);
+    expect(postResponse.body).toHaveLength(1);
+    expect(postResponse.body).toEqual(expect.arrayContaining([expect.objectContaining(premiumScheduleSchema)]));
+  });
+
   it('POST /premium/schedule and then GET /premium/segments/{facilityId}', async () => {
     const createSchedules = [
       {
@@ -81,7 +105,7 @@ describe('Premium schedules', () => {
         facilityURN: chance.natural({ min: 10000000, max: 99999999 }),
         productGroup: PRODUCTS.BS,
         premiumTypeId: 1,
-        premiumFrequencyId: 1,
+        premiumFrequencyId: 2,
         guaranteeCommencementDate: '2023-01-19',
         guaranteeExpiryDate: '2023-02-19',
         guaranteePercentage: 80,
@@ -105,7 +129,31 @@ describe('Premium schedules', () => {
         facilityURN: chance.natural({ min: 10000000, max: 99999999 }),
         productGroup: PRODUCTS.BS,
         premiumTypeId: 1,
-        premiumFrequencyId: 1,
+        premiumFrequencyId: 3,
+        guaranteeCommencementDate: '2023-01-19',
+        guaranteeExpiryDate: '2023-02-19',
+        guaranteePercentage: 80,
+        guaranteeFeePercentage: 1.35,
+        dayBasis: '360',
+        exposurePeriod: 1,
+        cumulativeAmount: null,
+        maximumLiability: 40000,
+      },
+    ];
+    const postResponse = await api.post(createSchedules).to('/premium/schedule');
+
+    expect(postResponse.status).toBe(201);
+    expect(postResponse.body).toHaveLength(1);
+    expect(postResponse.body).toEqual(expect.arrayContaining([expect.objectContaining(premiumScheduleSchema)]));
+  });
+
+  it('POST /premium/schedule as EWCS with `Annually` fee frequency', async () => {
+    const createSchedules = [
+      {
+        facilityURN: chance.natural({ min: 10000000, max: 99999999 }),
+        productGroup: PRODUCTS.BS,
+        premiumTypeId: 1,
+        premiumFrequencyId: 4,
         guaranteeCommencementDate: '2023-01-19',
         guaranteeExpiryDate: '2023-02-19',
         guaranteePercentage: 80,
