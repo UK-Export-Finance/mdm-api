@@ -30,11 +30,11 @@ export class CreatePremiumScheduleDto {
 
   @IsNumber()
   @IsNotEmpty()
-  @Min(1)
-  @Max(3)
+  @Min(0)
+  @Max(4)
   @ApiProperty({
     example: 1,
-    description: 'Payment frequency. It can be: 1 -> Monthly, 2 -> Quarterly, 3-> Semi-annually or 4 -> Annually',
+    description: 'Payment frequency. It can be: 0 -> Null (At maturity), 1 -> Monthly, 2 -> Quarterly, 3-> Semi-annually or 4 -> Annually',
   })
   readonly premiumFrequencyId: number;
 
