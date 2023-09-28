@@ -6,18 +6,17 @@
   "license": "MIT",
   "author": "UKEF",
   "scripts": {
-    "housekeeping": "npm update --save --legacy-peer-deps && npm i --legacy-peer-deps && npm audit --fix && npm run spellcheck",
     "api-test": "jest --selectProjects=API",
     "build": "nest build -p tsconfig.build.json",
+    "housekeeping": "npm update --save --legacy-peer-deps && npm i --legacy-peer-deps && npm audit --fix && npm run spellcheck",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
+    "spellcheck": "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color '**/*'",
     "start": "nest start",
     "start:debug": "nest start --debug --watch",
     "start:dev": "nest start --tsc --watch",
     "start:prod": "node dist/src/main",
-    "test:cov": "jest --coverage",
-    "unit-test": "jest --selectProjects=Unit",
-    "spellcheck": "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color '**/*'"
+    "unit-test": "jest --selectProjects=Unit"
   },
   "lint-staged": {
     "**/package.json": "sort-package-json",
