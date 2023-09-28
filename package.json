@@ -6,6 +6,7 @@
   "license": "MIT",
   "author": "UKEF",
   "scripts": {
+    "housekeeping": "npm update --save --legacy-peer-deps && npm i --legacy-peer-deps && npm audit --fix && npm run spellcheck",
     "api-test": "jest --selectProjects=API",
     "build": "nest build -p tsconfig.build.json",
     "lint": "eslint . --ext .ts",
@@ -15,15 +16,22 @@
     "start:dev": "nest start --tsc --watch",
     "start:prod": "node dist/src/main",
     "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:watch": "jest --watch",
-    "unit-test": "jest --selectProjects=Unit"
+    "unit-test": "jest --selectProjects=Unit",
+    "spellcheck": "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color '**/*'"
+  },
+  "lint-staged": {
+    "**/package.json": "sort-package-json",
+    "**/*.js": "eslint --fix",
+    "**/*.ts": "eslint --fix",
+    "**/*": [
+      "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color"
+    ]
   },
   "dependencies": {
     "@nestjs/axios": "^3.0.0",
     "@nestjs/common": "^10.2.6",
     "@nestjs/config": "^3.1.1",
-    "@nestjs/core": "^10.2.5",
+    "@nestjs/core": "^10.2.6",
     "@nestjs/passport": "^10.0.2",
     "@nestjs/platform-express": "^10.2.6",
     "@nestjs/swagger": "^7.1.12",
@@ -68,7 +76,7 @@
     "@typescript-eslint/eslint-plugin": "^6.7.3",
     "@typescript-eslint/parser": "^6.7.3",
     "chance": "^1.1.11",
-    "cspell": "^7.3.6",
+    "cspell": "^7.3.7",
     "eslint": "^8.50.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^17.1.0",
@@ -93,7 +101,7 @@
     "lint-staged": "^14.0.1",
     "nock": "^13.3.3",
     "prettier": "^3.0.3",
-    "sort-package-json": "^2.5.1",
+    "sort-package-json": "^2.6.0",
     "source-map-support": "^0.5.21",
     "supertest": "^6.3.3",
     "ts-jest": "29.1.1",
@@ -102,6 +110,6 @@
   },
   "engines": {
     "node": ">=18",
-    "npm": ">=9.5.0"
+    "npm": ">=9.8.0"
   }
 }
