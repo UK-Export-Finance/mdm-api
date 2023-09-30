@@ -7,9 +7,6 @@ services:
     container_name: mdm-api
     restart: always
     command: npm run start:prod
-    extra_hosts:
-      - "${DATABASE_MDM_HOST}:${DATABASE_SERVER_1_IP}"
-      - "${DATABASE_CEDAR_HOST}:${DATABASE_SERVER_2_IP}"
     ports:
       - ${PORT}:${PORT}
     volumes:
@@ -26,10 +23,7 @@ services:
       DATABASE_PORT:
       DATABASE_USERNAME:
       DATABASE_PASSWORD:
-      DATABASE_MDM_HOST:
-      DATABASE_NUMBER_GENERATOR_HOST:
-      DATABASE_CEDAR_HOST:
-      DATABASE_CIS_HOST:
+      DATABASE_HOST:
       DATABASE_MDM_NAME:
       DATABASE_NUMBER_GENERATOR_NAME:
       DATABASE_CEDAR_NAME:
