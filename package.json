@@ -71,7 +71,7 @@
     "@types/jest": "^29.5.6",
     "@types/lodash": "^4.14.199",
     "@types/node": "^20.8.7",
-    "@types/supertest": "^2.0.14",
+    "@types/supertest": "^2.0.15",
     "@typescript-eslint/eslint-plugin": "^6.8.0",
     "@typescript-eslint/parser": "^6.8.0",
     "chance": "^1.1.11",
