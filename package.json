@@ -59,8 +59,8 @@
     "typescript": "^5.2.2"
   },
   "devDependencies": {
-    "@commitlint/cli": "^17.8.0",
-    "@commitlint/config-conventional": "^17.8.0",
+    "@commitlint/cli": "^18.0.0",
+    "@commitlint/config-conventional": "^18.0.0",
     "@nestjs/cli": "^10.1.18",
     "@nestjs/schematics": "^10.0.2",
     "@nestjs/testing": "^10.2.7",
