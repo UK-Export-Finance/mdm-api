@@ -55,7 +55,7 @@
     "tsconfig-paths": "^4.2.0",
     "tslib": "^2.6.2",
     "typeorm": "^0.3.17",
-    "typeorm-extension": "^3.1.0",
+    "typeorm-extension": "^3.1.1",
     "typescript": "^5.2.2"
   },
   "devDependencies": {
