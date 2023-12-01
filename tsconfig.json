@@ -1,5 +1,5 @@
 {
-  "extends": "@tsconfig/node20/tsconfig.json",
+  "extends": "./node_modules/@tsconfig/node21/tsconfig.json",
   "compilerOptions": {
     "module": "commonjs",
     "removeComments": true,
