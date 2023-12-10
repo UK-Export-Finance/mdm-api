@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.17.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.16.0...v1.17.0) (2023-12-10)
+
+
+### Features
+
+* **ami:** migration to Azure AMI ([9854d57](https://github.com/UK-Export-Finance/mdm-api/commit/9854d573182ddedc6e521343d4b23b7b720754fd))
+* **ami:** migration to Azure AMI ([#514](https://github.com/UK-Export-Finance/mdm-api/issues/514)) ([bfeaa1e](https://github.com/UK-Export-Finance/mdm-api/commit/bfeaa1e190b1872e346a5866a5df778a859f2f0f))
+* **template:** pull request template ([b8506bb](https://github.com/UK-Export-Finance/mdm-api/commit/b8506bb391d090335b6f8c2ce3a54e9112325f06))
+* **template:** pull request template ([#624](https://github.com/UK-Export-Finance/mdm-api/issues/624)) ([847bdeb](https://github.com/UK-Export-Finance/mdm-api/commit/847bdebdf2880038ad4c2085e55d764bd1380e89))
+
+
+### Bug Fixes
+
+* **ci:** run ci with legacy-peer-deps argument ([d77d8f3](https://github.com/UK-Export-Finance/mdm-api/commit/d77d8f32282a8c673e6977d6ecbd08acff8be488))
+* **env:** updated .env.sample ([bd3f594](https://github.com/UK-Export-Finance/mdm-api/commit/bd3f5945bd3d9ba2c093dcf87e1849df7f22896b))
+* **env:** updated `.env.sample` ([#516](https://github.com/UK-Export-Finance/mdm-api/issues/516)) ([c09f145](https://github.com/UK-Export-Finance/mdm-api/commit/c09f1457786e460e474e296c96cd316aaa08787e))
+* **format:** formatting fixes ([b14807a](https://github.com/UK-Export-Finance/mdm-api/commit/b14807a3f1edd9f88c56f3c99a1df8cd09bca893))
+* **format:** Formatting fixes ([#517](https://github.com/UK-Export-Finance/mdm-api/issues/517)) ([baa3713](https://github.com/UK-Export-Finance/mdm-api/commit/baa3713e3a057385be08d6d58e94ab66c6101658))
+* **release:** release version manager ([#532](https://github.com/UK-Export-Finance/mdm-api/issues/532)) ([8a2a3a2](https://github.com/UK-Export-Finance/mdm-api/commit/8a2a3a2fca2a2b2d1eb5f31976a2ca5c78cdca50))
+* **spellcheck:** added spellcheck to the pipeline ([#511](https://github.com/UK-Export-Finance/mdm-api/issues/511)) ([8b84855](https://github.com/UK-Export-Finance/mdm-api/commit/8b8485522796db2b1d3056d643345e41032c3a12))
+* **tsconfig:** fixed tsconfig file ([d8df948](https://github.com/UK-Export-Finance/mdm-api/commit/d8df948e1d209a0e6319bad5acb237f669636db1))
+* **tsconfig:** tsconfig file fix ([e470ec5](https://github.com/UK-Export-Finance/mdm-api/commit/e470ec5f342033c21232c2b6721d6021eeb631fb))
+
 ## [1.16.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.15.1...v1.16.0) (2023-09-13)
 
 
