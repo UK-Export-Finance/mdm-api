@@ -23,7 +23,6 @@
 * **tsconfig:** fixed tsconfig file ([d8df948](https://github.com/UK-Export-Finance/mdm-api/commit/d8df948e1d209a0e6319bad5acb237f669636db1))
 * **tsconfig:** tsconfig file fix ([e470ec5](https://github.com/UK-Export-Finance/mdm-api/commit/e470ec5f342033c21232c2b6721d6021eeb631fb))
 
-
 ### Miscellaneous
 
 * **deps-dev:** Bump @babel/traverse from 7.23.0 to 7.23.2 ([#549](https://github.com/UK-Export-Finance/mdm-api/issues/549)) ([31d3a71](https://github.com/UK-Export-Finance/mdm-api/commit/31d3a717e8acb32a3c504184d2faa575cd96a910))
