@@ -11,13 +11,13 @@
     "housekeeping": "npm update --save --legacy-peer-deps && npm i --legacy-peer-deps && npm audit --fix && npm run spellcheck",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
+    "prepare": "husky",
     "spellcheck": "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color '**/*'",
     "start": "nest start",
     "start:debug": "nest start --debug --watch",
     "start:dev": "nest start --tsc --watch",
     "start:prod": "node dist/src/main",
-    "unit-test": "jest --selectProjects=Unit",
-    "prepare": "husky"
+    "unit-test": "jest --selectProjects=Unit"
   },
   "lint-staged": {
     "**/package.json": "sort-package-json",
