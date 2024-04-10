@@ -51,7 +51,19 @@
     "ukef",
     "venv",
     "VNET",
-    "CICD"
+    "CICD",
+    "DPA",
+    "UPRN",
+    "UDPRN",
+    "BLPU",
+    "TOID",
+    "EPSG",
+    "WOGAN",
+    "osgb",
+    "HJLNP",
+    "Zabd",
+    "hjlnp",
+    "BLPUs"
   ],
   "dictionaries": [
     "en-gb",
