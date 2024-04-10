@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { ENUMS, GEOSPATIAL } from '@ukef/constants';
 
 export type GetSearchAddressesResponse = GetSearchAddressesResponseItem[];
 
@@ -35,13 +36,14 @@ export class GetSearchAddressesResponseItem {
 
   @ApiProperty({
     description: 'Postcode',
-    example: 'SW1A 2AQ',
+    example: GEOSPATIAL.EXAMPLES.POSTCODE,
   })
   readonly postalCode: string | null;
 
   @ApiProperty({
     description: 'Country of address record',
-    example: null,
+    example: ENUMS.GEOSPATIAL_COUNTRIES.E,
+    enum: ENUMS.GEOSPATIAL_COUNTRIES,
   })
   readonly country: string | null;
 }

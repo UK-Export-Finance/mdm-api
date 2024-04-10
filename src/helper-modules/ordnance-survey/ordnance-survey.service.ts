@@ -2,6 +2,7 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { KEY as ORDNANCE_SURVEY_CONFIG_KEY, OrdnanceSurveyConfig } from '@ukef/config/ordnance-survey.config';
+import { GEOSPATIAL } from '@ukef/constants';
 import { HttpClient } from '@ukef/modules/http/http.client';
 
 import { GetAddressResponse } from './dto/get-addresses-response.dto';
@@ -20,7 +21,7 @@ export class OrdnanceSurveyService {
   }
 
   async getAddressesByPostcode(postcode): Promise<GetAddressResponse> {
-    const path = `/search/places/v1/postcode?postcode=${encodeURIComponent(postcode)}&key=${encodeURIComponent(this.key)}`;
+    const path = `/search/places/v1/postcode?postcode=${encodeURIComponent(postcode)}&lr=${GEOSPATIAL.DEFAULT.RESULT_LANGUAGE}&key=${encodeURIComponent(this.key)}`;
 
     const { data } = await this.httpClient.get<GetAddressResponse>({
       path,

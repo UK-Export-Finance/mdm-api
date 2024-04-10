@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ENUMS } from '@ukef/constants';
 import { OrdnanceSurveyService } from '@ukef/helper-modules/ordnance-survey/ordnance-survey.service';
 
 import { GetSearchAddressesResponse } from './dto/get-search-addresses-response.dto';
@@ -12,19 +13,17 @@ export class GeospatialService {
     const response = await this.ordnanceSurveyService.getAddressesByPostcode(postcode);
 
     response.results.forEach((item) => {
-      // if (item.DPA.LANGUAGE === (req.query.language ? req.query.language : 'EN')) {
       // Ordnance survey sends duplicated results with the welsh version too via 'CY'
-      if (item.DPA.LANGUAGE === 'EN') {
-        addresses.push({
-          organisationName: item.DPA.ORGANISATION_NAME || null,
-          addressLine1: `${item.DPA.BUILDING_NAME || ''} ${item.DPA.BUILDING_NUMBER || ''} ${item.DPA.THOROUGHFARE_NAME || ''}`.trim(),
-          addressLine2: item.DPA.DEPENDENT_LOCALITY || null,
-          addressLine3: null, // keys to match registered Address as requested, but not available in OS Places
-          locality: item.DPA.POST_TOWN || null,
-          postalCode: item.DPA.POSTCODE || null,
-          country: null, // keys to match registered Address as requested, but not available in OS Places
-        });
-      }
+      const item_data = item[Object.keys(item)[0]];
+      addresses.push({
+        organisationName: item_data.ORGANISATION_NAME || null,
+        addressLine1: `${item_data.BUILDING_NAME || ''} ${item_data.BUILDING_NUMBER || ''} ${item_data.THOROUGHFARE_NAME || ''}`.trim(),
+        addressLine2: item_data.DEPENDENT_LOCALITY || null,
+        addressLine3: null,
+        locality: item_data.POST_TOWN || null,
+        postalCode: item_data.POSTCODE || null,
+        country: ENUMS.GEOSPATIAL_COUNTRIES[item_data.COUNTRY_CODE],
+      });
     });
 
     return addresses;

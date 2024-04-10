@@ -7,6 +7,8 @@ import { of, throwError } from 'rxjs';
 import expectedResponse = require('./examples/example-response-for-search-places-v1-postcode.json');
 import noResultsResponse = require('./examples/example-response-for-search-places-v1-postcode-no-results.json');
 
+import { GEOSPATIAL } from '@ukef/constants';
+
 import { OrdnanceSurveyException } from './exception/ordnance-survey.exception';
 import { OrdnanceSurveyService } from './ordnance-survey.service';
 
@@ -17,7 +19,7 @@ describe('OrdnanceSurveyService', () => {
   let configServiceGet: jest.Mock;
   let service: OrdnanceSurveyService;
 
-  const testPostcode = 'W1A 1AA';
+  const testPostcode = GEOSPATIAL.EXAMPLES.POSTCODE;
   const testKey = valueGenerator.string({ length: 10 });
   const basePath = '/search/places/v1/postcode';
 
@@ -34,7 +36,7 @@ describe('OrdnanceSurveyService', () => {
   });
 
   describe('getAddressesByPostcode', () => {
-    const expectedPath = `${basePath}?postcode=${encodeURIComponent(testPostcode)}&key=${encodeURIComponent(testKey)}`;
+    const expectedPath = `${basePath}?postcode=${encodeURIComponent(testPostcode)}&lr=EN&key=${encodeURIComponent(testKey)}`;
 
     const expectedHttpServiceGetArgs: [string, object] = [expectedPath, { headers: { 'Content-Type': 'application/json' } }];
 
@@ -67,7 +69,7 @@ describe('OrdnanceSurveyService', () => {
         expectedUrlQueryPart: '?postcode=W1A1AA',
       },
     ])('call Ordnance Survey API with correct and safe query parameters "$expectedUrlQueryPart"', async ({ postcode, expectedUrlQueryPart }) => {
-      const expectedPath = `${basePath}${expectedUrlQueryPart}&key=${encodeURIComponent(testKey)}`;
+      const expectedPath = `${basePath}${expectedUrlQueryPart}&lr=EN&key=${encodeURIComponent(testKey)}`;
       const expectedHttpServiceGetArgs: [string, object] = [expectedPath, { headers: { 'Content-Type': 'application/json' } }];
 
       when(httpServiceGet)

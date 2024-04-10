@@ -16,8 +16,7 @@ export class GeospatialController {
   })
   @ApiResponse({
     status: 200,
-    description:
-      'AddressBase® Premium Basic Land and Property Units (BLPUs) can reference two types of address and with the OS Places API it is possible to search for one at a time, or both. These are the Delivery Point Address (DPA) and the Land and Property Identifier (LPI).',
+    description: 'Returns addresses from Ordanance survey Delivery Point Address (DPA) system.',
     type: [GetSearchAddressesResponseItem],
   })
   @ApiNotFoundResponse({
