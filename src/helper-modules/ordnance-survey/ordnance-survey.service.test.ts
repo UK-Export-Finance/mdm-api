@@ -1,15 +1,14 @@
 import { HttpService } from '@nestjs/axios';
+import { ConfigService } from '@nestjs/config';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { AxiosError } from 'axios';
 import { when } from 'jest-when';
 import { of, throwError } from 'rxjs';
+import expectedResponse = require('./examples/example-response-for-search-places-v1-postcode.json');
+import noResultsResponse = require('./examples/example-response-for-search-places-v1-postcode-no-results.json');
 
 import { OrdnanceSurveyException } from './exception/ordnance-survey.exception';
 import { OrdnanceSurveyService } from './ordnance-survey.service';
-import { ConfigService } from '@nestjs/config';
-
-const expectedResponse = require('./examples/example-response-for-search-places-v1-postcode.json');
-const noResultsResponse = require('./examples/example-response-for-search-places-v1-postcode.json');
 
 describe('OrdnanceSurveyService', () => {
   const valueGenerator = new RandomValueGenerator();
@@ -19,7 +18,7 @@ describe('OrdnanceSurveyService', () => {
   let service: OrdnanceSurveyService;
 
   const testPostcode = 'W1A 1AA';
-  const testKey = valueGenerator.string({length: 10});
+  const testKey = valueGenerator.string({ length: 10 });
   const basePath = '/search/places/v1/postcode';
 
   beforeEach(() => {
@@ -28,16 +27,14 @@ describe('OrdnanceSurveyService', () => {
     httpServiceGet = jest.fn();
     httpService.get = httpServiceGet;
 
-    configServiceGet = jest.fn().mockReturnValue({key: testKey});
+    configServiceGet = jest.fn().mockReturnValue({ key: testKey });
     configService.get = configServiceGet;
 
     service = new OrdnanceSurveyService(httpService, configService);
   });
 
-
-
   describe('getAddressesByPostcode', () => {
-    const expectedPath = `${basePath}?postcode=${testPostcode}&key=${testKey}`;
+    const expectedPath = `${basePath}?postcode=${encodeURIComponent(testPostcode)}&key=${encodeURIComponent(testKey)}`;
 
     const expectedHttpServiceGetArgs: [string, object] = [expectedPath, { headers: { 'Content-Type': 'application/json' } }];
 
@@ -70,9 +67,8 @@ describe('OrdnanceSurveyService', () => {
         expectedUrlQueryPart: '?postcode=W1A1AA',
       },
     ])('call Ordnance Survey API with correct and safe query parameters "$expectedUrlQueryPart"', async ({ postcode, expectedUrlQueryPart }) => {
-      // const expectedPath = `${basePath}${expectedUrlQueryPart}&key=${testKey}`;
-
-      // const expectedHttpServiceGetArgs: [string, object] = [expectedPath, { headers: { 'Content-Type': 'application/json' } }];
+      const expectedPath = `${basePath}${expectedUrlQueryPart}&key=${encodeURIComponent(testKey)}`;
+      const expectedHttpServiceGetArgs: [string, object] = [expectedPath, { headers: { 'Content-Type': 'application/json' } }];
 
       when(httpServiceGet)
         .calledWith(...expectedHttpServiceGetArgs)
@@ -86,13 +82,13 @@ describe('OrdnanceSurveyService', () => {
           }),
         );
 
-      await service.getAddressesByPostcode(testPostcode);
+      await service.getAddressesByPostcode(postcode);
 
       expect(httpServiceGet).toHaveBeenCalledTimes(1);
       expect(httpServiceGet).toHaveBeenCalledWith(...expectedHttpServiceGetArgs);
     });
 
-    it("no results - returns 200 without results", async () => {
+    it('no results - returns 200 without results', async () => {
       when(httpServiceGet)
         .calledWith(...expectedHttpServiceGetArgs)
         .mockReturnValueOnce(

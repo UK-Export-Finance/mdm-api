@@ -8,14 +8,13 @@ export class GeospatialService {
   constructor(private readonly ordnanceSurveyService: OrdnanceSurveyService) {}
 
   async getAddressesByPostcode(postcode: string): Promise<GetSearchAddressesResponse> {
-    let addresses = [];
+    const addresses = [];
     const response = await this.ordnanceSurveyService.getAddressesByPostcode(postcode);
 
     response.results.forEach((item) => {
       // if (item.DPA.LANGUAGE === (req.query.language ? req.query.language : 'EN')) {
+      // Ordnance survey sends duplicated results with the welsh version too via 'CY'
       if (item.DPA.LANGUAGE === 'EN') {
-        // Ordnance survey sends duplicated results with the welsh version too via 'CY'
-
         addresses.push({
           organisationName: item.DPA.ORGANISATION_NAME || null,
           addressLine1: `${item.DPA.BUILDING_NAME || ''} ${item.DPA.BUILDING_NUMBER || ''} ${item.DPA.THOROUGHFARE_NAME || ''}`.trim(),

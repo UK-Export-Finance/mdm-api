@@ -1,10 +1,9 @@
-import { BadRequestException, Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { ApiNotFoundResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { GetSearchPostcodeOrdnanceSurveyQueryDto } from '@ukef/helper-modules/ordnance-survey/dto/get-search-postcode-query.dto';
-import { GeospatialService } from './geospatial.service';
 import { GetAddressByPostcodeQueryDto } from './dto/get-address-by-postcode-query.dto';
 import { GetSearchAddressesResponse, GetSearchAddressesResponseItem } from './dto/get-search-addresses-response.dto';
+import { GeospatialService } from './geospatial.service';
 
 @ApiTags('geospatial')
 @Controller('geospatial')
@@ -17,7 +16,8 @@ export class GeospatialController {
   })
   @ApiResponse({
     status: 200,
-    description: 'AddressBase® Premium Basic Land and Property Units (BLPUs) can reference two types of address and with the OS Places API it is possible to search for one at a time, or both. These are the Delivery Point Address (DPA) and the Land and Property Identifier (LPI).',
+    description:
+      'AddressBase® Premium Basic Land and Property Units (BLPUs) can reference two types of address and with the OS Places API it is possible to search for one at a time, or both. These are the Delivery Point Address (DPA) and the Land and Property Identifier (LPI).',
     type: [GetSearchAddressesResponseItem],
   })
   @ApiNotFoundResponse({

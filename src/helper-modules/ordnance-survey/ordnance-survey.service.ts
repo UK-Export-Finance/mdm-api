@@ -1,12 +1,12 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { KEY as ORDNANCE_SURVEY_CONFIG_KEY, OrdnanceSurveyConfig } from '@ukef/config/ordnance-survey.config';
 import { HttpClient } from '@ukef/modules/http/http.client';
 
 import { GetAddressResponse } from './dto/get-addresses-response.dto';
 // import { getCustomersNotFoundKnownOrdnanceSurveyError } from './known-errors';
 import { createWrapOrdnanceSurveyHttpGetErrorCallback } from './wrap-ordnance-survey-http-error-callback';
-import { ConfigService } from '@nestjs/config';
-import { OrdnanceSurveyConfig, KEY as ORDNANCE_SURVEY_CONFIG_KEY } from '@ukef/config/ordnance-survey.config';
 
 @Injectable()
 export class OrdnanceSurveyService {
@@ -20,7 +20,8 @@ export class OrdnanceSurveyService {
   }
 
   async getAddressesByPostcode(postcode): Promise<GetAddressResponse> {
-    const path = '/search/places/v1/postcode?postcode=' + postcode + '&key=' + this.key;
+    const path = `/search/places/v1/postcode?postcode=${encodeURIComponent(postcode)}&key=${encodeURIComponent(this.key)}`;
+
     const { data } = await this.httpClient.get<GetAddressResponse>({
       path,
       headers: { 'Content-Type': 'application/json' },
