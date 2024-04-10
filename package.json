@@ -16,7 +16,8 @@
     "start:debug": "nest start --debug --watch",
     "start:dev": "nest start --tsc --watch",
     "start:prod": "node dist/src/main",
-    "unit-test": "jest --selectProjects=Unit"
+    "unit-test": "jest --selectProjects=Unit",
+    "prepare": "husky"
   },
   "lint-staged": {
     "**/package.json": "sort-package-json",
