@@ -1,10 +1,6 @@
-import { INestApplication } from '@nestjs/common';
-
-import { Api } from '../api';
-import { CreateApp } from '../createApp';
+import { Api } from '@ukef-test/support/api';
 
 describe('Sector industries', () => {
-  let app: INestApplication;
   let api: Api;
 
   const sectorIndustriesSchema = {
@@ -25,63 +21,62 @@ describe('Sector industries', () => {
   };
 
   beforeAll(async () => {
-    app = await new CreateApp().init();
-    api = new Api(app.getHttpServer());
+    api = await Api.create();
+  });
+
+  afterAll(async () => {
+    await api.destroy();
   });
 
   it(`GET /sector-industries`, async () => {
-    const { status, body } = await api.get('/sector-industries');
+    const { status, body } = await api.get('/api/v1/sector-industries');
     expect(status).toBe(200);
     expect(body).toEqual(expect.arrayContaining([expect.objectContaining(sectorIndustriesSchema)]));
   });
 
   it(`GET /sector-industries?ukefSectorId=1001`, async () => {
-    const { status, body } = await api.get('/sector-industries?ukefSectorId=1001');
+    const { status, body } = await api.get('/api/v1/sector-industries?ukefSectorId=1001');
     expect(status).toBe(200);
     expect(body).toEqual(expect.arrayContaining([expect.objectContaining(sectorIndustriesSchema)]));
     expect(body.length).toBeGreaterThan(1);
   });
 
   it(`GET /sector-industries?ukefIndustryId=01120`, async () => {
-    const { status, body } = await api.get('/sector-industries?ukefIndustryId=01120');
+    const { status, body } = await api.get('/api/v1/sector-industries?ukefIndustryId=01120');
     expect(status).toBe(200);
     expect(body).toEqual(expect.arrayContaining([expect.objectContaining(sectorIndustriesSchema)]));
     expect(body).toHaveLength(1);
   });
 
   it(`GET /sector-industries?ukefSectorId=1001&ukefIndustryId=01120`, async () => {
-    const { status, body } = await api.get('/sector-industries?ukefSectorId=1001&ukefIndustryId=01120');
+    const { status, body } = await api.get('/api/v1/sector-industries?ukefSectorId=1001&ukefIndustryId=01120');
     expect(status).toBe(200);
     expect(body).toHaveLength(1);
   });
 
   it(`GET /sector-industries?ukefSectorId=1234`, async () => {
-    const { status } = await api.get('/sector-industries?ukefSectorId=1234');
+    const { status } = await api.get('/api/v1/sector-industries?ukefSectorId=1234');
     expect(status).toBe(404);
   });
 
   it(`GET /sector-industries?ukefSectorId=a&ukefIndustryId=a`, async () => {
-    const { status, body } = await api.get('/sector-industries?ukefSectorId=a&ukefIndustryId=a');
+    const { status, body } = await api.get('/api/v1/sector-industries?ukefSectorId=a&ukefIndustryId=a');
     expect(status).toBe(400);
     expect(body.message).toContain('ukefSectorId must match /^\\d{4}$/ regular expression');
     expect(body.message).toContain('ukefIndustryId must match /^\\d{5}$/ regular expression');
   });
 
   it(`GET /sector-industries?ukefSectorId=null&ukefIndustryId=null`, async () => {
-    const { status, body } = await api.get('/sector-industries?ukefSectorId=null&ukefIndustryId=null');
+    const { status, body } = await api.get('/api/v1/sector-industries?ukefSectorId=null&ukefIndustryId=null');
     expect(status).toBe(400);
     expect(body.message).toContain('ukefSectorId must match /^\\d{4}$/ regular expression');
     expect(body.message).toContain('ukefIndustryId must match /^\\d{5}$/ regular expression');
   });
 
   it(`GET /sector-industries?ukefSectorId=undefined&ukefIndustryId=undefined`, async () => {
-    const { status, body } = await api.get('/sector-industries?ukefSectorId=undefined&ukefIndustryId=undefined');
+    const { status, body } = await api.get('/api/v1/sector-industries?ukefSectorId=undefined&ukefIndustryId=undefined');
     expect(status).toBe(400);
     expect(body.message).toContain('ukefSectorId must match /^\\d{4}$/ regular expression');
     expect(body.message).toContain('ukefIndustryId must match /^\\d{5}$/ regular expression');
-  });
-
-  afterAll(async () => {
-    await app.close();
   });
 });

@@ -16,6 +16,10 @@ export class Api {
     return this.request().get(url).set(this.getValidAuthHeader());
   }
 
+  post(url: string, body: string | object): request.Test {
+    return this.request().post(url).send(body).set(this.getValidAuthHeader());
+  }
+
   getWithoutAuth(url: string, strategy?: string, key?: string): request.Test {
     const query = this.request().get(url);
     return this.setQueryWithAuthStrategyIfPresent(query, strategy, key);

@@ -1,19 +1,18 @@
-import { INestApplication } from '@nestjs/common';
-
-import { Api } from '../api';
-import { CreateApp } from '../createApp';
+import { Api } from '@ukef-test/support/api';
 
 describe('Numbers', () => {
-  let app: INestApplication;
   let api: Api;
 
   beforeAll(async () => {
-    app = await new CreateApp().init();
-    api = new Api(app.getHttpServer());
+    api = await Api.create();
+  });
+
+  afterAll(async () => {
+    await api.destroy();
   });
 
   it(`GET /numbers?type=1&ukefId=0010581069`, async () => {
-    const { status, body } = await api.get('/numbers?type=1&ukefId=0010581069');
+    const { status, body } = await api.get('/api/v1/numbers?type=1&ukefId=0010581069');
 
     expect(status).toBe(404);
     expect(body.error).toMatch('Not Found');
@@ -31,25 +30,25 @@ describe('Numbers', () => {
       },
     ];
     // Generate
-    const postResponse = await api.post(postNumbersPayload).to('/numbers');
+    const postResponse = await api.post('/api/v1/numbers', postNumbersPayload);
 
     expect(postResponse.status).toBe(201);
 
     // Test
-    const getResponse = await api.get('/numbers?type=' + postResponse.body[0].type + '&ukefId=' + postResponse.body[0].maskedId);
+    const getResponse = await api.get('/api/v1/numbers?type=' + postResponse.body[0].type + '&ukefId=' + postResponse.body[0].maskedId);
 
     expect(getResponse.status).toBe(200);
     expect(postResponse.body[0]).toEqual(getResponse.body);
   });
 
   it(`GET /numbers?type=2&ukefId=0030581069`, async () => {
-    const { status } = await api.get('/numbers?type=2&ukefId=0030581069');
+    const { status } = await api.get('/api/v1/numbers?type=2&ukefId=0030581069');
 
     expect(status).toBe(404);
   });
 
   it(`GET /numbers?type=a&ukefId=a`, async () => {
-    const { status, body } = await api.get('/numbers?type=a&ukefId=a');
+    const { status, body } = await api.get('/api/v1/numbers?type=a&ukefId=a');
 
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
@@ -58,7 +57,7 @@ describe('Numbers', () => {
   });
 
   it(`GET /numbers?type=null&ukefId=null`, async () => {
-    const { status, body } = await api.get('/numbers?type=null&ukefId=null');
+    const { status, body } = await api.get('/api/v1/numbers?type=null&ukefId=null');
 
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
@@ -67,7 +66,7 @@ describe('Numbers', () => {
   });
 
   it(`GET /numbers?type=undefined&ukefId=undefined`, async () => {
-    const { status, body } = await api.get('/numbers?type=undefined&ukefId=undefined');
+    const { status, body } = await api.get('/api/v1/numbers?type=undefined&ukefId=undefined');
 
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
@@ -76,7 +75,7 @@ describe('Numbers', () => {
   });
 
   it(`GET /numbers?type=a&ukefId=0030581069`, async () => {
-    const { status, body } = await api.get('/numbers?type=a&ukefId=0030581069');
+    const { status, body } = await api.get('/api/v1/numbers?type=a&ukefId=0030581069');
 
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
@@ -84,7 +83,7 @@ describe('Numbers', () => {
   });
 
   it(`GET /numbers?type=3&ukefId=0030581069`, async () => {
-    const { status, body } = await api.get('/numbers?type=3&ukefId=0030581069');
+    const { status, body } = await api.get('/api/v1/numbers?type=3&ukefId=0030581069');
 
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
@@ -99,7 +98,7 @@ describe('Numbers', () => {
         requestingSystem: 'Jest 1 - Deal',
       },
     ];
-    const { status, body } = await api.post(payload).to('/numbers');
+    const { status, body } = await api.post('/api/v1/numbers', payload);
 
     expect(status).toBe(201);
     expect(body).toHaveLength(1);
@@ -119,7 +118,7 @@ describe('Numbers', () => {
         requestingSystem: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mau',
       },
     ];
-    const { status, body } = await api.post(payload).to('/numbers');
+    const { status, body } = await api.post('/api/v1/numbers', payload);
 
     expect(status).toBe(201);
     expect(body).toHaveLength(1);
@@ -139,7 +138,7 @@ describe('Numbers', () => {
         requestingSystem: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ac magna ipsum',
       },
     ];
-    const { status, body } = await api.post(payload).to('/numbers');
+    const { status, body } = await api.post('/api/v1/numbers', payload);
 
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
@@ -149,7 +148,7 @@ describe('Numbers', () => {
 
   it(`POST /numbers single, missing fields`, async () => {
     const payload = [{}];
-    const { status, body } = await api.post(payload).to('/numbers');
+    const { status, body } = await api.post('/api/v1/numbers', payload);
 
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
@@ -160,7 +159,7 @@ describe('Numbers', () => {
 
   it(`POST /numbers single, empty payload`, async () => {
     const payload = '';
-    const { status, body } = await api.post(payload).to('/numbers');
+    const { status, body } = await api.post('/api/v1/numbers', payload);
 
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
@@ -169,7 +168,7 @@ describe('Numbers', () => {
 
   it(`POST /numbers single, empty array`, async () => {
     const payload = [];
-    const { status, body } = await api.post(payload).to('/numbers');
+    const { status, body } = await api.post('/api/v1/numbers', payload);
 
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
@@ -178,7 +177,7 @@ describe('Numbers', () => {
 
   it(`POST /numbers single, not parsable array`, async () => {
     const payload = '[]';
-    const { status, body } = await api.post(payload).to('/numbers');
+    const { status, body } = await api.post('/api/v1/numbers', payload);
 
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
@@ -187,7 +186,7 @@ describe('Numbers', () => {
 
   it(`POST /numbers single, bad json`, async () => {
     const payload = 'asd';
-    const { status, body } = await api.post(payload).to('/numbers');
+    const { status, body } = await api.post('/api/v1/numbers', payload);
 
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
@@ -217,7 +216,7 @@ describe('Numbers', () => {
         requestingSystem: 'Jest 4 - Covenant',
       },
     ];
-    const { status, body } = await api.post(payload).to('/numbers');
+    const { status, body } = await api.post('/api/v1/numbers', payload);
 
     expect(status).toBe(201);
     expect(body).toHaveLength(4);
@@ -295,7 +294,7 @@ describe('Numbers', () => {
         requestingSystem: 'Jest 4 - Party',
       },
     ];
-    const { status, body } = await api.post(payload).to('/numbers');
+    const { status, body } = await api.post('/api/v1/numbers', payload);
 
     expect(status).toBe(201);
     expect(body).toHaveLength(payload.length);
@@ -313,9 +312,5 @@ describe('Numbers', () => {
       previousValues[newUkefId.type] = newUkefId.maskedId;
       return previousValues;
     }, Object.create(null));
-  });
-
-  afterAll(async () => {
-    await app.close();
   });
 });

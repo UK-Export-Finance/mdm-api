@@ -1,19 +1,18 @@
-import { INestApplication } from '@nestjs/common';
-
-import { Api } from '../api';
-import { CreateApp } from '../createApp';
+import { Api } from '@ukef-test/support/api';
 
 describe('Interest rates', () => {
-  let app: INestApplication;
   let api: Api;
 
   beforeAll(async () => {
-    app = await new CreateApp().init();
-    api = new Api(app.getHttpServer());
+    api = await Api.create();
+  });
+
+  afterAll(async () => {
+    await api.destroy();
   });
 
   it(`GET /interest-rates`, async () => {
-    const { status, body } = await api.get('/interest-rates');
+    const { status, body } = await api.get('/api/v1/interest-rates');
 
     expect(status).toBe(200);
     expect(body).toEqual(
@@ -34,9 +33,5 @@ describe('Interest rates', () => {
         }),
       ]),
     );
-  });
-
-  afterAll(async () => {
-    await app.close();
   });
 });

@@ -1,14 +1,10 @@
-import { INestApplication } from '@nestjs/common';
 import { PRODUCTS } from '@ukef/constants';
+import { Api } from '@ukef-test/support/api';
 import Chance from 'chance';
-
-import { Api } from '../api';
-import { CreateApp } from '../createApp';
 
 const chance = new Chance();
 
 describe('Premium schedules', () => {
-  let app: INestApplication;
   let api: Api;
 
   const premiumScheduleSchema = {
@@ -28,12 +24,15 @@ describe('Premium schedules', () => {
   };
 
   beforeAll(async () => {
-    app = await new CreateApp().init();
-    api = new Api(app.getHttpServer());
+    api = await Api.create();
+  });
+
+  afterAll(async () => {
+    await api.destroy();
   });
 
   it('GET /premium/segments/12345678', async () => {
-    const { status, body } = await api.get('/premium/segments/12345678');
+    const { status, body } = await api.get('/api/v1/premium/segments/12345678');
 
     // Not generated yet.
     expect(status).toBe(404);
@@ -60,7 +59,7 @@ describe('Premium schedules', () => {
         maximumLiability: 40000,
       },
     ];
-    const postResponse = await api.post(createSchedules).to('/premium/schedule');
+    const postResponse = await api.post('/api/v1/premium/schedule', createSchedules);
 
     expect(postResponse.status).toBe(201);
     expect(postResponse.body).toHaveLength(1);
@@ -85,12 +84,12 @@ describe('Premium schedules', () => {
       },
     ];
     // Generate
-    const postResponse = await api.post(createSchedules).to('/premium/schedule');
+    const postResponse = await api.post('/api/v1/premium/schedule', createSchedules);
 
     expect(postResponse.status).toBe(201);
 
     // Test
-    const getResponse = await api.get('/premium/segments/' + postResponse.body[0].facilityURN);
+    const getResponse = await api.get('/api/v1/premium/segments/' + postResponse.body[0].facilityURN);
 
     expect(getResponse.status).toBe(200);
     expect(getResponse.body).toHaveLength(16);
@@ -116,7 +115,7 @@ describe('Premium schedules', () => {
         maximumLiability: 40000,
       },
     ];
-    const postResponse = await api.post(createSchedules).to('/premium/schedule');
+    const postResponse = await api.post('/api/v1/premium/schedule', createSchedules);
 
     expect(postResponse.status).toBe(201);
     expect(postResponse.body).toHaveLength(1);
@@ -140,7 +139,7 @@ describe('Premium schedules', () => {
         maximumLiability: 40000,
       },
     ];
-    const postResponse = await api.post(createSchedules).to('/premium/schedule');
+    const postResponse = await api.post('/api/v1/premium/schedule', createSchedules);
 
     expect(postResponse.status).toBe(201);
     expect(postResponse.body).toHaveLength(1);
@@ -164,7 +163,7 @@ describe('Premium schedules', () => {
         maximumLiability: 40000,
       },
     ];
-    const postResponse = await api.post(createSchedules).to('/premium/schedule');
+    const postResponse = await api.post('/api/v1/premium/schedule', createSchedules);
 
     expect(postResponse.status).toBe(201);
     expect(postResponse.body).toHaveLength(1);
@@ -188,7 +187,7 @@ describe('Premium schedules', () => {
         maximumLiability: 40000,
       },
     ];
-    const { status, body } = await api.post(createSchedules).to('/premium/schedule');
+    const { status, body } = await api.post('/api/v1/premium/schedule', createSchedules);
 
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
@@ -213,7 +212,7 @@ describe('Premium schedules', () => {
       },
     ];
 
-    const { status, body } = await api.post(createSchedules).to('/premium/schedule');
+    const { status, body } = await api.post('/api/v1/premium/schedule', createSchedules);
 
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
@@ -223,20 +222,20 @@ describe('Premium schedules', () => {
   });
 
   it('GET /premium/segments/null', async () => {
-    const { status, body } = await api.get('/premium/segments/null');
+    const { status, body } = await api.get('/api/v1/premium/segments/null');
     expect(status).toBe(400);
     expect(body.message).toContain('facilityId must match /^\\d{8,10}$/ regular expression');
   });
 
   it('GET /premium/segments/undefined', async () => {
-    const { status, body } = await api.get('/premium/segments/undefined');
+    const { status, body } = await api.get('/api/v1/premium/segments/undefined');
     expect(status).toBe(400);
     expect(body.message).toContain('facilityId must match /^\\d{8,10}$/ regular expression');
   });
 
   it('POST /premium/schedule, empty array', async () => {
     const payload = [];
-    const { status, body } = await api.post(payload).to('/premium/schedule');
+    const { status, body } = await api.post('/api/v1/premium/schedule', payload);
 
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
@@ -245,7 +244,7 @@ describe('Premium schedules', () => {
 
   it('POST /premium/schedule, not parsable array', async () => {
     const payload = '[]';
-    const { status, body } = await api.post(payload).to('/premium/schedule');
+    const { status, body } = await api.post('/api/v1/premium/schedule', payload);
 
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
@@ -254,7 +253,7 @@ describe('Premium schedules', () => {
 
   it('POST /premium/schedule, bad json', async () => {
     const payload = 'asd';
-    const { status, body } = await api.post(payload).to('/premium/schedule');
+    const { status, body } = await api.post('/api/v1/premium/schedule', payload);
 
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
@@ -263,7 +262,7 @@ describe('Premium schedules', () => {
 
   it('POST /premium/schedule, field validation', async () => {
     const payload = [{}];
-    const { status, body } = await api.post(payload).to('/premium/schedule');
+    const { status, body } = await api.post('/api/v1/premium/schedule', payload);
 
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
@@ -290,9 +289,5 @@ describe('Premium schedules', () => {
     expect(body.message).toContain('exposurePeriod must be a number conforming to the specified constraints');
     expect(body.message).toContain('maximumLiability should not be empty');
     expect(body.message).toContain('maximumLiability must be a number conforming to the specified constraints');
-  });
-
-  afterAll(async () => {
-    await app.close();
   });
 });
