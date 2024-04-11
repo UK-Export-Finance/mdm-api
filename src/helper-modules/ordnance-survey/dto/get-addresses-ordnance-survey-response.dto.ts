@@ -1,4 +1,4 @@
-export type GetAddressResponse = {
+export type GetAddressOrdnanceSurveyResponse = {
   header: {
     uri: string;
     query: string;
@@ -12,14 +12,14 @@ export type GetAddressResponse = {
     lastupdate: string;
     output_srs: string;
   };
-  results?: GetAddressResponseItem[];
+  results?: GetAddressOrdnanceSurveyResponseItem[];
 };
 
-interface GetAddressResponseItem {
-  DPA: GetAddressResponseAddress;
+interface GetAddressOrdnanceSurveyResponseItem {
+  DPA: GetAddressOrdnanceSurveyResponseAddress;
 }
 
-interface GetAddressResponseAddress {
+interface GetAddressOrdnanceSurveyResponseAddress {
   UPRN: string;
   UDPRN: string;
   ADDRESS: string;

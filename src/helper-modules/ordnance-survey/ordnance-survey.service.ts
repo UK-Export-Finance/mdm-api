@@ -5,7 +5,7 @@ import { KEY as ORDNANCE_SURVEY_CONFIG_KEY, OrdnanceSurveyConfig } from '@ukef/c
 import { GEOSPATIAL } from '@ukef/constants';
 import { HttpClient } from '@ukef/modules/http/http.client';
 
-import { GetAddressResponse } from './dto/get-addresses-response.dto';
+import { GetAddressOrdnanceSurveyResponse } from './dto/get-addresses-ordnance-survey-response.dto';
 // import { getCustomersNotFoundKnownOrdnanceSurveyError } from './known-errors';
 import { createWrapOrdnanceSurveyHttpGetErrorCallback } from './wrap-ordnance-survey-http-error-callback';
 
@@ -20,10 +20,10 @@ export class OrdnanceSurveyService {
     this.key = key;
   }
 
-  async getAddressesByPostcode(postcode): Promise<GetAddressResponse> {
+  async getAddressesByPostcode(postcode): Promise<GetAddressOrdnanceSurveyResponse> {
     const path = `/search/places/v1/postcode?postcode=${encodeURIComponent(postcode)}&lr=${GEOSPATIAL.DEFAULT.RESULT_LANGUAGE}&key=${encodeURIComponent(this.key)}`;
 
-    const { data } = await this.httpClient.get<GetAddressResponse>({
+    const { data } = await this.httpClient.get<GetAddressOrdnanceSurveyResponse>({
       path,
       headers: { 'Content-Type': 'application/json' },
       onError: createWrapOrdnanceSurveyHttpGetErrorCallback({

@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ENUMS, GEOSPATIAL } from '@ukef/constants';
 
-export type GetSearchAddressesResponse = GetSearchAddressesResponseItem[];
+export type GetAddressesResponse = GetAddressesResponseItem[];
 
-export class GetSearchAddressesResponseItem {
+export class GetAddressesResponseItem {
   @ApiProperty({
     description: 'Organisation name if available',
     example: 'CHURCHILL MUSEUM & CABINET WAR ROOMS',

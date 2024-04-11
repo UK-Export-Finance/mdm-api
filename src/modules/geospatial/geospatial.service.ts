@@ -1,16 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { ENUMS } from '@ukef/constants';
+import { GetAddressOrdnanceSurveyResponse } from '@ukef/helper-modules/ordnance-survey/dto/get-addresses-ordnance-survey-response.dto';
 import { OrdnanceSurveyService } from '@ukef/helper-modules/ordnance-survey/ordnance-survey.service';
 
-import { GetSearchAddressesResponse } from './dto/get-search-addresses-response.dto';
+import { GetAddressesResponse } from './dto/get-addresses-response.dto';
 
 @Injectable()
 export class GeospatialService {
   constructor(private readonly ordnanceSurveyService: OrdnanceSurveyService) {}
 
-  async getAddressesByPostcode(postcode: string): Promise<GetSearchAddressesResponse> {
+  async getAddressesByPostcode(postcode: string): Promise<GetAddressesResponse> {
     const addresses = [];
-    const response = await this.ordnanceSurveyService.getAddressesByPostcode(postcode);
+    const response: GetAddressOrdnanceSurveyResponse = await this.ordnanceSurveyService.getAddressesByPostcode(postcode);
 
     response.results.forEach((item) => {
       // Ordnance survey sends duplicated results with the welsh version too via 'CY'
