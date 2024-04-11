@@ -1,5 +1,6 @@
 import { ENUMS, GEOSPATIAL } from '@ukef/constants';
 import { GetAddressOrdnanceSurveyResponse } from '@ukef/helper-modules/ordnance-survey/dto/get-addresses-ordnance-survey-response.dto';
+import { OrdnanceSurveyAuthErrorResponse } from '@ukef/helper-modules/ordnance-survey/dto/ordnance-survey-auth-error-response.dto';
 import { GetAddressByPostcodeQueryDto } from '@ukef/modules/geospatial/dto/get-address-by-postcode-query.dto';
 import { GetAddressesResponse } from '@ukef/modules/geospatial/dto/get-addresses-response.dto';
 
@@ -20,17 +21,12 @@ export class GetGeospatialAddressesGenerator extends AbstractGenerator<AddressVa
       DEPENDENT_LOCALITY: this.valueGenerator.word(),
       POST_TOWN: this.valueGenerator.word(),
       POSTCODE: this.valueGenerator.postcode(),
-      COUNTRY_CODE: this.valueGenerator.enumValue(ENUMS.GEOSPATIAL_COUNTRIES),
+      COUNTRY_CODE: this.valueGenerator.enumKey(ENUMS.GEOSPATIAL_COUNTRIES),
     };
   }
 
   protected transformRawValuesToGeneratedValues(values: AddressValues[], { postcode, key }: GenerateOptions): GenerateResult {
     const useKey = key || 'test';
-    // let request: GetAddressByPostcodeQueryDto = ;
-    // let ordnanceSurveyRequest: GetCustomersInformaticaQueryDto[];
-    // let ordnanceSurveyPath: 'test',
-    // let mdmPath: 'test',
-    // let getAddressesByPostcodeResponse: GetAddressesResponse[];
 
     const request: GetAddressByPostcodeQueryDto[] = values.map((v) => ({ postcode: postcode || v.POSTCODE }) as GetAddressByPostcodeQueryDto);
 
@@ -44,7 +40,7 @@ export class GetGeospatialAddressesGenerator extends AbstractGenerator<AddressVa
       return `/api/v1/geospatial/addresses/postcode?postcode=${usePostcode}`;
     });
 
-    const getAddressesByPostcodeResponse: GetAddressesResponse[] = values.map((v) => [
+    const getAddressByPostcodeResponse: GetAddressesResponse[] = values.map((v) => [
       {
         organisationName: v.ORGANISATION_NAME,
         addressLine1: `${v.BUILDING_NAME} ${v.BUILDING_NUMBER} ${v.THOROUGHFARE_NAME}`,
@@ -111,13 +107,94 @@ export class GetGeospatialAddressesGenerator extends AbstractGenerator<AddressVa
       ],
     }));
 
+    const getAddressessOrdnanceSurveyResponse: GetAddressOrdnanceSurveyResponse = {
+      header: {
+        uri: 'test',
+        query: 'test',
+        offset: 0,
+        totalresults: 0,
+        format: 'test',
+        dataset: 'test',
+        lr: 'test',
+        maxresults: 100,
+        epoch: 'test',
+        lastupdate: 'test',
+        output_srs: 'test',
+      },
+      results: values.map((v) => ({
+        DPA: {
+          UPRN: 'test',
+          UDPRN: 'test',
+          ADDRESS: 'test',
+          BUILDING_NAME: v.BUILDING_NAME,
+          BUILDING_NUMBER: v.BUILDING_NUMBER,
+          ORGANISATION_NAME: v.ORGANISATION_NAME,
+          DEPENDENT_LOCALITY: v.DEPENDENT_LOCALITY,
+          THOROUGHFARE_NAME: v.THOROUGHFARE_NAME,
+          POST_TOWN: v.POST_TOWN,
+          POSTCODE: v.POSTCODE,
+          RPC: 'test',
+          X_COORDINATE: 12345,
+          Y_COORDINATE: 12345,
+          STATUS: 'test',
+          LOGICAL_STATUS_CODE: 'test',
+          CLASSIFICATION_CODE: 'test',
+          CLASSIFICATION_CODE_DESCRIPTION: 'test',
+          LOCAL_CUSTODIAN_CODE: 12345,
+          LOCAL_CUSTODIAN_CODE_DESCRIPTION: 'test',
+          COUNTRY_CODE: v.COUNTRY_CODE,
+          COUNTRY_CODE_DESCRIPTION: 'test',
+          POSTAL_ADDRESS_CODE: 'test',
+          POSTAL_ADDRESS_CODE_DESCRIPTION: 'test',
+          BLPU_STATE_CODE: 'test',
+          BLPU_STATE_CODE_DESCRIPTION: 'test',
+          TOPOGRAPHY_LAYER_TOID: 'test',
+          LAST_UPDATE_DATE: 'test',
+          ENTRY_DATE: 'test',
+          BLPU_STATE_DATE: 'test',
+          LANGUAGE: 'test',
+          MATCH: 12345,
+          MATCH_DESCRIPTION: 'test',
+          DELIVERY_POINT_SUFFIX: 'test',
+        },
+      })),
+    };
+
+    const getAddressOrdnanceSurveyEmptyResponse: GetAddressOrdnanceSurveyResponse[] = values.map(() => ({
+      header: {
+        uri: 'test',
+        query: 'test',
+        offset: 0,
+        totalresults: 0,
+        format: 'test',
+        dataset: 'test',
+        lr: 'test',
+        maxresults: 100,
+        epoch: 'test',
+        lastupdate: 'test',
+        output_srs: 'test',
+      },
+    }));
+
+    const ordnanceSurveyAuthErrorResponse = {
+      fault: {
+        faultstring: 'Invalid ApiKey',
+        detail: {
+          errorcode: 'oauth.v2.InvalidApiKey',
+        },
+      },
+    };
+
     return {
       request,
       // ordnanceSurveyRequest,
       ordnanceSurveyPath,
       mdmPath,
-      getAddressesByPostcodeResponse,
+      getAddressByPostcodeResponse,
       getAddressOrdnanceSurveyResponse,
+      getAddressOrdnanceSurveyEmptyResponse,
+      getAddressessOrdnanceSurveyResponse,
+      ordnanceSurveyAuthErrorResponse,
     };
   }
 }
@@ -143,6 +220,9 @@ interface GenerateResult {
   //ordnanceSurveyRequest: GetCustomersInformaticaQueryDto[];
   ordnanceSurveyPath: string[];
   mdmPath: string[];
-  getAddressesByPostcodeResponse: GetAddressesResponse[];
+  getAddressByPostcodeResponse: GetAddressesResponse[];
   getAddressOrdnanceSurveyResponse: GetAddressOrdnanceSurveyResponse[];
+  getAddressessOrdnanceSurveyResponse: GetAddressOrdnanceSurveyResponse;
+  getAddressOrdnanceSurveyEmptyResponse: GetAddressOrdnanceSurveyResponse[];
+  ordnanceSurveyAuthErrorResponse: OrdnanceSurveyAuthErrorResponse;
 }

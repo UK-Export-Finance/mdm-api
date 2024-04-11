@@ -29,7 +29,7 @@ export class Api {
     return this.app.destroy();
   }
 
-  private request(): request.SuperTest<request.Test> {
+  private request(): any {
     return request(this.app.getHttpServer());
   }
 

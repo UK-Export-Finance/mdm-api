@@ -13,6 +13,10 @@ export class GeospatialService {
     const addresses = [];
     const response: GetAddressOrdnanceSurveyResponse = await this.ordnanceSurveyService.getAddressesByPostcode(postcode);
 
+    if (!response?.results) {
+      return [];
+    }
+
     response.results.forEach((item) => {
       // Ordnance survey sends duplicated results with the welsh version too via 'CY'
       const item_data = item[Object.keys(item)[0]];

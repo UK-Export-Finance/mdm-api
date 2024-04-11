@@ -22,7 +22,6 @@ export class OrdnanceSurveyService {
 
   async getAddressesByPostcode(postcode): Promise<GetAddressOrdnanceSurveyResponse> {
     const path = `/search/places/v1/postcode?postcode=${encodeURIComponent(postcode)}&lr=${GEOSPATIAL.DEFAULT.RESULT_LANGUAGE}&key=${encodeURIComponent(this.key)}`;
-
     const { data } = await this.httpClient.get<GetAddressOrdnanceSurveyResponse>({
       path,
       headers: { 'Content-Type': 'application/json' },

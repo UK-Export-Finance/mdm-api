@@ -17,7 +17,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/CurrencyEntity'
-      tags: &ref_0
+      tags:
         - currencies
   /api/v1/currencies/exchange:
     get:
@@ -58,7 +58,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GetCurrencyExchangeDto'
-      tags: *ref_0
+      tags:
+        - currencies
   /api/v1/currencies/{isoCode}:
     get:
       operationId: CurrenciesController_findOne
@@ -80,7 +81,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/CurrencyEntity'
-      tags: *ref_0
+      tags:
+        - currencies
   /api/v1/customers:
     get:
       operationId: CustomersController_getCustomers
@@ -194,38 +196,43 @@ paths:
                     example: ok
                   info:
                     type: object
-                    example: &ref_1
-                      database: &ref_2
+                    example:
+                      database:
                         status: up
                     additionalProperties:
                       type: object
+                      required:
+                        - status
                       properties:
                         status:
                           type: string
-                      additionalProperties:
-                        type: string
+                      additionalProperties: true
                     nullable: true
                   error:
                     type: object
                     example: {}
                     additionalProperties:
                       type: object
+                      required:
+                        - status
                       properties:
                         status:
                           type: string
-                      additionalProperties:
-                        type: string
+                      additionalProperties: true
                     nullable: true
                   details:
                     type: object
-                    example: *ref_1
+                    example:
+                      database:
+                        status: up
                     additionalProperties:
                       type: object
+                      required:
+                        - status
                       properties:
                         status:
                           type: string
-                      additionalProperties:
-                        type: string
+                      additionalProperties: true
         '503':
           description: The Health Check is not successful
           content:
@@ -238,41 +245,49 @@ paths:
                     example: error
                   info:
                     type: object
-                    example: *ref_1
+                    example:
+                      database:
+                        status: up
                     additionalProperties:
                       type: object
+                      required:
+                        - status
                       properties:
                         status:
                           type: string
-                      additionalProperties:
-                        type: string
+                      additionalProperties: true
                     nullable: true
                   error:
                     type: object
                     example:
-                      redis: &ref_3
+                      redis:
                         status: down
                         message: Could not connect
                     additionalProperties:
                       type: object
+                      required:
+                        - status
                       properties:
                         status:
                           type: string
-                      additionalProperties:
-                        type: string
+                      additionalProperties: true
                     nullable: true
                   details:
                     type: object
                     example:
-                      database: *ref_2
-                      redis: *ref_3
+                      database:
+                        status: up
+                      redis:
+                        status: down
+                        message: Could not connect
                     additionalProperties:
                       type: object
+                      required:
+                        - status
                       properties:
                         status:
                           type: string
-                      additionalProperties:
-                        type: string
+                      additionalProperties: true
       tags:
         - healthcheck
   /api/v1/interest-rates:
@@ -342,7 +357,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: &ref_4
+      tags:
         - numbers
     get:
       operationId: NumbersController_findOne
@@ -373,7 +388,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/UkefId'
-      tags: *ref_4
+      tags:
+        - numbers
   /api/v1/premium/schedule:
     post:
       operationId: PremiumSchedulesController_create
@@ -390,7 +406,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: &ref_5
+      tags:
         - premium-schedules
   /api/v1/premium/segments/{facilityId}:
     get:
@@ -415,7 +431,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/PremiumScheduleEntity'
-      tags: *ref_5
+      tags:
+        - premium-schedules
   /api/v1/sector-industries:
     get:
       operationId: SectorIndustriesController_find
@@ -469,6 +486,35 @@ paths:
                   $ref: '#/components/schemas/YieldRateEntity'
       tags:
         - yield-rates
+  /api/v1/geospatial/addresses/postcode:
+    get:
+      operationId: GeospatialController_getGeospatial
+      summary: >-
+        A search based on a property's postcode. Will accept a full postcode
+        consisting of the area, district, sector and unit e.g. SO16 0AS.
+      parameters:
+        - name: postcode
+          required: true
+          in: query
+          example: SW1A 2AQ
+          description: Postcode to search for
+          schema:
+            type: string
+      responses:
+        '200':
+          description: >-
+            Returns addresses from Ordanance survey Delivery Point Address (DPA)
+            system.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetAddressesResponseItem'
+        '404':
+          description: Customer not found.
+      tags:
+        - geospatial
 info:
   title: MDM API Specification
   description: MDM API documentation
@@ -850,8 +896,8 @@ components:
           type: number
           example: 1
           description: >-
-            Payment frequency. It can be: 0 -> Null (At maturity), 1 -> Monthly, 2 -> Quarterly, 3->
-            Semi-annually or 4 -> Annually
+            Payment frequency. It can be: 0 -> Null (At maturity), 1 -> Monthly,
+            2 -> Quarterly, 3-> Semi-annually or 4 -> Annually
         guaranteeCommencementDate:
           format: date-time
           type: string
@@ -1087,6 +1133,50 @@ components:
         - updated
         - effectiveTo
         - effectiveFrom
+    GetAddressesResponseItem:
+      type: object
+      properties:
+        organisationName:
+          type: string
+          description: Organisation name if available
+          example: CHURCHILL MUSEUM & CABINET WAR ROOMS
+        addressLine1:
+          type: string
+          description: Address line 1
+          example: CLIVE STEPS  KING CHARLES STREET
+        addressLine2:
+          type: string
+          description: Address line 2
+          example: null
+        addressLine3:
+          type: string
+          description: Address line 3
+          example: null
+        locality:
+          type: string
+          description: Locality, Town
+          example: LONDON
+        postalCode:
+          type: string
+          description: Postcode
+          example: SW1A 2AQ
+        country:
+          type: string
+          description: Country of address record
+          example: England
+          enum:
+            - England
+            - Scotland
+            - Wales
+            - Northern Ireland
+      required:
+        - organisationName
+        - addressLine1
+        - addressLine2
+        - addressLine3
+        - locality
+        - postalCode
+        - country
 security:
   - ApiKeyHeader: []
 "
