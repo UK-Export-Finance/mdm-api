@@ -13,7 +13,7 @@ export class GeospatialController {
   @Get('addresses/postcode')
   @ApiOperation({
     summary:
-      "A search based on a property's postcode. Will accept a full valid postcode. Returns addresses from Ordanance survey Delivery Point Address (DPA) system.",
+      "A search based on a property's postcode. Will accept a full valid postcode. Returns addresses from Ordnance survey Delivery Point Address (DPA) system.",
   })
   @ApiResponse({
     status: 200,

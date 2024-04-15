@@ -491,7 +491,7 @@ paths:
       operationId: GeospatialController_getAddressesByPostcode
       summary: >-
         A search based on a property's postcode. Will accept a full valid
-        postcode. Returns addresses from Ordanance survey Delivery Point Address
+        postcode. Returns addresses from Ordnance survey Delivery Point Address
         (DPA) system.
       parameters:
         - name: postcode
