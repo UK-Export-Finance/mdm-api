@@ -488,10 +488,11 @@ paths:
         - yield-rates
   /api/v1/geospatial/addresses/postcode:
     get:
-      operationId: GeospatialController_getGeospatial
+      operationId: GeospatialController_getAddressesByPostcode
       summary: >-
-        A search based on a property's postcode. Will accept a full postcode
-        consisting of the area, district, sector and unit e.g. SO16 0AS.
+        A search based on a property's postcode. Will accept a full valid
+        postcode. Returns addresses from Ordanance survey Delivery Point Address
+        (DPA) system.
       parameters:
         - name: postcode
           required: true
@@ -502,9 +503,7 @@ paths:
             type: string
       responses:
         '200':
-          description: >-
-            Returns addresses from Ordanance survey Delivery Point Address (DPA)
-            system.
+          description: Returns simplified addresses that are ready to show to users.
           content:
             application/json:
               schema:

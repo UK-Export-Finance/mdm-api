@@ -27,7 +27,7 @@ export class GeospatialService {
         addressLine3: null,
         locality: item_data.POST_TOWN || null,
         postalCode: item_data.POSTCODE || null,
-        country: ENUMS.GEOSPATIAL_COUNTRIES[item_data.COUNTRY_CODE],
+        country: ENUMS.GEOSPATIAL_COUNTRIES[item_data.COUNTRY_CODE] || null,
       });
     });
 

@@ -12,17 +12,18 @@ export class GeospatialController {
 
   @Get('addresses/postcode')
   @ApiOperation({
-    summary: "A search based on a property's postcode. Will accept a full postcode consisting of the area, district, sector and unit e.g. SO16 0AS.",
+    summary:
+      "A search based on a property's postcode. Will accept a full valid postcode. Returns addresses from Ordanance survey Delivery Point Address (DPA) system.",
   })
   @ApiResponse({
     status: 200,
-    description: 'Returns addresses from Ordanance survey Delivery Point Address (DPA) system.',
+    description: 'Returns simplified addresses that are ready to show to users.',
     type: [GetAddressesResponseItem],
   })
   @ApiNotFoundResponse({
     description: 'Customer not found.',
   })
-  getGeospatial(@Query() query: GetAddressByPostcodeQueryDto): Promise<GetAddressesResponse> {
+  getAddressesByPostcode(@Query() query: GetAddressByPostcodeQueryDto): Promise<GetAddressesResponse> {
     return this.geospatialService.getAddressesByPostcode(query.postcode);
   }
 }

@@ -15,9 +15,10 @@ describe('GET /geospatial/addresses/postcode?postcode=', () => {
     ordnanceSurveyPath,
     mdmPath,
     getAddressByPostcodeResponse,
+    getAddressByPostcodeMultipleResponse,
     getAddressOrdnanceSurveyResponse,
     getAddressOrdnanceSurveyEmptyResponse,
-    getAddressessOrdnanceSurveyResponse,
+    getAddressOrdnanceSurveyMultipleResponse,
     ordnanceSurveyAuthErrorResponse,
   } = new GetGeospatialAddressesGenerator(valueGenerator).generate({
     postcode: GEOSPATIAL.EXAMPLES.POSTCODE,
@@ -58,12 +59,12 @@ describe('GET /geospatial/addresses/postcode?postcode=', () => {
   });
 
   it('returns a 200 response with the addresses if they are returned by Ordnance Survey API', async () => {
-    requestToGetAddressesByPostcode(ordnanceSurveyPath[0]).reply(200, getAddressessOrdnanceSurveyResponse);
+    requestToGetAddressesByPostcode(ordnanceSurveyPath[0]).reply(200, getAddressOrdnanceSurveyMultipleResponse);
 
     const { status, body } = await api.get(mdmPath[0]);
 
     expect(status).toBe(200);
-    expect(body).toStrictEqual([getAddressByPostcodeResponse[0][0], getAddressByPostcodeResponse[1][0]]);
+    expect(body).toStrictEqual(getAddressByPostcodeMultipleResponse);
   });
 
   it('returns a empty 200 response if Ordnance Survey API returns a 200 without results', async () => {
