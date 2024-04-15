@@ -18,11 +18,12 @@ export class GeospatialService {
     }
 
     response.results.forEach((item) => {
-      // Ordnance survey sends duplicated results with the welsh version too via 'CY'
+      // Item can have key DPA or LPI, get data dynamicaly, even if we expect key to always be DPA.
       const item_data = item[Object.keys(item)[0]];
       addresses.push({
         organisationName: item_data.ORGANISATION_NAME || null,
-        addressLine1: `${item_data.BUILDING_NAME || ''} ${item_data.BUILDING_NUMBER || ''} ${item_data.THOROUGHFARE_NAME || ''}`.trim(),
+        // Filter out empty values and join values with single space.
+        addressLine1: [item_data.BUILDING_NAME, item_data.BUILDING_NUMBER, item_data.THOROUGHFARE_NAME].filter(Boolean).join(' '),
         addressLine2: item_data.DEPENDENT_LOCALITY || null,
         addressLine3: null,
         locality: item_data.POST_TOWN || null,

@@ -63,5 +63,16 @@ describe('CustomerService', () => {
 
       expect(response).toEqual([]);
     });
+
+    it('returns addressLine1 formatted correctly even if middle value is missing', async () => {
+      const [modifiedOrdnanceSurveyResponse] = getAddressOrdnanceSurveyResponse;
+      modifiedOrdnanceSurveyResponse.results[0].DPA.BUILDING_NUMBER = null;
+      const address = modifiedOrdnanceSurveyResponse.results[0].DPA;
+      when(informaticaServiceGetAddressesByPostcode).calledWith(postcode).mockResolvedValueOnce(modifiedOrdnanceSurveyResponse);
+
+      const response = await service.getAddressesByPostcode(postcode);
+
+      expect(response[0].addressLine1).toBe(`${address.BUILDING_NAME} ${address.THOROUGHFARE_NAME}`);
+    });
   });
 });
