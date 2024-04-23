@@ -14,10 +14,10 @@ export class GetGeospatialAddressesGenerator extends AbstractGenerator<AddressVa
 
   protected generateValues(): AddressValues {
     return {
-      ORGANISATION_NAME: this.valueGenerator.word({ length: 5 }),
+      ORGANISATION_NAME: this.valueGenerator.sentence({ words: 2 }),
       BUILDING_NAME: this.valueGenerator.word(),
       BUILDING_NUMBER: this.valueGenerator.nonnegativeInteger().toString(),
-      THOROUGHFARE_NAME: this.valueGenerator.word({ length: 7 }),
+      THOROUGHFARE_NAME: this.valueGenerator.sentence({ words: 5 }),
       DEPENDENT_LOCALITY: this.valueGenerator.word(),
       POST_TOWN: this.valueGenerator.word(),
       POSTCODE: this.valueGenerator.postcode(),

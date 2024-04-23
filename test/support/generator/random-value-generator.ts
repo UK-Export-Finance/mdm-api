@@ -36,6 +36,10 @@ export class RandomValueGenerator {
     return this.chance.word({ length: options?.length });
   }
 
+  sentence(options?: { words?: number }): string {
+    return this.chance.sentence({ words: options?.words });
+  }
+
   httpsUrl(): string {
     return this.chance.url({ protocol: 'https' });
   }
