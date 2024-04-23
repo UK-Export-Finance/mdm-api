@@ -41,7 +41,7 @@ describe('GeospatialController', () => {
       expect(response).toEqual(getAddressByPostcodeResponse[0]);
     });
 
-    it('returns multiple addressess for postcode', async () => {
+    it('returns multiple addresses for the postcode when the service returns multiple addresses', async () => {
       when(geospatialServiceGetAddressesByPostcode).calledWith(postcode).mockResolvedValueOnce(getAddressByPostcodeMultipleResponse);
 
       const response = await controller.getAddressesByPostcode({ postcode });
