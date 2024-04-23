@@ -40,7 +40,7 @@ describe('GeospatialService', () => {
     });
     const postcode = getAddressByPostcodeResponse[0][0].postalCode;
 
-    it('returns address from the backend service', async () => {
+    it('returns a single address from the backend service', async () => {
       when(informaticaServiceGetAddressesByPostcode).calledWith(postcode).mockResolvedValueOnce(getAddressOrdnanceSurveyResponse[0]);
 
       const response = await service.getAddressesByPostcode(postcode);
