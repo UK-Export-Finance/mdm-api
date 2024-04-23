@@ -55,7 +55,7 @@ describe('GeospatialController', () => {
 
       const response = await controller.getAddressesByPostcode({ postcode });
 
-      expect(geospatialServiceGetAddressesByPostcode).toHaveBeenCalled();
+      expect(geospatialServiceGetAddressesByPostcode).toHaveBeenCalledTimes(1);
       expect(response).toEqual([]);
     });
   });
