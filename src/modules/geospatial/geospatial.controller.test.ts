@@ -41,21 +41,21 @@ describe('GeospatialController', () => {
       expect(response).toEqual(getAddressByPostcodeResponse[0]);
     });
 
-    it('returns multiple addressess for postcode', async () => {
+    it('returns multiple addresses for the postcode when the service returns multiple addresses', async () => {
       when(geospatialServiceGetAddressesByPostcode).calledWith(postcode).mockResolvedValueOnce(getAddressByPostcodeMultipleResponse);
 
       const response = await controller.getAddressesByPostcode({ postcode });
 
-      expect(geospatialServiceGetAddressesByPostcode).toHaveBeenCalled();
+      expect(geospatialServiceGetAddressesByPostcode).toHaveBeenCalledTimes(1);
       expect(response).toEqual(getAddressByPostcodeMultipleResponse);
     });
 
-    it('returns empty response for postcode', async () => {
+    it('returns an empty response for the postcode when the service returns an empty response', async () => {
       when(geospatialServiceGetAddressesByPostcode).calledWith(postcode).mockResolvedValueOnce([]);
 
       const response = await controller.getAddressesByPostcode({ postcode });
 
-      expect(geospatialServiceGetAddressesByPostcode).toHaveBeenCalled();
+      expect(geospatialServiceGetAddressesByPostcode).toHaveBeenCalledTimes(1);
       expect(response).toEqual([]);
     });
   });
