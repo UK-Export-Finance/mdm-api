@@ -1,10 +1,10 @@
-import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
+import { App } from 'supertest/types';
 
 export class Api {
-  app: INestApplication;
+  app: App;
 
-  public constructor(app: INestApplication) {
+  public constructor(app: App) {
     this.app = app;
   }
 

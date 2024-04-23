@@ -16,8 +16,21 @@ export class Api {
     return this.request().get(url).set(this.getValidAuthHeader());
   }
 
+  post(url: string, body: string | object, extraHeaders?: object): request.Test {
+    const request = this.request().post(url).send(body).set(this.getValidAuthHeader());
+    if (extraHeaders) {
+      request.set(extraHeaders);
+    }
+    return request;
+  }
+
   getWithoutAuth(url: string, strategy?: string, key?: string): request.Test {
     const query = this.request().get(url);
+    return this.setQueryWithAuthStrategyIfPresent(query, strategy, key);
+  }
+
+  postWithoutAuth(url: string, body: string | object, strategy?: string, key?: string): request.Test {
+    const query = this.request().post(url, body);
     return this.setQueryWithAuthStrategyIfPresent(query, strategy, key);
   }
 
@@ -29,7 +42,8 @@ export class Api {
     return this.app.destroy();
   }
 
-  private request(): request.SuperTest<request.Test> {
+  // Todo: solve type issue.
+  private request(): any {
     return request(this.app.getHttpServer());
   }
 

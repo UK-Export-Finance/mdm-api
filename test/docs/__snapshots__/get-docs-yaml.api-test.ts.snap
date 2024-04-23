@@ -17,7 +17,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/CurrencyEntity'
-      tags: &ref_0
+      tags:
         - currencies
   /api/v1/currencies/exchange:
     get:
@@ -58,7 +58,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GetCurrencyExchangeDto'
-      tags: *ref_0
+      tags:
+        - currencies
   /api/v1/currencies/{isoCode}:
     get:
       operationId: CurrenciesController_findOne
@@ -80,7 +81,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/CurrencyEntity'
-      tags: *ref_0
+      tags:
+        - currencies
   /api/v1/customers:
     get:
       operationId: CustomersController_getCustomers
@@ -141,6 +143,39 @@ paths:
           description: Customer not found.
       tags:
         - customers
+  /api/v1/emails:
+    post:
+      operationId: EmailsController_postEmail
+      summary: Send email using to Gov.uk notify service
+      parameters:
+        - name: govUkNotifyKey
+          required: true
+          in: header
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/PostEmailRequestItemDto'
+      responses:
+        '201':
+          description: Returns information about email transaction.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PostEmailResponseDto'
+        '400':
+          description: Bad request
+        '422':
+          description: Returned if unknown gov.uk notify error happened
+      tags:
+        - emails
   /api/v1/exposure-period:
     get:
       operationId: ExposurePeriodController_find
@@ -194,8 +229,8 @@ paths:
                     example: ok
                   info:
                     type: object
-                    example: &ref_1
-                      database: &ref_2
+                    example:
+                      database:
                         status: up
                     additionalProperties:
                       type: object
@@ -218,7 +253,9 @@ paths:
                     nullable: true
                   details:
                     type: object
-                    example: *ref_1
+                    example:
+                      database:
+                        status: up
                     additionalProperties:
                       type: object
                       properties:
@@ -238,7 +275,9 @@ paths:
                     example: error
                   info:
                     type: object
-                    example: *ref_1
+                    example:
+                      database:
+                        status: up
                     additionalProperties:
                       type: object
                       properties:
@@ -250,7 +289,7 @@ paths:
                   error:
                     type: object
                     example:
-                      redis: &ref_3
+                      redis:
                         status: down
                         message: Could not connect
                     additionalProperties:
@@ -264,8 +303,11 @@ paths:
                   details:
                     type: object
                     example:
-                      database: *ref_2
-                      redis: *ref_3
+                      database:
+                        status: up
+                      redis:
+                        status: down
+                        message: Could not connect
                     additionalProperties:
                       type: object
                       properties:
@@ -342,7 +384,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: &ref_4
+      tags:
         - numbers
     get:
       operationId: NumbersController_findOne
@@ -373,7 +415,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/UkefId'
-      tags: *ref_4
+      tags:
+        - numbers
   /api/v1/premium/schedule:
     post:
       operationId: PremiumSchedulesController_create
@@ -390,7 +433,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: &ref_5
+      tags:
         - premium-schedules
   /api/v1/premium/segments/{facilityId}:
     get:
@@ -415,7 +458,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/PremiumScheduleEntity'
-      tags: *ref_5
+      tags:
+        - premium-schedules
   /api/v1/sector-industries:
     get:
       operationId: SectorIndustriesController_find
@@ -615,6 +659,116 @@ components:
         - type
         - subtype
         - isLegacyRecord
+    PostEmailRequestItemDto:
+      type: object
+      properties:
+        templateId:
+          type: string
+          example: tmpl1234-1234-5678-9012-abcd12345678
+        sendToEmailAddress:
+          type: string
+          example: john.tester@example.com
+          description: Email address to send this email
+        personalisation:
+          type: object
+          example:
+            firstName: John
+          description: All variables for email template
+        reference:
+          type: string
+          example: tmpl1234-1234-5678-9012-abcd12345678-1713272155576
+      required:
+        - templateId
+        - sendToEmailAddress
+        - personalisation
+        - reference
+    PostEmailResponseDataContent:
+      type: object
+      properties:
+        body:
+          type: string
+          example: "Dear John Smith,\\r\\n\\r\\nThe status of your MIA for EuroStar has been updated.\\r\\n\\r\\n* Your bank reference: EuroStar bridge\\r\\n* Current status: Acknowledged\\r\\n* Previous status: Submitted\\r\\n* Updated by: Joe Bloggs (Joe.Bloggs@example.com)\\r\\n\\r\\nSign in to our service for more information: \\r\\nhttps://www.test.service.gov.uk/\\r\\n\\r\\nWith regards,\\r\\n\\r\\nThe Digital Trade Finance Service team\\r\\n\\r\\nEmail: test@test.gov.uk\\r\\nPhone: +44 (0)202 123 4567\\r\\nOpening times: Monday to Friday, 9am to 5pm (excluding public holidays)"
+          description: Email text
+        from_email:
+          type: string
+          example: test@notifications.service.gov.uk
+          description: Email is sent from this address
+        subject:
+          type: string
+          example: 'Status update: EuroStar bridge'
+          description: Email subject line
+        unsubscribe_link:
+          type: string
+          example: null
+          description: we don't use unsubscribe links
+      required:
+        - body
+        - from_email
+        - subject
+        - unsubscribe_link
+    PostEmailResponseDataTemplate:
+      type: object
+      properties:
+        id:
+          type: string
+          example: tmpl1234-1234-5678-9012-abcd12345678
+          description: Notify's template id
+        uri:
+          type: string
+          example: >-
+            https://api.notifications.service.gov.uk/services/abc12345-a123-4567-8901-123456789012/templates/tmpl1234-1234-5678-9012-abcd12345678
+          description: URL to get more information about template
+        version:
+          type: number
+          example: 5
+          description: Template version
+      required:
+        - id
+        - uri
+        - version
+    PostEmailResponseData:
+      type: object
+      properties:
+        content:
+          $ref: '#/components/schemas/PostEmailResponseDataContent'
+        id:
+          type: string
+          example: efd12345-1234-5678-9012-ee123456789f
+          description: Notify's id for the status receipts
+        reference:
+          type: string
+          example: tmpl1234-1234-5678-9012-abcd12345678-1713346533467
+          description: Reference id you provided for this transaction
+        scheduled_for:
+          type: string
+          example: null
+          description: We don't schedule emails
+        template:
+          $ref: '#/components/schemas/PostEmailResponseDataTemplate'
+        uri:
+          type: string
+          example: >-
+            https://api.notifications.service.gov.uk/v2/notifications/efd12345-1234-5678-9012-ee123456789f
+          description: API location to get more information about this transaction
+      required:
+        - content
+        - id
+        - reference
+        - scheduled_for
+        - template
+        - uri
+    PostEmailResponseDto:
+      type: object
+      properties:
+        status:
+          type: number
+          example: 201
+          description: Http status code
+        data:
+          $ref: '#/components/schemas/PostEmailResponseData'
+      required:
+        - status
+        - data
     ExposurePeriodDto:
       type: object
       properties:
@@ -850,8 +1004,8 @@ components:
           type: number
           example: 1
           description: >-
-            Payment frequency. It can be: 0 -> Null (At maturity), 1 -> Monthly, 2 -> Quarterly, 3->
-            Semi-annually or 4 -> Annually
+            Payment frequency. It can be: 0 -> Null (At maturity), 1 -> Monthly,
+            2 -> Quarterly, 3-> Semi-annually or 4 -> Annually
         guaranteeCommencementDate:
           format: date-time
           type: string
