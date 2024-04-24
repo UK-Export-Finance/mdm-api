@@ -5,9 +5,8 @@ import { KEY as ORDNANCE_SURVEY_CONFIG_KEY, OrdnanceSurveyConfig } from '@ukef/c
 import { GEOSPATIAL } from '@ukef/constants';
 import { HttpClient } from '@ukef/modules/http/http.client';
 
-import { GetAddressOrdnanceSurveyResponse } from './dto/get-addresses-ordnance-survey-response.dto';
-// import { getCustomersNotFoundKnownOrdnanceSurveyError } from './known-errors';
-import { createWrapOrdnanceSurveyHttpGetErrorCallback } from './wrap-ordnance-survey-http-error-callback';
+import { GetAddressesOrdnanceSurveyResponse } from './dto/get-addresses-ordnance-survey-response.dto';
+import { OrdnanceSurveyException } from './exception/ordnance-survey.exception';
 
 @Injectable()
 export class OrdnanceSurveyService {
@@ -20,16 +19,15 @@ export class OrdnanceSurveyService {
     this.key = key;
   }
 
-  async getAddressesByPostcode(postcode): Promise<GetAddressOrdnanceSurveyResponse> {
+  async getAddressesByPostcode(postcode: string): Promise<GetAddressesOrdnanceSurveyResponse> {
     const path = `/search/places/v1/postcode?postcode=${encodeURIComponent(postcode)}&lr=${GEOSPATIAL.DEFAULT.RESULT_LANGUAGE}&key=${encodeURIComponent(this.key)}`;
-    const { data } = await this.httpClient.get<GetAddressOrdnanceSurveyResponse>({
+    const { data } = await this.httpClient.get<GetAddressesOrdnanceSurveyResponse>({
       path,
       headers: { 'Content-Type': 'application/json' },
-      onError: createWrapOrdnanceSurveyHttpGetErrorCallback({
-        messageForUnknownError: `Failed to get response from Ordnance Survey API.`,
-        knownErrors: [],
-        // knownErrors: [getCustomersNotFoundKnownOrdnanceSurveyError()], // TODO: should we change 200 no results to 404?
-      }),
+      onError: (error: Error) => {
+        console.error('Http call error happened, error %o', error);
+        throw new OrdnanceSurveyException('Failed to get response from Ordnance Survey API.', error);
+      },
     });
     return data;
   }

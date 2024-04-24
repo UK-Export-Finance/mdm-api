@@ -4,8 +4,8 @@ import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-
 import { AxiosError } from 'axios';
 import { when } from 'jest-when';
 import { of, throwError } from 'rxjs';
-import expectedResponse = require('./examples/example-response-for-search-places-v1-postcode.json');
-import noResultsResponse = require('./examples/example-response-for-search-places-v1-postcode-no-results.json');
+import expectedResponseData = require('./examples/example-response-for-search-places-v1-postcode.json');
+import noResultsResponseData = require('./examples/example-response-for-search-places-v1-postcode-no-results.json');
 
 import { GEOSPATIAL } from '@ukef/constants';
 
@@ -22,6 +22,14 @@ describe('OrdnanceSurveyService', () => {
   const testPostcode = GEOSPATIAL.EXAMPLES.POSTCODE;
   const testKey = valueGenerator.string({ length: 10 });
   const basePath = '/search/places/v1/postcode';
+
+  const expectedResponse = of({
+    data: expectedResponseData,
+    status: 200,
+    statusText: 'OK',
+    config: undefined,
+    headers: undefined,
+  });
 
   beforeEach(() => {
     const httpService = new HttpService();
@@ -40,26 +48,11 @@ describe('OrdnanceSurveyService', () => {
 
     const expectedHttpServiceGetArgs: [string, object] = [expectedPath, { headers: { 'Content-Type': 'application/json' } }];
 
-    it('sends a GET to the Ordnance Survey API /search endpoint with the specified request', async () => {
-      when(httpServiceGet)
-        .calledWith(...expectedHttpServiceGetArgs)
-        .mockReturnValueOnce(
-          of({
-            data: expectedResponse,
-            status: 200,
-            statusText: 'OK',
-            config: undefined,
-            headers: undefined,
-          }),
-        );
-
-      await service.getAddressesByPostcode(testPostcode);
-
-      expect(httpServiceGet).toHaveBeenCalledTimes(1);
-      expect(httpServiceGet).toHaveBeenCalledWith(...expectedHttpServiceGetArgs);
-    });
-
-    it.each([
+    describe.each([
+      {
+        postcode: testPostcode,
+        expectedUrlQueryPart: `?postcode=${encodeURIComponent(testPostcode)}`,
+      },
       {
         postcode: 'W1A 1AA',
         expectedUrlQueryPart: `?postcode=W1A%201AA`,
@@ -68,34 +61,40 @@ describe('OrdnanceSurveyService', () => {
         postcode: 'W1A1AA',
         expectedUrlQueryPart: '?postcode=W1A1AA',
       },
-    ])('call Ordnance Survey API with correct and safe query parameters "$expectedUrlQueryPart"', async ({ postcode, expectedUrlQueryPart }) => {
-      const expectedPath = `${basePath}${expectedUrlQueryPart}&lr=EN&key=${encodeURIComponent(testKey)}`;
-      const expectedHttpServiceGetArgs: [string, object] = [expectedPath, { headers: { 'Content-Type': 'application/json' } }];
+    ])('test postcode $postcode', ({ postcode, expectedUrlQueryPart }) => {
+      it('call Ordnance Survey with the correct arguments', async () => {
+        const expectedPath = `${basePath}${expectedUrlQueryPart}&lr=EN&key=${encodeURIComponent(testKey)}`;
+        const expectedHttpServiceGetArgs: [string, object] = [expectedPath, { headers: { 'Content-Type': 'application/json' } }];
 
-      when(httpServiceGet)
-        .calledWith(...expectedHttpServiceGetArgs)
-        .mockReturnValueOnce(
-          of({
-            data: expectedResponse,
-            status: 200,
-            statusText: 'OK',
-            config: undefined,
-            headers: undefined,
-          }),
-        );
+        when(httpServiceGet)
+          .calledWith(...expectedHttpServiceGetArgs)
+          .mockReturnValueOnce(expectedResponse);
+        await service.getAddressesByPostcode(postcode);
 
-      await service.getAddressesByPostcode(postcode);
+        expect(httpServiceGet).toHaveBeenCalledTimes(1);
+        expect(httpServiceGet).toHaveBeenCalledWith(...expectedHttpServiceGetArgs);
+      });
 
-      expect(httpServiceGet).toHaveBeenCalledTimes(1);
-      expect(httpServiceGet).toHaveBeenCalledWith(...expectedHttpServiceGetArgs);
+      it('call Ordnance Survey returns expectedResponse', async () => {
+        const expectedPath = `${basePath}${expectedUrlQueryPart}&lr=EN&key=${encodeURIComponent(testKey)}`;
+        const expectedHttpServiceGetArgs: [string, object] = [expectedPath, { headers: { 'Content-Type': 'application/json' } }];
+
+        when(httpServiceGet)
+          .calledWith(...expectedHttpServiceGetArgs)
+          .mockReturnValueOnce(expectedResponse);
+
+        const response = await service.getAddressesByPostcode(postcode);
+
+        expect(response).toBe(expectedResponseData);
+      });
     });
 
-    it('no results - returns 200 without results', async () => {
+    it('returns a 200 response without results when Ordnance Survey returns no results', async () => {
       when(httpServiceGet)
         .calledWith(...expectedHttpServiceGetArgs)
         .mockReturnValueOnce(
           of({
-            data: noResultsResponse,
+            data: noResultsResponseData,
             status: 200,
             statusText: 'OK',
             config: undefined,
@@ -107,7 +106,7 @@ describe('OrdnanceSurveyService', () => {
 
       expect(httpServiceGet).toHaveBeenCalledTimes(1);
       expect(httpServiceGet).toHaveBeenCalledWith(...expectedHttpServiceGetArgs);
-      expect(results).toBe(noResultsResponse);
+      expect(results).toBe(noResultsResponseData);
     });
 
     it('throws an OrdnanceSurveyException if the request to Ordnance Survey fails', async () => {

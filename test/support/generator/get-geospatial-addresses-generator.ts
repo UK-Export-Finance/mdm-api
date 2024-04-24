@@ -1,7 +1,7 @@
 import { ENUMS, GEOSPATIAL } from '@ukef/constants';
-import { GetAddressOrdnanceSurveyResponse } from '@ukef/helper-modules/ordnance-survey/dto/get-addresses-ordnance-survey-response.dto';
+import { GetAddressesOrdnanceSurveyResponse } from '@ukef/helper-modules/ordnance-survey/dto/get-addresses-ordnance-survey-response.dto';
 import { OrdnanceSurveyAuthErrorResponse } from '@ukef/helper-modules/ordnance-survey/dto/ordnance-survey-auth-error-response.dto';
-import { GetAddressByPostcodeQueryDto } from '@ukef/modules/geospatial/dto/get-address-by-postcode-query.dto';
+import { GetAddressesByPostcodeQueryDto } from '@ukef/modules/geospatial/dto/get-addresses-by-postcode-query.dto';
 import { GetAddressesResponse } from '@ukef/modules/geospatial/dto/get-addresses-response.dto';
 
 import { AbstractGenerator } from './abstract-generator';
@@ -28,19 +28,19 @@ export class GetGeospatialAddressesGenerator extends AbstractGenerator<AddressVa
   protected transformRawValuesToGeneratedValues(values: AddressValues[], { postcode, key }: GenerateOptions): GenerateResult {
     const useKey = key || 'test';
 
-    const request: GetAddressByPostcodeQueryDto[] = values.map((v) => ({ postcode: postcode || v.POSTCODE }) as GetAddressByPostcodeQueryDto);
+    const requests: GetAddressesByPostcodeQueryDto[] = values.map((v) => ({ postcode: postcode || v.POSTCODE }) as GetAddressesByPostcodeQueryDto);
 
-    const ordnanceSurveyPath: string[] = values.map((v) => {
+    const ordnanceSurveyPaths: string[] = values.map((v) => {
       const usePostcode = postcode || v.POSTCODE;
       return `/search/places/v1/postcode?postcode=${encodeURIComponent(usePostcode)}&lr=${GEOSPATIAL.DEFAULT.RESULT_LANGUAGE}&key=${encodeURIComponent(useKey)}`;
     });
 
-    const mdmPath: string[] = values.map((v) => {
+    const mdmPaths: string[] = values.map((v) => {
       const usePostcode = postcode || v.POSTCODE;
       return `/api/v1/geospatial/addresses/postcode?postcode=${usePostcode}`;
     });
 
-    const getAddressByPostcodeResponse: GetAddressesResponse[] = values.map((v) => [
+    const getAddressesByPostcodeResponse: GetAddressesResponse[] = values.map((v) => [
       {
         organisationName: v.ORGANISATION_NAME,
         addressLine1: `${v.BUILDING_NAME} ${v.BUILDING_NUMBER} ${v.THOROUGHFARE_NAME}`,
@@ -52,9 +52,9 @@ export class GetGeospatialAddressesGenerator extends AbstractGenerator<AddressVa
       },
     ]);
 
-    const getAddressByPostcodeMultipleResponse = getAddressByPostcodeResponse.map((response) => response[0]);
+    const getAddressesByPostcodeMultipleResponse = getAddressesByPostcodeResponse.map((response) => response[0]);
 
-    const getAddressOrdnanceSurveyResponse: GetAddressOrdnanceSurveyResponse[] = values.map((v) => ({
+    const getAddressesOrdnanceSurveyResponse: GetAddressesOrdnanceSurveyResponse[] = values.map((v) => ({
       header: {
         uri: 'test',
         query: 'test',
@@ -109,7 +109,7 @@ export class GetGeospatialAddressesGenerator extends AbstractGenerator<AddressVa
       ],
     }));
 
-    const getAddressOrdnanceSurveyMultipleResponse: GetAddressOrdnanceSurveyResponse = {
+    const getAddressesOrdnanceSurveyMultipleResponse: GetAddressesOrdnanceSurveyResponse = {
       header: {
         uri: 'test',
         query: 'test',
@@ -162,7 +162,7 @@ export class GetGeospatialAddressesGenerator extends AbstractGenerator<AddressVa
       })),
     };
 
-    const getAddressOrdnanceSurveyEmptyResponse: GetAddressOrdnanceSurveyResponse[] = values.map(() => ({
+    const getAddressesOrdnanceSurveyEmptyResponse: GetAddressesOrdnanceSurveyResponse = {
       header: {
         uri: 'test',
         query: 'test',
@@ -176,9 +176,9 @@ export class GetGeospatialAddressesGenerator extends AbstractGenerator<AddressVa
         lastupdate: 'test',
         output_srs: 'test',
       },
-    }));
+    };
 
-    const ordnanceSurveyAuthErrorResponse = {
+    const ordnanceSurveyAuthErrorResponse: OrdnanceSurveyAuthErrorResponse = {
       fault: {
         faultstring: 'Invalid ApiKey',
         detail: {
@@ -188,14 +188,14 @@ export class GetGeospatialAddressesGenerator extends AbstractGenerator<AddressVa
     };
 
     return {
-      request,
-      ordnanceSurveyPath,
-      mdmPath,
-      getAddressByPostcodeResponse,
-      getAddressByPostcodeMultipleResponse,
-      getAddressOrdnanceSurveyResponse,
-      getAddressOrdnanceSurveyEmptyResponse,
-      getAddressOrdnanceSurveyMultipleResponse,
+      requests,
+      ordnanceSurveyPath: ordnanceSurveyPaths,
+      mdmPath: mdmPaths,
+      getAddressByPostcodeResponse: getAddressesByPostcodeResponse,
+      getAddressByPostcodeMultipleResponse: getAddressesByPostcodeMultipleResponse,
+      getAddressOrdnanceSurveyResponse: getAddressesOrdnanceSurveyResponse,
+      getAddressOrdnanceSurveyEmptyResponse: getAddressesOrdnanceSurveyEmptyResponse,
+      getAddressOrdnanceSurveyMultipleResponse: getAddressesOrdnanceSurveyMultipleResponse,
       ordnanceSurveyAuthErrorResponse,
     };
   }
@@ -218,13 +218,13 @@ interface GenerateOptions {
 }
 
 interface GenerateResult {
-  request: GetAddressByPostcodeQueryDto[];
+  requests: GetAddressesByPostcodeQueryDto[];
   ordnanceSurveyPath: string[];
   mdmPath: string[];
   getAddressByPostcodeResponse: GetAddressesResponse[];
   getAddressByPostcodeMultipleResponse: GetAddressesResponse;
-  getAddressOrdnanceSurveyResponse: GetAddressOrdnanceSurveyResponse[];
-  getAddressOrdnanceSurveyMultipleResponse: GetAddressOrdnanceSurveyResponse;
-  getAddressOrdnanceSurveyEmptyResponse: GetAddressOrdnanceSurveyResponse[];
+  getAddressOrdnanceSurveyResponse: GetAddressesOrdnanceSurveyResponse[];
+  getAddressOrdnanceSurveyMultipleResponse: GetAddressesOrdnanceSurveyResponse;
+  getAddressOrdnanceSurveyEmptyResponse: GetAddressesOrdnanceSurveyResponse;
   ordnanceSurveyAuthErrorResponse: OrdnanceSurveyAuthErrorResponse;
 }

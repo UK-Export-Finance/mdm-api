@@ -1,7 +1,7 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiNotFoundResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { GetAddressByPostcodeQueryDto } from './dto/get-address-by-postcode-query.dto';
+import { GetAddressesByPostcodeQueryDto } from './dto/get-addresses-by-postcode-query.dto';
 import { GetAddressesResponse, GetAddressesResponseItem } from './dto/get-addresses-response.dto';
 import { GeospatialService } from './geospatial.service';
 
@@ -23,7 +23,7 @@ export class GeospatialController {
   @ApiNotFoundResponse({
     description: 'Customer not found.',
   })
-  getAddressesByPostcode(@Query() query: GetAddressByPostcodeQueryDto): Promise<GetAddressesResponse> {
+  getAddressesByPostcode(@Query() query: GetAddressesByPostcodeQueryDto): Promise<GetAddressesResponse> {
     return this.geospatialService.getAddressesByPostcode(query.postcode);
   }
 }
