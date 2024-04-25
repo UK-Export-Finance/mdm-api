@@ -44,7 +44,7 @@ describe('GET /geospatial/addresses/postcode?postcode=', () => {
   // MDM auth tests
   withClientAuthenticationTests({
     givenTheRequestWouldOtherwiseSucceed: () => {
-      requestToGetAddressesByPostcode(mdmPath[0]).reply(200, getAddressOrdnanceSurveyResponse[0]);
+      requestToGetAddressesByPostcode(ordnanceSurveyPath[0]).reply(200, getAddressOrdnanceSurveyResponse[0]);
     },
     makeRequestWithoutAuth: (incorrectAuth?: IncorrectAuthArg) => api.getWithoutAuth(mdmPath[0], incorrectAuth?.headerName, incorrectAuth?.headerValue),
   });
