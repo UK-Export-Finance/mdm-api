@@ -22,7 +22,7 @@ export class GeospatialController {
     type: [GetAddressesResponseItem],
   })
   @ApiNotFoundResponse({
-    description: 'Customer not found.',
+    description: 'Postcode not found.',
   })
   getAddressesByPostcode(@Query() query: GetAddressesByPostcodeQueryDto): Promise<GetAddressesResponse> {
     return this.geospatialService.getAddressesByPostcode(query.postcode);
