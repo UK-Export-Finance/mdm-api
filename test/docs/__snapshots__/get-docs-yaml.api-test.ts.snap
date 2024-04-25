@@ -1141,8 +1141,9 @@ components:
       properties:
         organisationName:
           type: string
-          description: Organisation name if available
+          description: Organisation name, if available
           example: CHURCHILL MUSEUM & CABINET WAR ROOMS
+          nullable: true
         addressLine1:
           type: string
           description: Address line 1
@@ -1151,10 +1152,12 @@ components:
           type: string
           description: Address line 2
           example: null
+          nullable: true
         addressLine3:
           type: string
           description: Address line 3
           example: null
+          nullable: true
         locality:
           type: string
           description: Locality, Town
@@ -1163,6 +1166,7 @@ components:
           type: string
           description: Postcode
           example: SW1A 2AQ
+          nullable: true
         country:
           type: string
           description: Country of address record
@@ -1172,6 +1176,7 @@ components:
             - Scotland
             - Wales
             - Northern Ireland
+          nullable: true
       required:
         - organisationName
         - addressLine1
