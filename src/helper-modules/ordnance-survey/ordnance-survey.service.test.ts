@@ -62,7 +62,7 @@ describe('OrdnanceSurveyService', () => {
         expectedUrlQueryPart: '?postcode=W1A1AA',
       },
     ])('test postcode $postcode', ({ postcode, expectedUrlQueryPart }) => {
-      it('call Ordnance Survey with the correct arguments', async () => {
+      it('calls Ordnance Survey with the correct arguments', async () => {
         const expectedPath = `${basePath}${expectedUrlQueryPart}&lr=EN&key=${encodeURIComponent(testKey)}`;
         const expectedHttpServiceGetArgs: [string, object] = [expectedPath, { headers: { 'Content-Type': 'application/json' } }];
 
