@@ -189,13 +189,13 @@ export class GetGeospatialAddressesGenerator extends AbstractGenerator<AddressVa
 
     return {
       requests,
-      ordnanceSurveyPath: ordnanceSurveyPaths,
-      mdmPath: mdmPaths,
-      getAddressByPostcodeResponse: getAddressesByPostcodeResponse,
-      getAddressByPostcodeMultipleResponse: getAddressesByPostcodeMultipleResponse,
-      getAddressOrdnanceSurveyResponse: getAddressesOrdnanceSurveyResponse,
-      getAddressOrdnanceSurveyEmptyResponse: getAddressesOrdnanceSurveyEmptyResponse,
-      getAddressOrdnanceSurveyMultipleResponse: getAddressesOrdnanceSurveyMultipleMatchingAddressesResponse,
+      ordnanceSurveyPaths,
+      mdmPaths,
+      getAddressesByPostcodeResponse,
+      getAddressesByPostcodeMultipleResponse,
+      getAddressesOrdnanceSurveyResponse,
+      getAddressesOrdnanceSurveyEmptyResponse,
+      getAddressesOrdnanceSurveyMultipleMatchingAddressesResponse,
       ordnanceSurveyAuthErrorResponse,
     };
   }
@@ -219,12 +219,12 @@ interface GenerateOptions {
 
 interface GenerateResult {
   requests: GetAddressesByPostcodeQueryDto[];
-  ordnanceSurveyPath: string[];
-  mdmPath: string[];
-  getAddressByPostcodeResponse: GetAddressesResponse[];
-  getAddressByPostcodeMultipleResponse: GetAddressesResponse;
-  getAddressOrdnanceSurveyResponse: GetAddressesOrdnanceSurveyResponse[];
-  getAddressOrdnanceSurveyMultipleResponse: GetAddressesOrdnanceSurveyResponse;
-  getAddressOrdnanceSurveyEmptyResponse: GetAddressesOrdnanceSurveyResponse;
+  ordnanceSurveyPaths: string[];
+  mdmPaths: string[];
+  getAddressesByPostcodeResponse: GetAddressesResponse[];
+  getAddressesByPostcodeMultipleResponse: GetAddressesResponse;
+  getAddressesOrdnanceSurveyResponse: GetAddressesOrdnanceSurveyResponse[];
+  getAddressesOrdnanceSurveyMultipleMatchingAddressesResponse: GetAddressesOrdnanceSurveyResponse;
+  getAddressesOrdnanceSurveyEmptyResponse: GetAddressesOrdnanceSurveyResponse;
   ordnanceSurveyAuthErrorResponse: OrdnanceSurveyAuthErrorResponse;
 }

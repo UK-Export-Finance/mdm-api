@@ -12,13 +12,13 @@ describe('GET /geospatial/addresses/postcode?postcode=', () => {
   let api: Api;
 
   const {
-    ordnanceSurveyPath,
-    mdmPath,
-    getAddressByPostcodeResponse,
-    getAddressByPostcodeMultipleResponse,
-    getAddressOrdnanceSurveyResponse,
-    getAddressOrdnanceSurveyEmptyResponse,
-    getAddressOrdnanceSurveyMultipleResponse,
+    ordnanceSurveyPaths,
+    mdmPaths,
+    getAddressesByPostcodeResponse,
+    getAddressesByPostcodeMultipleResponse,
+    getAddressesOrdnanceSurveyResponse,
+    getAddressesOrdnanceSurveyEmptyResponse,
+    getAddressesOrdnanceSurveyMultipleMatchingAddressesResponse,
     ordnanceSurveyAuthErrorResponse,
   } = new GetGeospatialAddressesGenerator(valueGenerator).generate({
     postcode: GEOSPATIAL.EXAMPLES.POSTCODE,
@@ -44,42 +44,42 @@ describe('GET /geospatial/addresses/postcode?postcode=', () => {
   // MDM auth tests
   withClientAuthenticationTests({
     givenTheRequestWouldOtherwiseSucceed: () => {
-      requestToGetAddressesByPostcode(ordnanceSurveyPath[0]).reply(200, getAddressOrdnanceSurveyResponse[0]);
+      requestToGetAddressesByPostcode(ordnanceSurveyPaths[0]).reply(200, getAddressesOrdnanceSurveyResponse[0]);
     },
-    makeRequestWithoutAuth: (incorrectAuth?: IncorrectAuthArg) => api.getWithoutAuth(mdmPath[0], incorrectAuth?.headerName, incorrectAuth?.headerValue),
+    makeRequestWithoutAuth: (incorrectAuth?: IncorrectAuthArg) => api.getWithoutAuth(mdmPaths[0], incorrectAuth?.headerName, incorrectAuth?.headerValue),
   });
 
   it('returns a 200 response with the address if it is returned by Ordnance Survey API', async () => {
-    requestToGetAddressesByPostcode(ordnanceSurveyPath[0]).reply(200, getAddressOrdnanceSurveyResponse[0]);
+    requestToGetAddressesByPostcode(ordnanceSurveyPaths[0]).reply(200, getAddressesOrdnanceSurveyResponse[0]);
 
-    const { status, body } = await api.get(mdmPath[0]);
+    const { status, body } = await api.get(mdmPaths[0]);
 
     expect(status).toBe(200);
-    expect(body).toStrictEqual(getAddressByPostcodeResponse[0]);
+    expect(body).toStrictEqual(getAddressesByPostcodeResponse[0]);
   });
 
   it('returns a 200 response with the addresses if they are returned by Ordnance Survey API', async () => {
-    requestToGetAddressesByPostcode(ordnanceSurveyPath[0]).reply(200, getAddressOrdnanceSurveyMultipleResponse);
+    requestToGetAddressesByPostcode(ordnanceSurveyPaths[0]).reply(200, getAddressesOrdnanceSurveyMultipleMatchingAddressesResponse);
 
-    const { status, body } = await api.get(mdmPath[0]);
+    const { status, body } = await api.get(mdmPaths[0]);
 
     expect(status).toBe(200);
-    expect(body).toStrictEqual(getAddressByPostcodeMultipleResponse);
+    expect(body).toStrictEqual(getAddressesByPostcodeMultipleResponse);
   });
 
   it('returns an empty 200 response if Ordnance Survey API returns a 200 without results', async () => {
-    requestToGetAddressesByPostcode(ordnanceSurveyPath[0]).reply(200, getAddressOrdnanceSurveyEmptyResponse[0]);
+    requestToGetAddressesByPostcode(ordnanceSurveyPaths[0]).reply(200, getAddressesOrdnanceSurveyEmptyResponse[0]);
 
-    const { status, body } = await api.get(mdmPath[0]);
+    const { status, body } = await api.get(mdmPaths[0]);
 
     expect(status).toBe(200);
     expect(body).toStrictEqual([]);
   });
 
   it('returns a 500 response if Ordnance Survey API returns a status code 401', async () => {
-    requestToGetAddressesByPostcode(ordnanceSurveyPath[0]).reply(401);
+    requestToGetAddressesByPostcode(ordnanceSurveyPaths[0]).reply(401);
 
-    const { status, body } = await api.get(mdmPath[0]);
+    const { status, body } = await api.get(mdmPaths[0]);
 
     expect(status).toBe(500);
     expect(body).toStrictEqual({
@@ -89,9 +89,9 @@ describe('GET /geospatial/addresses/postcode?postcode=', () => {
   });
 
   it('returns a 500 response if Ordnance Survey API returns a status code 404', async () => {
-    requestToGetAddressesByPostcode(ordnanceSurveyPath[0]).reply(404);
+    requestToGetAddressesByPostcode(ordnanceSurveyPaths[0]).reply(404);
 
-    const { status, body } = await api.get(mdmPath[0]);
+    const { status, body } = await api.get(mdmPaths[0]);
 
     expect(status).toBe(500);
     expect(body).toStrictEqual({
@@ -101,9 +101,9 @@ describe('GET /geospatial/addresses/postcode?postcode=', () => {
   });
 
   it('returns a 500 response if Ordnance Survey API times out', async () => {
-    requestToGetAddressesByPostcode(ordnanceSurveyPath[0]).delay(TIME_EXCEEDING_ORDNANCE_SURVEY_TIMEOUT).reply(200, getAddressOrdnanceSurveyResponse[0]);
+    requestToGetAddressesByPostcode(ordnanceSurveyPaths[0]).delay(TIME_EXCEEDING_ORDNANCE_SURVEY_TIMEOUT).reply(200, getAddressesOrdnanceSurveyResponse[0]);
 
-    const { status, body } = await api.get(mdmPath[0]);
+    const { status, body } = await api.get(mdmPaths[0]);
 
     expect(status).toBe(500);
     expect(body).toStrictEqual({
@@ -113,9 +113,9 @@ describe('GET /geospatial/addresses/postcode?postcode=', () => {
   });
 
   it('returns a 500 response if Ordnance Survey API returns error', async () => {
-    requestToGetAddressesByPostcode(ordnanceSurveyPath[0]).reply(401, ordnanceSurveyAuthErrorResponse);
+    requestToGetAddressesByPostcode(ordnanceSurveyPaths[0]).reply(401, ordnanceSurveyAuthErrorResponse);
 
-    const { status, body } = await api.get(mdmPath[0]);
+    const { status, body } = await api.get(mdmPaths[0]);
 
     expect(status).toBe(500);
     expect(body).toStrictEqual({

@@ -12,7 +12,7 @@ describe('GeospatialController', () => {
   let controller: GeospatialController;
 
   const valueGenerator = new RandomValueGenerator();
-  const { getAddressByPostcodeResponse, getAddressByPostcodeMultipleResponse } = new GetGeospatialAddressesGenerator(valueGenerator).generate({
+  const { getAddressesByPostcodeResponse, getAddressesByPostcodeMultipleResponse } = new GetGeospatialAddressesGenerator(valueGenerator).generate({
     numberToGenerate: 2,
   });
 
@@ -33,21 +33,21 @@ describe('GeospatialController', () => {
     const postcode = GEOSPATIAL.EXAMPLES.POSTCODE;
 
     it('returns a single address for the postcode when the service returns a single address', async () => {
-      when(geospatialServiceGetAddressesByPostcode).calledWith(postcode).mockResolvedValueOnce(getAddressByPostcodeResponse[0]);
+      when(geospatialServiceGetAddressesByPostcode).calledWith(postcode).mockResolvedValueOnce(getAddressesByPostcodeResponse[0]);
 
       const response = await controller.getAddressesByPostcode({ postcode });
 
       expect(geospatialServiceGetAddressesByPostcode).toHaveBeenCalledTimes(1);
-      expect(response).toEqual(getAddressByPostcodeResponse[0]);
+      expect(response).toEqual(getAddressesByPostcodeResponse[0]);
     });
 
     it('returns multiple addresses for the postcode when the service returns multiple addresses', async () => {
-      when(geospatialServiceGetAddressesByPostcode).calledWith(postcode).mockResolvedValueOnce(getAddressByPostcodeMultipleResponse);
+      when(geospatialServiceGetAddressesByPostcode).calledWith(postcode).mockResolvedValueOnce(getAddressesByPostcodeMultipleResponse);
 
       const response = await controller.getAddressesByPostcode({ postcode });
 
       expect(geospatialServiceGetAddressesByPostcode).toHaveBeenCalledTimes(1);
-      expect(response).toEqual(getAddressByPostcodeMultipleResponse);
+      expect(response).toEqual(getAddressesByPostcodeMultipleResponse);
     });
 
     it('returns an empty response for the postcode when the service returns an empty response', async () => {
