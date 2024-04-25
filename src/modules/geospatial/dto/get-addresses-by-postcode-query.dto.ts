@@ -2,15 +2,16 @@ import { ApiProperty } from '@nestjs/swagger';
 import { GEOSPATIAL } from '@ukef/constants';
 import { Matches, MaxLength, MinLength } from 'class-validator';
 
-const UK_POSTCODE = /^[A-Za-z]{1,2}[\dRr][\dA-Za-z]?\s?\d[ABD-HJLNP-UW-Zabd-hjlnp-uw-z]{2}$/;
-
 export class GetAddressesByPostcodeQueryDto {
   @ApiProperty({
     example: GEOSPATIAL.EXAMPLES.POSTCODE,
     description: 'Postcode to search for',
+    minLength: 5,
+    maxLength: 8,
+    pattern: GEOSPATIAL.REGEX.UK_POSTCODE.source,
   })
   @MinLength(5)
   @MaxLength(8)
-  @Matches(UK_POSTCODE)
+  @Matches(GEOSPATIAL.REGEX.UK_POSTCODE)
   public postcode: string;
 }

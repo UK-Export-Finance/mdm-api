@@ -500,6 +500,10 @@ paths:
           example: SW1A 2AQ
           description: Postcode to search for
           schema:
+            minLength: 5
+            maxLength: 8
+            pattern: >-
+              ^[A-Za-z]{1,2}[\\dRr][\\dA-Za-z]?\\s?\\d[ABD-HJLNP-UW-Zabd-hjlnp-uw-z]{2}$
             type: string
       responses:
         '200':
