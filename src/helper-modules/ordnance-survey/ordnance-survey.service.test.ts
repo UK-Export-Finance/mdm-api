@@ -75,7 +75,7 @@ describe('OrdnanceSurveyService', () => {
         expect(httpServiceGet).toHaveBeenCalledWith(...expectedHttpServiceGetArgs);
       });
 
-      it('call Ordnance Survey returns expectedResponse', async () => {
+      it('returns the results when Ordnance Survey returns a 200 with results', async () => {
         const expectedPath = `${basePath}${expectedUrlQueryPart}&lr=EN&key=${encodeURIComponent(testKey)}`;
         const expectedHttpServiceGetArgs: [string, object] = [expectedPath, { headers: { 'Content-Type': 'application/json' } }];
 
