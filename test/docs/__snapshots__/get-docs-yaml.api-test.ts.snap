@@ -491,7 +491,7 @@ paths:
       operationId: GeospatialController_getAddressesByPostcode
       summary: >-
         A search based on a property's postcode. Will accept a full valid
-        postcode. Returns addresses from Ordnance survey Delivery Point Address
+        postcode. Returns addresses from Ordnance Survey Delivery Point Address
         (DPA) system.
       parameters:
         - name: postcode
@@ -515,7 +515,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/GetAddressesResponseItem'
         '404':
-          description: Customer not found.
+          description: Postcode not found.
       tags:
         - geospatial
 info:
@@ -1160,8 +1160,9 @@ components:
           nullable: true
         locality:
           type: string
-          description: Locality, Town
+          description: Locality or town
           example: LONDON
+          nullable: true
         postalCode:
           type: string
           description: Postcode
