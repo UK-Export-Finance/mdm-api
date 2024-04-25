@@ -89,7 +89,7 @@ describe('OrdnanceSurveyService', () => {
       });
     });
 
-    it('returns a 200 response without results when Ordnance Survey returns no results', async () => {
+    it('returns no results without erroring when Ordnance Survey returns a 200 without results', async () => {
       when(httpServiceGet)
         .calledWith(...expectedHttpServiceGetArgs)
         .mockReturnValueOnce(
