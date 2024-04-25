@@ -47,6 +47,7 @@ export class GetAddressesResponseItem {
     description: 'Country of address record',
     example: ENUMS.GEOSPATIAL_COUNTRIES.E,
     enum: ENUMS.GEOSPATIAL_COUNTRIES,
+    nullable: true,
   })
   readonly country: string | null;
 }
