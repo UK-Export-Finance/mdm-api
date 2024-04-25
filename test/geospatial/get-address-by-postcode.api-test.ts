@@ -44,7 +44,7 @@ describe('GET /geospatial/addresses/postcode?postcode=', () => {
   // MDM auth tests
   withClientAuthenticationTests({
     givenTheRequestWouldOtherwiseSucceed: () => {
-      requestToGetAddressesByPostcode(mdmPath[0]).reply(200, getAddressOrdnanceSurveyResponse[0]);
+      requestToGetAddressesByPostcode(ordnanceSurveyPath[0]).reply(200, getAddressOrdnanceSurveyResponse[0]);
     },
     makeRequestWithoutAuth: (incorrectAuth?: IncorrectAuthArg) => api.getWithoutAuth(mdmPath[0], incorrectAuth?.headerName, incorrectAuth?.headerValue),
   });
@@ -67,7 +67,7 @@ describe('GET /geospatial/addresses/postcode?postcode=', () => {
     expect(body).toStrictEqual(getAddressByPostcodeMultipleResponse);
   });
 
-  it('returns a empty 200 response if Ordnance Survey API returns a 200 without results', async () => {
+  it('returns an empty 200 response if Ordnance Survey API returns a 200 without results', async () => {
     requestToGetAddressesByPostcode(ordnanceSurveyPath[0]).reply(200, getAddressOrdnanceSurveyEmptyResponse[0]);
 
     const { status, body } = await api.get(mdmPath[0]);

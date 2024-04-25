@@ -13,7 +13,7 @@ export class GeospatialController {
   @Get('addresses/postcode')
   @ApiOperation({
     summary:
-      "A search based on a property's postcode. Will accept a full valid postcode. Returns addresses from Ordnance survey Delivery Point Address (DPA) system.",
+      "A search based on a property's postcode. Will accept a full valid postcode. Returns addresses from Ordnance Survey Delivery Point Address (DPA) system.",
   })
   @ApiResponse({
     status: 200,
@@ -21,7 +21,7 @@ export class GeospatialController {
     type: [GetAddressesResponseItem],
   })
   @ApiNotFoundResponse({
-    description: 'Customer not found.',
+    description: 'Postcode not found.',
   })
   getAddressesByPostcode(@Query() query: GetAddressesByPostcodeQueryDto): Promise<GetAddressesResponse> {
     return this.geospatialService.getAddressesByPostcode(query.postcode);
