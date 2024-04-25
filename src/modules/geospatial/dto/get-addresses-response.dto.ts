@@ -19,6 +19,7 @@ export class GetAddressesResponseItem {
   @ApiProperty({
     description: 'Address line 2',
     example: null,
+    nullable: true,
   })
   readonly addressLine2: string | null;
 
