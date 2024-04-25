@@ -49,6 +49,10 @@ export const withEmailFieldValidationApiTests = <RequestBodyItem, RequestBodyIte
         invalidEmail: 'testexample.com',
         expectedError: 'sendToEmailAddress must be an email',
       },
+      {
+        invalidEmail: 'test@example.c',
+        expectedError: 'sendToEmailAddress must be an email',
+      },
     ])(`returns a 400 response if ${fieldName} is "$invalidEmail"`, async ({ invalidEmail, expectedError }) => {
       const requestWithInvalidValue = { ...requestBodyItem, [fieldNameSymbol]: invalidEmail };
       const preparedRequest = prepareModifiedRequest(requestIsAnArray, requestWithInvalidValue);

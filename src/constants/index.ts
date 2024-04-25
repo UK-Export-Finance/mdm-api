@@ -9,7 +9,7 @@
  * 5. Customers
  * 6. Strings to redact
  * 7. Strings locations to redact
- * 7. Govuk notify email constants
+ * 7. GOV.UK notify email constants
  */
 
 export * from './auth.constant';

@@ -36,7 +36,7 @@ export class GovukNotifyService {
       });
 
     if (!notifyResponse) {
-      throw new UnprocessableEntityException('No gov.uk response');
+      throw new UnprocessableEntityException('No GOV.UK Notify response');
     }
 
     const { status, data } = notifyResponse;

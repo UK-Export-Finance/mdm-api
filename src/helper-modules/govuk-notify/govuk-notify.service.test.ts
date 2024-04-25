@@ -46,26 +46,26 @@ describe('GovukNotifyService', () => {
       return new AxiosError(`Request failed with status code ${status}`, status.toString(), null, null, response);
     };
 
-    it('calls notify client constructor', async () => {
+    it('calls GOV.UK Notify client constructor', async () => {
       await service.sendEmail(govUkNotifyKey, { sendToEmailAddress, templateId, personalisation });
 
       expect(NotifyClient).toHaveBeenCalledTimes(1);
       expect(NotifyClient).toHaveBeenCalledWith(govUkNotifyKey);
     });
 
-    it('calls notify client with the specified request', async () => {
+    it('calls GOV.UK Notify client sendEmail function', async () => {
       await service.sendEmail(govUkNotifyKey, { sendToEmailAddress, templateId, personalisation });
 
       expect(sendEmailMethodMock).toHaveBeenCalledTimes(1);
     });
 
-    it('returns successful response for the specified request', async () => {
+    it('returns a 201 response from GOV.UK Notify', async () => {
       const response = await service.sendEmail(govUkNotifyKey, { sendToEmailAddress, templateId, personalisation });
 
       expect(response).toEqual({ status: 201, data: expectedResponse });
     });
 
-    it('calls notify client with the specified field `reference` and get successful response', async () => {
+    it('calls GOV.UK Notify client with the specified field `reference` and returns a 201 response', async () => {
       const reference = valueGenerator.string({ length: 10 });
       const response = await service.sendEmail(govUkNotifyKey, { sendToEmailAddress, templateId, personalisation, reference });
 
@@ -92,7 +92,7 @@ describe('GovukNotifyService', () => {
         error: 'Forbidden',
         status: 403,
       },
-    ])('handles notify client error response with status "$status"', async ({ exceptionClass, exceptionName, error, status }) => {
+    ])('throws exception $exceptionName for unexpected $status', async ({ exceptionClass, exceptionName, error, status }) => {
       jest.mocked(sendEmailMethodMock).mockImplementation(() => Promise.reject(generateNotifyError(status, errorMessage)));
 
       const resultPromise = service.sendEmail(govUkNotifyKey, { sendToEmailAddress, templateId, personalisation });
@@ -104,8 +104,9 @@ describe('GovukNotifyService', () => {
       await expect(resultPromise).rejects.toHaveProperty('response', { message: [errorMessage], error, statusCode: status });
     });
 
-    it('handles notify client error with unexpected status 900', async () => {
-      jest.mocked(sendEmailMethodMock).mockImplementation(() => Promise.reject(generateNotifyError(900, errorMessage)));
+    it('throws generic Error exception for unexpected status', async () => {
+      const unexpectedStatus = valueGenerator.integer({ min: 900, max: 999 });
+      jest.mocked(sendEmailMethodMock).mockImplementation(() => Promise.reject(generateNotifyError(unexpectedStatus, errorMessage)));
 
       const resultPromise = service.sendEmail(govUkNotifyKey, { sendToEmailAddress, templateId, personalisation });
 
@@ -116,14 +117,14 @@ describe('GovukNotifyService', () => {
       await expect(resultPromise).rejects.toHaveProperty('stack');
     });
 
-    it('handles empty response from notify client', async () => {
+    it('throws exception UnprocessableEntityException for empty response from GOV.UK Notify client', async () => {
       jest.mocked(sendEmailMethodMock).mockImplementation(() => Promise.resolve(''));
 
       const resultPromise = service.sendEmail(govUkNotifyKey, { sendToEmailAddress, templateId, personalisation });
 
       expect(sendEmailMethodMock).toHaveBeenCalledTimes(1);
       await expect(resultPromise).rejects.toBeInstanceOf(UnprocessableEntityException);
-      await expect(resultPromise).rejects.toThrow('No gov.uk response');
+      await expect(resultPromise).rejects.toThrow('No GOV.UK Notify response');
     });
   });
 });

@@ -12,7 +12,7 @@ export class EmailsController {
 
   @Post()
   @ApiOperation({
-    summary: 'Send email using to Gov.uk notify service',
+    summary: 'Send email using to GOV.UK Notify service',
   })
   @ApiBody({ type: [PostEmailsRequestItemDto] })
   @ApiCreatedResponse({
@@ -24,7 +24,7 @@ export class EmailsController {
     description: 'Bad request',
   })
   @ApiUnprocessableEntityResponse({
-    description: 'Unknown gov.uk notify error happened',
+    description: 'Unknown GOV.UK Notify error happened',
   })
   postEmail(
     @Headers('govUkNotifyKey') govUkNotifyKey: string,

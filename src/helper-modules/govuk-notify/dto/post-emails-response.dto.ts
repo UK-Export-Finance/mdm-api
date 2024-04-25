@@ -3,27 +3,26 @@ import { GOVUK_NOTIFY } from '@ukef/constants';
 
 export class PostEmailsResponseDataContent {
   @ApiProperty({
-    example:
-      'Dear John Smith,\r\n\r\nThe status of your MIA for EuroStar has been updated.\r\n\r\n* Your bank reference: EuroStar bridge\r\n* Current status: Acknowledged\r\n* Previous status: Submitted\r\n* Updated by: Joe Bloggs (Joe.Bloggs@example.com)\r\n\r\nSign in to our service for more information: \r\nhttps://www.test.service.gov.uk/\r\n\r\nWith regards,\r\n\r\nThe Digital Trade Finance Service team\r\n\r\nEmail: test@test.gov.uk\r\nPhone: +44 (0)202 123 4567\r\nOpening times: Monday to Friday, 9am to 5pm (excluding public holidays)',
+    example: GOVUK_NOTIFY.EXAMPLES.EMAIL_BODY,
     description: 'Email text',
   })
   public body: string;
 
   @ApiProperty({
-    example: 'test@notifications.service.gov.uk',
+    example: GOVUK_NOTIFY.EXAMPLES.FROM_EMAIL,
     description: 'Email is sent from this address',
   })
   public from_email: string;
 
   @ApiProperty({
-    example: 'Status update: EuroStar bridge',
+    example: GOVUK_NOTIFY.EXAMPLES.EMAIL_SUBJECT,
     description: 'Email subject line',
   })
   public subject: string;
 
   @ApiProperty({
     example: null,
-    description: "we don't use unsubscribe links",
+    description: 'Unsubscribe links are not used',
     nullable: true,
   })
   public unsubscribe_link: string | null;
@@ -38,13 +37,13 @@ export class PostEmailsResponseDataTemplate {
 
   @ApiProperty({
     example: GOVUK_NOTIFY.EXAMPLES.TEMPLATE_URI,
-    description: 'URL to get more information about template',
+    description: "Notify's URL to get more information about template",
   })
   public uri: string;
 
   @ApiProperty({
     example: 5,
-    description: 'Template version',
+    description: "Notify's template version",
   })
   public version: number;
 }
@@ -67,7 +66,7 @@ export class PostEmailsResponseData {
 
   @ApiProperty({
     example: null,
-    description: "We don't schedule emails",
+    description: 'Email scheduling is not used',
     nullable: true,
   })
   public scheduled_for: string | null;
@@ -77,7 +76,7 @@ export class PostEmailsResponseData {
 
   @ApiProperty({
     example: GOVUK_NOTIFY.EXAMPLES.RESPONSE_URI,
-    description: 'API location to get more information about this transaction',
+    description: "Notify's URL to get more information about this transaction",
   })
   public uri: string;
 }

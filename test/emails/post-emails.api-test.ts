@@ -139,34 +139,6 @@ describe('POST /emails', () => {
     });
   });
 
-  describe('POST /emails input validation', () => {
-    it.each([
-      {
-        desc: 'Email format is not valid',
-        request: [{ ...requests, sendToEmailAddress: 'test@example' }],
-        expectedError: 'sendToEmailAddress must be an email',
-      },
-      {
-        desc: 'Email format is not valid2',
-        request: [{ ...requests, sendToEmailAddress: 'testexample.com' }],
-        expectedError: 'sendToEmailAddress must be an email',
-      },
-      {
-        desc: 'Email is required',
-        request: (() => {
-          const [{ sendToEmailAddress: _sendToEmailAddress, ...all_rest }] = requests;
-          return [all_rest];
-        })(),
-        expectedError: 'sendToEmailAddress should not be empty',
-      },
-    ])('returns a 400 response with error array if "$desc"', async ({ request, expectedError }) => {
-      const { status, body } = await api.post(mdmPath, request, { govUkNotifyKey });
-
-      expect(status).toBe(400);
-      expect(body).toMatchObject({ error: 'Bad Request', message: expect.arrayContaining([expectedError]), statusCode: 400 });
-    });
-  });
-
   describe('field validation', () => {
     withStringFieldValidationApiTests({
       fieldName: 'templateId',
@@ -207,12 +179,30 @@ describe('POST /emails', () => {
       },
     });
 
-    it('returns a 200 response if optional field personalisation is not present', async () => {
+    it('returns a 201 response if optional object field personalisation is not present', async () => {
       const [{ personalisation: _personalisation, ...requestWithoutPersonalisation }] = requests;
 
       const { status, body } = await api.post(mdmPath, [requestWithoutPersonalisation], { govUkNotifyKey });
 
       expect(status).toBe(201);
+      expect(body).toStrictEqual(postEmailsResponse[0][0]);
+    });
+
+    it('returns a 400 response if object field personalisation is string', async () => {
+      const requestWithPersonalisationString = { ...requests[0], personalisation: '' };
+
+      const { status, body } = await api.post(mdmPath, [requestWithPersonalisationString], { govUkNotifyKey });
+
+      expect(status).toBe(400);
+      expect(body).toStrictEqual({ error: 'Bad Request', message: ['personalisation must be an object'], statusCode: 400 });
+    });
+
+    it('returns a 201 response if object field personalisation is null', async () => {
+      const requestWithPersonalisationString = { ...requests[0], personalisation: null };
+
+      const { status, body } = await api.post(mdmPath, [requestWithPersonalisationString], { govUkNotifyKey });
+
+      expect(status).toBe(400);
       expect(body).toStrictEqual(postEmailsResponse[0][0]);
     });
   });

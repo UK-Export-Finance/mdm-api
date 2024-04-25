@@ -146,7 +146,7 @@ paths:
   /api/v1/emails:
     post:
       operationId: EmailsController_postEmail
-      summary: Send email using to Gov.uk notify service
+      summary: Send email using to GOV.UK Notify service
       parameters:
         - name: govUkNotifyKey
           required: true
@@ -173,7 +173,7 @@ paths:
         '400':
           description: Bad request
         '422':
-          description: Unknown gov.uk notify error happened
+          description: Unknown GOV.UK Notify error happened
       tags:
         - emails
   /api/v1/exposure-period:
