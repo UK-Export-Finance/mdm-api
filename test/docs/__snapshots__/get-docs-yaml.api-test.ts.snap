@@ -1146,7 +1146,7 @@ components:
         addressLine1:
           type: string
           description: Address line 1
-          example: CLIVE STEPS  KING CHARLES STREET
+          example: CLIVE STEPS KING CHARLES STREET
         addressLine2:
           type: string
           description: Address line 2
