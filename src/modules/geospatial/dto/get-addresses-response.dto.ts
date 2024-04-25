@@ -5,8 +5,9 @@ export type GetAddressesResponse = GetAddressesResponseItem[];
 
 export class GetAddressesResponseItem {
   @ApiProperty({
-    description: 'Organisation name if available',
+    description: 'Organisation name, if available',
     example: GEOSPATIAL.EXAMPLES.ORGANISATION_NAME,
+    nullable: true,
   })
   readonly organisationName: string | null;
 
