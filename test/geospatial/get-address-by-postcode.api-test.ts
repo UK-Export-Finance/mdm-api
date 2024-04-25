@@ -67,7 +67,7 @@ describe('GET /geospatial/addresses/postcode?postcode=', () => {
     expect(body).toStrictEqual(getAddressByPostcodeMultipleResponse);
   });
 
-  it('returns a empty 200 response if Ordnance Survey API returns a 200 without results', async () => {
+  it('returns an empty 200 response if Ordnance Survey API returns a 200 without results', async () => {
     requestToGetAddressesByPostcode(ordnanceSurveyPath[0]).reply(200, getAddressOrdnanceSurveyEmptyResponse[0]);
 
     const { status, body } = await api.get(mdmPath[0]);
