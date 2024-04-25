@@ -1,6 +1,7 @@
 import { AUTH } from '@ukef/constants';
 import { ENVIRONMENT_VARIABLES } from '@ukef-test/support/environment-variables';
 import request from 'supertest';
+import TestAgent from 'supertest/lib/agent';
 
 import { App } from './app';
 
@@ -33,7 +34,7 @@ export class Api {
     return this.app.destroy();
   }
 
-  private request(): any {
+  private request(): TestAgent<request.Test> {
     return request(this.app.getHttpServer());
   }
 
