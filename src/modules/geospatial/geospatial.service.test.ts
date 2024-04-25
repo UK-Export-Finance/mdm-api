@@ -65,7 +65,7 @@ describe('GeospatialService', () => {
     });
 
     it('returns addressLine1 formatted correctly even if middle value is missing', async () => {
-      const [modifiedOrdnanceSurveyResponse] = getAddressOrdnanceSurveyResponse;
+      const [modifiedOrdnanceSurveyResponse] = structuredClone(getAddressOrdnanceSurveyResponse);
       modifiedOrdnanceSurveyResponse.results[0].DPA.BUILDING_NUMBER = null;
       const address = modifiedOrdnanceSurveyResponse.results[0].DPA;
       when(informaticaServiceGetAddressesByPostcode).calledWith(postcode).mockResolvedValueOnce(modifiedOrdnanceSurveyResponse);
