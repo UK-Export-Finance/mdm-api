@@ -32,7 +32,7 @@ describe('GeospatialController', () => {
   describe('getAddressesByPostcode()', () => {
     const postcode = GEOSPATIAL.EXAMPLES.POSTCODE;
 
-    it('returns address for postcode', async () => {
+    it('returns a single address for the postcode when the service returns a single address', async () => {
       when(geospatialServiceGetAddressesByPostcode).calledWith(postcode).mockResolvedValueOnce(getAddressByPostcodeResponse[0]);
 
       const response = await controller.getAddressesByPostcode({ postcode });
