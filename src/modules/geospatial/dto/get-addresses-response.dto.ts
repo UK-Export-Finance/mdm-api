@@ -6,13 +6,13 @@ export type GetAddressesResponse = GetAddressesResponseItem[];
 export class GetAddressesResponseItem {
   @ApiProperty({
     description: 'Organisation name if available',
-    example: 'CHURCHILL MUSEUM & CABINET WAR ROOMS',
+    example: GEOSPATIAL.EXAMPLES.ORGANISATION_NAME,
   })
   readonly organisationName: string | null;
 
   @ApiProperty({
     description: 'Address line 1',
-    example: 'CLIVE STEPS  KING CHARLES STREET',
+    example: GEOSPATIAL.EXAMPLES.ADDRESS_LINE_1,
   })
   readonly addressLine1: string;
 
@@ -30,7 +30,7 @@ export class GetAddressesResponseItem {
 
   @ApiProperty({
     description: 'Locality, Town',
-    example: 'LONDON',
+    example: GEOSPATIAL.EXAMPLES.LOCALITY,
   })
   readonly locality: string | null;
 

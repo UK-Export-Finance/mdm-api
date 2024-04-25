@@ -5,6 +5,9 @@ export const GEOSPATIAL = {
   },
   EXAMPLES: {
     POSTCODE: 'SW1A 2AQ',
+    ORGANISATION_NAME: 'CHURCHILL MUSEUM & CABINET WAR ROOMS',
+    ADDRESS_LINE_1: 'CLIVE STEPS KING CHARLES STREET',
+    LOCALITY: 'LONDON',
   },
   REGEX: {
     // UK postcode regex is from DTFS project and slightly optimised by lint.
