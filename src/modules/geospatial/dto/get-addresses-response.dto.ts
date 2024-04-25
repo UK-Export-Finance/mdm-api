@@ -39,6 +39,7 @@ export class GetAddressesResponseItem {
   @ApiProperty({
     description: 'Postcode',
     example: GEOSPATIAL.EXAMPLES.POSTCODE,
+    nullable: true,
   })
   readonly postalCode: string | null;
 
