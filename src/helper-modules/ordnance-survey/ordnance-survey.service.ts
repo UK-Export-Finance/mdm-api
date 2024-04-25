@@ -25,7 +25,6 @@ export class OrdnanceSurveyService {
       path,
       headers: { 'Content-Type': 'application/json' },
       onError: (error: Error) => {
-        console.error('Http call error happened, error %o', error);
         throw new OrdnanceSurveyException('Failed to get response from Ordnance Survey API.', error);
       },
     });

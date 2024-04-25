@@ -109,7 +109,7 @@ export class GetGeospatialAddressesGenerator extends AbstractGenerator<AddressVa
       ],
     }));
 
-    const getAddressesOrdnanceSurveyMultipleResponse: GetAddressesOrdnanceSurveyResponse = {
+    const getAddressesOrdnanceSurveyMultipleMatchingAddressesResponse: GetAddressesOrdnanceSurveyResponse = {
       header: {
         uri: 'test',
         query: 'test',
@@ -195,7 +195,7 @@ export class GetGeospatialAddressesGenerator extends AbstractGenerator<AddressVa
       getAddressByPostcodeMultipleResponse: getAddressesByPostcodeMultipleResponse,
       getAddressOrdnanceSurveyResponse: getAddressesOrdnanceSurveyResponse,
       getAddressOrdnanceSurveyEmptyResponse: getAddressesOrdnanceSurveyEmptyResponse,
-      getAddressOrdnanceSurveyMultipleResponse: getAddressesOrdnanceSurveyMultipleResponse,
+      getAddressOrdnanceSurveyMultipleResponse: getAddressesOrdnanceSurveyMultipleMatchingAddressesResponse,
       ordnanceSurveyAuthErrorResponse,
     };
   }

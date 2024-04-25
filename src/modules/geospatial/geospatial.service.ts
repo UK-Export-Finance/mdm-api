@@ -18,7 +18,7 @@ export class GeospatialService {
     }
 
     response.results.forEach((item) => {
-      // Item can have key DPA or LPI, get data dynamically, even if we expect key to always be DPA.
+      // Item can have key DPA or LPI, so we get data dynamically, even if we expect key to always be DPA.
       const item_data = item[Object.keys(item)[0]];
       addresses.push({
         organisationName: item_data.ORGANISATION_NAME || null,
