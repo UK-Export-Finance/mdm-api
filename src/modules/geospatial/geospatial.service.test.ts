@@ -13,16 +13,16 @@ describe('GeospatialService', () => {
 
   let service: GeospatialService;
   let configServiceGet: jest.Mock;
-  let informaticaServiceGetAddressesByPostcode: jest.Mock;
+  let ordnanceSurveyServiceGetAddressesByPostcode: jest.Mock;
 
   beforeEach(() => {
     const configService = new ConfigService();
     configServiceGet = jest.fn().mockReturnValue({ key: valueGenerator.word() });
     configService.get = configServiceGet;
 
-    informaticaServiceGetAddressesByPostcode = jest.fn();
+    ordnanceSurveyServiceGetAddressesByPostcode = jest.fn();
     const ordnanceSurveyService = new OrdnanceSurveyService(null, configService);
-    ordnanceSurveyService.getAddressesByPostcode = informaticaServiceGetAddressesByPostcode;
+    ordnanceSurveyService.getAddressesByPostcode = ordnanceSurveyServiceGetAddressesByPostcode;
     resetAllWhenMocks();
 
     service = new GeospatialService(ordnanceSurveyService);
@@ -41,7 +41,7 @@ describe('GeospatialService', () => {
     const postcode = getAddressByPostcodeResponse[0][0].postalCode;
 
     it('returns a single address from the backend service', async () => {
-      when(informaticaServiceGetAddressesByPostcode).calledWith(postcode).mockResolvedValueOnce(getAddressOrdnanceSurveyResponse[0]);
+      when(ordnanceSurveyServiceGetAddressesByPostcode).calledWith(postcode).mockResolvedValueOnce(getAddressOrdnanceSurveyResponse[0]);
 
       const response = await service.getAddressesByPostcode(postcode);
 
@@ -49,7 +49,7 @@ describe('GeospatialService', () => {
     });
 
     it('returns multiple addressess from the backend service', async () => {
-      when(informaticaServiceGetAddressesByPostcode).calledWith(postcode).mockResolvedValueOnce(getAddressOrdnanceSurveyMultipleResponse);
+      when(ordnanceSurveyServiceGetAddressesByPostcode).calledWith(postcode).mockResolvedValueOnce(getAddressOrdnanceSurveyMultipleResponse);
 
       const response = await service.getAddressesByPostcode(postcode);
 
@@ -57,7 +57,7 @@ describe('GeospatialService', () => {
     });
 
     it('can handle empty backend response', async () => {
-      when(informaticaServiceGetAddressesByPostcode).calledWith(postcode).mockResolvedValueOnce(getAddressOrdnanceSurveyEmptyResponse[0]);
+      when(ordnanceSurveyServiceGetAddressesByPostcode).calledWith(postcode).mockResolvedValueOnce(getAddressOrdnanceSurveyEmptyResponse[0]);
 
       const response = await service.getAddressesByPostcode(postcode);
 
@@ -68,7 +68,7 @@ describe('GeospatialService', () => {
       const [modifiedOrdnanceSurveyResponse] = getAddressOrdnanceSurveyResponse;
       modifiedOrdnanceSurveyResponse.results[0].DPA.BUILDING_NUMBER = null;
       const address = modifiedOrdnanceSurveyResponse.results[0].DPA;
-      when(informaticaServiceGetAddressesByPostcode).calledWith(postcode).mockResolvedValueOnce(modifiedOrdnanceSurveyResponse);
+      when(ordnanceSurveyServiceGetAddressesByPostcode).calledWith(postcode).mockResolvedValueOnce(modifiedOrdnanceSurveyResponse);
 
       const response = await service.getAddressesByPostcode(postcode);
 

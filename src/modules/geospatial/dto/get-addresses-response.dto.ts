@@ -32,8 +32,9 @@ export class GetAddressesResponseItem {
   readonly addressLine3: string | null;
 
   @ApiProperty({
-    description: 'Locality, Town',
+    description: 'Locality or town',
     example: GEOSPATIAL.EXAMPLES.LOCALITY,
+    nullable: true,
   })
   readonly locality: string | null;
 
