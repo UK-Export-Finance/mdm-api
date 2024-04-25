@@ -43,7 +43,7 @@
     "src",
     "test",
     "jest.config.ts",
-    "src/**/*.json"
+    "src/**/*.json",
   ],
   "exclude": [
     "node_modules",

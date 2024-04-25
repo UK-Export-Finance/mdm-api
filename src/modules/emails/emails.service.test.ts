@@ -30,14 +30,14 @@ describe('EmailsService', () => {
 
   describe('sendEmail', () => {
     const govUkNotifyKey = valueGenerator.string({ length: 10 });
-    const { request, postEmailsResponse } = new PostEmailsGenerator(valueGenerator).generate({
+    const { requests, postEmailsResponse } = new PostEmailsGenerator(valueGenerator).generate({
       numberToGenerate: 1,
     });
 
     it('returns email sent receipt from the backend service', async () => {
-      when(govukNotifyServiceSendEmail).calledWith(govUkNotifyKey, request[0]).mockResolvedValueOnce(postEmailsResponse[0]);
+      when(govukNotifyServiceSendEmail).calledWith(govUkNotifyKey, requests[0]).mockResolvedValueOnce(postEmailsResponse[0]);
 
-      const response = await service.sendEmail(govUkNotifyKey, request[0]);
+      const response = await service.sendEmail(govUkNotifyKey, requests[0]);
 
       expect(response).toEqual(postEmailsResponse[0]);
     });

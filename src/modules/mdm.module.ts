@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from '@ukef/auth/auth.module';
 import { DatabaseModule } from '@ukef/database/database.module';
-import { GovukNotifyModule } from '@ukef/helper-modules/govuk-notify/govuk-notify.module';
 import { CurrenciesModule } from '@ukef/modules/currencies/currencies.module';
 import { CustomersModule } from '@ukef/modules/customers/customers.module';
 import { EmailsModule } from '@ukef/modules/emails/emails.module';
@@ -22,7 +21,6 @@ import { YieldRatesModule } from '@ukef/modules/yield-rates/yield-rates.module';
     CustomersModule,
     EmailsModule,
     ExposurePeriodModule,
-    GovukNotifyModule,
     HealthcheckModule,
     InterestRatesModule,
     MarketsModule,
@@ -38,7 +36,6 @@ import { YieldRatesModule } from '@ukef/modules/yield-rates/yield-rates.module';
     CustomersModule,
     EmailsModule,
     ExposurePeriodModule,
-    GovukNotifyModule,
     HealthcheckModule,
     InterestRatesModule,
     MarketsModule,

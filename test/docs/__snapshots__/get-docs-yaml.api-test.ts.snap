@@ -160,7 +160,7 @@ paths:
             schema:
               type: array
               items:
-                $ref: '#/components/schemas/PostEmailRequestItemDto'
+                $ref: '#/components/schemas/PostEmailsRequestItemDto'
       responses:
         '201':
           description: Returns information about email transaction.
@@ -169,11 +169,11 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/PostEmailResponseDto'
+                  $ref: '#/components/schemas/PostEmailsResponseDto'
         '400':
           description: Bad request
         '422':
-          description: Returned if unknown gov.uk notify error happened
+          description: Unknown gov.uk notify error happened
       tags:
         - emails
   /api/v1/exposure-period:
@@ -659,7 +659,7 @@ components:
         - type
         - subtype
         - isLegacyRecord
-    PostEmailRequestItemDto:
+    PostEmailsRequestItemDto:
       type: object
       properties:
         templateId:
@@ -682,7 +682,7 @@ components:
         - sendToEmailAddress
         - personalisation
         - reference
-    PostEmailResponseDataContent:
+    PostEmailsResponseDataContent:
       type: object
       properties:
         body:
@@ -701,12 +701,13 @@ components:
           type: string
           example: null
           description: we don't use unsubscribe links
+          nullable: true
       required:
         - body
         - from_email
         - subject
         - unsubscribe_link
-    PostEmailResponseDataTemplate:
+    PostEmailsResponseDataTemplate:
       type: object
       properties:
         id:
@@ -726,25 +727,26 @@ components:
         - id
         - uri
         - version
-    PostEmailResponseData:
+    PostEmailsResponseData:
       type: object
       properties:
         content:
-          $ref: '#/components/schemas/PostEmailResponseDataContent'
+          $ref: '#/components/schemas/PostEmailsResponseDataContent'
         id:
           type: string
           example: efd12345-1234-5678-9012-ee123456789f
           description: Notify's id for the status receipts
         reference:
           type: string
-          example: tmpl1234-1234-5678-9012-abcd12345678-1713346533467
+          example: tmpl1234-1234-5678-9012-abcd12345678-1713272155576
           description: Reference id you provided for this transaction
         scheduled_for:
           type: string
           example: null
           description: We don't schedule emails
+          nullable: true
         template:
-          $ref: '#/components/schemas/PostEmailResponseDataTemplate'
+          $ref: '#/components/schemas/PostEmailsResponseDataTemplate'
         uri:
           type: string
           example: >-
@@ -757,7 +759,7 @@ components:
         - scheduled_for
         - template
         - uri
-    PostEmailResponseDto:
+    PostEmailsResponseDto:
       type: object
       properties:
         status:
@@ -765,7 +767,7 @@ components:
           example: 201
           description: Http status code
         data:
-          $ref: '#/components/schemas/PostEmailResponseData'
+          $ref: '#/components/schemas/PostEmailsResponseData'
       required:
         - status
         - data

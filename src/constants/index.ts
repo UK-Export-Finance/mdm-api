@@ -9,6 +9,7 @@
  * 5. Customers
  * 6. Strings to redact
  * 7. Strings locations to redact
+ * 7. Govuk notify email constants
  */
 
 export * from './auth.constant';
@@ -16,6 +17,7 @@ export * from './customers.constant';
 export * from './database-name.constant';
 export * from './date.constant';
 export * from './enums';
+export * from './govuk-notify.constant';
 export * from './products.constant';
 export * from './redact-strings.constant';
 export * from './redact-strings-paths.constant';

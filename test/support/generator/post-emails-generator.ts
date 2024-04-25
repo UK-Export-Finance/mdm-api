@@ -1,5 +1,5 @@
-import { PostEmailRequestItemDto } from '@ukef/helper-modules/govuk-notify/dto/post-email-request.dto';
-import { PostEmailResponseDto } from '@ukef/helper-modules/govuk-notify/dto/post-email-response.dto';
+import { PostEmailsResponseDto } from '@ukef/helper-modules/govuk-notify/dto/post-emails-response.dto';
+import { PostEmailsRequestItemDto } from '@ukef/modules/emails/dto/post-emails-request.dto';
 
 import { AbstractGenerator } from './abstract-generator';
 import { RandomValueGenerator } from './random-value-generator';
@@ -28,7 +28,7 @@ export class PostEmailsGenerator extends AbstractGenerator<postEmailsValues, Gen
   }
 
   protected transformRawValuesToGeneratedValues(values: postEmailsValues[], {}: GenerateOptions): GenerateResult {
-    const request: PostEmailRequestItemDto[] = values.map((v) => ({
+    const requests: PostEmailsRequestItemDto[] = values.map((v) => ({
       templateId: v.templateId,
       sendToEmailAddress: v.toEmail,
       personalisation: v.personalisation,
@@ -37,7 +37,7 @@ export class PostEmailsGenerator extends AbstractGenerator<postEmailsValues, Gen
     const mdmPath = '/api/v1/emails';
     const govUkDomain = this.valueGenerator.httpsUrl();
 
-    const postEmailsResponse: PostEmailResponseDto[][] = values.map((v: postEmailsValues) => [
+    const postEmailsResponse: PostEmailsResponseDto[][] = values.map((v: postEmailsValues) => [
       {
         status: 201,
         data: {
@@ -63,7 +63,7 @@ export class PostEmailsGenerator extends AbstractGenerator<postEmailsValues, Gen
     // const postEmailsMultipleResponse = postEmailsResponse.map((response) => response[0]);
 
     return {
-      request,
+      requests,
       postEmailsResponse,
       mdmPath,
     };
@@ -88,7 +88,7 @@ interface postEmailsValues {
 interface GenerateOptions {}
 
 interface GenerateResult {
-  request: PostEmailRequestItemDto[];
+  requests: PostEmailsRequestItemDto[];
   mdmPath: string;
-  postEmailsResponse: PostEmailResponseDto[][];
+  postEmailsResponse: PostEmailsResponseDto[][];
 }

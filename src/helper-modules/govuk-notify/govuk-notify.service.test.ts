@@ -1,5 +1,5 @@
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
-import expectedResponse = require('./examples/example-response-for-send-email.json');
+import expectedResponse = require('./examples/example-response-for-send-emails.json');
 import { BadRequestException, ForbiddenException, UnauthorizedException, UnprocessableEntityException } from '@nestjs/common';
 import { AxiosError, AxiosResponse } from 'axios';
 import { NotifyClient } from 'notifications-node-client';

@@ -1,6 +1,7 @@
 import { AUTH } from '@ukef/constants';
 import { ENVIRONMENT_VARIABLES } from '@ukef-test/support/environment-variables';
 import request from 'supertest';
+import TestAgent from 'supertest/lib/agent';
 
 import { App } from './app';
 
@@ -16,7 +17,7 @@ export class Api {
     return this.request().get(url).set(this.getValidAuthHeader());
   }
 
-  post(url: string, body: string | object, extraHeaders?: object): request.Test {
+  post(url: string, body: string | object, extraHeaders?: Record<string, string>): request.Test {
     const request = this.request().post(url).send(body).set(this.getValidAuthHeader());
     if (extraHeaders) {
       request.set(extraHeaders);
@@ -30,7 +31,7 @@ export class Api {
   }
 
   postWithoutAuth(url: string, body: string | object, strategy?: string, key?: string): request.Test {
-    const query = this.request().post(url, body);
+    const query = this.request().post(url).send(body);
     return this.setQueryWithAuthStrategyIfPresent(query, strategy, key);
   }
 
@@ -43,7 +44,7 @@ export class Api {
   }
 
   // Todo: solve type issue.
-  private request(): any {
+  private request(): TestAgent<request.Test> {
     return request(this.app.getHttpServer());
   }
 

@@ -1,14 +1,14 @@
 import { BadRequestException, ForbiddenException, Injectable, UnauthorizedException, UnprocessableEntityException } from '@nestjs/common';
 import { NotifyClient } from 'notifications-node-client';
 
-import { PostEmailRequestItemDto } from './dto/post-email-request.dto';
-import { PostEmailResponseDto } from './dto/post-email-response.dto';
+import { PostEmailsRequestItemDto } from '../../modules/emails/dto/post-emails-request.dto';
+import { PostEmailsResponseDto } from './dto/post-emails-response.dto';
 
 @Injectable()
 export class GovukNotifyService {
   constructor() {}
 
-  async sendEmail(govUkNotifyKey: string, email: PostEmailRequestItemDto): Promise<PostEmailResponseDto> {
+  async sendEmail(govUkNotifyKey: string, email: PostEmailsRequestItemDto): Promise<PostEmailsResponseDto> {
     // We create new client for each request because govUkNotifyKey (auth key) might be different.
     const notifyClient = new NotifyClient(govUkNotifyKey);
     const reference = email.reference || `${email.templateId}-${Date.now()}`;

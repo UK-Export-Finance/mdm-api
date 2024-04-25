@@ -1,8 +1,8 @@
 import { BadRequestException, Body, Controller, Headers, ParseArrayPipe, Post } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiOperation, ApiTags, ApiUnprocessableEntityResponse } from '@nestjs/swagger';
-import { PostEmailRequestItemDto } from '@ukef/helper-modules/govuk-notify/dto/post-email-request.dto';
-import { PostEmailResponseDto } from '@ukef/helper-modules/govuk-notify/dto/post-email-response.dto';
+import { PostEmailsResponseDto } from '@ukef/helper-modules/govuk-notify/dto/post-emails-response.dto';
 
+import { PostEmailsRequestItemDto } from './dto/post-emails-request.dto';
 import { EmailsService } from './emails.service';
 
 @ApiTags('emails')
@@ -14,22 +14,22 @@ export class EmailsController {
   @ApiOperation({
     summary: 'Send email using to Gov.uk notify service',
   })
-  @ApiBody({ type: [PostEmailRequestItemDto] })
+  @ApiBody({ type: [PostEmailsRequestItemDto] })
   @ApiCreatedResponse({
     status: 201,
     description: 'Returns information about email transaction.',
-    type: [PostEmailResponseDto],
+    type: [PostEmailsResponseDto],
   })
   @ApiBadRequestResponse({
     description: 'Bad request',
   })
   @ApiUnprocessableEntityResponse({
-    description: 'Returned if unknown gov.uk notify error happened',
+    description: 'Unknown gov.uk notify error happened',
   })
   postEmail(
     @Headers('govUkNotifyKey') govUkNotifyKey: string,
-    @Body(new ParseArrayPipe({ items: PostEmailRequestItemDto, optional: false })) body: PostEmailRequestItemDto[],
-  ): Promise<PostEmailResponseDto> {
+    @Body(new ParseArrayPipe({ items: PostEmailsRequestItemDto, optional: false })) body: PostEmailsRequestItemDto[],
+  ): Promise<PostEmailsResponseDto> {
     if (!govUkNotifyKey) {
       throw new BadRequestException(['govUkNotifyKey header is required']);
     }
