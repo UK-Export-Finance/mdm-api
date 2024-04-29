@@ -1,3 +1,4 @@
+import { GOVUK_NOTIFY } from '@ukef/constants';
 import { PostEmailsResponseDto } from '@ukef/helper-modules/govuk-notify/dto/post-emails-response.dto';
 import { PostEmailsRequestItemDto } from '@ukef/modules/emails/dto/post-emails-request.dto';
 
@@ -10,12 +11,12 @@ export class PostEmailsGenerator extends AbstractGenerator<postEmailsValues, Gen
   }
 
   protected generateValues(): postEmailsValues {
-    const templateId = this.valueGenerator.string({ length: 20 });
+    const templateId = this.valueGenerator.string({ length: GOVUK_NOTIFY.FIELD_LENGTHS.TEMPLATE_ID });
     return {
       templateId,
       reference: `${templateId}-12345`,
-      sendTransactionId: this.valueGenerator.string({ length: 20 }),
-      serviceId: this.valueGenerator.string({ length: 20 }),
+      sendTransactionId: this.valueGenerator.string({ length: GOVUK_NOTIFY.FIELD_LENGTHS.TRANSACTION_ID }),
+      serviceId: this.valueGenerator.string({ length: GOVUK_NOTIFY.FIELD_LENGTHS.SERVICE_ID }),
       fromEmail: this.valueGenerator.email(),
       toEmail: this.valueGenerator.email(),
       emailSubject: this.valueGenerator.sentence(),
@@ -28,11 +29,13 @@ export class PostEmailsGenerator extends AbstractGenerator<postEmailsValues, Gen
   }
 
   protected transformRawValuesToGeneratedValues(values: postEmailsValues[], {}: GenerateOptions): GenerateResult {
-    const requests: PostEmailsRequestItemDto[] = values.map((v) => ({
-      templateId: v.templateId,
-      sendToEmailAddress: v.toEmail,
-      personalisation: v.personalisation,
-    }));
+    const requests: PostEmailsRequestItemDto[][] = values.map((v) => [
+      {
+        templateId: v.templateId,
+        sendToEmailAddress: v.toEmail,
+        personalisation: v.personalisation,
+      },
+    ]);
 
     const mdmPath = '/api/v1/emails';
     const govUkDomain = this.valueGenerator.httpsUrl();
@@ -60,8 +63,6 @@ export class PostEmailsGenerator extends AbstractGenerator<postEmailsValues, Gen
       },
     ]);
 
-    // const postEmailsMultipleResponse = postEmailsResponse.map((response) => response[0]);
-
     return {
       requests,
       postEmailsResponse,
@@ -88,7 +89,7 @@ interface postEmailsValues {
 interface GenerateOptions {}
 
 interface GenerateResult {
-  requests: PostEmailsRequestItemDto[];
+  requests: PostEmailsRequestItemDto[][];
   mdmPath: string;
   postEmailsResponse: PostEmailsResponseDto[][];
 }

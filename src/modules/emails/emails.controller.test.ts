@@ -11,7 +11,10 @@ describe('EmailsController', () => {
   let controller: EmailsController;
 
   const valueGenerator = new RandomValueGenerator();
-  const { requests, postEmailsResponse } = new PostEmailsGenerator(valueGenerator).generate({
+  const {
+    requests: [request],
+    postEmailsResponse,
+  } = new PostEmailsGenerator(valueGenerator).generate({
     numberToGenerate: 1,
   });
 
@@ -32,9 +35,9 @@ describe('EmailsController', () => {
     const govUkNotifyKey = valueGenerator.string({ length: 10 });
 
     it('returns receipt response for sent email', async () => {
-      when(emailsServiceSendEmail).calledWith(govUkNotifyKey, requests[0]).mockResolvedValueOnce(postEmailsResponse[0]);
+      when(emailsServiceSendEmail).calledWith(govUkNotifyKey, request[0]).mockResolvedValueOnce(postEmailsResponse[0]);
 
-      const response = await controller.postEmail(govUkNotifyKey, requests);
+      const response = await controller.postEmail(govUkNotifyKey, request);
 
       expect(emailsServiceSendEmail).toHaveBeenCalled();
       expect(response).toEqual(postEmailsResponse[0]);

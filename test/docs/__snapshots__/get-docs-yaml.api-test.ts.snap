@@ -700,7 +700,7 @@ components:
         unsubscribe_link:
           type: string
           example: null
-          description: we don't use unsubscribe links
+          description: Unsubscribe links are not used
           nullable: true
       required:
         - body
@@ -718,11 +718,11 @@ components:
           type: string
           example: >-
             https://api.notifications.service.gov.uk/services/abc12345-a123-4567-8901-123456789012/templates/tmpl1234-1234-5678-9012-abcd12345678
-          description: URL to get more information about template
+          description: Notify's URL to get more information about template
         version:
           type: number
           example: 5
-          description: Template version
+          description: Notify's template version
       required:
         - id
         - uri
@@ -743,7 +743,7 @@ components:
         scheduled_for:
           type: string
           example: null
-          description: We don't schedule emails
+          description: Email scheduling is not used
           nullable: true
         template:
           $ref: '#/components/schemas/PostEmailsResponseDataTemplate'
@@ -751,7 +751,7 @@ components:
           type: string
           example: >-
             https://api.notifications.service.gov.uk/v2/notifications/efd12345-1234-5678-9012-ee123456789f
-          description: API location to get more information about this transaction
+          description: Notify's URL to get more information about this transaction
       required:
         - content
         - id

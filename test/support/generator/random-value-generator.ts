@@ -72,28 +72,7 @@ export class RandomValueGenerator {
     return this.integer({ min: 0, max });
   }
 
-  email(options?: { length?: number; minLength?: number; maxLength?: number }): string {
-    if (!options?.length && !options?.minLength && !options?.maxLength) {
-      // Generate random length email.
-      return this.chance.email();
-    }
-    // Generate specific length email.
-    let fullLength = this.getStringLengthFromOptions(options);
-    if (fullLength < 6) {
-      console.info("Can't generate shorter than 6 characters email, returning 6 character email for length tests");
-      fullLength = 6;
-    }
-    let tld = this.chance.tld();
-    tld = 'co.uk';
-    if (fullLength - tld.length < 4) {
-      while (tld.length !== 2) {
-        tld = this.chance.tld();
-      }
-    }
-    const option = { min: 1, max: fullLength - tld.length - 3 };
-    const domainWordLength = this.chance.integer(option);
-    const word = this.chance.word({ length: domainWordLength });
-    const localPartLength = fullLength - word.length - tld.length - 2;
-    return this.chance.email({ length: localPartLength, domain: `${word}.${tld}` });
+  email(): string {
+    return this.chance.email();
   }
 }

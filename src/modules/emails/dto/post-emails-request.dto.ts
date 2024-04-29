@@ -7,15 +7,13 @@ export type PostEmailsRequestDto = PostEmailsRequestItemDto[];
 export class PostEmailsRequestItemDto {
   @IsString()
   @IsNotEmpty()
-  @MinLength(1)
-  @MaxLength(40)
+  @MinLength(GOVUK_NOTIFY.FIELD_LENGTHS.TEMPLATE_ID)
+  @MaxLength(GOVUK_NOTIFY.FIELD_LENGTHS.TEMPLATE_ID)
   @ApiProperty({ example: GOVUK_NOTIFY.EXAMPLES.TEMPLATE_ID })
   readonly templateId: string;
 
   @IsEmail()
   @IsNotEmpty()
-  @MinLength(7)
-  @MaxLength(60)
   @ApiProperty({ example: GOVUK_NOTIFY.EXAMPLES.EMAIL, description: 'Email address to send this email' })
   readonly sendToEmailAddress: string;
 
@@ -27,7 +25,8 @@ export class PostEmailsRequestItemDto {
   @IsString()
   @IsOptional()
   @MinLength(1)
-  @MaxLength(60)
+  // 100 characters is arbitrary Max limit, GOV.UK Notify can accept references atleast 400 characters long.
+  @MaxLength(100)
   @ApiProperty({ example: GOVUK_NOTIFY.EXAMPLES.REFERENCE })
   readonly reference?: string;
 }

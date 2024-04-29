@@ -9,7 +9,6 @@ export interface StringFieldValidationApiTestOptions<RequestBodyItem, RequestBod
   required?: boolean;
   pattern?: RegExp;
   enum?: any;
-  typeNameForErrorMessages?: string;
   generateFieldValueOfLength?: (length: number) => RequestBodyItem[RequestBodyItemKey];
   generateFieldValueThatDoesNotMatchRegex?: () => RequestBodyItem[RequestBodyItemKey];
   generateFieldValueThatDoesNotMatchEnum?: () => RequestBodyItem[RequestBodyItemKey];
@@ -26,7 +25,6 @@ export function withStringFieldValidationApiTests<RequestBodyItem, RequestBodyIt
   required,
   pattern,
   enum: theEnum,
-  typeNameForErrorMessages = 'a string',
   generateFieldValueThatDoesNotMatchEnum,
   generateFieldValueOfLength,
   generateFieldValueThatDoesNotMatchRegex,
@@ -55,7 +53,7 @@ export function withStringFieldValidationApiTests<RequestBodyItem, RequestBodyIt
       expect(status).toBe(400);
       expect(body).toMatchObject({
         error: 'Bad Request',
-        message: expect.arrayContaining([`${fieldName} must be ${typeNameForErrorMessages}`]),
+        message: expect.arrayContaining([`${fieldName} must be a string`]),
         statusCode: 400,
       });
     });

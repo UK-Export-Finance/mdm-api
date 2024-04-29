@@ -12,4 +12,9 @@ export const GOVUK_NOTIFY = {
     TEMPLATE_ID: 'tmpl1234-1234-5678-9012-abcd12345678',
     TEMPLATE_URI: 'https://api.notifications.service.gov.uk/services/abc12345-a123-4567-8901-123456789012/templates/tmpl1234-1234-5678-9012-abcd12345678',
   },
+  FIELD_LENGTHS: {
+    TEMPLATE_ID: 36,
+    TRANSACTION_ID: 36,
+    SERVICE_ID: 36,
+  },
 };
