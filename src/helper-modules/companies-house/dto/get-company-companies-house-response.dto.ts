@@ -1,0 +1,1 @@
+export type GetCompanyCompaniesHouseResponse = object;
