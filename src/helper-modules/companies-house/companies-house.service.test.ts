@@ -1,11 +1,13 @@
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
+import { AxiosError } from 'axios';
 import { when } from 'jest-when';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import expectedResponseData = require('./examples/example-response-for-get-company-by-registration-number.json');
 import noResultResponseData = require('./examples/example-response-for-get-company-by-registration-number-no-result.json'); // eslint-disable-line unused-imports/no-unused-vars
 import { CompaniesHouseService } from './companies-house.service';
+import { CompaniesHouseException } from './exception/companies-house.exception';
 import { CompaniesHouseNotFoundException } from './exception/companies-house-not-found.exception';
 
 describe('CompaniesHouseService', () => {
@@ -87,6 +89,19 @@ describe('CompaniesHouseService', () => {
 
       await expect(getCompanyPromise).rejects.toBeInstanceOf(CompaniesHouseNotFoundException);
       await expect(getCompanyPromise).rejects.toThrow(`Company with registration number ${testRegistrationNumber} was not found.`);
+    });
+
+    it('throws a CompaniesHouseException if the request to the Companies House API fails', async () => {
+      const axiosRequestError = new AxiosError();
+      when(httpServiceGet)
+        .calledWith(...expectedHttpServiceGetArgs)
+        .mockReturnValueOnce(throwError(() => axiosRequestError));
+
+      const getCompanyPromise = service.getCompanyByRegistrationNumber(testRegistrationNumber);
+
+      await expect(getCompanyPromise).rejects.toBeInstanceOf(CompaniesHouseException);
+      await expect(getCompanyPromise).rejects.toThrow('Failed to get response from Companies House API.');
+      await expect(getCompanyPromise).rejects.toHaveProperty('innerError', axiosRequestError);
     });
   });
 });

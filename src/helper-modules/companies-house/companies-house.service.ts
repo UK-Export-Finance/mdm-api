@@ -5,6 +5,7 @@ import { CompaniesHouseConfig, KEY as COMPANIES_HOUSE_CONFIG_KEY } from '@ukef/c
 import { HttpClient } from '@ukef/modules/http/http.client';
 
 import { GetCompanyCompaniesHouseResponse } from './dto/get-company-companies-house-response.dto';
+import { CompaniesHouseException } from './exception/companies-house.exception';
 import { CompaniesHouseNotFoundException } from './exception/companies-house-not-found.exception';
 
 @Injectable()
@@ -29,7 +30,7 @@ export class CompaniesHouseService {
         'Content-Type': 'application/json',
       },
       onError: (error: Error) => {
-        throw error;
+        throw new CompaniesHouseException('Failed to get response from Companies House API.', error);
       },
     });
 
