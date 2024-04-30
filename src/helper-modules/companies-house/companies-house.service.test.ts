@@ -61,8 +61,8 @@ describe('CompaniesHouseService', () => {
 
     it('returns the results when the Companies House API returns a 200 with results', async () => {
       when(httpServiceGet)
-      .calledWith(...expectedHttpServiceGetArgs)
-      .mockReturnValueOnce(expectedResponse);
+        .calledWith(...expectedHttpServiceGetArgs)
+        .mockReturnValueOnce(expectedResponse);
 
       const response = await service.getCompanyByRegistrationNumber(testRegistrationNumber);
 
