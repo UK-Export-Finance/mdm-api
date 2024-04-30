@@ -34,7 +34,7 @@ export class CompaniesHouseService {
     });
 
     if (status === 404) {
-      throw new CompaniesHouseNotFoundException(`Company with registration number ${registrationNumber} was not found.`)
+      throw new CompaniesHouseNotFoundException(`Company with registration number ${registrationNumber} was not found.`);
     }
 
     return data;
