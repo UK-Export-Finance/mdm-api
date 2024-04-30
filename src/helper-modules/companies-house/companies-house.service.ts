@@ -7,6 +7,7 @@ import { HttpClient } from '@ukef/modules/http/http.client';
 import { GetCompanyCompaniesHouseResponse } from './dto/get-company-companies-house-response.dto';
 import { CompaniesHouseException } from './exception/companies-house.exception';
 import { CompaniesHouseNotFoundException } from './exception/companies-house-not-found.exception';
+import { CompaniesHouseUnauthorizedException } from './exception/companies-house-unauthorized.exception';
 
 @Injectable()
 export class CompaniesHouseService {
@@ -36,6 +37,8 @@ export class CompaniesHouseService {
 
     if (status === 404) {
       throw new CompaniesHouseNotFoundException(`Company with registration number ${registrationNumber} was not found.`);
+    } else if (status === 401) {
+      throw new CompaniesHouseUnauthorizedException(`Invalid authorization. Check your Companies House API key and 'Authorization' header.`);
     }
 
     return data;

@@ -5,10 +5,12 @@ import { AxiosError } from 'axios';
 import { when } from 'jest-when';
 import { of, throwError } from 'rxjs';
 import expectedResponseData = require('./examples/example-response-for-get-company-by-registration-number.json');
-import noResultResponseData = require('./examples/example-response-for-get-company-by-registration-number-no-result.json'); // eslint-disable-line unused-imports/no-unused-vars
+import notFoundResponseData = require('./examples/example-response-for-get-company-by-registration-number-not-found.json');
+import unauthorizedResponseData = require('./examples/example-response-for-get-company-by-registration-number-unauthorized.json');
 import { CompaniesHouseService } from './companies-house.service';
 import { CompaniesHouseException } from './exception/companies-house.exception';
 import { CompaniesHouseNotFoundException } from './exception/companies-house-not-found.exception';
+import { CompaniesHouseUnauthorizedException } from './exception/companies-house-unauthorized.exception';
 
 describe('CompaniesHouseService', () => {
   let httpServiceGet: jest.Mock;
@@ -77,7 +79,7 @@ describe('CompaniesHouseService', () => {
         .calledWith(...expectedHttpServiceGetArgs)
         .mockReturnValueOnce(
           of({
-            data: noResultResponseData,
+            data: notFoundResponseData,
             status: 404,
             statusText: 'Not Found',
             config: undefined,
@@ -89,6 +91,25 @@ describe('CompaniesHouseService', () => {
 
       await expect(getCompanyPromise).rejects.toBeInstanceOf(CompaniesHouseNotFoundException);
       await expect(getCompanyPromise).rejects.toThrow(`Company with registration number ${testRegistrationNumber} was not found.`);
+    });
+
+    it('throws a CompaniesHouseUnauthorizedException when the Companies House API returns a 401', async () => {
+      when(httpServiceGet)
+        .calledWith(...expectedHttpServiceGetArgs)
+        .mockReturnValueOnce(
+          of({
+            data: unauthorizedResponseData,
+            status: 401,
+            statusText: 'Unauthorized',
+            config: undefined,
+            headers: undefined,
+          }),
+        );
+
+      const getCompanyPromise = service.getCompanyByRegistrationNumber(testRegistrationNumber);
+
+      await expect(getCompanyPromise).rejects.toBeInstanceOf(CompaniesHouseUnauthorizedException);
+      await expect(getCompanyPromise).rejects.toThrow(`Invalid authorization. Check your Companies House API key and 'Authorization' header.`);
     });
 
     it('throws a CompaniesHouseException if the request to the Companies House API fails', async () => {
