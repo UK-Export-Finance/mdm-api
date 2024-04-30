@@ -5,6 +5,7 @@ import { CompaniesHouseConfig, KEY as COMPANIES_HOUSE_CONFIG_KEY } from '@ukef/c
 import { HttpClient } from '@ukef/modules/http/http.client';
 
 import { GetCompanyCompaniesHouseResponse } from './dto/get-company-companies-house-response.dto';
+import { CompaniesHouseNotFoundException } from './exception/companies-house-not-found.exception';
 
 @Injectable()
 export class CompaniesHouseService {
@@ -20,7 +21,8 @@ export class CompaniesHouseService {
   async getCompanyByRegistrationNumber(registrationNumber: string): Promise<GetCompanyCompaniesHouseResponse> {
     const path = `/company/${registrationNumber}`;
     const encodedKey = Buffer.from(this.key).toString('base64');
-    const { data } = await this.httpClient.get<GetCompanyCompaniesHouseResponse>({
+
+    const { status, data } = await this.httpClient.get<GetCompanyCompaniesHouseResponse>({
       path,
       headers: {
         Authorization: `Basic ${encodedKey}`,
@@ -30,6 +32,11 @@ export class CompaniesHouseService {
         throw error;
       },
     });
+
+    if (status === 404) {
+      throw new CompaniesHouseNotFoundException(`Company with registration number ${registrationNumber} was not found.`)
+    }
+
     return data;
   }
 }

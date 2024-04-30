@@ -4,8 +4,9 @@ import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-
 import { when } from 'jest-when';
 import { of } from 'rxjs';
 import expectedResponseData = require('./examples/example-response-for-get-company-by-registration-number.json');
-import noResultsResponseData = require('./examples/example-response-for-get-company-by-registration-number-no-results.json'); // eslint-disable-line unused-imports/no-unused-vars
+import noResultResponseData = require('./examples/example-response-for-get-company-by-registration-number-no-result.json'); // eslint-disable-line unused-imports/no-unused-vars
 import { CompaniesHouseService } from './companies-house.service';
+import { CompaniesHouseNotFoundException } from './exception/companies-house-not-found.exception';
 
 describe('CompaniesHouseService', () => {
   let httpServiceGet: jest.Mock;
@@ -67,6 +68,25 @@ describe('CompaniesHouseService', () => {
       const response = await service.getCompanyByRegistrationNumber(testRegistrationNumber);
 
       expect(response).toBe(expectedResponseData);
+    });
+
+    it('throws a CompaniesHouseNotFoundException when the Companies House API returns a 404', async () => {
+      when(httpServiceGet)
+        .calledWith(...expectedHttpServiceGetArgs)
+        .mockReturnValueOnce(
+          of({
+            data: noResultResponseData,
+            status: 404,
+            statusText: 'Not Found',
+            config: undefined,
+            headers: undefined,
+          }),
+        );
+
+      const getCompanyPromise = service.getCompanyByRegistrationNumber(testRegistrationNumber);
+
+      await expect(getCompanyPromise).rejects.toBeInstanceOf(CompaniesHouseNotFoundException);
+      await expect(getCompanyPromise).rejects.toThrow(`Company with registration number ${testRegistrationNumber} was not found.`);
     });
   });
 });
