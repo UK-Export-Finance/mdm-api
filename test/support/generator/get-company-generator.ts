@@ -12,7 +12,7 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
     return {};
   }
 
-// eslint-disable-next-line unused-imports/no-unused-vars
+  // eslint-disable-next-line unused-imports/no-unused-vars
   protected transformRawValuesToGeneratedValues(values: CompanyValues[], {}: GenerateOptions): GenerateResult {
     return null;
   }
