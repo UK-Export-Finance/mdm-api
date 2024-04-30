@@ -13,8 +13,20 @@ describe('CompaniesHouseService', () => {
   let service: CompaniesHouseService;
 
   const basePath = '/company';
+  const testRegistrationNumber = '00000001';
+  const expectedPath = `${basePath}/${testRegistrationNumber}`;
   const valueGenerator = new RandomValueGenerator();
   const testKey = valueGenerator.string({ length: 40 });
+  const encodedTestKey = Buffer.from(testKey).toString('base64');
+  const expectedHttpServiceGetArgs: [string, object] = [
+    expectedPath,
+    {
+      headers: {
+        Authorization: `Basic ${encodedTestKey}`,
+        'Content-Type': 'application/json',
+      },
+    },
+  ];
   const expectedResponse = of({
     data: expectedResponseData,
     status: 200,
@@ -37,19 +49,6 @@ describe('CompaniesHouseService', () => {
 
   describe('getCompanyByRegistrationNumber', () => {
     it('calls the Companies House API with the correct arguments', async () => {
-      const testRegistrationNumber = '00000001';
-      const expectedPath = `${basePath}/${testRegistrationNumber}`;
-      const encodedTestKey = Buffer.from(testKey).toString('base64');
-      const expectedHttpServiceGetArgs: [string, object] = [
-        expectedPath,
-        {
-          headers: {
-            Authorization: `Basic ${encodedTestKey}`,
-            'Content-Type': 'application/json',
-          },
-        },
-      ];
-
       when(httpServiceGet)
         .calledWith(...expectedHttpServiceGetArgs)
         .mockReturnValueOnce(expectedResponse);
@@ -58,6 +57,16 @@ describe('CompaniesHouseService', () => {
 
       expect(httpServiceGet).toHaveBeenCalledTimes(1);
       expect(httpServiceGet).toHaveBeenCalledWith(...expectedHttpServiceGetArgs);
+    });
+
+    it('returns the results when the Companies House API returns a 200 with results', async () => {
+      when(httpServiceGet)
+      .calledWith(...expectedHttpServiceGetArgs)
+      .mockReturnValueOnce(expectedResponse);
+
+      const response = await service.getCompanyByRegistrationNumber(testRegistrationNumber);
+
+      expect(response).toBe(expectedResponseData);
     });
   });
 });
