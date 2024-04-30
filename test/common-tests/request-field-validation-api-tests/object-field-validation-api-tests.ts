@@ -1,5 +1,7 @@
-import { prepareModifiedRequest } from '@ukef-test/support/helpers/request-field-validation-helper';
 import request from 'supertest';
+
+import { withRequiredFieldValidationApiTests } from './partials/require-validation';
+import { withTypeFieldValidationApiTests } from './partials/type-validation';
 
 export interface ObjectFieldValidationApiTests<RequestBodyItem, RequestBodyItemKey extends keyof RequestBodyItem> {
   fieldName: RequestBodyItemKey;
@@ -17,9 +19,7 @@ export function withObjectFieldValidationApiTests<RequestBodyItem, RequestBodyIt
   givenAnyRequestBodyWouldSucceed,
 }: ObjectFieldValidationApiTests<RequestBodyItem, RequestBodyItemKey>): void {
   const fieldName = fieldNameSymbol.toString();
-  const requestIsAnArray = Array.isArray(validRequestBody);
-  const requestBodyItem = requestIsAnArray ? validRequestBody[0] : validRequestBody;
-
+  const typeNameForErrorMessages = 'an object';
   required = required ?? true;
 
   describe(`${fieldName} validation`, () => {
@@ -27,96 +27,21 @@ export function withObjectFieldValidationApiTests<RequestBodyItem, RequestBodyIt
       givenAnyRequestBodyWouldSucceed();
     });
 
-    it(`returns a 400 response if ${fieldName} is number`, async () => {
-      const requestWithNumberField = { ...requestBodyItem, [fieldNameSymbol]: 1 };
-      const preparedRequestWithNumberField = prepareModifiedRequest(requestIsAnArray, requestWithNumberField);
-
-      const { status, body } = await makeRequest(preparedRequestWithNumberField);
-
-      expect(status).toBe(400);
-      expect(body).toMatchObject({
-        error: 'Bad Request',
-        message: expect.arrayContaining([`${fieldName} must be an object`]),
-        statusCode: 400,
-      });
+    withRequiredFieldValidationApiTests({
+      fieldName: fieldNameSymbol,
+      required,
+      validRequestBody,
+      makeRequest,
+      typeNameForErrorMessages,
+      givenAnyRequestBodyWouldSucceed,
     });
 
-    it(`returns a 400 response if ${fieldName} is string`, async () => {
-      const requestWithStringField = { ...requestBodyItem, [fieldNameSymbol]: '' };
-      const preparedRequestWithStringField = prepareModifiedRequest(requestIsAnArray, requestWithStringField);
-
-      const { status, body } = await makeRequest(preparedRequestWithStringField);
-
-      expect(status).toBe(400);
-      expect(body).toMatchObject({
-        error: 'Bad Request',
-        message: expect.arrayContaining([`${fieldName} must be an object`]),
-        statusCode: 400,
-      });
+    withTypeFieldValidationApiTests({
+      fieldName: fieldNameSymbol,
+      validRequestBody,
+      makeRequest,
+      typeNameForErrorMessages,
+      givenAnyRequestBodyWouldSucceed,
     });
-
-    it(`returns a 400 response if ${fieldName} is array`, async () => {
-      const requestWithArrayField = { ...requestBodyItem, [fieldNameSymbol]: [] };
-      const preparedRequestWithArrayField = prepareModifiedRequest(requestIsAnArray, requestWithArrayField);
-
-      const { status, body } = await makeRequest(preparedRequestWithArrayField);
-
-      expect(status).toBe(400);
-      expect(body).toMatchObject({
-        error: 'Bad Request',
-        message: expect.arrayContaining([`${fieldName} must be an object`]),
-        statusCode: 400,
-      });
-    });
-
-    if (required) {
-      it(`returns a 400 response if ${fieldName} is not present`, async () => {
-        const { [fieldNameSymbol]: _removed, ...requestWithoutTheField } = requestBodyItem;
-        const preparedRequestWithoutTheField = prepareModifiedRequest(requestIsAnArray, requestWithoutTheField);
-
-        const { status, body } = await makeRequest(preparedRequestWithoutTheField);
-
-        expect(status).toBe(400);
-        expect(body).toMatchObject({
-          error: 'Bad Request',
-          message: expect.arrayContaining([`${fieldName} must be an object`]),
-          statusCode: 400,
-        });
-      });
-
-      it(`returns a 400 response if ${fieldName} is null`, async () => {
-        const requestWithNullField = { ...requestBodyItem, [fieldNameSymbol]: null };
-        const preparedRequestWithNullField = prepareModifiedRequest(requestIsAnArray, requestWithNullField);
-
-        const { status, body } = await makeRequest(preparedRequestWithNullField);
-
-        expect(status).toBe(400);
-        expect(body).toMatchObject({
-          error: 'Bad Request',
-          message: expect.arrayContaining([`${fieldName} must be an object`]),
-          statusCode: 400,
-        });
-      });
-    } else {
-      it(`returns a 2xx response if ${fieldName} is not present`, async () => {
-        const { [fieldNameSymbol]: _removed, ...requestWithField } = requestBodyItem;
-        const preparedRequestWithField = prepareModifiedRequest(requestIsAnArray, requestWithField);
-
-        const { status } = await makeRequest(preparedRequestWithField);
-
-        expect(status).toBeGreaterThanOrEqual(200);
-        expect(status).toBeLessThan(300);
-      });
-
-      it(`returns a 2xx response if ${fieldName} is null`, async () => {
-        const requestWithNullField = { ...requestBodyItem, [fieldNameSymbol]: null };
-        const preparedRequestWithNullField = prepareModifiedRequest(requestIsAnArray, requestWithNullField);
-
-        const { status } = await makeRequest(preparedRequestWithNullField);
-
-        expect(status).toBeGreaterThanOrEqual(200);
-        expect(status).toBeLessThan(300);
-      });
-    }
   });
 }

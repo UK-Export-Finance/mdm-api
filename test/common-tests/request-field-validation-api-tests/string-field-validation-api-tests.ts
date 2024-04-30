@@ -1,6 +1,9 @@
 import { prepareModifiedRequest } from '@ukef-test/support/helpers/request-field-validation-helper';
 import request from 'supertest';
 
+import { withRequiredFieldValidationApiTests } from './partials/require-validation';
+import { withTypeFieldValidationApiTests } from './partials/type-validation';
+
 export interface StringFieldValidationApiTestOptions<RequestBodyItem, RequestBodyItemKey extends keyof RequestBodyItem> {
   fieldName: RequestBodyItemKey;
   length?: number;
@@ -44,74 +47,23 @@ export function withStringFieldValidationApiTests<RequestBodyItem, RequestBodyIt
       givenAnyRequestBodyWouldSucceed();
     });
 
-    it(`returns a 400 response if ${fieldName} is number`, async () => {
-      const requestWithNumberField = { ...requestBodyItem, [fieldNameSymbol]: 1 };
-      const preparedRequestWithNumberField = prepareModifiedRequest(requestIsAnArray, requestWithNumberField);
-
-      const { status, body } = await makeRequest(preparedRequestWithNumberField);
-
-      expect(status).toBe(400);
-      expect(body).toMatchObject({
-        error: 'Bad Request',
-        message: expect.arrayContaining([`${fieldName} must be a string`]),
-        statusCode: 400,
-      });
+    withRequiredFieldValidationApiTests({
+      fieldName: fieldNameSymbol,
+      required,
+      validRequestBody,
+      enum: theEnum,
+      makeRequest,
+      typeNameForErrorMessages: 'a string',
+      givenAnyRequestBodyWouldSucceed,
     });
 
-    if (required) {
-      const expectedRequiredFieldError =
-        theEnum && generateFieldValueThatDoesNotMatchEnum
-          ? `${fieldName} must be one of the following values: ${Object.values(theEnum).join(', ')}`
-          : `${fieldName} must be longer than or equal to ${minLength} characters`;
-
-      it(`returns a 400 response if ${fieldName} is not present`, async () => {
-        const { [fieldNameSymbol]: _removed, ...requestWithoutTheField } = requestBodyItem;
-        const preparedRequestWithoutTheField = prepareModifiedRequest(requestIsAnArray, requestWithoutTheField);
-
-        const { status, body } = await makeRequest(preparedRequestWithoutTheField);
-
-        expect(status).toBe(400);
-        expect(body).toMatchObject({
-          error: 'Bad Request',
-          message: expect.arrayContaining([expectedRequiredFieldError]),
-          statusCode: 400,
-        });
-      });
-
-      it(`returns a 400 response if ${fieldName} is null`, async () => {
-        const requestWithNullField = { ...requestBodyItem, [fieldNameSymbol]: null };
-        const preparedRequestWithNullField = prepareModifiedRequest(requestIsAnArray, requestWithNullField);
-
-        const { status, body } = await makeRequest(preparedRequestWithNullField);
-
-        expect(status).toBe(400);
-        expect(body).toMatchObject({
-          error: 'Bad Request',
-          message: expect.arrayContaining([expectedRequiredFieldError]),
-          statusCode: 400,
-        });
-      });
-    } else {
-      it(`returns a 2xx response if ${fieldName} is not present`, async () => {
-        const { [fieldNameSymbol]: _removed, ...requestWithField } = requestBodyItem;
-        const preparedRequestWithField = prepareModifiedRequest(requestIsAnArray, requestWithField);
-
-        const { status } = await makeRequest(preparedRequestWithField);
-
-        expect(status).toBeGreaterThanOrEqual(200);
-        expect(status).toBeLessThan(300);
-      });
-
-      it(`returns a 2xx response if ${fieldName} is null`, async () => {
-        const requestWithNullField = { ...requestBodyItem, [fieldNameSymbol]: null };
-        const preparedRequestWithNullField = prepareModifiedRequest(requestIsAnArray, requestWithNullField);
-
-        const { status } = await makeRequest(preparedRequestWithNullField);
-
-        expect(status).toBeGreaterThanOrEqual(200);
-        expect(status).toBeLessThan(300);
-      });
-    }
+    withTypeFieldValidationApiTests({
+      fieldName: fieldNameSymbol,
+      validRequestBody,
+      makeRequest,
+      typeNameForErrorMessages: 'a string',
+      givenAnyRequestBodyWouldSucceed,
+    });
 
     if (minLength > 0) {
       it(`returns a 400 response if ${fieldName} is an empty string`, async () => {

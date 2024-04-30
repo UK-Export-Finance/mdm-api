@@ -5,12 +5,12 @@ import { PostEmailsRequestItemDto } from '@ukef/modules/emails/dto/post-emails-r
 import { AbstractGenerator } from './abstract-generator';
 import { RandomValueGenerator } from './random-value-generator';
 
-export class PostEmailsGenerator extends AbstractGenerator<postEmailsValues, GenerateResult, GenerateOptions> {
+export class PostEmailsGenerator extends AbstractGenerator<PostEmailsValues, GenerateResult, GenerateOptions> {
   constructor(protected readonly valueGenerator: RandomValueGenerator) {
     super(valueGenerator);
   }
 
-  protected generateValues(): postEmailsValues {
+  protected generateValues(): PostEmailsValues {
     const templateId = this.valueGenerator.string({ length: GOVUK_NOTIFY.FIELD_LENGTHS.TEMPLATE_ID });
     return {
       templateId,
@@ -28,7 +28,7 @@ export class PostEmailsGenerator extends AbstractGenerator<postEmailsValues, Gen
     };
   }
 
-  protected transformRawValuesToGeneratedValues(values: postEmailsValues[], {}: GenerateOptions): GenerateResult {
+  protected transformRawValuesToGeneratedValues(values: PostEmailsValues[], _options: GenerateOptions): GenerateResult {
     const requests: PostEmailsRequestItemDto[][] = values.map((v) => [
       {
         templateId: v.templateId,
@@ -40,7 +40,7 @@ export class PostEmailsGenerator extends AbstractGenerator<postEmailsValues, Gen
     const mdmPath = '/api/v1/emails';
     const govUkDomain = this.valueGenerator.httpsUrl();
 
-    const postEmailsResponse: PostEmailsResponseDto[][] = values.map((v: postEmailsValues) => [
+    const postEmailsResponse: PostEmailsResponseDto[][] = values.map((v: PostEmailsValues) => [
       {
         status: 201,
         data: {
@@ -71,7 +71,7 @@ export class PostEmailsGenerator extends AbstractGenerator<postEmailsValues, Gen
   }
 }
 
-interface postEmailsValues {
+interface PostEmailsValues {
   templateId: string;
   reference: string;
   sendTransactionId: string;

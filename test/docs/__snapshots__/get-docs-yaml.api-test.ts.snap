@@ -234,22 +234,24 @@ paths:
                         status: up
                     additionalProperties:
                       type: object
+                      required:
+                        - status
                       properties:
                         status:
                           type: string
-                      additionalProperties:
-                        type: string
+                      additionalProperties: true
                     nullable: true
                   error:
                     type: object
                     example: {}
                     additionalProperties:
                       type: object
+                      required:
+                        - status
                       properties:
                         status:
                           type: string
-                      additionalProperties:
-                        type: string
+                      additionalProperties: true
                     nullable: true
                   details:
                     type: object
@@ -258,11 +260,12 @@ paths:
                         status: up
                     additionalProperties:
                       type: object
+                      required:
+                        - status
                       properties:
                         status:
                           type: string
-                      additionalProperties:
-                        type: string
+                      additionalProperties: true
         '503':
           description: The Health Check is not successful
           content:
@@ -280,11 +283,12 @@ paths:
                         status: up
                     additionalProperties:
                       type: object
+                      required:
+                        - status
                       properties:
                         status:
                           type: string
-                      additionalProperties:
-                        type: string
+                      additionalProperties: true
                     nullable: true
                   error:
                     type: object
@@ -294,11 +298,12 @@ paths:
                         message: Could not connect
                     additionalProperties:
                       type: object
+                      required:
+                        - status
                       properties:
                         status:
                           type: string
-                      additionalProperties:
-                        type: string
+                      additionalProperties: true
                     nullable: true
                   details:
                     type: object
@@ -310,11 +315,12 @@ paths:
                         message: Could not connect
                     additionalProperties:
                       type: object
+                      required:
+                        - status
                       properties:
                         status:
                           type: string
-                      additionalProperties:
-                        type: string
+                      additionalProperties: true
       tags:
         - healthcheck
   /api/v1/interest-rates:

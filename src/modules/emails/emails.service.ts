@@ -7,8 +7,7 @@ import { PostEmailsRequestItemDto } from '@ukef/modules/emails/dto/post-emails-r
 export class EmailsService {
   constructor(private readonly govukNotifyService: GovukNotifyService) {}
 
-  async sendEmail(govUkNotifyKey, postEmailRequestItem: PostEmailsRequestItemDto): Promise<PostEmailsResponseDto> {
-    const response: PostEmailsResponseDto = await this.govukNotifyService.sendEmail(govUkNotifyKey, postEmailRequestItem);
-    return response;
+  sendEmail(govUkNotifyKey, postEmailRequestItem: PostEmailsRequestItemDto): Promise<PostEmailsResponseDto> {
+    return this.govukNotifyService.sendEmail(govUkNotifyKey, postEmailRequestItem);
   }
 }

@@ -43,7 +43,6 @@ export class Api {
     return this.app.destroy();
   }
 
-  // Todo: solve type issue.
   private request(): TestAgent<request.Test> {
     return request(this.app.getHttpServer());
   }
