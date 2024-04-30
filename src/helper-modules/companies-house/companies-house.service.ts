@@ -5,7 +5,6 @@ import { CompaniesHouseConfig, KEY as COMPANIES_HOUSE_CONFIG_KEY } from '@ukef/c
 import { HttpClient } from '@ukef/modules/http/http.client';
 
 import { GetCompanyCompaniesHouseResponse } from './dto/get-company-companies-house-response.dto';
-// eslint-disable-line unused-imports/no-unused-vars
 
 @Injectable()
 export class CompaniesHouseService {
@@ -18,9 +17,19 @@ export class CompaniesHouseService {
     this.key = key;
   }
 
-  // eslint-disable-next-line unused-imports/no-unused-vars, require-await
   async getCompanyByRegistrationNumber(registrationNumber: string): Promise<GetCompanyCompaniesHouseResponse> {
-    // make call to Companies House API
-    return null;
+    const path = `/company/${registrationNumber}`;
+    const encodedKey = Buffer.from(this.key).toString('base64');
+    const { data } = await this.httpClient.get<GetCompanyCompaniesHouseResponse>({
+      path,
+      headers: {
+        Authorization: `Basic ${encodedKey}`,
+        'Content-Type': 'application/json',
+      },
+      onError: (error: Error) => {
+        throw error;
+      },
+    });
+    return data;
   }
 }
