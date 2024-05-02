@@ -10,8 +10,9 @@ import notFoundResponseData = require('./examples/example-response-for-get-compa
 import unauthorizedResponseData = require('./examples/example-response-for-get-company-by-registration-number-unauthorized.json');
 import { CompaniesHouseService } from './companies-house.service';
 import { CompaniesHouseException } from './exception/companies-house.exception';
+import { CompaniesHouseInvalidAuthorizationException } from './exception/companies-house-invalid-authorization.exception';
+import { CompaniesHouseMalformedAuthorizationHeaderException } from './exception/companies-house-malformed-authorization-header.exception';
 import { CompaniesHouseNotFoundException } from './exception/companies-house-not-found.exception';
-import { CompaniesHouseUnauthorizedException } from './exception/companies-house-unauthorized.exception';
 
 describe('CompaniesHouseService', () => {
   let httpServiceGet: jest.Mock;
@@ -65,7 +66,7 @@ describe('CompaniesHouseService', () => {
       expect(httpServiceGet).toHaveBeenCalledWith(...expectedHttpServiceGetArgs);
     });
 
-    it('returns the results when the Companies House API returns a 200 with results', async () => {
+    it('returns the results when the Companies House API returns a 200 response with results', async () => {
       when(httpServiceGet)
         .calledWith(...expectedHttpServiceGetArgs)
         .mockReturnValueOnce(expectedResponse);
@@ -73,6 +74,48 @@ describe('CompaniesHouseService', () => {
       const response = await service.getCompanyByRegistrationNumber(testRegistrationNumber);
 
       expect(response).toBe(expectedResponseData);
+    });
+
+    it(`throws a CompaniesHouseMalformedAuthorizationHeaderException when the Companies House API returns a 400 response containing the error string 'Invalid Authorization header'`, async () => {
+      const axiosError = new AxiosError();
+      axiosError.response = {
+        data: badRequestInvalidAuthorizationHeaderResponseData,
+        status: 400,
+        statusText: 'Bad Request',
+        config: undefined,
+        headers: undefined,
+      };
+
+      when(httpServiceGet)
+        .calledWith(...expectedHttpServiceGetArgs)
+        .mockReturnValueOnce(throwError(() => axiosError));
+
+      const getCompanyPromise = service.getCompanyByRegistrationNumber(testRegistrationNumber);
+
+      await expect(getCompanyPromise).rejects.toBeInstanceOf(CompaniesHouseMalformedAuthorizationHeaderException);
+      await expect(getCompanyPromise).rejects.toThrow(`Invalid 'Authorization' header. Check that your 'Authorization' header is well-formed.`);
+      await expect(getCompanyPromise).rejects.toHaveProperty('innerError', axiosError);
+    });
+
+    it(`throws a CompaniesHouseInvalidAuthorizationException when the Companies House API returns a 401 response containing the error string 'Invalid Authorization'`, async () => {
+      const axiosError = new AxiosError();
+      axiosError.response = {
+        data: unauthorizedResponseData,
+        status: 401,
+        statusText: 'Unauthorized',
+        config: undefined,
+        headers: undefined,
+      };
+
+      when(httpServiceGet)
+        .calledWith(...expectedHttpServiceGetArgs)
+        .mockReturnValueOnce(throwError(() => axiosError));
+
+      const getCompanyPromise = service.getCompanyByRegistrationNumber(testRegistrationNumber);
+
+      await expect(getCompanyPromise).rejects.toBeInstanceOf(CompaniesHouseInvalidAuthorizationException);
+      await expect(getCompanyPromise).rejects.toThrow('Invalid authorization. Check your Companies House API key.');
+      await expect(getCompanyPromise).rejects.toHaveProperty('innerError', axiosError);
     });
 
     it(`throws a CompaniesHouseNotFoundException when the Companies House API returns a 404 response containing the error string 'company-profile-not-found'`, async () => {
@@ -94,44 +137,6 @@ describe('CompaniesHouseService', () => {
       await expect(getCompanyPromise).rejects.toBeInstanceOf(CompaniesHouseNotFoundException);
       await expect(getCompanyPromise).rejects.toThrow(`Company with registration number ${testRegistrationNumber} was not found.`);
       await expect(getCompanyPromise).rejects.toHaveProperty('innerError', axiosError);
-    });
-
-    it('throws a CompaniesHouseUnauthorizedException when the Companies House API returns a 401', async () => {
-      when(httpServiceGet)
-        .calledWith(...expectedHttpServiceGetArgs)
-        .mockReturnValueOnce(
-          of({
-            data: unauthorizedResponseData,
-            status: 401,
-            statusText: 'Unauthorized',
-            config: undefined,
-            headers: undefined,
-          }),
-        );
-
-      const getCompanyPromise = service.getCompanyByRegistrationNumber(testRegistrationNumber);
-
-      await expect(getCompanyPromise).rejects.toBeInstanceOf(CompaniesHouseUnauthorizedException);
-      await expect(getCompanyPromise).rejects.toThrow(`Invalid authorization. Check your Companies House API key and 'Authorization' header.`);
-    });
-
-    it(`throws a CompaniesHouseUnauthorizedException when the Companies House API returns a 400 with an 'Invalid Authorization header' error field`, async () => {
-      when(httpServiceGet)
-        .calledWith(...expectedHttpServiceGetArgs)
-        .mockReturnValueOnce(
-          of({
-            data: badRequestInvalidAuthorizationHeaderResponseData,
-            status: 400,
-            statusText: 'Bad Request',
-            config: undefined,
-            headers: undefined,
-          }),
-        );
-
-      const getCompanyPromise = service.getCompanyByRegistrationNumber(testRegistrationNumber);
-
-      await expect(getCompanyPromise).rejects.toBeInstanceOf(CompaniesHouseUnauthorizedException);
-      await expect(getCompanyPromise).rejects.toThrow(`Invalid authorization. Check your Companies House API key and 'Authorization' header.`);
     });
 
     it('throws a CompaniesHouseException if the request to the Companies House API fails', async () => {

@@ -1,4 +1,4 @@
-export class CompaniesHouseUnauthorizedException extends Error {
+export class CompaniesHouseInvalidAuthorizationException extends Error {
   constructor(
     message: string,
     public readonly innerError?: Error,

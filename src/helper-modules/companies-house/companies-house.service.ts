@@ -5,9 +5,11 @@ import { CompaniesHouseConfig, KEY as COMPANIES_HOUSE_CONFIG_KEY } from '@ukef/c
 import { HttpClient } from '@ukef/modules/http/http.client';
 
 import { GetCompanyCompaniesHouseResponse } from './dto/get-company-companies-house-response.dto';
-import { CompaniesHouseNotFoundException } from './exception/companies-house-not-found.exception';
-import { CompaniesHouseUnauthorizedException } from './exception/companies-house-unauthorized.exception';
-import { getCompanyNotFoundKnownCompaniesHouseError } from './known-errors';
+import {
+  getCompanyInvalidAuthorizationKnownCompaniesHouseError,
+  getCompanyMalformedAuthorizationHeaderKnownCompaniesHouseError,
+  getCompanyNotFoundKnownCompaniesHouseError,
+} from './known-errors';
 import { createWrapCompaniesHouseHttpGetErrorCallback } from './wrap-companies-house-http-error-callback';
 
 @Injectable()
@@ -25,7 +27,7 @@ export class CompaniesHouseService {
     const path = `/company/${registrationNumber}`;
     const encodedKey = Buffer.from(this.key).toString('base64');
 
-    const { status, data } = await this.httpClient.get<any>({
+    const { data } = await this.httpClient.get<any>({
       path,
       headers: {
         Authorization: `Basic ${encodedKey}`,
@@ -33,15 +35,13 @@ export class CompaniesHouseService {
       },
       onError: createWrapCompaniesHouseHttpGetErrorCallback({
         messageForUnknownError: 'Failed to get response from Companies House API.',
-        knownErrors: [getCompanyNotFoundKnownCompaniesHouseError(registrationNumber)],
+        knownErrors: [
+          getCompanyMalformedAuthorizationHeaderKnownCompaniesHouseError(),
+          getCompanyInvalidAuthorizationKnownCompaniesHouseError(),
+          getCompanyNotFoundKnownCompaniesHouseError(registrationNumber),
+        ],
       }),
     });
-
-    if (status === 404) {
-      throw new CompaniesHouseNotFoundException(`Company with registration number ${registrationNumber} was not found.`);
-    } else if (status === 401 || (status === 400 && data.error === 'Invalid Authorization header')) {
-      throw new CompaniesHouseUnauthorizedException(`Invalid authorization. Check your Companies House API key and 'Authorization' header.`);
-    }
 
     return data;
   }
