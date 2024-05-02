@@ -5,9 +5,10 @@ import { CompaniesHouseConfig, KEY as COMPANIES_HOUSE_CONFIG_KEY } from '@ukef/c
 import { HttpClient } from '@ukef/modules/http/http.client';
 
 import { GetCompanyCompaniesHouseResponse } from './dto/get-company-companies-house-response.dto';
-import { CompaniesHouseException } from './exception/companies-house.exception';
 import { CompaniesHouseNotFoundException } from './exception/companies-house-not-found.exception';
 import { CompaniesHouseUnauthorizedException } from './exception/companies-house-unauthorized.exception';
+import { getCompanyNotFoundKnownCompaniesHouseError } from './known-errors';
+import { createWrapCompaniesHouseHttpGetErrorCallback } from './wrap-companies-house-http-error-callback';
 
 @Injectable()
 export class CompaniesHouseService {
@@ -30,9 +31,10 @@ export class CompaniesHouseService {
         Authorization: `Basic ${encodedKey}`,
         'Content-Type': 'application/json',
       },
-      onError: (error: Error) => {
-        throw new CompaniesHouseException('Failed to get response from Companies House API.', error);
-      },
+      onError: createWrapCompaniesHouseHttpGetErrorCallback({
+        messageForUnknownError: 'Failed to get response from Companies House API.',
+        knownErrors: [getCompanyNotFoundKnownCompaniesHouseError(registrationNumber)],
+      }),
     });
 
     if (status === 404) {

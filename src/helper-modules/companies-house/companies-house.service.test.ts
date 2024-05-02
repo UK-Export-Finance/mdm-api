@@ -75,23 +75,25 @@ describe('CompaniesHouseService', () => {
       expect(response).toBe(expectedResponseData);
     });
 
-    it('throws a CompaniesHouseNotFoundException when the Companies House API returns a 404', async () => {
+    it(`throws a CompaniesHouseNotFoundException when the Companies House API returns a 404 response containing the error string 'company-profile-not-found'`, async () => {
+      const axiosError = new AxiosError();
+      axiosError.response = {
+        data: notFoundResponseData,
+        status: 404,
+        statusText: 'Not Found',
+        config: undefined,
+        headers: undefined,
+      };
+
       when(httpServiceGet)
         .calledWith(...expectedHttpServiceGetArgs)
-        .mockReturnValueOnce(
-          of({
-            data: notFoundResponseData,
-            status: 404,
-            statusText: 'Not Found',
-            config: undefined,
-            headers: undefined,
-          }),
-        );
+        .mockReturnValueOnce(throwError(() => axiosError));
 
       const getCompanyPromise = service.getCompanyByRegistrationNumber(testRegistrationNumber);
 
       await expect(getCompanyPromise).rejects.toBeInstanceOf(CompaniesHouseNotFoundException);
       await expect(getCompanyPromise).rejects.toThrow(`Company with registration number ${testRegistrationNumber} was not found.`);
+      await expect(getCompanyPromise).rejects.toHaveProperty('innerError', axiosError);
     });
 
     it('throws a CompaniesHouseUnauthorizedException when the Companies House API returns a 401', async () => {
@@ -133,16 +135,16 @@ describe('CompaniesHouseService', () => {
     });
 
     it('throws a CompaniesHouseException if the request to the Companies House API fails', async () => {
-      const axiosRequestError = new AxiosError();
+      const axiosError = new AxiosError();
       when(httpServiceGet)
         .calledWith(...expectedHttpServiceGetArgs)
-        .mockReturnValueOnce(throwError(() => axiosRequestError));
+        .mockReturnValueOnce(throwError(() => axiosError));
 
       const getCompanyPromise = service.getCompanyByRegistrationNumber(testRegistrationNumber);
 
       await expect(getCompanyPromise).rejects.toBeInstanceOf(CompaniesHouseException);
       await expect(getCompanyPromise).rejects.toThrow('Failed to get response from Companies House API.');
-      await expect(getCompanyPromise).rejects.toHaveProperty('innerError', axiosRequestError);
+      await expect(getCompanyPromise).rejects.toHaveProperty('innerError', axiosError);
     });
   });
 });
