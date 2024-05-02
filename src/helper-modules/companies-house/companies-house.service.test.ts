@@ -4,6 +4,7 @@ import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-
 import { AxiosError } from 'axios';
 import { when } from 'jest-when';
 import { of, throwError } from 'rxjs';
+import badRequestInvalidAuthorizationHeaderResponseData = require('./examples/example-response-for-get-company-by-registration-number-bad-request-invalid-authorization-header.json');
 import expectedResponseData = require('./examples/example-response-for-get-company-by-registration-number.json');
 import notFoundResponseData = require('./examples/example-response-for-get-company-by-registration-number-not-found.json');
 import unauthorizedResponseData = require('./examples/example-response-for-get-company-by-registration-number-unauthorized.json');
@@ -101,6 +102,25 @@ describe('CompaniesHouseService', () => {
             data: unauthorizedResponseData,
             status: 401,
             statusText: 'Unauthorized',
+            config: undefined,
+            headers: undefined,
+          }),
+        );
+
+      const getCompanyPromise = service.getCompanyByRegistrationNumber(testRegistrationNumber);
+
+      await expect(getCompanyPromise).rejects.toBeInstanceOf(CompaniesHouseUnauthorizedException);
+      await expect(getCompanyPromise).rejects.toThrow(`Invalid authorization. Check your Companies House API key and 'Authorization' header.`);
+    });
+
+    it(`throws a CompaniesHouseUnauthorizedException when the Companies House API returns a 400 with an 'Invalid Authorization header' error field`, async () => {
+      when(httpServiceGet)
+        .calledWith(...expectedHttpServiceGetArgs)
+        .mockReturnValueOnce(
+          of({
+            data: badRequestInvalidAuthorizationHeaderResponseData,
+            status: 400,
+            statusText: 'Bad Request',
             config: undefined,
             headers: undefined,
           }),

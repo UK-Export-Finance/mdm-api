@@ -24,7 +24,7 @@ export class CompaniesHouseService {
     const path = `/company/${registrationNumber}`;
     const encodedKey = Buffer.from(this.key).toString('base64');
 
-    const { status, data } = await this.httpClient.get<GetCompanyCompaniesHouseResponse>({
+    const { status, data } = await this.httpClient.get<any>({
       path,
       headers: {
         Authorization: `Basic ${encodedKey}`,
@@ -37,8 +37,10 @@ export class CompaniesHouseService {
 
     if (status === 404) {
       throw new CompaniesHouseNotFoundException(`Company with registration number ${registrationNumber} was not found.`);
-    } else if (status === 401) {
+
+    } else if (status === 401 || (status === 400 && data.error === 'Invalid Authorization header')) {
       throw new CompaniesHouseUnauthorizedException(`Invalid authorization. Check your Companies House API key and 'Authorization' header.`);
+
     }
 
     return data;
