@@ -37,10 +37,8 @@ export class CompaniesHouseService {
 
     if (status === 404) {
       throw new CompaniesHouseNotFoundException(`Company with registration number ${registrationNumber} was not found.`);
-
     } else if (status === 401 || (status === 400 && data.error === 'Invalid Authorization header')) {
       throw new CompaniesHouseUnauthorizedException(`Invalid authorization. Check your Companies House API key and 'Authorization' header.`);
-
     }
 
     return data;
