@@ -27,7 +27,7 @@ export class CompaniesHouseService {
     const path = `/company/${registrationNumber}`;
     const encodedKey = Buffer.from(this.key).toString('base64');
 
-    const { data } = await this.httpClient.get<any>({
+    const { data } = await this.httpClient.get<GetCompanyCompaniesHouseResponse>({
       path,
       headers: {
         Authorization: `Basic ${encodedKey}`,

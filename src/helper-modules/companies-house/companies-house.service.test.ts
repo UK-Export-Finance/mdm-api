@@ -139,7 +139,7 @@ describe('CompaniesHouseService', () => {
       await expect(getCompanyPromise).rejects.toHaveProperty('innerError', axiosError);
     });
 
-    it('throws a CompaniesHouseException if the request to the Companies House API fails', async () => {
+    it('throws a CompaniesHouseException if the Companies House API returns an unknown error response', async () => {
       const axiosError = new AxiosError();
       when(httpServiceGet)
         .calledWith(...expectedHttpServiceGetArgs)
