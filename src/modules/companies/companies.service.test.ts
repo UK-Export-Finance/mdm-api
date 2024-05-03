@@ -7,11 +7,11 @@ import { resetAllWhenMocks, when } from 'jest-when';
 import { CompaniesService } from './companies.service';
 
 describe('CompaniesService', () => {
-  const valueGenerator = new RandomValueGenerator();
-
-  let service: CompaniesService; // eslint-disable-line unused-imports/no-unused-vars
   let configServiceGet: jest.Mock;
   let companiesHouseServiceGetCompanyByRegistrationNumber: jest.Mock;
+  let service: CompaniesService;
+
+  const valueGenerator = new RandomValueGenerator();
 
   beforeEach(() => {
     const configService = new ConfigService();
