@@ -1,3 +1,5 @@
+import { GetCompanyCompaniesHouseErrorResponse } from '@ukef/helper-modules/companies-house/dto/get-company-companies-house-error-response.dto';
+import { GetCompanyCompaniesHouseMultipleErrorResponse } from '@ukef/helper-modules/companies-house/dto/get-company-companies-house-multiple-error-response.dto';
 import { GetCompanyCompaniesHouseResponse } from '@ukef/helper-modules/companies-house/dto/get-company-companies-house-response.dto';
 import { GetCompanyResponse } from '@ukef/modules/companies/dto/get-company-response.dto';
 
@@ -101,12 +103,34 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
       sicCodes: [v.sicCode1, v.sicCode2, v.sicCode3, v.sicCode4],
     };
 
+    const getCompanyCompaniesHouseMalformedAuthorizationHeaderResponse: GetCompanyCompaniesHouseErrorResponse = {
+      error: 'Invalid Authorization header',
+      type: 'ch:service',
+    };
+
+    const getCompanyCompaniesHouseInvalidAuthorizationResponse: GetCompanyCompaniesHouseErrorResponse = {
+      error: 'Invalid Authorization',
+      type: 'ch:service',
+    };
+
+    const getCompanyCompaniesHouseNotFoundResponse: GetCompanyCompaniesHouseMultipleErrorResponse = {
+      errors: [
+        {
+          error: 'company-profile-not-found',
+          type: 'ch:service',
+        },
+      ],
+    };
+
     const companiesHousePath = `/company/${registrationNumberToUse}`;
     const mdmPath = `/api/v1/companies?registrationNumber=${registrationNumberToUse}`;
 
     return {
       getCompanyCompaniesHouseResponse,
       getCompanyResponse,
+      getCompanyCompaniesHouseMalformedAuthorizationHeaderResponse,
+      getCompanyCompaniesHouseInvalidAuthorizationResponse,
+      getCompanyCompaniesHouseNotFoundResponse,
       companiesHousePath,
       mdmPath,
     };
@@ -135,6 +159,9 @@ interface GenerateOptions {
 interface GenerateResult {
   getCompanyCompaniesHouseResponse: GetCompanyCompaniesHouseResponse;
   getCompanyResponse: GetCompanyResponse;
+  getCompanyCompaniesHouseMalformedAuthorizationHeaderResponse: GetCompanyCompaniesHouseErrorResponse;
+  getCompanyCompaniesHouseInvalidAuthorizationResponse: GetCompanyCompaniesHouseErrorResponse;
+  getCompanyCompaniesHouseNotFoundResponse: GetCompanyCompaniesHouseMultipleErrorResponse;
   companiesHousePath: string;
   mdmPath: string;
 }

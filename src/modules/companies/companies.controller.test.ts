@@ -11,6 +11,13 @@ describe('CompaniesController', () => {
 
   const valueGenerator = new RandomValueGenerator();
 
+  const testRegistrationNumber = '00000001';
+
+  const { getCompanyResponse } = new GetCompanyGenerator(valueGenerator).generate({
+    numberToGenerate: 1,
+    registrationNumber: testRegistrationNumber,
+  });
+
   beforeEach(() => {
     resetAllWhenMocks();
 
@@ -22,12 +29,6 @@ describe('CompaniesController', () => {
   });
 
   describe('getCompanyByRegistrationNumber', () => {
-    const testRegistrationNumber = '00000001';
-    const { getCompanyResponse } = new GetCompanyGenerator(valueGenerator).generate({
-      numberToGenerate: 1,
-      registrationNumber: testRegistrationNumber,
-    });
-
     it('calls getCompanyByRegistrationNumber on the CompaniesService with the registration number', async () => {
       when(companiesServiceGetCompanyByRegistrationNumber).calledWith(testRegistrationNumber).mockReturnValueOnce(getCompanyResponse);
 

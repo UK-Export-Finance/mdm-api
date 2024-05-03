@@ -1,13 +1,11 @@
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
+import { GetCompanyGenerator } from '@ukef-test/support/generator/get-company-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { AxiosError } from 'axios';
-import { when } from 'jest-when';
+import { resetAllWhenMocks, when } from 'jest-when';
 import { of, throwError } from 'rxjs';
-import badRequestInvalidAuthorizationHeaderResponseData = require('./examples/example-response-for-get-company-by-registration-number-bad-request-invalid-authorization-header.json');
-import expectedResponseData = require('./examples/example-response-for-get-company-by-registration-number.json');
-import notFoundResponseData = require('./examples/example-response-for-get-company-by-registration-number-not-found.json');
-import unauthorizedResponseData = require('./examples/example-response-for-get-company-by-registration-number-unauthorized.json');
+
 import { CompaniesHouseService } from './companies-house.service';
 import { CompaniesHouseException } from './exception/companies-house.exception';
 import { CompaniesHouseInvalidAuthorizationException } from './exception/companies-house-invalid-authorization.exception';
@@ -19,14 +17,26 @@ describe('CompaniesHouseService', () => {
   let configServiceGet: jest.Mock;
   let service: CompaniesHouseService;
 
-  const basePath = '/company';
-  const testRegistrationNumber = '00000001';
-  const expectedPath = `${basePath}/${testRegistrationNumber}`;
   const valueGenerator = new RandomValueGenerator();
+
+  const testRegistrationNumber = '00000001';
+
+  const {
+    companiesHousePath,
+    getCompanyCompaniesHouseResponse,
+    getCompanyCompaniesHouseMalformedAuthorizationHeaderResponse,
+    getCompanyCompaniesHouseInvalidAuthorizationResponse,
+    getCompanyCompaniesHouseNotFoundResponse,
+  } = new GetCompanyGenerator(valueGenerator).generate({
+    numberToGenerate: 1,
+    registrationNumber: testRegistrationNumber,
+  });
+
   const testKey = valueGenerator.string({ length: 40 });
   const encodedTestKey = Buffer.from(testKey).toString('base64');
-  const expectedHttpServiceGetArgs: [string, object] = [
-    expectedPath,
+
+  const expectedHttpServiceGetArguments: [string, object] = [
+    companiesHousePath,
     {
       headers: {
         Authorization: `Basic ${encodedTestKey}`,
@@ -34,8 +44,9 @@ describe('CompaniesHouseService', () => {
       },
     },
   ];
-  const expectedResponse = of({
-    data: expectedResponseData,
+
+  const expectedHttpServiceGetResponse = of({
+    data: getCompanyCompaniesHouseResponse,
     status: 200,
     statusText: 'OK',
     config: undefined,
@@ -43,6 +54,8 @@ describe('CompaniesHouseService', () => {
   });
 
   beforeEach(() => {
+    resetAllWhenMocks();
+
     const httpService = new HttpService();
     httpServiceGet = jest.fn();
     httpService.get = httpServiceGet;
@@ -57,29 +70,29 @@ describe('CompaniesHouseService', () => {
   describe('getCompanyByRegistrationNumber', () => {
     it('calls the Companies House API with the correct arguments', async () => {
       when(httpServiceGet)
-        .calledWith(...expectedHttpServiceGetArgs)
-        .mockReturnValueOnce(expectedResponse);
+        .calledWith(...expectedHttpServiceGetArguments)
+        .mockReturnValueOnce(expectedHttpServiceGetResponse);
 
       await service.getCompanyByRegistrationNumber(testRegistrationNumber);
 
       expect(httpServiceGet).toHaveBeenCalledTimes(1);
-      expect(httpServiceGet).toHaveBeenCalledWith(...expectedHttpServiceGetArgs);
+      expect(httpServiceGet).toHaveBeenCalledWith(...expectedHttpServiceGetArguments);
     });
 
     it('returns the results when the Companies House API returns a 200 response with results', async () => {
       when(httpServiceGet)
-        .calledWith(...expectedHttpServiceGetArgs)
-        .mockReturnValueOnce(expectedResponse);
+        .calledWith(...expectedHttpServiceGetArguments)
+        .mockReturnValueOnce(expectedHttpServiceGetResponse);
 
       const response = await service.getCompanyByRegistrationNumber(testRegistrationNumber);
 
-      expect(response).toBe(expectedResponseData);
+      expect(response).toBe(getCompanyCompaniesHouseResponse);
     });
 
     it(`throws a CompaniesHouseMalformedAuthorizationHeaderException when the Companies House API returns a 400 response containing the error string 'Invalid Authorization header'`, async () => {
       const axiosError = new AxiosError();
       axiosError.response = {
-        data: badRequestInvalidAuthorizationHeaderResponseData,
+        data: getCompanyCompaniesHouseMalformedAuthorizationHeaderResponse,
         status: 400,
         statusText: 'Bad Request',
         config: undefined,
@@ -87,7 +100,7 @@ describe('CompaniesHouseService', () => {
       };
 
       when(httpServiceGet)
-        .calledWith(...expectedHttpServiceGetArgs)
+        .calledWith(...expectedHttpServiceGetArguments)
         .mockReturnValueOnce(throwError(() => axiosError));
 
       const getCompanyPromise = service.getCompanyByRegistrationNumber(testRegistrationNumber);
@@ -100,7 +113,7 @@ describe('CompaniesHouseService', () => {
     it(`throws a CompaniesHouseInvalidAuthorizationException when the Companies House API returns a 401 response containing the error string 'Invalid Authorization'`, async () => {
       const axiosError = new AxiosError();
       axiosError.response = {
-        data: unauthorizedResponseData,
+        data: getCompanyCompaniesHouseInvalidAuthorizationResponse,
         status: 401,
         statusText: 'Unauthorized',
         config: undefined,
@@ -108,7 +121,7 @@ describe('CompaniesHouseService', () => {
       };
 
       when(httpServiceGet)
-        .calledWith(...expectedHttpServiceGetArgs)
+        .calledWith(...expectedHttpServiceGetArguments)
         .mockReturnValueOnce(throwError(() => axiosError));
 
       const getCompanyPromise = service.getCompanyByRegistrationNumber(testRegistrationNumber);
@@ -121,7 +134,7 @@ describe('CompaniesHouseService', () => {
     it(`throws a CompaniesHouseNotFoundException when the Companies House API returns a 404 response containing the error string 'company-profile-not-found'`, async () => {
       const axiosError = new AxiosError();
       axiosError.response = {
-        data: notFoundResponseData,
+        data: getCompanyCompaniesHouseNotFoundResponse,
         status: 404,
         statusText: 'Not Found',
         config: undefined,
@@ -129,7 +142,7 @@ describe('CompaniesHouseService', () => {
       };
 
       when(httpServiceGet)
-        .calledWith(...expectedHttpServiceGetArgs)
+        .calledWith(...expectedHttpServiceGetArguments)
         .mockReturnValueOnce(throwError(() => axiosError));
 
       const getCompanyPromise = service.getCompanyByRegistrationNumber(testRegistrationNumber);
@@ -142,7 +155,7 @@ describe('CompaniesHouseService', () => {
     it('throws a CompaniesHouseException if the Companies House API returns an unknown error response', async () => {
       const axiosError = new AxiosError();
       when(httpServiceGet)
-        .calledWith(...expectedHttpServiceGetArgs)
+        .calledWith(...expectedHttpServiceGetArguments)
         .mockReturnValueOnce(throwError(() => axiosError));
 
       const getCompanyPromise = service.getCompanyByRegistrationNumber(testRegistrationNumber);
