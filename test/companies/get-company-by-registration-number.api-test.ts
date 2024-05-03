@@ -15,6 +15,8 @@ describe('GET /companies?registrationNumber=', () => {
     registrationNumber: '00000001',
   });
 
+  const getMdmUrl = (registrationNumber: string) => `/api/v1/companies?registrationNumber=${encodeURIComponent(registrationNumber)}`;
+
   beforeAll(async () => {
     api = await Api.create();
   });
@@ -43,6 +45,30 @@ describe('GET /companies?registrationNumber=', () => {
 
     expect(status).toBe(200);
     expect(body).toStrictEqual(getCompanyResponse);
+  });
+
+  it.each([
+    {
+      registrationNumber: valueGenerator.stringOfNumericCharacters({ length: 6 }),
+      validationError: 'registrationNumber must be longer than or equal to 7 characters',
+    },
+    {
+      registrationNumber: valueGenerator.stringOfNumericCharacters({ length: 9 }),
+      validationError: 'registrationNumber must be shorter than or equal to 8 characters',
+    },
+    {
+      registrationNumber: '0A000001',
+      validationError: 'registrationNumber must match /^(([A-Z]{2}|[A-Z]\\d|\\d{2})(\\d{5,6}|\\d{4,5}[A-Z]))$/ regular expression',
+    },
+  ])(`returns a 400 response with validation errors if postcode is '$registrationNumber'`, async ({ registrationNumber, validationError }) => {
+    const { status, body } = await api.get(getMdmUrl(registrationNumber));
+
+    expect(status).toBe(400);
+    expect(body).toMatchObject({
+      error: 'Bad Request',
+      message: expect.arrayContaining([validationError]),
+      statusCode: 400,
+    });
   });
 
   const requestToGetCompanyByRegistrationNumber = (companiesHousePath: string): nock.Interceptor =>
