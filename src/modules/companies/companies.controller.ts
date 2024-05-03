@@ -10,7 +10,7 @@ import { GetCompanyResponse } from './dto/get-company-response.dto';
 export class CompaniesController {
   constructor(private readonly companiesService: CompaniesService) {}
 
-  @Get('companies')
+  @Get()
   @ApiOperation({
     summary: 'Get company by Companies House registration number.',
   })

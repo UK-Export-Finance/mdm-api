@@ -93,10 +93,7 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
       companiesHouseRegistrationNumber: registrationNumberToUse,
       companyName: v.companyName,
       registeredAddress: {
-        organisationName: undefined,
         addressLine1: `${v.buildingName} ${v.buildingNumber} ${v.thoroughfareName}`,
-        addressLine2: undefined,
-        addressLine3: undefined,
         locality: v.locality,
         postalCode: v.postalCode,
         country: v.country,
@@ -104,9 +101,14 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
       sicCodes: [v.sicCode1, v.sicCode2, v.sicCode3, v.sicCode4],
     };
 
+    const companiesHousePath = `/company/${registrationNumberToUse}`;
+    const mdmPath = `/api/v1/companies?registrationNumber=${registrationNumberToUse}`;
+
     return {
       getCompanyCompaniesHouseResponse,
       getCompanyResponse,
+      companiesHousePath,
+      mdmPath,
     };
   }
 }
@@ -133,4 +135,6 @@ interface GenerateOptions {
 interface GenerateResult {
   getCompanyCompaniesHouseResponse: GetCompanyCompaniesHouseResponse;
   getCompanyResponse: GetCompanyResponse;
+  companiesHousePath: string;
+  mdmPath: string;
 }

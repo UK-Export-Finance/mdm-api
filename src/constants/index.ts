@@ -10,9 +10,11 @@
  * 6. Strings to redact
  * 7. Strings locations to redact
  * 8. Module geospatial
+ * 9. Companies module
  */
 
 export * from './auth.constant';
+export * from './companies.constant';
 export * from './customers.constant';
 export * from './database-name.constant';
 export * from './date.constant';
