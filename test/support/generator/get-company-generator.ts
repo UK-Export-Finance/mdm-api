@@ -32,6 +32,10 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
     const [v] = values;
     const registrationNumberToUse = registrationNumber || v.companiesHouseRegistrationNumber;
 
+    const companiesHousePath = `/company/${registrationNumberToUse}`;
+
+    const mdmPath = `/api/v1/companies?registrationNumber=${registrationNumberToUse}`;
+
     const randomDateString = () => this.valueGenerator.date().toISOString().split('T')[0];
     const randomAccountingReferenceDate = this.valueGenerator.date();
 
@@ -122,17 +126,14 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
       ],
     };
 
-    const companiesHousePath = `/company/${registrationNumberToUse}`;
-    const mdmPath = `/api/v1/companies?registrationNumber=${registrationNumberToUse}`;
-
     return {
+      companiesHousePath,
+      mdmPath,
       getCompanyCompaniesHouseResponse,
       getCompanyResponse,
       getCompanyCompaniesHouseMalformedAuthorizationHeaderResponse,
       getCompanyCompaniesHouseInvalidAuthorizationResponse,
       getCompanyCompaniesHouseNotFoundResponse,
-      companiesHousePath,
-      mdmPath,
     };
   }
 }
@@ -157,11 +158,11 @@ interface GenerateOptions {
 }
 
 interface GenerateResult {
+  companiesHousePath: string;
+  mdmPath: string;
   getCompanyCompaniesHouseResponse: GetCompanyCompaniesHouseResponse;
   getCompanyResponse: GetCompanyResponse;
   getCompanyCompaniesHouseMalformedAuthorizationHeaderResponse: GetCompanyCompaniesHouseErrorResponse;
   getCompanyCompaniesHouseInvalidAuthorizationResponse: GetCompanyCompaniesHouseErrorResponse;
   getCompanyCompaniesHouseNotFoundResponse: GetCompanyCompaniesHouseMultipleErrorResponse;
-  companiesHousePath: string;
-  mdmPath: string;
 }
