@@ -14,6 +14,8 @@ describe('CompaniesService', () => {
   const valueGenerator = new RandomValueGenerator();
 
   beforeEach(() => {
+    resetAllWhenMocks();
+
     const configService = new ConfigService();
     configServiceGet = jest.fn().mockReturnValue({ key: valueGenerator.word() });
     configService.get = configServiceGet;
@@ -21,8 +23,6 @@ describe('CompaniesService', () => {
     companiesHouseServiceGetCompanyByRegistrationNumber = jest.fn();
     const companiesHouseService = new CompaniesHouseService(null, configService);
     companiesHouseService.getCompanyByRegistrationNumber = companiesHouseServiceGetCompanyByRegistrationNumber;
-
-    resetAllWhenMocks();
 
     service = new CompaniesService(companiesHouseService);
   });
