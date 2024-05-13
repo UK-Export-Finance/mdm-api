@@ -1,24 +1,19 @@
-import { INestApplication } from '@nestjs/common';
-
-import { Api } from './api';
-import { CreateApp } from './createApp';
+import { Api } from '@ukef-test/support/api';
 
 describe('AppController (e2e)', () => {
-  let app: INestApplication;
   let api;
 
   beforeAll(async () => {
-    app = await new CreateApp().init();
-    api = new Api(app.getHttpServer());
-  });
-
-  it(`GET /ready`, async () => {
-    const { status } = await api.get('/ready');
-
-    expect(status).toBe(200);
+    api = await Api.create();
   });
 
   afterAll(async () => {
-    await app.close();
+    await api.destroy();
+  });
+
+  it(`GET /ready`, async () => {
+    const { status } = await api.get('/api/v1/ready');
+
+    expect(status).toBe(200);
   });
 });

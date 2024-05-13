@@ -1,6 +1,7 @@
 import { AUTH } from '@ukef/constants';
 import { ENVIRONMENT_VARIABLES } from '@ukef-test/support/environment-variables';
 import request from 'supertest';
+import TestAgent from 'supertest/lib/agent';
 
 import { App } from './app';
 
@@ -16,6 +17,10 @@ export class Api {
     return this.request().get(url).set(this.getValidAuthHeader());
   }
 
+  post(url: string, body: string | object): request.Test {
+    return this.request().post(url).send(body).set(this.getValidAuthHeader());
+  }
+
   getWithoutAuth(url: string, strategy?: string, key?: string): request.Test {
     const query = this.request().get(url);
     return this.setQueryWithAuthStrategyIfPresent(query, strategy, key);
@@ -29,7 +34,7 @@ export class Api {
     return this.app.destroy();
   }
 
-  private request(): request.SuperTest<request.Test> {
+  private request(): TestAgent<request.Test> {
     return request(this.app.getHttpServer());
   }
 

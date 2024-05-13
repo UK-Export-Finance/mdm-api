@@ -1,5 +1,8 @@
 import { Chance } from 'chance';
 
+interface Enum {
+  [key: number | string]: string | number;
+}
 export class RandomValueGenerator {
   private static readonly seed = 0;
   private readonly chance: Chance.Chance;
@@ -33,6 +36,10 @@ export class RandomValueGenerator {
     return this.chance.word({ length: options?.length });
   }
 
+  sentence(options?: { words?: number }): string {
+    return this.chance.sentence({ words: options?.words });
+  }
+
   httpsUrl(): string {
     return this.chance.url({ protocol: 'https' });
   }
@@ -62,5 +69,19 @@ export class RandomValueGenerator {
 
   nonnegativeInteger({ max }: { max?: number } = {}): number {
     return this.integer({ min: 0, max });
+  }
+
+  postcode(): string {
+    return this.chance.postcode();
+  }
+
+  enumValue<T = string>(theEnum: Enum): T {
+    const possibleValues = Object.values(theEnum);
+    return possibleValues[this.integer({ min: 0, max: possibleValues.length - 1 })] as T;
+  }
+
+  enumKey<T = string>(theEnum: Enum): T {
+    const possibleValues = Object.keys(theEnum);
+    return possibleValues[this.integer({ min: 0, max: possibleValues.length - 1 })] as T;
   }
 }
