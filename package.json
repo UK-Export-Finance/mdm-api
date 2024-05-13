@@ -50,7 +50,7 @@
     "passport-headerapikey": "^1.2.2",
     "pino-http": "^9.0.0",
     "pino-pretty": "^10.3.1",
-    "reflect-metadata": "^0.2.1",
+    "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "tsconfig-paths": "^4.2.0",
     "tslib": "^2.6.2",
