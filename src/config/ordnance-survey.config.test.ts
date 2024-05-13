@@ -27,7 +27,7 @@ describe('ordnanceSurveyConfig', () => {
     {
       configPropertyName: 'timeout',
       environmentVariableName: 'ORDNANCE_SURVEY_TIMEOUT',
-      defaultConfigValue: 30000,
+      defaultConfigValue: 30000, // in milliseconds
     },
   ];
 
