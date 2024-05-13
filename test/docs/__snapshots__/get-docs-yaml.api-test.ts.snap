@@ -519,6 +519,38 @@ paths:
                   $ref: '#/components/schemas/YieldRateEntity'
       tags:
         - yield-rates
+  /api/v1/geospatial/addresses/postcode:
+    get:
+      operationId: GeospatialController_getAddressesByPostcode
+      summary: >-
+        A search based on a property's postcode. Will accept a full valid
+        postcode. Returns addresses from Ordnance Survey Delivery Point Address
+        (DPA) system.
+      parameters:
+        - name: postcode
+          required: true
+          in: query
+          example: SW1A 2AQ
+          description: Postcode to search for
+          schema:
+            minLength: 5
+            maxLength: 8
+            pattern: >-
+              ^[A-Za-z]{1,2}[\\dRr][\\dA-Za-z]?\\s?\\d[ABD-HJLNP-UW-Zabd-hjlnp-uw-z]{2}$
+            type: string
+      responses:
+        '200':
+          description: Returns simplified addresses that are ready to show to users.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetAddressesResponseItem'
+        '404':
+          description: No addresses found
+      tags:
+        - geospatial
 info:
   title: MDM API Specification
   description: MDM API documentation
@@ -1249,6 +1281,56 @@ components:
         - updated
         - effectiveTo
         - effectiveFrom
+    GetAddressesResponseItem:
+      type: object
+      properties:
+        organisationName:
+          type: string
+          description: Organisation name, if available
+          example: CHURCHILL MUSEUM & CABINET WAR ROOMS
+          nullable: true
+        addressLine1:
+          type: string
+          description: Address line 1
+          example: CLIVE STEPS KING CHARLES STREET
+        addressLine2:
+          type: string
+          description: Address line 2
+          example: null
+          nullable: true
+        addressLine3:
+          type: string
+          description: Address line 3
+          example: null
+          nullable: true
+        locality:
+          type: string
+          description: Locality or town
+          example: LONDON
+          nullable: true
+        postalCode:
+          type: string
+          description: Postcode
+          example: SW1A 2AQ
+          nullable: true
+        country:
+          type: string
+          description: Country of address record
+          example: England
+          enum:
+            - England
+            - Northern Ireland
+            - Scotland
+            - Wales
+          nullable: true
+      required:
+        - organisationName
+        - addressLine1
+        - addressLine2
+        - addressLine3
+        - locality
+        - postalCode
+        - country
 security:
   - ApiKeyHeader: []
 "

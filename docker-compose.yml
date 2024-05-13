@@ -33,6 +33,10 @@ services:
       APIM_INFORMATICA_PASSWORD:
       APIM_INFORMATICA_MAX_REDIRECTS:
       APIM_INFORMATICA_TIMEOUT:
+      ORDNANCE_SURVEY_URL:
+      ORDNANCE_SURVEY_KEY:
+      ORDNANCE_SURVEY_MAX_REDIRECTS:
+      ORDNANCE_SURVEY_TIMEOUT:
       API_KEY:
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:${PORT}"]

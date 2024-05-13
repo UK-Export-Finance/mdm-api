@@ -155,3 +155,7 @@ The most important prefixes you should have in mind are:
 1. `fix:` which represents bug fixes, and correlates to a [SemVer](https://semver.org/) **patch**.
 2. `feat:` which represents a new feature, and correlates to a [SemVer](https://semver.org/) **minor**.
 3. `feat!:`, `fix!:` or `refactor!:`, etc., which represent a breaking change (indicated by the `!`) and will result in a [SemVer](https://semver.org/) **major**.
+
+### Special notes for .env settings
+
+- ORDNANCE_SURVEY_URL - Domain [https://api.os.co.uk](https://api.os.co.uk) redirects to [https://api.os.uk](https://api.os.uk), so please use [https://api.os.uk](https://api.os.uk).

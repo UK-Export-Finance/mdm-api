@@ -1,11 +1,8 @@
-import { INestApplication } from '@nestjs/common';
+import { Api } from '@ukef-test/support/api';
 
-import { Api } from '../api';
-import { CreateApp } from '../createApp';
 import { TEST_CONSTANTS } from '../test-constants';
 
 describe('Markets', () => {
-  let app: INestApplication;
   let api: Api;
 
   const marketSchema = {
@@ -30,19 +27,22 @@ describe('Markets', () => {
   };
 
   beforeAll(async () => {
-    app = await new CreateApp().init();
-    api = new Api(app.getHttpServer());
+    api = await Api.create();
+  });
+
+  afterAll(async () => {
+    await api.destroy();
   });
 
   it(`GET /markets`, async () => {
-    const { status, body } = await api.get('/markets');
+    const { status, body } = await api.get('/api/v1/markets');
 
     expect(status).toBe(200);
     expect(body).toEqual(expect.arrayContaining([expect.objectContaining(marketSchema)]));
   });
 
   it(`GET /markets?active=Y`, async () => {
-    const { status, body } = await api.get('/markets?active=Y');
+    const { status, body } = await api.get('/api/v1/markets?active=Y');
 
     expect(status).toBe(200);
     expect(body).toEqual(
@@ -56,7 +56,7 @@ describe('Markets', () => {
   });
 
   it(`GET /markets?active=N`, async () => {
-    const { status, body } = await api.get('/markets?active=N');
+    const { status, body } = await api.get('/api/v1/markets?active=N');
 
     expect(status).toBe(200);
     expect(body).toEqual(
@@ -70,15 +70,15 @@ describe('Markets', () => {
   });
 
   it(`returns more results from GET /markets?active=Y than GET /markets?active=N`, async () => {
-    const responseActive = await api.get('/markets?active=Y');
-    const responseDisabled = await api.get('/markets?active=N');
+    const responseActive = await api.get('/api/v1/markets?active=Y');
+    const responseDisabled = await api.get('/api/v1/markets?active=N');
 
     // We expect more active markets than disabled
     expect(responseActive.body.length).toBeGreaterThan(responseDisabled.body.length);
   });
 
   it(`GET /markets?active=something-else`, async () => {
-    const { status, body } = await api.get('/markets?active=something-else');
+    const { status, body } = await api.get('/api/v1/markets?active=something-else');
 
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
@@ -86,7 +86,7 @@ describe('Markets', () => {
   });
 
   it(`GET /markets?active=`, async () => {
-    const { status, body } = await api.get('/markets?active=');
+    const { status, body } = await api.get('/api/v1/markets?active=');
 
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
@@ -94,7 +94,7 @@ describe('Markets', () => {
   });
 
   it(`GET /markets?active=null`, async () => {
-    const { status, body } = await api.get('/markets?active=null');
+    const { status, body } = await api.get('/api/v1/markets?active=null');
 
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
@@ -102,7 +102,7 @@ describe('Markets', () => {
   });
 
   it(`GET /markets?active=undefined`, async () => {
-    const { status, body } = await api.get('/markets?active=undefined');
+    const { status, body } = await api.get('/api/v1/markets?active=undefined');
 
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
@@ -112,7 +112,7 @@ describe('Markets', () => {
   // Testing "search" query parameter
 
   it(`GET /markets?search=Aus`, async () => {
-    const { status, body } = await api.get('/markets?search=Aus');
+    const { status, body } = await api.get('/api/v1/markets?search=Aus');
 
     expect(status).toBe(200);
     expect(body).toEqual(expect.arrayContaining([expect.objectContaining(marketSchema)]));
@@ -120,7 +120,7 @@ describe('Markets', () => {
   });
 
   it(`GET /markets?search=AUT`, async () => {
-    const { status, body } = await api.get('/markets?search=AUT');
+    const { status, body } = await api.get('/api/v1/markets?search=AUT');
 
     expect(status).toBe(200);
 
@@ -130,8 +130,8 @@ describe('Markets', () => {
   });
 
   it(`test that query param search is not case sensitive`, async () => {
-    const { status, body } = await api.get('/markets?search=Aus');
-    const lowerCaseResponse = await api.get('/markets?search=aus');
+    const { status, body } = await api.get('/api/v1/markets?search=Aus');
+    const lowerCaseResponse = await api.get('/api/v1/markets?search=aus');
 
     expect(status).toBe(200);
     expect(lowerCaseResponse.status).toBe(200);
@@ -140,55 +140,51 @@ describe('Markets', () => {
   });
 
   it(`GET /markets?active=Y&search=Aus`, async () => {
-    const { status, body } = await api.get('/markets?active=Y&search=Aus');
+    const { status, body } = await api.get('/api/v1/markets?active=Y&search=Aus');
 
     expect(status).toBe(200);
     expect(body).toEqual(expect.arrayContaining([expect.objectContaining(marketSchema)]));
   });
 
   it(`GET /markets?active=N&search=Aus`, async () => {
-    const { status, body } = await api.get('/markets?active=N&search=Aus');
+    const { status, body } = await api.get('/api/v1/markets?active=N&search=Aus');
 
     expect(status).toBe(200);
     expect(body).toEqual([]);
   });
 
   it(`GET /markets?search=undefined`, async () => {
-    const { status, body } = await api.get('/markets?search=undefined');
+    const { status, body } = await api.get('/api/v1/markets?search=undefined');
 
     expect(status).toBe(200);
     expect(body).toEqual([]);
   });
 
   it(`GET /markets?search=null`, async () => {
-    const { status, body } = await api.get('/markets?search=null');
+    const { status, body } = await api.get('/api/v1/markets?search=null');
 
     expect(status).toBe(200);
     expect(body).toEqual([]);
   });
 
   it(`GET /markets?search=`, async () => {
-    const { status, body } = await api.get('/markets?search=');
+    const { status, body } = await api.get('/api/v1/markets?search=');
 
     expect(status).toBe(200);
     expect(body).toEqual(expect.arrayContaining([expect.objectContaining(marketSchema)]));
   });
 
   it(`GET /markets?search=${TEST_CONSTANTS.SPECIAL_CHARACTERS}`, async () => {
-    const { status, body } = await api.get(`/markets?search=${TEST_CONSTANTS.SPECIAL_CHARACTERS}`);
+    const { status, body } = await api.get(`/api/v1/markets?search=${TEST_CONSTANTS.SPECIAL_CHARACTERS}`);
 
     expect(status).toBe(200);
     expect(body).toEqual([]);
   });
 
   it(`GET /markets?search=%20%20%20`, async () => {
-    const { status, body } = await api.get('/markets?search=%20%20%20');
+    const { status, body } = await api.get('/api/v1/markets?search=%20%20%20');
 
     expect(status).toBe(200);
     expect(body).toEqual([]);
-  });
-
-  afterAll(async () => {
-    await app.close();
   });
 });

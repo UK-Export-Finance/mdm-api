@@ -1,10 +1,6 @@
-import { INestApplication } from '@nestjs/common';
-
-import { Api } from '../api';
-import { CreateApp } from '../createApp';
+import { Api } from '@ukef-test/support/api';
 
 describe('Currencies', () => {
-  let app: INestApplication;
   let api: Api;
 
   const expectedResult = expect.arrayContaining([
@@ -25,31 +21,34 @@ describe('Currencies', () => {
   ]);
 
   beforeAll(async () => {
-    app = await new CreateApp().init();
-    api = new Api(app.getHttpServer());
+    api = await Api.create();
+  });
+
+  afterAll(async () => {
+    await api.destroy();
   });
 
   describe('/currencies/exchange', () => {
     it('should return 200 on GET `/currencies/exchange?source=GBP&target=AED&exchangeRateDate=2021-01-26`', async () => {
-      const { status, body } = await api.get('/currencies/exchange?source=GBP&target=AED&exchangeRateDate=2021-01-26');
+      const { status, body } = await api.get('/api/v1/currencies/exchange?source=GBP&target=AED&exchangeRateDate=2021-01-26');
       expect(status).toBe(200);
       expect(body).toEqual(expectedResult);
     });
 
     it('should return 200 on GET `/currencies/exchange?source=GBP&target=AED`', async () => {
-      const { status, body } = await api.get('/currencies/exchange?source=GBP&target=AED');
+      const { status, body } = await api.get('/api/v1/currencies/exchange?source=GBP&target=AED');
       expect(status).toBe(200);
       expect(body).toEqual(expectedResult);
     });
 
     it('should return 200 on GET `currencies/exchange?source=USD&target=GBP`', async () => {
-      const { status, body } = await api.get('/currencies/exchange?source=USD&target=GBP');
+      const { status, body } = await api.get('/api/v1/currencies/exchange?source=USD&target=GBP');
       expect(status).toBe(200);
       expect(body).toEqual(expectedResult);
     });
 
     it('should return 404 on GET `/currencies/exchange?source=AED&target=GBP`', async () => {
-      const { status, body } = await api.get('/currencies/exchange?source=AED&target=GBP');
+      const { status, body } = await api.get('/api/v1/currencies/exchange?source=AED&target=GBP');
       expect(status).toBe(404);
       expect(body).toEqual({
         statusCode: 404,
@@ -59,7 +58,7 @@ describe('Currencies', () => {
     });
 
     it('should return 400 on GET `/currencies/exchange?source=GBP&target=abc`', async () => {
-      const { status, body } = await api.get('/currencies/exchange?source=GBP&target=abc');
+      const { status, body } = await api.get('/api/v1/currencies/exchange?source=GBP&target=abc');
       expect(status).toBe(400);
       expect(body).toEqual({
         statusCode: 400,
@@ -69,7 +68,7 @@ describe('Currencies', () => {
     });
 
     it('should return 400 on GET `/currencies/exchange?source=abc&target=AED`', async () => {
-      const { status, body } = await api.get('/currencies/exchange?source=abc&target=AED');
+      const { status, body } = await api.get('/api/v1/currencies/exchange?source=abc&target=AED');
       expect(status).toBe(400);
       expect(body).toEqual({
         statusCode: 400,
@@ -79,7 +78,7 @@ describe('Currencies', () => {
     });
 
     it('should return 400 on GET `/currencies/exchange?source=abc&target=def`', async () => {
-      const { status, body } = await api.get('/currencies/exchange?source=abc&target=def');
+      const { status, body } = await api.get('/api/v1/currencies/exchange?source=abc&target=def');
       expect(status).toBe(400);
       expect(body).toEqual({
         statusCode: 400,
@@ -89,7 +88,7 @@ describe('Currencies', () => {
     });
 
     it('should return 400 on GET `/currencies/exchange`', async () => {
-      const { status, body } = await api.get('/currencies/exchange');
+      const { status, body } = await api.get('/api/v1/currencies/exchange');
       expect(status).toBe(400);
       expect(body).toEqual({
         statusCode: 400,
@@ -99,7 +98,7 @@ describe('Currencies', () => {
     });
 
     it('should return 400 on GET `/currencies/exchange?source=GBP`', async () => {
-      const { status, body } = await api.get('/currencies/exchange?source=GBP');
+      const { status, body } = await api.get('/api/v1/currencies/exchange?source=GBP');
       expect(status).toBe(400);
       expect(body).toEqual({
         statusCode: 400,
@@ -109,7 +108,7 @@ describe('Currencies', () => {
     });
 
     it('should return 400 on GET `/currencies/exchange?target=GBP`', async () => {
-      const { status, body } = await api.get('/currencies/exchange?target=GBP');
+      const { status, body } = await api.get('/api/v1/currencies/exchange?target=GBP');
       expect(status).toBe(400);
       expect(body).toEqual({
         statusCode: 400,
@@ -121,7 +120,7 @@ describe('Currencies', () => {
 
   describe('/currencies', () => {
     it('should return 200 on GET `/currencies`', async () => {
-      const { status, body } = await api.get('/currencies');
+      const { status, body } = await api.get('/api/v1/currencies');
       expect(status).toBe(200);
       expect(body).toEqual(
         expect.arrayContaining([
@@ -142,7 +141,7 @@ describe('Currencies', () => {
 
   describe('/currencies/{isoCode}', () => {
     it('should return 200 on GET `/currencies/GBP`', async () => {
-      const { status, body } = await api.get('/currencies/GBP');
+      const { status, body } = await api.get('/api/v1/currencies/GBP');
       expect(status).toBe(200);
       expect(body).toEqual(
         expect.arrayContaining([
@@ -161,7 +160,7 @@ describe('Currencies', () => {
     });
 
     it('should return 400 on GET `/currencies/abc`', async () => {
-      const { status, body } = await api.get('/currencies/abc');
+      const { status, body } = await api.get('/api/v1/currencies/abc');
       expect(status).toBe(400);
       expect(body).toEqual({
         statusCode: 400,
@@ -169,9 +168,5 @@ describe('Currencies', () => {
         error: 'Bad Request',
       });
     });
-  });
-
-  afterAll(async () => {
-    await app.close();
   });
 });
