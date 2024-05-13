@@ -20,10 +20,11 @@ export class GeospatialService {
     response.results.forEach((item) => {
       // Item can have key DPA or LPI, so we get data dynamically, even if we expect key to always be DPA.
       const item_data = item[Object.keys(item)[0]];
+      // Filter out empty values and join values with single space.
+      const addressLine1 = [item_data.BUILDING_NAME, item_data.BUILDING_NUMBER, item_data.THOROUGHFARE_NAME].filter(Boolean).join(' ');
       addresses.push({
         organisationName: item_data.ORGANISATION_NAME || null,
-        // Filter out empty values and join values with single space.
-        addressLine1: [item_data.BUILDING_NAME, item_data.BUILDING_NUMBER, item_data.THOROUGHFARE_NAME].filter(Boolean).join(' '),
+        addressLine1,
         addressLine2: item_data.DEPENDENT_LOCALITY || null,
         addressLine3: null,
         locality: item_data.POST_TOWN || null,
