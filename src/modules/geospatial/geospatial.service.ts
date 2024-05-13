@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ENUMS } from '@ukef/constants';
 import { GetAddressesOrdnanceSurveyResponse } from '@ukef/helper-modules/ordnance-survey/dto/get-addresses-ordnance-survey-response.dto';
 import { OrdnanceSurveyService } from '@ukef/helper-modules/ordnance-survey/ordnance-survey.service';
@@ -13,8 +13,8 @@ export class GeospatialService {
     const addresses = [];
     const response: GetAddressesOrdnanceSurveyResponse = await this.ordnanceSurveyService.getAddressesByPostcode(postcode);
 
-    if (!response?.results) {
-      return [];
+    if (!response?.results?.length) {
+      throw new NotFoundException('No addresses found');
     }
 
     response.results.forEach((item) => {

@@ -137,4 +137,11 @@ describe('Exposure period', () => {
     expect(status).toBe(400);
     expect(body.message).toContain('productgroup must be one of the following values: EW, BS');
   });
+
+  it('returns a 404 response if URL is missing /api/v1 at the beginning', async () => {
+    const url = '/exposure-period?startdate=2017-03-05&enddate=2017-04-05&productgroup=new';
+    const { status, body } = await api.get(url);
+    expect(status).toBe(404);
+    expect(body.message).toContain(`Cannot GET ${url}`);
+  });
 });

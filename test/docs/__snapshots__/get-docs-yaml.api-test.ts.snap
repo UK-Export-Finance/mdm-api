@@ -515,7 +515,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/GetAddressesResponseItem'
         '404':
-          description: Postcode not found.
+          description: No addresses found
       tags:
         - geospatial
 info:
@@ -1174,9 +1174,9 @@ components:
           example: England
           enum:
             - England
+            - Northern Ireland
             - Scotland
             - Wales
-            - Northern Ireland
           nullable: true
       required:
         - organisationName

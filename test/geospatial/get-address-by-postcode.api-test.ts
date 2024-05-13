@@ -13,6 +13,7 @@ describe('GET /geospatial/addresses/postcode?postcode=', () => {
 
   const {
     ordnanceSurveyPaths,
+    ordnanceSurveyKey,
     mdmPaths,
     getAddressesByPostcodeResponse,
     getAddressesByPostcodeMultipleResponse,
@@ -21,12 +22,14 @@ describe('GET /geospatial/addresses/postcode?postcode=', () => {
     getAddressesOrdnanceSurveyMultipleMatchingAddressesResponse,
     ordnanceSurveyAuthErrorResponse,
   } = new GetGeospatialAddressesGenerator(valueGenerator).generate({
-    postcode: GEOSPATIAL.EXAMPLES.POSTCODE,
+    postcode: GEOSPATIAL.EXAMPLES.ENGLISH_POSTCODE,
     key: ENVIRONMENT_VARIABLES.ORDNANCE_SURVEY_KEY,
     numberToGenerate: 2,
   });
 
-  const getMdmUrl = (postcode: string) => `/api/v1/geospatial/addresses/postcode?postcode=${encodeURIComponent(postcode)}`;
+  const getMdmUrl = (postcode: any) => `/api/v1/geospatial/addresses/postcode?postcode=${encodeURIComponent(postcode)}`;
+  const getOsUrl = (postcode: any) =>
+    `/search/places/v1/postcode?postcode=${encodeURIComponent(postcode)}&lr=${GEOSPATIAL.DEFAULT.RESULT_LANGUAGE}&key=${encodeURIComponent(ordnanceSurveyKey)}`;
 
   beforeAll(async () => {
     api = await Api.create();
@@ -49,10 +52,27 @@ describe('GET /geospatial/addresses/postcode?postcode=', () => {
     makeRequestWithoutAuth: (incorrectAuth?: IncorrectAuthArg) => api.getWithoutAuth(mdmPaths[0], incorrectAuth?.headerName, incorrectAuth?.headerValue),
   });
 
-  it('returns a 200 response with the address if it is returned by Ordnance Survey API', async () => {
-    requestToGetAddressesByPostcode(ordnanceSurveyPaths[0]).reply(200, getAddressesOrdnanceSurveyResponse[0]);
+  it.each([
+    {
+      postcode: GEOSPATIAL.EXAMPLES.ENGLISH_POSTCODE,
+      description: 'for English postcode',
+    },
+    {
+      postcode: GEOSPATIAL.EXAMPLES.NORTHERN_IRELAND_POSTCODE,
+      description: 'for Northern Ireland postcode',
+    },
+    {
+      postcode: GEOSPATIAL.EXAMPLES.SCOTLAND_POSTCODE,
+      description: 'for Scotish postcode',
+    },
+    {
+      postcode: GEOSPATIAL.EXAMPLES.WALES_POSTCODE,
+      description: 'for Wales postcode',
+    },
+  ])('returns a 200 response $description', async ({ postcode }) => {
+    requestToGetAddressesByPostcode(getOsUrl(postcode)).reply(200, getAddressesOrdnanceSurveyResponse[0]);
 
-    const { status, body } = await api.get(mdmPaths[0]);
+    const { status, body } = await api.get(getMdmUrl(postcode));
 
     expect(status).toBe(200);
     expect(body).toStrictEqual(getAddressesByPostcodeResponse[0]);
@@ -67,13 +87,17 @@ describe('GET /geospatial/addresses/postcode?postcode=', () => {
     expect(body).toStrictEqual(getAddressesByPostcodeMultipleResponse);
   });
 
-  it('returns an empty 200 response if Ordnance Survey API returns a 200 without results', async () => {
+  it('returns a 404 response if Ordnance Survey API returns a 200 without results', async () => {
     requestToGetAddressesByPostcode(ordnanceSurveyPaths[0]).reply(200, getAddressesOrdnanceSurveyEmptyResponse[0]);
 
     const { status, body } = await api.get(mdmPaths[0]);
 
-    expect(status).toBe(200);
-    expect(body).toStrictEqual([]);
+    expect(status).toBe(404);
+    expect(body).toEqual({
+      statusCode: 404,
+      message: 'No addresses found',
+      error: 'Not Found',
+    });
   });
 
   it('returns a 500 response if Ordnance Survey API returns a status code 401', async () => {
@@ -125,6 +149,26 @@ describe('GET /geospatial/addresses/postcode?postcode=', () => {
   });
 
   it.each([
+    {
+      postcode: false,
+      expectedError: 'postcode must match /^[A-Za-z]{1,2}[\\dRr][\\dA-Za-z]?\\s?\\d[ABD-HJLNP-UW-Zabd-hjlnp-uw-z]{2}$/ regular expression',
+    },
+    {
+      postcode: 1234567,
+      expectedError: 'postcode must match /^[A-Za-z]{1,2}[\\dRr][\\dA-Za-z]?\\s?\\d[ABD-HJLNP-UW-Zabd-hjlnp-uw-z]{2}$/ regular expression',
+    },
+    {
+      postcode: null,
+      expectedError: 'postcode must match /^[A-Za-z]{1,2}[\\dRr][\\dA-Za-z]?\\s?\\d[ABD-HJLNP-UW-Zabd-hjlnp-uw-z]{2}$/ regular expression',
+    },
+    {
+      postcode: {},
+      expectedError: 'postcode must match /^[A-Za-z]{1,2}[\\dRr][\\dA-Za-z]?\\s?\\d[ABD-HJLNP-UW-Zabd-hjlnp-uw-z]{2}$/ regular expression',
+    },
+    {
+      postcode: '',
+      expectedError: 'postcode must be longer than or equal to 5 characters',
+    },
     {
       postcode: valueGenerator.string({ length: 4 }),
       expectedError: 'postcode must be longer than or equal to 5 characters',

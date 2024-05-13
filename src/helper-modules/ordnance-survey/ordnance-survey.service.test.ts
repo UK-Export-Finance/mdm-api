@@ -19,7 +19,7 @@ describe('OrdnanceSurveyService', () => {
   let configServiceGet: jest.Mock;
   let service: OrdnanceSurveyService;
 
-  const testPostcode = GEOSPATIAL.EXAMPLES.POSTCODE;
+  const testPostcode = GEOSPATIAL.EXAMPLES.ENGLISH_POSTCODE;
   const testKey = valueGenerator.string({ length: 10 });
   const basePath = '/search/places/v1/postcode';
 

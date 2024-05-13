@@ -1,3 +1,4 @@
+import { NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { OrdnanceSurveyService } from '@ukef/helper-modules/ordnance-survey/ordnance-survey.service';
 import { GetGeospatialAddressesGenerator } from '@ukef-test/support/generator/get-geospatial-addresses-generator';
@@ -56,12 +57,13 @@ describe('GeospatialService', () => {
       expect(response).toEqual(getAddressesByPostcodeMultipleResponse);
     });
 
-    it('can handle empty backend response', async () => {
+    it('throws NotFoundException in case of empty backend response', async () => {
       when(ordnanceSurveyServiceGetAddressesByPostcode).calledWith(postcode).mockResolvedValueOnce(getAddressesOrdnanceSurveyEmptyResponse[0]);
 
-      const response = await service.getAddressesByPostcode(postcode);
+      const responsePromise = service.getAddressesByPostcode(postcode);
 
-      expect(response).toEqual([]);
+      await expect(responsePromise).rejects.toBeInstanceOf(NotFoundException);
+      await expect(responsePromise).rejects.toThrow('No addresses found');
     });
 
     it('returns addressLine1 formatted correctly even if middle value is missing', async () => {

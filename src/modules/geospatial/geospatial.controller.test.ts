@@ -1,3 +1,4 @@
+import { NotFoundException } from '@nestjs/common';
 import { GEOSPATIAL } from '@ukef/constants';
 import { GetGeospatialAddressesGenerator } from '@ukef-test/support/generator/get-geospatial-addresses-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
@@ -30,7 +31,7 @@ describe('GeospatialController', () => {
   });
 
   describe('getAddressesByPostcode()', () => {
-    const postcode = GEOSPATIAL.EXAMPLES.POSTCODE;
+    const postcode = GEOSPATIAL.EXAMPLES.ENGLISH_POSTCODE;
 
     it('returns a single address for the postcode when the service returns a single address', async () => {
       when(geospatialServiceGetAddressesByPostcode).calledWith(postcode).mockResolvedValueOnce(getAddressesByPostcodeResponse[0]);
@@ -50,13 +51,16 @@ describe('GeospatialController', () => {
       expect(response).toEqual(getAddressesByPostcodeMultipleResponse);
     });
 
-    it('returns an empty response for the postcode when the service returns an empty response', async () => {
-      when(geospatialServiceGetAddressesByPostcode).calledWith(postcode).mockResolvedValueOnce([]);
+    it('passes NotFoundException when it is thrown by geospatialService', async () => {
+      const errorMessage = valueGenerator.sentence();
+      when(geospatialServiceGetAddressesByPostcode).calledWith(postcode).mockRejectedValueOnce(new NotFoundException(errorMessage));
 
-      const response = await controller.getAddressesByPostcode({ postcode });
+      const responsePromise = controller.getAddressesByPostcode({ postcode });
 
       expect(geospatialServiceGetAddressesByPostcode).toHaveBeenCalledTimes(1);
-      expect(response).toEqual([]);
+
+      await expect(responsePromise).rejects.toBeInstanceOf(NotFoundException);
+      await expect(responsePromise).rejects.toThrow(errorMessage);
     });
   });
 });
