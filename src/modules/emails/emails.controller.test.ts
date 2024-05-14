@@ -1,3 +1,4 @@
+import { BadRequestException } from '@nestjs/common';
 import { PostEmailsGenerator } from '@ukef-test/support/generator/post-emails-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { resetAllWhenMocks, when } from 'jest-when';
@@ -41,6 +42,20 @@ describe('EmailsController', () => {
 
       expect(emailsServiceSendEmail).toHaveBeenCalled();
       expect(response).toEqual(postEmailsResponse[0]);
+    });
+
+    it('throws BadRequestException exception if header govUkNotifyKey is missing', () => {
+      const runTest = () => () => controller.postEmail(null, request);
+
+      expect(runTest()).toThrow(BadRequestException);
+      expect(runTest()).toThrow('Bad Request Exception');
+    });
+
+    it('throws BadRequestException exception if body is empty array', () => {
+      const runTest = () => () => controller.postEmail(govUkNotifyKey, []);
+
+      expect(runTest()).toThrow(BadRequestException);
+      expect(runTest()).toThrow('Request payload is empty');
     });
   });
 });

@@ -20,13 +20,13 @@ export class PostEmailsRequestItemDto {
   @IsObject()
   @IsOptional()
   @ApiProperty({ example: { firstName: GOVUK_NOTIFY.EXAMPLES.FIRST_NAME }, description: 'All variables for email template' })
-  readonly personalisation?: { [key: string]: string | number };
+  readonly personalisation?: { [key: string]: string | number } | null;
 
   @IsString()
   @IsOptional()
   @MinLength(1)
-  // 100 characters is arbitrary Max limit, GOV.UK Notify can accept references atleast 400 characters long.
+  // 100 characters is arbitrary max limit, GOV.UK Notify can accept references atleast 400 characters long.
   @MaxLength(100)
   @ApiProperty({ example: GOVUK_NOTIFY.EXAMPLES.REFERENCE })
-  readonly reference?: string;
+  readonly reference?: string | null;
 }

@@ -1,3 +1,4 @@
+import { GOVUK_NOTIFY } from '@ukef/constants';
 import { IncorrectAuthArg, withClientAuthenticationTests } from '@ukef-test/common-tests/client-authentication-api-tests';
 import { withEmailFieldValidationApiTests } from '@ukef-test/common-tests/request-field-validation-api-tests/email-address-field-validation-api-tests';
 import { withObjectFieldValidationApiTests } from '@ukef-test/common-tests/request-field-validation-api-tests/object-field-validation-api-tests';
@@ -103,7 +104,7 @@ describe('POST /emails', () => {
     const { status, body } = await api.post(mdmPath, request);
 
     expect(status).toBe(400);
-    expect(body).toStrictEqual({ error: 'Bad Request', message: ['govUkNotifyKey header is required'], statusCode: 400 });
+    expect(body).toStrictEqual({ error: 'Bad Request', message: ['Header "govUkNotifyKey" is required'], statusCode: 400 });
   });
 
   it.each([
@@ -144,10 +145,37 @@ describe('POST /emails', () => {
     });
   });
 
+  it(`returns a 400 response for empty payload`, async () => {
+    const payload = '';
+    const { status, body } = await api.post(mdmPath, payload, { govUkNotifyKey });
+
+    expect(status).toBe(400);
+    expect(body.error).toMatch('Bad Request');
+    expect(body.message).toMatch('Validation failed (parsable array expected)');
+  });
+
+  it(`returns a 400 response for empty array`, async () => {
+    const payload = [];
+    const { status, body } = await api.post(mdmPath, payload, { govUkNotifyKey });
+
+    expect(status).toBe(400);
+    expect(body.error).toMatch('Bad Request');
+    expect(body.message).toMatch('Request payload is empty');
+  });
+
+  it(`returns a 400 response for broken json`, async () => {
+    const payload = '[]';
+    const { status, body } = await api.post(mdmPath, payload, { govUkNotifyKey });
+
+    expect(status).toBe(400);
+    expect(body.error).toMatch('Bad Request');
+    expect(body.message).toMatch('Validation failed (parsable array expected)');
+  });
+
   describe('field validation', () => {
     withStringFieldValidationApiTests({
       fieldName: 'templateId',
-      length: 36,
+      length: GOVUK_NOTIFY.FIELD_LENGTHS.TEMPLATE_ID,
       required: true,
       generateFieldValueOfLength: (length: number) => valueGenerator.string({ length }),
       validRequestBody: request,

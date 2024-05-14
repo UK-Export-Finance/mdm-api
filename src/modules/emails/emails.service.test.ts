@@ -1,4 +1,3 @@
-import { ConfigService } from '@nestjs/config';
 import { PostEmailsGenerator } from '@ukef-test/support/generator/post-emails-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { resetAllWhenMocks, when } from 'jest-when';
@@ -12,14 +11,9 @@ describe('EmailsService', () => {
   const valueGenerator = new RandomValueGenerator();
 
   let service: EmailsService;
-  let configServiceGet: jest.Mock;
   let govukNotifyServiceSendEmail: jest.Mock;
 
   beforeEach(() => {
-    const configService = new ConfigService();
-    configServiceGet = jest.fn().mockReturnValue({ key: valueGenerator.word() });
-    configService.get = configServiceGet;
-
     govukNotifyServiceSendEmail = jest.fn();
     const govukNotifyService = new GovukNotifyService();
     govukNotifyService.sendEmail = govukNotifyServiceSendEmail;
