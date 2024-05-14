@@ -173,7 +173,7 @@ paths:
         '400':
           description: Bad request
         '422':
-          description: Unknown GOV.UK Notify error happened
+          description: No GOV.UK Notify response
       tags:
         - emails
   /api/v1/exposure-period:
