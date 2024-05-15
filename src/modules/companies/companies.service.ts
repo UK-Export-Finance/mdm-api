@@ -2,21 +2,27 @@ import { Injectable } from '@nestjs/common';
 import { CompaniesHouseService } from '@ukef/helper-modules/companies-house/companies-house.service';
 import { GetCompanyCompaniesHouseResponse } from '@ukef/helper-modules/companies-house/dto/get-company-companies-house-response.dto';
 
-import { GetCompanyResponse } from './dto/get-company-response.dto';
+import { SectorIndustryEntity } from '../sector-industries/entities/sector-industry.entity';
+import { SectorIndustriesService } from '../sector-industries/sector-industries.service';
+import { GetCompanyResponse, Industry } from './dto/get-company-response.dto';
 
 @Injectable()
 export class CompaniesService {
-  constructor(private readonly companiesHouseService: CompaniesHouseService) {}
+  constructor(
+    private readonly companiesHouseService: CompaniesHouseService,
+    private readonly sectorIndustriesService: SectorIndustriesService,
+  ) {}
 
   async getCompanyByRegistrationNumber(registrationNumber: string): Promise<GetCompanyResponse> {
     const company: GetCompanyCompaniesHouseResponse = await this.companiesHouseService.getCompanyByRegistrationNumber(registrationNumber);
+    const industryClasses: SectorIndustryEntity[] = await this.sectorIndustriesService.find(null, null);
 
-    const reducedCompany = this.reduceCompany(company);
+    const mappedCompany = this.mapCompany(company, industryClasses);
 
-    return reducedCompany;
+    return mappedCompany;
   }
 
-  private reduceCompany(company: GetCompanyCompaniesHouseResponse): GetCompanyResponse {
+  private mapCompany(company: GetCompanyCompaniesHouseResponse, industryClasses: SectorIndustryEntity[]): GetCompanyResponse {
     const address = company.registered_office_address;
 
     return {
@@ -31,7 +37,30 @@ export class CompaniesService {
         postalCode: address.postal_code,
         country: address.country,
       },
-      sicCodes: company.sic_codes,
+      industries: this.mapSicCodes(company.sic_codes, industryClasses),
     };
+  }
+
+  private mapSicCodes(sicCodes: string[], industryClasses: SectorIndustryEntity[]): Industry[] {
+    const industries = [];
+
+    sicCodes.forEach((sicCode) => {
+      industryClasses.forEach((industryClass) => {
+        if (sicCode === industryClass.ukefIndustryId) {
+          industries.push({
+            sector: {
+              code: industryClass.ukefSectorId.toString(),
+              name: industryClass.ukefSectorName,
+            },
+            class: {
+              code: industryClass.ukefIndustryId,
+              name: industryClass.ukefIndustryName,
+            },
+          });
+        }
+      });
+    });
+
+    return industries;
   }
 }

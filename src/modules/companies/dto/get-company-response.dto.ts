@@ -10,5 +10,16 @@ export class GetCompanyResponse {
     postalCode: string;
     country: string;
   };
-  sicCodes: string[];
+  industries: Industry[];
+}
+
+export class Industry {
+  sector: {
+    code: string;
+    name: string;
+  };
+  class: {
+    code: string;
+    name: string;
+  };
 }

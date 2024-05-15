@@ -21,7 +21,7 @@ describe('CompaniesController', () => {
   beforeEach(() => {
     resetAllWhenMocks();
 
-    const companiesService = new CompaniesService(null);
+    const companiesService = new CompaniesService(null, null);
     companiesServiceGetCompanyByRegistrationNumber = jest.fn();
     companiesService.getCompanyByRegistrationNumber = companiesServiceGetCompanyByRegistrationNumber;
 

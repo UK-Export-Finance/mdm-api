@@ -4,6 +4,8 @@ import { ENVIRONMENT_VARIABLES, TIME_EXCEEDING_COMPANIES_HOUSE_TIMEOUT } from '@
 import { GetCompanyGenerator } from '@ukef-test/support/generator/get-company-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import nock from 'nock';
+import getCompanyCompaniesHouseResponse = require('@ukef/helper-modules/companies-house/examples/example-response-for-get-company-by-registration-number.json');
+import getCompanyResponse = require('@ukef/modules/companies/examples/example-response-for-get-company-by-registration-number.json');
 
 describe('GET /companies?registrationNumber=', () => {
   let api: Api;
@@ -13,11 +15,9 @@ describe('GET /companies?registrationNumber=', () => {
   const {
     companiesHousePath,
     mdmPath,
-    getCompanyCompaniesHouseResponse,
     getCompanyCompaniesHouseMalformedAuthorizationHeaderResponse,
     getCompanyCompaniesHouseInvalidAuthorizationResponse,
     getCompanyCompaniesHouseNotFoundResponse,
-    getCompanyResponse,
   } = new GetCompanyGenerator(valueGenerator).generate({
     numberToGenerate: 1,
     registrationNumber: '00000001',

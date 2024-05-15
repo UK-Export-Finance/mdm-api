@@ -10,5 +10,6 @@ import { SectorIndustriesService } from './sector-industries.service';
   imports: [TypeOrmModule.forFeature([SectorIndustryEntity], DATABASE.MDM)],
   controllers: [SectorIndustriesController],
   providers: [SectorIndustriesService],
+  exports: [SectorIndustriesService],
 })
 export class SectorIndustriesModule {}

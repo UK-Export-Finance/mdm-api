@@ -1,7 +1,8 @@
 import { GetCompanyCompaniesHouseErrorResponse } from '@ukef/helper-modules/companies-house/dto/get-company-companies-house-error-response.dto';
 import { GetCompanyCompaniesHouseMultipleErrorResponse } from '@ukef/helper-modules/companies-house/dto/get-company-companies-house-multiple-error-response.dto';
 import { GetCompanyCompaniesHouseResponse } from '@ukef/helper-modules/companies-house/dto/get-company-companies-house-response.dto';
-import { GetCompanyResponse } from '@ukef/modules/companies/dto/get-company-response.dto';
+import { GetCompanyResponse, Industry } from '@ukef/modules/companies/dto/get-company-response.dto';
+import { SectorIndustryEntity } from '@ukef/modules/sector-industries/entities/sector-industry.entity';
 
 import { AbstractGenerator } from './abstract-generator';
 import { RandomValueGenerator } from './random-value-generator';
@@ -21,10 +22,20 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
       locality: this.valueGenerator.word(),
       postalCode: this.valueGenerator.postcode(),
       country: this.valueGenerator.word(),
-      sicCode1: this.valueGenerator.stringOfNumericCharacters({ length: 5 }),
-      sicCode2: this.valueGenerator.stringOfNumericCharacters({ length: 5 }),
-      sicCode3: this.valueGenerator.stringOfNumericCharacters({ length: 5 }),
-      sicCode4: this.valueGenerator.stringOfNumericCharacters({ length: 5 }),
+      sicCodes: [
+        this.valueGenerator.stringOfNumericCharacters({ length: 5 }),
+        this.valueGenerator.stringOfNumericCharacters({ length: 5 }),
+        this.valueGenerator.stringOfNumericCharacters({ length: 5 }),
+        this.valueGenerator.stringOfNumericCharacters({ length: 5 }),
+      ],
+      industryClassNames: [
+        this.valueGenerator.sentence({ words: 10 }),
+        this.valueGenerator.sentence({ words: 10 }),
+        this.valueGenerator.sentence({ words: 10 }),
+        this.valueGenerator.sentence({ words: 10 }),
+      ],
+      industrySectorCode: this.valueGenerator.integer({ min: 1001, max: 1020 }),
+      industrySectorName: this.valueGenerator.sentence({ words: 4 }),
     };
   }
 
@@ -38,6 +49,13 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
 
     const randomDateString = () => this.valueGenerator.date().toISOString().split('T')[0];
     const randomAccountingReferenceDate = this.valueGenerator.date();
+
+    const shuffleArray = (array: any[]) => {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    };
 
     const getCompanyCompaniesHouseResponse: GetCompanyCompaniesHouseResponse = {
       links: {
@@ -88,12 +106,60 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
         country: v.country,
       },
       registered_office_is_in_dispute: false,
-      sic_codes: [v.sicCode1, v.sicCode2, v.sicCode3, v.sicCode4],
+      sic_codes: v.sicCodes,
       type: 'ltd',
       undeliverable_registered_office_address: false,
       has_super_secure_pscs: false,
       can_file: true,
     };
+
+    const findSectorIndustriesResponse: SectorIndustryEntity[] = v.sicCodes.map((sicCode, index) => ({
+      id: this.valueGenerator.integer({ min: 1, max: 1000 }),
+      ukefSectorId: v.industrySectorCode,
+      ukefSectorName: v.industrySectorName,
+      internalNo: null,
+      ukefIndustryId: sicCode,
+      ukefIndustryName: v.industryClassNames[index],
+      acbsSectorId: this.valueGenerator.stringOfNumericCharacters({ length: 2 }),
+      acbsSectorName: this.valueGenerator.sentence({ words: 5 }),
+      acbsIndustryId: this.valueGenerator.stringOfNumericCharacters({ length: 2 }),
+      acbsIndustryName: this.valueGenerator.sentence({ words: 4 }),
+      created: this.valueGenerator.date(),
+      updated: this.valueGenerator.date(),
+      effectiveFrom: this.valueGenerator.date(),
+      effectiveTo: this.valueGenerator.date(),
+    }));
+
+    const nonMatchingIndustryClass: SectorIndustryEntity = {
+      id: this.valueGenerator.integer({ min: 1, max: 1000 }),
+      ukefSectorId: this.valueGenerator.integer({ min: 1001, max: 1020 }),
+      ukefSectorName: this.valueGenerator.sentence({ words: 4 }),
+      internalNo: null,
+      ukefIndustryId: this.valueGenerator.stringOfNumericCharacters({ length: 5 }),
+      ukefIndustryName: this.valueGenerator.sentence({ words: 10 }),
+      acbsSectorId: this.valueGenerator.stringOfNumericCharacters({ length: 2 }),
+      acbsSectorName: this.valueGenerator.sentence({ words: 5 }),
+      acbsIndustryId: this.valueGenerator.stringOfNumericCharacters({ length: 2 }),
+      acbsIndustryName: this.valueGenerator.sentence({ words: 4 }),
+      created: this.valueGenerator.date(),
+      updated: this.valueGenerator.date(),
+      effectiveFrom: this.valueGenerator.date(),
+      effectiveTo: this.valueGenerator.date(),
+    };
+
+    findSectorIndustriesResponse.push(nonMatchingIndustryClass);
+    shuffleArray(findSectorIndustriesResponse);
+
+    const industries: Industry[] = v.sicCodes.map((sicCode, index) => ({
+      sector: {
+        code: v.industrySectorCode.toString(),
+        name: v.industrySectorName,
+      },
+      class: {
+        code: sicCode,
+        name: v.industryClassNames[index],
+      },
+    }));
 
     const getCompanyResponse: GetCompanyResponse = {
       companiesHouseRegistrationNumber: registrationNumberToUse,
@@ -104,7 +170,7 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
         postalCode: v.postalCode,
         country: v.country,
       },
-      sicCodes: [v.sicCode1, v.sicCode2, v.sicCode3, v.sicCode4],
+      industries,
     };
 
     const getCompanyCompaniesHouseMalformedAuthorizationHeaderResponse: GetCompanyCompaniesHouseErrorResponse = {
@@ -130,6 +196,7 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
       companiesHousePath,
       mdmPath,
       getCompanyCompaniesHouseResponse,
+      findSectorIndustriesResponse,
       getCompanyResponse,
       getCompanyCompaniesHouseMalformedAuthorizationHeaderResponse,
       getCompanyCompaniesHouseInvalidAuthorizationResponse,
@@ -147,10 +214,10 @@ interface CompanyValues {
   locality: string;
   postalCode: string;
   country: string;
-  sicCode1: string;
-  sicCode2: string;
-  sicCode3: string;
-  sicCode4: string;
+  sicCodes: string[];
+  industryClassNames: string[];
+  industrySectorCode: number;
+  industrySectorName: string;
 }
 
 interface GenerateOptions {
@@ -161,6 +228,7 @@ interface GenerateResult {
   companiesHousePath: string;
   mdmPath: string;
   getCompanyCompaniesHouseResponse: GetCompanyCompaniesHouseResponse;
+  findSectorIndustriesResponse: SectorIndustryEntity[];
   getCompanyResponse: GetCompanyResponse;
   getCompanyCompaniesHouseMalformedAuthorizationHeaderResponse: GetCompanyCompaniesHouseErrorResponse;
   getCompanyCompaniesHouseInvalidAuthorizationResponse: GetCompanyCompaniesHouseErrorResponse;
