@@ -1,21 +1,14 @@
-# MDM-API Git Hub Actions
-#####################################
-# This GHA is responsible for initiating various test suites
-# upon a PR creation. Following test suites are executed:
-# 1. Unit tests (Jest)
-# 2. API tests (Jest)
-
-name: Quality Assurance - Tests
-run-name: Executing test QA on ${{ github.repository }} 🚀
+name: GitHub
+run-name: 🔬Pull request inspection on ${{ github.event.number }}
 
 on:
   pull_request:
-    branches: [main]
-    paths:
-      - "**"
+    branches:
+      - main
+      - "release-*"
 
 env:
-  environment: "qa"
+  environment: dev
   timezone: ${{ vars.TIMEZONE }}
 
 jobs:
@@ -33,16 +26,15 @@ jobs:
       - name: Timezone 🌐
         run: echo "Timezone set to ${{ env.timezone }}"
 
-  # 2. Unit tests
-  unit-tests:
-    name: Unit 👷
-    needs: setup
+  # 2. Pull request
+  pullrequest:
+    name: Pull request ⬇️
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
     steps:
       - name: Timezone
-        uses: szenius/set-timezone@v2.0
+        uses: szenius/set-timezone@v1.2
         with:
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
@@ -50,14 +42,25 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
       - name: Dependencies
         working-directory: ./
-        run: npm ci --legacy-peer-deps
+        run: npm ci
 
-      - name: Execute
-        working-directory: ./
-        run: npm run unit-test
+      - name: Title
+        run: echo "${{ github.event.pull_request.title }}" | npx commitlint --color --verbose $1
+
+      - name: Body
+        if: ${{ github.event.pull_request.body == '' }}
+        run: exit 1
+
+      - name: Label
+        if: ${{ github.event.pull_request.labels == '[]' }}
+        run: exit 1
+
+      - name: Assignee
+        if: ${{ github.event.pull_request.assignee == '[]' }}
+        run: exit 1

@@ -15,7 +15,7 @@ on:
 
 env:
   environment: "qa"
-  timezone: "Europe/London"
+  timezone: ${{ vars.TIMEZONE }}
 
 jobs:
   # 1. Setup test infrastructure
