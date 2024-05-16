@@ -48,7 +48,7 @@ jobs:
 
       - name: Dependencies
         working-directory: ./
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
       - name: Title
         run: echo "${{ github.event.pull_request.title }}" | npx commitlint --color --verbose $1
