@@ -12,6 +12,7 @@
     "postinstall": "husky install",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
+    "prettier": "prettier --no-error-on-unmatched-pattern --check **/*.{ts,js}",
     "spellcheck": "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color '**/*'",
     "start": "nest start",
     "start:debug": "nest start --debug --watch",
@@ -21,8 +22,10 @@
   },
   "lint-staged": {
     "**/package.json": "sort-package-json",
-    "**/*.js": "eslint --fix",
-    "**/*.ts": "eslint --fix",
+    "**/*.{js,ts}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
     "**/*": [
       "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color"
     ]
