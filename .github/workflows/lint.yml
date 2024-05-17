@@ -21,7 +21,18 @@
 # Checks out the repository code.
 # Sets up the specified Node.js version.
 # Installs dependencies using npm run ci:all.
-# Runs linting using the command npm run lint:all.
+# Runs linting using the command npm run lint
+#
+# Prettier:
+# Name: Prettier
+# Depends on: setup
+# Runs on: ubuntu-latest
+# Steps:
+# Sets the timezone using the specified value.
+# Checks out the repository code.
+# Sets up the specified Node.js version.
+# Installs dependencies using npm run ci:all.
+# Runs prettier using the command npm run prettier.
 #
 # Key Points:
 # The workflow focuses on linting, which checks code for potential errors, style issues, and adherence to best practices.
