@@ -1,6 +1,6 @@
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import expectedResponse = require('./examples/example-response-for-send-emails.json');
-import { BadRequestException, ForbiddenException, UnauthorizedException, UnprocessableEntityException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, InternalServerErrorException, UnauthorizedException, UnprocessableEntityException } from '@nestjs/common';
 import { AxiosError, AxiosResponse } from 'axios';
 import { NotifyClient } from 'notifications-node-client';
 
@@ -91,6 +91,12 @@ describe('GovukNotifyService', () => {
         exceptionName: 'Forbidden Exception',
         error: 'Forbidden',
         status: 403,
+      },
+      {
+        exceptionClass: InternalServerErrorException,
+        exceptionName: 'Internal Server Error Exception',
+        error: 'Internal Server Error',
+        status: 500,
       },
     ])('throws exception $exceptionName for unexpected $status', async ({ exceptionClass, exceptionName, error, status }) => {
       jest.mocked(sendEmailMethodMock).mockImplementation(() => Promise.reject(generateNotifyError(status, errorMessage)));
