@@ -2,6 +2,7 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { CompaniesHouseConfig } from '@ukef/config/companies-house.config';
+import { COMPANIES_HOUSE } from '@ukef/constants';
 import { HttpClient } from '@ukef/modules/http/http.client';
 
 import { GetCompanyCompaniesHouseResponse } from './dto/get-company-companies-house-response.dto';
@@ -11,7 +12,6 @@ import {
   getCompanyNotFoundKnownCompaniesHouseError,
 } from './known-errors';
 import { createWrapCompaniesHouseHttpGetErrorCallback } from './wrap-companies-house-http-error-callback';
-import { COMPANIES_HOUSE } from '@ukef/constants';
 
 @Injectable()
 export class CompaniesHouseService {

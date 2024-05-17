@@ -1,3 +1,4 @@
+import { COMPANIES } from '@ukef/constants';
 import { GetCompanyCompaniesHouseErrorResponse } from '@ukef/helper-modules/companies-house/dto/get-company-companies-house-error-response.dto';
 import { GetCompanyCompaniesHouseMultipleErrorResponse } from '@ukef/helper-modules/companies-house/dto/get-company-companies-house-multiple-error-response.dto';
 import { GetCompanyCompaniesHouseResponse } from '@ukef/helper-modules/companies-house/dto/get-company-companies-house-response.dto';
@@ -6,7 +7,6 @@ import { SectorIndustryEntity } from '@ukef/modules/sector-industries/entities/s
 
 import { AbstractGenerator } from './abstract-generator';
 import { RandomValueGenerator } from './random-value-generator';
-import { COMPANIES } from '@ukef/constants';
 
 export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, GenerateResult, GenerateOptions> {
   constructor(protected readonly valueGenerator: RandomValueGenerator) {
