@@ -1,14 +1,18 @@
+# This GitHub Actions workflow ensures that any pull request targeting the main or main-*
+# branches meets certain criteria before it is merged. The workflow sets up the necessary infrastructure,
+# configures the environment, and performs checks on the pull request title, body, labels
+# and assignee to ensure that it adheres to predefined standards. If any of these checks fail,
+# the workflow will exit with an error, preventing the pull request from proceeding.
+
 name: GitHub
-run-name: 🔬Pull request inspection on ${{ github.event.number }}
+run-name: 🔬 Pull request inspection on ${{ github.event.number }}
 
 on:
   pull_request:
-    branches:
-      - main
-      - "release-*"
+    branches: [main, main-*]
 
 env:
-  environment: dev
+  environment: "qa"
   timezone: ${{ vars.TIMEZONE }}
 
 jobs:
@@ -29,6 +33,7 @@ jobs:
   # 2. Pull request
   pullrequest:
     name: Pull request ⬇️
+    needs: setup
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
@@ -42,7 +47,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ vars.NODE_VERSION }}
 

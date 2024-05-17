@@ -7,7 +7,7 @@
 #
 
 name: PR
-run-name: 🔎 pull request analysis on ${{ github.event.number }}
+run-name: 🔎 Pull request analysis on ${{ github.event.number }}
 
 on:
   schedule:
