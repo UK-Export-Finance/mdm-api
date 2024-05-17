@@ -98,7 +98,7 @@ jobs:
         working-directory: ./
         run: npm run lint
 
-  # 3. Lint
+  # 3. Prettier
   prettier:
     name: Prettier 🎨
     environment:
