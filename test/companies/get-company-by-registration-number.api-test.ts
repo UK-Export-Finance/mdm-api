@@ -79,6 +79,18 @@ describe('GET /companies?registrationNumber=', () => {
     });
   });
 
+  it(`returns a 404 response if the Companies House API returns a 404 response containing the error string 'company-profile-not-found'`, async () => {
+    requestToGetCompanyByRegistrationNumber(companiesHousePath).reply(404, getCompanyCompaniesHouseNotFoundResponse);
+
+    const { status, body } = await api.get(mdmPath);
+
+    expect(status).toBe(404);
+    expect(body).toStrictEqual({
+      statusCode: 404,
+      message: 'Not found',
+    });
+  });
+
   it(`returns a 500 response if the Companies House API returns a 400 response containing the error string 'Invalid Authorization header'`, async () => {
     requestToGetCompanyByRegistrationNumber(companiesHousePath).reply(400, getCompanyCompaniesHouseMalformedAuthorizationHeaderResponse);
 
@@ -93,18 +105,6 @@ describe('GET /companies?registrationNumber=', () => {
 
   it(`returns a 500 response if the Companies House API returns a 401 response containing the error string 'Invalid Authorization'`, async () => {
     requestToGetCompanyByRegistrationNumber(companiesHousePath).reply(401, getCompanyCompaniesHouseInvalidAuthorizationResponse);
-
-    const { status, body } = await api.get(mdmPath);
-
-    expect(status).toBe(500);
-    expect(body).toStrictEqual({
-      statusCode: 500,
-      message: 'Internal server error',
-    });
-  });
-
-  it(`returns a 500 response if the Companies House API returns a 404 response containing the error string 'company-profile-not-found'`, async () => {
-    requestToGetCompanyByRegistrationNumber(companiesHousePath).reply(404, getCompanyCompaniesHouseNotFoundResponse);
 
     const { status, body } = await api.get(mdmPath);
 

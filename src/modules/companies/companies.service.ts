@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CompaniesHouseService } from '@ukef/helper-modules/companies-house/companies-house.service';
 import { GetCompanyCompaniesHouseResponse } from '@ukef/helper-modules/companies-house/dto/get-company-companies-house-response.dto';
+import { CompaniesHouseNotFoundException } from '@ukef/helper-modules/companies-house/exception/companies-house-not-found.exception';
 
 import { SectorIndustryEntity } from '../sector-industries/entities/sector-industry.entity';
 import { SectorIndustriesService } from '../sector-industries/sector-industries.service';
@@ -14,12 +15,20 @@ export class CompaniesService {
   ) {}
 
   async getCompanyByRegistrationNumber(registrationNumber: string): Promise<GetCompanyResponse> {
-    const company: GetCompanyCompaniesHouseResponse = await this.companiesHouseService.getCompanyByRegistrationNumber(registrationNumber);
-    const industryClasses: SectorIndustryEntity[] = await this.sectorIndustriesService.find(null, null);
+    try {
+      const company: GetCompanyCompaniesHouseResponse = await this.companiesHouseService.getCompanyByRegistrationNumber(registrationNumber);
+      const industryClasses: SectorIndustryEntity[] = await this.sectorIndustriesService.find(null, null);
 
-    const mappedCompany = this.mapCompany(company, industryClasses);
+      const mappedCompany = this.mapCompany(company, industryClasses);
 
-    return mappedCompany;
+      return mappedCompany;
+    } catch (error) {
+      if (error instanceof CompaniesHouseNotFoundException) {
+        throw new NotFoundException('Not found', { cause: error });
+      }
+
+      throw error;
+    }
   }
 
   private mapCompany(company: GetCompanyCompaniesHouseResponse, industryClasses: SectorIndustryEntity[]): GetCompanyResponse {
