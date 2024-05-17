@@ -35,28 +35,13 @@ run-name: 🎨 Lint checking on ${{ github.event.number }}
 
 on:
   pull_request:
-    branches:
-      - main
-      - "release-*"
-
+    branches: [main]
     paths:
-      - "package*.json"
-      - "docker*.yml"
-      - ".github/workflows/**"
-      - "gef-ui/**"
-      - "portal/**"
-      - "portal-api/**"
-      - "trade-finance-manager-ui/**"
-      - "trade-finance-manager-api/**"
-      - "external-api/**"
-      - "dtfs-central-api/**"
-      - "azure-functions/**"
-      - "e2e-tests/**"
-      - "utils/mock-data-loader/**"
-      - "libs/**"
+      - "src/**"
+      - "test/**"
 
 env:
-  environment: dev
+  environment: "qa"
   timezone: ${{ vars.TIMEZONE }}
 
 jobs:
@@ -100,8 +85,7 @@ jobs:
 
       - name: Linting
         working-directory: ./
-        run:
-          npm run lint:all
+        run: npm run lint
 
   # 3. Lint
   prettier:

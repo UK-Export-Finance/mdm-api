@@ -13,7 +13,7 @@ on:
   schedule:
     - cron: "00 00 * * *"
 env:
-  environment: dev
+  environment: "qa"
   timezone: ${{ vars.TIMEZONE }}
 
 jobs:
