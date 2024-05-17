@@ -11,7 +11,7 @@ export class PostEmailsGenerator extends AbstractGenerator<PostEmailsValues, Gen
   }
 
   protected generateValues(): PostEmailsValues {
-    const templateId = this.valueGenerator.string({ length: GOVUK_NOTIFY.FIELD_LENGTHS.TEMPLATE_ID });
+    const templateId = this.valueGenerator.base64string({ length: GOVUK_NOTIFY.FIELD_LENGTHS.TEMPLATE_ID });
     return {
       templateId,
       reference: `${templateId}-12345`,
