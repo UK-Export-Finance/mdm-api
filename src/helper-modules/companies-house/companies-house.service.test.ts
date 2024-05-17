@@ -40,7 +40,6 @@ describe('CompaniesHouseService', () => {
     {
       headers: {
         Authorization: `Basic ${encodedTestKey}`,
-        'Content-Type': 'application/json',
       },
     },
   ];

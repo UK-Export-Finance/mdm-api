@@ -1,4 +1,5 @@
 export const COMPANIES = {
+  ENDPOINT_BASE_URL: '/api/v1/companies?registrationNumber=',
   EXAMPLES: {
     COMPANIES_HOUSE_REGISTRATION_NUMBER: '00000001',
   },

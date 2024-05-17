@@ -6,6 +6,7 @@ import { SectorIndustryEntity } from '@ukef/modules/sector-industries/entities/s
 
 import { AbstractGenerator } from './abstract-generator';
 import { RandomValueGenerator } from './random-value-generator';
+import { COMPANIES } from '@ukef/constants';
 
 export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, GenerateResult, GenerateOptions> {
   constructor(protected readonly valueGenerator: RandomValueGenerator) {
@@ -45,7 +46,7 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
 
     const companiesHousePath = `/company/${registrationNumberToUse}`;
 
-    const mdmPath = `/api/v1/companies?registrationNumber=${registrationNumberToUse}`;
+    const mdmPath = `${COMPANIES.ENDPOINT_BASE_URL}${registrationNumberToUse}`;
 
     const randomDateString = () => this.valueGenerator.date().toISOString().split('T')[0];
     const randomAccountingReferenceDate = this.valueGenerator.date();

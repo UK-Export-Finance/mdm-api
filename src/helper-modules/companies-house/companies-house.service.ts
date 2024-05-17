@@ -1,7 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { CompaniesHouseConfig, KEY as COMPANIES_HOUSE_CONFIG_KEY } from '@ukef/config/companies-house.config';
+import { CompaniesHouseConfig } from '@ukef/config/companies-house.config';
 import { HttpClient } from '@ukef/modules/http/http.client';
 
 import { GetCompanyCompaniesHouseResponse } from './dto/get-company-companies-house-response.dto';
@@ -11,6 +11,7 @@ import {
   getCompanyNotFoundKnownCompaniesHouseError,
 } from './known-errors';
 import { createWrapCompaniesHouseHttpGetErrorCallback } from './wrap-companies-house-http-error-callback';
+import { COMPANIES_HOUSE } from '@ukef/constants';
 
 @Injectable()
 export class CompaniesHouseService {
@@ -19,7 +20,7 @@ export class CompaniesHouseService {
 
   constructor(httpService: HttpService, configService: ConfigService) {
     this.httpClient = new HttpClient(httpService);
-    const { key } = configService.get<CompaniesHouseConfig>(COMPANIES_HOUSE_CONFIG_KEY);
+    const { key } = configService.get<CompaniesHouseConfig>(COMPANIES_HOUSE.CONFIG.KEY);
     this.key = key;
   }
 
@@ -31,7 +32,6 @@ export class CompaniesHouseService {
       path,
       headers: {
         Authorization: `Basic ${encodedKey}`,
-        'Content-Type': 'application/json',
       },
       onError: createWrapCompaniesHouseHttpGetErrorCallback({
         messageForUnknownError: 'Failed to get response from Companies House API.',

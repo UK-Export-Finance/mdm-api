@@ -1,7 +1,6 @@
 import { registerAs } from '@nestjs/config';
+import { COMPANIES_HOUSE } from '@ukef/constants';
 import { getIntConfig } from '@ukef/helpers/get-int-config';
-
-export const KEY = 'companiesHouse';
 
 export interface CompaniesHouseConfig {
   baseUrl: string;
@@ -11,7 +10,7 @@ export interface CompaniesHouseConfig {
 }
 
 export default registerAs(
-  KEY,
+  COMPANIES_HOUSE.CONFIG.KEY,
   (): CompaniesHouseConfig => ({
     baseUrl: process.env.COMPANIES_HOUSE_URL,
     key: process.env.COMPANIES_HOUSE_KEY,
