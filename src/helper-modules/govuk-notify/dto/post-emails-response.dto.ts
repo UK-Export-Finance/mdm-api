@@ -4,13 +4,13 @@ import { GOVUK_NOTIFY } from '@ukef/constants';
 export class PostEmailsResponseDataContent {
   @ApiProperty({
     example: GOVUK_NOTIFY.EXAMPLES.EMAIL_BODY,
-    description: 'Email text',
+    description: 'Email body',
   })
   public body: string;
 
   @ApiProperty({
     example: GOVUK_NOTIFY.EXAMPLES.FROM_EMAIL,
-    description: 'Email is sent from this address',
+    description: 'Senders email address',
   })
   public from_email: string;
 
@@ -54,13 +54,13 @@ export class PostEmailsResponseData {
 
   @ApiProperty({
     example: GOVUK_NOTIFY.EXAMPLES.RESPONSE_ID,
-    description: "Notify's id for the status receipts",
+    description: "Notify's transaction id",
   })
   public id: string;
 
   @ApiProperty({
     example: GOVUK_NOTIFY.EXAMPLES.REFERENCE,
-    description: 'Reference id you provided for this transaction',
+    description: 'Reference that was sent to GOV.UK Notify',
   })
   public reference: string;
 
