@@ -15,7 +15,7 @@ export class EmailsService {
   constructor(private readonly govukNotifyService: GovukNotifyService) {}
 
   sendEmail(
-    govUkNotifyKey,
+    govUkNotifyKey: string,
     postEmailRequestItem: PostEmailsRequestItemDto,
   ): Promise<
     | PostEmailsResponseDto

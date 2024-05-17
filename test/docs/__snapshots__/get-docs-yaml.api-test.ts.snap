@@ -726,11 +726,11 @@ components:
         body:
           type: string
           example: "Dear John Smith,\\r\\n\\r\\nThe status of your MIA for EuroStar has been updated.\\r\\n\\r\\n* Your bank reference: EuroStar bridge\\r\\n* Current status: Acknowledged\\r\\n* Previous status: Submitted\\r\\n* Updated by: Joe Bloggs (Joe.Bloggs@example.com)\\r\\n\\r\\nSign in to our service for more information: \\r\\nhttps://www.test.service.gov.uk/\\r\\n\\r\\nWith regards,\\r\\n\\r\\nThe Digital Trade Finance Service team\\r\\n\\r\\nEmail: test@test.gov.uk\\r\\nPhone: +44 (0)202 123 4567\\r\\nOpening times: Monday to Friday, 9am to 5pm (excluding public holidays)"
-          description: Email text
+          description: Email body
         from_email:
           type: string
           example: test@notifications.service.gov.uk
-          description: Email is sent from this address
+          description: Senders email address
         subject:
           type: string
           example: 'Status update: EuroStar bridge'
@@ -773,11 +773,11 @@ components:
         id:
           type: string
           example: efd12345-1234-5678-9012-ee123456789f
-          description: Notify's id for the status receipts
+          description: Notify's transaction id
         reference:
           type: string
           example: tmpl1234-1234-5678-9012-abcd12345678-1713272155576
-          description: Reference id you provided for this transaction
+          description: Reference that was sent to GOV.UK Notify
         scheduled_for:
           type: string
           example: null

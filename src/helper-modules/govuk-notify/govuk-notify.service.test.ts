@@ -15,6 +15,7 @@ describe('GovukNotifyService', () => {
   const sendToEmailAddress = valueGenerator.email();
   const templateId = valueGenerator.string({ length: 10 });
   const errorMessage = valueGenerator.sentence();
+  const reference = valueGenerator.base64string({ length: 32 });
   const personalisation = {
     firstName: valueGenerator.word(),
     surname: valueGenerator.word(),
@@ -56,9 +57,10 @@ describe('GovukNotifyService', () => {
     });
 
     it('calls GOV.UK Notify client sendEmail function', async () => {
-      await service.sendEmail(govUkNotifyKey, { sendToEmailAddress, templateId, personalisation });
+      await service.sendEmail(govUkNotifyKey, { sendToEmailAddress, templateId, personalisation, reference });
 
       expect(sendEmailMethodMock).toHaveBeenCalledTimes(1);
+      expect(sendEmailMethodMock).toHaveBeenCalledWith(templateId, sendToEmailAddress, { personalisation, reference });
     });
 
     it('returns a 201 response from GOV.UK Notify', async () => {

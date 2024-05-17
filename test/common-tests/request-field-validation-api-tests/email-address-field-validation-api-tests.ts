@@ -53,6 +53,28 @@ export const withEmailFieldValidationApiTests = <RequestBodyItem, RequestBodyIte
       });
 
       it.each([
+        valueGenerator.email(),
+        'test@example.uk',
+        'test@example.co.uk',
+        'test@example.com',
+        'test@example.info',
+        'test@example.london',
+        'test@example.academy',
+        'test@example.accountant',
+        'test@example.accountants',
+        'test@example.entertainment',
+        'ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt@eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.entertainment',
+      ])(`returns a 2xx response if ${fieldName} is correct email "%s"`, async (validEmail) => {
+        const requestWithInvalidValue = { ...requestBodyItem, [fieldNameSymbol]: validEmail };
+        const preparedRequest = prepareModifiedRequest(requestIsAnArray, requestWithInvalidValue);
+
+        const { status } = await makeRequest(preparedRequest);
+
+        expect(status).toBeGreaterThanOrEqual(200);
+        expect(status).toBeLessThan(300);
+      });
+
+      it.each([
         {
           invalidEmail: 'test@example',
           expectedError: 'sendToEmailAddress must be an email',
@@ -65,7 +87,15 @@ export const withEmailFieldValidationApiTests = <RequestBodyItem, RequestBodyIte
           invalidEmail: 'test@example.c',
           expectedError: 'sendToEmailAddress must be an email',
         },
-      ])(`returns a 400 response if ${fieldName} is "$invalidEmail"`, async ({ invalidEmail, expectedError }) => {
+        {
+          invalidEmail: 'ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt@eeee.com',
+          expectedError: 'sendToEmailAddress must be an email',
+        },
+        {
+          invalidEmail: 'tttt@eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.com',
+          expectedError: 'sendToEmailAddress must be an email',
+        },
+      ])(`returns a 400 response if ${fieldName} is invalid email "$invalidEmail"`, async ({ invalidEmail, expectedError }) => {
         const requestWithInvalidValue = { ...requestBodyItem, [fieldNameSymbol]: invalidEmail };
         const preparedRequest = prepareModifiedRequest(requestIsAnArray, requestWithInvalidValue);
 

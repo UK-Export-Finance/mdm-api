@@ -53,7 +53,7 @@ export class EmailsController {
     if (!govUkNotifyKey) {
       throw new BadRequestException('Header "govUkNotifyKey" is required');
     }
-    if (!body.length) {
+    if (!body?.length) {
       throw new BadRequestException('Request payload is empty');
     }
     return this.emailsService.sendEmail(govUkNotifyKey, body[0]);
