@@ -27,9 +27,7 @@ describe('CompaniesService', () => {
     registrationNumber: testRegistrationNumber,
   });
 
-  beforeEach(() => {
-    resetAllWhenMocks();
-
+  beforeAll(() => {
     const configService = new ConfigService();
     configServiceGet = jest.fn().mockReturnValue({ key: valueGenerator.word() });
     configService.get = configServiceGet;
@@ -43,6 +41,11 @@ describe('CompaniesService', () => {
     sectorIndustriesService.find = sectorIndustriesServiceFind;
 
     service = new CompaniesService(companiesHouseService, sectorIndustriesService);
+  });
+
+  beforeEach(() => {
+    resetAllWhenMocks();
+    jest.clearAllMocks();
   });
 
   describe('getCompanyByRegistrationNumber', () => {

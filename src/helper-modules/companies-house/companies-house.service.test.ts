@@ -53,9 +53,7 @@ describe('CompaniesHouseService', () => {
     headers: undefined,
   });
 
-  beforeEach(() => {
-    resetAllWhenMocks();
-
+  beforeAll(() => {
     const httpService = new HttpService();
     httpServiceGet = jest.fn();
     httpService.get = httpServiceGet;
@@ -65,6 +63,10 @@ describe('CompaniesHouseService', () => {
     configService.get = configServiceGet;
 
     service = new CompaniesHouseService(httpService, configService);
+  });
+
+  beforeEach(() => {
+    resetAllWhenMocks();
   });
 
   describe('getCompanyByRegistrationNumber', () => {

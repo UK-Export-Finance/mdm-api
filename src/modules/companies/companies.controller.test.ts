@@ -18,14 +18,16 @@ describe('CompaniesController', () => {
     registrationNumber: testRegistrationNumber,
   });
 
-  beforeEach(() => {
-    resetAllWhenMocks();
-
+  beforeAll(() => {
     const companiesService = new CompaniesService(null, null);
     companiesServiceGetCompanyByRegistrationNumber = jest.fn();
     companiesService.getCompanyByRegistrationNumber = companiesServiceGetCompanyByRegistrationNumber;
 
     controller = new CompaniesController(companiesService);
+  });
+
+  beforeEach(() => {
+    resetAllWhenMocks();
   });
 
   describe('getCompanyByRegistrationNumber', () => {
