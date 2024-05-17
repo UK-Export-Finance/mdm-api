@@ -1,16 +1,12 @@
 import { BadRequestException } from '@nestjs/common';
 import { PostEmailsGenerator } from '@ukef-test/support/generator/post-emails-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
-import { resetAllWhenMocks, when } from 'jest-when';
+import { when } from 'jest-when';
 
 import { EmailsController } from './emails.controller';
 import { EmailsService } from './emails.service';
 
 describe('EmailsController', () => {
-  let emailsServiceSendEmail: jest.Mock;
-
-  let controller: EmailsController;
-
   const valueGenerator = new RandomValueGenerator();
   const {
     requests: [request],
@@ -19,14 +15,11 @@ describe('EmailsController', () => {
     numberToGenerate: 1,
   });
 
-  beforeEach(() => {
-    resetAllWhenMocks();
-    const emailsService = new EmailsService(null);
-    emailsServiceSendEmail = jest.fn();
-    emailsService.sendEmail = emailsServiceSendEmail;
+  const emailsService = new EmailsService(null);
+  const emailsServiceSendEmail = jest.fn();
+  emailsService.sendEmail = emailsServiceSendEmail;
 
-    controller = new EmailsController(emailsService);
-  });
+  const controller = new EmailsController(emailsService);
 
   it('should be defined', () => {
     expect(EmailsController).toBeDefined();
@@ -40,7 +33,7 @@ describe('EmailsController', () => {
 
       const response = await controller.postEmail(govUkNotifyKey, request);
 
-      expect(emailsServiceSendEmail).toHaveBeenCalled();
+      expect(emailsServiceSendEmail).toHaveBeenCalledTimes(1);
       expect(response).toEqual(postEmailsResponse[0]);
     });
 
@@ -48,7 +41,7 @@ describe('EmailsController', () => {
       const runTest = () => () => controller.postEmail(null, request);
 
       expect(runTest()).toThrow(BadRequestException);
-      expect(runTest()).toThrow('Bad Request Exception');
+      expect(runTest()).toThrow('Header "govUkNotifyKey" is required');
     });
 
     it('throws BadRequestException exception if body is empty array', () => {
@@ -56,6 +49,13 @@ describe('EmailsController', () => {
 
       expect(runTest()).toThrow(BadRequestException);
       expect(runTest()).toThrow('Request payload is empty');
+    });
+
+    it('throws BadRequestException exception if header govUkNotifyKey is missing and body is empty array', () => {
+      const runTest = () => () => controller.postEmail(null, []);
+
+      expect(runTest()).toThrow(BadRequestException);
+      expect(runTest()).toThrow('Header "govUkNotifyKey" is required');
     });
   });
 });

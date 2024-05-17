@@ -103,7 +103,7 @@ describe('POST /emails', () => {
     const { status, body } = await api.post(mdmPath, request);
 
     expect(status).toBe(400);
-    expect(body).toStrictEqual({ error: 'Bad Request', message: ['Header "govUkNotifyKey" is required'], statusCode: 400 });
+    expect(body).toStrictEqual({ error: 'Bad Request', message: 'Header "govUkNotifyKey" is required', statusCode: 400 });
   });
 
   it.each([

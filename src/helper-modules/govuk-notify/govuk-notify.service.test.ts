@@ -2,6 +2,7 @@ import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-
 import expectedResponse = require('./examples/example-response-for-send-emails.json');
 import { BadRequestException, ForbiddenException, InternalServerErrorException, UnauthorizedException, UnprocessableEntityException } from '@nestjs/common';
 import { AxiosError, AxiosResponse } from 'axios';
+import { PinoLogger } from 'nestjs-pino';
 import { NotifyClient } from 'notifications-node-client';
 
 import { GovukNotifyService } from './govuk-notify.service';
@@ -9,10 +10,6 @@ jest.mock('notifications-node-client');
 
 describe('GovukNotifyService', () => {
   const valueGenerator = new RandomValueGenerator();
-
-  let service: GovukNotifyService;
-
-  let sendEmailMethodMock;
 
   const govUkNotifyKey = valueGenerator.string({ length: 10 });
   const sendToEmailAddress = valueGenerator.email();
@@ -24,10 +21,15 @@ describe('GovukNotifyService', () => {
     supplierName: valueGenerator.word(),
   };
 
+  const sendEmailMethodMock = jest
+    .spyOn(NotifyClient.prototype, 'sendEmail')
+    .mockImplementation(() => Promise.resolve({ status: 201, data: expectedResponse }));
+  const loggerMock = {} as PinoLogger;
+  loggerMock.error = jest.fn();
+  const service = new GovukNotifyService(loggerMock);
+
   beforeEach(() => {
-    jest.resetAllMocks();
-    sendEmailMethodMock = jest.spyOn(NotifyClient.prototype, 'sendEmail').mockImplementation(() => Promise.resolve({ status: 201, data: expectedResponse }));
-    service = new GovukNotifyService();
+    jest.clearAllMocks();
   });
 
   describe('sendEmail', () => {

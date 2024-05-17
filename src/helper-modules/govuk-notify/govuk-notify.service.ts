@@ -1,4 +1,12 @@
-import { BadRequestException, ForbiddenException, Injectable, UnauthorizedException, UnprocessableEntityException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
+import { PinoLogger } from 'nestjs-pino';
 import { NotifyClient } from 'notifications-node-client';
 
 import { PostEmailsRequestItemDto } from '../../modules/emails/dto/post-emails-request.dto';
@@ -6,9 +14,20 @@ import { PostEmailsResponseDto } from './dto/post-emails-response.dto';
 
 @Injectable()
 export class GovukNotifyService {
-  constructor() {}
+  constructor(private readonly logger: PinoLogger) {}
 
-  async sendEmail(govUkNotifyKey: string, email: PostEmailsRequestItemDto): Promise<PostEmailsResponseDto> {
+  async sendEmail(
+    govUkNotifyKey: string,
+    email: PostEmailsRequestItemDto,
+  ): Promise<
+    | PostEmailsResponseDto
+    | BadRequestException
+    | UnauthorizedException
+    | ForbiddenException
+    | Error
+    | UnprocessableEntityException
+    | InternalServerErrorException
+  > {
     // We create new client for each request because govUkNotifyKey (auth key) might be different.
     const notifyClient = new NotifyClient(govUkNotifyKey);
     const reference = email.reference || `${email.templateId}-${Date.now()}`;
@@ -19,6 +38,7 @@ export class GovukNotifyService {
       })
       .then((response: any) => response)
       .catch((err) => {
+        this.logger.error(err);
         if (err?.response?.data?.errors[0].message) {
           switch (err.response.data.status_code) {
             case 400:
@@ -27,6 +47,8 @@ export class GovukNotifyService {
               throw new UnauthorizedException([err.response.data.errors[0].message]);
             case 403:
               throw new ForbiddenException([err.response.data.errors[0].message]);
+            case 500:
+              throw new InternalServerErrorException([err.response.data.errors[0].message]);
             default:
               throw new Error(err.response.data.errors[0].message);
           }
