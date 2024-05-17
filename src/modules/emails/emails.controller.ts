@@ -1,4 +1,16 @@
-import { BadRequestException, Body, Controller, Headers, HttpStatus, ParseArrayPipe, Post } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  ForbiddenException,
+  Headers,
+  HttpStatus,
+  InternalServerErrorException,
+  ParseArrayPipe,
+  Post,
+  UnauthorizedException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiOperation, ApiTags, ApiUnprocessableEntityResponse } from '@nestjs/swagger';
 import { PostEmailsResponseDto } from '@ukef/helper-modules/govuk-notify/dto/post-emails-response.dto';
 
@@ -29,9 +41,17 @@ export class EmailsController {
   postEmail(
     @Headers('govUkNotifyKey') govUkNotifyKey: string,
     @Body(new ParseArrayPipe({ items: PostEmailsRequestItemDto, optional: false })) body: PostEmailsRequestItemDto[],
-  ): Promise<PostEmailsResponseDto> {
+  ): Promise<
+    | PostEmailsResponseDto
+    | BadRequestException
+    | UnauthorizedException
+    | ForbiddenException
+    | Error
+    | UnprocessableEntityException
+    | InternalServerErrorException
+  > {
     if (!govUkNotifyKey) {
-      throw new BadRequestException(['Header "govUkNotifyKey" is required']);
+      throw new BadRequestException('Header "govUkNotifyKey" is required');
     }
     if (!body.length) {
       throw new BadRequestException('Request payload is empty');
