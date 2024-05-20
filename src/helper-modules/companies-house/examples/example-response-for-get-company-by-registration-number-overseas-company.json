@@ -1,0 +1,51 @@
+{
+    "links": {
+        "filing_history": "/company/OE006930/filing-history",
+        "self": "/company/OE006930",
+        "persons_with_significant_control": "/company/OE006930/persons-with-significant-control",
+        "persons_with_significant_control_statements": "/company/OE006930/persons-with-significant-control-statements"
+    },
+    "company_name": "APPLE BLOSSOM HOLDINGS LIMITED",
+    "company_number": "OE006930",
+    "company_status": "registered",
+    "confirmation_statement": {
+        "last_made_up_to": "2023-12-06",
+        "next_due": "2024-12-20",
+        "overdue": false,
+        "next_made_up_to": "2024-12-06"
+    },
+    "date_of_creation": "2022-12-08",
+    "etag": "332373c5004d70a1869c1078f0892759fcdd1d95",
+    "external_registration_number": "1770420",
+    "foreign_company_details": {
+        "registration_number": "1770420",
+        "originating_registry": {
+            "country": "VIRGIN ISLANDS, BRITISH",
+            "name": "Registry Of Corporate Affairs, British Virgin Islands,British Virgin Islands"
+        },
+        "legal_form": "Limited Company",
+        "governed_by": "British Virgin Islands, Business Companies Act"
+    },
+    "has_charges": false,
+    "has_insolvency_history": false,
+    "has_super_secure_pscs": false,
+    "jurisdiction": "united-kingdom",
+    "registered_office_address": {
+        "address_line_2": "Road Town",
+        "locality": "Tortola",
+        "country": "Virgin Islands, British",
+        "address_line_1": "Nerine Chambers PO BOX 905, Quastisky Building"
+    },
+    "registered_office_is_in_dispute": false,
+    "service_address": {
+        "address_line_2": "10 Barley Mow Passage",
+        "country": "United Kingdom",
+        "locality": "London",
+        "postal_code": "W4 4PH",
+        "address_line_1": "Unit 2.15 Barley Mow Centre"
+    },
+    "super_secure_managing_officer_count": 0,
+    "type": "registered-overseas-entity",
+    "undeliverable_registered_office_address": false,
+    "can_file": false
+}

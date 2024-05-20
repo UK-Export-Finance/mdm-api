@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+import { NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { CompaniesHouseService } from '@ukef/helper-modules/companies-house/companies-house.service';
 import { CompaniesHouseException } from '@ukef/helper-modules/companies-house/exception/companies-house.exception';
@@ -11,6 +11,7 @@ import { resetAllWhenMocks, when } from 'jest-when';
 
 import { SectorIndustriesService } from '../sector-industries/sector-industries.service';
 import { CompaniesService } from './companies.service';
+import { CompaniesOverseasCompanyException } from './exception/companies-overseas-company-exception.exception';
 
 describe('CompaniesService', () => {
   let configServiceGet: jest.Mock;
@@ -22,7 +23,12 @@ describe('CompaniesService', () => {
 
   const testRegistrationNumber = '00000001';
 
-  const { getCompanyCompaniesHouseResponse, findSectorIndustriesResponse, getCompanyResponse } = new GetCompanyGenerator(valueGenerator).generate({
+  const {
+    getCompanyCompaniesHouseResponse,
+    findSectorIndustriesResponse,
+    getCompanyResponse,
+    getCompanyCompaniesHouseOverseasCompanyResponse,
+  } = new GetCompanyGenerator(valueGenerator).generate({
     numberToGenerate: 1,
     registrationNumber: testRegistrationNumber,
   });
@@ -87,6 +93,17 @@ describe('CompaniesService', () => {
       await expect(getCompanyPromise).rejects.toBeInstanceOf(NotFoundException);
       await expect(getCompanyPromise).rejects.toThrow('Not found');
       await expect(getCompanyPromise).rejects.toHaveProperty('cause', companiesHouseNotFoundException);
+    });
+
+    it('throws an UnprocessableEntityException if the CompaniesHouseService returns an overseas company', async () => {
+      const companiesOverseasCompanyException = new CompaniesOverseasCompanyException(`Company with registration number ${testRegistrationNumber} is an overseas company. UKEF can only process applications from companies based in the UK.`);
+      when(companiesHouseServiceGetCompanyByRegistrationNumber).calledWith(testRegistrationNumber).mockReturnValueOnce(getCompanyCompaniesHouseOverseasCompanyResponse);
+
+      const getCompanyPromise = service.getCompanyByRegistrationNumber(testRegistrationNumber);
+
+      await expect(getCompanyPromise).rejects.toBeInstanceOf(UnprocessableEntityException);
+      await expect(getCompanyPromise).rejects.toThrow('Unprocessable entity');
+      await expect(getCompanyPromise).rejects.toHaveProperty('cause', companiesOverseasCompanyException);
     });
 
     it.each([

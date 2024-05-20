@@ -99,7 +99,7 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
       etag: this.valueGenerator.stringOfNumericCharacters({ length: 40 }),
       has_charges: false,
       has_insolvency_history: false,
-      jurisdiction: 'england-wales',
+      jurisdiction: this.valueGenerator.word(),
       registered_office_address: {
         address_line_1: `${v.buildingName} ${v.buildingNumber} ${v.thoroughfareName}`,
         locality: v.locality,
@@ -174,6 +174,9 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
       industries,
     };
 
+    const getCompanyCompaniesHouseOverseasCompanyResponse = structuredClone(getCompanyCompaniesHouseResponse);
+    getCompanyCompaniesHouseOverseasCompanyResponse.type = 'registered-overseas-entity';
+
     const getCompanyCompaniesHouseMalformedAuthorizationHeaderResponse: GetCompanyCompaniesHouseErrorResponse = {
       error: 'Invalid Authorization header',
       type: 'ch:service',
@@ -199,6 +202,7 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
       getCompanyCompaniesHouseResponse,
       findSectorIndustriesResponse,
       getCompanyResponse,
+      getCompanyCompaniesHouseOverseasCompanyResponse,
       getCompanyCompaniesHouseMalformedAuthorizationHeaderResponse,
       getCompanyCompaniesHouseInvalidAuthorizationResponse,
       getCompanyCompaniesHouseNotFoundResponse,
@@ -231,6 +235,7 @@ interface GenerateResult {
   getCompanyCompaniesHouseResponse: GetCompanyCompaniesHouseResponse;
   findSectorIndustriesResponse: SectorIndustryEntity[];
   getCompanyResponse: GetCompanyResponse;
+  getCompanyCompaniesHouseOverseasCompanyResponse: GetCompanyCompaniesHouseResponse;
   getCompanyCompaniesHouseMalformedAuthorizationHeaderResponse: GetCompanyCompaniesHouseErrorResponse;
   getCompanyCompaniesHouseInvalidAuthorizationResponse: GetCompanyCompaniesHouseErrorResponse;
   getCompanyCompaniesHouseNotFoundResponse: GetCompanyCompaniesHouseMultipleErrorResponse;

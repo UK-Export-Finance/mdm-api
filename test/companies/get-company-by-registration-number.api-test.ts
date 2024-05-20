@@ -6,6 +6,7 @@ import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-
 import nock from 'nock';
 import getCompanyCompaniesHouseResponse = require('@ukef/helper-modules/companies-house/examples/example-response-for-get-company-by-registration-number.json');
 import getCompanyResponse = require('@ukef/modules/companies/examples/example-response-for-get-company-by-registration-number.json');
+import getCompanyCompaniesHouseOverseasCompanyResponse = require('@ukef/helper-modules/companies-house/examples/example-response-for-get-company-by-registration-number-overseas-company.json');
 
 describe('GET /companies?registrationNumber=', () => {
   let api: Api;
@@ -23,6 +24,7 @@ describe('GET /companies?registrationNumber=', () => {
     registrationNumber: '00000001',
   });
 
+  const getCompaniesHousePath = (registrationNumber: string) => `/company/${registrationNumber}`;
   const getMdmPath = (registrationNumber: string) => `/api/v1/companies?registrationNumber=${encodeURIComponent(registrationNumber)}`;
 
   beforeAll(async () => {
@@ -68,6 +70,14 @@ describe('GET /companies?registrationNumber=', () => {
       registrationNumber: '0A000001',
       validationError: 'registrationNumber must match /^(([A-Z]{2}|[A-Z]\\d|\\d{2})(\\d{5,6}|\\d{4,5}[A-Z]))$/ regular expression',
     },
+    {
+      registrationNumber: '',
+      validationError: 'registrationNumber must be longer than or equal to 7 characters',
+    },
+    {
+      registrationNumber: '        ',
+      validationError: 'registrationNumber must match /^(([A-Z]{2}|[A-Z]\\d|\\d{2})(\\d{5,6}|\\d{4,5}[A-Z]))$/ regular expression',
+    },
   ])(`returns a 400 response with validation errors if postcode is '$registrationNumber'`, async ({ registrationNumber, validationError }) => {
     const { status, body } = await api.get(getMdmPath(registrationNumber));
 
@@ -88,6 +98,20 @@ describe('GET /companies?registrationNumber=', () => {
     expect(body).toStrictEqual({
       statusCode: 404,
       message: 'Not found',
+    });
+  });
+
+  it('returns a 422 response if the Companies House API returns an overseas company', async () => {
+    const registrationNumber = 'OE006930';
+
+    requestToGetCompanyByRegistrationNumber(getCompaniesHousePath(registrationNumber)).reply(200, getCompanyCompaniesHouseOverseasCompanyResponse);
+
+    const { status, body } = await api.get(getMdmPath(registrationNumber));
+
+    expect(status).toBe(422);
+    expect(body).toStrictEqual({
+      statusCode: 422,
+      message: 'Unprocessable entity',
     });
   });
 

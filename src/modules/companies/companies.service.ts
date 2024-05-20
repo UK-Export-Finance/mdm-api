@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { CompaniesHouseService } from '@ukef/helper-modules/companies-house/companies-house.service';
 import { GetCompanyCompaniesHouseResponse } from '@ukef/helper-modules/companies-house/dto/get-company-companies-house-response.dto';
 import { CompaniesHouseNotFoundException } from '@ukef/helper-modules/companies-house/exception/companies-house-not-found.exception';
@@ -6,6 +6,7 @@ import { CompaniesHouseNotFoundException } from '@ukef/helper-modules/companies-
 import { SectorIndustryEntity } from '../sector-industries/entities/sector-industry.entity';
 import { SectorIndustriesService } from '../sector-industries/sector-industries.service';
 import { GetCompanyResponse, Industry } from './dto/get-company-response.dto';
+import { CompaniesOverseasCompanyException } from './exception/companies-overseas-company-exception.exception';
 
 @Injectable()
 export class CompaniesService {
@@ -17,6 +18,8 @@ export class CompaniesService {
   async getCompanyByRegistrationNumber(registrationNumber: string): Promise<GetCompanyResponse> {
     try {
       const company: GetCompanyCompaniesHouseResponse = await this.companiesHouseService.getCompanyByRegistrationNumber(registrationNumber);
+      this.validateCompanyIsUkCompany(company, registrationNumber);
+
       const industryClasses: SectorIndustryEntity[] = await this.sectorIndustriesService.find(null, null);
 
       const mappedCompany = this.mapCompany(company, industryClasses);
@@ -27,7 +30,17 @@ export class CompaniesService {
         throw new NotFoundException('Not found', { cause: error });
       }
 
+      if (error instanceof CompaniesOverseasCompanyException) {
+        throw new UnprocessableEntityException('Unprocessable entity', { cause: error });
+      }
+
       throw error;
+    }
+  }
+
+  private validateCompanyIsUkCompany(company: GetCompanyCompaniesHouseResponse, registrationNumber: string): never | undefined {
+    if (company.type.includes('oversea')) {
+      throw new CompaniesOverseasCompanyException(`Company with registration number ${registrationNumber} is an overseas company. UKEF can only process applications from companies based in the UK.`);
     }
   }
 
