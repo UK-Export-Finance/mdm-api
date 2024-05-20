@@ -10,7 +10,7 @@ export interface RequiredFieldValidationApiTestOptions<RequestBodyItem, RequestB
   generateFieldValueOfLength?: (length: number) => RequestBodyItem[RequestBodyItemKey];
   generateFieldValueThatDoesNotMatchEnum?: () => RequestBodyItem[RequestBodyItemKey];
   validRequestBody: RequestBodyItem[] | RequestBodyItem;
-  makeRequest: ((body: unknown[]) => request.Test) | ((body: unknown) => request.Test);
+  makeRequest: (body: unknown | unknown[]) => request.Test;
   givenAnyRequestBodyWouldSucceed: () => void;
 }
 

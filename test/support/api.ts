@@ -17,8 +17,11 @@ export class Api {
     return this.request().get(url).set(this.getValidAuthHeader());
   }
 
-  post(url: string, body: string | object, extraHeaders?: Record<string, string>): request.Test {
-    const request = this.request().post(url).send(body).set(this.getValidAuthHeader());
+  post(url: string, body: string | unknown | unknown[], extraHeaders?: Record<string, string>): request.Test {
+    const request = this.request()
+      .post(url)
+      .send(body as object)
+      .set(this.getValidAuthHeader());
     if (extraHeaders) {
       request.set(extraHeaders);
     }

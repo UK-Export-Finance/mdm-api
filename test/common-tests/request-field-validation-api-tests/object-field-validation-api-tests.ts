@@ -7,7 +7,7 @@ export interface ObjectFieldValidationApiTests<RequestBodyItem, RequestBodyItemK
   fieldName: RequestBodyItemKey;
   required?: boolean;
   validRequestBody: RequestBodyItem[] | RequestBodyItem;
-  makeRequest: ((body: unknown[]) => request.Test) | ((body: unknown) => request.Test);
+  makeRequest: (body: unknown | unknown[]) => request.Test;
   givenAnyRequestBodyWouldSucceed: () => void;
 }
 

@@ -6,7 +6,7 @@ export interface TypeFieldValidationApiTestOptions<RequestBodyItem, RequestBodyI
   enum?: any;
   typeNameForErrorMessages: string;
   validRequestBody: RequestBodyItem[] | RequestBodyItem;
-  makeRequest: ((body: unknown[]) => request.Test) | ((body: unknown) => request.Test);
+  makeRequest: (body: unknown | unknown[]) => request.Test;
   givenAnyRequestBodyWouldSucceed: () => void;
 }
 
