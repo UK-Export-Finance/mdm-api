@@ -40,7 +40,9 @@ export class CompaniesService {
 
   private validateCompanyIsUkCompany(company: GetCompanyCompaniesHouseResponse, registrationNumber: string): never | undefined {
     if (company.type.includes('oversea')) {
-      throw new CompaniesOverseasCompanyException(`Company with registration number ${registrationNumber} is an overseas company. UKEF can only process applications from companies based in the UK.`);
+      throw new CompaniesOverseasCompanyException(
+        `Company with registration number ${registrationNumber} is an overseas company. UKEF can only process applications from companies based in the UK.`,
+      );
     }
   }
 

@@ -23,15 +23,11 @@ describe('CompaniesService', () => {
 
   const testRegistrationNumber = '00000001';
 
-  const {
-    getCompanyCompaniesHouseResponse,
-    findSectorIndustriesResponse,
-    getCompanyResponse,
-    getCompanyCompaniesHouseOverseasCompanyResponse,
-  } = new GetCompanyGenerator(valueGenerator).generate({
-    numberToGenerate: 1,
-    registrationNumber: testRegistrationNumber,
-  });
+  const { getCompanyCompaniesHouseResponse, findSectorIndustriesResponse, getCompanyResponse, getCompanyCompaniesHouseOverseasCompanyResponse } =
+    new GetCompanyGenerator(valueGenerator).generate({
+      numberToGenerate: 1,
+      registrationNumber: testRegistrationNumber,
+    });
 
   beforeAll(() => {
     const configService = new ConfigService();
@@ -96,8 +92,12 @@ describe('CompaniesService', () => {
     });
 
     it('throws an UnprocessableEntityException if the CompaniesHouseService returns an overseas company', async () => {
-      const companiesOverseasCompanyException = new CompaniesOverseasCompanyException(`Company with registration number ${testRegistrationNumber} is an overseas company. UKEF can only process applications from companies based in the UK.`);
-      when(companiesHouseServiceGetCompanyByRegistrationNumber).calledWith(testRegistrationNumber).mockReturnValueOnce(getCompanyCompaniesHouseOverseasCompanyResponse);
+      const companiesOverseasCompanyException = new CompaniesOverseasCompanyException(
+        `Company with registration number ${testRegistrationNumber} is an overseas company. UKEF can only process applications from companies based in the UK.`,
+      );
+      when(companiesHouseServiceGetCompanyByRegistrationNumber)
+        .calledWith(testRegistrationNumber)
+        .mockReturnValueOnce(getCompanyCompaniesHouseOverseasCompanyResponse);
 
       const getCompanyPromise = service.getCompanyByRegistrationNumber(testRegistrationNumber);
 
