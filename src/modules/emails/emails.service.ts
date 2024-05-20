@@ -14,6 +14,20 @@ import { PostEmailsRequestItemDto } from '@ukef/modules/emails/dto/post-emails-r
 export class EmailsService {
   constructor(private readonly govukNotifyService: GovukNotifyService) {}
 
+  /**
+   * Send email to one recipient using GOV.UK template id
+   * @param {String} govUkNotifyKey
+   * @param {PostEmailsRequestItemDto} post email request item
+   *
+   * @returns {Promise.<PostEmailsResponseDto>} GOV.UK Notify response
+   *
+   * @throws {BadRequestException}
+   * @throws {UnauthorizedException}
+   * @throws {ForbiddenException}
+   * @throws {Error}
+   * @throws {UnprocessableEntityException}
+   * @throws {InternalServerErrorException}
+   */
   sendEmail(
     govUkNotifyKey: string,
     postEmailRequestItem: PostEmailsRequestItemDto,

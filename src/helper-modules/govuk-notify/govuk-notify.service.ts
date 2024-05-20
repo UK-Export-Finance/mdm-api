@@ -16,6 +16,20 @@ import { PostEmailsResponseDto } from './dto/post-emails-response.dto';
 export class GovukNotifyService {
   constructor(private readonly logger: PinoLogger) {}
 
+  /**
+   * Send email to one recipient using GOV.UK template id
+   * @param {String} govUkNotifyKey
+   * @param {PostEmailsRequestItemDto} post email request item
+   *
+   * @returns {Promise.<PostEmailsResponseDto>} GOV.UK Notify response
+   *
+   * @throws {BadRequestException}
+   * @throws {UnauthorizedException}
+   * @throws {ForbiddenException}
+   * @throws {Error}
+   * @throws {UnprocessableEntityException}
+   * @throws {InternalServerErrorException}
+   */
   async sendEmail(
     govUkNotifyKey: string,
     email: PostEmailsRequestItemDto,

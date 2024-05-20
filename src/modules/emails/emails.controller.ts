@@ -38,6 +38,20 @@ export class EmailsController {
   @ApiUnprocessableEntityResponse({
     description: 'No GOV.UK Notify response',
   })
+  /**
+   * Verify request and send email
+   * @param {String} govUkNotifyKey
+   * @param {PostEmailsRequestItemDto[]]} post email request
+   *
+   * @returns {Promise.<PostEmailsResponseDto>} GOV.UK Notify response
+   *
+   * @throws {BadRequestException}
+   * @throws {UnauthorizedException}
+   * @throws {ForbiddenException}
+   * @throws {Error}
+   * @throws {UnprocessableEntityException}
+   * @throws {InternalServerErrorException}
+   */
   postEmail(
     @Headers('govUkNotifyKey') govUkNotifyKey: string,
     @Body(new ParseArrayPipe({ items: PostEmailsRequestItemDto, optional: false })) body: PostEmailsRequestItemDto[],
