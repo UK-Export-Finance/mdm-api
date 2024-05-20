@@ -51,7 +51,7 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
     const randomDateString = () => this.valueGenerator.date().toISOString().split('T')[0];
     const randomAccountingReferenceDate = this.valueGenerator.date();
 
-    const shuffleArray = (array: any[]) => {
+    const shuffleArray = <T>(array: Array<T>) => {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
