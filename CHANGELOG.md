@@ -1,5 +1,55 @@
 # Changelog
 
+## [1.18.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.17.0...v1.18.0) (2024-05-22)
+
+
+### Features
+
+* **DTFS-7052:** added GET `/geospatial/addresses/postcode` endpoint for Ordnance Survey API data ([#804](https://github.com/UK-Export-Finance/mdm-api/issues/804)) ([4963371](https://github.com/UK-Export-Finance/mdm-api/commit/496337123accb88225c1cb1d159d86621eae7b7b))
+* **DTFS2-7049:** adding new env variables to docker-compose.yml ([3ca57f0](https://github.com/UK-Export-Finance/mdm-api/commit/3ca57f0cfdbddf1ac1285164b0aa2c214e04a429))
+* **DTFS2-7052:** actioning PR comments ([e012eb4](https://github.com/UK-Export-Finance/mdm-api/commit/e012eb4a7912dcb254bfa0e7c2f5d2794f11ab58))
+* **DTFS2-7052:** actioning PR comments ([7d15b07](https://github.com/UK-Export-Finance/mdm-api/commit/7d15b07ef4126f99ffcf6189deac2b2391633edd))
+* **DTFS2-7052:** adding constants and examples ([a3d5433](https://github.com/UK-Export-Finance/mdm-api/commit/a3d54338610f50f4824d6c6eeffa50ebdb6e91a2))
+* **DTFS2-7052:** adding typescript include for json files, to satify lint. I added big examples to json files ([0b79772](https://github.com/UK-Export-Finance/mdm-api/commit/0b79772256a36fc8e5c9b38e3f67a0433984f2ab))
+* **DTFS2-7052:** api-tests for geospatial/get-address-by-postcode ([c8cb1bc](https://github.com/UK-Export-Finance/mdm-api/commit/c8cb1bc98c72f3258f8bc9d498effdfe561ff45b))
+* **DTFS2-7052:** applying Oscars suggestions on my PR ([f68ac66](https://github.com/UK-Export-Finance/mdm-api/commit/f68ac66050ea3e0515378657f4893eb65f933ed4))
+* **DTFS2-7052:** change GET /geospatial/addresses/postcode?postcode= empty response from 200 to 404 ([33c9e65](https://github.com/UK-Export-Finance/mdm-api/commit/33c9e65961e67fdff36c854a7ae9f78c3c1ccd0c))
+* **DTFS2-7052:** change husky install to same way as in DTFS project ([889fe1b](https://github.com/UK-Export-Finance/mdm-api/commit/889fe1b0c12152a2964afbf75cdede3ef1e6b48b))
+* **DTFS2-7052:** changed documentation for .env setting ORDNANCE_SURVEY_URL ([18fdf4a](https://github.com/UK-Export-Finance/mdm-api/commit/18fdf4a7bdfa77cc84a33f4da43b4c6cbab5f86b))
+* **DTFS2-7052:** changed numeric status code 200 to HttpStatus.OK, but just in controller ([3751992](https://github.com/UK-Export-Finance/mdm-api/commit/37519922172ef04acba5ca98d5e24c8039426dcc))
+* **DTFS2-7052:** changing variables to use plural ([c020867](https://github.com/UK-Export-Finance/mdm-api/commit/c020867afb451723a8f7d361cb33ef54566355ad))
+* **DTFS2-7052:** code style improvements based on PR feedback ([38939db](https://github.com/UK-Export-Finance/mdm-api/commit/38939db77917c9679311e6a793bd339b5f817a26))
+* **DTFS2-7052:** comments copy and variable name improvements ([5a0ee93](https://github.com/UK-Export-Finance/mdm-api/commit/5a0ee9342ee2d8505e0e8c08e26b8df67ce37941))
+* **DTFS2-7052:** downgrade @commitlint/cli from 19.3.0 to 18.6.0 ([132d179](https://github.com/UK-Export-Finance/mdm-api/commit/132d17933a3086773a2e0824b9a755ab4964c241))
+* **DTFS2-7052:** fix address line 1 formating ([db50210](https://github.com/UK-Export-Finance/mdm-api/commit/db50210567ef3e3b542daccb4748726476409934))
+* **DTFS2-7052:** fixed lint errors ([17fea54](https://github.com/UK-Export-Finance/mdm-api/commit/17fea546a3cf1e0945e85e653c7829544de41bfc))
+* **DTFS2-7052:** improve address test data ([ff5ac7b](https://github.com/UK-Export-Finance/mdm-api/commit/ff5ac7b19b50398c0c4662ca9886987e460dc783))
+* **DTFS2-7052:** moving address examples to constants ([de7a0e5](https://github.com/UK-Export-Finance/mdm-api/commit/de7a0e59450dc7f0f4ea57bebd8251f560a5b36b))
+* **DTFS2-7052:** moving uk postcode regex to constants and doc improvements ([75b34ac](https://github.com/UK-Export-Finance/mdm-api/commit/75b34ac8c827ee214b219c0c6eff748af79e70a9))
+* **DTFS2-7052:** new API modules and endpoint /api/v1/geospatial/addresses/postcode?postcode=W1A1AA ([2cdd0de](https://github.com/UK-Export-Finance/mdm-api/commit/2cdd0dede07399cf6f8d6f52aa2f5efbcf2759f3))
+* **DTFS2-7052:** new module geospatial ([14a6a08](https://github.com/UK-Export-Finance/mdm-api/commit/14a6a08485888f854935909f4039cd8eb9d261ae))
+* **DTFS2-7052:** package update ([3259347](https://github.com/UK-Export-Finance/mdm-api/commit/32593478c1939697f5d75cea3917716d64711d9d))
+* **DTFS2-7052:** refactor api tests to match TFS and solve type issues ([c91144d](https://github.com/UK-Export-Finance/mdm-api/commit/c91144daa23e806764e5cd80382d1726d4380339))
+* **DTFS2-7052:** removing unused class GetSearchPostcodeOrdnanceSurveyQueryDto ([32aa1ef](https://github.com/UK-Export-Finance/mdm-api/commit/32aa1ef3e41f4cf5e56ae1952b710d4e8a4fc1da))
+* **DTFS2-7052:** renaming enums/geospatial.ts to enums/geospatialCountries.ts ([252b5a1](https://github.com/UK-Export-Finance/mdm-api/commit/252b5a132a04e44df1cc4a66f27f5ff16af67207))
+* **DTFS2-7052:** spelling fix ([4c503ca](https://github.com/UK-Export-Finance/mdm-api/commit/4c503caa0895a0c1b8ba5214dd5aeeeeb57f11a1))
+* **DTFS2-7052:** tests for ordnance survey API endpoint ([837a482](https://github.com/UK-Export-Finance/mdm-api/commit/837a48254d14c6369f1f394aeb2d0646bdeb2ed9))
+* **DTFS2-7052:** tidying up map function ([0da25c3](https://github.com/UK-Export-Finance/mdm-api/commit/0da25c3304cf9491236dbf169092d68972ba1815))
+* **DTFS2-7052:** trying to automate husky run on commit ([5fbf3d7](https://github.com/UK-Export-Finance/mdm-api/commit/5fbf3d78f38c1ce7847b482112ce2815ba2e4c7b))
+* **DTFS2-7052:** trying to automate husky run on commit ([1b6cf30](https://github.com/UK-Export-Finance/mdm-api/commit/1b6cf30cb4e960e64a2efb2b699aed75b61cd4d2))
+* **DTFS2-7052:** typescript type improvement in api-test helper ([6bf5a4d](https://github.com/UK-Export-Finance/mdm-api/commit/6bf5a4d7264d1f388795b679c461f8d753f1b490))
+* **DTFS2-7052:** updating API spec ([15743c0](https://github.com/UK-Export-Finance/mdm-api/commit/15743c043b478d660097194f54c396eebe2c352f))
+* **DTFS2-7052:** updating api spec definition ([fa73657](https://github.com/UK-Export-Finance/mdm-api/commit/fa73657434c73236ae9efa93036283cc110b4c86))
+* **DTFS2-7052:** updating api spec snapshot ([3e215d7](https://github.com/UK-Export-Finance/mdm-api/commit/3e215d726496ffb206c1e1b954efc9c27c4ec685))
+* **DTFS2-7052:** updating spec snapshot ([c7ac787](https://github.com/UK-Export-Finance/mdm-api/commit/c7ac787dba058ab17b95865681d2b9afe7a4e005))
+* **DTFS2-7052:** work in progress of geospatial-get-address api tests ([21f8006](https://github.com/UK-Export-Finance/mdm-api/commit/21f800652587e12cf8cdcd457353b8a163221311))
+* **github-actions:** enable various imperative github actions ([#847](https://github.com/UK-Export-Finance/mdm-api/issues/847)) ([fbfafa9](https://github.com/UK-Export-Finance/mdm-api/commit/fbfafa9d42b98617d12bd83e99c478f5fca971e5))
+
+
+### Bug Fixes
+
+* **release-please-version:** set version to v1.17.0 ([#689](https://github.com/UK-Export-Finance/mdm-api/issues/689)) ([90c6b08](https://github.com/UK-Export-Finance/mdm-api/commit/90c6b08f30428a220fab8ec00052b92bb2d2345b))
+
 ## [1.17.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.16.0...v1.17.0) (2023-12-10)
 
 
