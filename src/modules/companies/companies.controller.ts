@@ -1,5 +1,13 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOperation, ApiResponse, ApiTags, ApiUnprocessableEntityResponse } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiInternalServerErrorResponse,
+  ApiNotFoundResponse,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  ApiUnprocessableEntityResponse,
+} from '@nestjs/swagger';
 
 import { CompaniesService } from './companies.service';
 import { GetCompanyByRegistrationNumberQuery } from './dto/get-company-by-registration-number-query.dto';
