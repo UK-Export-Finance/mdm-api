@@ -28,7 +28,7 @@
 * **DTFS2-7052:** actioning PR comments ([e012eb4](https://github.com/UK-Export-Finance/mdm-api/commit/e012eb4a7912dcb254bfa0e7c2f5d2794f11ab58))
 * **DTFS2-7052:** actioning PR comments ([7d15b07](https://github.com/UK-Export-Finance/mdm-api/commit/7d15b07ef4126f99ffcf6189deac2b2391633edd))
 * **DTFS2-7052:** adding constants and examples ([a3d5433](https://github.com/UK-Export-Finance/mdm-api/commit/a3d54338610f50f4824d6c6eeffa50ebdb6e91a2))
-* **DTFS2-7052:** adding typescript include for json files, to satify lint. I added big examples to json files ([0b79772](https://github.com/UK-Export-Finance/mdm-api/commit/0b79772256a36fc8e5c9b38e3f67a0433984f2ab))
+* **DTFS2-7052:** adding typescript include for json files, to satisfy lint. I added big examples to json files ([0b79772](https://github.com/UK-Export-Finance/mdm-api/commit/0b79772256a36fc8e5c9b38e3f67a0433984f2ab))
 * **DTFS2-7052:** api-tests for geospatial/get-address-by-postcode ([c8cb1bc](https://github.com/UK-Export-Finance/mdm-api/commit/c8cb1bc98c72f3258f8bc9d498effdfe561ff45b))
 * **DTFS2-7052:** applying Oscars suggestions on my PR ([f68ac66](https://github.com/UK-Export-Finance/mdm-api/commit/f68ac66050ea3e0515378657f4893eb65f933ed4))
 * **DTFS2-7052:** change GET /geospatial/addresses/postcode?postcode= empty response from 200 to 404 ([33c9e65](https://github.com/UK-Export-Finance/mdm-api/commit/33c9e65961e67fdff36c854a7ae9f78c3c1ccd0c))
