@@ -1,5 +1,5 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOperation, ApiResponse, ApiTags, ApiUnprocessableEntityResponse } from '@nestjs/swagger';
 
 import { CompaniesService } from './companies.service';
 import { GetCompanyByRegistrationNumberQuery } from './dto/get-company-by-registration-number-query.dto';
@@ -24,6 +24,9 @@ export class CompaniesController {
   })
   @ApiNotFoundResponse({
     description: 'Company not found.',
+  })
+  @ApiUnprocessableEntityResponse({
+    description: 'Company is an overseas company. UKEF can only process applications from companies based in the UK.',
   })
   @ApiInternalServerErrorResponse({
     description: 'Internal server error.',
