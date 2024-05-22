@@ -33,7 +33,7 @@ export const withEmailFieldValidationApiTests = <RequestBodyItem, RequestBodyIte
       givenAnyRequestBodyWouldSucceed();
     });
 
-    it(`returns a 2xx response validRequestBody is provided`, async () => {
+    it(`returns a 2xx response if validRequestBody is provided`, async () => {
       const preparedRequest = prepareModifiedRequest(requestIsAnArray, requestBodyItem);
 
       const { status } = await makeRequest(preparedRequest);
@@ -65,8 +65,8 @@ export const withEmailFieldValidationApiTests = <RequestBodyItem, RequestBodyIte
         'test@example.entertainment',
         'ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt@eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.entertainment',
       ])(`returns a 2xx response if ${fieldName} is correct email "%s"`, async (validEmail) => {
-        const requestWithInvalidValue = { ...requestBodyItem, [fieldNameSymbol]: validEmail };
-        const preparedRequest = prepareModifiedRequest(requestIsAnArray, requestWithInvalidValue);
+        const requestWithValidEmail = { ...requestBodyItem, [fieldNameSymbol]: validEmail };  
+        const preparedRequest = prepareModifiedRequest(requestIsAnArray, requestWithValidEmail); 
 
         const { status } = await makeRequest(preparedRequest);
 

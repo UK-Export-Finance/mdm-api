@@ -32,7 +32,7 @@ export class GovukNotifyService {
    */
   async sendEmail(
     govUkNotifyKey: string,
-    email: PostEmailsRequestItemDto,
+    postEmailsRequestItem: PostEmailsRequestItemDto,
   ): Promise<
     | PostEmailsResponseDto
     | BadRequestException

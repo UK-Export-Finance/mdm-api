@@ -45,7 +45,7 @@ export class RandomValueGenerator {
     return this.chance.sentence({ words: options?.words });
   }
 
-  paragraph(options: { sentences?: number }): string {
+  paragraph(options?: { sentences?: number }): string {
     return this.chance.paragraph({ sentences: options?.sentences });
   }
 

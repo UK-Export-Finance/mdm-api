@@ -73,7 +73,7 @@ describe('POST /emails', () => {
     expect(body).toStrictEqual(postEmailsResponse[0][0]);
   });
 
-  it('calls NotifyClient.sendEmail', async () => {
+  it('calls NotifyClient.sendEmail with the correct arguments', async () => {
     await api.post(mdmPath, request, { govUkNotifyKey });
 
     expect(sendEmailMethodMock).toHaveBeenCalledWith(
@@ -119,7 +119,7 @@ describe('POST /emails', () => {
       error: 'Forbidden',
       expectedStatus: 403,
     },
-  ])('returns a $expectedStatus response if notify client response with status $expectedStatus', async ({ error, expectedStatus }) => {
+  ])('returns a $expectedStatus response if the Notify client responds with status $expectedStatus', async ({ error, expectedStatus }) => {
     jest.mocked(sendEmailMethodMock).mockImplementation(() => Promise.reject(generateNotifyError(expectedStatus, errorMessage)));
 
     const { status, body } = await api.post(mdmPath, request, { govUkNotifyKey });
@@ -132,7 +132,7 @@ describe('POST /emails', () => {
     });
   });
 
-  it('returns a 500 response if notify client response with status 500', async () => {
+  it('returns a 500 response if the Notify client responds with status 500', async () => {
     jest.mocked(sendEmailMethodMock).mockImplementation(() => Promise.reject(generateNotifyError(500)));
 
     const { status, body } = await api.post(mdmPath, request, { govUkNotifyKey });
@@ -149,8 +149,11 @@ describe('POST /emails', () => {
     const { status, body } = await api.post(mdmPath, payload, { govUkNotifyKey });
 
     expect(status).toBe(400);
-    expect(body.error).toMatch('Bad Request');
-    expect(body.message).toMatch('Validation failed (parsable array expected)');
+    expect(body).toStrictEqual({
+      statusCode: 400,
+      error: 'Bad Request',
+      message: 'Validation failed (parsable array expected)',
+    });
   });
 
   it(`returns a 400 response for empty array`, async () => {
@@ -158,8 +161,11 @@ describe('POST /emails', () => {
     const { status, body } = await api.post(mdmPath, payload, { govUkNotifyKey });
 
     expect(status).toBe(400);
-    expect(body.error).toMatch('Bad Request');
-    expect(body.message).toMatch('Request payload is empty');
+    expect(body).toStrictEqual({  
+      statusCode: 400,  
+      error: 'Bad Request',  
+      message: 'Request payload is empty',  
+    });  
   });
 
   it(`returns a 400 response for broken json`, async () => {
@@ -167,8 +173,11 @@ describe('POST /emails', () => {
     const { status, body } = await api.post(mdmPath, payload, { govUkNotifyKey });
 
     expect(status).toBe(400);
-    expect(body.error).toMatch('Bad Request');
-    expect(body.message).toMatch('Validation failed (parsable array expected)');
+    expect(body).toStrictEqual({  
+      statusCode: 400,  
+      error: 'Bad Request',  
+      message: 'Validation failed (parsable array expected)',  
+    });  
   });
 
   describe('field validation', () => {

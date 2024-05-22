@@ -24,24 +24,33 @@ export class EmailsController {
 
   @Post()
   @ApiOperation({
-    summary: 'Send email using to GOV.UK Notify service',
+    summary: 'Send email using GOV.UK Notify service',
   })
   @ApiBody({ type: [PostEmailsRequestItemDto] })
   @ApiCreatedResponse({
     status: HttpStatus.CREATED,
     description: 'Returns information about email transaction.',
-    type: [PostEmailsResponseDto],
+    type: PostEmailsResponseDto,
   })
   @ApiBadRequestResponse({
     description: 'Bad request',
   })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+  })
+  @ApiForbiddenResponse({
+    description: 'Forbidden',
+  })
   @ApiUnprocessableEntityResponse({
     description: 'No GOV.UK Notify response',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error'
   })
   /**
    * Verify request and send email
    * @param {String} govUkNotifyKey
-   * @param {PostEmailsRequestItemDto[]]} post email request
+   * @param {PostEmailsRequestItemDto[]} body
    *
    * @returns {Promise.<PostEmailsResponseDto>} GOV.UK Notify response
    *
@@ -68,7 +77,7 @@ export class EmailsController {
       throw new BadRequestException('Header "govUkNotifyKey" is required');
     }
     if (!body?.length) {
-      throw new BadRequestException('Request payload is empty');
+      throw new BadRequestException('Request payload is the empty array');
     }
     return this.emailsService.sendEmail(govUkNotifyKey, body[0]);
   }

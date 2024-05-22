@@ -13,7 +13,7 @@ describe('GovukNotifyService', () => {
 
   const govUkNotifyKey = valueGenerator.string({ length: 10 });
   const sendToEmailAddress = valueGenerator.email();
-  const templateId = valueGenerator.string({ length: 10 });
+  const templateId = valueGenerator.string({ length: GOVUK_NOTIFY.FIELD_LENGTHS.TEMPLATE_ID });
   const errorMessage = valueGenerator.sentence();
   const reference = valueGenerator.base64string({ length: 32 });
   const personalisation = {
@@ -49,21 +49,21 @@ describe('GovukNotifyService', () => {
       return new AxiosError(`Request failed with status code ${status}`, status.toString(), null, null, response);
     };
 
-    it('calls GOV.UK Notify client constructor', async () => {
+    it('calls GOV.UK Notify client constructor with the correct argument', async () => {
       await service.sendEmail(govUkNotifyKey, { sendToEmailAddress, templateId, personalisation });
 
       expect(NotifyClient).toHaveBeenCalledTimes(1);
       expect(NotifyClient).toHaveBeenCalledWith(govUkNotifyKey);
     });
 
-    it('calls GOV.UK Notify client sendEmail function', async () => {
+    it('calls GOV.UK Notify client sendEmail function with the correct arguments', async () => {
       await service.sendEmail(govUkNotifyKey, { sendToEmailAddress, templateId, personalisation, reference });
 
       expect(sendEmailMethodMock).toHaveBeenCalledTimes(1);
       expect(sendEmailMethodMock).toHaveBeenCalledWith(templateId, sendToEmailAddress, { personalisation, reference });
     });
 
-    it('returns a 201 response from GOV.UK Notify', async () => {
+    it('returns a 201 response from GOV.UK Notify when sending the email is successful', async () => {
       const response = await service.sendEmail(govUkNotifyKey, { sendToEmailAddress, templateId, personalisation });
 
       expect(response).toEqual({ status: 201, data: expectedResponse });

@@ -10,7 +10,7 @@ export class PostEmailsResponseDataContent {
 
   @ApiProperty({
     example: GOVUK_NOTIFY.EXAMPLES.FROM_EMAIL,
-    description: 'Senders email address',
+    description: 'Sender's email address',
   })
   public from_email: string;
 
@@ -22,7 +22,7 @@ export class PostEmailsResponseDataContent {
 
   @ApiProperty({
     example: null,
-    description: 'Unsubscribe links are not used',
+    description: 'Unsubscribe links are not used, so this field should always be null',
     nullable: true,
   })
   public unsubscribe_link: string | null;
@@ -66,7 +66,7 @@ export class PostEmailsResponseData {
 
   @ApiProperty({
     example: null,
-    description: 'Email scheduling is not used',
+    description: 'Email scheduling is not used, so this field should always be null',
     nullable: true,
   })
   public scheduled_for: string | null;

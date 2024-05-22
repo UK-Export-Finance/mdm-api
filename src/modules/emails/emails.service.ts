@@ -17,7 +17,7 @@ export class EmailsService {
   /**
    * Send email to one recipient using GOV.UK template id
    * @param {String} govUkNotifyKey
-   * @param {PostEmailsRequestItemDto} post email request item
+   * @param {PostEmailsRequestItemDto} postEmailsRequestItem
    *
    * @returns {Promise.<PostEmailsResponseDto>} GOV.UK Notify response
    *
@@ -30,16 +30,8 @@ export class EmailsService {
    */
   sendEmail(
     govUkNotifyKey: string,
-    postEmailRequestItem: PostEmailsRequestItemDto,
-  ): Promise<
-    | PostEmailsResponseDto
-    | BadRequestException
-    | UnauthorizedException
-    | ForbiddenException
-    | Error
-    | UnprocessableEntityException
-    | InternalServerErrorException
-  > {
-    return this.govukNotifyService.sendEmail(govUkNotifyKey, postEmailRequestItem);
+    postEmailsRequestItem: PostEmailsRequestItemDto,
+  ): Promise<PostEmailsResponseDto> {
+    return this.govukNotifyService.sendEmail(govUkNotifyKey, postEmailsRequestItem);
   }
 }
