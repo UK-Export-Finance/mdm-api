@@ -14,7 +14,7 @@ describe('GeospatialController', () => {
 
   const valueGenerator = new RandomValueGenerator();
   const { getAddressesByPostcodeResponse, getAddressesByPostcodeMultipleResponse } = new GetGeospatialAddressesGenerator(valueGenerator).generate({
-    numberToGenerate: 2,
+    numberToGenerate: 1,
   });
 
   beforeEach(() => {

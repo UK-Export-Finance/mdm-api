@@ -1,20 +1,18 @@
+import { BadRequestException, Body, Controller, Headers, HttpStatus, Post } from '@nestjs/common';
 import {
-  BadRequestException,
-  Body,
-  Controller,
-  ForbiddenException,
-  Headers,
-  HttpStatus,
-  InternalServerErrorException,
-  ParseArrayPipe,
-  Post,
-  UnauthorizedException,
-  UnprocessableEntityException,
-} from '@nestjs/common';
-import { ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiOperation, ApiTags, ApiUnprocessableEntityResponse } from '@nestjs/swagger';
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiCreatedResponse,
+  ApiForbiddenResponse,
+  ApiInternalServerErrorResponse,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+  ApiUnprocessableEntityResponse,
+} from '@nestjs/swagger';
 import { PostEmailsResponseDto } from '@ukef/helper-modules/govuk-notify/dto/post-emails-response.dto';
 
-import { PostEmailsRequestItemDto } from './dto/post-emails-request.dto';
+import { PostEmailsRequestDto } from './dto/post-emails-request.dto';
 import { EmailsService } from './emails.service';
 
 @ApiTags('emails')
@@ -26,7 +24,7 @@ export class EmailsController {
   @ApiOperation({
     summary: 'Send email using GOV.UK Notify service',
   })
-  @ApiBody({ type: [PostEmailsRequestItemDto] })
+  @ApiBody({ type: [PostEmailsRequestDto] })
   @ApiCreatedResponse({
     status: HttpStatus.CREATED,
     description: 'Returns information about email transaction.',
@@ -45,7 +43,7 @@ export class EmailsController {
     description: 'No GOV.UK Notify response',
   })
   @ApiInternalServerErrorResponse({
-    description: 'Internal server error'
+    description: 'Internal server error',
   })
   /**
    * Verify request and send email
@@ -61,24 +59,10 @@ export class EmailsController {
    * @throws {UnprocessableEntityException}
    * @throws {InternalServerErrorException}
    */
-  postEmail(
-    @Headers('govUkNotifyKey') govUkNotifyKey: string,
-    @Body(new ParseArrayPipe({ items: PostEmailsRequestItemDto, optional: false })) body: PostEmailsRequestItemDto[],
-  ): Promise<
-    | PostEmailsResponseDto
-    | BadRequestException
-    | UnauthorizedException
-    | ForbiddenException
-    | Error
-    | UnprocessableEntityException
-    | InternalServerErrorException
-  > {
+  postEmail(@Headers('govUkNotifyKey') govUkNotifyKey: string, @Body() body: PostEmailsRequestDto): Promise<PostEmailsResponseDto> {
     if (!govUkNotifyKey) {
       throw new BadRequestException('Header "govUkNotifyKey" is required');
     }
-    if (!body?.length) {
-      throw new BadRequestException('Request payload is the empty array');
-    }
-    return this.emailsService.sendEmail(govUkNotifyKey, body[0]);
+    return this.emailsService.sendEmail(govUkNotifyKey, body);
   }
 }

@@ -10,7 +10,7 @@ export class PostEmailsResponseDataContent {
 
   @ApiProperty({
     example: GOVUK_NOTIFY.EXAMPLES.FROM_EMAIL,
-    description: 'Sender's email address',
+    description: "Sender's email address",
   })
   public from_email: string;
 

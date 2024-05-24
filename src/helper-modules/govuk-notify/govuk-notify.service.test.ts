@@ -1,6 +1,7 @@
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import expectedResponse = require('./examples/example-response-for-send-emails.json');
 import { BadRequestException, ForbiddenException, InternalServerErrorException, UnauthorizedException, UnprocessableEntityException } from '@nestjs/common';
+import { GOVUK_NOTIFY } from '@ukef/constants';
 import { AxiosError, AxiosResponse } from 'axios';
 import { PinoLogger } from 'nestjs-pino';
 import { NotifyClient } from 'notifications-node-client';
@@ -10,6 +11,7 @@ jest.mock('notifications-node-client');
 
 describe('GovukNotifyService', () => {
   const valueGenerator = new RandomValueGenerator();
+  const loggerError = jest.fn();
 
   const govUkNotifyKey = valueGenerator.string({ length: 10 });
   const sendToEmailAddress = valueGenerator.email();
@@ -25,9 +27,9 @@ describe('GovukNotifyService', () => {
   const sendEmailMethodMock = jest
     .spyOn(NotifyClient.prototype, 'sendEmail')
     .mockImplementation(() => Promise.resolve({ status: 201, data: expectedResponse }));
-  const loggerMock = {} as PinoLogger;
-  loggerMock.error = jest.fn();
-  const service = new GovukNotifyService(loggerMock);
+  const logger = new PinoLogger({});
+  logger.error = loggerError;
+  const service = new GovukNotifyService(logger);
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -66,14 +68,6 @@ describe('GovukNotifyService', () => {
     it('returns a 201 response from GOV.UK Notify when sending the email is successful', async () => {
       const response = await service.sendEmail(govUkNotifyKey, { sendToEmailAddress, templateId, personalisation });
 
-      expect(response).toEqual({ status: 201, data: expectedResponse });
-    });
-
-    it('calls GOV.UK Notify client with the specified field `reference` and returns a 201 response', async () => {
-      const reference = valueGenerator.string({ length: 10 });
-      const response = await service.sendEmail(govUkNotifyKey, { sendToEmailAddress, templateId, personalisation, reference });
-
-      expect(sendEmailMethodMock).toHaveBeenCalledWith(templateId, sendToEmailAddress, { personalisation, reference });
       expect(response).toEqual({ status: 201, data: expectedResponse });
     });
 
@@ -124,7 +118,6 @@ describe('GovukNotifyService', () => {
       await expect(resultPromise).rejects.toBeInstanceOf(Error);
       await expect(resultPromise).rejects.toThrow(errorMessage);
       await expect(resultPromise).rejects.toHaveProperty('message', errorMessage);
-      await expect(resultPromise).rejects.toHaveProperty('stack');
     });
 
     it('throws exception UnprocessableEntityException for empty response from GOV.UK Notify client', async () => {

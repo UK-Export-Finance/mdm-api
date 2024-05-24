@@ -54,7 +54,6 @@ export function withTypeFieldValidationApiTests<RequestBodyItem, RequestBodyItem
       const preparedRequestWithWrongField = prepareModifiedRequest(requestIsAnArray, requestWithWrongField);
 
       const { status, body } = await makeRequest(preparedRequestWithWrongField);
-
       expect(status).toBe(400);
       expect(body).toMatchObject({
         error: 'Bad Request',

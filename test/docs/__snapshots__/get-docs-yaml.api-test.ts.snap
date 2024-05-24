@@ -146,7 +146,7 @@ paths:
   /api/v1/emails:
     post:
       operationId: EmailsController_postEmail
-      summary: Send email using to GOV.UK Notify service
+      summary: Send email using GOV.UK Notify service
       parameters:
         - name: govUkNotifyKey
           required: true
@@ -160,20 +160,24 @@ paths:
             schema:
               type: array
               items:
-                $ref: '#/components/schemas/PostEmailsRequestItemDto'
+                $ref: '#/components/schemas/PostEmailsRequestDto'
       responses:
         '201':
           description: Returns information about email transaction.
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/PostEmailsResponseDto'
+                $ref: '#/components/schemas/PostEmailsResponseDto'
         '400':
           description: Bad request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
         '422':
           description: No GOV.UK Notify response
+        '500':
+          description: Internal server error
       tags:
         - emails
   /api/v1/exposure-period:
@@ -697,29 +701,37 @@ components:
         - type
         - subtype
         - isLegacyRecord
-    PostEmailsRequestItemDto:
+    PostEmailsRequestDto:
       type: object
       properties:
         templateId:
           type: string
           example: tmpl1234-1234-5678-9012-abcd12345678
+          description: The GOV.UK Notify ID corresponding to the email template
+          nullable: false
+          minLength: 36
+          maxLength: 36
         sendToEmailAddress:
           type: string
           example: john.tester@example.com
           description: Email address to send this email
+          nullable: false
         personalisation:
           type: object
           example:
             firstName: John
           description: All variables for email template
+          nullable: true
         reference:
           type: string
           example: tmpl1234-1234-5678-9012-abcd12345678-1713272155576
+          description: Reference for the email sent
+          nullable: true
+          minLength: 1
+          maxLength: 100
       required:
         - templateId
         - sendToEmailAddress
-        - personalisation
-        - reference
     PostEmailsResponseDataContent:
       type: object
       properties:
@@ -730,7 +742,7 @@ components:
         from_email:
           type: string
           example: test@notifications.service.gov.uk
-          description: Senders email address
+          description: Sender's email address
         subject:
           type: string
           example: 'Status update: EuroStar bridge'
@@ -738,7 +750,7 @@ components:
         unsubscribe_link:
           type: string
           example: null
-          description: Unsubscribe links are not used
+          description: Unsubscribe links are not used, so this field should always be null
           nullable: true
       required:
         - body
@@ -781,7 +793,7 @@ components:
         scheduled_for:
           type: string
           example: null
-          description: Email scheduling is not used
+          description: Email scheduling is not used, so this field should always be null
           nullable: true
         template:
           $ref: '#/components/schemas/PostEmailsResponseDataTemplate'

@@ -9,7 +9,7 @@ import {
 import { PinoLogger } from 'nestjs-pino';
 import { NotifyClient } from 'notifications-node-client';
 
-import { PostEmailsRequestItemDto } from '../../modules/emails/dto/post-emails-request.dto';
+import { PostEmailsRequestDto } from '../../modules/emails/dto/post-emails-request.dto';
 import { PostEmailsResponseDto } from './dto/post-emails-response.dto';
 
 @Injectable()
@@ -19,7 +19,7 @@ export class GovukNotifyService {
   /**
    * Send email to one recipient using GOV.UK template id
    * @param {String} govUkNotifyKey
-   * @param {PostEmailsRequestItemDto} post email request item
+   * @param {PostEmailsRequestDto} postEmailsRequest
    *
    * @returns {Promise.<PostEmailsResponseDto>} GOV.UK Notify response
    *
@@ -30,24 +30,13 @@ export class GovukNotifyService {
    * @throws {UnprocessableEntityException}
    * @throws {InternalServerErrorException}
    */
-  async sendEmail(
-    govUkNotifyKey: string,
-    postEmailsRequestItem: PostEmailsRequestItemDto,
-  ): Promise<
-    | PostEmailsResponseDto
-    | BadRequestException
-    | UnauthorizedException
-    | ForbiddenException
-    | Error
-    | UnprocessableEntityException
-    | InternalServerErrorException
-  > {
+  async sendEmail(govUkNotifyKey: string, postEmailsRequest: PostEmailsRequestDto): Promise<PostEmailsResponseDto> {
     // We create new client for each request because govUkNotifyKey (auth key) might be different.
     const notifyClient = new NotifyClient(govUkNotifyKey);
-    const reference = email.reference || `${email.templateId}-${Date.now()}`;
+    const reference = postEmailsRequest.reference || `${postEmailsRequest.templateId}-${Date.now()}`;
     const notifyResponse = await notifyClient
-      .sendEmail(email.templateId, email.sendToEmailAddress, {
-        personalisation: email.personalisation,
+      .sendEmail(postEmailsRequest.templateId, postEmailsRequest.sendToEmailAddress, {
+        personalisation: postEmailsRequest.personalisation,
         reference,
       })
       .then((response: any) => response)
@@ -72,6 +61,7 @@ export class GovukNotifyService {
       });
 
     if (!notifyResponse) {
+      this.logger.error('Empty response from GOV.UK Notify');
       throw new UnprocessableEntityException('No GOV.UK Notify response');
     }
 

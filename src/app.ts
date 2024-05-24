@@ -31,10 +31,6 @@ export class App {
       new ValidationPipe({
         whitelist: true,
         transform: true,
-        forbidNonWhitelisted: true,
-        transformOptions: {
-          enableImplicitConversion: true,
-        },
       }),
     );
 

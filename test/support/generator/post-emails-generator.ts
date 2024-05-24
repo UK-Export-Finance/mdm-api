@@ -1,6 +1,6 @@
 import { GOVUK_NOTIFY } from '@ukef/constants';
 import { PostEmailsResponseDto } from '@ukef/helper-modules/govuk-notify/dto/post-emails-response.dto';
-import { PostEmailsRequestItemDto } from '@ukef/modules/emails/dto/post-emails-request.dto';
+import { PostEmailsRequestDto } from '@ukef/modules/emails/dto/post-emails-request.dto';
 
 import { AbstractGenerator } from './abstract-generator';
 import { RandomValueGenerator } from './random-value-generator';
@@ -29,39 +29,35 @@ export class PostEmailsGenerator extends AbstractGenerator<PostEmailsValues, Gen
   }
 
   protected transformRawValuesToGeneratedValues(values: PostEmailsValues[], _options: GenerateOptions): GenerateResult {
-    const requests: PostEmailsRequestItemDto[][] = values.map((v) => [
-      {
-        templateId: v.templateId,
-        sendToEmailAddress: v.toEmail,
-        personalisation: v.personalisation,
-      },
-    ]);
+    const requests: PostEmailsRequestDto[] = values.map((v) => ({
+      templateId: v.templateId,
+      sendToEmailAddress: v.toEmail,
+      personalisation: v.personalisation,
+    }));
 
     const mdmPath = '/api/v1/emails';
     const govUkDomain = this.valueGenerator.httpsUrl();
 
-    const postEmailsResponse: PostEmailsResponseDto[][] = values.map((v: PostEmailsValues) => [
-      {
-        status: 201,
-        data: {
-          content: {
-            body: v.emailBody,
-            from_email: v.fromEmail,
-            subject: v.emailSubject,
-            unsubscribe_link: null,
-          },
-          id: v.sendTransactionId,
-          reference: v.reference,
-          scheduled_for: null,
-          template: {
-            id: v.templateId,
-            uri: `${govUkDomain}/services/${v.serviceId}'/templates/${v.templateId}`,
-            version: 24,
-          },
-          uri: `${govUkDomain}/v2/notifications/${v.sendTransactionId}`,
+    const postEmailsResponse: PostEmailsResponseDto[] = values.map((v: PostEmailsValues) => ({
+      status: 201,
+      data: {
+        content: {
+          body: v.emailBody,
+          from_email: v.fromEmail,
+          subject: v.emailSubject,
+          unsubscribe_link: null,
         },
+        id: v.sendTransactionId,
+        reference: v.reference,
+        scheduled_for: null,
+        template: {
+          id: v.templateId,
+          uri: `${govUkDomain}/services/${v.serviceId}'/templates/${v.templateId}`,
+          version: 24,
+        },
+        uri: `${govUkDomain}/v2/notifications/${v.sendTransactionId}`,
       },
-    ]);
+    }));
 
     return {
       requests,
@@ -89,7 +85,7 @@ interface PostEmailsValues {
 interface GenerateOptions {}
 
 interface GenerateResult {
-  requests: PostEmailsRequestItemDto[][];
+  requests: PostEmailsRequestDto[];
   mdmPath: string;
-  postEmailsResponse: PostEmailsResponseDto[][];
+  postEmailsResponse: PostEmailsResponseDto[];
 }

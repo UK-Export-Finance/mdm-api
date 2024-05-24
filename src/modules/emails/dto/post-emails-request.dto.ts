@@ -2,9 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { GOVUK_NOTIFY } from '@ukef/constants';
 import { IsEmail, IsNotEmpty, IsObject, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 
-export type PostEmailsRequestDto = PostEmailsRequestItemDto[];
-
-export class PostEmailsRequestItemDto {
+export class PostEmailsRequestDto {
   @IsString()
   @IsNotEmpty()
   @MinLength(GOVUK_NOTIFY.FIELD_LENGTHS.TEMPLATE_ID)

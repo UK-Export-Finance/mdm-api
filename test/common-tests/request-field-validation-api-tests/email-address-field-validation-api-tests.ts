@@ -24,7 +24,6 @@ export const withEmailFieldValidationApiTests = <RequestBodyItem, RequestBodyIte
   const requestIsAnArray = Array.isArray(validRequestBody);
   const requestBodyItem = requestIsAnArray ? validRequestBody[0] : validRequestBody;
   const fieldName = fieldNameSymbol.toString();
-  const validEmail = valueGenerator.email();
   const typeNameForErrorMessages = 'an email';
   required = required ?? true;
 
@@ -42,16 +41,6 @@ export const withEmailFieldValidationApiTests = <RequestBodyItem, RequestBodyIte
     });
 
     describe(`${fieldName} email specific validation`, () => {
-      it(`returns a 2xx response if ${fieldName} is correct email is "${validEmail}"`, async () => {
-        const requestWithInvalidValue = { ...requestBodyItem, [fieldNameSymbol]: validEmail };
-        const preparedRequest = prepareModifiedRequest(requestIsAnArray, requestWithInvalidValue);
-
-        const { status } = await makeRequest(preparedRequest);
-
-        expect(status).toBeGreaterThanOrEqual(200);
-        expect(status).toBeLessThan(300);
-      });
-
       it.each([
         valueGenerator.email(),
         'test@example.uk',
@@ -65,8 +54,8 @@ export const withEmailFieldValidationApiTests = <RequestBodyItem, RequestBodyIte
         'test@example.entertainment',
         'ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt@eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.entertainment',
       ])(`returns a 2xx response if ${fieldName} is correct email "%s"`, async (validEmail) => {
-        const requestWithValidEmail = { ...requestBodyItem, [fieldNameSymbol]: validEmail };  
-        const preparedRequest = prepareModifiedRequest(requestIsAnArray, requestWithValidEmail); 
+        const requestWithValidEmail = { ...requestBodyItem, [fieldNameSymbol]: validEmail };
+        const preparedRequest = prepareModifiedRequest(requestIsAnArray, requestWithValidEmail);
 
         const { status } = await makeRequest(preparedRequest);
 
@@ -75,27 +64,13 @@ export const withEmailFieldValidationApiTests = <RequestBodyItem, RequestBodyIte
       });
 
       it.each([
-        {
-          invalidEmail: 'test@example',
-          expectedError: 'sendToEmailAddress must be an email',
-        },
-        {
-          invalidEmail: 'testexample.com',
-          expectedError: 'sendToEmailAddress must be an email',
-        },
-        {
-          invalidEmail: 'test@example.c',
-          expectedError: 'sendToEmailAddress must be an email',
-        },
-        {
-          invalidEmail: 'ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt@eeee.com',
-          expectedError: 'sendToEmailAddress must be an email',
-        },
-        {
-          invalidEmail: 'tttt@eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.com',
-          expectedError: 'sendToEmailAddress must be an email',
-        },
-      ])(`returns a 400 response if ${fieldName} is invalid email "$invalidEmail"`, async ({ invalidEmail, expectedError }) => {
+        'test@example',
+        'testexample.com',
+        'test@example.c',
+        'ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt@eeee.com',
+        'tttt@eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.com',
+      ])(`returns a 400 response if ${fieldName} is invalid email "%s"`, async (invalidEmail) => {
+        const expectedError = `${fieldName} must be an email`;
         const requestWithInvalidValue = { ...requestBodyItem, [fieldNameSymbol]: invalidEmail };
         const preparedRequest = prepareModifiedRequest(requestIsAnArray, requestWithInvalidValue);
 
