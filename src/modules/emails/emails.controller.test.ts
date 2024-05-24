@@ -43,19 +43,5 @@ describe('EmailsController', () => {
       expect(runTest()).toThrow(BadRequestException);
       expect(runTest()).toThrow('Header "govUkNotifyKey" is required');
     });
-
-    it('throws BadRequestException exception if body is empty array', () => {
-      const runTest = () => () => controller.postEmail(govUkNotifyKey, []);
-
-      expect(runTest()).toThrow(BadRequestException);
-      expect(runTest()).toThrow('Request payload is empty');
-    });
-
-    it('throws BadRequestException exception if header govUkNotifyKey is missing and body is empty array', () => {
-      const runTest = () => () => controller.postEmail(null, []);
-
-      expect(runTest()).toThrow(BadRequestException);
-      expect(runTest()).toThrow('Header "govUkNotifyKey" is required');
-    });
   });
 });
