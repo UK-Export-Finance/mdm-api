@@ -76,7 +76,7 @@
     "@types/lodash": "^4.17.4",
     "@types/node": "^20.12.12",
     "@types/supertest": "^6.0.2",
-    "@typescript-eslint/eslint-plugin": "^7.10.0",
+    "@typescript-eslint/eslint-plugin": "^7.11.0",
     "@typescript-eslint/parser": "^7.11.0",
     "chance": "^1.1.11",
     "cspell": "^8.8.2",
