@@ -13,40 +13,32 @@
                 "code": "59112",
                 "name": "Video production activities"
             },
-            "sector":  {
-                "code": "1009",
-                "name": "Information and communication"
-            }
+            "code": "1009",
+            "name": "Information and communication"
         },
         {
             "class":  {
                 "code": "62012",
                 "name": "Business and domestic software development"
             },
-            "sector":  {
-                "code": "1009",
-                "name": "Information and communication"
-            }
+            "code": "1009",
+            "name": "Information and communication"
         },
         {
             "class":  {
                 "code": "62020",
                 "name": "Information technology consultancy activities"
             },
-            "sector":  {
-                "code": "1009",
-                "name": "Information and communication"
-            }
+            "code": "1009",
+            "name": "Information and communication"
         },
         {
             "class":  {
                 "code": "62090",
                 "name": "Other information technology service activities"
             },
-            "sector":  {
-                "code": "1009",
-                "name": "Information and communication"
-            }
+            "code": "1009",
+            "name": "Information and communication"
         }
     ]
 }

@@ -152,10 +152,8 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
     shuffleArray(findSectorIndustriesResponse);
 
     const industries: Industry[] = v.sicCodes.map((sicCode, index) => ({
-      sector: {
-        code: v.industrySectorCode.toString(),
-        name: v.industrySectorName,
-      },
+      code: v.industrySectorCode.toString(),
+      name: v.industrySectorName,
       class: {
         code: sicCode,
         name: v.industryClassNames[index],

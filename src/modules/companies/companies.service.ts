@@ -72,10 +72,8 @@ export class CompaniesService {
       industryClasses.forEach((industryClass) => {
         if (sicCode === industryClass.ukefIndustryId) {
           industries.push({
-            sector: {
-              code: industryClass.ukefSectorId.toString(),
-              name: industryClass.ukefSectorName,
-            },
+            code: industryClass.ukefSectorId.toString(),
+            name: industryClass.ukefSectorName,
             class: {
               code: industryClass.ukefIndustryId,
               name: industryClass.ukefIndustryName,

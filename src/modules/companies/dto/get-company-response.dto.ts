@@ -14,10 +14,8 @@ export class GetCompanyResponse {
 }
 
 export class Industry {
-  sector: {
-    code: string;
-    name: string;
-  };
+  code: string;
+  name: string;
   class: {
     code: string;
     name: string;
