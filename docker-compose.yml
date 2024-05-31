@@ -37,6 +37,10 @@ services:
       ORDNANCE_SURVEY_KEY:
       ORDNANCE_SURVEY_MAX_REDIRECTS:
       ORDNANCE_SURVEY_TIMEOUT:
+      COMPANIES_HOUSE_URL:
+      COMPANIES_HOUSE_KEY:
+      COMPANIES_HOUSE_MAX_REDIRECTS:
+      COMPANIES_HOUSE_TIMEOUT:
       API_KEY:
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:${PORT}"]

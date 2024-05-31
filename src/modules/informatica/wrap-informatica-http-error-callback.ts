@@ -4,10 +4,10 @@ import { ObservableInput, throwError } from 'rxjs';
 import { InformaticaException } from './exception/informatica.exception';
 import { KnownErrors } from './known-errors';
 
-type AcbsHttpErrorCallback = (error: Error) => ObservableInput<never>;
+type InformaticaHttpErrorCallback = (error: Error) => ObservableInput<never>;
 
 export const createWrapInformaticaHttpGetErrorCallback =
-  ({ messageForUnknownError, knownErrors }: { messageForUnknownError: string; knownErrors: KnownErrors }): AcbsHttpErrorCallback =>
+  ({ messageForUnknownError, knownErrors }: { messageForUnknownError: string; knownErrors: KnownErrors }): InformaticaHttpErrorCallback =>
   (error: Error) => {
     let errorString;
     if (error instanceof AxiosError && error.response) {

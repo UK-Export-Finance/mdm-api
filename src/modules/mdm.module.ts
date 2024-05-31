@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from '@ukef/auth/auth.module';
 import { DatabaseModule } from '@ukef/database/database.module';
+import { CompaniesModule } from '@ukef/modules/companies/companies.module';
 import { CurrenciesModule } from '@ukef/modules/currencies/currencies.module';
 import { CustomersModule } from '@ukef/modules/customers/customers.module';
 import { EmailsModule } from '@ukef/modules/emails/emails.module';
@@ -30,6 +31,7 @@ import { YieldRatesModule } from '@ukef/modules/yield-rates/yield-rates.module';
     SectorIndustriesModule,
     YieldRatesModule,
     GeospatialModule,
+    CompaniesModule,
   ],
   exports: [
     AuthModule,
@@ -46,6 +48,7 @@ import { YieldRatesModule } from '@ukef/modules/yield-rates/yield-rates.module';
     SectorIndustriesModule,
     YieldRatesModule,
     GeospatialModule,
+    CompaniesModule,
   ],
 })
 export class MdmModule {}

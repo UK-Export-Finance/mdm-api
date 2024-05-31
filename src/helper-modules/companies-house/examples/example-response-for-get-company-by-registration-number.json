@@ -1,0 +1,60 @@
+{
+    "links": {
+        "filing_history": "/company/00000001/filing-history",
+        "self": "/company/00000001",
+        "persons_with_significant_control": "/company/00000001/persons-with-significant-control",
+        "officers": "/company/00000001/officers"
+    },
+    "accounts": {
+        "last_accounts": {
+            "period_end_on": "2022-12-31",
+            "type": "micro-entity",
+            "made_up_to": "2022-12-31",
+            "period_start_on": "2022-01-01"
+        },
+        "accounting_reference_date": {
+            "month": "12",
+            "day": "31"
+        },
+        "overdue": false,
+        "next_made_up_to": "2023-12-31",
+        "next_due": "2024-09-30",
+        "next_accounts": {
+            "period_start_on": "2023-01-01",
+            "due_on": "2024-09-30",
+            "period_end_on": "2023-12-31",
+            "overdue": false
+        }
+    },
+    "company_name": "TEST COMPANY LTD",
+    "company_number": "00000001",
+    "company_status": "active",
+    "confirmation_statement": {
+        "next_made_up_to": "2025-01-20",
+        "next_due": "2025-02-03",
+        "overdue": false,
+        "last_made_up_to": "2024-01-20"
+    },
+    "date_of_creation": "2020-01-21",
+    "etag": "4f776861e3dfca11b773ff496c55999b7ec6a1cc",
+    "has_charges": false,
+    "has_insolvency_history": false,
+    "jurisdiction": "england-wales",
+    "registered_office_address": {
+        "address_line_1": "1 Test Street",
+        "locality": "Test City",
+        "postal_code": "A1 2BC",
+        "country": "United Kingdom"
+    },
+    "registered_office_is_in_dispute": false,
+    "sic_codes": [
+        "59112",
+        "62012",
+        "62020",
+        "62090"
+    ],
+    "type": "ltd",
+    "undeliverable_registered_office_address": false,
+    "has_super_secure_pscs": false,
+    "can_file": true
+}
