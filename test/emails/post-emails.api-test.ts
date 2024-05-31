@@ -108,30 +108,25 @@ describe('POST /emails', () => {
 
   it.each([
     {
-      error: 'Bad Request',
       expectedStatus: 400,
     },
     {
-      error: 'Unauthorized',
       expectedStatus: 401,
     },
     {
-      error: 'Forbidden',
       expectedStatus: 403,
     },
     {
-      error: 'Internal Server Error',
       expectedStatus: 500,
     },
-  ])('returns a $expectedStatus response if the Notify client responds with status $expectedStatus', async ({ error, expectedStatus }) => {
+  ])('returns a $expectedStatus response if the Notify client responds with status $expectedStatus', async ({ expectedStatus }) => {
     jest.mocked(sendEmailMethodMock).mockImplementation(() => Promise.reject(generateNotifyError(expectedStatus, errorMessage)));
 
     const { status, body } = await api.post(mdmPath, request, { govUkNotifyKey });
 
     expect(status).toBe(expectedStatus);
     expect(body).toMatchObject({
-      error,
-      message: expect.arrayContaining([errorMessage]),
+      message: errorMessage,
       statusCode: expectedStatus,
     });
   });

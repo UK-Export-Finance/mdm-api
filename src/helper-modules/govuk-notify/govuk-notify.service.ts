@@ -45,15 +45,15 @@ export class GovukNotifyService {
         if (err?.response?.data?.errors[0].message) {
           switch (err.response.data.status_code) {
             case 400:
-              throw new BadRequestException([err.response.data.errors[0].message]);
+              throw new BadRequestException(err.response.data.errors[0].message, { cause: err });
             case 401:
-              throw new UnauthorizedException([err.response.data.errors[0].message]);
+              throw new UnauthorizedException(err.response.data.errors[0].message, { cause: err });
             case 403:
-              throw new ForbiddenException([err.response.data.errors[0].message]);
+              throw new ForbiddenException(err.response.data.errors[0].message, { cause: err });
             case 500:
-              throw new InternalServerErrorException([err.response.data.errors[0].message]);
+              throw new InternalServerErrorException(err.response.data.errors[0].message, { cause: err });
             default:
-              throw new Error(err.response.data.errors[0].message);
+              throw new Error(err.response.data.errors[0].message, { cause: err });
           }
         } else {
           throw new Error('NotifyClient failed with unexpected error %o', err);
