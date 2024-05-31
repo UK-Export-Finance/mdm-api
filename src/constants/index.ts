@@ -10,8 +10,9 @@
  * 6. Strings to redact
  * 7. Strings locations to redact
  * 8. Module geospatial
- * 9. Companies module
- * 10. Companies House helper module
+ * 9. GOV.UK notify email constants
+ * 10. Companies module
+ * 11. Companies House helper module
  */
 
 export * from './auth.constant';
@@ -22,6 +23,7 @@ export * from './database-name.constant';
 export * from './date.constant';
 export * from './enums';
 export * from './geospatial.constant';
+export * from './govuk-notify.constant';
 export * from './products.constant';
 export * from './redact-strings.constant';
 export * from './redact-strings-paths.constant';

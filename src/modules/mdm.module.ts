@@ -4,6 +4,7 @@ import { DatabaseModule } from '@ukef/database/database.module';
 import { CompaniesModule } from '@ukef/modules/companies/companies.module';
 import { CurrenciesModule } from '@ukef/modules/currencies/currencies.module';
 import { CustomersModule } from '@ukef/modules/customers/customers.module';
+import { EmailsModule } from '@ukef/modules/emails/emails.module';
 import { ExposurePeriodModule } from '@ukef/modules/exposure-period/exposure-period.module';
 import { GeospatialModule } from '@ukef/modules/geospatial/geospatial.module';
 import { HealthcheckModule } from '@ukef/modules/healthcheck/healthcheck.module';
@@ -20,6 +21,7 @@ import { YieldRatesModule } from '@ukef/modules/yield-rates/yield-rates.module';
     DatabaseModule,
     CurrenciesModule,
     CustomersModule,
+    EmailsModule,
     ExposurePeriodModule,
     HealthcheckModule,
     InterestRatesModule,
@@ -36,6 +38,7 @@ import { YieldRatesModule } from '@ukef/modules/yield-rates/yield-rates.module';
     DatabaseModule,
     CurrenciesModule,
     CustomersModule,
+    EmailsModule,
     ExposurePeriodModule,
     HealthcheckModule,
     InterestRatesModule,

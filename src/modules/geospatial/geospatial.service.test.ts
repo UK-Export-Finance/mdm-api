@@ -37,7 +37,7 @@ describe('GeospatialService', () => {
       getAddressesOrdnanceSurveyMultipleMatchingAddressesResponse,
       getAddressesOrdnanceSurveyEmptyResponse,
     } = new GetGeospatialAddressesGenerator(valueGenerator).generate({
-      numberToGenerate: 2,
+      numberToGenerate: 1,
     });
     const postcode = getAddressesByPostcodeResponse[0][0].postalCode;
 

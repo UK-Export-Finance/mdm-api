@@ -1,7 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import { IsInt, IsNotEmpty, IsString, Matches, Max, Min } from 'class-validator';
 
 export class GetNumbersQueryDto {
+  @Transform(({ value }) => {
+    return parseInt(value);
+  })
   @IsInt()
   @IsNotEmpty()
   @Min(1)

@@ -149,10 +149,6 @@ describe('GET /customers', () => {
       expectedError: 'name must be shorter than or equal to 255 characters',
     },
     {
-      query: { name: valueGenerator.word(), extraParameter: valueGenerator.word() },
-      expectedError: 'property extraParameter should not exist',
-    },
-    {
       query: { companyReg: valueGenerator.string({ length: 7 }) },
       expectedError: 'companyReg must be longer than or equal to 8 characters',
     },

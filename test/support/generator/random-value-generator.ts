@@ -20,6 +20,11 @@ export class RandomValueGenerator {
     return this.chance.string({ length });
   }
 
+  base64string(options?: { length?: number; minLength?: number; maxLength?: number }): string {
+    const length = this.getStringLengthFromOptions(options);
+    return this.chance.string({ length, pool: '0123456789abcdef' });
+  }
+
   stringOfNumericCharacters(options?: { length?: number; minLength?: number; maxLength?: number }): string {
     const length = this.getStringLengthFromOptions(options);
     return this.chance.string({ length, pool: '0123456789' });
@@ -38,6 +43,10 @@ export class RandomValueGenerator {
 
   sentence(options?: { words?: number }): string {
     return this.chance.sentence({ words: options?.words });
+  }
+
+  paragraph(options?: { sentences?: number }): string {
+    return this.chance.paragraph({ sentences: options?.sentences });
   }
 
   httpsUrl(): string {
@@ -69,6 +78,10 @@ export class RandomValueGenerator {
 
   nonnegativeInteger({ max }: { max?: number } = {}): number {
     return this.integer({ min: 0, max });
+  }
+
+  email(): string {
+    return this.chance.email();
   }
 
   postcode(): string {

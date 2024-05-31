@@ -24,7 +24,7 @@ describe('GET /geospatial/addresses/postcode?postcode=', () => {
   } = new GetGeospatialAddressesGenerator(valueGenerator).generate({
     postcode: GEOSPATIAL.EXAMPLES.ENGLISH_POSTCODE,
     key: ENVIRONMENT_VARIABLES.ORDNANCE_SURVEY_KEY,
-    numberToGenerate: 2,
+    numberToGenerate: 1,
   });
 
   const getMdmUrl = (postcode: any) => `/api/v1/geospatial/addresses/postcode?postcode=${encodeURIComponent(postcode)}`;

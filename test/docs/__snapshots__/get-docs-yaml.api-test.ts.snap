@@ -143,6 +143,43 @@ paths:
           description: Customer not found.
       tags:
         - customers
+  /api/v1/emails:
+    post:
+      operationId: EmailsController_postEmail
+      summary: Send email using GOV.UK Notify service
+      parameters:
+        - name: govUkNotifyKey
+          required: true
+          in: header
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/PostEmailsRequestDto'
+      responses:
+        '201':
+          description: Returns information about email transaction.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostEmailsResponseDto'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '422':
+          description: No GOV.UK Notify response
+        '500':
+          description: Internal server error
+      tags:
+        - emails
   /api/v1/exposure-period:
     get:
       operationId: ExposurePeriodController_find
@@ -664,6 +701,126 @@ components:
         - type
         - subtype
         - isLegacyRecord
+    PostEmailsRequestDto:
+      type: object
+      properties:
+        templateId:
+          type: string
+          example: tmpl1234-1234-5678-9012-abcd12345678
+          description: The GOV.UK Notify ID corresponding to the email template
+          nullable: false
+          minLength: 36
+          maxLength: 36
+        sendToEmailAddress:
+          type: string
+          example: john.tester@example.com
+          description: Email address to send this email
+          nullable: false
+        personalisation:
+          type: object
+          example:
+            firstName: John
+          description: All variables for email template
+          nullable: true
+        reference:
+          type: string
+          example: tmpl1234-1234-5678-9012-abcd12345678-1713272155576
+          description: Reference for the email sent
+          nullable: true
+          minLength: 1
+          maxLength: 100
+      required:
+        - templateId
+        - sendToEmailAddress
+    PostEmailsResponseDataContent:
+      type: object
+      properties:
+        body:
+          type: string
+          example: "Dear John Smith,\\r\\n\\r\\nThe status of your MIA for EuroStar has been updated.\\r\\n\\r\\n* Your bank reference: EuroStar bridge\\r\\n* Current status: Acknowledged\\r\\n* Previous status: Submitted\\r\\n* Updated by: Joe Bloggs (Joe.Bloggs@example.com)\\r\\n\\r\\nSign in to our service for more information: \\r\\nhttps://www.test.service.gov.uk/\\r\\n\\r\\nWith regards,\\r\\n\\r\\nThe Digital Trade Finance Service team\\r\\n\\r\\nEmail: test@test.gov.uk\\r\\nPhone: +44 (0)202 123 4567\\r\\nOpening times: Monday to Friday, 9am to 5pm (excluding public holidays)"
+          description: Email body
+        from_email:
+          type: string
+          example: test@notifications.service.gov.uk
+          description: Sender's email address
+        subject:
+          type: string
+          example: 'Status update: EuroStar bridge'
+          description: Email subject line
+        unsubscribe_link:
+          type: string
+          example: null
+          description: Unsubscribe links are not used, so this field should always be null
+          nullable: true
+      required:
+        - body
+        - from_email
+        - subject
+        - unsubscribe_link
+    PostEmailsResponseDataTemplate:
+      type: object
+      properties:
+        id:
+          type: string
+          example: tmpl1234-1234-5678-9012-abcd12345678
+          description: Notify's template id
+        uri:
+          type: string
+          example: >-
+            https://api.notifications.service.gov.uk/services/abc12345-a123-4567-8901-123456789012/templates/tmpl1234-1234-5678-9012-abcd12345678
+          description: Notify's URL to get more information about template
+        version:
+          type: number
+          example: 5
+          description: Notify's template version
+      required:
+        - id
+        - uri
+        - version
+    PostEmailsResponseData:
+      type: object
+      properties:
+        content:
+          $ref: '#/components/schemas/PostEmailsResponseDataContent'
+        id:
+          type: string
+          example: efd12345-1234-5678-9012-ee123456789f
+          description: Notify's transaction id
+        reference:
+          type: string
+          example: tmpl1234-1234-5678-9012-abcd12345678-1713272155576
+          description: Reference that was sent to GOV.UK Notify
+        scheduled_for:
+          type: string
+          example: null
+          description: Email scheduling is not used, so this field should always be null
+          nullable: true
+        template:
+          $ref: '#/components/schemas/PostEmailsResponseDataTemplate'
+        uri:
+          type: string
+          example: >-
+            https://api.notifications.service.gov.uk/v2/notifications/efd12345-1234-5678-9012-ee123456789f
+          description: Notify's URL to get more information about this transaction
+      required:
+        - content
+        - id
+        - reference
+        - scheduled_for
+        - template
+        - uri
+    PostEmailsResponseDto:
+      type: object
+      properties:
+        status:
+          type: number
+          example: 201
+          description: Http status code
+        data:
+          $ref: '#/components/schemas/PostEmailsResponseData'
+      required:
+        - status
+        - data
     ExposurePeriodDto:
       type: object
       properties:

@@ -17,12 +17,24 @@ export class Api {
     return this.request().get(url).set(this.getValidAuthHeader());
   }
 
-  post(url: string, body: string | object): request.Test {
-    return this.request().post(url).send(body).set(this.getValidAuthHeader());
+  post(url: string, body: string | unknown | unknown[], extraHeaders?: Record<string, string>): request.Test {
+    const request = this.request()
+      .post(url)
+      .send(body as object)
+      .set(this.getValidAuthHeader());
+    if (extraHeaders) {
+      request.set(extraHeaders);
+    }
+    return request;
   }
 
   getWithoutAuth(url: string, strategy?: string, key?: string): request.Test {
     const query = this.request().get(url);
+    return this.setQueryWithAuthStrategyIfPresent(query, strategy, key);
+  }
+
+  postWithoutAuth(url: string, body: string | object, strategy?: string, key?: string): request.Test {
+    const query = this.request().post(url).send(body);
     return this.setQueryWithAuthStrategyIfPresent(query, strategy, key);
   }
 
