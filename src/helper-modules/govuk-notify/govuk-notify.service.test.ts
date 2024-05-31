@@ -36,7 +36,7 @@ describe('GovukNotifyService', () => {
   });
 
   describe('sendEmail', () => {
-    const generateNotifyError = (status: number, message: string) => {
+    const generateNotifyError = (status: number, message?: string) => {
       const response = {
         data: {
           status_code: status,
@@ -97,7 +97,8 @@ describe('GovukNotifyService', () => {
         status: 500,
       },
     ])('throws exception $exceptionName for unexpected $status', async ({ exceptionClass, exceptionName, error, status }) => {
-      jest.mocked(sendEmailMethodMock).mockImplementation(() => Promise.reject(generateNotifyError(status, errorMessage)));
+      const notifyError = generateNotifyError(status, errorMessage);
+      jest.mocked(sendEmailMethodMock).mockImplementation(() => Promise.reject(notifyError));
 
       const resultPromise = service.sendEmail(govUkNotifyKey, { sendToEmailAddress, templateId, personalisation });
 
@@ -106,11 +107,14 @@ describe('GovukNotifyService', () => {
       await expect(resultPromise).rejects.toThrow(exceptionName);
       await expect(resultPromise).rejects.toHaveProperty('status', status);
       await expect(resultPromise).rejects.toHaveProperty('response', { message: [errorMessage], error, statusCode: status });
+      expect(loggerError).toHaveBeenCalledTimes(1);
+      expect(loggerError).toHaveBeenCalledWith(notifyError);
     });
 
     it('throws generic Error exception for unexpected status', async () => {
       const unexpectedStatus = valueGenerator.integer({ min: 900, max: 999 });
-      jest.mocked(sendEmailMethodMock).mockImplementation(() => Promise.reject(generateNotifyError(unexpectedStatus, errorMessage)));
+      const notifyError = generateNotifyError(unexpectedStatus, errorMessage);
+      jest.mocked(sendEmailMethodMock).mockImplementation(() => Promise.reject(notifyError));
 
       const resultPromise = service.sendEmail(govUkNotifyKey, { sendToEmailAddress, templateId, personalisation });
 
@@ -118,6 +122,22 @@ describe('GovukNotifyService', () => {
       await expect(resultPromise).rejects.toBeInstanceOf(Error);
       await expect(resultPromise).rejects.toThrow(errorMessage);
       await expect(resultPromise).rejects.toHaveProperty('message', errorMessage);
+      expect(loggerError).toHaveBeenCalledTimes(1);
+      expect(loggerError).toHaveBeenCalledWith(notifyError);
+    });
+
+    it('throws generic Error exception for error without error message', async () => {
+      const notifyError = generateNotifyError(400);
+      jest.mocked(sendEmailMethodMock).mockImplementation(() => Promise.reject(notifyError));
+
+      const resultPromise = service.sendEmail(govUkNotifyKey, { sendToEmailAddress, templateId, personalisation });
+
+      expect(sendEmailMethodMock).toHaveBeenCalledTimes(1);
+      await expect(resultPromise).rejects.toBeInstanceOf(Error);
+      await expect(resultPromise).rejects.toThrow('NotifyClient failed with unexpected error %o');
+      await expect(resultPromise).rejects.toHaveProperty('message', 'NotifyClient failed with unexpected error %o');
+      expect(loggerError).toHaveBeenCalledTimes(1);
+      expect(loggerError).toHaveBeenCalledWith(notifyError);
     });
 
     it('throws exception UnprocessableEntityException for empty response from GOV.UK Notify client', async () => {
@@ -128,6 +148,8 @@ describe('GovukNotifyService', () => {
       expect(sendEmailMethodMock).toHaveBeenCalledTimes(1);
       await expect(resultPromise).rejects.toBeInstanceOf(UnprocessableEntityException);
       await expect(resultPromise).rejects.toThrow('No GOV.UK Notify response');
+      expect(loggerError).toHaveBeenCalledTimes(1);
+      expect(loggerError).toHaveBeenCalledWith('Empty response from GOV.UK Notify');
     });
   });
 });

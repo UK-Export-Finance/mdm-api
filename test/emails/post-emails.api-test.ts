@@ -136,13 +136,26 @@ describe('POST /emails', () => {
     });
   });
 
-  it('returns a 500 response if the Notify client responds with status 500', async () => {
-    jest.mocked(sendEmailMethodMock).mockImplementation(() => Promise.reject(generateNotifyError(500)));
+  it('returns a 500 response if the Notify client responds with unexpected status', async () => {
+    const unexpectedStatus = valueGenerator.integer({ min: 900, max: 999 });
+    jest.mocked(sendEmailMethodMock).mockImplementation(() => Promise.reject(generateNotifyError(unexpectedStatus, errorMessage)));
 
     const { status, body } = await api.post(mdmPath, request, { govUkNotifyKey });
 
     expect(status).toBe(500);
-    expect(body).toStrictEqual({
+    expect(body).toMatchObject({
+      statusCode: 500,
+      message: 'Internal server error',
+    });
+  });
+
+  it("returns a 500 response if the Notify client error doesn't have message attribute", async () => {
+    jest.mocked(sendEmailMethodMock).mockImplementation(() => Promise.reject(generateNotifyError(400)));
+
+    const { status, body } = await api.post(mdmPath, request, { govUkNotifyKey });
+
+    expect(status).toBe(500);
+    expect(body).toMatchObject({
       statusCode: 500,
       message: 'Internal server error',
     });

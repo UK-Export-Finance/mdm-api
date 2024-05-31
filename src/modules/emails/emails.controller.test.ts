@@ -29,7 +29,7 @@ describe('EmailsController', () => {
     const govUkNotifyKey = valueGenerator.string({ length: 10 });
 
     it('returns receipt response for sent email', async () => {
-      when(emailsServiceSendEmail).calledWith(govUkNotifyKey, request[0]).mockResolvedValueOnce(postEmailsResponse[0]);
+      when(emailsServiceSendEmail).calledWith(govUkNotifyKey, request).mockResolvedValueOnce(postEmailsResponse[0]);
 
       const response = await controller.postEmail(govUkNotifyKey, request);
 

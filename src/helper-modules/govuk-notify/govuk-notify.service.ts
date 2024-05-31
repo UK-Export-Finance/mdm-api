@@ -56,7 +56,7 @@ export class GovukNotifyService {
               throw new Error(err.response.data.errors[0].message);
           }
         } else {
-          throw new Error(JSON.stringify(err.response.data));
+          throw new Error('NotifyClient failed with unexpected error %o', err);
         }
       });
 
