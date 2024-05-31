@@ -24,7 +24,7 @@ export class EmailsController {
   @ApiOperation({
     summary: 'Send email using GOV.UK Notify service',
   })
-  @ApiBody({ type: [PostEmailsRequestDto] })
+  @ApiBody({ type: PostEmailsRequestDto })
   @ApiCreatedResponse({
     status: HttpStatus.CREATED,
     description: 'Returns information about email transaction.',
@@ -48,7 +48,7 @@ export class EmailsController {
   /**
    * Verify request and send email
    * @param {String} govUkNotifyKey
-   * @param {PostEmailsRequestItemDto[]} body
+   * @param {PostEmailsRequestDto} body
    *
    * @returns {Promise.<PostEmailsResponseDto>} GOV.UK Notify response
    *
