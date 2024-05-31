@@ -1,3 +1,5 @@
+const { FlatCompat } = require('@eslint/eslintrc');
+
 const tsParser = require('@typescript-eslint/parser');
 const switchCasePlugin = require('eslint-plugin-switch-case');
 const simpleImportSortPlugin = require('eslint-plugin-simple-import-sort');
@@ -13,32 +15,30 @@ const securityPlugin = require('eslint-plugin-security');
 const jestPlugin = require('eslint-plugin-jest');
 const jestFormattingPlugin = require('eslint-plugin-jest-formatting');
 
+const compat = new FlatCompat({
+  baseDirectory: __dirname,
+});
 const ignores = ['node_modules/**', '.eslintrc.js', 'dist/**', 'coverage/**', 'report/**'];
 const languageOptions = {
   parser: tsParser,
   ecmaVersion: 'latest',
   sourceType: 'module',
+  parserOptions: {
+    project: './tsconfig.json',
+  },
   globals: {
     node: true,
     jest: true,
   },
-  parserOptions: {
-    project: 'tsconfig.json',
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-  },
 };
 
 module.exports = [
-  nodePlugin.configs.recommended,
-  eslintCommentsPlugin.configs.recommended,
-  optimizeRegexPlugin.configs.recommended,
-  switchCasePlugin.configs.recommended,
-  simpleImportSortPlugin,
-  deprecationPlugin.configs.recommended,
-  importPlugin.configs.recommended,
-  unusedImportsPlugin,
-  tsEslintPlugin.configs.recommended,
+  ...compat.plugins(nodePlugin.configs.recommended.plugins[0]),
+  // ...compat.plugins(importPlugin.configs.recommended.plugins[0]),
+  // ...compat.plugins(deprecationPlugin.configs.recommended.plugins[0]),
+  // ...compat.plugins(prettierPlugin.plugins.prettier.configs.recommended.plugins[0]),
+  ...compat.plugins(optimizeRegexPlugin.configs.recommended.plugins[0]),
+  ...compat.plugins(eslintCommentsPlugin.configs.recommended.plugins[0]),
   securityPlugin.configs.recommended,
   {
     files: ['**/*.ts'],
@@ -47,33 +47,41 @@ module.exports = [
     settings: {
       node: {
         allowModules: ['express'],
-        tryExtensions: ['.js', '.json', '.ts'],
+        tryExtensions: ['.ts'],
       },
       'import/parsers': {
         '@typescript-eslint/parser': ['.ts'],
       },
       'import/resolver': {
         node: {
-          extensions: ['.js', '.jsx', '.ts', '.tsx'],
+          extensions: ['.ts', '.tsx'],
         },
         typescript: {
           alwaysTryTypes: true,
         },
       },
     },
+    plugins: {
+      'simple-import-sort': simpleImportSortPlugin,
+      'unused-imports': unusedImportsPlugin,
+      'switch-case': switchCasePlugin,
+      '@typescript-eslint': tsEslintPlugin,
+      import: importPlugin,
+      deprecation: deprecationPlugin,
+      prettier: prettierPlugin,
+    },
     rules: {
-      ...prettierPlugin.rules,
-      ...tsEslintPlugin.configs.recommended.rules,
       ...nodePlugin.configs.recommended.rules,
-      ...eslintCommentsPlugin.configs.recommended.rules,
-      ...optimizeRegexPlugin.configs.recommended.rules,
-      ...switchCasePlugin.configs.recommended.rules,
-      ...securityPlugin.configs.recommended.rules,
       ...importPlugin.configs.recommended.rules,
-      ...importPlugin.configs.typescript.rules,
-      ...simpleImportSortPlugin.rules,
-      ...unusedImportsPlugin.rules,
-      ...deprecationPlugin.rules,
+      ...deprecationPlugin.configs.recommended.rules,
+      ...prettierPlugin.rules,
+      ...switchCasePlugin.configs.recommended.rules,
+      ...optimizeRegexPlugin.configs.recommended.rules,
+      ...eslintCommentsPlugin.configs.recommended.rules,
+      ...tsEslintPlugin.configs.recommended.rules,
+      ...tsEslintPlugin.configs['recommended-requiring-type-checking'].rules,
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
       'node/no-unsupported-features/es-syntax': [
         'error',
         {
@@ -82,14 +90,9 @@ module.exports = [
       ],
       'node/no-missing-import': 'off',
       'node/no-unpublished-import': 'off',
-      'simple-import-sort/imports': 'error',
-      'simple-import-sort/exports': 'error',
       'import/first': 'error',
-      'import/no-duplicates': 'error',
-      'deprecation/deprecation': 'warn',
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
-      'import/no-unresolved': 'error',
       'prettier/prettier': [
         'error',
         {
@@ -116,7 +119,6 @@ module.exports = [
           allow: ['info', 'error'],
         },
       ],
-      'import/no-named-as-default': 'off',
       'import/extensions': 'off',
       'implicit-arrow-linebreak': 'off',
       'import/newline-after-import': 'off',
@@ -139,7 +141,6 @@ module.exports = [
           consistent: true,
         },
       ],
-      'import/no-named-as-default-member': 'off',
       'prefer-destructuring': [
         'error',
         {
@@ -154,7 +155,7 @@ module.exports = [
     ignores,
     languageOptions,
     plugins: {
-      'jest': jestPlugin,
+      jest: jestPlugin,
       'jest-formatting': jestFormattingPlugin,
     },
     rules: {
@@ -171,8 +172,6 @@ module.exports = [
       '@typescript-eslint/no-unsafe-assignment': 'off',
       '@typescript-eslint/unbound-method': 'off',
       'jest/unbound-method': 'error',
-      // TODO: Remove below
-      'security/detect-non-literal-regexp': 'off',
     },
   },
 ];
