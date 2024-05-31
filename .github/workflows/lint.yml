@@ -48,8 +48,7 @@ on:
   pull_request:
     branches: [main]
     paths:
-      - "src/**"
-      - "test/**"
+      - "**"
 
 env:
   environment: "qa"

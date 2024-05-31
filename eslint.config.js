@@ -3,7 +3,7 @@ const switchCasePlugin = require('eslint-plugin-switch-case');
 const simpleImportSortPlugin = require('eslint-plugin-simple-import-sort');
 const deprecationPlugin = require('eslint-plugin-deprecation');
 const importPlugin = require('eslint-plugin-import');
-const prettierPlugin = require('eslint-plugin-prettier');
+const prettierPlugin = require('eslint-plugin-prettier/recommended');
 const unusedImportsPlugin = require('eslint-plugin-unused-imports');
 const tsEslintPlugin = require('@typescript-eslint/eslint-plugin');
 const nodePlugin = require('eslint-plugin-node');
@@ -30,23 +30,20 @@ const languageOptions = {
 };
 
 module.exports = [
+  nodePlugin.configs.recommended,
+  eslintCommentsPlugin.configs.recommended,
+  optimizeRegexPlugin.configs.recommended,
+  switchCasePlugin.configs.recommended,
+  simpleImportSortPlugin,
+  deprecationPlugin.configs.recommended,
+  importPlugin.configs.recommended,
+  unusedImportsPlugin,
+  tsEslintPlugin.configs.recommended,
+  securityPlugin.configs.recommended,
   {
     files: ['**/*.ts'],
     ignores,
     languageOptions,
-    plugins: {
-      prettierPlugin,
-      nodePlugin,
-      eslintCommentsPlugin,
-      optimizeRegexPlugin,
-      securityPlugin,
-      switchCasePlugin,
-      simpleImportSortPlugin,
-      deprecationPlugin,
-      importPlugin,
-      unusedImportsPlugin,
-      tsEslintPlugin,
-    },
     settings: {
       node: {
         allowModules: ['express'],
@@ -65,6 +62,7 @@ module.exports = [
       },
     },
     rules: {
+      ...prettierPlugin.rules,
       ...tsEslintPlugin.configs.recommended.rules,
       ...nodePlugin.configs.recommended.rules,
       ...eslintCommentsPlugin.configs.recommended.rules,
@@ -73,6 +71,9 @@ module.exports = [
       ...securityPlugin.configs.recommended.rules,
       ...importPlugin.configs.recommended.rules,
       ...importPlugin.configs.typescript.rules,
+      ...simpleImportSortPlugin.rules,
+      ...unusedImportsPlugin.rules,
+      ...deprecationPlugin.rules,
       'node/no-unsupported-features/es-syntax': [
         'error',
         {
@@ -153,13 +154,14 @@ module.exports = [
     ignores,
     languageOptions,
     plugins: {
-      jestPlugin,
-      jestFormattingPlugin,
+      'jest': jestPlugin,
+      'jest-formatting': jestFormattingPlugin,
     },
     rules: {
       ...jestPlugin.configs.recommended.rules,
       ...jestPlugin.configs.style.rules,
       ...jestFormattingPlugin.configs.strict.rules,
+      ...securityPlugin.configs.recommended.rules,
       'jest/expect-expect': [
         'warn',
         {
@@ -169,7 +171,8 @@ module.exports = [
       '@typescript-eslint/no-unsafe-assignment': 'off',
       '@typescript-eslint/unbound-method': 'off',
       'jest/unbound-method': 'error',
-      'security/detect-possible-timing-attacks': 'off',
+      // TODO: Remove below
+      'security/detect-non-literal-regexp': 'off',
     },
   },
 ];
