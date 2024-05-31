@@ -1,7 +1,8 @@
 import AppConfig from './app.config';
+import CompaniesHouseConfig from './companies-house.config';
 import DatabaseConfig from './database.config';
 import DocConfig from './doc.config';
 import InformaticaConfig from './informatica.config';
 import OrdnanceSurveyConfig from './ordnance-survey.config';
 
-export default [AppConfig, DocConfig, DatabaseConfig, InformaticaConfig, OrdnanceSurveyConfig];
+export default [AppConfig, CompaniesHouseConfig, DocConfig, DatabaseConfig, InformaticaConfig, OrdnanceSurveyConfig];
