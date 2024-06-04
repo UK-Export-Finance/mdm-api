@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.21.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.20.0...v1.21.0) (2024-06-04)
+
+
+### Features
+
+* **DTFS-7049:** added POST /emails endpoint for sending emails using GOV.UK Notify service ([#820](https://github.com/UK-Export-Finance/mdm-api/issues/820)) ([3a1bf0e](https://github.com/UK-Export-Finance/mdm-api/commit/3a1bf0e369167f7aa1b7a940a4120260a419c3c0))
+* **DTFS2-7049:** fixed tests caused by removal of global transformer and allowing extra params ([71e44ff](https://github.com/UK-Export-Finance/mdm-api/commit/71e44ff577b00695743ad62537b00d6fd25bb22d))
+* **DTFS2-7049:** fixing PR issues ([e0e099e](https://github.com/UK-Export-Finance/mdm-api/commit/e0e099e841726c34cac121059bacff393bfceef7))
+* **DTFS2-7049:** removed BadRequestException tests moving payload to object instead of array ([3bb8d71](https://github.com/UK-Export-Finance/mdm-api/commit/3bb8d714eace1fcaf9fe987b77c8641e1dc79686))
+* **DTFS2-7049:** return error message as string instead of array ([86b5b4d](https://github.com/UK-Export-Finance/mdm-api/commit/86b5b4d982c16ba0e8b6964ff2d422e746800cc3))
+* **DTFS2-7049:** test unknown Gov.UK Notify responses ([c14fa49](https://github.com/UK-Export-Finance/mdm-api/commit/c14fa49d6eabf09585dd85f58a6415fcca2aa9c5))
+* **DTFS2-7121:** create Companies House endpoint ([#821](https://github.com/UK-Export-Finance/mdm-api/issues/821)) ([7860528](https://github.com/UK-Export-Finance/mdm-api/commit/786052823f37b9b5f8e832fc2678c1cfdfb87fed))
+
+
+### Bug Fixes
+
+* **eslint:** reverted back to eslint `8.57.0` ([#905](https://github.com/UK-Export-Finance/mdm-api/issues/905)) ([75ca97c](https://github.com/UK-Export-Finance/mdm-api/commit/75ca97c46e77b2737ff441246974122c346c133e))
+
 ## [1.20.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.19.0...v1.20.0) (2024-05-22)
 
 
