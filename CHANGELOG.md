@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.21.1](https://github.com/UK-Export-Finance/mdm-api/compare/v1.21.0...v1.21.1) (2024-06-04)
+
+
+### Bug Fixes
+
+* **deployment:** added env variables to deployment ([#918](https://github.com/UK-Export-Finance/mdm-api/issues/918)) ([eaf7fad](https://github.com/UK-Export-Finance/mdm-api/commit/eaf7fad86d2b4f7e5f0158c4164f28b5d8c7b402))
+
 ## [1.21.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.20.0...v1.21.0) (2024-06-04)
 
 
