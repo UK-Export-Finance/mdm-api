@@ -39,7 +39,7 @@ on:
 env:
   PRODUCT: apim
   ENVIRONMENT: ${{ github.ref_name }}
-  timezone: ${{ vars.TIMEZONE }}
+  TIMEZONE: ${{ vars.TIMEZONE }}
   # Base artifact
   FROM: latest
 
@@ -140,7 +140,15 @@ jobs:
             "APIM_INFORMATICA_PASSWORD=${{ secrets.APIM_INFORMATICA_PASSWORD }}" \
             "APIM_INFORMATICA_MAX_REDIRECTS=${{ secrets.APIM_INFORMATICA_MAX_REDIRECTS }}" \
             "APIM_INFORMATICA_TIMEOUT=${{ secrets.APIM_INFORMATICA_TIMEOUT }}" \
-            "API_KEY=${{ secrets.API_KEY }}"
+            "API_KEY=${{ secrets.API_KEY }}" \
+            "ORDNANCE_SURVEY_URL=${{ secrets.ORDNANCE_SURVEY_URL }}" \
+            "ORDNANCE_SURVEY_KEY=${{ secrets.ORDNANCE_SURVEY_KEY }}" \
+            "ORDNANCE_SURVEY_MAX_REDIRECTS=${{ secrets.ORDNANCE_SURVEY_MAX_REDIRECTS }}" \
+            "ORDNANCE_SURVEY_TIMEOUT=${{ secrets.ORDNANCE_SURVEY_TIMEOUT }}" \
+            "COMPANIES_HOUSE_URL=${{ secrets.COMPANIES_HOUSE_URL }}" \
+            "COMPANIES_HOUSE_KEY=${{ secrets.COMPANIES_HOUSE_KEY }}" \
+            "COMPANIES_HOUSE_MAX_REDIRECTS=${{ secrets.COMPANIES_HOUSE_MAX_REDIRECTS }}" \
+            "COMPANIES_HOUSE_TIMEOUT=${{ secrets.COMPANIES_HOUSE_TIMEOUT }}"
 
       - name: Import ⬇️
         if: ${{ '' != env.API_ID }}

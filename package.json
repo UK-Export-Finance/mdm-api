@@ -9,7 +9,6 @@
     "api-test": "jest --selectProjects=API",
     "build": "nest build -p tsconfig.build.json",
     "housekeeping": "npm update --save --legacy-peer-deps && npm i --legacy-peer-deps && npm audit --fix && npm run spellcheck",
-    "postinstall": "husky install",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "prettier": "prettier --no-error-on-unmatched-pattern --check **/*.{ts,js}",
