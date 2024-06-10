@@ -11,6 +11,7 @@ import { resetAllWhenMocks, when } from 'jest-when';
 
 import { SectorIndustriesService } from '../sector-industries/sector-industries.service';
 import { CompaniesService } from './companies.service';
+import { GetCompanyResponse } from './dto/get-company-response.dto';
 import { CompaniesOverseasCompanyException } from './exception/companies-overseas-company-exception.exception';
 
 describe('CompaniesService', () => {
@@ -78,6 +79,47 @@ describe('CompaniesService', () => {
       const response = await service.getCompanyByRegistrationNumber(testRegistrationNumber);
 
       expect(response).toEqual(getCompanyResponse);
+    });
+
+    it('returns a mapped form of the company returned by the CompaniesHouseService when it has no type', async () => {
+      const { type: _removed, ...getCompanyCompaniesHouseResponseNoType } = getCompanyCompaniesHouseResponse;
+
+      when(companiesHouseServiceGetCompanyByRegistrationNumber).calledWith(testRegistrationNumber).mockReturnValueOnce(getCompanyCompaniesHouseResponseNoType);
+      when(sectorIndustriesServiceFind).calledWith(null, null).mockReturnValueOnce(findSectorIndustriesResponse);
+
+      const response = await service.getCompanyByRegistrationNumber(testRegistrationNumber);
+
+      expect(response).toEqual(getCompanyResponse);
+    });
+
+    it('returns a mapped form of the company returned by the CompaniesHouseService when it has no SIC codes', async () => {
+      const { sic_codes: _removed, ...getCompanyCompaniesHouseResponseNoSicCodes } = getCompanyCompaniesHouseResponse;
+      const { industries: _removed2, ...getCompanyResponseNoIndustries } = getCompanyResponse;
+      (getCompanyResponseNoIndustries as GetCompanyResponse).industries = [];
+
+      when(companiesHouseServiceGetCompanyByRegistrationNumber)
+        .calledWith(testRegistrationNumber)
+        .mockReturnValueOnce(getCompanyCompaniesHouseResponseNoSicCodes);
+      when(sectorIndustriesServiceFind).calledWith(null, null).mockReturnValueOnce(findSectorIndustriesResponse);
+
+      const response = await service.getCompanyByRegistrationNumber(testRegistrationNumber);
+
+      expect(response).toEqual(getCompanyResponseNoIndustries);
+    });
+
+    it('returns a mapped form of the company returned by the CompaniesHouseService when it has no registered office address', async () => {
+      const { registered_office_address: _removed, ...getCompanyCompaniesHouseResponseNoRegisteredOfficeAddress } = getCompanyCompaniesHouseResponse;
+      const { registeredAddress: _removed2, ...getCompanyResponseNoRegisteredAddress } = getCompanyResponse;
+      (getCompanyResponseNoRegisteredAddress as GetCompanyResponse).registeredAddress = {};
+
+      when(companiesHouseServiceGetCompanyByRegistrationNumber)
+        .calledWith(testRegistrationNumber)
+        .mockReturnValueOnce(getCompanyCompaniesHouseResponseNoRegisteredOfficeAddress);
+      when(sectorIndustriesServiceFind).calledWith(null, null).mockReturnValueOnce(findSectorIndustriesResponse);
+
+      const response = await service.getCompanyByRegistrationNumber(testRegistrationNumber);
+
+      expect(response).toEqual(getCompanyResponseNoRegisteredAddress);
     });
 
     it('throws a NotFoundException if the call to getCompanyByRegistrationNumber on the CompaniesHouseService throws a CompaniesHouseNotFoundException', async () => {

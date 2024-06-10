@@ -3,12 +3,12 @@ export class GetCompanyResponse {
   companyName: string;
   registeredAddress: {
     organisationName?: string;
-    addressLine1: string;
+    addressLine1?: string;
     addressLine2?: string;
     addressLine3?: string;
-    locality: string;
-    postalCode: string;
-    country: string;
+    locality?: string;
+    postalCode?: string;
+    country?: string;
   };
   industries: Industry[];
 }
