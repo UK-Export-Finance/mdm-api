@@ -39,7 +39,7 @@ export class CompaniesService {
   }
 
   private validateCompanyIsUkCompany(company: GetCompanyCompaniesHouseResponse, registrationNumber: string): never | undefined {
-    if (company.type.includes('oversea')) {
+    if (company.type?.includes('oversea')) {
       throw new CompaniesOverseasCompanyException(
         `Company with registration number ${registrationNumber} is an overseas company. UKEF can only process applications from companies based in the UK.`,
       );
@@ -53,13 +53,13 @@ export class CompaniesService {
       companiesHouseRegistrationNumber: company.company_number,
       companyName: company.company_name,
       registeredAddress: {
-        organisationName: address.organisation_name,
-        addressLine1: address.address_line_1,
-        addressLine2: address.address_line_2,
-        addressLine3: address.address_line_3,
-        locality: address.locality,
-        postalCode: address.postal_code,
-        country: address.country,
+        organisationName: address?.organisation_name,
+        addressLine1: address?.address_line_1,
+        addressLine2: address?.address_line_2,
+        addressLine3: address?.address_line_3,
+        locality: address?.locality,
+        postalCode: address?.postal_code,
+        country: address?.country,
       },
       industries: this.mapSicCodes(company.sic_codes, industryClasses),
     };
@@ -68,7 +68,7 @@ export class CompaniesService {
   private mapSicCodes(sicCodes: string[], industryClasses: SectorIndustryEntity[]): Industry[] {
     const industries = [];
 
-    sicCodes.forEach((sicCode) => {
+    sicCodes?.forEach((sicCode) => {
       industryClasses.forEach((industryClass) => {
         if (sicCode === industryClass.ukefIndustryId) {
           industries.push({
