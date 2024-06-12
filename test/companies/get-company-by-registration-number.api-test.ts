@@ -59,35 +59,43 @@ describe('GET /companies?registrationNumber=', () => {
 
   it.each([
     {
-      registrationNumber: valueGenerator.stringOfNumericCharacters({ length: 6 }),
-      validationError: 'registrationNumber must be longer than or equal to 7 characters',
+      descriptionForTestName: 'too short',
+      registrationNumber: valueGenerator.stringOfNumericCharacters({ length: 7 }),
+      validationError: 'registrationNumber must be longer than or equal to 8 characters',
     },
     {
+      descriptionForTestName: 'too long',
       registrationNumber: valueGenerator.stringOfNumericCharacters({ length: 9 }),
       validationError: 'registrationNumber must be shorter than or equal to 8 characters',
     },
     {
+      descriptionForTestName: 'in the wrong format',
       registrationNumber: '0A000001',
-      validationError: 'registrationNumber must match /^(([A-Z]{2}|[A-Z]\\d|\\d{2})(\\d{5,6}|\\d{4,5}[A-Z]))$/ regular expression',
+      validationError: 'registrationNumber must match /^(([A-Z]{2}|[A-Z]\\d|\\d{2})(\\d{6}|\\d{5}[A-Z]))$/ regular expression',
     },
     {
+      descriptionForTestName: 'the empty string',
       registrationNumber: '',
-      validationError: 'registrationNumber must be longer than or equal to 7 characters',
+      validationError: 'registrationNumber must be longer than or equal to 8 characters',
     },
     {
+      descriptionForTestName: 'all spaces',
       registrationNumber: '        ',
-      validationError: 'registrationNumber must match /^(([A-Z]{2}|[A-Z]\\d|\\d{2})(\\d{5,6}|\\d{4,5}[A-Z]))$/ regular expression',
+      validationError: 'registrationNumber must match /^(([A-Z]{2}|[A-Z]\\d|\\d{2})(\\d{6}|\\d{5}[A-Z]))$/ regular expression',
     },
-  ])(`returns a 400 response with validation errors if postcode is '$registrationNumber'`, async ({ registrationNumber, validationError }) => {
-    const { status, body } = await api.get(getMdmPath(registrationNumber));
+  ])(
+    'returns a 400 response with the correct validation errors if the registration number is $descriptionForTestName',
+    async ({ registrationNumber, validationError }) => {
+      const { status, body } = await api.get(getMdmPath(registrationNumber));
 
-    expect(status).toBe(400);
-    expect(body).toMatchObject({
-      error: 'Bad Request',
-      message: expect.arrayContaining([validationError]),
-      statusCode: 400,
-    });
-  });
+      expect(status).toBe(400);
+      expect(body).toMatchObject({
+        error: 'Bad Request',
+        message: expect.arrayContaining([validationError]),
+        statusCode: 400,
+      });
+    },
+  );
 
   it(`returns a 404 response if the Companies House API returns a 404 response containing the error string 'company-profile-not-found'`, async () => {
     requestToGetCompanyByRegistrationNumber(companiesHousePath).reply(404, getCompanyCompaniesHouseNotFoundResponse);
