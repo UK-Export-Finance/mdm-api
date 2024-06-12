@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.21.3](https://github.com/UK-Export-Finance/mdm-api/compare/v1.21.2...v1.21.3) (2024-06-12)
+
+
+### Bug Fixes
+
+* **DTFS2-7223:** ensure registration number regex only accepts 8-character strings ([#943](https://github.com/UK-Export-Finance/mdm-api/issues/943)) ([18ba1c5](https://github.com/UK-Export-Finance/mdm-api/commit/18ba1c5bbe3a94916e3a3a7e59921eeacdef61d8))
+
 ## [1.21.2](https://github.com/UK-Export-Finance/mdm-api/compare/v1.21.1...v1.21.2) (2024-06-12)
 
 
