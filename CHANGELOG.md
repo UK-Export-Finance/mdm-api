@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.21.2](https://github.com/UK-Export-Finance/mdm-api/compare/v1.21.1...v1.21.2) (2024-06-12)
+
+
+### Bug Fixes
+
+* **DTFS2-7203:** fix bug where /companies returns 500 for companies w/o SIC codes ([#932](https://github.com/UK-Export-Finance/mdm-api/issues/932)) ([d397861](https://github.com/UK-Export-Finance/mdm-api/commit/d397861ca3b137528b1e9ef83401b4496aad5b0e))
+
 ## [1.21.1](https://github.com/UK-Export-Finance/mdm-api/compare/v1.21.0...v1.21.1) (2024-06-04)
 
 
