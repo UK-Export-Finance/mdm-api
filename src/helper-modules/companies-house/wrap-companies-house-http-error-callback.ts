@@ -9,21 +9,25 @@ type CompaniesHouseHttpErrorCallback = (error: Error) => ObservableInput<never>;
 export const createWrapCompaniesHouseHttpGetErrorCallback =
   ({ messageForUnknownError, knownErrors }: { messageForUnknownError: string; knownErrors: KnownErrors }): CompaniesHouseHttpErrorCallback =>
   (error: Error) => {
-    if (error instanceof AxiosError && error.response && typeof error.response.data === 'object') {
-      const errorResponseData = error.response.data;
-      let errorMessage: string;
+    if (error instanceof AxiosError) {
+      let message: string;
+      const status: number = error?.response?.status;
 
-      if (typeof errorResponseData.error === 'string') {
-        errorMessage = errorResponseData.error;
-      } else if (errorResponseData.errors && errorResponseData.errors[0] && typeof errorResponseData.errors[0].error === 'string') {
-        errorMessage = errorResponseData.errors[0].error;
+      if (typeof error?.response?.data?.error === 'string') {
+        message = error.response.data.error;
+      } else if (error?.response?.data?.errors[0] && typeof error?.response?.data?.errors[0]?.error === 'string') {
+        message = error.response.data.errors[0].error;
       }
 
-      if (errorMessage) {
-        const errorMessageInLowerCase = errorMessage.toLowerCase();
-
-        knownErrors.forEach(({ caseInsensitiveSubstringToFind, throwError }) => {
-          if (errorMessageInLowerCase.includes(caseInsensitiveSubstringToFind.toLowerCase())) {
+      /**
+       * CH API will throw empty response body with `404`
+       * upon sending a valid non-existent 8 digit CRN.
+       *
+       * Otherwise `404` with an expected response body.
+       */
+      if (message || status) {
+        knownErrors.forEach(({ checkHasError, throwError }) => {
+          if (checkHasError(error)) {
             return throwError(error);
           }
         });

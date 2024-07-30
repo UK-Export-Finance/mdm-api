@@ -15,12 +15,14 @@ export const statusCheck = ({ error, status }: { error: Error; status: HttpStatu
  */
 export const messageCheck = ({ error, search }: { error: Error; search: string }): boolean => {
   if (!isAxiosError(error) || !error?.response?.data) {
-    return;
+    return false;
   }
 
   let message: string;
 
-  if (error?.response?.data?.errors?.length && typeof error?.response?.data?.errors[0]?.error === 'string') {
+  if (typeof error?.response?.data?.error === 'string') {
+    message = error.response.data.error;
+  } else if (error?.response?.data?.errors[0] && typeof error?.response?.data?.errors[0]?.error === 'string') {
     message = error.response.data.errors[0].error;
   }
 

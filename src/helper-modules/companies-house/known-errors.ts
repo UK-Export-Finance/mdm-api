@@ -1,5 +1,5 @@
 import { HttpStatus } from '@nestjs/common';
-import { messageCheck, statusCheck } from '@ukef/helpers/response-status';
+import { messageCheck, statusCheck } from '@ukef/helpers/response-status.helper';
 import { AxiosError } from 'axios';
 
 import { CompaniesHouseInvalidAuthorizationException } from './exception/companies-house-invalid-authorization.exception';
@@ -11,7 +11,7 @@ export type KnownErrors = KnownError[];
 type KnownError = { checkHasError: (error: Error) => boolean; throwError: (error: AxiosError) => never };
 
 export const getCompanyMalformedAuthorizationHeaderKnownCompaniesHouseError = (): KnownError => ({
-  checkHasError: (error) => statusCheck({ error, status: HttpStatus.UNAUTHORIZED }) && messageCheck({ error, search: 'Invalid Authorization header' }),
+  checkHasError: (error) => statusCheck({ error, status: HttpStatus.BAD_REQUEST }) && messageCheck({ error, search: 'Invalid Authorization header' }),
   throwError: (error) => {
     throw new CompaniesHouseMalformedAuthorizationHeaderException(
       `Invalid 'Authorization' header. Check that your 'Authorization' header is well-formed.`,

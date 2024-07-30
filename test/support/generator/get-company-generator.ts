@@ -185,14 +185,7 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
       type: 'ch:service',
     };
 
-    const getCompanyCompaniesHouseNotFoundResponse: GetCompanyCompaniesHouseMultipleErrorResponse = {
-      errors: [
-        {
-          error: 'company-profile-not-found',
-          type: 'ch:service',
-        },
-      ],
-    };
+    const getCompanyCompaniesHouseNotFoundResponse: GetCompanyCompaniesHouseMultipleErrorResponse = undefined;
 
     return {
       companiesHousePath,

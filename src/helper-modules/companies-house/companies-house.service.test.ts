@@ -132,7 +132,7 @@ describe('CompaniesHouseService', () => {
       await expect(getCompanyPromise).rejects.toHaveProperty('innerError', axiosError);
     });
 
-    it(`throws a CompaniesHouseNotFoundException when the Companies House API returns a 404 response containing the error string 'company-profile-not-found'`, async () => {
+    it(`throws a CompaniesHouseNotFoundException when the Companies House API returns a 404 response status'`, async () => {
       const axiosError = new AxiosError();
       axiosError.response = {
         data: getCompanyCompaniesHouseNotFoundResponse,

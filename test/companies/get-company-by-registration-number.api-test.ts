@@ -97,16 +97,13 @@ describe('GET /companies?registrationNumber=', () => {
     },
   );
 
-  it(`returns a 404 response if the Companies House API returns a 404 response containing the error string 'company-profile-not-found'`, async () => {
+  it(`returns a 404 response if the Companies House API returns a 404 response status code`, async () => {
     requestToGetCompanyByRegistrationNumber(companiesHousePath).reply(404, getCompanyCompaniesHouseNotFoundResponse);
 
     const { status, body } = await api.get(mdmPath);
 
     expect(status).toBe(404);
-    expect(body).toStrictEqual({
-      statusCode: 404,
-      message: 'Not found',
-    });
+    expect(body).toStrictEqual({});
   });
 
   it('returns a 422 response if the Companies House API returns an overseas company', async () => {
