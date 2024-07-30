@@ -2,16 +2,20 @@ import { HttpStatus } from '@nestjs/common';
 import { isAxiosError } from 'axios';
 
 /**
- * This function validate the error response against the specified status code
- * @param Object Comprising of an error object and status to be validated against with
- * @returns Boolean
+ * Checks if the error object is an AxiosError and has a response status matching the specified status.
+ * @param {Object} options - An object containing the error and status.
+ * @param {Error} options.error - The error object to check.
+ * @param {HttpStatus} options.status - The status to compare against.
+ * @returns {boolean} - Returns true if the error is an AxiosError and has a matching response status, otherwise false.
  */
 export const statusCheck = ({ error, status }: { error: Error; status: HttpStatus }): boolean => isAxiosError(error) && error.response?.status === status;
 
 /**
- * This function validates the error response against the specified search string
- * @param Object Comprising of an error object and search string
- * @returns Boolean
+ * Validates the error response against the specified search string.
+ * @param {Object} options - An object containing the error and search string.
+ * @param {Error} options.error - The error object to validate.
+ * @param {string} options.search - The search string to compare against the error message.
+ * @returns {boolean} - Returns true if the error response contains the search string, otherwise false.
  */
 export const messageCheck = ({ error, search }: { error: Error; search: string }): boolean => {
   if (!isAxiosError(error) || !error?.response?.data) {
