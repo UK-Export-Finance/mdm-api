@@ -30,7 +30,5 @@ export const messageCheck = ({ error, search }: { error: Error; search: string }
     message = error.response.data.errors[0].error;
   }
 
-  if (message) {
-    return message.toLowerCase().includes(search.toLowerCase());
-  }
+  return message.toLowerCase().includes(search.toLowerCase()) ?? false;
 };
