@@ -97,7 +97,7 @@ describe('GET /companies?registrationNumber=', () => {
     },
   );
 
-  it(`returns a 404 response if the Companies House API returns a 404 response containing the error string 'company-profile-not-found'`, async () => {
+  it(`returns a 404 response if the Companies House API returns a 404 response status code`, async () => {
     requestToGetCompanyByRegistrationNumber(companiesHousePath).reply(404, getCompanyCompaniesHouseNotFoundResponse);
 
     const { status, body } = await api.get(mdmPath);
