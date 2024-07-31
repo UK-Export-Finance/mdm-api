@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.21.4](https://github.com/UK-Export-Finance/mdm-api/compare/v1.21.3...v1.21.4) (2024-07-31)
+
+
+### Bug Fixes
+
+* **company-house:** company house API response ([#967](https://github.com/UK-Export-Finance/mdm-api/issues/967)) ([c9234b8](https://github.com/UK-Export-Finance/mdm-api/commit/c9234b82e692baa4f792b07f1d74401660089d44))
+* **deps:** update dependency mssql to v11 ([#954](https://github.com/UK-Export-Finance/mdm-api/issues/954)) ([8942563](https://github.com/UK-Export-Finance/mdm-api/commit/8942563921e7a7cec22a3c6b2dc70aceecc16fcb))
+
 ## [1.21.3](https://github.com/UK-Export-Finance/mdm-api/compare/v1.21.2...v1.21.3) (2024-06-12)
 
 
