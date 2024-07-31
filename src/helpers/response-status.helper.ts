@@ -26,7 +26,7 @@ export const messageCheck = ({ error, search }: { error: Error; search: string }
 
   if (typeof error?.response?.data?.error === 'string') {
     message = error.response.data.error;
-  } else if (error?.response?.data?.errors[0] && typeof error?.response?.data?.errors[0]?.error === 'string') {
+  } else if (error?.response?.data?.errors?.[0] && typeof error?.response?.data?.errors?.[0]?.error === 'string') {
     message = error.response.data.errors[0].error;
   }
 

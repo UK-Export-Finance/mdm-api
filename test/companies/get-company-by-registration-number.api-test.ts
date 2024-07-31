@@ -103,7 +103,10 @@ describe('GET /companies?registrationNumber=', () => {
     const { status, body } = await api.get(mdmPath);
 
     expect(status).toBe(404);
-    expect(body).toStrictEqual({});
+    expect(body).toStrictEqual({
+      statusCode: 404,
+      message: 'Not found',
+    });
   });
 
   it('returns a 422 response if the Companies House API returns an overseas company', async () => {
