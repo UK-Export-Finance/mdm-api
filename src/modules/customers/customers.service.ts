@@ -3,6 +3,7 @@ import { GetCustomersInformaticaQueryDto } from '@ukef/modules/informatica/dto/g
 import { InformaticaService } from '@ukef/modules/informatica/informatica.service';
 
 import { GetCustomersResponse, GetCustomersResponseItem } from './dto/get-customers-response.dto';
+import { CreateCustomerDto } from './dto/create-customer.dto';
 
 @Injectable()
 export class CustomersService {
@@ -21,5 +22,19 @@ export class CustomersService {
         isLegacyRecord: customerInInformatica.isLegacyRecord,
       }),
     );
+  }
+
+  async createCustomer(createCustomerDto: CreateCustomerDto): Promise<GetCustomersResponseItem> {
+    
+    const testResponse: GetCustomersResponseItem = {       
+      partyUrn: 'partyurn',
+      name: createCustomerDto.Name,
+      sfId: 'id',
+      companyRegNo: 'regno',
+      type: 'type',
+      subtype: 'subtype',
+      isLegacyRecord: false,
+    }
+    return testResponse
   }
 }

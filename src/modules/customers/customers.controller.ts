@@ -1,10 +1,11 @@
-import { BadRequestException, Controller, Get, Query } from '@nestjs/common';
-import { ApiNotFoundResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { BadRequestException, Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { ApiCreatedResponse, ApiNotFoundResponse, ApiBadRequestResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { GetCustomersInformaticaQueryDto } from '../informatica/dto/get-customers-informatica-query.dto';
 import { CustomersService } from './customers.service';
 import { GetCustomersQueryDto } from './dto/get-customers-query.dto';
 import { GetCustomersResponse, GetCustomersResponseItem } from './dto/get-customers-response.dto';
+import { CreateCustomerDto } from './dto/create-customer.dto';
 
 @ApiTags('customers')
 @Controller('customers')
@@ -32,6 +33,21 @@ export class CustomersController {
       ...{ includeLegacyData: query.fallbackToLegacyData },
     };
     return this.customersService.getCustomers(backendQuery);
+  }
+
+  @Post()
+  @ApiOperation({
+    summary: 'Create a new customer',
+  })
+  @ApiCreatedResponse({
+    description: 'Customer successfully created',
+    type: GetCustomersResponseItem,
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid input data',
+  })
+  createCustomer(@Body() createCustomerDto: CreateCustomerDto): Promise<GetCustomersResponseItem> {
+    return this.customersService.createCustomer(createCustomerDto);
   }
 
   private ensureOneIsNotEmpty(...args) {
