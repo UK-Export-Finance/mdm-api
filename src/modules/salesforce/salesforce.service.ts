@@ -18,10 +18,6 @@ export class SalesforceService {
   async createCustomer(query: CreateCustomerDto): Promise<GetCustomersResponseItem> {
     const path = '/services/data/v53.0/sobjects/Account'
     const access_token = await this.getAccessToken();
-    console.log({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${access_token}`
-    })
     // todo: fix response type
     const { data } = await this.httpClient.post<CreateCustomerDto, any>({
       path,
