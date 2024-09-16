@@ -16,24 +16,25 @@ export class SalesforceService {
   }
 
   async createCustomer(query: CreateCustomerDto): Promise<GetCustomersResponseItem> {
-    const path = 'https://jsonplaceholder.typicode.com/todos/1'
-    const { data } = await this.httpClient.get<string>({
+    const path = 'https://httpbin.org/post'
+    const { data } = await this.httpClient.post<CreateCustomerDto, any>({
       path,
+      body: query,
       headers: { 'Content-Type': 'application/json' },
       onError: createWrapInformaticaHttpGetErrorCallback({
         messageForUnknownError: `Failed to create customer in Salesforce.`,
         knownErrors: [getCustomersNotFoundKnownInformaticaError()],
       }),
     });
-    const testResponse: GetCustomersResponseItem = {       
-        partyUrn: 'partyurn',
-        name: data,
-        sfId: 'id',
-        companyRegNo: 'regno',
-        type: 'type',
-        subtype: 'subtype',
-        isLegacyRecord: false,
-      }
+    const testResponse: GetCustomersResponseItem = {
+      partyUrn: 'partyurn',
+      name: data,
+      sfId: 'id',
+      companyRegNo: 'regno',
+      type: 'type',
+      subtype: 'subtype',
+      isLegacyRecord: false,
+    }
     return testResponse;
   }
 }
