@@ -16,11 +16,21 @@ export class SalesforceService {
   }
 
   async createCustomer(query: CreateCustomerDto): Promise<GetCustomersResponseItem> {
-    const path = 'https://httpbin.org/post'
+    const path = '/services/data/v53.0/sobjects/Account'
+    const access_token = await this.getAccessToken();
+    console.log({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${access_token}`
+    })
+    // todo: fix response type
     const { data } = await this.httpClient.post<CreateCustomerDto, any>({
       path,
       body: query,
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${access_token}`,
+      },
+      // todo: fix error type
       onError: createWrapInformaticaHttpGetErrorCallback({
         messageForUnknownError: `Failed to create customer in Salesforce.`,
         knownErrors: [getCustomersNotFoundKnownInformaticaError()],
@@ -36,5 +46,27 @@ export class SalesforceService {
       isLegacyRecord: false,
     }
     return testResponse;
+  }
+
+  private async getAccessToken(): Promise<string> {
+    const path = 'https://test.salesforce.com/services/oauth2/token'
+    const response = await this.httpClient.post<any, any>({
+      path,
+      body: {
+        'grant_type': 'password',
+        'client_id': process.env.SF_CLIENT_ID,
+        'client_secret': process.env.SF_CLIENT_SECRET,
+        'username': process.env.SF_USERNAME,
+        'password': process.env.SF_PASSWORD,
+      },
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      onError: createWrapInformaticaHttpGetErrorCallback({
+        messageForUnknownError: `Failed to get access token.`,
+        knownErrors: [getCustomersNotFoundKnownInformaticaError()],
+      }),
+    })
+    return response.data.access_token
   }
 }

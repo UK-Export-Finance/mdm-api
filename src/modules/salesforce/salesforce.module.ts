@@ -3,7 +3,7 @@ import crypto from 'crypto';
 
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { InformaticaConfig, KEY as INFORMATICA_CONFIG_KEY } from '@ukef/config/informatica.config';
+import { SalesforceConfig, KEY as SALESFORCE_CONFIG_KEY } from '@ukef/config/salesforce.config';
 import { HttpModule } from '@ukef/modules/http/http.module';
 
 import { SalesforceService } from './salesforce.service';
@@ -14,12 +14,14 @@ import { SalesforceService } from './salesforce.service';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const { baseUrl, username, password, maxRedirects, timeout } = configService.get<InformaticaConfig>(INFORMATICA_CONFIG_KEY);
+        const { baseUrl, clientId, clientSecret, username, password, maxRedirects, timeout } = configService.get<SalesforceConfig>(SALESFORCE_CONFIG_KEY);
         return {
           baseURL: baseUrl,
           maxRedirects,
           timeout,
           auth: {
+            clientId,
+            clientSecret,
             username,
             password,
           },
@@ -40,4 +42,4 @@ import { SalesforceService } from './salesforce.service';
   providers: [SalesforceService],
   exports: [SalesforceService],
 })
-export class SalesforceModule { }
+export class SalesforceModule {}
