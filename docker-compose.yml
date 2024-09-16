@@ -41,6 +41,14 @@ services:
       COMPANIES_HOUSE_KEY:
       COMPANIES_HOUSE_MAX_REDIRECTS:
       COMPANIES_HOUSE_TIMEOUT:
+      SF_CLIENT_ID:
+      SF_CLIENT_SECRET:
+      SF_USERNAME:
+      SF_PASSWORD:
+      SF_INSTANCE_URL:
+      SF_ACCESS_URL:
+      SF_MAX_REDIRECTS:
+      SF_TIMEOUT:
       API_KEY:
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:${PORT}"]
