@@ -6,6 +6,7 @@ import { CustomersService } from './customers.service';
 import { GetCustomersQueryDto } from './dto/get-customers-query.dto';
 import { GetCustomersResponse, GetCustomersResponseItem } from './dto/get-customers-response.dto';
 import { CreateCustomerDto } from './dto/create-customer.dto';
+import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-customer-salesforce-response.dto';
 
 @ApiTags('customers')
 @Controller('customers')
@@ -41,12 +42,12 @@ export class CustomersController {
   })
   @ApiCreatedResponse({
     description: 'Customer successfully created',
-    type: GetCustomersResponseItem,
+    type: CreateCustomerSalesforceResponseDto,
   })
   @ApiBadRequestResponse({
     description: 'Invalid input data',
   })
-  createCustomer(@Body() createCustomerDto: CreateCustomerDto): Promise<GetCustomersResponseItem> {
+  createCustomer(@Body() createCustomerDto: CreateCustomerDto): Promise<CreateCustomerSalesforceResponseDto> {
     return this.customersService.createCustomer(createCustomerDto);
   }
 

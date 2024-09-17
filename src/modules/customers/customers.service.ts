@@ -5,6 +5,7 @@ import { SalesforceService } from '@ukef/modules/salesforce/salesforce.service';
 
 import { GetCustomersResponse, GetCustomersResponseItem } from './dto/get-customers-response.dto';
 import { CreateCustomerDto } from './dto/create-customer.dto';
+import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-customer-salesforce-response.dto';
 
 @Injectable()
 export class CustomersService {
@@ -28,8 +29,8 @@ export class CustomersService {
     );
   }
 
-  async createCustomer(createCustomerDto: CreateCustomerDto): Promise<GetCustomersResponseItem> {
-    const customerResponse: GetCustomersResponseItem = await this.salesforceService.createCustomer(createCustomerDto)
+  async createCustomer(createCustomerDto: CreateCustomerDto): Promise<CreateCustomerSalesforceResponseDto> {
+    const customerResponse: CreateCustomerSalesforceResponseDto = await this.salesforceService.createCustomer(createCustomerDto)
     return customerResponse
   }
 }

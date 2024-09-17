@@ -4,8 +4,8 @@ import { HttpClient } from '@ukef/modules/http/http.client';
 
 import { getCustomersNotFoundKnownInformaticaError } from '../informatica/known-errors';
 import { createWrapInformaticaHttpGetErrorCallback } from '../informatica/wrap-informatica-http-error-callback';
-import { GetCustomersResponseItem } from '../customers/dto/get-customers-response.dto';
 import { CreateCustomerDto } from '../customers/dto/create-customer.dto';
+import { CreateCustomerSalesforceResponseDto } from './dto/create-customer-salesforce-response.dto';
 
 @Injectable()
 export class SalesforceService {
@@ -15,11 +15,10 @@ export class SalesforceService {
     this.httpClient = new HttpClient(httpService);
   }
 
-  async createCustomer(query: CreateCustomerDto): Promise<GetCustomersResponseItem> {
+  async createCustomer(query: CreateCustomerDto): Promise<CreateCustomerSalesforceResponseDto> {
     const path = '/sobjects/Account'
     const access_token = await this.getAccessToken();
-    // todo: fix response type
-    const { data } = await this.httpClient.post<CreateCustomerDto, any>({
+    const { data } = await this.httpClient.post<CreateCustomerDto, CreateCustomerSalesforceResponseDto>({
       path,
       body: query,
       headers: {
@@ -31,16 +30,7 @@ export class SalesforceService {
         knownErrors: [getCustomersNotFoundKnownInformaticaError()],
       }),
     });
-    const testResponse: GetCustomersResponseItem = {
-      partyUrn: 'partyurn',
-      name: data,
-      sfId: 'id',
-      companyRegNo: 'regno',
-      type: 'type',
-      subtype: 'subtype',
-      isLegacyRecord: false,
-    }
-    return testResponse;
+    return data;
   }
 
   private async getAccessToken(): Promise<string> {
