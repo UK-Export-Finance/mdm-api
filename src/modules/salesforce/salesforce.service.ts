@@ -16,7 +16,7 @@ export class SalesforceService {
   }
 
   async createCustomer(query: CreateCustomerDto): Promise<GetCustomersResponseItem> {
-    const path = 'https://ukexportfinance--ccmapi.sandbox.my.salesforce.com/services/data/v53.0/sobjects/Account'
+    const path = '/sobjects/Account'
     const access_token = await this.getAccessToken();
     // todo: fix response type
     const { data } = await this.httpClient.post<CreateCustomerDto, any>({
