@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
+import { IsArray, IsBoolean, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateCustomerSalesforceResponseDto {
   @ApiProperty({ description: 'id' })
@@ -8,7 +8,7 @@ export class CreateCustomerSalesforceResponseDto {
   id: string;
   
   @ApiProperty({ description: 'errors' })
-  @IsString()
+  @IsArray()
   @IsNotEmpty()
   errors: any[];
 
