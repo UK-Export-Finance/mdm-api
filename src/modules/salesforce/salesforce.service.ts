@@ -16,15 +16,14 @@ export class SalesforceService {
   }
 
   async createCustomer(query: CreateCustomerDto): Promise<GetCustomersResponseItem> {
-    const path = '/services/data/v53.0/sobjects/Account'
+    const path = 'https://ukexportfinance--ccmapi.sandbox.my.salesforce.com/services/data/v53.0/sobjects/Account'
     const access_token = await this.getAccessToken();
     // todo: fix response type
     const { data } = await this.httpClient.post<CreateCustomerDto, any>({
       path,
       body: query,
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${access_token}`,
+        'Authorization': 'Bearer ' + access_token,
       },
       // todo: fix error type
       onError: createWrapInformaticaHttpGetErrorCallback({
