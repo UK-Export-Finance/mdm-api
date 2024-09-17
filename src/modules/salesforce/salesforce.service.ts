@@ -2,8 +2,7 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { HttpClient } from '@ukef/modules/http/http.client';
 
-import { getCustomersNotFoundKnownInformaticaError } from '../informatica/known-errors';
-import { createWrapInformaticaHttpGetErrorCallback } from '../informatica/wrap-informatica-http-error-callback';
+import { createWrapSalesforceHttpGetErrorCallback } from './wrap-salesforce-http-error-callback';
 import { CreateCustomerDto } from '../customers/dto/create-customer.dto';
 import { CreateCustomerSalesforceResponseDto } from './dto/create-customer-salesforce-response.dto';
 
@@ -24,10 +23,8 @@ export class SalesforceService {
       headers: {
         'Authorization': 'Bearer ' + access_token,
       },
-      // todo: fix error type
-      onError: createWrapInformaticaHttpGetErrorCallback({
+      onError: createWrapSalesforceHttpGetErrorCallback({
         messageForUnknownError: `Failed to create customer in Salesforce.`,
-        knownErrors: [getCustomersNotFoundKnownInformaticaError()],
       }),
     });
     return data;
@@ -47,9 +44,8 @@ export class SalesforceService {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      onError: createWrapInformaticaHttpGetErrorCallback({
+      onError: createWrapSalesforceHttpGetErrorCallback({
         messageForUnknownError: `Failed to get access token.`,
-        knownErrors: [getCustomersNotFoundKnownInformaticaError()],
       }),
     })
     return response.data.access_token
