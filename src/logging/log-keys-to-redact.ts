@@ -48,7 +48,7 @@ const getClientRequestLogKeysToRedact = ({ logKey, headersLogKey, bodyLogKey }: 
 ];
 
 const getIncomingResponseLogKeysToRedact = ({ logKey, bodyLogKey }: LogKeysToRedactOptions['incomingResponse']): string[] => [
-  // We redact the client request body as they contain the Dun and Bradstreet access token
+  // We redact the client request body as they contain the Dun and Bradstreet and Salesforce access tokens
   buildKeyToRedact([logKey, bodyLogKey]),
 ];
 
@@ -57,7 +57,7 @@ const getOutgoingRequestLogKeysToRedact = ({ logKey, headersLogKey, bodyLogKey }
     // We redact the outgoing request headers as they contain:
     //  - our Basic auth details for Informatica
     // We redact the outgoing request body as it contains:
-    //  - our Client auth details for Dun and Bradstreet
+    //  - our Client auth details for Dun and Bradstreet and Salesforce
     buildKeyToRedact([logKey, headersLogKey]),
     buildKeyToRedact([logKey, bodyLogKey]),
   ];
