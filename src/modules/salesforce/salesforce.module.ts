@@ -16,15 +16,15 @@ import { SalesforceService } from './salesforce.service';
       useFactory: (configService: ConfigService) => {
         const { baseUrl, clientId, clientSecret, username, password, maxRedirects, timeout } = configService.get<SalesforceConfig>(SALESFORCE_CONFIG_KEY);
         return {
-          baseURL: baseUrl,
-          maxRedirects,
-          timeout,
-          auth: {
-            clientId,
-            clientSecret,
-            username,
-            password,
-          },
+          // baseURL: baseUrl,
+          // maxRedirects,
+          // timeout,
+          // auth: {
+          //   clientId,
+          //   clientSecret,
+          //   username,
+          //   password,
+          // },
           // TODO: APIM-471 - cleanup rejectUnauthorized when Informatica SSL issue is resolved
           // "rejectUnauthorized: false" is just for local DEV laptop environment, not for DEV/PROD.
           // to ignore https issues, enable agent and rejectUnauthorized:false bellow.
