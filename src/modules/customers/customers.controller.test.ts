@@ -15,7 +15,7 @@ describe('CustomersController', () => {
   let controller: CustomersController;
 
   beforeEach(() => {
-    const customersService = new CustomersService(null);
+    const customersService = new CustomersService(null, null);
     customersServiceGetCustomers = jest.fn();
     customersService.getCustomers = customersServiceGetCustomers;
 
