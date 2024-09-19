@@ -1,4 +1,5 @@
 import { InformaticaService } from '@ukef/modules/informatica/informatica.service';
+import { SalesforceService } from '@ukef/modules/salesforce/salesforce.service';
 import { GetCustomersGenerator } from '@ukef-test/support/generator/get-customers-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { resetAllWhenMocks, when } from 'jest-when';
@@ -12,14 +13,19 @@ describe('CustomerService', () => {
 
   let service: CustomersService;
   let informaticaServiceGetCustomers: jest.Mock;
+  let salesforceServiceCreateCustomer: jest.Mock;
 
   beforeEach(() => {
     informaticaServiceGetCustomers = jest.fn();
     const informaticaService = new InformaticaService(null);
     informaticaService.getCustomers = informaticaServiceGetCustomers;
+    salesforceServiceCreateCustomer = jest.fn();
+    const salesforceService = new SalesforceService(null);
+    salesforceService.createCustomer = salesforceServiceCreateCustomer;
+
     resetAllWhenMocks();
 
-    service = new CustomersService(informaticaService);
+    service = new CustomersService(informaticaService, salesforceService);
   });
 
   describe('getCustomers', () => {
