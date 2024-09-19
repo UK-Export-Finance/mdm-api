@@ -143,6 +143,27 @@ paths:
           description: Customer not found.
       tags:
         - customers
+    post:
+      operationId: CustomersController_createCustomer
+      summary: Create a new customer
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCustomerDto'
+      responses:
+        '201':
+          description: Customer successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateCustomerSalesforceResponseDto'
+        '400':
+          description: Invalid input data
+      tags:
+        - customers
   /api/v1/emails:
     post:
       operationId: EmailsController_postEmail
@@ -735,6 +756,32 @@ components:
         - type
         - subtype
         - isLegacyRecord
+    CreateCustomerDto:
+      type: object
+      properties:
+        Name:
+          type: string
+          description: Customer name
+      required:
+        - Name
+    CreateCustomerSalesforceResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: id
+        errors:
+          description: errors
+          type: array
+          items:
+            type: string
+        success:
+          type: boolean
+          description: success
+      required:
+        - id
+        - errors
+        - success
     PostEmailsRequestDto:
       type: object
       properties:
