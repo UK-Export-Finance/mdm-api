@@ -34,7 +34,7 @@ export const logKeysToRedact = ({ redactLogs, clientRequest, outgoingRequest, in
   const keys = [
     ...getClientRequestLogKeysToRedact(clientRequest),
     ...getOutgoingRequestLogKeysToRedact(outgoingRequest),
-    ...getIncomingRequestLogKeysToRedact(incomingResponse),
+    ...getIncomingResponseLogKeysToRedact(incomingResponse),
     ...getErrorLogKeysToRedact(error),
     ...getDbErrorLogKeysToRedact(dbError),
   ];
@@ -47,7 +47,7 @@ const getClientRequestLogKeysToRedact = ({ logKey, headersLogKey, bodyLogKey }: 
   buildKeyToRedact([logKey, headersLogKey]),
 ];
 
-const getIncomingRequestLogKeysToRedact = ({ logKey, bodyLogKey }: LogKeysToRedactOptions['incomingResponse']): string[] => [
+const getIncomingResponseLogKeysToRedact = ({ logKey, bodyLogKey }: LogKeysToRedactOptions['incomingResponse']): string[] => [
   // We redact the client request body as they contain the Salesforce access token
   buildKeyToRedact([logKey, bodyLogKey]),
 ];
