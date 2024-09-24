@@ -14,12 +14,12 @@ export class SalesforceService {
     this.httpClient = new HttpClient(httpService);
   }
 
-  async createCustomer(query: CreateCustomerDto): Promise<CreateCustomerSalesforceResponseDto> {
+  async createCustomer(createCustomerDto: CreateCustomerDto): Promise<CreateCustomerSalesforceResponseDto> {
     const path = '/sobjects/Account'
     const access_token = await this.getAccessToken();
     const { data } = await this.httpClient.post<CreateCustomerDto, CreateCustomerSalesforceResponseDto>({
       path,
-      body: query,
+      body: createCustomerDto,
       headers: {
         'Authorization': 'Bearer ' + access_token,
       },
