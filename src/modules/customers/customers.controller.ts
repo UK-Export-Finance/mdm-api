@@ -5,8 +5,8 @@ import { GetCustomersInformaticaQueryDto } from '../informatica/dto/get-customer
 import { CustomersService } from './customers.service';
 import { GetCustomersQueryDto } from './dto/get-customers-query.dto';
 import { GetCustomersResponse, GetCustomersResponseItem } from './dto/get-customers-response.dto';
-import { CreateCustomerDto } from './dto/create-customer.dto';
 import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-customer-salesforce-response.dto';
+import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
 
 @ApiTags('customers')
 @Controller('customers')
@@ -47,8 +47,8 @@ export class CustomersController {
   @ApiBadRequestResponse({
     description: 'Invalid input data',
   })
-  createCustomer(@Body() createCustomerDto: CreateCustomerDto): Promise<CreateCustomerSalesforceResponseDto> {
-    return this.customersService.createCustomer(createCustomerDto);
+  createCustomer(@Body() companyRegistrationNumber: CompanyRegistrationNumberDto): Promise<CreateCustomerSalesforceResponseDto> {
+    return this.customersService.createCustomer(companyRegistrationNumber);
   }
 
   private ensureOneIsNotEmpty(...args) {

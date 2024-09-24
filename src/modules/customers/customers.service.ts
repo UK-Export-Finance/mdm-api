@@ -5,6 +5,7 @@ import { SalesforceService } from '@ukef/modules/salesforce/salesforce.service';
 
 import { GetCustomersResponse, GetCustomersResponseItem } from './dto/get-customers-response.dto';
 import { CreateCustomerDto } from './dto/create-customer.dto';
+import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
 import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-customer-salesforce-response.dto';
 
 @Injectable()
@@ -29,8 +30,16 @@ export class CustomersService {
     );
   }
 
-  async createCustomer(createCustomerDto: CreateCustomerDto): Promise<CreateCustomerSalesforceResponseDto> {
-    const customerResponse: CreateCustomerSalesforceResponseDto = await this.salesforceService.createCustomer(createCustomerDto)
+  async createCustomer(companyRegistrationNumberDto: CompanyRegistrationNumberDto): Promise<CreateCustomerSalesforceResponseDto> {
+    const dnbLookupResponse: CreateCustomerDto = {
+      "Name": companyRegistrationNumberDto.companyRegistrationNumber,
+      "BillingCountry": null,
+      "BillingStreet": null,
+      "BillingCity": null,
+      "BillingPostalCode": null,
+      "D_B_Number__c": null,
+    }
+    const customerResponse: CreateCustomerSalesforceResponseDto = await this.salesforceService.createCustomer(dnbLookupResponse)
     return customerResponse
   }
 }
