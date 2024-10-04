@@ -31,7 +31,7 @@ export class SalesforceService {
   }
 
   private async getAccessToken(): Promise<string> {
-    const path = 'https://test.salesforce.com/services/oauth2/token'
+    const path = process.env.SF_ACCESS_URL
     const response = await this.httpClient.post<any, any>({
       path,
       body: {
