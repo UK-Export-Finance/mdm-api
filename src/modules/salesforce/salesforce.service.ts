@@ -5,6 +5,8 @@ import { HttpClient } from '@ukef/modules/http/http.client';
 import { createWrapSalesforceHttpGetErrorCallback } from './wrap-salesforce-http-error-callback';
 import { CreateCustomerDto } from '../customers/dto/create-customer.dto';
 import { CreateCustomerSalesforceResponseDto } from './dto/create-customer-salesforce-response.dto';
+import { CompanyRegistrationNumberDto } from '../customers/dto/company-registration-number.dto';
+import { GetCustomersDirectResponse, GetCustomersDirectResponseItems } from '../customers/dto/get-customers-direct-response.dto';
 
 @Injectable()
 export class SalesforceService {
@@ -12,6 +14,22 @@ export class SalesforceService {
 
   constructor(httpService: HttpService) {
     this.httpClient = new HttpClient(httpService);
+  }
+
+  async getCustomers(companyRegistrationNumberDto: CompanyRegistrationNumberDto): Promise<GetCustomersDirectResponseItems> {
+    const encodedCompanyRegistrationNumber = encodeURIComponent(companyRegistrationNumberDto.companyRegistrationNumber);
+    const path = `/query/?q=SELECT+FIELDS(ALL)+FROM+Account+WHERE+Company_Registration_Number__c='${encodedCompanyRegistrationNumber}'+LIMIT+200`;
+    const access_token = await this.getAccessToken();
+    const { data } = await this.httpClient.get<GetCustomersDirectResponse>({
+      path,
+      headers: {
+        'Authorization': 'Bearer ' + access_token,
+      },
+      onError: createWrapSalesforceHttpGetErrorCallback({
+        messageForUnknownError: `Failed to get customers in Salesforce.`,
+      }),
+    });
+    return data.records;
   }
 
   async createCustomer(createCustomerDto: CreateCustomerDto): Promise<CreateCustomerSalesforceResponseDto> {
