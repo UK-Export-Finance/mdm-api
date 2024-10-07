@@ -7,6 +7,7 @@ import { GetCustomersQueryDto } from './dto/get-customers-query.dto';
 import { GetCustomersResponse, GetCustomersResponseItem } from './dto/get-customers-response.dto';
 import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-customer-salesforce-response.dto';
 import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
+import { GetCustomersDirectResponseItems } from './dto/get-customers-direct-response.dto';
 
 @ApiTags('customers')
 @Controller('customers')
@@ -15,7 +16,7 @@ export class CustomersController {
 
   @Get()
   @ApiOperation({
-    summary: 'Get customers from Salesforce',
+    summary: 'Get customers from Salesforce via Informatica',
   })
   @ApiResponse({
     status: 200,
@@ -34,6 +35,22 @@ export class CustomersController {
       ...{ includeLegacyData: query.fallbackToLegacyData },
     };
     return this.customersService.getCustomers(backendQuery);
+  }
+
+  @Get('direct')
+  @ApiOperation({
+    summary: 'Get customers directly from Salesforce',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Party URN of customer matching search parameters',
+    type: [GetCustomersResponseItem],
+  })
+  @ApiNotFoundResponse({
+    description: 'Customer not found.',
+  })
+  getCustomersDirect(@Query() companyRegistrationNumber: CompanyRegistrationNumberDto): Promise<GetCustomersDirectResponseItems> {
+    return this.customersService.getCustomersDirect(companyRegistrationNumber);
   }
 
   @Post()
