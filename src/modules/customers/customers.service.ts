@@ -7,6 +7,7 @@ import { GetCustomersResponse, GetCustomersResponseItem } from './dto/get-custom
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
 import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-customer-salesforce-response.dto';
+import { GetCustomersDirectResponseItems } from './dto/get-customers-direct-response.dto';
 
 @Injectable()
 export class CustomersService {
@@ -28,6 +29,10 @@ export class CustomersService {
         isLegacyRecord: customerInInformatica.isLegacyRecord,
       }),
     );
+  }
+
+  async getCustomersDirect(companyRegistrationNumberDto: CompanyRegistrationNumberDto): Promise<GetCustomersDirectResponseItems> {
+    return await this.salesforceService.getCustomers(companyRegistrationNumberDto);
   }
 
   async createCustomer(companyRegistrationNumberDto: CompanyRegistrationNumberDto): Promise<CreateCustomerSalesforceResponseDto> {
