@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { HttpClient } from '@ukef/modules/http/http.client';
 
 import { createWrapSalesforceHttpGetErrorCallback } from './wrap-salesforce-http-error-callback';
@@ -29,7 +29,11 @@ export class SalesforceService {
         messageForUnknownError: `Failed to get customers in Salesforce.`,
       }),
     });
-    return data.records;
+    if (data.totalSize === 0) {
+      throw new NotFoundException('Customer not found');
+      } else {
+      return data.records;
+    }
   }
 
   async createCustomer(createCustomerDto: CreateCustomerDto): Promise<CreateCustomerSalesforceResponseDto> {
