@@ -1,23 +1,28 @@
 import { BadRequestException } from '@nestjs/common';
-import { CUSTOMERS, ENUMS } from '@ukef/constants';
+import { COMPANIES, CUSTOMERS, ENUMS } from '@ukef/constants';
 import { GetCustomersGenerator } from '@ukef-test/support/generator/get-customers-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { when } from 'jest-when';
 
 import { CustomersController } from './customers.controller';
 import { CustomersService } from './customers.service';
+import { GetCustomersDirectResponseItems } from './dto/get-customers-direct-response.dto';
+import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
 
 describe('CustomersController', () => {
   const valueGenerator = new RandomValueGenerator();
 
   let customersServiceGetCustomers: jest.Mock;
+  let customersServiceGetCustomersDirect: jest.Mock;
 
   let controller: CustomersController;
 
   beforeEach(() => {
     const customersService = new CustomersService(null, null);
     customersServiceGetCustomers = jest.fn();
+    customersServiceGetCustomersDirect = jest.fn();
     customersService.getCustomers = customersServiceGetCustomers;
+    customersService.getCustomersDirect = customersServiceGetCustomersDirect;
 
     controller = new CustomersController(customersService);
   });
@@ -97,6 +102,19 @@ describe('CustomersController', () => {
 
       expect(getCustomers(query)).toThrow('One and just one search parameter is required');
       expect(getCustomers(query)).toThrow(BadRequestException);
+    });
+  });
+
+  describe('getCustomersDirect', () => {
+    const companyRegNoDto: CompanyRegistrationNumberDto = { companyRegistrationNumber: CUSTOMERS.EXAMPLES.COMPANYREG };
+    const expectedResponse: GetCustomersDirectResponseItems = [{ Id: CUSTOMERS.EXAMPLES.COMPANYREG }];
+
+    it('returns customers directly from Salesforce', async () => {
+      when(customersServiceGetCustomersDirect).calledWith(companyRegNoDto).mockResolvedValueOnce(expectedResponse);
+
+      const response = await controller.getCustomersDirect(companyRegNoDto);
+
+      expect(response).toEqual(expectedResponse);
     });
   });
 });
