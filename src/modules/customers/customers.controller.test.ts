@@ -8,12 +8,14 @@ import { CustomersController } from './customers.controller';
 import { CustomersService } from './customers.service';
 import { GetCustomersDirectResponseItems } from './dto/get-customers-direct-response.dto';
 import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
+import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-customer-salesforce-response.dto';
 
 describe('CustomersController', () => {
   const valueGenerator = new RandomValueGenerator();
 
   let customersServiceGetCustomers: jest.Mock;
   let customersServiceGetCustomersDirect: jest.Mock;
+  let customersServiceCreateCustomer: jest.Mock;
 
   let controller: CustomersController;
 
@@ -21,8 +23,10 @@ describe('CustomersController', () => {
     const customersService = new CustomersService(null, null);
     customersServiceGetCustomers = jest.fn();
     customersServiceGetCustomersDirect = jest.fn();
+    customersServiceCreateCustomer = jest.fn();
     customersService.getCustomers = customersServiceGetCustomers;
     customersService.getCustomersDirect = customersServiceGetCustomersDirect;
+    customersService.createCustomer = customersServiceCreateCustomer;
 
     controller = new CustomersController(customersService);
   });
@@ -117,4 +121,27 @@ describe('CustomersController', () => {
       expect(response).toEqual(expectedResponse);
     });
   });
+
+  describe('createCustomer', () => {
+    const companyRegNoDto: CompanyRegistrationNumberDto = { companyRegistrationNumber: CUSTOMERS.EXAMPLES.COMPANYREG };
+    const createCustomerResponse: CreateCustomerSalesforceResponseDto = { 
+      id: 'customer-id', 
+      errors: null,
+      success: true 
+    };
+  
+    it('creates a customer successfully and returns the response', async () => {
+      when(customersServiceCreateCustomer).calledWith(companyRegNoDto).mockResolvedValueOnce(createCustomerResponse);
+  
+      const response = await controller.createCustomer(companyRegNoDto);
+  
+      expect(response).toEqual(createCustomerResponse);
+    });
+    
+    it('throws an error if the service fails to create a customer', async () => {
+      when(customersServiceCreateCustomer).calledWith(companyRegNoDto).mockRejectedValueOnce(new Error('Service Error'));
+  
+      await expect(controller.createCustomer(companyRegNoDto)).rejects.toThrow('Service Error');
+    });
+  });  
 });
