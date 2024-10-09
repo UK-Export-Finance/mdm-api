@@ -30,7 +30,7 @@ export class SalesforceService {
       }),
     });
     if (data.totalSize === 0) {
-      throw new NotFoundException('Customer not found');
+      throw new NotFoundException('Customer not found.');
       } else {
       return data.records;
     }
