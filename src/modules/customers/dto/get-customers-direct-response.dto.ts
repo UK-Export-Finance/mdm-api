@@ -4,12 +4,12 @@ export type GetCustomersDirectResponseItems = GetCustomersDirectResponseItem[];
 
 export class GetCustomersDirectResponse {
   @ApiProperty({
-    description: 'The unique UKEF id of the customer',
+    description: 'Total numer of records returned',
   })
   readonly totalSize: number;
 
   @ApiProperty({
-    description: 'The unique UKEF id of the customer',
+    description: 'A boolean indicating whether there are no more results',
   })
   readonly done: boolean;
   
