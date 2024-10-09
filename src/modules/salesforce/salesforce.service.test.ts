@@ -9,7 +9,7 @@ import { SalesforceException } from './exception/salesforce.exception';
 import { SalesforceService } from './salesforce.service';
 import { CompanyRegistrationNumberDto } from '../customers/dto/company-registration-number.dto';
 
-describe('InformaticaService', () => {
+describe('SalesforceService', () => {
   const valueGenerator = new RandomValueGenerator();
 
   let httpServiceGet: jest.Mock;
@@ -128,7 +128,7 @@ describe('InformaticaService', () => {
       await expect(getCustomersPromise).rejects.toThrow('Customer not found.');
     });
 
-    it('throws an SalesforceException if the request to Salesforce fails', async () => {
+    it('throws a SalesforceException if the request to Salesforce fails', async () => {
       const axiosRequestError = new AxiosError();
       when(httpServiceGet)
         .calledWith(...expectedHttpServiceGetArgs)
