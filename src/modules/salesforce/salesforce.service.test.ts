@@ -8,6 +8,7 @@ import { of, throwError } from 'rxjs';
 import { SalesforceException } from './exception/salesforce.exception';
 import { SalesforceService } from './salesforce.service';
 import { CompanyRegistrationNumberDto } from '../customers/dto/company-registration-number.dto';
+import { CreateCustomerDto } from '../customers/dto/create-customer.dto';
 
 describe('SalesforceService', () => {
   const valueGenerator = new RandomValueGenerator();
@@ -27,21 +28,28 @@ describe('SalesforceService', () => {
     service = new SalesforceService(httpService);
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   const companyRegNo = '0' + valueGenerator.stringOfNumericCharacters({ length: 7 });
-  const customerBasePath = '/query';
-  const expectedResponse = {
-    totalSize: 1,
-    data: [
-      {
-        Id: companyRegNo
-      },
-    ]
-  };
-
   const expectedAccessToken = 'TEST_ACCESS_TOKEN';
-
+  const getAccessTokenMethodMock = jest
+  .spyOn(SalesforceService.prototype as any, 'getAccessToken')
+  .mockImplementation(() => Promise.resolve(expectedAccessToken))
 
   describe('getCustomers', () => {
+
+    const customerBasePath = '/query';
+    const expectedResponse = {
+      totalSize: 1,
+      data: [
+        {
+          Id: companyRegNo
+        },
+      ]
+    };
+
     const query: CompanyRegistrationNumberDto = {
       companyRegistrationNumber: companyRegNo,
     };
@@ -49,9 +57,6 @@ describe('SalesforceService', () => {
     const expectedPath = `${customerBasePath}/?q=SELECT+FIELDS(ALL)+FROM+Account+WHERE+Company_Registration_Number__c='${encodeURIComponent(companyRegNo)}'+LIMIT+200`;
 
     const expectedHttpServiceGetArgs: [string, object] = [expectedPath, { headers: { 'Authorization': 'Bearer ' + expectedAccessToken } }];
-    const getAccessTokenMethodMock = jest
-      .spyOn(SalesforceService.prototype as any, 'getAccessToken')
-      .mockImplementation(() => Promise.resolve(expectedAccessToken))
 
     it('sends a GET to the Salesforce /query endpoint with the specified request', async () => {
       when(httpServiceGet)
@@ -137,6 +142,58 @@ describe('SalesforceService', () => {
 
       await expect(getCustomersPromise).rejects.toBeInstanceOf(SalesforceException);
       await expect(getCustomersPromise).rejects.toThrow('Failed to get customers in Salesforce.');
+      await expect(getCustomersPromise).rejects.toHaveProperty('innerError', axiosRequestError);
+    });
+  });
+
+  describe('createCustomer', () => {
+    const customerBasePath = '/sobjects/Account';
+    const expectedResponse = {
+      id: '1234asdf',
+      errors: null,
+      success: true,
+    };
+
+    const query: CreateCustomerDto = {
+      "Name": companyRegNo,
+      "BillingCountry": null,
+      "BillingStreet": null,
+      "BillingCity": null,
+      "BillingPostalCode": null,
+      "D_B_Number__c": companyRegNo,
+      "Company_Registration_Number__c": companyRegNo,
+    };
+
+    const expectedHttpServicePostArgs: [string, body: CreateCustomerDto, object] = [customerBasePath, query, { headers: { 'Authorization': 'Bearer ' + expectedAccessToken } }];
+
+    it('sends a POST to the Salesforce /sobjects/Account endpoint with the specified request', async () => {
+      when(httpServicePost)
+        .calledWith(...expectedHttpServicePostArgs)
+        .mockReturnValueOnce(
+          of({
+            data: expectedResponse,
+            status: 201,
+            statusText: 'OK',
+            config: undefined,
+            headers: undefined,
+          }),
+        );
+      await service.createCustomer(query);
+
+      expect(getAccessTokenMethodMock).toHaveBeenCalledTimes(1);
+      expect(httpServicePost).toHaveBeenCalledTimes(1);
+      expect(httpServicePost).toHaveBeenCalledWith(...expectedHttpServicePostArgs);
+    });
+
+    it('throws a SalesforceException if the request to Salesforce fails', async () => {
+      const axiosRequestError = new AxiosError();
+      when(httpServicePost)
+        .calledWith(...expectedHttpServicePostArgs)
+        .mockReturnValueOnce(throwError(() => axiosRequestError));
+      const getCustomersPromise = service.createCustomer(query);
+
+      await expect(getCustomersPromise).rejects.toBeInstanceOf(SalesforceException);
+      await expect(getCustomersPromise).rejects.toThrow('Failed to create customer in Salesforce.');
       await expect(getCustomersPromise).rejects.toHaveProperty('innerError', axiosRequestError);
     });
   });
