@@ -39,14 +39,8 @@ export class CustomersService {
     // TODO: to get from DnB
     const dnbLookupResponse: CreateCustomerDto = {
       "Name": companyRegistrationNumberDto.companyRegistrationNumber,
-      "BillingCountry": null,
-      "BillingStreet": null,
-      "BillingCity": null,
-      "BillingPostalCode": null,
       "D_B_Number__c": companyRegistrationNumberDto.companyRegistrationNumber,
-      "Company_Registration_Number__c": companyRegistrationNumberDto.companyRegistrationNumber,
     }
-    // and request party urn?
     const customerResponse: CreateCustomerSalesforceResponseDto = await this.salesforceService.createCustomer(dnbLookupResponse)
     return customerResponse
   }
