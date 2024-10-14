@@ -9,6 +9,7 @@ export interface SalesforceConfig {
   clientSecret: string;
   username: string;
   password: string;
+  accessUrl: string;
   maxRedirects: number;
   timeout: number;
 }
@@ -21,6 +22,7 @@ export default registerAs(
     clientSecret: process.env.SF_CLIENT_SECRET,
     username: process.env.SF_USERNAME,
     password: process.env.SF_PASSWORD,
+    accessUrl: process.env.SF_ACCESS_URL,
     maxRedirects: getIntConfig(process.env.SF_MAX_REDIRECTS, 5),
     timeout: getIntConfig(process.env.SF_TIMEOUT, 30000), // in milliseconds
   }),
