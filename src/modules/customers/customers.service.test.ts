@@ -80,8 +80,9 @@ describe('CustomerService', () => {
 
       expect(response).toEqual(createCustomerResponse);
       expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(expect.objectContaining({
-        // TODO: add to this
-        Company_Registration_Number__c: companyRegNoDto.companyRegistrationNumber,
+        // TODO: update this with correct values
+        Name: companyRegNoDto.companyRegistrationNumber,
+        D_B_Number__c: companyRegNoDto.companyRegistrationNumber,
       }));
     });
 
