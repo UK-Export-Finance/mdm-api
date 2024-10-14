@@ -4,6 +4,7 @@ import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-
 import { AxiosError } from 'axios';
 import { when } from 'jest-when';
 import { of, throwError } from 'rxjs';
+import { ConfigService } from '@nestjs/config';
 
 import { SalesforceException } from './exception/salesforce.exception';
 import { SalesforceService } from './salesforce.service';
@@ -15,6 +16,7 @@ describe('SalesforceService', () => {
 
   let httpServiceGet: jest.Mock;
   let httpServicePost: jest.Mock;
+  let configServiceGet: jest.Mock;
   let service: SalesforceService;
 
   beforeEach(() => {
@@ -24,8 +26,12 @@ describe('SalesforceService', () => {
     httpServicePost = jest.fn();
     httpService.post = httpServicePost;
 
+    const configService = new ConfigService();
+    configServiceGet = jest.fn().mockReturnValue({ clientId: 'TEST_CLIENT_ID', clientSecret: 'TEST_CLIENT_SECRET', username: 'TEST_USERNAME', password: 'TEST_PASSWORD', accessUrl: 'TEST_ACCESS_URL' });
+    configService.get = configServiceGet;
 
-    service = new SalesforceService(httpService);
+
+    service = new SalesforceService(httpService, configService);
   });
 
   afterEach(() => {

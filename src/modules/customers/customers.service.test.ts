@@ -3,6 +3,7 @@ import { SalesforceService } from '@ukef/modules/salesforce/salesforce.service';
 import { GetCustomersGenerator } from '@ukef-test/support/generator/get-customers-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { resetAllWhenMocks, when } from 'jest-when';
+import { ConfigService } from '@nestjs/config';
 
 import { CustomersService } from './customers.service';
 import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
@@ -18,6 +19,7 @@ describe('CustomerService', () => {
   let informaticaServiceGetCustomers: jest.Mock;
   let salesforceServiceGetCustomers: jest.Mock;
   let salesforceServiceCreateCustomer: jest.Mock;
+  let configServiceGet: jest.Mock;
 
   beforeEach(() => {
     informaticaServiceGetCustomers = jest.fn();
@@ -25,7 +27,10 @@ describe('CustomerService', () => {
     informaticaService.getCustomers = informaticaServiceGetCustomers;
     salesforceServiceGetCustomers = jest.fn();
     salesforceServiceCreateCustomer = jest.fn();
-    const salesforceService = new SalesforceService(null);
+    const salesforceConfigService = new ConfigService();
+    configServiceGet = jest.fn().mockReturnValue({ clientId: 'TEST_CLIENT_ID', clientSecret: 'TEST_CLIENT_SECRET', username: 'TEST_USERNAME', password: 'TEST_PASSWORD', accessUrl: 'TEST_ACCESS_URL' });
+    salesforceConfigService.get = configServiceGet;
+    const salesforceService = new SalesforceService(null, salesforceConfigService);
     salesforceService.getCustomers = salesforceServiceGetCustomers;
     salesforceService.createCustomer = salesforceServiceCreateCustomer;
 

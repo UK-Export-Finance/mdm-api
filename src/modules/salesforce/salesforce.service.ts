@@ -1,18 +1,32 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { HttpClient } from '@ukef/modules/http/http.client';
+import { ConfigService } from '@nestjs/config';
 
 import { createWrapSalesforceHttpGetErrorCallback } from './wrap-salesforce-http-error-callback';
 import { CreateCustomerDto } from '../customers/dto/create-customer.dto';
 import { CreateCustomerSalesforceResponseDto } from './dto/create-customer-salesforce-response.dto';
 import { CompanyRegistrationNumberDto } from '../customers/dto/company-registration-number.dto';
 import { GetCustomersDirectResponse, GetCustomersDirectResponseItems } from '../customers/dto/get-customers-direct-response.dto';
+import { SalesforceConfig, KEY } from '../../config/salesforce.config';
 
 @Injectable()
 export class SalesforceService {
   private readonly httpClient: HttpClient;
+  private readonly client_id: string;
+  private readonly client_secret: string;
+  private readonly username: string;
+  private readonly password: string;
+  private readonly access_url: string;
 
-  constructor(httpService: HttpService) {
+  constructor(httpService: HttpService, configService: ConfigService) {
+    const { clientId, clientSecret, username, password, accessUrl } = configService.get<SalesforceConfig>(KEY);
+    this.client_id = clientId;
+    this.client_secret = clientSecret;
+    this.username = username;
+    this.password = password;
+    this.access_url = accessUrl;
+
     this.httpClient = new HttpClient(httpService);
   }
 
@@ -31,7 +45,7 @@ export class SalesforceService {
     });
     if (data.totalSize === 0) {
       throw new NotFoundException('Customer not found.');
-      } else {
+    } else {
       return data.records;
     }
   }
@@ -53,15 +67,15 @@ export class SalesforceService {
   }
 
   private async getAccessToken(): Promise<string> {
-    const path = process.env.SF_ACCESS_URL
+    const path = this.access_url
     const response = await this.httpClient.post<any, any>({
       path,
       body: {
         'grant_type': 'password',
-        'client_id': process.env.SF_CLIENT_ID,
-        'client_secret': process.env.SF_CLIENT_SECRET,
-        'username': process.env.SF_USERNAME,
-        'password': process.env.SF_PASSWORD,
+        'client_id': this.client_id,
+        'client_secret': this.client_secret,
+        'username': this.username,
+        'password': this.password,
       },
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
