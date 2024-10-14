@@ -14,9 +14,14 @@ import { SalesforceService } from './salesforce.service';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const { baseUrl, maxRedirects, timeout } = configService.get<SalesforceConfig>(SALESFORCE_CONFIG_KEY);
+        const { baseUrl, clientId, clientSecret, username, password, accessUrl, maxRedirects, timeout } = configService.get<SalesforceConfig>(SALESFORCE_CONFIG_KEY);
         return {
           baseURL: baseUrl,
+          clientId,
+          clientSecret,
+          username,
+          password,
+          accessURL: accessUrl,
           maxRedirects,
           timeout,
           // TODO: APIM-471 - cleanup rejectUnauthorized when Informatica SSL issue is resolved
