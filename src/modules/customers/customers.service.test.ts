@@ -7,6 +7,7 @@ import { ConfigService } from '@nestjs/config';
 
 import { CustomersService } from './customers.service';
 import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
+import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
 import { GetCustomersDirectResponseItems } from './dto/get-customers-direct-response.dto';
 import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-customer-salesforce-response.dto';
 
@@ -71,7 +72,7 @@ describe('CustomerService', () => {
   });
 
   describe('createCustomer', () => {
-    const companyRegNoDto: CompanyRegistrationNumberDto = { companyRegistrationNumber: '12345678' };
+    const DTFSCustomerDto: DTFSCustomerDto = { companyRegistrationNumber: '12345678', companyName: 'TEST NAME'};
     const createCustomerResponse: CreateCustomerSalesforceResponseDto = { 
       id: 'customer-id', 
       errors: null,
@@ -81,20 +82,20 @@ describe('CustomerService', () => {
     it('creates a customer successfully and returns the response', async () => {
       when(salesforceServiceCreateCustomer).calledWith(expect.any(Object)).mockResolvedValueOnce(createCustomerResponse);
 
-      const response = await service.createCustomer(companyRegNoDto);
+      const response = await service.createCustomer(DTFSCustomerDto);
 
       expect(response).toEqual(createCustomerResponse);
       expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(expect.objectContaining({
         // TODO: update this with correct values
-        Name: companyRegNoDto.companyRegistrationNumber,
-        D_B_Number__c: companyRegNoDto.companyRegistrationNumber,
+        Name: DTFSCustomerDto.companyName,
+        D_B_Number__c: DTFSCustomerDto.companyRegistrationNumber,
       }));
     });
 
     it('throws an error if Salesforce service fails to create a customer', async () => {
       when(salesforceServiceCreateCustomer).calledWith(expect.any(Object)).mockRejectedValueOnce(new Error('Service Error'));
 
-      await expect(service.createCustomer(companyRegNoDto)).rejects.toThrow('Service Error');
+      await expect(service.createCustomer(DTFSCustomerDto)).rejects.toThrow('Service Error');
     });
   });
 });
