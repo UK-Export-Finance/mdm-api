@@ -5,9 +5,10 @@ import { SalesforceService } from '@ukef/modules/salesforce/salesforce.service';
 
 import { GetCustomersResponse, GetCustomersResponseItem } from './dto/get-customers-response.dto';
 import { CreateCustomerDto } from './dto/create-customer.dto';
-import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
+import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
 import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-customer-salesforce-response.dto';
 import { GetCustomersDirectResponseItems } from './dto/get-customers-direct-response.dto';
+import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
 
 @Injectable()
 export class CustomersService {
@@ -35,11 +36,11 @@ export class CustomersService {
     return await this.salesforceService.getCustomers(companyRegistrationNumberDto);
   }
 
-  async createCustomer(companyRegistrationNumberDto: CompanyRegistrationNumberDto): Promise<CreateCustomerSalesforceResponseDto> {
-    // TODO: to get from DnB
+  async createCustomer(DTFSCustomerDto: DTFSCustomerDto): Promise<CreateCustomerSalesforceResponseDto> {
     const dnbLookupResponse: CreateCustomerDto = {
-      "Name": companyRegistrationNumberDto.companyRegistrationNumber,
-      "D_B_Number__c": companyRegistrationNumberDto.companyRegistrationNumber,
+      "Name": DTFSCustomerDto.companyName,
+    // TODO: to get DUNS from DnB
+      "D_B_Number__c": DTFSCustomerDto.companyRegistrationNumber,
     }
     const customerResponse: CreateCustomerSalesforceResponseDto = await this.salesforceService.createCustomer(dnbLookupResponse)
     return customerResponse

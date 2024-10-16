@@ -8,6 +8,7 @@ import { GetCustomersResponse, GetCustomersResponseItem } from './dto/get-custom
 import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-customer-salesforce-response.dto';
 import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
 import { GetCustomersDirectResponseItems } from './dto/get-customers-direct-response.dto';
+import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
 
 @ApiTags('customers')
 @Controller('customers')
@@ -64,8 +65,8 @@ export class CustomersController {
   @ApiBadRequestResponse({
     description: 'Invalid input data',
   })
-  createCustomer(@Body() companyRegistrationNumber: CompanyRegistrationNumberDto): Promise<CreateCustomerSalesforceResponseDto> {
-    return this.customersService.createCustomer(companyRegistrationNumber);
+  createCustomer(@Body() DTFSCustomerDto: DTFSCustomerDto): Promise<CreateCustomerSalesforceResponseDto> {
+    return this.customersService.createCustomer(DTFSCustomerDto);
   }
 
   private ensureOneIsNotEmpty(...args) {
