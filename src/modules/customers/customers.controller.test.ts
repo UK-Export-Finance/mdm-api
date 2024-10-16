@@ -8,6 +8,7 @@ import { CustomersController } from './customers.controller';
 import { CustomersService } from './customers.service';
 import { GetCustomersDirectResponseItems } from './dto/get-customers-direct-response.dto';
 import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
+import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
 import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-customer-salesforce-response.dto';
 
 describe('CustomersController', () => {
@@ -123,7 +124,7 @@ describe('CustomersController', () => {
   });
 
   describe('createCustomer', () => {
-    const companyRegNoDto: CompanyRegistrationNumberDto = { companyRegistrationNumber: CUSTOMERS.EXAMPLES.COMPANYREG };
+    const DTFSCustomerDto: DTFSCustomerDto = { companyRegistrationNumber: CUSTOMERS.EXAMPLES.COMPANYREG, companyName: 'TEST NAME' };
     const createCustomerResponse: CreateCustomerSalesforceResponseDto = { 
       id: 'customer-id', 
       errors: null,
@@ -131,17 +132,17 @@ describe('CustomersController', () => {
     };
   
     it('creates a customer successfully and returns the response', async () => {
-      when(customersServiceCreateCustomer).calledWith(companyRegNoDto).mockResolvedValueOnce(createCustomerResponse);
+      when(customersServiceCreateCustomer).calledWith(DTFSCustomerDto).mockResolvedValueOnce(createCustomerResponse);
   
-      const response = await controller.createCustomer(companyRegNoDto);
+      const response = await controller.createCustomer(DTFSCustomerDto);
   
       expect(response).toEqual(createCustomerResponse);
     });
     
     it('throws an error if the service fails to create a customer', async () => {
-      when(customersServiceCreateCustomer).calledWith(companyRegNoDto).mockRejectedValueOnce(new Error('Service Error'));
+      when(customersServiceCreateCustomer).calledWith(DTFSCustomerDto).mockRejectedValueOnce(new Error('Service Error'));
   
-      await expect(controller.createCustomer(companyRegNoDto)).rejects.toThrow('Service Error');
+      await expect(controller.createCustomer(DTFSCustomerDto)).rejects.toThrow('Service Error');
     });
   });  
 });
