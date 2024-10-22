@@ -152,7 +152,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CompanyRegistrationNumberDto'
+              $ref: '#/components/schemas/DTFSCustomerDto'
       responses:
         '201':
           description: Customer successfully created
@@ -177,13 +177,13 @@ paths:
             type: string
       responses:
         '200':
-          description: Party URN of customer matching search parameters
+          description: Customers matching search parameters
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/GetCustomersResponseItem'
+                  $ref: '#/components/schemas/GetCustomersDirectResponseItem'
         '404':
           description: Customer not found.
       tags:
@@ -780,14 +780,38 @@ components:
         - type
         - subtype
         - isLegacyRecord
-    CompanyRegistrationNumberDto:
+    GetCustomersDirectResponseItem:
+      type: object
+      properties:
+        partyUrn:
+          type: string
+          description: The unique UKEF id of the customer
+        name:
+          type: string
+          description: The name of the Salesforce customer
+        sfId:
+          type: string
+          description: The unique Salesforce id
+        companyRegNo:
+          type: string
+          description: The Companies house registration number
+      required:
+        - partyUrn
+        - name
+        - sfId
+        - companyRegNo
+    DTFSCustomerDto:
       type: object
       properties:
         companyRegistrationNumber:
           type: string
           description: Company Registration Number
+        companyName:
+          type: string
+          description: Company Name
       required:
         - companyRegistrationNumber
+        - companyName
     CreateCustomerSalesforceResponseDto:
       type: object
       properties:
