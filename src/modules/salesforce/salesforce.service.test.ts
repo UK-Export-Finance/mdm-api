@@ -162,7 +162,8 @@ describe('SalesforceService', () => {
 
     const query: CreateCustomerDto = {
       "Name": companyRegNo,
-      "D_B_Number__c": companyRegNo,
+      "D_B_Number__c": null,
+      "Company_Registration_Number__c": companyRegNo
     };
 
     const expectedHttpServicePostArgs: [string, body: CreateCustomerDto, object] = [customerBasePath, query, { headers: { 'Authorization': 'Bearer ' + expectedAccessToken } }];

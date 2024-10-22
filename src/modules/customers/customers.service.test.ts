@@ -8,8 +8,9 @@ import { ConfigService } from '@nestjs/config';
 import { CustomersService } from './customers.service';
 import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
 import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
-import { GetCustomersDirectResponseItems } from './dto/get-customers-direct-response.dto';
+import { GetCustomersDirectResponse } from './dto/get-customers-direct-response.dto';
 import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-customer-salesforce-response.dto';
+import { CUSTOMERS } from '@ukef/constants';
 
 jest.mock('@ukef/modules/informatica/informatica.service');
 
@@ -54,7 +55,12 @@ describe('CustomerService', () => {
 
   describe('getCustomersDirect', () => {
     const companyRegNoDto: CompanyRegistrationNumberDto = { companyRegistrationNumber: '12345678' };
-    const expectedResponse: GetCustomersDirectResponseItems = [{ Id: 'asdf1234' }];
+    const expectedResponse: GetCustomersDirectResponse = [{
+      partyUrn: CUSTOMERS.EXAMPLES.PARTYURN,
+      name: CUSTOMERS.EXAMPLES.NAME,
+      sfId: 'TEST_SF_ID',
+      companyRegNo: CUSTOMERS.EXAMPLES.COMPANYREG,
+    }];
 
     it('returns customers directly from Salesforce', async () => {
       when(salesforceServiceGetCustomers).calledWith(companyRegNoDto).mockResolvedValueOnce(expectedResponse);
