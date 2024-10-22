@@ -722,7 +722,7 @@ components:
           description: Customer company name
         sfId:
           type: string
-          description: The uniqueue Salesforce id
+          description: The unique Salesforce id
         companyRegNo:
           type: string
           description: The Companies house registration number
