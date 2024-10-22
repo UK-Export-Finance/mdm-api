@@ -11,6 +11,7 @@ import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
 import { GetCustomersDirectResponse } from './dto/get-customers-direct-response.dto';
 import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-customer-salesforce-response.dto';
 import { CUSTOMERS } from '@ukef/constants';
+import { GetCustomersSalesforceResponseItems } from '../salesforce/dto/get-customers-salesforce-response.dto';
 
 jest.mock('@ukef/modules/informatica/informatica.service');
 
@@ -54,7 +55,14 @@ describe('CustomerService', () => {
   });
 
   describe('getCustomersDirect', () => {
-    const companyRegNoDto: CompanyRegistrationNumberDto = { companyRegistrationNumber: '12345678' };
+    const companyRegNoDto: CompanyRegistrationNumberDto = { companyRegistrationNumber: CUSTOMERS.EXAMPLES.PARTYURN };
+    const expectedSalesforceResponse: GetCustomersSalesforceResponseItems = [{
+      Party_URN__c: CUSTOMERS.EXAMPLES.PARTYURN,
+      Name: CUSTOMERS.EXAMPLES.NAME,
+      Id: 'TEST_SF_ID',
+      Company_Registration_Number__c: CUSTOMERS.EXAMPLES.COMPANYREG,
+    }];
+
     const expectedResponse: GetCustomersDirectResponse = [{
       partyUrn: CUSTOMERS.EXAMPLES.PARTYURN,
       name: CUSTOMERS.EXAMPLES.NAME,
@@ -63,7 +71,7 @@ describe('CustomerService', () => {
     }];
 
     it('returns customers directly from Salesforce', async () => {
-      when(salesforceServiceGetCustomers).calledWith(companyRegNoDto).mockResolvedValueOnce(expectedResponse);
+      when(salesforceServiceGetCustomers).calledWith(companyRegNoDto).mockResolvedValueOnce(expectedSalesforceResponse);
 
       const response = await service.getCustomersDirect(companyRegNoDto);
 
@@ -94,7 +102,8 @@ describe('CustomerService', () => {
       expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(expect.objectContaining({
         // TODO: update this with correct values
         Name: DTFSCustomerDto.companyName,
-        D_B_Number__c: DTFSCustomerDto.companyRegistrationNumber,
+        D_B_Number__c: null,
+        Company_Registration_Number__c: DTFSCustomerDto.companyRegistrationNumber,
       }));
     });
 
