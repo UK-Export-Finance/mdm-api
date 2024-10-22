@@ -7,7 +7,7 @@ import { GetCustomersQueryDto } from './dto/get-customers-query.dto';
 import { GetCustomersResponse, GetCustomersResponseItem } from './dto/get-customers-response.dto';
 import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-customer-salesforce-response.dto';
 import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
-import { GetCustomersDirectResponseItems, GetCustomersDirectResponseItem } from './dto/get-customers-direct-response.dto';
+import { GetCustomersDirectResponse, GetCustomersDirectResponseItem } from './dto/get-customers-direct-response.dto';
 import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
 
 @ApiTags('customers')
@@ -50,7 +50,7 @@ export class CustomersController {
   @ApiNotFoundResponse({
     description: 'Customer not found.',
   })
-  getCustomersDirect(@Query() companyRegistrationNumber: CompanyRegistrationNumberDto): Promise<GetCustomersDirectResponseItems> {
+  getCustomersDirect(@Query() companyRegistrationNumber: CompanyRegistrationNumberDto): Promise<GetCustomersDirectResponse> {
     return this.customersService.getCustomersDirect(companyRegistrationNumber);
   }
 
