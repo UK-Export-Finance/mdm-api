@@ -7,7 +7,7 @@ import { GetCustomersQueryDto } from './dto/get-customers-query.dto';
 import { GetCustomersResponse, GetCustomersResponseItem } from './dto/get-customers-response.dto';
 import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-customer-salesforce-response.dto';
 import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
-import { GetCustomersDirectResponseItems } from './dto/get-customers-direct-response.dto';
+import { GetCustomersDirectResponseItems, GetCustomersDirectResponseItem } from './dto/get-customers-direct-response.dto';
 import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
 
 @ApiTags('customers')
@@ -44,8 +44,8 @@ export class CustomersController {
   })
   @ApiResponse({
     status: 200,
-    description: 'Party URN of customer matching search parameters',
-    type: [GetCustomersResponseItem],
+    description: 'Customers matching search parameters',
+    type: [GetCustomersDirectResponseItem],
   })
   @ApiNotFoundResponse({
     description: 'Customer not found.',
