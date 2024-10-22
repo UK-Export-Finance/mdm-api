@@ -7,7 +7,7 @@ import { createWrapSalesforceHttpGetErrorCallback } from './wrap-salesforce-http
 import { CreateCustomerDto } from '../customers/dto/create-customer.dto';
 import { CreateCustomerSalesforceResponseDto } from './dto/create-customer-salesforce-response.dto';
 import { CompanyRegistrationNumberDto } from '../customers/dto/company-registration-number.dto';
-import { GetCustomersDirectResponse, GetCustomersDirectResponseItems } from '../customers/dto/get-customers-direct-response.dto';
+import { GetCustomersSalesforceResponse, GetCustomersSalesforceResponseItems } from '../salesforce/dto/get-customers-salesforce-response.dto';
 import { SalesforceConfig, KEY } from '../../config/salesforce.config';
 
 @Injectable()
@@ -30,11 +30,11 @@ export class SalesforceService {
     this.httpClient = new HttpClient(httpService);
   }
 
-  async getCustomers(companyRegistrationNumberDto: CompanyRegistrationNumberDto): Promise<GetCustomersDirectResponseItems> {
+  async getCustomers(companyRegistrationNumberDto: CompanyRegistrationNumberDto): Promise<GetCustomersSalesforceResponseItems> {
     const encodedCompanyRegistrationNumber = encodeURIComponent(companyRegistrationNumberDto.companyRegistrationNumber);
     const path = `/query/?q=SELECT+FIELDS(ALL)+FROM+Account+WHERE+Company_Registration_Number__c='${encodedCompanyRegistrationNumber}'+LIMIT+200`;
     const access_token = await this.getAccessToken();
-    const { data } = await this.httpClient.get<GetCustomersDirectResponse>({
+    const { data } = await this.httpClient.get<GetCustomersSalesforceResponse>({
       path,
       headers: {
         'Authorization': 'Bearer ' + access_token,

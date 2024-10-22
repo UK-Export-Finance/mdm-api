@@ -7,7 +7,7 @@ import { GetCustomersResponse, GetCustomersResponseItem } from './dto/get-custom
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
 import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-customer-salesforce-response.dto';
-import { GetCustomersDirectResponseItems } from './dto/get-customers-direct-response.dto';
+import { GetCustomersDirectResponse, GetCustomersDirectResponseItem } from './dto/get-customers-direct-response.dto';
 import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
 
 @Injectable()
@@ -32,8 +32,16 @@ export class CustomersService {
     );
   }
 
-  async getCustomersDirect(companyRegistrationNumberDto: CompanyRegistrationNumberDto): Promise<GetCustomersDirectResponseItems> {
-    return await this.salesforceService.getCustomers(companyRegistrationNumberDto);
+  async getCustomersDirect(companyRegistrationNumberDto: CompanyRegistrationNumberDto): Promise<GetCustomersDirectResponse> {
+    const customersInSalesforce = await this.salesforceService.getCustomers(companyRegistrationNumberDto);
+    return customersInSalesforce.map(
+      (customerInSalesforce): GetCustomersDirectResponseItem => ({
+        partyUrn: customerInSalesforce.Party_URN__c,
+        name: customerInSalesforce.Name,
+        sfId: customerInSalesforce.Id,
+        companyRegNo: customerInSalesforce.Company_Registration_Number__c
+      })
+    )
   }
 
   async createCustomer(DTFSCustomerDto: DTFSCustomerDto): Promise<CreateCustomerSalesforceResponseDto> {
