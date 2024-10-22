@@ -2,9 +2,21 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export type GetCustomersDirectResponseItems = GetCustomersDirectResponseItem[];
 
+export class GetCustomersDirectResponseItem {
+  @ApiProperty({
+    description: 'The unique Salesforce id of the customer',
+  })
+  readonly Id: string | null;
+
+  @ApiProperty({
+    description: 'The Party URN of the customer',
+  })
+  readonly Party_URN__c: string | null;
+}
+
 export class GetCustomersDirectResponse {
   @ApiProperty({
-    description: 'Total numer of records returned',
+    description: 'Total number of records returned',
   })
   readonly totalSize: number;
 
@@ -14,14 +26,8 @@ export class GetCustomersDirectResponse {
   readonly done: boolean;
   
   @ApiProperty({
-    description: 'The list of matching records'
+    description: 'The list of matching records',
+    type: [GetCustomersDirectResponseItem],
   })
   readonly records: GetCustomersDirectResponseItems
 };
-
-export class GetCustomersDirectResponseItem {
-  @ApiProperty({
-    description: 'The unique Salesforce id of the customer',
-  })
-  readonly Id: string | null;
-}
