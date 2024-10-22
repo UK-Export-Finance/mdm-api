@@ -37,12 +37,14 @@ export class CustomersService {
   }
 
   async createCustomer(DTFSCustomerDto: DTFSCustomerDto): Promise<CreateCustomerSalesforceResponseDto> {
-    const dnbLookupResponse: CreateCustomerDto = {
-      "Name": DTFSCustomerDto.companyName,
     // TODO: to get DUNS from DnB
-      "D_B_Number__c": DTFSCustomerDto.companyRegistrationNumber,
+    const dunsNumber: string = null
+    const createCustomerDto: CreateCustomerDto = {
+      "Name": DTFSCustomerDto.companyName,
+      "D_B_Number__c": dunsNumber,
+      "Company_Registration_Number__c": DTFSCustomerDto.companyRegistrationNumber,
     }
-    const customerResponse: CreateCustomerSalesforceResponseDto = await this.salesforceService.createCustomer(dnbLookupResponse)
+    const customerResponse: CreateCustomerSalesforceResponseDto = await this.salesforceService.createCustomer(createCustomerDto)
     return customerResponse
   }
 }
