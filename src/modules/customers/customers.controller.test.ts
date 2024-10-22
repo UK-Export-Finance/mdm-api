@@ -6,7 +6,7 @@ import { when } from 'jest-when';
 
 import { CustomersController } from './customers.controller';
 import { CustomersService } from './customers.service';
-import { GetCustomersDirectResponseItems } from './dto/get-customers-direct-response.dto';
+import { GetCustomersDirectResponse } from './dto/get-customers-direct-response.dto';
 import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
 import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
 import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-customer-salesforce-response.dto';
@@ -112,7 +112,12 @@ describe('CustomersController', () => {
 
   describe('getCustomersDirect', () => {
     const companyRegNoDto: CompanyRegistrationNumberDto = { companyRegistrationNumber: CUSTOMERS.EXAMPLES.COMPANYREG };
-    const expectedResponse: GetCustomersDirectResponseItems = [{ Id: CUSTOMERS.EXAMPLES.COMPANYREG }];
+    const expectedResponse: GetCustomersDirectResponse = [{
+      partyUrn: CUSTOMERS.EXAMPLES.PARTYURN,
+      name: CUSTOMERS.EXAMPLES.NAME,
+      sfId: 'TEST_SF_ID',
+      companyRegNo: CUSTOMERS.EXAMPLES.COMPANYREG,
+    }];
 
     it('returns customers directly from Salesforce', async () => {
       when(customersServiceGetCustomersDirect).calledWith(companyRegNoDto).mockResolvedValueOnce(expectedResponse);
@@ -125,24 +130,24 @@ describe('CustomersController', () => {
 
   describe('createCustomer', () => {
     const DTFSCustomerDto: DTFSCustomerDto = { companyRegistrationNumber: CUSTOMERS.EXAMPLES.COMPANYREG, companyName: 'TEST NAME' };
-    const createCustomerResponse: CreateCustomerSalesforceResponseDto = { 
-      id: 'customer-id', 
+    const createCustomerResponse: CreateCustomerSalesforceResponseDto = {
+      id: 'customer-id',
       errors: null,
-      success: true 
+      success: true
     };
-  
+
     it('creates a customer successfully and returns the response', async () => {
       when(customersServiceCreateCustomer).calledWith(DTFSCustomerDto).mockResolvedValueOnce(createCustomerResponse);
-  
+
       const response = await controller.createCustomer(DTFSCustomerDto);
-  
+
       expect(response).toEqual(createCustomerResponse);
     });
-    
+
     it('throws an error if the service fails to create a customer', async () => {
       when(customersServiceCreateCustomer).calledWith(DTFSCustomerDto).mockRejectedValueOnce(new Error('Service Error'));
-  
+
       await expect(controller.createCustomer(DTFSCustomerDto)).rejects.toThrow('Service Error');
     });
-  });  
+  });
 });
