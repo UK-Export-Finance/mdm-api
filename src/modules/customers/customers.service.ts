@@ -9,6 +9,7 @@ import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
 import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-customer-salesforce-response.dto';
 import { GetCustomersDirectResponse, GetCustomersDirectResponseItem } from './dto/get-customers-direct-response.dto';
 import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
+import { SalesforceException } from '../salesforce/exception/salesforce.exception';
 
 @Injectable()
 export class CustomersService {
@@ -44,15 +45,26 @@ export class CustomersService {
     )
   }
 
-  async createCustomer(DTFSCustomerDto: DTFSCustomerDto): Promise<CreateCustomerSalesforceResponseDto> {
+  async createCustomer(DTFSCustomerDto: DTFSCustomerDto): Promise<GetCustomersDirectResponse> {
     // TODO: to get DUNS from DnB
     const dunsNumber: string = null
     const createCustomerDto: CreateCustomerDto = {
       "Name": DTFSCustomerDto.companyName,
-      "D_B_Number__c": dunsNumber,
+      // TODO: change to dunsNumber
+      "D_B_Number__c": DTFSCustomerDto.companyName,
       "Company_Registration_Number__c": DTFSCustomerDto.companyRegistrationNumber,
     }
-    const customerResponse: CreateCustomerSalesforceResponseDto = await this.salesforceService.createCustomer(createCustomerDto)
-    return customerResponse
+
+    const createCustomerResponse: CreateCustomerSalesforceResponseDto = await this.salesforceService.createCustomer(createCustomerDto)
+
+    if (createCustomerResponse.success) {
+      const companyRegistrationNumberDto: CompanyRegistrationNumberDto = {
+        "companyRegistrationNumber": DTFSCustomerDto.companyRegistrationNumber
+      }
+      return this.getCustomersDirect(companyRegistrationNumberDto)
+    }
+    else {
+      throw new SalesforceException("Failed to create customer in Salesforce")
+    }
   }
 }

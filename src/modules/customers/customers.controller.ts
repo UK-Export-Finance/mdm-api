@@ -5,7 +5,6 @@ import { GetCustomersInformaticaQueryDto } from '../informatica/dto/get-customer
 import { CustomersService } from './customers.service';
 import { GetCustomersQueryDto } from './dto/get-customers-query.dto';
 import { GetCustomersResponse, GetCustomersResponseItem } from './dto/get-customers-response.dto';
-import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-customer-salesforce-response.dto';
 import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
 import { GetCustomersDirectResponse, GetCustomersDirectResponseItem } from './dto/get-customers-direct-response.dto';
 import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
@@ -60,12 +59,12 @@ export class CustomersController {
   })
   @ApiCreatedResponse({
     description: 'Customer successfully created',
-    type: CreateCustomerSalesforceResponseDto,
+    type: [GetCustomersDirectResponseItem],
   })
   @ApiBadRequestResponse({
-    description: 'Invalid input data',
+    description: 'This customer already exists in Salesforce',
   })
-  createCustomer(@Body() DTFSCustomerDto: DTFSCustomerDto): Promise<CreateCustomerSalesforceResponseDto> {
+  createCustomer(@Body() DTFSCustomerDto: DTFSCustomerDto): Promise<GetCustomersDirectResponse> {
     return this.customersService.createCustomer(DTFSCustomerDto);
   }
 
