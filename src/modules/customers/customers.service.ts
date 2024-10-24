@@ -53,6 +53,7 @@ export class CustomersService {
     // TODO: to get DUNS from DnB
     const dunsNumber: string = null
 
+    // TODO: replace this with a call to Salesforce's NUMGEN table once that's in place (or just remove altogether if SF can generate a PartyURN on creation quick enough to be returned in the subsqeuent GET)
     const createUkefIdDto: CreateUkefIdDto[] = [{
       numberTypeId: 2,
       createdBy: "DTFS Automated Customer Creation User",
