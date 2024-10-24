@@ -15,7 +15,7 @@ export class GetNumbersQueryDto {
 
   @IsString()
   @IsNotEmpty()
-  @ApiProperty({ example: '0030052431', description: 'UKEF ID to check' })
-  @Matches(/^\d{10}$/)
+  @ApiProperty({ example: '00300524', description: 'UKEF ID to check' })
+  @Matches(/^\d{8,10}$/)
   public ukefId: string;
 }
