@@ -10,12 +10,16 @@ import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-cu
 import { GetCustomersDirectResponse, GetCustomersDirectResponseItem } from './dto/get-customers-direct-response.dto';
 import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
 import { SalesforceException } from '../salesforce/exception/salesforce.exception';
+import { NumbersService } from '../numbers/numbers.service';
+import { CreateUkefIdDto } from '../numbers/dto/create-ukef-id.dto';
+import { UkefId } from '../numbers/entities/ukef-id.entity';
 
 @Injectable()
 export class CustomersService {
   constructor(
     private readonly informaticaService: InformaticaService,
     private readonly salesforceService: SalesforceService,
+    private readonly numbersService: NumbersService
   ) { }
 
   async getCustomers(backendQuery: GetCustomersInformaticaQueryDto): Promise<GetCustomersResponse> {
@@ -48,9 +52,19 @@ export class CustomersService {
   async createCustomer(DTFSCustomerDto: DTFSCustomerDto): Promise<GetCustomersDirectResponse> {
     // TODO: to get DUNS from DnB
     const dunsNumber: string = null
+
+    const createUkefIdDto: CreateUkefIdDto[] = [{
+      numberTypeId: 2,
+      createdBy: "DTFS Automated Customer Creation User",
+      requestingSystem: "MDM"
+    }]
+    const numbersServiceResponse: UkefId[] = await this.numbersService.create(createUkefIdDto)
+    const partyUrn = numbersServiceResponse[0].maskedId
+    
     const createCustomerDto: CreateCustomerDto = {
       "Name": DTFSCustomerDto.companyName,
-      // TODO: change to dunsNumber
+      "Party_URN__c": partyUrn,
+      // TODO: use duns number here
       "D_B_Number__c": DTFSCustomerDto.companyName,
       "Company_Registration_Number__c": DTFSCustomerDto.companyRegistrationNumber,
     }
