@@ -7,6 +7,11 @@ export class CreateCustomerDto {
   @IsNotEmpty()
   Name: string;
 
+  @ApiProperty({ description: 'Party URN' })
+  @IsString()
+  @IsNotEmpty()
+  Party_URN__c: string;
+
   @ApiProperty({ description: 'D&B Number' })
   @IsString()
   @IsNotEmpty()
