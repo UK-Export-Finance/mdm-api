@@ -9,6 +9,7 @@ import { CreateCustomerSalesforceResponseDto } from './dto/create-customer-sales
 import { CompanyRegistrationNumberDto } from '../customers/dto/company-registration-number.dto';
 import { GetCustomersSalesforceResponse, GetCustomersSalesforceResponseItems } from '../salesforce/dto/get-customers-salesforce-response.dto';
 import { SalesforceConfig, KEY } from '../../config/salesforce.config';
+import { customerAlreadyExistsSalesforceError } from './known-errors';
 
 @Injectable()
 export class SalesforceService {
@@ -41,6 +42,7 @@ export class SalesforceService {
       },
       onError: createWrapSalesforceHttpGetErrorCallback({
         messageForUnknownError: `Failed to get customers in Salesforce.`,
+        knownErrors: [],
       }),
     });
     if (data.totalSize === 0) {
@@ -61,6 +63,7 @@ export class SalesforceService {
       },
       onError: createWrapSalesforceHttpGetErrorCallback({
         messageForUnknownError: `Failed to create customer in Salesforce.`,
+        knownErrors: [customerAlreadyExistsSalesforceError()],
       }),
     });
     return data;
@@ -82,6 +85,7 @@ export class SalesforceService {
       },
       onError: createWrapSalesforceHttpGetErrorCallback({
         messageForUnknownError: `Failed to get access token.`,
+        knownErrors: [],
       }),
     })
     return response.data.access_token
