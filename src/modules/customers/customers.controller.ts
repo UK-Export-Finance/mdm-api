@@ -1,5 +1,5 @@
 import { BadRequestException, Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { ApiCreatedResponse, ApiNotFoundResponse, ApiBadRequestResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiNotFoundResponse, ApiBadRequestResponse, ApiOperation, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 
 import { GetCustomersInformaticaQueryDto } from '../informatica/dto/get-customers-informatica-query.dto';
 import { CustomersService } from './customers.service';
@@ -24,7 +24,7 @@ export class CustomersController {
     type: [GetCustomersResponseItem],
   })
   @ApiNotFoundResponse({
-    description: 'Customer not found.',
+    description: 'Customer not found',
   })
   getCustomers(@Query() query: GetCustomersQueryDto): Promise<GetCustomersResponse> {
     this.ensureOneIsNotEmpty(query.companyReg, query.name, query.partyUrn);
@@ -47,7 +47,13 @@ export class CustomersController {
     type: [GetCustomersDirectResponseItem],
   })
   @ApiNotFoundResponse({
-    description: 'Customer not found.',
+    description: 'Customer not found',
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid Company Registration Number',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Failed to get access token'
   })
   getCustomersDirect(@Query() companyRegistrationNumber: CompanyRegistrationNumberDto): Promise<GetCustomersDirectResponse> {
     return this.customersService.getCustomersDirect(companyRegistrationNumber);
@@ -63,6 +69,9 @@ export class CustomersController {
   })
   @ApiBadRequestResponse({
     description: 'This customer already exists in Salesforce',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Failed to get access token'
   })
   createCustomer(@Body() DTFSCustomerDto: DTFSCustomerDto): Promise<GetCustomersDirectResponse> {
     return this.customersService.createCustomer(DTFSCustomerDto);

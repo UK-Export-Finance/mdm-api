@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { HttpClient } from '@ukef/modules/http/http.client';
 import { ConfigService } from '@nestjs/config';
 
@@ -32,8 +32,14 @@ export class SalesforceService {
   }
 
   async getCustomers(companyRegistrationNumberDto: CompanyRegistrationNumberDto): Promise<GetCustomersSalesforceResponseItems> {
+    const isValid = /^[a-zA-Z0-9]{1,8}$/.test(companyRegistrationNumberDto.companyRegistrationNumber)
+    if (!isValid) {
+      throw new BadRequestException('Invalid Company Registration Number');
+    }
+
     const encodedCompanyRegistrationNumber = encodeURIComponent(companyRegistrationNumberDto.companyRegistrationNumber);
     const path = `/query/?q=SELECT+FIELDS(ALL)+FROM+Account+WHERE+Company_Registration_Number__c='${encodedCompanyRegistrationNumber}'+LIMIT+200`;
+
     const access_token = await this.getAccessToken();
     const { data } = await this.httpClient.get<GetCustomersSalesforceResponse>({
       path,
@@ -41,12 +47,12 @@ export class SalesforceService {
         'Authorization': 'Bearer ' + access_token,
       },
       onError: createWrapSalesforceHttpGetErrorCallback({
-        messageForUnknownError: `Failed to get customers in Salesforce.`,
+        messageForUnknownError: `Failed to get customers in Salesforce`,
         knownErrors: [],
       }),
     });
     if (data.totalSize === 0) {
-      throw new NotFoundException('Customer not found.');
+      throw new NotFoundException('Customer not found');
     } else {
       return data.records;
     }
@@ -62,7 +68,7 @@ export class SalesforceService {
         'Authorization': 'Bearer ' + access_token,
       },
       onError: createWrapSalesforceHttpGetErrorCallback({
-        messageForUnknownError: `Failed to create customer in Salesforce.`,
+        messageForUnknownError: `Failed to create customer in Salesforce`,
         knownErrors: [customerAlreadyExistsSalesforceError()],
       }),
     });
@@ -84,7 +90,7 @@ export class SalesforceService {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       onError: createWrapSalesforceHttpGetErrorCallback({
-        messageForUnknownError: `Failed to get access token.`,
+        messageForUnknownError: `Failed to get access token`,
         knownErrors: [],
       }),
     })
