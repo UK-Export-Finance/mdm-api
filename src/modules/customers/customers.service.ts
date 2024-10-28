@@ -53,33 +53,41 @@ export class CustomersService {
     // TODO: to get DUNS from DnB
     const dunsNumber: string = null
 
-    // TODO: replace this with a call to Salesforce's NUMGEN table once that's in place (or just remove altogether if SF can generate a PartyURN on creation quick enough to be returned in the subsqeuent GET)
+    // TODO: replace this with a call to Salesforce's NUMGEN table once that's in place (or just remove altogether if SF can generate a PartyURN on creation quickly enough to be returned in the subsqeuent GET)
     const createUkefIdDto: CreateUkefIdDto[] = [{
       numberTypeId: 2,
       createdBy: "DTFS Automated Customer Creation User",
       requestingSystem: "MDM"
     }]
-    const numbersServiceResponse: UkefId[] = await this.numbersService.create(createUkefIdDto)
-    const partyUrn = numbersServiceResponse[0].maskedId
+    let partyUrn = null
+    try {
+      const numbersServiceResponse: UkefId[] = await this.numbersService.create(createUkefIdDto)
+      partyUrn = numbersServiceResponse[0].maskedId
+    } catch(error) {
+      console.error('Error creating new Party URN', error)
+    }
     
     const createCustomerDto: CreateCustomerDto = {
       "Name": DTFSCustomerDto.companyName,
       "Party_URN__c": partyUrn,
       // TODO: use duns number here
-      "D_B_Number__c": DTFSCustomerDto.companyName,
+      "D_B_Number__c": DTFSCustomerDto.companyRegistrationNumber,
       "Company_Registration_Number__c": DTFSCustomerDto.companyRegistrationNumber,
     }
 
     const createCustomerResponse: CreateCustomerSalesforceResponseDto = await this.salesforceService.createCustomer(createCustomerDto)
 
     if (createCustomerResponse.success) {
-      const companyRegistrationNumberDto: CompanyRegistrationNumberDto = {
-        "companyRegistrationNumber": DTFSCustomerDto.companyRegistrationNumber
-      }
-      return this.getCustomersDirect(companyRegistrationNumberDto)
+      const createdCustomerResponse: GetCustomersDirectResponse = [{
+        "partyUrn": partyUrn,
+        "name": DTFSCustomerDto.companyName,
+        "sfId": createCustomerResponse.id,
+        "companyRegNo": DTFSCustomerDto.companyRegistrationNumber,
+      }]
+      return createdCustomerResponse
     }
     else {
-      throw new SalesforceException("Failed to create customer in Salesforce")
+      console.error("Failed to create customer in Salesforce")
     }
   }
 }
