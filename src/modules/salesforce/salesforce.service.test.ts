@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { AxiosError } from 'axios';
 import { when } from 'jest-when';
@@ -10,6 +10,7 @@ import { SalesforceException } from './exception/salesforce.exception';
 import { SalesforceService } from './salesforce.service';
 import { CompanyRegistrationNumberDto } from '../customers/dto/company-registration-number.dto';
 import { CreateCustomerDto } from '../customers/dto/create-customer.dto';
+import { BadRequestError } from 'passport-headerapikey';
 
 describe('SalesforceService', () => {
   const valueGenerator = new RandomValueGenerator();
@@ -91,8 +92,8 @@ describe('SalesforceService', () => {
       },
 
       {
-        query: { companyRegistrationNumber: '%26@/;%<>=' },
-        expectedUrlQueryPart: `/?q=SELECT+FIELDS(ALL)+FROM+Account+WHERE+Company_Registration_Number__c='%2526%40%2F%3B%25%3C%3E%3D'+LIMIT+200`,
+        query: { companyRegistrationNumber: 'AB123456' },
+        expectedUrlQueryPart: `/?q=SELECT+FIELDS(ALL)+FROM+Account+WHERE+Company_Registration_Number__c='AB123456'+LIMIT+200`,
       },
     ])('calls salesforce with correct and safe query parameters "$expectedUrlQueryPart"', async ({ query, expectedUrlQueryPart }) => {
       const expectedPath = `${customerBasePath}${expectedUrlQueryPart}`;
@@ -117,6 +118,27 @@ describe('SalesforceService', () => {
       expect(httpServiceGet).toHaveBeenCalledWith(...expectedHttpServiceGetArgs);
     });
 
+    it.each([
+      {
+        query: { companyRegistrationNumber: '123456789' },
+        expectedUrlQueryPart: `/?q=SELECT+FIELDS(ALL)+FROM+Account+WHERE+Company_Registration_Number__c='123456789'+LIMIT+200`,
+      },
+
+      {
+        query: { companyRegistrationNumber: '%26@/;%<>=' },
+        expectedUrlQueryPart: `/?q=SELECT+FIELDS(ALL)+FROM+Account+WHERE+Company_Registration_Number__c='%2526%40%2F%3B%25%3C%3E%3D'+LIMIT+200`,
+      },
+    ])('rejects incorrect or non alphanumeric query parameters "$expectedUrlQueryPart"', async ({ query, expectedUrlQueryPart }) => {
+      const expectedPath = `${customerBasePath}${expectedUrlQueryPart}`;
+
+      const expectedHttpServiceGetArgs: [string, object] = [expectedPath, { headers: { 'Authorization': 'Bearer ' + expectedAccessToken } }];
+
+      await expect(service.getCustomers(query)).rejects.toBeInstanceOf(BadRequestException);
+      await expect(service.getCustomers(query)).rejects.toThrow('Invalid Company Registration Number');
+      
+      expect(httpServiceGet).toHaveBeenCalledTimes(0);
+    });
+
     it('returns 404 Not Found if Salesforce response has totalSize = 0 (no customers match the query)', async () => {
       const expectedResponse = {
         totalSize: 0,
@@ -136,7 +158,7 @@ describe('SalesforceService', () => {
       const getCustomersPromise = service.getCustomers(query);
 
       await expect(getCustomersPromise).rejects.toBeInstanceOf(NotFoundException);
-      await expect(getCustomersPromise).rejects.toThrow('Customer not found.');
+      await expect(getCustomersPromise).rejects.toThrow('Customer not found');
     });
 
     it('throws a SalesforceException if the request to Salesforce fails', async () => {
@@ -147,7 +169,7 @@ describe('SalesforceService', () => {
       const getCustomersPromise = service.getCustomers(query);
 
       await expect(getCustomersPromise).rejects.toBeInstanceOf(SalesforceException);
-      await expect(getCustomersPromise).rejects.toThrow('Failed to get customers in Salesforce.');
+      await expect(getCustomersPromise).rejects.toThrow('Failed to get customers in Salesforce');
       await expect(getCustomersPromise).rejects.toHaveProperty('innerError', axiosRequestError);
     });
   });
@@ -162,6 +184,7 @@ describe('SalesforceService', () => {
 
     const query: CreateCustomerDto = {
       "Name": companyRegNo,
+      "Party_URN__c": null,
       "D_B_Number__c": null,
       "Company_Registration_Number__c": companyRegNo
     };
@@ -195,7 +218,7 @@ describe('SalesforceService', () => {
       const getCustomersPromise = service.createCustomer(query);
 
       await expect(getCustomersPromise).rejects.toBeInstanceOf(SalesforceException);
-      await expect(getCustomersPromise).rejects.toThrow('Failed to create customer in Salesforce.');
+      await expect(getCustomersPromise).rejects.toThrow('Failed to create customer in Salesforce');
       await expect(getCustomersPromise).rejects.toHaveProperty('innerError', axiosRequestError);
     });
   });

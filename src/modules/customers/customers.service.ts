@@ -63,10 +63,8 @@ export class CustomersService {
     try {
       const numbersServiceResponse: UkefId[] = await this.numbersService.create(createUkefIdDto)
       partyUrn = numbersServiceResponse[0].maskedId
-    } catch(error) {
-      console.error('Error creating new Party URN', error)
-    }
-    
+    } catch (error) { }
+
     const createCustomerDto: CreateCustomerDto = {
       "Name": DTFSCustomerDto.companyName,
       "Party_URN__c": partyUrn,
@@ -77,17 +75,12 @@ export class CustomersService {
 
     const createCustomerResponse: CreateCustomerSalesforceResponseDto = await this.salesforceService.createCustomer(createCustomerDto)
 
-    if (createCustomerResponse.success) {
-      const createdCustomerResponse: GetCustomersDirectResponse = [{
-        "partyUrn": partyUrn,
-        "name": DTFSCustomerDto.companyName,
-        "sfId": createCustomerResponse.id,
-        "companyRegNo": DTFSCustomerDto.companyRegistrationNumber,
-      }]
-      return createdCustomerResponse
-    }
-    else {
-      console.error("Failed to create customer in Salesforce")
-    }
+    const createdCustomerResponse: GetCustomersDirectResponse = [{
+      "partyUrn": partyUrn,
+      "name": DTFSCustomerDto.companyName,
+      "sfId": createCustomerResponse?.success ? createCustomerResponse.id : null,
+      "companyRegNo": DTFSCustomerDto.companyRegistrationNumber,
+    }]
+    return createdCustomerResponse
   }
 }
