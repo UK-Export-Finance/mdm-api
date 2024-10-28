@@ -12,6 +12,9 @@ import { GetCustomersDirectResponse } from './dto/get-customers-direct-response.
 import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-customer-salesforce-response.dto';
 import { CUSTOMERS } from '@ukef/constants';
 import { GetCustomersSalesforceResponseItems } from '../salesforce/dto/get-customers-salesforce-response.dto';
+import { NumbersService } from '../numbers/numbers.service';
+import { UkefId } from '../numbers/entities/ukef-id.entity';
+import { InternalServerErrorException } from '@nestjs/common';
 
 jest.mock('@ukef/modules/informatica/informatica.service');
 
@@ -22,6 +25,7 @@ describe('CustomerService', () => {
   let informaticaServiceGetCustomers: jest.Mock;
   let salesforceServiceGetCustomers: jest.Mock;
   let salesforceServiceCreateCustomer: jest.Mock;
+  let numbersServiceCreate: jest.Mock;
   let configServiceGet: jest.Mock;
 
   beforeEach(() => {
@@ -36,10 +40,13 @@ describe('CustomerService', () => {
     const salesforceService = new SalesforceService(null, salesforceConfigService);
     salesforceService.getCustomers = salesforceServiceGetCustomers;
     salesforceService.createCustomer = salesforceServiceCreateCustomer;
+    numbersServiceCreate = jest.fn();
+    const numbersService = new NumbersService(null, null)
+    numbersService.create = numbersServiceCreate;
 
     resetAllWhenMocks();
 
-    service = new CustomersService(informaticaService, salesforceService);
+    service = new CustomersService(informaticaService, salesforceService, numbersService);
   });
 
   describe('getCustomers', () => {
@@ -87,14 +94,18 @@ describe('CustomerService', () => {
 
   describe('createCustomer', () => {
     const DTFSCustomerDto: DTFSCustomerDto = { companyRegistrationNumber: '12345678', companyName: 'TEST NAME'};
-    const createCustomerResponse: CreateCustomerSalesforceResponseDto = { 
+    const salesforceCreateCustomerResponse: CreateCustomerSalesforceResponseDto = { 
       id: 'customer-id', 
       errors: null,
       success: true 
     };
+    const createUkefIdResponse: UkefId[] = [{"maskedId": "TEST PARTY_URN", "type": null, "createdBy": null, "createdDatetime": null, "requestingSystem": null}];
+    const createCustomerResponse: GetCustomersDirectResponse = [{"companyRegNo": "12345678", "name": "TEST NAME", "partyUrn": "TEST PARTY_URN", "sfId": "customer-id"}];
+    const createCustomerResponseWithNoPartyUrn: GetCustomersDirectResponse = [{"companyRegNo": "12345678", "name": "TEST NAME", "partyUrn": null, "sfId": "customer-id"}];
 
     it('creates a customer successfully and returns the response', async () => {
-      when(salesforceServiceCreateCustomer).calledWith(expect.any(Object)).mockResolvedValueOnce(createCustomerResponse);
+      when(salesforceServiceCreateCustomer).calledWith(expect.any(Object)).mockResolvedValueOnce(salesforceCreateCustomerResponse);
+      when(numbersServiceCreate).calledWith(expect.any(Object)).mockResolvedValueOnce(createUkefIdResponse);
 
       const response = await service.createCustomer(DTFSCustomerDto);
 
@@ -102,15 +113,31 @@ describe('CustomerService', () => {
       expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(expect.objectContaining({
         // TODO: update this with correct values
         Name: DTFSCustomerDto.companyName,
-        D_B_Number__c: null,
+        Party_URN__c: "TEST PARTY_URN",
         Company_Registration_Number__c: DTFSCustomerDto.companyRegistrationNumber,
       }));
     });
 
     it('throws an error if Salesforce service fails to create a customer', async () => {
       when(salesforceServiceCreateCustomer).calledWith(expect.any(Object)).mockRejectedValueOnce(new Error('Service Error'));
+      when(numbersServiceCreate).calledWith(expect.any(Object)).mockResolvedValueOnce(createUkefIdResponse);
 
       await expect(service.createCustomer(DTFSCustomerDto)).rejects.toThrow('Service Error');
     });
+
+    it('continues creating customer with null PartyURN if numbers service fails to create a party urn', async () => {
+      when(salesforceServiceCreateCustomer).calledWith(expect.any(Object)).mockResolvedValueOnce(salesforceCreateCustomerResponse);
+      when(numbersServiceCreate).calledWith(expect.any(Object)).mockResolvedValueOnce(new InternalServerErrorException());
+
+      const response = await service.createCustomer(DTFSCustomerDto);
+
+      expect(response).toEqual(createCustomerResponseWithNoPartyUrn);
+      expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(expect.objectContaining({
+        // TODO: update this with correct values
+        Name: DTFSCustomerDto.companyName,
+        Party_URN__c: null,
+        Company_Registration_Number__c: DTFSCustomerDto.companyRegistrationNumber,
+      }));
+    });
   });
-});
+});  
