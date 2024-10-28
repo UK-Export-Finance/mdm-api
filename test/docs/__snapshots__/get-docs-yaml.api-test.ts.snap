@@ -140,7 +140,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/GetCustomersResponseItem'
         '404':
-          description: Customer not found.
+          description: Customer not found
       tags:
         - customers
     post:
@@ -159,9 +159,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreateCustomerSalesforceResponseDto'
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetCustomersDirectResponseItem'
         '400':
-          description: Invalid input data
+          description: This customer already exists in Salesforce
+        '401':
+          description: Failed to get access token
       tags:
         - customers
   /api/v1/customers/direct:
@@ -184,10 +188,63 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/GetCustomersDirectResponseItem'
+        '400':
+          description: Invalid Company Registration Number
+        '401':
+          description: Failed to get access token
         '404':
-          description: Customer not found.
+          description: Customer not found
       tags:
         - customers
+  /api/v1/numbers:
+    post:
+      operationId: NumbersController_create
+      summary: Create Number
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CreateUkefIdDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+        - numbers
+    get:
+      operationId: NumbersController_findOne
+      summary: Get information about UKEF ID
+      parameters:
+        - name: type
+          required: true
+          in: query
+          example: 1
+          description: >-
+            Id of UKEF ID type. Common types are: 1 for Deal/Facility, 2 for
+            Party, 8 for Covenant
+          schema:
+            type: number
+        - name: ukefId
+          required: true
+          in: query
+          example: '00300524'
+          description: UKEF ID to check
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The found record
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UkefId'
+      tags:
+        - numbers
   /api/v1/emails:
     post:
       operationId: EmailsController_postEmail
@@ -421,55 +478,6 @@ paths:
                 $ref: '#/components/schemas/MarketEntity'
       tags:
         - markets
-  /api/v1/numbers:
-    post:
-      operationId: NumbersController_create
-      summary: Create Number
-      parameters: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/CreateUkefIdDto'
-      responses:
-        '201':
-          description: ''
-      tags:
-        - numbers
-    get:
-      operationId: NumbersController_findOne
-      summary: Get information about UKEF ID
-      parameters:
-        - name: type
-          required: true
-          in: query
-          example: 1
-          description: >-
-            Id of UKEF ID type. Common types are: 1 for Deal/Facility, 2 for
-            Party, 8 for Covenant
-          schema:
-            type: number
-        - name: ukefId
-          required: true
-          in: query
-          example: '0030052431'
-          description: UKEF ID to check
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The found record
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/UkefId'
-      tags:
-        - numbers
   /api/v1/premium/schedule:
     post:
       operationId: PremiumSchedulesController_create
@@ -812,24 +820,56 @@ components:
       required:
         - companyRegistrationNumber
         - companyName
-    CreateCustomerSalesforceResponseDto:
+    CreateUkefIdDto:
+      type: object
+      properties:
+        numberTypeId:
+          type: number
+          example: 1
+        createdBy:
+          type: string
+          example: ECGD\\jsmith
+          description: User if it is known
+        requestingSystem:
+          type: string
+          example: NodeJs/App
+      required:
+        - numberTypeId
+        - createdBy
+        - requestingSystem
+    UkefId:
       type: object
       properties:
         id:
+          type: number
+          example: 20057861
+          description: Internal id
+        maskedId:
           type: string
-          description: id
-        errors:
-          description: errors
-          type: array
-          items:
-            type: string
-        success:
-          type: boolean
-          description: success
+          example: '0030570680'
+          description: UKEF ID
+        type:
+          type: number
+          example: 1
+        createdBy:
+          type: string
+          example: ECGD\\jsmith
+          description: User if it is known
+        createdDatetime:
+          format: date-time
+          type: string
+          example: '2021-11-30T09:44:04.15Z'
+          description: Created timestamp
+        requestingSystem:
+          type: string
+          example: NodeJs/App
       required:
         - id
-        - errors
-        - success
+        - maskedId
+        - type
+        - createdBy
+        - createdDatetime
+        - requestingSystem
     PostEmailsRequestDto:
       type: object
       properties:
@@ -1112,56 +1152,6 @@ components:
         - shortTermCoverAvailabilityDesc
         - NBIIssue
         - active
-    CreateUkefIdDto:
-      type: object
-      properties:
-        numberTypeId:
-          type: number
-          example: 1
-        createdBy:
-          type: string
-          example: ECGD\\jsmith
-          description: User if it is known
-        requestingSystem:
-          type: string
-          example: NodeJs/App
-      required:
-        - numberTypeId
-        - createdBy
-        - requestingSystem
-    UkefId:
-      type: object
-      properties:
-        id:
-          type: number
-          example: 20057861
-          description: Internal id
-        maskedId:
-          type: string
-          example: '0030570680'
-          description: UKEF ID
-        type:
-          type: number
-          example: 1
-        createdBy:
-          type: string
-          example: ECGD\\jsmith
-          description: User if it is known
-        createdDatetime:
-          format: date-time
-          type: string
-          example: '2021-11-30T09:44:04.15Z'
-          description: Created timestamp
-        requestingSystem:
-          type: string
-          example: NodeJs/App
-      required:
-        - id
-        - maskedId
-        - type
-        - createdBy
-        - createdDatetime
-        - requestingSystem
     CreatePremiumScheduleDto:
       type: object
       properties:
