@@ -90,7 +90,7 @@ export class SalesforceService {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       onError: createWrapSalesforceHttpGetErrorCallback({
-        messageForUnknownError: `Failed to get access token`,
+        messageForUnknownError: 'Failed to get access token',
         knownErrors: [],
       }),
     })
