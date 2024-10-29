@@ -19,7 +19,7 @@ describe('CompaniesController', () => {
   });
 
   beforeAll(() => {
-    const companiesService = new CompaniesService(null, null);
+    const companiesService = new CompaniesService(null, null, null);
     companiesServiceGetCompanyByRegistrationNumber = jest.fn();
     companiesService.getCompanyByRegistrationNumber = companiesServiceGetCompanyByRegistrationNumber;
 

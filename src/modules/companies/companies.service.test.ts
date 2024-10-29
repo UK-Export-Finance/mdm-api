@@ -13,10 +13,12 @@ import { SectorIndustriesService } from '../sector-industries/sector-industries.
 import { CompaniesService } from './companies.service';
 import { GetCompanyResponse } from './dto/get-company-response.dto';
 import { CompaniesOverseasCompanyException } from './exception/companies-overseas-company-exception.exception';
+import { DunAndBradstreetService } from '@ukef/helper-modules/dun-and-bradstreet/dun-and-bradstreet.service';
 
 describe('CompaniesService', () => {
   let configServiceGet: jest.Mock;
   let companiesHouseServiceGetCompanyByRegistrationNumber: jest.Mock;
+  let dunAndBradstreetServiceGetDunsNumber: jest.Mock;
   let sectorIndustriesServiceFind: jest.Mock;
   let service: CompaniesService;
 
@@ -39,11 +41,16 @@ describe('CompaniesService', () => {
     const companiesHouseService = new CompaniesHouseService(null, configService);
     companiesHouseService.getCompanyByRegistrationNumber = companiesHouseServiceGetCompanyByRegistrationNumber;
 
+    dunAndBradstreetServiceGetDunsNumber = jest.fn();
+    const dunAndBradstreetService = new DunAndBradstreetService(null, configService);
+    dunAndBradstreetService.getDunAndBradstreetNumberByRegistrationNumber = companiesHouseServiceGetCompanyByRegistrationNumber;
+
+
     sectorIndustriesServiceFind = jest.fn();
     const sectorIndustriesService = new SectorIndustriesService(null, null);
     sectorIndustriesService.find = sectorIndustriesServiceFind;
 
-    service = new CompaniesService(companiesHouseService, sectorIndustriesService);
+    service = new CompaniesService(companiesHouseService, dunAndBradstreetService, sectorIndustriesService);
   });
 
   beforeEach(() => {
