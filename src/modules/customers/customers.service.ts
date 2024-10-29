@@ -9,17 +9,18 @@ import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
 import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-customer-salesforce-response.dto';
 import { GetCustomersDirectResponse, GetCustomersDirectResponseItem } from './dto/get-customers-direct-response.dto';
 import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
-import { SalesforceException } from '../salesforce/exception/salesforce.exception';
 import { NumbersService } from '../numbers/numbers.service';
 import { CreateUkefIdDto } from '../numbers/dto/create-ukef-id.dto';
 import { UkefId } from '../numbers/entities/ukef-id.entity';
+import { DunAndBradstreetService } from '@ukef/helper-modules/dun-and-bradstreet/dun-and-bradstreet.service';
 
 @Injectable()
 export class CustomersService {
   constructor(
     private readonly informaticaService: InformaticaService,
     private readonly salesforceService: SalesforceService,
-    private readonly numbersService: NumbersService
+    private readonly numbersService: NumbersService,
+    private readonly dunAndBradstreetService: DunAndBradstreetService,
   ) { }
 
   async getCustomers(backendQuery: GetCustomersInformaticaQueryDto): Promise<GetCustomersResponse> {
@@ -50,26 +51,27 @@ export class CustomersService {
   }
 
   async createCustomer(DTFSCustomerDto: DTFSCustomerDto): Promise<GetCustomersDirectResponse> {
-    // TODO: to get DUNS from DnB
-    const dunsNumber: string = null
-
     // TODO: replace this with a call to Salesforce's NUMGEN table once that's in place (or just remove altogether if SF can generate a PartyURN on creation quickly enough to be returned in the subsqeuent GET)
     const createUkefIdDto: CreateUkefIdDto[] = [{
       numberTypeId: 2,
       createdBy: "DTFS Automated Customer Creation User",
       requestingSystem: "MDM"
     }]
-    let partyUrn = null
+    let partyUrn: string = null
     try {
       const numbersServiceResponse: UkefId[] = await this.numbersService.create(createUkefIdDto)
       partyUrn = numbersServiceResponse[0].maskedId
     } catch (error) { }
 
+    let dunsNumber: string = null
+    try {
+      dunsNumber = await this.dunAndBradstreetService.getDunAndBradstreetNumberByRegistrationNumber(DTFSCustomerDto.companyRegistrationNumber)
+    } catch(error) { }
+
     const createCustomerDto: CreateCustomerDto = {
       "Name": DTFSCustomerDto.companyName,
       "Party_URN__c": partyUrn,
-      // TODO: use duns number here
-      "D_B_Number__c": DTFSCustomerDto.companyRegistrationNumber,
+      "D_B_Number__c": dunsNumber,
       "Company_Registration_Number__c": DTFSCustomerDto.companyRegistrationNumber,
     }
 

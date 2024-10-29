@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { CompaniesHouseService } from '@ukef/helper-modules/companies-house/companies-house.service';
+import { DunAndBradstreetService } from '@ukef/helper-modules/dun-and-bradstreet/dun-and-bradstreet.service';
 import { GetCompanyCompaniesHouseResponse } from '@ukef/helper-modules/companies-house/dto/get-company-companies-house-response.dto';
 import { CompaniesHouseNotFoundException } from '@ukef/helper-modules/companies-house/exception/companies-house-not-found.exception';
 
@@ -12,6 +13,7 @@ import { CompaniesOverseasCompanyException } from './exception/companies-oversea
 export class CompaniesService {
   constructor(
     private readonly companiesHouseService: CompaniesHouseService,
+    private readonly dunAndBradstreetService: DunAndBradstreetService,
     private readonly sectorIndustriesService: SectorIndustriesService,
   ) {}
 
@@ -36,6 +38,11 @@ export class CompaniesService {
 
       throw error;
     }
+  }
+
+  async getDunAndBradstreetNumberByRegistrationNumber(registrationNumber: string): Promise<string> {
+    const dunsNumber: string = await this.dunAndBradstreetService.getDunAndBradstreetNumberByRegistrationNumber(registrationNumber);
+    return dunsNumber
   }
 
   private validateCompanyIsUkCompany(company: GetCompanyCompaniesHouseResponse, registrationNumber: string): never | undefined {
