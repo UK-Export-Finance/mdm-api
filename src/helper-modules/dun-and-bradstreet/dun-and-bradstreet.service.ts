@@ -33,7 +33,7 @@ export class DunAndBradstreetService {
         knownErrors: [],
       }),
     });
-    return data.matchCandidates[0].organization.duns;
+    return data?.matchCandidates[0]?.organization?.duns;
   }
 
   private async getAccessToken(): Promise<string> {
