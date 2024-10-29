@@ -691,6 +691,38 @@ paths:
           description: Internal server error.
       tags:
         - companies
+  /api/v1/companies/dun-and-bradstreet-number:
+    get:
+      operationId: CompaniesController_getDunAndBradstreetNumberByRegistrationNumber
+      summary: >-
+        Get Dun and Bradstreet number for a company by Companies House
+        registration number.
+      parameters:
+        - name: registrationNumber
+          required: true
+          in: query
+          description: The Companies House registration number of the company to find.
+          example: '00000001'
+          schema:
+            minLength: 8
+            maxLength: 8
+            pattern: ^(([A-Z]{2}|[A-Z]\\d|\\d{2})(\\d{6}|\\d{5}[A-Z]))$
+            type: string
+      responses:
+        '200':
+          description: Returns the DUNS number by Companies House registration nuymber.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCompanyResponse'
+        '400':
+          description: Invalid Companies House registration number.
+        '404':
+          description: Company not found.
+        '500':
+          description: Internal server error.
+      tags:
+        - companies
 info:
   title: MDM API Specification
   description: MDM API documentation
