@@ -146,7 +146,7 @@ describe('CustomerService', () => {
 
     it('continues creating customer with null PartyURN if numbers service fails to create a party urn', async () => {
       when(salesforceServiceCreateCustomer).calledWith(expect.any(Object)).mockResolvedValueOnce(salesforceCreateCustomerResponse);
-      when(numbersServiceCreate).calledWith(expect.any(Object)).mockResolvedValueOnce(new InternalServerErrorException());
+      when(numbersServiceCreate).calledWith(expect.any(Object)).mockRejectedValueOnce(new InternalServerErrorException());
       when(dunAndBradstreetServiceGetDunsNumber).calledWith(expect.any(String)).mockResolvedValueOnce(dunAndBradstreetGetDunsNumberResponse);
 
       const response = await service.createCustomer(DTFSCustomerDto);
@@ -163,7 +163,7 @@ describe('CustomerService', () => {
     it('continues creating customer with null DUNS number if Dun and Bradstreet service fails to return one', async () => {
       when(salesforceServiceCreateCustomer).calledWith(expect.any(Object)).mockResolvedValueOnce(salesforceCreateCustomerResponse);
       when(numbersServiceCreate).calledWith(expect.any(Object)).mockResolvedValueOnce(createUkefIdResponse);
-      when(dunAndBradstreetServiceGetDunsNumber).calledWith(expect.any(String)).mockResolvedValueOnce(new InternalServerErrorException());
+      when(dunAndBradstreetServiceGetDunsNumber).calledWith(expect.any(String)).mockRejectedValueOnce(new InternalServerErrorException());
 
       const response = await service.createCustomer(DTFSCustomerDto);
 
