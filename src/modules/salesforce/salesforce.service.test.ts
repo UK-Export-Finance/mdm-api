@@ -10,7 +10,6 @@ import { SalesforceException } from './exception/salesforce.exception';
 import { SalesforceService } from './salesforce.service';
 import { CompanyRegistrationNumberDto } from '../customers/dto/company-registration-number.dto';
 import { CreateCustomerDto } from '../customers/dto/create-customer.dto';
-import { BadRequestError } from 'passport-headerapikey';
 
 describe('SalesforceService', () => {
   const valueGenerator = new RandomValueGenerator();
