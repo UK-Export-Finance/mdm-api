@@ -44,26 +44,4 @@ export class CompaniesController {
   getCompanyByRegistrationNumber(@Query() query: GetCompanyByRegistrationNumberQuery): Promise<GetCompanyResponse> {
     return this.companiesService.getCompanyByRegistrationNumber(query.registrationNumber);
   }
-
-  @Get('dun-and-bradstreet-number')
-  @ApiOperation({
-    summary: 'Get Dun and Bradstreet number for a company by Companies House registration number.',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Returns the DUNS number by Companies House registration nuymber.',
-    type: GetCompanyResponse,
-  })
-  @ApiBadRequestResponse({
-    description: 'Invalid Companies House registration number.',
-  })
-  @ApiNotFoundResponse({
-    description: 'Company not found.',
-  })
-  @ApiInternalServerErrorResponse({
-    description: 'Internal server error.',
-  })
-  getDunAndBradstreetNumberByRegistrationNumber(@Query() query: GetCompanyByRegistrationNumberQuery): Promise<string> {
-    return this.companiesService.getDunAndBradstreetNumberByRegistrationNumber(query.registrationNumber);
-  }
 }
