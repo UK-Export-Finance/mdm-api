@@ -1,6 +1,6 @@
 # UKEF
 .env
-.env.prod
+.env*
 
 # compiled output
 /dist
