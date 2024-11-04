@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.21.6](https://github.com/UK-Export-Finance/mdm-api/compare/v1.21.5...v1.21.6) (2024-11-04)
+
+
+### Bug Fixes
+
+* **deps:** update dependency date-fns to v4 ([#1051](https://github.com/UK-Export-Finance/mdm-api/issues/1051)) ([9ab56af](https://github.com/UK-Export-Finance/mdm-api/commit/9ab56af6ceb13e95b70529bb34bf11ccf87aa214))
+
 ## [1.21.5](https://github.com/UK-Export-Finance/mdm-api/compare/v1.21.4...v1.21.5) (2024-08-15)
 
 
