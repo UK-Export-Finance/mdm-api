@@ -6,7 +6,7 @@ import { when } from 'jest-when';
 
 import { CustomersController } from './customers.controller';
 import { CustomersService } from './customers.service';
-import { GetCustomersDirectResponse } from './dto/get-customers-direct-response.dto';
+import { GetCustomersSalesforceResponse } from './dto/get-customers-salesforce-response.dto';
 import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
 import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
 import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-customer-salesforce-response.dto';
@@ -15,7 +15,7 @@ describe('CustomersController', () => {
   const valueGenerator = new RandomValueGenerator();
 
   let customersServiceGetCustomers: jest.Mock;
-  let customersServiceGetCustomersDirect: jest.Mock;
+  let customersServiceGetCustomersSalesforce: jest.Mock;
   let customersServiceCreateCustomer: jest.Mock;
 
   let controller: CustomersController;
@@ -23,10 +23,10 @@ describe('CustomersController', () => {
   beforeEach(() => {
     const customersService = new CustomersService(null, null, null, null);
     customersServiceGetCustomers = jest.fn();
-    customersServiceGetCustomersDirect = jest.fn();
+    customersServiceGetCustomersSalesforce = jest.fn();
     customersServiceCreateCustomer = jest.fn();
     customersService.getCustomers = customersServiceGetCustomers;
-    customersService.getCustomersDirect = customersServiceGetCustomersDirect;
+    customersService.getCustomersSalesforce = customersServiceGetCustomersSalesforce;
     customersService.createCustomer = customersServiceCreateCustomer;
 
     controller = new CustomersController(customersService);
@@ -110,9 +110,9 @@ describe('CustomersController', () => {
     });
   });
 
-  describe('getCustomersDirect', () => {
+  describe('getCustomersSalesforce', () => {
     const companyRegNoDto: CompanyRegistrationNumberDto = { companyRegistrationNumber: CUSTOMERS.EXAMPLES.COMPANYREG };
-    const expectedResponse: GetCustomersDirectResponse = [{
+    const expectedResponse: GetCustomersSalesforceResponse = [{
       partyUrn: CUSTOMERS.EXAMPLES.PARTYURN,
       name: CUSTOMERS.EXAMPLES.NAME,
       sfId: 'TEST_SF_ID',
@@ -120,9 +120,9 @@ describe('CustomersController', () => {
     }];
 
     it('returns customers directly from Salesforce', async () => {
-      when(customersServiceGetCustomersDirect).calledWith(companyRegNoDto).mockResolvedValueOnce(expectedResponse);
+      when(customersServiceGetCustomersSalesforce).calledWith(companyRegNoDto).mockResolvedValueOnce(expectedResponse);
 
-      const response = await controller.getCustomersDirect(companyRegNoDto);
+      const response = await controller.getCustomersSalesforce(companyRegNoDto);
 
       expect(response).toEqual(expectedResponse);
     });

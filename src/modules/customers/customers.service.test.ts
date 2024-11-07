@@ -10,7 +10,7 @@ import { CustomersService } from './customers.service';
 
 import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
 import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
-import { GetCustomersDirectResponse } from './dto/get-customers-direct-response.dto';
+import { GetCustomersSalesforceResponse } from './dto/get-customers-salesforce-response.dto';
 import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-customer-salesforce-response.dto';
 import { CUSTOMERS } from '@ukef/constants';
 import { GetCustomersSalesforceResponseItems } from '../salesforce/dto/get-customers-salesforce-response.dto';
@@ -77,7 +77,7 @@ describe('CustomerService', () => {
     });
   });
 
-  describe('getCustomersDirect', () => {
+  describe('getCustomersSalesforce', () => {
     const companyRegNoDto: CompanyRegistrationNumberDto = { companyRegistrationNumber: CUSTOMERS.EXAMPLES.PARTYURN };
     const expectedSalesforceResponse: GetCustomersSalesforceResponseItems = [{
       Party_URN__c: CUSTOMERS.EXAMPLES.PARTYURN,
@@ -86,7 +86,7 @@ describe('CustomerService', () => {
       Company_Registration_Number__c: CUSTOMERS.EXAMPLES.COMPANYREG,
     }];
 
-    const expectedResponse: GetCustomersDirectResponse = [{
+    const expectedResponse: GetCustomersSalesforceResponse = [{
       partyUrn: CUSTOMERS.EXAMPLES.PARTYURN,
       name: CUSTOMERS.EXAMPLES.NAME,
       sfId: 'TEST_SF_ID',
@@ -96,7 +96,7 @@ describe('CustomerService', () => {
     it('returns customers directly from Salesforce', async () => {
       when(salesforceServiceGetCustomers).calledWith(companyRegNoDto).mockResolvedValueOnce(expectedSalesforceResponse);
 
-      const response = await service.getCustomersDirect(companyRegNoDto);
+      const response = await service.getCustomersSalesforce(companyRegNoDto);
 
       expect(response).toEqual(expectedResponse);
     });
@@ -104,7 +104,7 @@ describe('CustomerService', () => {
     it('throws an error if Salesforce service fails', async () => {
       when(salesforceServiceGetCustomers).calledWith(companyRegNoDto).mockRejectedValueOnce(new Error('Service Error'));
 
-      await expect(service.getCustomersDirect(companyRegNoDto)).rejects.toThrow('Service Error');
+      await expect(service.getCustomersSalesforce(companyRegNoDto)).rejects.toThrow('Service Error');
     });
   });
 
@@ -117,8 +117,8 @@ describe('CustomerService', () => {
     };
     const createUkefIdResponse: UkefId[] = [{"maskedId": "TEST PARTY_URN", "type": null, "createdBy": null, "createdDatetime": null, "requestingSystem": null}];
     const dunAndBradstreetGetDunsNumberResponse: string = "TEST DUNS_NUMBER";
-    const createCustomerResponse: GetCustomersDirectResponse = [{"companyRegNo": "12345678", "name": "TEST NAME", "partyUrn": "TEST PARTY_URN", "sfId": "customer-id"}];
-    const createCustomerResponseWithNoPartyUrn: GetCustomersDirectResponse = [{"companyRegNo": "12345678", "name": "TEST NAME", "partyUrn": null, "sfId": "customer-id"}];
+    const createCustomerResponse: GetCustomersSalesforceResponse = [{"companyRegNo": "12345678", "name": "TEST NAME", "partyUrn": "TEST PARTY_URN", "sfId": "customer-id"}];
+    const createCustomerResponseWithNoPartyUrn: GetCustomersSalesforceResponse = [{"companyRegNo": "12345678", "name": "TEST NAME", "partyUrn": null, "sfId": "customer-id"}];
 
     it('creates a customer successfully and returns the response', async () => {
       when(salesforceServiceCreateCustomer).calledWith(expect.any(Object)).mockResolvedValueOnce(salesforceCreateCustomerResponse);

@@ -7,7 +7,7 @@ import { GetCustomersResponse, GetCustomersResponseItem } from './dto/get-custom
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
 import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-customer-salesforce-response.dto';
-import { GetCustomersDirectResponse, GetCustomersDirectResponseItem } from './dto/get-customers-direct-response.dto';
+import { GetCustomersSalesforceResponse, GetCustomersSalesforceResponseItem } from './dto/get-customers-salesforce-response.dto';
 import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
 import { NumbersService } from '../numbers/numbers.service';
 import { CreateUkefIdDto } from '../numbers/dto/create-ukef-id.dto';
@@ -38,10 +38,10 @@ export class CustomersService {
     );
   }
 
-  async getCustomersDirect(companyRegistrationNumberDto: CompanyRegistrationNumberDto): Promise<GetCustomersDirectResponse> {
+  async getCustomersSalesforce(companyRegistrationNumberDto: CompanyRegistrationNumberDto): Promise<GetCustomersSalesforceResponse> {
     const customersInSalesforce = await this.salesforceService.getCustomers(companyRegistrationNumberDto);
     return customersInSalesforce.map(
-      (customerInSalesforce): GetCustomersDirectResponseItem => ({
+      (customerInSalesforce): GetCustomersSalesforceResponseItem => ({
         partyUrn: customerInSalesforce.Party_URN__c,
         name: customerInSalesforce.Name,
         sfId: customerInSalesforce.Id,
@@ -50,7 +50,7 @@ export class CustomersService {
     )
   }
 
-  async createCustomer(DTFSCustomerDto: DTFSCustomerDto): Promise<GetCustomersDirectResponse> {
+  async createCustomer(DTFSCustomerDto: DTFSCustomerDto): Promise<GetCustomersSalesforceResponse> {
     // TODO: replace this with a call to Salesforce's NUMGEN table once that's in place (or just remove altogether if SF can generate a PartyURN on creation quickly enough to be returned in the subsqeuent GET)
     const createUkefIdDto: CreateUkefIdDto[] = [{
       numberTypeId: 2,
@@ -77,7 +77,7 @@ export class CustomersService {
 
     const createCustomerResponse: CreateCustomerSalesforceResponseDto = await this.salesforceService.createCustomer(createCustomerDto)
 
-    const createdCustomerResponse: GetCustomersDirectResponse = [{
+    const createdCustomerResponse: GetCustomersSalesforceResponse = [{
       "partyUrn": partyUrn,
       "name": DTFSCustomerDto.companyName,
       "sfId": createCustomerResponse?.success ? createCustomerResponse.id : null,
