@@ -161,16 +161,16 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/GetCustomersDirectResponseItem'
+                  $ref: '#/components/schemas/GetCustomersSalesforceResponseItem'
         '400':
           description: This customer already exists in Salesforce
         '401':
           description: Failed to get access token
       tags:
         - customers
-  /api/v1/customers/direct:
+  /api/v1/customers/salesforce:
     get:
-      operationId: CustomersController_getCustomersDirect
+      operationId: CustomersController_getCustomersSalesforce
       summary: Get customers directly from Salesforce
       parameters:
         - name: companyRegistrationNumber
@@ -187,7 +187,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/GetCustomersDirectResponseItem'
+                  $ref: '#/components/schemas/GetCustomersSalesforceResponseItem'
         '400':
           description: Invalid Company Registration Number
         '401':
@@ -221,18 +221,18 @@ paths:
         - name: type
           required: true
           in: query
-          example: 1
           description: >-
             Id of UKEF ID type. Common types are: 1 for Deal/Facility, 2 for
             Party, 8 for Covenant
           schema:
+            example: 1
             type: number
         - name: ukefId
           required: true
           in: query
-          example: '00300524'
           description: UKEF ID to check
           schema:
+            example: '00300524'
             type: string
       responses:
         '200':
@@ -837,7 +837,7 @@ components:
         - type
         - subtype
         - isLegacyRecord
-    GetCustomersDirectResponseItem:
+    GetCustomersSalesforceResponseItem:
       type: object
       properties:
         partyUrn:
