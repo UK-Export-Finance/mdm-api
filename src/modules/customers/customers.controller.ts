@@ -6,7 +6,7 @@ import { CustomersService } from './customers.service';
 import { GetCustomersQueryDto } from './dto/get-customers-query.dto';
 import { GetCustomersResponse, GetCustomersResponseItem } from './dto/get-customers-response.dto';
 import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
-import { GetCustomersDirectResponse, GetCustomersDirectResponseItem } from './dto/get-customers-direct-response.dto';
+import { GetCustomersSalesforceResponse, GetCustomersSalesforceResponseItem } from './dto/get-customers-salesforce-response.dto';
 import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
 
 @ApiTags('customers')
@@ -37,14 +37,14 @@ export class CustomersController {
     return this.customersService.getCustomers(backendQuery);
   }
 
-  @Get('direct')
+  @Get('salesforce')
   @ApiOperation({
     summary: 'Get customers directly from Salesforce',
   })
   @ApiResponse({
     status: 200,
     description: 'Customers matching search parameters',
-    type: [GetCustomersDirectResponseItem],
+    type: [GetCustomersSalesforceResponseItem],
   })
   @ApiNotFoundResponse({
     description: 'Customer not found',
@@ -55,8 +55,8 @@ export class CustomersController {
   @ApiUnauthorizedResponse({
     description: 'Failed to get access token'
   })
-  getCustomersDirect(@Query() companyRegistrationNumber: CompanyRegistrationNumberDto): Promise<GetCustomersDirectResponse> {
-    return this.customersService.getCustomersDirect(companyRegistrationNumber);
+  getCustomersSalesforce(@Query() companyRegistrationNumber: CompanyRegistrationNumberDto): Promise<GetCustomersSalesforceResponse> {
+    return this.customersService.getCustomersSalesforce(companyRegistrationNumber);
   }
 
   @Post()
@@ -65,7 +65,7 @@ export class CustomersController {
   })
   @ApiCreatedResponse({
     description: 'Customer successfully created',
-    type: [GetCustomersDirectResponseItem],
+    type: [GetCustomersSalesforceResponseItem],
   })
   @ApiBadRequestResponse({
     description: 'This customer already exists in Salesforce',
@@ -73,7 +73,7 @@ export class CustomersController {
   @ApiUnauthorizedResponse({
     description: 'Failed to get access token'
   })
-  createCustomer(@Body() DTFSCustomerDto: DTFSCustomerDto): Promise<GetCustomersDirectResponse> {
+  createCustomer(@Body() DTFSCustomerDto: DTFSCustomerDto): Promise<GetCustomersSalesforceResponse> {
     return this.customersService.createCustomer(DTFSCustomerDto);
   }
 

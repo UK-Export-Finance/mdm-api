@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export type GetCustomersDirectResponse = GetCustomersDirectResponseItem[];
+export type GetCustomersSalesforceResponse = GetCustomersSalesforceResponseItem[];
 
-export class GetCustomersDirectResponseItem {
+export class GetCustomersSalesforceResponseItem {
   @ApiProperty({
     description: 'The unique UKEF id of the customer',
   })
