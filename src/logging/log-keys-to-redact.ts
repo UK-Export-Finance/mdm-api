@@ -5,11 +5,18 @@ export interface LogKeysToRedactOptions {
   clientRequest: {
     logKey: string;
     headersLogKey: string;
+    bodyLogKey: string;
   };
   outgoingRequest: {
     logKey: string;
     headersLogKey: string;
+    bodyLogKey: string;
   };
+  incomingResponse: {
+    logKey: string;
+    bodyLogKey: string;
+  };
+
   error: {
     logKey: string;
     sensitiveChildKeys: string[];
@@ -20,13 +27,14 @@ export interface LogKeysToRedactOptions {
   };
 }
 
-export const logKeysToRedact = ({ redactLogs, clientRequest, outgoingRequest, error, dbError }: LogKeysToRedactOptions): string[] => {
+export const logKeysToRedact = ({ redactLogs, clientRequest, outgoingRequest, incomingResponse, error, dbError }: LogKeysToRedactOptions): string[] => {
   if (!redactLogs) {
     return [];
   }
   const keys = [
     ...getClientRequestLogKeysToRedact(clientRequest),
     ...getOutgoingRequestLogKeysToRedact(outgoingRequest),
+    ...getIncomingResponseLogKeysToRedact(incomingResponse),
     ...getErrorLogKeysToRedact(error),
     ...getDbErrorLogKeysToRedact(dbError),
   ];
@@ -34,16 +42,24 @@ export const logKeysToRedact = ({ redactLogs, clientRequest, outgoingRequest, er
   return keys;
 };
 
-const getClientRequestLogKeysToRedact = ({ logKey, headersLogKey }: LogKeysToRedactOptions['clientRequest']): string[] => [
+const getClientRequestLogKeysToRedact = ({ logKey, headersLogKey, bodyLogKey }: LogKeysToRedactOptions['clientRequest']): string[] => [
   // We redact the client request headers as they contain the secret API key that the client uses to authenticate with our API.
   buildKeyToRedact([logKey, headersLogKey]),
 ];
 
-const getOutgoingRequestLogKeysToRedact = ({ logKey, headersLogKey }: LogKeysToRedactOptions['outgoingRequest']): string[] => {
+const getIncomingResponseLogKeysToRedact = ({ logKey, bodyLogKey }: LogKeysToRedactOptions['incomingResponse']): string[] => [
+  // We redact the client request body as they contain the Dun and Bradstreet access token
+  buildKeyToRedact([logKey, bodyLogKey]),
+];
+
+const getOutgoingRequestLogKeysToRedact = ({ logKey, headersLogKey, bodyLogKey }: LogKeysToRedactOptions['outgoingRequest']): string[] => {
   return [
     // We redact the outgoing request headers as they contain:
     //  - our Basic auth details for Informatica
+    // We redact the outgoing request body as it contains:
+    //  - our Client auth details for Dun and Bradstreet
     buildKeyToRedact([logKey, headersLogKey]),
+    buildKeyToRedact([logKey, bodyLogKey]),
   ];
 };
 

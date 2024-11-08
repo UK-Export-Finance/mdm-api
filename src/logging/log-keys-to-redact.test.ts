@@ -9,10 +9,16 @@ describe('logKeysToRedact', () => {
     clientRequest: {
       logKey: valueGenerator.string(),
       headersLogKey: valueGenerator.string(),
+      bodyLogKey: valueGenerator.string(),
     },
     outgoingRequest: {
       logKey: valueGenerator.string(),
       headersLogKey: valueGenerator.string(),
+      bodyLogKey: valueGenerator.string(),
+    },
+    incomingResponse: {
+      logKey: valueGenerator.string(),
+      bodyLogKey: valueGenerator.string(),
     },
     error: {
       logKey: valueGenerator.string(),
