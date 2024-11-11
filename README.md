@@ -22,7 +22,7 @@ MDM micro-service provides endpoints for internal UKEF applications ranging from
 ## Install 💻
 
 ```bash
-npm install
+npm install --legacy-peer-deps
 ```
 
 ## Run 💡
