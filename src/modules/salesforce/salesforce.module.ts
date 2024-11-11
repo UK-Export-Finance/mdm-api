@@ -29,10 +29,7 @@ import { SalesforceService } from './salesforce.service';
           // to ignore https issues, enable agent and rejectUnauthorized:false bellow.
           httpsAgent: new https.Agent({
             // Allow self signed negotiations
-            rejectUnauthorized: false,
-
-            // Allow legacy server
-            secureOptions: crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT,
+            // rejectUnauthorized: false,
           }),
         };
       },
