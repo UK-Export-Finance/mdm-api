@@ -24,9 +24,9 @@ import { SalesforceService } from './salesforce.service';
           accessURL: accessUrl,
           maxRedirects,
           timeout,
-          // TODO: APIM-471 - cleanup rejectUnauthorized when Informatica SSL issue is resolved
+          // TODO: cleanup rejectUnauthorized when Salesforce SSL issue is resolved
           // "rejectUnauthorized: false" is just for local DEV laptop environment, not for DEV/PROD.
-          // to ignore https issues, enable agent and rejectUnauthorized:false bellow.
+          // to ignore https issues, enable rejectUnauthorized:false below.
           httpsAgent: new https.Agent({
             // Allow self signed negotiations
             // rejectUnauthorized: false,
