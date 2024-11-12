@@ -3,10 +3,9 @@ import { SalesforceModule } from  '@ukef/modules/salesforce/salesforce.module';
 
 import { CustomersController } from './customers.controller';
 import { CustomersService } from './customers.service';
-import { NumbersModule } from '../numbers/numbers.module';
 
 @Module({
-  imports: [SalesforceModule, NumbersModule],
+  imports: [SalesforceModule],
   controllers: [CustomersController],
   providers: [CustomersService],
 })
