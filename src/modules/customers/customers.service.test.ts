@@ -35,14 +35,14 @@ describe('CustomerService', () => {
     const expectedSalesforceResponse: GetCustomersSalesforceResponseItems = [{
       Party_URN__c: CUSTOMERS.EXAMPLES.PARTYURN,
       Name: CUSTOMERS.EXAMPLES.NAME,
-      Id: 'TEST_SF_ID',
+      Id: 'TEST_SALESFORCE_ID',
       Company_Registration_Number__c: CUSTOMERS.EXAMPLES.COMPANYREG,
     }];
 
     const expectedResponse: GetCustomersSalesforceResponse = [{
       partyUrn: CUSTOMERS.EXAMPLES.PARTYURN,
       name: CUSTOMERS.EXAMPLES.NAME,
-      sfId: 'TEST_SF_ID',
+      sfId: 'TEST_SALESFORCE_ID',
       companyRegNo: CUSTOMERS.EXAMPLES.COMPANYREG,
     }];
 
