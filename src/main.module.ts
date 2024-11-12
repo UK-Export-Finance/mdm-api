@@ -55,10 +55,7 @@ import { LoggingInterceptor } from './logging/logging-interceptor.helper';
             },
             error: {
               logKey: 'err',
-              sensitiveChildKeys: [
-                // The `config` has basic authentication details for Informatica.
-                'config',
-              ],
+              sensitiveChildKeys: [],
             },
             dbError: {
               logKey: 'err',
@@ -75,4 +72,4 @@ import { LoggingInterceptor } from './logging/logging-interceptor.helper';
   ],
   providers: [{ provide: APP_INTERCEPTOR, useClass: LoggingInterceptor }],
 })
-export class MainModule {}
+export class MainModule { }

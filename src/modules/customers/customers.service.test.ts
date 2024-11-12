@@ -1,6 +1,4 @@
-import { InformaticaService } from '@ukef/modules/informatica/informatica.service';
 import { SalesforceService } from '@ukef/modules/salesforce/salesforce.service';
-import { GetCustomersGenerator } from '@ukef-test/support/generator/get-customers-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { resetAllWhenMocks, when } from 'jest-when';
 import { ConfigService } from '@nestjs/config';
@@ -11,23 +9,15 @@ import { GetCustomersSalesforceResponse } from './dto/get-customers-salesforce-r
 import { CUSTOMERS } from '@ukef/constants';
 import { GetCustomersSalesforceResponseItems } from '../salesforce/dto/get-customers-salesforce-response.dto';
 
-jest.mock('@ukef/modules/informatica/informatica.service');
-
 describe('CustomerService', () => {
   const valueGenerator = new RandomValueGenerator();
 
   let service: CustomersService;
 
-  let informaticaServiceGetCustomers: jest.Mock;
-
   let salesforceConfigServiceGet: jest.Mock;
   let salesforceServiceGetCustomers: jest.Mock;
 
   beforeEach(() => {
-    informaticaServiceGetCustomers = jest.fn();
-    const informaticaService = new InformaticaService(null);
-    informaticaService.getCustomers = informaticaServiceGetCustomers;
-
     const salesforceConfigService = new ConfigService();
     salesforceConfigServiceGet = jest.fn().mockReturnValue({ clientId: 'TEST_CLIENT_ID', clientSecret: 'TEST_CLIENT_SECRET', username: 'TEST_USERNAME', password: 'TEST_PASSWORD', accessUrl: 'TEST_ACCESS_URL' });
     salesforceConfigService.get = salesforceConfigServiceGet;
@@ -37,19 +27,7 @@ describe('CustomerService', () => {
 
     resetAllWhenMocks();
 
-    service = new CustomersService(informaticaService, salesforceService);
-  });
-
-  describe('getCustomers', () => {
-    const { informaticaRequest, getCustomersResponse } = new GetCustomersGenerator(valueGenerator).generate({ numberToGenerate: 1 });
-
-    it('returns customers from the service', async () => {
-      when(informaticaServiceGetCustomers).calledWith(informaticaRequest[0]).mockResolvedValueOnce(getCustomersResponse[0]);
-
-      const response = await service.getCustomers(informaticaRequest[0]);
-
-      expect(response).toEqual(getCustomersResponse[0]);
-    });
+    service = new CustomersService(salesforceService);
   });
 
   describe('getCustomersSalesforce', () => {

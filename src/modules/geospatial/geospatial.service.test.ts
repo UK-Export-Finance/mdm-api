@@ -7,8 +7,6 @@ import { resetAllWhenMocks, when } from 'jest-when';
 
 import { GeospatialService } from './geospatial.service';
 
-jest.mock('@ukef/modules/informatica/informatica.service');
-
 describe('GeospatialService', () => {
   const valueGenerator = new RandomValueGenerator();
 

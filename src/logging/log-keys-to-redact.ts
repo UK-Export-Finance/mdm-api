@@ -54,11 +54,8 @@ const getIncomingResponseLogKeysToRedact = ({ logKey, bodyLogKey }: LogKeysToRed
 
 const getOutgoingRequestLogKeysToRedact = ({ logKey, headersLogKey, bodyLogKey }: LogKeysToRedactOptions['outgoingRequest']): string[] => {
   return [
-    // We redact the outgoing request headers as they contain:
-    //  - our Basic auth details for Informatica
     // We redact the outgoing request body as it contains:
     //  - our Client auth details for Salesforce
-    buildKeyToRedact([logKey, headersLogKey]),
     buildKeyToRedact([logKey, bodyLogKey]),
   ];
 };
