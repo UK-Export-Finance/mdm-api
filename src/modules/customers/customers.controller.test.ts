@@ -1,5 +1,5 @@
 import { BadRequestException } from '@nestjs/common';
-import { COMPANIES, CUSTOMERS, ENUMS } from '@ukef/constants';
+import { CUSTOMERS, ENUMS } from '@ukef/constants';
 import { GetCustomersGenerator } from '@ukef-test/support/generator/get-customers-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { when } from 'jest-when';
@@ -8,26 +8,21 @@ import { CustomersController } from './customers.controller';
 import { CustomersService } from './customers.service';
 import { GetCustomersSalesforceResponse } from './dto/get-customers-salesforce-response.dto';
 import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
-import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
-import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-customer-salesforce-response.dto';
 
 describe('CustomersController', () => {
   const valueGenerator = new RandomValueGenerator();
 
   let customersServiceGetCustomers: jest.Mock;
   let customersServiceGetCustomersSalesforce: jest.Mock;
-  let customersServiceCreateCustomer: jest.Mock;
 
   let controller: CustomersController;
 
   beforeEach(() => {
-    const customersService = new CustomersService(null, null, null, null);
+    const customersService = new CustomersService(null, null, null);
     customersServiceGetCustomers = jest.fn();
     customersServiceGetCustomersSalesforce = jest.fn();
-    customersServiceCreateCustomer = jest.fn();
     customersService.getCustomers = customersServiceGetCustomers;
     customersService.getCustomersSalesforce = customersServiceGetCustomersSalesforce;
-    customersService.createCustomer = customersServiceCreateCustomer;
 
     controller = new CustomersController(customersService);
   });
@@ -125,29 +120,6 @@ describe('CustomersController', () => {
       const response = await controller.getCustomersSalesforce(companyRegNoDto);
 
       expect(response).toEqual(expectedResponse);
-    });
-  });
-
-  describe('createCustomer', () => {
-    const DTFSCustomerDto: DTFSCustomerDto = { companyRegistrationNumber: CUSTOMERS.EXAMPLES.COMPANYREG, companyName: 'TEST NAME' };
-    const createCustomerResponse: CreateCustomerSalesforceResponseDto = {
-      id: 'customer-id',
-      errors: null,
-      success: true
-    };
-
-    it('creates a customer successfully and returns the response', async () => {
-      when(customersServiceCreateCustomer).calledWith(DTFSCustomerDto).mockResolvedValueOnce(createCustomerResponse);
-
-      const response = await controller.createCustomer(DTFSCustomerDto);
-
-      expect(response).toEqual(createCustomerResponse);
-    });
-
-    it('throws an error if the service fails to create a customer', async () => {
-      when(customersServiceCreateCustomer).calledWith(DTFSCustomerDto).mockRejectedValueOnce(new Error('Service Error'));
-
-      await expect(controller.createCustomer(DTFSCustomerDto)).rejects.toThrow('Service Error');
     });
   });
 });

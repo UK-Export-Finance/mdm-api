@@ -143,31 +143,6 @@ paths:
           description: Customer not found
       tags:
         - customers
-    post:
-      operationId: CustomersController_createCustomer
-      summary: Create a new customer
-      parameters: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/DTFSCustomerDto'
-      responses:
-        '201':
-          description: Customer successfully created
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/GetCustomersSalesforceResponseItem'
-        '400':
-          description: This customer already exists in Salesforce
-        '401':
-          description: Failed to get access token
-      tags:
-        - customers
   /api/v1/customers/salesforce:
     get:
       operationId: CustomersController_getCustomersSalesforce
@@ -232,7 +207,7 @@ paths:
           in: query
           description: UKEF ID to check
           schema:
-            example: '00300524'
+            example: '0030052431'
             type: string
       responses:
         '200':
@@ -808,18 +783,6 @@ components:
         - name
         - sfId
         - companyRegNo
-    DTFSCustomerDto:
-      type: object
-      properties:
-        companyRegistrationNumber:
-          type: string
-          description: Company Registration Number
-        companyName:
-          type: string
-          description: Company Name
-      required:
-        - companyRegistrationNumber
-        - companyName
     CreateUkefIdDto:
       type: object
       properties:

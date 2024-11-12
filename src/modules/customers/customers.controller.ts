@@ -59,24 +59,6 @@ export class CustomersController {
     return this.customersService.getCustomersSalesforce(companyRegistrationNumber);
   }
 
-  @Post()
-  @ApiOperation({
-    summary: 'Create a new customer',
-  })
-  @ApiCreatedResponse({
-    description: 'Customer successfully created',
-    type: [GetCustomersSalesforceResponseItem],
-  })
-  @ApiBadRequestResponse({
-    description: 'This customer already exists in Salesforce',
-  })
-  @ApiUnauthorizedResponse({
-    description: 'Failed to get access token'
-  })
-  createCustomer(@Body() DTFSCustomerDto: DTFSCustomerDto): Promise<GetCustomersSalesforceResponse> {
-    return this.customersService.createCustomer(DTFSCustomerDto);
-  }
-
   private ensureOneIsNotEmpty(...args) {
     if (args.filter((arg) => arg).length !== 1) {
       throw new BadRequestException('One and just one search parameter is required');

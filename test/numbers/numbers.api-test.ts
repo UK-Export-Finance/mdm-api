@@ -53,7 +53,7 @@ describe('Numbers', () => {
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
     expect(body.message).toContain('type must be an integer number');
-    expect(body.message).toContain('ukefId must match /^\\d{8,10}$/ regular expression');
+    expect(body.message).toContain('ukefId must match /^\\d{10}$/ regular expression');
   });
 
   it(`GET /numbers?type=null&ukefId=null`, async () => {
@@ -62,7 +62,7 @@ describe('Numbers', () => {
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
     expect(body.message).toContain('type must be an integer number');
-    expect(body.message).toContain('ukefId must match /^\\d{8,10}$/ regular expression');
+    expect(body.message).toContain('ukefId must match /^\\d{10}$/ regular expression');
   });
 
   it(`GET /numbers?type=undefined&ukefId=undefined`, async () => {
@@ -71,7 +71,7 @@ describe('Numbers', () => {
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
     expect(body.message).toContain('type must be an integer number');
-    expect(body.message).toContain('ukefId must match /^\\d{8,10}$/ regular expression');
+    expect(body.message).toContain('ukefId must match /^\\d{10}$/ regular expression');
   });
 
   it(`GET /numbers?type=a&ukefId=0030581069`, async () => {

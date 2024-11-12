@@ -9,7 +9,6 @@ import { ConfigService } from '@nestjs/config';
 import { SalesforceException } from './exception/salesforce.exception';
 import { SalesforceService } from './salesforce.service';
 import { CompanyRegistrationNumberDto } from '../customers/dto/company-registration-number.dto';
-import { CreateCustomerDto } from '../customers/dto/create-customer.dto';
 
 describe('SalesforceService', () => {
   const valueGenerator = new RandomValueGenerator();
@@ -169,55 +168,6 @@ describe('SalesforceService', () => {
 
       await expect(getCustomersPromise).rejects.toBeInstanceOf(SalesforceException);
       await expect(getCustomersPromise).rejects.toThrow('Failed to get customers in Salesforce');
-      await expect(getCustomersPromise).rejects.toHaveProperty('innerError', axiosRequestError);
-    });
-  });
-
-  describe('createCustomer', () => {
-    const customerBasePath = '/sobjects/Account';
-    const expectedResponse = {
-      id: '1234asdf',
-      errors: null,
-      success: true,
-    };
-
-    const query: CreateCustomerDto = {
-      "Name": companyRegNo,
-      "Party_URN__c": null,
-      "D_B_Number__c": null,
-      "Company_Registration_Number__c": companyRegNo
-    };
-
-    const expectedHttpServicePostArgs: [string, body: CreateCustomerDto, object] = [customerBasePath, query, { headers: { 'Authorization': 'Bearer ' + expectedAccessToken } }];
-
-    it('sends a POST to the Salesforce /sobjects/Account endpoint with the specified request', async () => {
-      when(httpServicePost)
-        .calledWith(...expectedHttpServicePostArgs)
-        .mockReturnValueOnce(
-          of({
-            data: expectedResponse,
-            status: 201,
-            statusText: 'OK',
-            config: undefined,
-            headers: undefined,
-          }),
-        );
-      await service.createCustomer(query);
-
-      expect(getAccessTokenMethodMock).toHaveBeenCalledTimes(1);
-      expect(httpServicePost).toHaveBeenCalledTimes(1);
-      expect(httpServicePost).toHaveBeenCalledWith(...expectedHttpServicePostArgs);
-    });
-
-    it('throws a SalesforceException if the request to Salesforce fails', async () => {
-      const axiosRequestError = new AxiosError();
-      when(httpServicePost)
-        .calledWith(...expectedHttpServicePostArgs)
-        .mockReturnValueOnce(throwError(() => axiosRequestError));
-      const getCustomersPromise = service.createCustomer(query);
-
-      await expect(getCustomersPromise).rejects.toBeInstanceOf(SalesforceException);
-      await expect(getCustomersPromise).rejects.toThrow('Failed to create customer in Salesforce');
       await expect(getCustomersPromise).rejects.toHaveProperty('innerError', axiosRequestError);
     });
   });

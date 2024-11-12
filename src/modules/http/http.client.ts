@@ -30,7 +30,8 @@ export class HttpClient {
     body: RequestBody;
     onError: (error: Error) => ObservableInput<never>;
   }): Promise<AxiosResponse<ResponseBody>> {
-    return this.responseFrom({request: this.httpService.post<never>(path, body, { headers }),
+    return this.responseFrom({
+      request: this.httpService.post<never>(path, body, { headers }),
       onError
     });
   }

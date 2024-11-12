@@ -4,8 +4,6 @@ import { HttpClient } from '@ukef/modules/http/http.client';
 import { ConfigService } from '@nestjs/config';
 
 import { createWrapSalesforceHttpGetErrorCallback } from './wrap-salesforce-http-error-callback';
-import { CreateCustomerDto } from '../customers/dto/create-customer.dto';
-import { CreateCustomerSalesforceResponseDto } from './dto/create-customer-salesforce-response.dto';
 import { CompanyRegistrationNumberDto } from '../customers/dto/company-registration-number.dto';
 import { GetCustomersSalesforceResponse, GetCustomersSalesforceResponseItems } from '../salesforce/dto/get-customers-salesforce-response.dto';
 import { SalesforceConfig, KEY } from '../../config/salesforce.config';
@@ -56,23 +54,6 @@ export class SalesforceService {
     } else {
       return data.records;
     }
-  }
-
-  async createCustomer(createCustomerDto: CreateCustomerDto): Promise<CreateCustomerSalesforceResponseDto> {
-    const path = '/sobjects/Account'
-    const access_token = await this.getAccessToken();
-    const { data } = await this.httpClient.post<CreateCustomerDto, CreateCustomerSalesforceResponseDto>({
-      path,
-      body: createCustomerDto,
-      headers: {
-        'Authorization': 'Bearer ' + access_token,
-      },
-      onError: createWrapSalesforceHttpGetErrorCallback({
-        messageForUnknownError: `Failed to create customer in Salesforce`,
-        knownErrors: [customerAlreadyExistsSalesforceError()],
-      }),
-    });
-    return data;
   }
 
   private async getAccessToken(): Promise<string> {
