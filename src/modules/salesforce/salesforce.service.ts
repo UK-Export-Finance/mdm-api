@@ -7,7 +7,6 @@ import { createWrapSalesforceHttpGetErrorCallback } from './wrap-salesforce-http
 import { CompanyRegistrationNumberDto } from '../customers/dto/company-registration-number.dto';
 import { GetCustomersSalesforceResponse, GetCustomersSalesforceResponseItems } from '../salesforce/dto/get-customers-salesforce-response.dto';
 import { SalesforceConfig, KEY } from '../../config/salesforce.config';
-import { customerAlreadyExistsSalesforceError } from './known-errors';
 
 @Injectable()
 export class SalesforceService {
