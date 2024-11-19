@@ -48,11 +48,11 @@ describe('CustomerService', () => {
     const salesforceService = new SalesforceService(null, salesforceConfigService);
     salesforceService.getCustomers = salesforceServiceGetCustomers;
     salesforceService.createCustomer = salesforceServiceCreateCustomer;
-    
+
     numbersServiceCreate = jest.fn();
     const numbersService = new NumbersService(null, null)
     numbersService.create = numbersServiceCreate;
-    
+
     const dunAndBradstreetConfigService = new ConfigService();
     dunAndBradstreetConfigServiceGet = jest.fn().mockReturnValue({ key: 'TEST_KEY' });
     dunAndBradstreetConfigService.get = dunAndBradstreetConfigServiceGet;
@@ -82,14 +82,14 @@ describe('CustomerService', () => {
     const expectedSalesforceResponse: GetCustomersSalesforceResponseItems = [{
       Party_URN__c: CUSTOMERS.EXAMPLES.PARTYURN,
       Name: CUSTOMERS.EXAMPLES.NAME,
-      Id: 'TEST_SF_ID',
+      Id: 'TEST_SALESFORCE_ID',
       Company_Registration_Number__c: CUSTOMERS.EXAMPLES.COMPANYREG,
     }];
 
     const expectedResponse: GetCustomersSalesforceResponse = [{
       partyUrn: CUSTOMERS.EXAMPLES.PARTYURN,
       name: CUSTOMERS.EXAMPLES.NAME,
-      sfId: 'TEST_SF_ID',
+      sfId: 'TEST_SALESFORCE_ID',
       companyRegNo: CUSTOMERS.EXAMPLES.COMPANYREG,
     }];
 
@@ -109,16 +109,16 @@ describe('CustomerService', () => {
   });
 
   describe('createCustomer', () => {
-    const DTFSCustomerDto: DTFSCustomerDto = { companyRegistrationNumber: '12345678', companyName: 'TEST NAME'};
-    const salesforceCreateCustomerResponse: CreateCustomerSalesforceResponseDto = { 
-      id: 'customer-id', 
+    const DTFSCustomerDto: DTFSCustomerDto = { companyRegistrationNumber: '12345678', companyName: 'TEST NAME' };
+    const salesforceCreateCustomerResponse: CreateCustomerSalesforceResponseDto = {
+      id: 'customer-id',
       errors: null,
-      success: true 
+      success: true
     };
-    const createUkefIdResponse: UkefId[] = [{"maskedId": "TEST PARTY_URN", "type": null, "createdBy": null, "createdDatetime": null, "requestingSystem": null}];
+    const createUkefIdResponse: UkefId[] = [{ "maskedId": "TEST PARTY_URN", "type": null, "createdBy": null, "createdDatetime": null, "requestingSystem": null }];
     const dunAndBradstreetGetDunsNumberResponse: string = "TEST DUNS_NUMBER";
-    const createCustomerResponse: GetCustomersSalesforceResponse = [{"companyRegNo": "12345678", "name": "TEST NAME", "partyUrn": "TEST PARTY_URN", "sfId": "customer-id"}];
-    const createCustomerResponseWithNoPartyUrn: GetCustomersSalesforceResponse = [{"companyRegNo": "12345678", "name": "TEST NAME", "partyUrn": null, "sfId": "customer-id"}];
+    const createCustomerResponse: GetCustomersSalesforceResponse = [{ "companyRegNo": "12345678", "name": "TEST NAME", "partyUrn": "TEST PARTY_URN", "sfId": "customer-id" }];
+    const createCustomerResponseWithNoPartyUrn: GetCustomersSalesforceResponse = [{ "companyRegNo": "12345678", "name": "TEST NAME", "partyUrn": null, "sfId": "customer-id" }];
 
     it('creates a customer successfully and returns the response', async () => {
       when(salesforceServiceCreateCustomer).calledWith(expect.any(Object)).mockResolvedValueOnce(salesforceCreateCustomerResponse);

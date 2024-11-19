@@ -6,28 +6,28 @@ describe('salesforceConfig', () => {
   const configDirectlyFromEnvironmentVariables: { configPropertyName: keyof SalesforceConfig; environmentVariableName: string }[] = [
     {
       configPropertyName: 'baseUrl',
-      environmentVariableName: 'SF_INSTANCE_URL',
+      environmentVariableName: 'SALESFORCE_INSTANCE_URL',
     },
     {
       configPropertyName: 'clientId',
-      environmentVariableName: 'SF_CLIENT_ID',
+      environmentVariableName: 'SALESFORCE_CLIENT_ID',
     },
 
     {
       configPropertyName: 'clientSecret',
-      environmentVariableName: 'SF_CLIENT_SECRET',
+      environmentVariableName: 'SALESFORCE_CLIENT_SECRET',
     },
     {
       configPropertyName: 'username',
-      environmentVariableName: 'SF_USERNAME',
+      environmentVariableName: 'SALESFORCE_USERNAME',
     },
     {
       configPropertyName: 'password',
-      environmentVariableName: 'SF_PASSWORD',
+      environmentVariableName: 'SALESFORCE_PASSWORD',
     },
     {
       configPropertyName: 'accessUrl',
-      environmentVariableName: 'SF_ACCESS_URL',
+      environmentVariableName: 'SALESFORCE_ACCESS_URL',
     },
   ];
 
@@ -36,17 +36,17 @@ describe('salesforceConfig', () => {
     environmentVariableName: string;
     defaultConfigValue: number;
   }[] = [
-    {
-      configPropertyName: 'maxRedirects',
-      environmentVariableName: 'SF_MAX_REDIRECTS',
-      defaultConfigValue: 5,
-    },
-    {
-      configPropertyName: 'timeout',
-      environmentVariableName: 'SF_TIMEOUT',
-      defaultConfigValue: 30000, // in milliseconds
-    },
-  ];
+      {
+        configPropertyName: 'maxRedirects',
+        environmentVariableName: 'SALESFORCE_MAX_REDIRECTS',
+        defaultConfigValue: 5,
+      },
+      {
+        configPropertyName: 'timeout',
+        environmentVariableName: 'SALESFORCE_TIMEOUT',
+        defaultConfigValue: 30000, // in milliseconds
+      },
+    ];
 
   withEnvironmentVariableParsingUnitTests({
     configDirectlyFromEnvironmentVariables,

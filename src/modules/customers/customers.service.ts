@@ -66,7 +66,7 @@ export class CustomersService {
     let dunsNumber: string = null
     try {
       dunsNumber = await this.dunAndBradstreetService.getDunAndBradstreetNumberByRegistrationNumber(DTFSCustomerDto.companyRegistrationNumber)
-    } catch(error) { }
+    } catch (error) { }
 
     const createCustomerDto: CreateCustomerDto = {
       "Name": DTFSCustomerDto.companyName,
