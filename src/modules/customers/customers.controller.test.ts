@@ -115,7 +115,7 @@ describe('CustomersController', () => {
     const expectedResponse: GetCustomersSalesforceResponse = [{
       partyUrn: CUSTOMERS.EXAMPLES.PARTYURN,
       name: CUSTOMERS.EXAMPLES.NAME,
-      sfId: 'TEST_SF_ID',
+      sfId: 'TEST_SALESFORCE_ID',
       companyRegNo: CUSTOMERS.EXAMPLES.COMPANYREG,
     }];
 
