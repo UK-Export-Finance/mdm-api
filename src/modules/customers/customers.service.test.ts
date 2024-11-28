@@ -13,6 +13,7 @@ import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-cu
 import { UkefId } from '../numbers/entities/ukef-id.entity';
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { GetCustomersInformaticaResponseItem } from '../informatica/dto/get-customers-informatica-response.dto';
+import { InformaticaException } from '../informatica/exception/informatica.exception';
 
 jest.mock('@ukef/modules/informatica/informatica.service');
 
@@ -83,8 +84,25 @@ describe('CustomerService', () => {
     const createCustomerResponse: GetCustomersInformaticaResponseItem[] = [{ "companyRegNo": "12345678", "name": "TEST NAME", "partyUrn": "TEST PARTY_URN", "sfId": "customer-id", "type": null, "subtype": null, "isLegacyRecord": false }];
     const createCustomerResponseWithNoPartyUrn: GetCustomersInformaticaResponseItem[] = [{ "companyRegNo": "12345678", "name": "TEST NAME", "partyUrn": null, "sfId": "customer-id", "type": null, "subtype": null, "isLegacyRecord": false }];
 
+    describe('when the customer does exist', () => {
+      const { getCustomersResponse } = new GetCustomersGenerator(valueGenerator).generate({ numberToGenerate: 1 });
+
+      it('returns the existing customer', async () => {
+        when(informaticaServiceGetCustomers).calledWith({
+          companyreg: DTFSCustomerDto.companyRegistrationNumber
+        }).mockResolvedValueOnce(getCustomersResponse[0]);
+
+        const response = await service.getOrCreateCustomer(DTFSCustomerDto);
+
+        expect(response).toEqual(getCustomersResponse[0]);
+        expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(0);
+        expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(0);
+        expect(numbersServiceCreate).toHaveBeenCalledTimes(0);
+      });
+    })
+
     describe('when the customer does not exist', () => {
-      it('creates a customer successfully and returns the response', async () => {
+      it('creates a customer successfully and returns the response if there are no errors', async () => {
         when(salesforceServiceCreateCustomer).calledWith(expect.any(Object)).mockResolvedValueOnce(salesforceCreateCustomerResponse);
         when(numbersServiceCreate).calledWith(expect.any(Object)).mockResolvedValueOnce(createUkefIdResponse);
         when(dunAndBradstreetServiceGetDunsNumber).calledWith(expect.any(String)).mockResolvedValueOnce(dunAndBradstreetGetDunsNumberResponse);
@@ -154,6 +172,32 @@ describe('CustomerService', () => {
         await expect(service.getOrCreateCustomer(DTFSCustomerDto)).rejects.toThrow('Internal Server Error');
         expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(1);
         expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(0);
+        expect(numbersServiceCreate).toHaveBeenCalledTimes(0);
+      });
+    });
+
+    describe('when the Informatica service returns an unexpected response', () => {
+      it('throws an error if there is an InformaticaException', async () => {
+        when(informaticaServiceGetCustomers).calledWith({
+          companyreg: DTFSCustomerDto.companyRegistrationNumber
+        }).mockRejectedValueOnce(new InformaticaException('Failed to get customers in Informatica'));
+
+        await expect(service.getOrCreateCustomer(DTFSCustomerDto)).rejects.toThrow('Failed to get customers in Informatica');
+
+        expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(0);
+        expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(0);
+        expect(numbersServiceCreate).toHaveBeenCalledTimes(0);
+      });
+
+      it('throws an error if the Informatica response does not contain valid customers', async () => {
+        when(informaticaServiceGetCustomers).calledWith({
+          companyreg: DTFSCustomerDto.companyRegistrationNumber
+        }).mockResolvedValueOnce([]);
+
+        await expect(service.getOrCreateCustomer(DTFSCustomerDto)).rejects.toThrow('Internal Server Error');
+
+        expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(0);
+        expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(0);
         expect(numbersServiceCreate).toHaveBeenCalledTimes(0);
       });
     })

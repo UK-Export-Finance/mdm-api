@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { GetCustomersInformaticaQueryDto } from '@ukef/modules/informatica/dto/get-customers-informatica-query.dto';
 import { InformaticaService } from '@ukef/modules/informatica/informatica.service';
 import { SalesforceService } from '@ukef/modules/salesforce/salesforce.service';
@@ -70,6 +70,8 @@ export class CustomersService {
       //       this.createCustomerByURNAndDUNS(DTFSCustomerDto, partyUrn, dunsNumber)
         //     } catch (error) { }
         //   }
+      } else {
+        throw new InternalServerErrorException()
       }
     } catch (error) {
       if (error instanceof NotFoundException) {
@@ -106,6 +108,8 @@ export class CustomersService {
         } catch (error) {
           throw error;
         }
+      } else {
+        throw error;
       }
     }
   }
