@@ -5,7 +5,6 @@ import { GetCustomersInformaticaQueryDto } from '../informatica/dto/get-customer
 import { CustomersService } from './customers.service';
 import { GetCustomersQueryDto } from './dto/get-customers-query.dto';
 import { GetCustomersResponse, GetCustomersResponseItem } from './dto/get-customers-response.dto';
-import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
 import { GetCustomersSalesforceResponse, GetCustomersSalesforceResponseItem } from './dto/get-customers-salesforce-response.dto';
 import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
 
@@ -37,31 +36,9 @@ export class CustomersController {
     return this.customersService.getCustomers(backendQuery);
   }
 
-  @Get('salesforce')
-  @ApiOperation({
-    summary: 'Get customers directly from Salesforce',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Customers matching search parameters',
-    type: [GetCustomersSalesforceResponseItem],
-  })
-  @ApiNotFoundResponse({
-    description: 'Customer not found',
-  })
-  @ApiBadRequestResponse({
-    description: 'Invalid Company Registration Number',
-  })
-  @ApiUnauthorizedResponse({
-    description: 'Failed to get access token'
-  })
-  getCustomersSalesforce(@Query() companyRegistrationNumber: CompanyRegistrationNumberDto): Promise<GetCustomersSalesforceResponse> {
-    return this.customersService.getCustomersSalesforce(companyRegistrationNumber);
-  }
-
   @Post()
   @ApiOperation({
-    summary: 'Create a new customer',
+    summary: 'Get a customer in Salesforce, or create one if it does not exist',
   })
   @ApiCreatedResponse({
     description: 'Customer successfully created',
@@ -74,7 +51,7 @@ export class CustomersController {
     description: 'Failed to get access token'
   })
   createCustomer(@Body() DTFSCustomerDto: DTFSCustomerDto): Promise<GetCustomersSalesforceResponse> {
-    return this.customersService.createCustomer(DTFSCustomerDto);
+    return this.customersService.getOrCreateCustomer(DTFSCustomerDto);
   }
 
   private ensureOneIsNotEmpty(...args) {
