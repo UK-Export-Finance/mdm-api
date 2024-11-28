@@ -59,12 +59,17 @@ export class CustomersService {
         );
         // } else {
         //   if (existingCustomersInInformatica[0]?.isLegacyRecord === true && existingCustomersInInformatica[0]?.partyUrn) {
+      //     let dunsNumber: string = null
+      //     try {
+      //       dunsNumber = await this.dunAndBradstreetService.getDunAndBradstreetNumberByRegistrationNumber(DTFSCustomerDto.companyRegistrationNumber)
+      //     } catch (error) {
+      //       throw error;
+      //     }
         //     try {
         //       const partyUrn = existingCustomersInInformatica[0].partyUrn
-        //       this.createCustomerByURN(DTFSCustomerDto, partyUrn)
+      //       this.createCustomerByURNAndDUNS(DTFSCustomerDto, partyUrn, dunsNumber)
         //     } catch (error) { }
         //   }
-        // }
       }
     } catch (error) {
       if (error instanceof NotFoundException) {
@@ -74,10 +79,19 @@ export class CustomersService {
           requestingSystem: "MDM"
         }]
         // TODO: replace this with a call to Salesforce's NUMGEN table once that's in place (or just remove altogether if SF can generate a PartyURN on creation quickly enough to be returned in the subsqeuent GET)
+        let dunsNumber: string = null
+        try {
+          dunsNumber = await this.dunAndBradstreetService.getDunAndBradstreetNumberByRegistrationNumber(DTFSCustomerDto.companyRegistrationNumber)
+        } catch (error) {
+          throw error;
+        }
+        let partyUrn: string = null;
         try {
           const numbersServiceResponse: UkefId[] = await this.numbersService.create(createUkefIdDto)
-          const partyUrn = numbersServiceResponse[0].maskedId
-          const createdCustomerResponse = await this.createCustomerByURN(DTFSCustomerDto, partyUrn)
+          partyUrn = numbersServiceResponse[0].maskedId
+        } catch (error) { }
+        try {
+          const createdCustomerResponse = await this.createCustomerByURNAndDUNS(DTFSCustomerDto, partyUrn, dunsNumber)
           return createdCustomerResponse.map(
             (createdCustomer): GetCustomersResponseItem => ({
               partyUrn: createdCustomer.partyUrn,
@@ -89,26 +103,22 @@ export class CustomersService {
               isLegacyRecord: false,
             })
           )
-        } catch (error) { }
+        } catch (error) {
+          throw error;
+        }
       }
     }
   }
 
-  private async createCustomerByURN(DTFSCustomerDto: DTFSCustomerDto, partyUrn: string): Promise<GetCustomersSalesforceResponse> {
-    let dunsNumber: string = null
-    try {
-      dunsNumber = await this.dunAndBradstreetService.getDunAndBradstreetNumberByRegistrationNumber(DTFSCustomerDto.companyRegistrationNumber)
-    } catch (error) { }
-
+  private async createCustomerByURNAndDUNS(DTFSCustomerDto: DTFSCustomerDto, partyUrn: string, dunsNumber: string): Promise<GetCustomersSalesforceResponse> {
     const createCustomerDto: CreateCustomerDto = {
       "Name": DTFSCustomerDto.companyName,
       "Party_URN__c": partyUrn,
       "D_B_Number__c": dunsNumber,
       "Company_Registration_Number__c": DTFSCustomerDto.companyRegistrationNumber,
     }
-
+    try {
     const createCustomerResponse: CreateCustomerSalesforceResponseDto = await this.salesforceService.createCustomer(createCustomerDto)
-
     const createdCustomerResponse: GetCustomersSalesforceResponse = [{
       "partyUrn": partyUrn,
       "name": DTFSCustomerDto.companyName,
@@ -116,5 +126,8 @@ export class CustomersService {
       "companyRegNo": DTFSCustomerDto.companyRegistrationNumber,
     }]
     return createdCustomerResponse
+    } catch (error) {
+      throw error;
+    }
   }
 }
