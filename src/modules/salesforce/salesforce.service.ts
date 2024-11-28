@@ -1,13 +1,11 @@
 import { HttpService } from '@nestjs/axios';
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { HttpClient } from '@ukef/modules/http/http.client';
 import { ConfigService } from '@nestjs/config';
 
 import { createWrapSalesforceHttpGetErrorCallback } from './wrap-salesforce-http-error-callback';
 import { CreateCustomerDto } from '../customers/dto/create-customer.dto';
 import { CreateCustomerSalesforceResponseDto } from './dto/create-customer-salesforce-response.dto';
-import { CompanyRegistrationNumberDto } from '../customers/dto/company-registration-number.dto';
-import { GetCustomersSalesforceResponse, GetCustomersSalesforceResponseItems } from '../salesforce/dto/get-customers-salesforce-response.dto';
 import { SalesforceConfig, KEY } from '../../config/salesforce.config';
 import { customerAlreadyExistsSalesforceError } from './known-errors';
 
@@ -29,33 +27,6 @@ export class SalesforceService {
     this.access_url = accessUrl;
 
     this.httpClient = new HttpClient(httpService);
-  }
-
-  async getCustomers(companyRegistrationNumberDto: CompanyRegistrationNumberDto): Promise<GetCustomersSalesforceResponseItems> {
-    const isValid = /^[a-zA-Z0-9]{1,8}$/.test(companyRegistrationNumberDto.companyRegistrationNumber)
-    if (!isValid) {
-      throw new BadRequestException('Invalid Company Registration Number');
-    }
-
-    const encodedCompanyRegistrationNumber = encodeURIComponent(companyRegistrationNumberDto.companyRegistrationNumber);
-    const path = `/query/?q=SELECT+FIELDS(ALL)+FROM+Account+WHERE+Company_Registration_Number__c='${encodedCompanyRegistrationNumber}'+LIMIT+200`;
-
-    const access_token = await this.getAccessToken();
-    const { data } = await this.httpClient.get<GetCustomersSalesforceResponse>({
-      path,
-      headers: {
-        'Authorization': 'Bearer ' + access_token,
-      },
-      onError: createWrapSalesforceHttpGetErrorCallback({
-        messageForUnknownError: `Failed to get customers in Salesforce`,
-        knownErrors: [],
-      }),
-    });
-    if (data.totalSize === 0) {
-      throw new NotFoundException('Customer not found');
-    } else {
-      return data.records;
-    }
   }
 
   async createCustomer(createCustomerDto: CreateCustomerDto): Promise<CreateCustomerSalesforceResponseDto> {
