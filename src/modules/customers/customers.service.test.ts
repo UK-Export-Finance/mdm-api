@@ -8,12 +8,9 @@ import { resetAllWhenMocks, when } from 'jest-when';
 import { ConfigService } from '@nestjs/config';
 import { CustomersService } from './customers.service';
 
-import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
 import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
 import { GetCustomersSalesforceResponse } from './dto/get-customers-salesforce-response.dto';
 import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-customer-salesforce-response.dto';
-import { CUSTOMERS } from '@ukef/constants';
-import { GetCustomersSalesforceResponseItems } from '../salesforce/dto/get-customers-salesforce-response.dto';
 import { UkefId } from '../numbers/entities/ukef-id.entity';
 import { InternalServerErrorException } from '@nestjs/common';
 
@@ -43,10 +40,8 @@ describe('CustomerService', () => {
     const salesforceConfigService = new ConfigService();
     salesforceConfigServiceGet = jest.fn().mockReturnValue({ clientId: 'TEST_CLIENT_ID', clientSecret: 'TEST_CLIENT_SECRET', username: 'TEST_USERNAME', password: 'TEST_PASSWORD', accessUrl: 'TEST_ACCESS_URL' });
     salesforceConfigService.get = salesforceConfigServiceGet;
-    salesforceServiceGetCustomers = jest.fn();
     salesforceServiceCreateCustomer = jest.fn();
     const salesforceService = new SalesforceService(null, salesforceConfigService);
-    salesforceService.getCustomers = salesforceServiceGetCustomers;
     salesforceService.createCustomer = salesforceServiceCreateCustomer;
 
     numbersServiceCreate = jest.fn();
@@ -77,38 +72,7 @@ describe('CustomerService', () => {
     });
   });
 
-  describe('getCustomersSalesforce', () => {
-    const companyRegNoDto: CompanyRegistrationNumberDto = { companyRegistrationNumber: CUSTOMERS.EXAMPLES.PARTYURN };
-    const expectedSalesforceResponse: GetCustomersSalesforceResponseItems = [{
-      Party_URN__c: CUSTOMERS.EXAMPLES.PARTYURN,
-      Name: CUSTOMERS.EXAMPLES.NAME,
-      Id: 'TEST_SALESFORCE_ID',
-      Company_Registration_Number__c: CUSTOMERS.EXAMPLES.COMPANYREG,
-    }];
-
-    const expectedResponse: GetCustomersSalesforceResponse = [{
-      partyUrn: CUSTOMERS.EXAMPLES.PARTYURN,
-      name: CUSTOMERS.EXAMPLES.NAME,
-      sfId: 'TEST_SALESFORCE_ID',
-      companyRegNo: CUSTOMERS.EXAMPLES.COMPANYREG,
-    }];
-
-    it('returns customers directly from Salesforce', async () => {
-      when(salesforceServiceGetCustomers).calledWith(companyRegNoDto).mockResolvedValueOnce(expectedSalesforceResponse);
-
-      const response = await service.getCustomersSalesforce(companyRegNoDto);
-
-      expect(response).toEqual(expectedResponse);
-    });
-
-    it('throws an error if Salesforce service fails', async () => {
-      when(salesforceServiceGetCustomers).calledWith(companyRegNoDto).mockRejectedValueOnce(new Error('Service Error'));
-
-      await expect(service.getCustomersSalesforce(companyRegNoDto)).rejects.toThrow('Service Error');
-    });
-  });
-
-  describe('createCustomer', () => {
+  describe('getOrCreateCustomer', () => {
     const DTFSCustomerDto: DTFSCustomerDto = { companyRegistrationNumber: '12345678', companyName: 'TEST NAME' };
     const salesforceCreateCustomerResponse: CreateCustomerSalesforceResponseDto = {
       id: 'customer-id',
@@ -125,7 +89,7 @@ describe('CustomerService', () => {
       when(numbersServiceCreate).calledWith(expect.any(Object)).mockResolvedValueOnce(createUkefIdResponse);
       when(dunAndBradstreetServiceGetDunsNumber).calledWith(expect.any(String)).mockResolvedValueOnce(dunAndBradstreetGetDunsNumberResponse);
 
-      const response = await service.createCustomer(DTFSCustomerDto);
+      const response = await service.getOrCreateCustomer(DTFSCustomerDto);
 
       expect(response).toEqual(createCustomerResponse);
       expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(expect.objectContaining({
@@ -141,7 +105,7 @@ describe('CustomerService', () => {
       when(numbersServiceCreate).calledWith(expect.any(Object)).mockResolvedValueOnce(createUkefIdResponse);
       when(dunAndBradstreetServiceGetDunsNumber).calledWith(expect.any(String)).mockResolvedValueOnce(dunAndBradstreetGetDunsNumberResponse);
 
-      await expect(service.createCustomer(DTFSCustomerDto)).rejects.toThrow('Service Error');
+      await expect(service.getOrCreateCustomer(DTFSCustomerDto)).rejects.toThrow('Service Error');
     });
 
     it('continues creating customer with null PartyURN if numbers service fails to create a party urn', async () => {
@@ -149,7 +113,7 @@ describe('CustomerService', () => {
       when(numbersServiceCreate).calledWith(expect.any(Object)).mockRejectedValueOnce(new InternalServerErrorException());
       when(dunAndBradstreetServiceGetDunsNumber).calledWith(expect.any(String)).mockResolvedValueOnce(dunAndBradstreetGetDunsNumberResponse);
 
-      const response = await service.createCustomer(DTFSCustomerDto);
+      const response = await service.getOrCreateCustomer(DTFSCustomerDto);
 
       expect(response).toEqual(createCustomerResponseWithNoPartyUrn);
       expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(expect.objectContaining({
@@ -165,7 +129,7 @@ describe('CustomerService', () => {
       when(numbersServiceCreate).calledWith(expect.any(Object)).mockResolvedValueOnce(createUkefIdResponse);
       when(dunAndBradstreetServiceGetDunsNumber).calledWith(expect.any(String)).mockRejectedValueOnce(new InternalServerErrorException());
 
-      const response = await service.createCustomer(DTFSCustomerDto);
+      const response = await service.getOrCreateCustomer(DTFSCustomerDto);
 
       expect(response).toEqual(createCustomerResponse);
       expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(expect.objectContaining({
