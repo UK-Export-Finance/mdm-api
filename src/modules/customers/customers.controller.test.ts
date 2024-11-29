@@ -1,5 +1,5 @@
 import { BadRequestException } from '@nestjs/common';
-import { COMPANIES, CUSTOMERS, ENUMS } from '@ukef/constants';
+import { CUSTOMERS, ENUMS } from '@ukef/constants';
 import { GetCustomersGenerator } from '@ukef-test/support/generator/get-customers-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { when } from 'jest-when';
