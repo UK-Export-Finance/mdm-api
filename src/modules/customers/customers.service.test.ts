@@ -83,22 +83,129 @@ describe('CustomerService', () => {
     const dunAndBradstreetGetDunsNumberResponse: string = "TEST DUNS_NUMBER";
     const createCustomerResponse: GetCustomersInformaticaResponseItem[] = [{ "companyRegNo": "12345678", "name": "TEST NAME", "partyUrn": "TEST PARTY_URN", "sfId": "customer-id", "type": null, "subtype": null, "isLegacyRecord": false }];
     const createCustomerResponseWithNoPartyUrn: GetCustomersInformaticaResponseItem[] = [{ "companyRegNo": "12345678", "name": "TEST NAME", "partyUrn": null, "sfId": "customer-id", "type": null, "subtype": null, "isLegacyRecord": false }];
+    const createCustomerResponseWithLegacyUrn: GetCustomersInformaticaResponseItem[] = [{ "companyRegNo": "12345678", "name": "TEST NAME", "partyUrn": "SOME_LEGACY_URN", "sfId": "customer-id", "type": null, "subtype": null, "isLegacyRecord": true }];
 
     describe('when the customer does exist', () => {
-      const { getCustomersResponse } = new GetCustomersGenerator(valueGenerator).generate({ numberToGenerate: 1 });
+      describe('when the customer is non-legacy', () => {
+        const getCustomersResponse = [
+          [
+            {
+              partyUrn: '00312345',
+              name: 'TEST NAME',
+              sfId: 'customer-id',
+              companyRegNo: '12345678',
+              type: null,
+              subtype: null,
+              isLegacyRecord: false
+            }
+          ]
+        ]
 
-      it('returns the existing customer', async () => {
-        when(informaticaServiceGetCustomers).calledWith({
-          companyreg: DTFSCustomerDto.companyRegistrationNumber
-        }).mockResolvedValueOnce(getCustomersResponse[0]);
+        it('returns the existing customer', async () => {
+          when(informaticaServiceGetCustomers).calledWith({
+            companyreg: DTFSCustomerDto.companyRegistrationNumber
+          }).mockResolvedValueOnce(getCustomersResponse[0]);
+          console.log(getCustomersResponse)
 
-        const response = await service.getOrCreateCustomer(DTFSCustomerDto);
+          const response = await service.getOrCreateCustomer(DTFSCustomerDto);
 
-        expect(response).toEqual(getCustomersResponse[0]);
-        expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(0);
-        expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(0);
-        expect(numbersServiceCreate).toHaveBeenCalledTimes(0);
-      });
+          expect(response).toEqual(getCustomersResponse[0]);
+          expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(0);
+          expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(0);
+          expect(numbersServiceCreate).toHaveBeenCalledTimes(0);
+        });
+      })
+
+      describe('when the customer is legacy', () => {
+        const getCustomersResponse = [
+          [
+            {
+              partyUrn: 'SOME_LEGACY_URN',
+              name: 'TEST NAME',
+              sfId: 'customer-id',
+              companyRegNo: '12345678',
+              type: null,
+              subtype: null,
+              isLegacyRecord: true
+            }
+          ]
+        ]
+
+        it('creates a new customer using the legacy URN and returns the response if there are no errors', async () => {
+          when(salesforceServiceCreateCustomer).calledWith(expect.any(Object)).mockResolvedValueOnce(salesforceCreateCustomerResponse);
+          when(numbersServiceCreate).calledWith(expect.any(Object)).mockResolvedValueOnce(createUkefIdResponse);
+          when(dunAndBradstreetServiceGetDunsNumber).calledWith(expect.any(String)).mockResolvedValueOnce(dunAndBradstreetGetDunsNumberResponse);
+          when(informaticaServiceGetCustomers).calledWith({
+            companyreg: DTFSCustomerDto.companyRegistrationNumber
+          }).mockResolvedValueOnce(getCustomersResponse[0]);
+          console.log(getCustomersResponse)
+
+          const response = await service.getOrCreateCustomer(DTFSCustomerDto);
+
+          expect(response).toEqual(createCustomerResponseWithLegacyUrn);
+          expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(expect.objectContaining({
+            Name: DTFSCustomerDto.companyName,
+            D_B_Number__c: "TEST DUNS_NUMBER",
+            Party_URN__c: "SOME_LEGACY_URN",
+            Company_Registration_Number__c: DTFSCustomerDto.companyRegistrationNumber,
+          }));
+
+          expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(1);
+          expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(1);
+          expect(numbersServiceCreate).toHaveBeenCalledTimes(0);
+        });
+
+        it('throws an error if Salesforce service fails to create a customer', async () => {
+          when(salesforceServiceCreateCustomer).calledWith(expect.any(Object)).mockRejectedValueOnce(new Error('Service Error'));
+          when(numbersServiceCreate).calledWith(expect.any(Object)).mockResolvedValueOnce(createUkefIdResponse);
+          when(dunAndBradstreetServiceGetDunsNumber).calledWith(expect.any(String)).mockResolvedValueOnce(dunAndBradstreetGetDunsNumberResponse);
+          when(informaticaServiceGetCustomers).calledWith({
+            companyreg: DTFSCustomerDto.companyRegistrationNumber
+          }).mockRejectedValueOnce(new NotFoundException('Customer not found.'));
+
+          await expect(service.getOrCreateCustomer(DTFSCustomerDto)).rejects.toThrow('Service Error');
+          expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(1);
+          expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(1);
+          expect(numbersServiceCreate).toHaveBeenCalledTimes(1);
+        });
+
+        it('continues creating customer with null PartyURN if numbers service fails to create a party urn', async () => {
+          when(salesforceServiceCreateCustomer).calledWith(expect.any(Object)).mockResolvedValueOnce(salesforceCreateCustomerResponse);
+          when(numbersServiceCreate).calledWith(expect.any(Object)).mockRejectedValueOnce(new InternalServerErrorException());
+          when(dunAndBradstreetServiceGetDunsNumber).calledWith(expect.any(String)).mockResolvedValueOnce(dunAndBradstreetGetDunsNumberResponse);
+          when(informaticaServiceGetCustomers).calledWith({
+            companyreg: DTFSCustomerDto.companyRegistrationNumber
+          }).mockRejectedValueOnce(new NotFoundException('Customer not found.'));
+
+          const response = await service.getOrCreateCustomer(DTFSCustomerDto);
+
+          expect(response).toEqual(createCustomerResponseWithNoPartyUrn);
+          expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(expect.objectContaining({
+            Name: DTFSCustomerDto.companyName,
+            D_B_Number__c: "TEST DUNS_NUMBER",
+            Party_URN__c: null,
+            Company_Registration_Number__c: DTFSCustomerDto.companyRegistrationNumber,
+          }));
+          expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(1);
+          expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(1);
+          expect(numbersServiceCreate).toHaveBeenCalledTimes(1);
+        });
+
+        it('throws an error if Dun and Bradstreet service fails to return a DUNS number and does not call further services', async () => {
+          when(salesforceServiceCreateCustomer).calledWith(expect.any(Object)).mockResolvedValueOnce(salesforceCreateCustomerResponse);
+          when(numbersServiceCreate).calledWith(expect.any(Object)).mockResolvedValueOnce(createUkefIdResponse);
+          when(dunAndBradstreetServiceGetDunsNumber).calledWith(expect.any(String)).mockRejectedValueOnce(new InternalServerErrorException());
+          when(informaticaServiceGetCustomers).calledWith({
+            companyreg: DTFSCustomerDto.companyRegistrationNumber
+          }).mockRejectedValueOnce(new NotFoundException('Customer not found.'));
+
+
+          await expect(service.getOrCreateCustomer(DTFSCustomerDto)).rejects.toThrow('Internal Server Error');
+          expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(1);
+          expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(0);
+          expect(numbersServiceCreate).toHaveBeenCalledTimes(0);
+        });
+      })
     })
 
     describe('when the customer does not exist', () => {
@@ -160,7 +267,7 @@ describe('CustomerService', () => {
         expect(numbersServiceCreate).toHaveBeenCalledTimes(1);
       });
 
-      it('throw an error if Dun and Bradstreet service fails to return a DUNS number and does not call further services', async () => {
+      it('throws an error if Dun and Bradstreet service fails to return a DUNS number and does not call further services', async () => {
         when(salesforceServiceCreateCustomer).calledWith(expect.any(Object)).mockResolvedValueOnce(salesforceCreateCustomerResponse);
         when(numbersServiceCreate).calledWith(expect.any(Object)).mockResolvedValueOnce(createUkefIdResponse);
         when(dunAndBradstreetServiceGetDunsNumber).calledWith(expect.any(String)).mockRejectedValueOnce(new InternalServerErrorException());
