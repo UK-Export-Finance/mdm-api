@@ -45,31 +45,33 @@ export class CustomersService {
     try {
       const existingCustomersInInformatica = await this.informaticaService.getCustomers(backendQuery);
       if (existingCustomersInInformatica?.[0]) {
-        // if (existingCustomersInInformatica[0]?.isLegacyRecord === false) {
-        return existingCustomersInInformatica.map(
-          (customerInInformatica): GetCustomersResponseItem => ({
-            partyUrn: customerInInformatica.partyUrn,
-            name: customerInInformatica.name,
-            sfId: customerInInformatica.sfId,
-            companyRegNo: customerInInformatica.companyRegNo,
-            type: customerInInformatica.type,
-            subtype: customerInInformatica.subtype,
-            isLegacyRecord: customerInInformatica.isLegacyRecord,
-          })
-        );
-        // } else {
-        //   if (existingCustomersInInformatica[0]?.isLegacyRecord === true && existingCustomersInInformatica[0]?.partyUrn) {
-      //     let dunsNumber: string = null
-      //     try {
-      //       dunsNumber = await this.dunAndBradstreetService.getDunAndBradstreetNumberByRegistrationNumber(DTFSCustomerDto.companyRegistrationNumber)
-      //     } catch (error) {
-      //       throw error;
-      //     }
-        //     try {
-        //       const partyUrn = existingCustomersInInformatica[0].partyUrn
-      //       this.createCustomerByURNAndDUNS(DTFSCustomerDto, partyUrn, dunsNumber)
-        //     } catch (error) { }
-        //   }
+        if (existingCustomersInInformatica[0]?.isLegacyRecord === false) {
+          return existingCustomersInInformatica.map(
+            (customerInInformatica): GetCustomersResponseItem => ({
+              partyUrn: customerInInformatica.partyUrn,
+              name: customerInInformatica.name,
+              sfId: customerInInformatica.sfId,
+              companyRegNo: customerInInformatica.companyRegNo,
+              type: customerInInformatica.type,
+              subtype: customerInInformatica.subtype,
+              isLegacyRecord: customerInInformatica.isLegacyRecord,
+            })
+          );
+        } else if (existingCustomersInInformatica[0]?.isLegacyRecord === true && existingCustomersInInformatica[0]?.partyUrn) {
+          let dunsNumber: string = null
+          try {
+            dunsNumber = await this.dunAndBradstreetService.getDunAndBradstreetNumberByRegistrationNumber(DTFSCustomerDto.companyRegistrationNumber)
+          } catch (error) {
+            throw error;
+          }
+          try {
+            const partyUrn = existingCustomersInInformatica[0].partyUrn
+            const isLegacyRecord = true;
+            return await this.createCustomerByURNAndDUNS(DTFSCustomerDto, partyUrn, dunsNumber, isLegacyRecord)
+          } catch (error) {
+            throw error;
+          }
+        }
       } else {
         throw new InternalServerErrorException()
       }
@@ -93,18 +95,8 @@ export class CustomersService {
           partyUrn = numbersServiceResponse[0].maskedId
         } catch (error) { }
         try {
-          const createdCustomerResponse = await this.createCustomerByURNAndDUNS(DTFSCustomerDto, partyUrn, dunsNumber)
-          return createdCustomerResponse.map(
-            (createdCustomer): GetCustomersResponseItem => ({
-              partyUrn: createdCustomer.partyUrn,
-              name: createdCustomer.name,
-              sfId: createdCustomer.sfId,
-              companyRegNo: createdCustomer.companyRegNo,
-              type: null,
-              subtype: null,
-              isLegacyRecord: false,
-            })
-          )
+          const isLegacyRecord = false;
+          return this.createCustomerByURNAndDUNS(DTFSCustomerDto, partyUrn, dunsNumber, isLegacyRecord)
         } catch (error) {
           throw error;
         }
@@ -114,7 +106,7 @@ export class CustomersService {
     }
   }
 
-  private async createCustomerByURNAndDUNS(DTFSCustomerDto: DTFSCustomerDto, partyUrn: string, dunsNumber: string): Promise<GetCustomersSalesforceResponse> {
+  private async createCustomerByURNAndDUNS(DTFSCustomerDto: DTFSCustomerDto, partyUrn: string, dunsNumber: string, isLegacyRecord: boolean): Promise<GetCustomersResponse> {
     const createCustomerDto: CreateCustomerDto = {
       "Name": DTFSCustomerDto.companyName,
       "Party_URN__c": partyUrn,
@@ -122,14 +114,23 @@ export class CustomersService {
       "Company_Registration_Number__c": DTFSCustomerDto.companyRegistrationNumber,
     }
     try {
-    const createCustomerResponse: CreateCustomerSalesforceResponseDto = await this.salesforceService.createCustomer(createCustomerDto)
-    const createdCustomerResponse: GetCustomersSalesforceResponse = [{
-      "partyUrn": partyUrn,
-      "name": DTFSCustomerDto.companyName,
-      "sfId": createCustomerResponse?.success ? createCustomerResponse.id : null,
-      "companyRegNo": DTFSCustomerDto.companyRegistrationNumber,
-    }]
-    return createdCustomerResponse
+      const createCustomerResponse: CreateCustomerSalesforceResponseDto = await this.salesforceService.createCustomer(createCustomerDto)
+      const createdCustomerResponse: GetCustomersSalesforceResponse = [{
+        "partyUrn": partyUrn,
+        "name": DTFSCustomerDto.companyName,
+        "sfId": createCustomerResponse?.success ? createCustomerResponse.id : null,
+        "companyRegNo": DTFSCustomerDto.companyRegistrationNumber,
+      }]
+      return createdCustomerResponse.map(
+        (createdCustomer): GetCustomersResponseItem => ({
+          partyUrn: createdCustomer.partyUrn,
+          name: createdCustomer.name,
+          sfId: createdCustomer.sfId,
+          companyRegNo: createdCustomer.companyRegNo,
+          type: null,
+          subtype: null,
+          isLegacyRecord: isLegacyRecord,
+        }));
     } catch (error) {
       throw error;
     }
