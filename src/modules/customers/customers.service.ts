@@ -82,7 +82,7 @@ export class CustomersService {
           createdBy: "DTFS Automated Customer Creation User",
           requestingSystem: "MDM"
         }]
-        // TODO: replace this with a call to Salesforce's NUMGEN table once that's in place (or just remove altogether if SF can generate a PartyURN on creation quickly enough to be returned in the subsqeuent GET)
+        // TODO: replace this with a call to Salesforce's NUMGEN table once that's in place
         let dunsNumber: string = null
         try {
           dunsNumber = await this.dunAndBradstreetService.getDunAndBradstreetNumberByRegistrationNumber(DTFSCustomerDto.companyRegistrationNumber)
