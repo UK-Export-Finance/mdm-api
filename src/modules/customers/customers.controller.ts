@@ -5,7 +5,6 @@ import { GetCustomersInformaticaQueryDto } from '../informatica/dto/get-customer
 import { CustomersService } from './customers.service';
 import { GetCustomersQueryDto } from './dto/get-customers-query.dto';
 import { GetCustomersResponse, GetCustomersResponseItem } from './dto/get-customers-response.dto';
-import { GetCustomersSalesforceResponse, GetCustomersSalesforceResponseItem } from './dto/get-customers-salesforce-response.dto';
 import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
 
 @ApiTags('customers')
@@ -42,15 +41,15 @@ export class CustomersController {
   })
   @ApiCreatedResponse({
     description: 'Customer successfully created',
-    type: [GetCustomersSalesforceResponseItem],
+    type: [GetCustomersResponseItem],
   })
   @ApiBadRequestResponse({
-    description: 'This customer already exists in Salesforce',
+    description: 'Failed to create customer as a duplicate record without a company registration number exists',
   })
   @ApiUnauthorizedResponse({
     description: 'Failed to get access token'
   })
-  getOrCreateCustomer(@Body() DTFSCustomerDto: DTFSCustomerDto): Promise<GetCustomersSalesforceResponse> {
+  getOrCreateCustomer(@Body() DTFSCustomerDto: DTFSCustomerDto): Promise<GetCustomersResponse> {
     return this.customersService.getOrCreateCustomer(DTFSCustomerDto);
   }
 

@@ -8,6 +8,6 @@ type KnownError = { caseInsensitiveSubstringToFind: string; throwError: (error: 
 export const customerAlreadyExistsSalesforceError = (): KnownError => ({
   caseInsensitiveSubstringToFind: 'This record looks like an existing Salesforce record, you are unable to create record.',
   throwError: (error) => {
-    throw new BadRequestException('This customer already exists in Salesforce', error);
+    throw new BadRequestException('Failed to create customer as a duplicate record without a company registration number exists', error);
   },
 });

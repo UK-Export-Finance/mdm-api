@@ -144,8 +144,8 @@ paths:
       tags:
         - customers
     post:
-      operationId: CustomersController_createCustomer
-      summary: Create a new customer
+      operationId: CustomersController_getOrCreateCustomer
+      summary: Get a customer in Salesforce, or create one if it does not exist
       parameters: []
       requestBody:
         required: true
@@ -166,34 +166,6 @@ paths:
           description: This customer already exists in Salesforce
         '401':
           description: Failed to get access token
-      tags:
-        - customers
-  /api/v1/customers/salesforce:
-    get:
-      operationId: CustomersController_getCustomersSalesforce
-      summary: Get customers directly from Salesforce
-      parameters:
-        - name: companyRegistrationNumber
-          required: true
-          in: query
-          description: Company Registration Number
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Customers matching search parameters
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/GetCustomersSalesforceResponseItem'
-        '400':
-          description: Invalid Company Registration Number
-        '401':
-          description: Failed to get access token
-        '404':
-          description: Customer not found
       tags:
         - customers
   /api/v1/numbers:
@@ -478,55 +450,6 @@ paths:
                 $ref: '#/components/schemas/MarketEntity'
       tags:
         - markets
-  /api/v1/numbers:
-    post:
-      operationId: NumbersController_create
-      summary: Create Number
-      parameters: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/CreateUkefIdDto'
-      responses:
-        '201':
-          description: ''
-      tags:
-        - numbers
-    get:
-      operationId: NumbersController_findOne
-      summary: Get information about UKEF ID
-      parameters:
-        - name: type
-          required: true
-          in: query
-          description: >-
-            Id of UKEF ID type. Common types are: 1 for Deal/Facility, 2 for
-            Party, 8 for Covenant
-          schema:
-            example: 1
-            type: number
-        - name: ukefId
-          required: true
-          in: query
-          description: UKEF ID to check
-          schema:
-            example: '0030052431'
-            type: string
-      responses:
-        '200':
-          description: The found record
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/UkefId'
-      tags:
-        - numbers
   /api/v1/premium/schedule:
     post:
       operationId: PremiumSchedulesController_create
@@ -837,6 +760,18 @@ components:
         - type
         - subtype
         - isLegacyRecord
+    DTFSCustomerDto:
+      type: object
+      properties:
+        companyRegistrationNumber:
+          type: string
+          description: Company Registration Number
+        companyName:
+          type: string
+          description: Company Name
+      required:
+        - companyRegistrationNumber
+        - companyName
     GetCustomersSalesforceResponseItem:
       type: object
       properties:
@@ -857,18 +792,6 @@ components:
         - name
         - sfId
         - companyRegNo
-    DTFSCustomerDto:
-      type: object
-      properties:
-        companyRegistrationNumber:
-          type: string
-          description: Company Registration Number
-        companyName:
-          type: string
-          description: Company Name
-      required:
-        - companyRegistrationNumber
-        - companyName
     CreateUkefIdDto:
       type: object
       properties:
