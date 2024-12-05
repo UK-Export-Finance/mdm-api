@@ -75,4 +75,4 @@ import { LoggingInterceptor } from './logging/logging-interceptor.helper';
   ],
   providers: [{ provide: APP_INTERCEPTOR, useClass: LoggingInterceptor }],
 })
-export class MainModule {}
+export class MainModule { }

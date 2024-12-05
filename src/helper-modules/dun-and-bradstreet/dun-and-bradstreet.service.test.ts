@@ -18,8 +18,8 @@ describe('CompaniesHouseService', () => {
   const testRegistrationNumber = '0' + valueGenerator.stringOfNumericCharacters({ length: 7 });
   const expectedAccessToken = 'TEST_ACCESS_TOKEN';
   const getAccessTokenMethodMock = jest
-  .spyOn(DunAndBradstreetService.prototype as any, 'getAccessToken')
-  .mockImplementation(() => Promise.resolve(expectedAccessToken))
+    .spyOn(DunAndBradstreetService.prototype as any, 'getAccessToken')
+    .mockImplementation(() => Promise.resolve(expectedAccessToken))
 
   const dunAndBradstreetpath = `/v1/match/cleanseMatch?countryISOAlpha2Code=GB&registrationNumber=${testRegistrationNumber}`;
   const expectedDunsNumber = "123456789"
