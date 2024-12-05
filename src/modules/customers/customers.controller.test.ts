@@ -3,27 +3,33 @@ import { CUSTOMERS, ENUMS } from '@ukef/constants';
 import { GetCustomersGenerator } from '@ukef-test/support/generator/get-customers-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { when } from 'jest-when';
+import { Response } from 'express';
 
 import { CustomersController } from './customers.controller';
 import { CustomersService } from './customers.service';
 import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
-import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-customer-salesforce-response.dto';
+import { GetCustomersResponse } from './dto/get-customers-response.dto';
+
+const mockResponseObject = {
+  json: jest.fn(),
+  status: jest.fn().mockReturnThis()
+} as any as Response;
+
 
 describe('CustomersController', () => {
   const valueGenerator = new RandomValueGenerator();
 
   let customersServiceGetCustomers: jest.Mock;
-  let customersServiceCreateCustomer: jest.Mock;
+  let customersServiceGetOrCreateCustomer: jest.Mock;
 
   let controller: CustomersController;
 
   beforeEach(() => {
     const customersService = new CustomersService(null, null, null, null);
     customersServiceGetCustomers = jest.fn();
-    customersServiceCreateCustomer = jest.fn();
+    customersServiceGetOrCreateCustomer = jest.fn();
     customersService.getCustomers = customersServiceGetCustomers;
-    customersService.getOrCreateCustomer = customersServiceCreateCustomer;
-
+    customersService.getOrCreateCustomer = customersServiceGetOrCreateCustomer;
     controller = new CustomersController(customersService);
   });
 
@@ -108,24 +114,34 @@ describe('CustomersController', () => {
 
   describe('getOrCreateCustomer', () => {
     const DTFSCustomerDto: DTFSCustomerDto = { companyRegistrationNumber: CUSTOMERS.EXAMPLES.COMPANYREG, companyName: 'TEST NAME' };
-    const createCustomerResponse: CreateCustomerSalesforceResponseDto = {
-      id: 'customer-id',
-      errors: null,
-      success: true
-    };
+
+    const getOrCreateCustomerResponse: GetCustomersResponse = [
+      {
+        "partyUrn": "string",
+        "name": "string",
+        "sfId": "string",
+        "companyRegNo": "string",
+        "type": "Association",
+        "subtype": "Alternative Finance Provider",
+        "isLegacyRecord": true
+      }
+    ];
 
     it('creates a customer successfully and returns the response', async () => {
-      when(customersServiceCreateCustomer).calledWith(DTFSCustomerDto).mockResolvedValueOnce(createCustomerResponse);
+      when(customersServiceGetOrCreateCustomer).calledWith(mockResponseObject, DTFSCustomerDto).mockResolvedValueOnce(getOrCreateCustomerResponse);
 
-      const response = await controller.getOrCreateCustomer(DTFSCustomerDto);
+      const response = await controller.getOrCreateCustomer(mockResponseObject, DTFSCustomerDto);
 
-      expect(response).toEqual(createCustomerResponse);
+      expect(customersServiceGetOrCreateCustomer).toHaveBeenCalledTimes(1);
+      expect(response).toEqual(getOrCreateCustomerResponse);
     });
 
-    it('throws an error if the service fails to create a customer', async () => {
-      when(customersServiceCreateCustomer).calledWith(DTFSCustomerDto).mockRejectedValueOnce(new Error('Service Error'));
 
-      await expect(controller.getOrCreateCustomer(DTFSCustomerDto)).rejects.toThrow('Service Error');
+    it('throws an error if the service fails to create a customer', async () => {
+      when(customersServiceGetOrCreateCustomer).calledWith(mockResponseObject, DTFSCustomerDto).mockRejectedValueOnce(new Error('Service Error'));
+
+      expect(customersServiceGetOrCreateCustomer).toHaveBeenCalledTimes(1);
+      await expect(controller.getOrCreateCustomer(mockResponseObject, DTFSCustomerDto)).rejects.toThrow('Service Error')
     });
   });
 });
