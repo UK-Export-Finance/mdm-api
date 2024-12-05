@@ -38,7 +38,7 @@ export class CustomersService {
     );
   }
 
-  async getOrCreateCustomer(res: Response, DTFSCustomerDto: DTFSCustomerDto): Promise<any> {
+  async getOrCreateCustomer(res: Response, DTFSCustomerDto: DTFSCustomerDto): Promise<GetCustomersResponse> {
     const backendQuery: GetCustomersInformaticaQueryDto = {
       companyreg: DTFSCustomerDto.companyRegistrationNumber
     }
@@ -58,6 +58,7 @@ export class CustomersService {
               isLegacyRecord: customerInInformatica.isLegacyRecord,
             })
           ));
+          return;
         } else if (existingCustomersInInformatica[0]?.isLegacyRecord === true && existingCustomersInInformatica[0]?.partyUrn) {
           let dunsNumber: string = null
           try {
@@ -70,6 +71,7 @@ export class CustomersService {
             const isLegacyRecord = true;
             const createdCustomer = await this.createCustomerByURNAndDUNS(DTFSCustomerDto, partyUrn, dunsNumber, isLegacyRecord)
             res.status(201).json(createdCustomer)
+            return;
           } catch (error) {
             throw error;
           }
@@ -100,6 +102,7 @@ export class CustomersService {
           const isLegacyRecord = false;
           const createdCustomer = await this.createCustomerByURNAndDUNS(DTFSCustomerDto, partyUrn, dunsNumber, isLegacyRecord)
           res.status(201).json(createdCustomer)
+          return;
         } catch (error) {
           throw error;
         }
