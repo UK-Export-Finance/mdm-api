@@ -38,7 +38,7 @@ export class HttpClient {
 
   private async responseFrom<ResponseBody = never>({
     request,
-    onError
+    onError,
   }: {
     request: Observable<AxiosResponse<ResponseBody, any>>;
     onError: (error: Error) => ObservableInput<never>;
