@@ -13,7 +13,8 @@ import { SalesforceService } from './salesforce.service';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const { baseUrl, clientId, clientSecret, username, password, accessUrl, maxRedirects, timeout } = configService.get<SalesforceConfig>(SALESFORCE_CONFIG_KEY);
+        const { baseUrl, clientId, clientSecret, username, password, accessUrl, maxRedirects, timeout } =
+          configService.get<SalesforceConfig>(SALESFORCE_CONFIG_KEY);
         return {
           baseURL: baseUrl,
           clientId,

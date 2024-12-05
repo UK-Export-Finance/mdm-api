@@ -6,13 +6,12 @@ export class CreateCustomerSalesforceResponseDto {
   @IsString()
   @IsNotEmpty()
   id: string;
-  
+
   @ApiProperty({ description: 'errors' })
   @IsArray()
   @IsNotEmpty()
   errors: any[];
 
-    
   @ApiProperty({ description: 'success' })
   @IsBoolean()
   @IsNotEmpty()

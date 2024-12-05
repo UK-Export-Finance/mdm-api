@@ -30,13 +30,13 @@ export class SalesforceService {
   }
 
   async createCustomer(createCustomerDto: CreateCustomerDto): Promise<CreateCustomerSalesforceResponseDto> {
-    const path = '/sobjects/Account'
+    const path = '/sobjects/Account';
     const access_token = await this.getAccessToken();
     const { data } = await this.httpClient.post<CreateCustomerDto, CreateCustomerSalesforceResponseDto>({
       path,
       body: createCustomerDto,
       headers: {
-        'Authorization': 'Bearer ' + access_token,
+        Authorization: 'Bearer ' + access_token,
       },
       onError: createWrapSalesforceHttpGetErrorCallback({
         messageForUnknownError: `Failed to create customer in Salesforce`,
@@ -47,15 +47,15 @@ export class SalesforceService {
   }
 
   private async getAccessToken(): Promise<string> {
-    const path = this.access_url
+    const path = this.access_url;
     const response = await this.httpClient.post<any, any>({
       path,
       body: {
-        'grant_type': 'password',
-        'client_id': this.client_id,
-        'client_secret': this.client_secret,
-        'username': this.username,
-        'password': this.password,
+        grant_type: 'password',
+        client_id: this.client_id,
+        client_secret: this.client_secret,
+        username: this.username,
+        password: this.password,
       },
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -64,7 +64,7 @@ export class SalesforceService {
         messageForUnknownError: 'Failed to get access token',
         knownErrors: [],
       }),
-    })
-    return response.data.access_token
+    });
+    return response.data.access_token;
   }
 }

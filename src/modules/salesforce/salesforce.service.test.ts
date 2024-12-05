@@ -25,9 +25,14 @@ describe('SalesforceService', () => {
     httpService.post = httpServicePost;
 
     const configService = new ConfigService();
-    configServiceGet = jest.fn().mockReturnValue({ clientId: 'TEST_CLIENT_ID', clientSecret: 'TEST_CLIENT_SECRET', username: 'TEST_USERNAME', password: 'TEST_PASSWORD', accessUrl: 'TEST_ACCESS_URL' });
+    configServiceGet = jest.fn().mockReturnValue({
+      clientId: 'TEST_CLIENT_ID',
+      clientSecret: 'TEST_CLIENT_SECRET',
+      username: 'TEST_USERNAME',
+      password: 'TEST_PASSWORD',
+      accessUrl: 'TEST_ACCESS_URL',
+    });
     configService.get = configServiceGet;
-
 
     service = new SalesforceService(httpService, configService);
   });
@@ -40,7 +45,7 @@ describe('SalesforceService', () => {
   const expectedAccessToken = 'TEST_ACCESS_TOKEN';
   const getAccessTokenMethodMock = jest
     .spyOn(SalesforceService.prototype as any, 'getAccessToken')
-    .mockImplementation(() => Promise.resolve(expectedAccessToken))
+    .mockImplementation(() => Promise.resolve(expectedAccessToken));
 
   describe('createCustomer', () => {
     const customerBasePath = '/sobjects/Account';
@@ -51,13 +56,17 @@ describe('SalesforceService', () => {
     };
 
     const query: CreateCustomerDto = {
-      "Name": companyRegNo,
-      "Party_URN__c": null,
-      "D_B_Number__c": null,
-      "Company_Registration_Number__c": companyRegNo
+      Name: companyRegNo,
+      Party_URN__c: null,
+      D_B_Number__c: null,
+      Company_Registration_Number__c: companyRegNo,
     };
 
-    const expectedHttpServicePostArgs: [string, body: CreateCustomerDto, object] = [customerBasePath, query, { headers: { 'Authorization': 'Bearer ' + expectedAccessToken } }];
+    const expectedHttpServicePostArgs: [string, body: CreateCustomerDto, object] = [
+      customerBasePath,
+      query,
+      { headers: { Authorization: 'Bearer ' + expectedAccessToken } },
+    ];
 
     it('sends a POST to the Salesforce /sobjects/Account endpoint with the specified request', async () => {
       when(httpServicePost)
