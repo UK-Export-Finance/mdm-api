@@ -2,6 +2,7 @@ import { Injectable, InternalServerErrorException, NotFoundException } from '@ne
 import { GetCustomersInformaticaQueryDto } from '@ukef/modules/informatica/dto/get-customers-informatica-query.dto';
 import { InformaticaService } from '@ukef/modules/informatica/informatica.service';
 import { SalesforceService } from '@ukef/modules/salesforce/salesforce.service';
+import { Response } from 'express';
 
 import { GetCustomersResponse, GetCustomersResponseItem } from './dto/get-customers-response.dto';
 import { CreateCustomerDto } from './dto/create-customer.dto';
@@ -37,7 +38,7 @@ export class CustomersService {
     );
   }
 
-  async getOrCreateCustomer(DTFSCustomerDto: DTFSCustomerDto): Promise<GetCustomersResponse> {
+  async getOrCreateCustomer(res: Response, DTFSCustomerDto: DTFSCustomerDto): Promise<any> {
     const backendQuery: GetCustomersInformaticaQueryDto = {
       companyreg: DTFSCustomerDto.companyRegistrationNumber
     }
@@ -46,7 +47,7 @@ export class CustomersService {
       const existingCustomersInInformatica = await this.informaticaService.getCustomers(backendQuery);
       if (existingCustomersInInformatica?.[0]) {
         if (existingCustomersInInformatica[0]?.isLegacyRecord === false) {
-          return existingCustomersInInformatica.map(
+          res.status(200).json(existingCustomersInInformatica.map(
             (customerInInformatica): GetCustomersResponseItem => ({
               partyUrn: customerInInformatica.partyUrn,
               name: customerInInformatica.name,
@@ -56,7 +57,7 @@ export class CustomersService {
               subtype: customerInInformatica.subtype,
               isLegacyRecord: customerInInformatica.isLegacyRecord,
             })
-          );
+          ));
         } else if (existingCustomersInInformatica[0]?.isLegacyRecord === true && existingCustomersInInformatica[0]?.partyUrn) {
           let dunsNumber: string = null
           try {
@@ -67,7 +68,8 @@ export class CustomersService {
           try {
             const partyUrn = existingCustomersInInformatica[0].partyUrn
             const isLegacyRecord = true;
-            return await this.createCustomerByURNAndDUNS(DTFSCustomerDto, partyUrn, dunsNumber, isLegacyRecord)
+            const createdCustomer = await this.createCustomerByURNAndDUNS(DTFSCustomerDto, partyUrn, dunsNumber, isLegacyRecord)
+            res.status(201).json(createdCustomer)
           } catch (error) {
             throw error;
           }
@@ -96,7 +98,8 @@ export class CustomersService {
         } catch (error) { }
         try {
           const isLegacyRecord = false;
-          return this.createCustomerByURNAndDUNS(DTFSCustomerDto, partyUrn, dunsNumber, isLegacyRecord)
+          const createdCustomer = await this.createCustomerByURNAndDUNS(DTFSCustomerDto, partyUrn, dunsNumber, isLegacyRecord)
+          res.status(201).json(createdCustomer)
         } catch (error) {
           throw error;
         }
