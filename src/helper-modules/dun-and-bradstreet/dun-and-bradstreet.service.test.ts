@@ -19,20 +19,19 @@ describe('CompaniesHouseService', () => {
   const expectedAccessToken = 'TEST_ACCESS_TOKEN';
   const getAccessTokenMethodMock = jest
     .spyOn(DunAndBradstreetService.prototype as any, 'getAccessToken')
-    .mockImplementation(() => Promise.resolve(expectedAccessToken))
+    .mockImplementation(() => Promise.resolve(expectedAccessToken));
 
   const dunAndBradstreetpath = `/v1/match/cleanseMatch?countryISOAlpha2Code=GB&registrationNumber=${testRegistrationNumber}`;
-  const expectedDunsNumber = "123456789"
+  const expectedDunsNumber = '123456789';
   const getDunsNumberDunAndBradstreetResponse = {
-    "matchCandidates": [
+    matchCandidates: [
       {
-        "organization": {
-          "duns": expectedDunsNumber
-        }
-      }
-    ]
-  }
-
+        organization: {
+          duns: expectedDunsNumber,
+        },
+      },
+    ],
+  };
 
   const expectedHttpServiceGetArguments: [string, object] = [
     dunAndBradstreetpath,
@@ -57,7 +56,7 @@ describe('CompaniesHouseService', () => {
     httpService.get = httpServiceGet;
 
     const configService = new ConfigService();
-    configServiceGet = jest.fn().mockReturnValue({ key: "TEST API_KEY" });
+    configServiceGet = jest.fn().mockReturnValue({ key: 'TEST API_KEY' });
     configService.get = configServiceGet;
 
     service = new DunAndBradstreetService(httpService, configService);
