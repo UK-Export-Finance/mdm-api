@@ -12,7 +12,6 @@ export class DunAndBradstreetService {
   private readonly httpClient: HttpClient;
   private readonly encoded_key: string;
 
-
   constructor(httpService: HttpService, configService: ConfigService) {
     this.httpClient = new HttpClient(httpService);
     const { key } = configService.get<DunAndBradstreetConfig>(DUN_AND_BRADSTREET.CONFIG.KEY);
@@ -26,7 +25,7 @@ export class DunAndBradstreetService {
     const { data } = await this.httpClient.get<any>({
       path,
       headers: {
-        'Authorization': 'Bearer ' + access_token,
+        Authorization: 'Bearer ' + access_token,
       },
       onError: createWrapDunAndBradstreetHttpGetErrorCallback({
         messageForUnknownError: 'Failed to get response from Dun and Bradstreet API',
@@ -37,21 +36,21 @@ export class DunAndBradstreetService {
   }
 
   private async getAccessToken(): Promise<string> {
-    const path = '/v3/token'
+    const path = '/v3/token';
     const response = await this.httpClient.post<any, any>({
       path,
       body: {
-        'grant_type': 'client_credentials',
+        grant_type: 'client_credentials',
       },
       headers: {
-        'Authorization': 'Basic ' + this.encoded_key,
+        Authorization: 'Basic ' + this.encoded_key,
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       onError: createWrapDunAndBradstreetHttpGetErrorCallback({
         messageForUnknownError: 'Failed to get access token',
         knownErrors: [],
       }),
-    })
-    return response.data.access_token
+    });
+    return response.data.access_token;
   }
 }
