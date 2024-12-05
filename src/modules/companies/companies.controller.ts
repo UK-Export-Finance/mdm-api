@@ -16,9 +16,7 @@ import { GetCompanyResponse } from './dto/get-company-response.dto';
 @ApiTags('companies')
 @Controller('companies')
 export class CompaniesController {
-  constructor(
-    private readonly companiesService: CompaniesService,
-  ) { }
+  constructor(private readonly companiesService: CompaniesService) {}
 
   @Get()
   @ApiOperation({

@@ -12,9 +12,8 @@ import { GetCustomersResponse } from './dto/get-customers-response.dto';
 
 const mockResponseObject = {
   json: jest.fn(),
-  status: jest.fn().mockReturnThis()
+  status: jest.fn().mockReturnThis(),
 } as any as Response;
-
 
 describe('CustomersController', () => {
   const valueGenerator = new RandomValueGenerator();
@@ -111,20 +110,19 @@ describe('CustomersController', () => {
     });
   });
 
-
   describe('getOrCreateCustomer', () => {
     const DTFSCustomerDto: DTFSCustomerDto = { companyRegistrationNumber: CUSTOMERS.EXAMPLES.COMPANYREG, companyName: 'TEST NAME' };
 
     const getOrCreateCustomerResponse: GetCustomersResponse = [
       {
-        "partyUrn": "string",
-        "name": "string",
-        "sfId": "string",
-        "companyRegNo": "string",
-        "type": "Association",
-        "subtype": "Alternative Finance Provider",
-        "isLegacyRecord": true
-      }
+        partyUrn: 'string',
+        name: 'string',
+        sfId: 'string',
+        companyRegNo: 'string',
+        type: 'Association',
+        subtype: 'Alternative Finance Provider',
+        isLegacyRecord: true,
+      },
     ];
 
     it('creates a customer successfully and returns the response', async () => {
@@ -136,11 +134,10 @@ describe('CustomersController', () => {
       expect(response).toEqual(getOrCreateCustomerResponse);
     });
 
-
     it('throws an error if the service fails to create a customer', async () => {
       when(customersServiceGetOrCreateCustomer).calledWith(mockResponseObject, DTFSCustomerDto).mockRejectedValueOnce(new Error('Service Error'));
 
-      await expect(controller.getOrCreateCustomer(mockResponseObject, DTFSCustomerDto)).rejects.toThrow('Service Error')
+      await expect(controller.getOrCreateCustomer(mockResponseObject, DTFSCustomerDto)).rejects.toThrow('Service Error');
     });
   });
 });

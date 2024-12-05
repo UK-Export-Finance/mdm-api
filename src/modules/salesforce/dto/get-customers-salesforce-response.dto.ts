@@ -34,10 +34,10 @@ export class GetCustomersSalesforceResponse {
     description: 'A boolean indicating whether there are no more results',
   })
   readonly done: boolean;
-  
+
   @ApiProperty({
     description: 'The list of matching records',
     type: [GetCustomersSalesforceResponseItem],
   })
-  readonly records: GetCustomersSalesforceResponseItems
-};
+  readonly records: GetCustomersSalesforceResponseItems;
+}

@@ -36,17 +36,17 @@ describe('salesforceConfig', () => {
     environmentVariableName: string;
     defaultConfigValue: number;
   }[] = [
-      {
-        configPropertyName: 'maxRedirects',
-        environmentVariableName: 'SALESFORCE_MAX_REDIRECTS',
-        defaultConfigValue: 5,
-      },
-      {
-        configPropertyName: 'timeout',
-        environmentVariableName: 'SALESFORCE_TIMEOUT',
-        defaultConfigValue: 30000, // in milliseconds
-      },
-    ];
+    {
+      configPropertyName: 'maxRedirects',
+      environmentVariableName: 'SALESFORCE_MAX_REDIRECTS',
+      defaultConfigValue: 5,
+    },
+    {
+      configPropertyName: 'timeout',
+      environmentVariableName: 'SALESFORCE_TIMEOUT',
+      defaultConfigValue: 30000, // in milliseconds
+    },
+  ];
 
   withEnvironmentVariableParsingUnitTests({
     configDirectlyFromEnvironmentVariables,

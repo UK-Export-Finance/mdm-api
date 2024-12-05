@@ -11,7 +11,7 @@ import { Response } from 'express';
 @ApiTags('customers')
 @Controller('customers')
 export class CustomersController {
-  constructor(private readonly customersService: CustomersService) { }
+  constructor(private readonly customersService: CustomersService) {}
 
   @Get()
   @ApiOperation({
@@ -53,10 +53,10 @@ export class CustomersController {
     description: 'Failed to create customer as a duplicate record without a company registration number exists',
   })
   @ApiUnauthorizedResponse({
-    description: 'Failed to get access token'
+    description: 'Failed to get access token',
   })
   getOrCreateCustomer(@Res() res: Response, @Body() DTFSCustomerDto: DTFSCustomerDto): Promise<GetCustomersResponse> {
-    return this.customersService.getOrCreateCustomer(res, DTFSCustomerDto)
+    return this.customersService.getOrCreateCustomer(res, DTFSCustomerDto);
   }
 
   private ensureOneIsNotEmpty(...args) {
