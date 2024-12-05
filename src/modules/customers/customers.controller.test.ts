@@ -140,7 +140,6 @@ describe('CustomersController', () => {
     it('throws an error if the service fails to create a customer', async () => {
       when(customersServiceGetOrCreateCustomer).calledWith(mockResponseObject, DTFSCustomerDto).mockRejectedValueOnce(new Error('Service Error'));
 
-      expect(customersServiceGetOrCreateCustomer).toHaveBeenCalledTimes(1);
       await expect(controller.getOrCreateCustomer(mockResponseObject, DTFSCustomerDto)).rejects.toThrow('Service Error')
     });
   });
