@@ -105,10 +105,9 @@ describe('CustomerService', () => {
           when(informaticaServiceGetCustomers).calledWith({
             companyreg: DTFSCustomerDto.companyRegistrationNumber
           }).mockResolvedValueOnce(getCustomersResponse[0]);
-          console.log(getCustomersResponse)
 
           const response = await service.getOrCreateCustomer(DTFSCustomerDto);
-
+        
           expect(response).toEqual(getCustomersResponse[0]);
           expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(0);
           expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(0);
@@ -138,7 +137,6 @@ describe('CustomerService', () => {
           when(informaticaServiceGetCustomers).calledWith({
             companyreg: DTFSCustomerDto.companyRegistrationNumber
           }).mockResolvedValueOnce(getCustomersResponse[0]);
-          console.log(getCustomersResponse)
 
           const response = await service.getOrCreateCustomer(DTFSCustomerDto);
 
