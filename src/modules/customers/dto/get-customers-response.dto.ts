@@ -16,7 +16,7 @@ export class GetCustomersResponseItem {
   readonly name: string;
 
   @ApiProperty({
-    description: 'The uniqueue Salesforce id',
+    description: 'The unique Salesforce id',
   })
   readonly sfId: string;
 

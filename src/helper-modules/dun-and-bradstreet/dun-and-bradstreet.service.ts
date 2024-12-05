@@ -21,7 +21,6 @@ export class DunAndBradstreetService {
   async getDunAndBradstreetNumberByRegistrationNumber(registrationNumber: string): Promise<string> {
     const path = `/v1/match/cleanseMatch?countryISOAlpha2Code=GB&registrationNumber=${registrationNumber}`;
     const access_token = await this.getAccessToken();
-
     const { data } = await this.httpClient.get<any>({
       path,
       headers: {
