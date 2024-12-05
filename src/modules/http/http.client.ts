@@ -5,7 +5,7 @@ import { catchError, lastValueFrom, Observable, ObservableInput } from 'rxjs';
 import { RequestHeaders } from './type/headers.type';
 
 export class HttpClient {
-  constructor(private readonly httpService: HttpService) { }
+  constructor(private readonly httpService: HttpService) {}
 
   get<ResponseBody>({
     path,
@@ -38,7 +38,7 @@ export class HttpClient {
 
   private async responseFrom<ResponseBody = never>({
     request,
-    onError,
+    onError
   }: {
     request: Observable<AxiosResponse<ResponseBody, any>>;
     onError: (error: Error) => ObservableInput<never>;

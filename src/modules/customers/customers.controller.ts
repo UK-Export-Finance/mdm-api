@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Post, Query, Res } from '@nestjs/common';
 import { ApiCreatedResponse, ApiNotFoundResponse, ApiBadRequestResponse, ApiOperation, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 
 import { GetCustomersInformaticaQueryDto } from '../informatica/dto/get-customers-informatica-query.dto';
@@ -6,11 +6,12 @@ import { CustomersService } from './customers.service';
 import { GetCustomersQueryDto } from './dto/get-customers-query.dto';
 import { GetCustomersResponse, GetCustomersResponseItem } from './dto/get-customers-response.dto';
 import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
+import { Response } from 'express';
 
 @ApiTags('customers')
 @Controller('customers')
 export class CustomersController {
-  constructor(private readonly customersService: CustomersService) {}
+  constructor(private readonly customersService: CustomersService) { }
 
   @Get()
   @ApiOperation({
@@ -39,6 +40,11 @@ export class CustomersController {
   @ApiOperation({
     summary: 'Get a customer in Salesforce, or create one if it does not exist',
   })
+  @ApiResponse({
+    status: 200,
+    description: 'Customers matching search parameters',
+    type: [GetCustomersResponseItem],
+  })
   @ApiCreatedResponse({
     description: 'Customer successfully created',
     type: [GetCustomersResponseItem],
@@ -49,8 +55,8 @@ export class CustomersController {
   @ApiUnauthorizedResponse({
     description: 'Failed to get access token'
   })
-  getOrCreateCustomer(@Body() DTFSCustomerDto: DTFSCustomerDto): Promise<GetCustomersResponse> {
-    return this.customersService.getOrCreateCustomer(DTFSCustomerDto);
+  getOrCreateCustomer(@Body() DTFSCustomerDto: DTFSCustomerDto, @Res() res: Response): Promise<GetCustomersResponse> {
+    return this.customersService.getOrCreateCustomer(res, DTFSCustomerDto)
   }
 
   private ensureOneIsNotEmpty(...args) {
