@@ -7,6 +7,7 @@ import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-
 import { resetAllWhenMocks, when } from 'jest-when';
 import { ConfigService } from '@nestjs/config';
 import { CustomersService } from './customers.service';
+import { Response } from 'express';
 
 import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
 import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-customer-salesforce-response.dto';
@@ -14,8 +15,14 @@ import { UkefId } from '../numbers/entities/ukef-id.entity';
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { GetCustomersInformaticaResponseItem } from '../informatica/dto/get-customers-informatica-response.dto';
 import { InformaticaException } from '../informatica/exception/informatica.exception';
+import { HttpStatusCode } from 'axios';
 
 jest.mock('@ukef/modules/informatica/informatica.service');
+
+const mockResponseObject = {
+  json: jest.fn(),
+  status: jest.fn().mockReturnThis()
+} as any as Response;
 
 describe('CustomerService', () => {
   const valueGenerator = new RandomValueGenerator();
@@ -56,6 +63,7 @@ describe('CustomerService', () => {
     dunAndBradstreetService.getDunAndBradstreetNumberByRegistrationNumber = dunAndBradstreetServiceGetDunsNumber;
 
     resetAllWhenMocks();
+    jest.clearAllMocks();
 
     service = new CustomersService(informaticaService, salesforceService, numbersService, dunAndBradstreetService);
   });
@@ -106,9 +114,11 @@ describe('CustomerService', () => {
             companyreg: DTFSCustomerDto.companyRegistrationNumber
           }).mockResolvedValueOnce(getCustomersResponse[0]);
 
-          const response = await service.getOrCreateCustomer(DTFSCustomerDto);
-        
-          expect(response).toEqual(getCustomersResponse[0]);
+          await service.getOrCreateCustomer(mockResponseObject, DTFSCustomerDto);
+
+          expect(mockResponseObject.json).toHaveBeenCalledTimes(1)
+          expect(mockResponseObject.json).toHaveBeenCalledWith(getCustomersResponse[0])
+          expect(mockResponseObject.status).toHaveBeenCalledWith(HttpStatusCode.Ok)
           expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(0);
           expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(0);
           expect(numbersServiceCreate).toHaveBeenCalledTimes(0);
@@ -138,9 +148,12 @@ describe('CustomerService', () => {
             companyreg: DTFSCustomerDto.companyRegistrationNumber
           }).mockResolvedValueOnce(getCustomersResponse[0]);
 
-          const response = await service.getOrCreateCustomer(DTFSCustomerDto);
+          await service.getOrCreateCustomer(mockResponseObject, DTFSCustomerDto);
 
-          expect(response).toEqual(createCustomerResponseWithLegacyUrn);
+          expect(mockResponseObject.json).toHaveBeenCalledTimes(1)
+          expect(mockResponseObject.json).toHaveBeenCalledWith(createCustomerResponseWithLegacyUrn)
+          expect(mockResponseObject.status).toHaveBeenCalledWith(HttpStatusCode.Created)
+
           expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(expect.objectContaining({
             Name: DTFSCustomerDto.companyName,
             D_B_Number__c: "TEST DUNS_NUMBER",
@@ -161,7 +174,7 @@ describe('CustomerService', () => {
             companyreg: DTFSCustomerDto.companyRegistrationNumber
           }).mockRejectedValueOnce(new NotFoundException('Customer not found.'));
 
-          await expect(service.getOrCreateCustomer(DTFSCustomerDto)).rejects.toThrow('Service Error');
+          await expect(service.getOrCreateCustomer(mockResponseObject, DTFSCustomerDto)).rejects.toThrow('Service Error');
           expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(1);
           expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(1);
           expect(numbersServiceCreate).toHaveBeenCalledTimes(1);
@@ -175,9 +188,12 @@ describe('CustomerService', () => {
             companyreg: DTFSCustomerDto.companyRegistrationNumber
           }).mockRejectedValueOnce(new NotFoundException('Customer not found.'));
 
-          const response = await service.getOrCreateCustomer(DTFSCustomerDto);
+          await service.getOrCreateCustomer(mockResponseObject, DTFSCustomerDto);
 
-          expect(response).toEqual(createCustomerResponseWithNoPartyUrn);
+          expect(mockResponseObject.json).toHaveBeenCalledTimes(1)
+          expect(mockResponseObject.json).toHaveBeenCalledWith(createCustomerResponseWithNoPartyUrn)
+          expect(mockResponseObject.status).toHaveBeenCalledWith(HttpStatusCode.Created)
+
           expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(expect.objectContaining({
             Name: DTFSCustomerDto.companyName,
             D_B_Number__c: "TEST DUNS_NUMBER",
@@ -198,7 +214,7 @@ describe('CustomerService', () => {
           }).mockRejectedValueOnce(new NotFoundException('Customer not found.'));
 
 
-          await expect(service.getOrCreateCustomer(DTFSCustomerDto)).rejects.toThrow('Internal Server Error');
+          await expect(service.getOrCreateCustomer(mockResponseObject, DTFSCustomerDto)).rejects.toThrow('Internal Server Error');
           expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(1);
           expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(0);
           expect(numbersServiceCreate).toHaveBeenCalledTimes(0);
@@ -215,9 +231,12 @@ describe('CustomerService', () => {
           companyreg: DTFSCustomerDto.companyRegistrationNumber
         }).mockRejectedValueOnce(new NotFoundException('Customer not found.'));
 
-        const response = await service.getOrCreateCustomer(DTFSCustomerDto);
+        await service.getOrCreateCustomer(mockResponseObject, DTFSCustomerDto);
 
-        expect(response).toEqual(createCustomerResponse);
+        expect(mockResponseObject.json).toHaveBeenCalledTimes(1)
+        expect(mockResponseObject.json).toHaveBeenCalledWith(createCustomerResponse)
+        expect(mockResponseObject.status).toHaveBeenCalledWith(HttpStatusCode.Created)
+
         expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(expect.objectContaining({
           Name: DTFSCustomerDto.companyName,
           D_B_Number__c: "TEST DUNS_NUMBER",
@@ -237,7 +256,7 @@ describe('CustomerService', () => {
           companyreg: DTFSCustomerDto.companyRegistrationNumber
         }).mockRejectedValueOnce(new NotFoundException('Customer not found.'));
 
-        await expect(service.getOrCreateCustomer(DTFSCustomerDto)).rejects.toThrow('Service Error');
+        await expect(service.getOrCreateCustomer(mockResponseObject, DTFSCustomerDto)).rejects.toThrow('Service Error');
         expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(1);
         expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(1);
         expect(numbersServiceCreate).toHaveBeenCalledTimes(1);
@@ -251,9 +270,12 @@ describe('CustomerService', () => {
           companyreg: DTFSCustomerDto.companyRegistrationNumber
         }).mockRejectedValueOnce(new NotFoundException('Customer not found.'));
 
-        const response = await service.getOrCreateCustomer(DTFSCustomerDto);
+        await service.getOrCreateCustomer(mockResponseObject, DTFSCustomerDto);
 
-        expect(response).toEqual(createCustomerResponseWithNoPartyUrn);
+        expect(mockResponseObject.json).toHaveBeenCalledTimes(1)
+        expect(mockResponseObject.json).toHaveBeenCalledWith(createCustomerResponseWithNoPartyUrn)
+        expect(mockResponseObject.status).toHaveBeenCalledWith(HttpStatusCode.Created)
+
         expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(expect.objectContaining({
           Name: DTFSCustomerDto.companyName,
           D_B_Number__c: "TEST DUNS_NUMBER",
@@ -274,7 +296,7 @@ describe('CustomerService', () => {
         }).mockRejectedValueOnce(new NotFoundException('Customer not found.'));
 
 
-        await expect(service.getOrCreateCustomer(DTFSCustomerDto)).rejects.toThrow('Internal Server Error');
+        await expect(service.getOrCreateCustomer(mockResponseObject, DTFSCustomerDto)).rejects.toThrow('Internal Server Error');
         expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(1);
         expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(0);
         expect(numbersServiceCreate).toHaveBeenCalledTimes(0);
@@ -287,7 +309,7 @@ describe('CustomerService', () => {
           companyreg: DTFSCustomerDto.companyRegistrationNumber
         }).mockRejectedValueOnce(new InformaticaException('Failed to get customers in Informatica'));
 
-        await expect(service.getOrCreateCustomer(DTFSCustomerDto)).rejects.toThrow('Failed to get customers in Informatica');
+        await expect(service.getOrCreateCustomer(mockResponseObject, DTFSCustomerDto)).rejects.toThrow('Failed to get customers in Informatica');
 
         expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(0);
         expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(0);
@@ -299,7 +321,7 @@ describe('CustomerService', () => {
           companyreg: DTFSCustomerDto.companyRegistrationNumber
         }).mockResolvedValueOnce([]);
 
-        await expect(service.getOrCreateCustomer(DTFSCustomerDto)).rejects.toThrow('Internal Server Error');
+        await expect(service.getOrCreateCustomer(mockResponseObject, DTFSCustomerDto)).rejects.toThrow('Internal Server Error');
 
         expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(0);
         expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(0);
