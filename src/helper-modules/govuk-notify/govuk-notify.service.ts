@@ -33,7 +33,15 @@ export class GovukNotifyService {
   async sendEmail(govUkNotifyKey: string, postEmailsRequest: PostEmailsRequestDto): Promise<PostEmailsResponseDto> {
     // We create new client for each request because govUkNotifyKey (auth key) might be different.
     const notifyClient = new NotifyClient(govUkNotifyKey);
+
     const reference = postEmailsRequest.reference || `${postEmailsRequest.templateId}-${Date.now()}`;
+
+    const personalisation = postEmailsRequest.personalisation;
+
+    if (postEmailsRequest.file) {
+      personalisation.linkToFile = await notifyClient.prepareUpload(postEmailsRequest.file, { confirmEmailBeforeDownload: true });
+    }
+
     const notifyResponse = await notifyClient
       .sendEmail(postEmailsRequest.templateId, postEmailsRequest.sendToEmailAddress, {
         personalisation: postEmailsRequest.personalisation,

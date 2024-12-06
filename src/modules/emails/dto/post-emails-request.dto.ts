@@ -40,7 +40,7 @@ export class PostEmailsRequestDto {
   @IsString()
   @IsOptional()
   @MinLength(1)
-  // 100 characters is arbitrary max limit, GOV.UK Notify can accept references at least 400 characters long.
+  // 100 characters is an arbitrary max limit.GOV.UK Notify can accept references at least 400 characters long.
   @MaxLength(100)
   @ApiProperty({
     example: GOVUK_NOTIFY.EXAMPLES.REFERENCE,
@@ -51,4 +51,18 @@ export class PostEmailsRequestDto {
     maxLength: 100,
   })
   readonly reference?: string | null;
+
+  @IsString()
+  @IsOptional()
+  @MinLength(1)
+  @MaxLength(400)
+  @ApiProperty({
+    example: GOVUK_NOTIFY.EXAMPLES.FILE,
+    description: 'File for Notify to consume and generate a link to download',
+    required: false,
+    nullable: true,
+    minLength: 1,
+    maxLength: 400,
+  })
+  readonly file?: string | null;
 }
