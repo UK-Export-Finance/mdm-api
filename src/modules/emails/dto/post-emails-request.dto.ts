@@ -40,7 +40,7 @@ export class PostEmailsRequestDto {
   @IsString()
   @IsOptional()
   @MinLength(1)
-  // 100 characters is an arbitrary max limit.GOV.UK Notify can accept references at least 400 characters long.
+  // 100 characters is an arbitrary max limit. GOV.UK Notify can accept references at least 400 characters long.
   @MaxLength(100)
   @ApiProperty({
     example: GOVUK_NOTIFY.EXAMPLES.REFERENCE,
