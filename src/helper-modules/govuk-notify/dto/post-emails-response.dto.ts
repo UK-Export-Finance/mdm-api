@@ -24,6 +24,7 @@ export class PostEmailsResponseDataContent {
     example: null,
     description: 'Unsubscribe links are not used, so this field should always be null',
     nullable: true,
+    required: false,
   })
   public unsubscribe_link: string | null;
 }
