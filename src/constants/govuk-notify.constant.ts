@@ -11,6 +11,7 @@ export const GOVUK_NOTIFY = {
     RESPONSE_URI: 'https://api.notifications.service.gov.uk/v2/notifications/efd12345-1234-5678-9012-ee123456789f',
     TEMPLATE_ID: 'tmpl1234-1234-5678-9012-abcd12345678',
     TEMPLATE_URI: 'https://api.notifications.service.gov.uk/services/abc12345-a123-4567-8901-123456789012/templates/tmpl1234-1234-5678-9012-abcd12345678',
+    FILE: Buffer.from('example-file.xlsx'),
   },
   FIELD_LENGTHS: {
     TEMPLATE_ID: 36,
