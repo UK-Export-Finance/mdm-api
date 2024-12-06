@@ -36,7 +36,7 @@ export class GovukNotifyService {
 
     const reference = postEmailsRequest.reference || `${postEmailsRequest.templateId}-${Date.now()}`;
 
-    const personalisation = postEmailsRequest.personalisation;
+    const { personalisation } = postEmailsRequest;
 
     if (postEmailsRequest.file) {
       personalisation.linkToFile = await notifyClient.prepareUpload(postEmailsRequest.file, { confirmEmailBeforeDownload: true });
