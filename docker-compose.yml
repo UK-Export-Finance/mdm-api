@@ -41,6 +41,10 @@ services:
       COMPANIES_HOUSE_KEY:
       COMPANIES_HOUSE_MAX_REDIRECTS:
       COMPANIES_HOUSE_TIMEOUT:
+      DUN_AND_BRADSTREET_URL:
+      DUN_AND_BRADSTREET_KEY:
+      DUN_AND_BRADSTREET_MAX_REDIRECTS:
+      DUN_AND_BRADSTREET_TIMEOUT:
       API_KEY:
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:${PORT}"]
