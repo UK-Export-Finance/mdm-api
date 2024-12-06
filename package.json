@@ -6,24 +6,35 @@
   "license": "MIT",
   "author": "UKEF",
   "scripts": {
+    "audit:fix": "npm audit --fix",
     "api-test": "jest --selectProjects=API",
     "build": "nest build -p tsconfig.build.json",
-    "housekeeping": "npm update --save --legacy-peer-deps && npm i --legacy-peer-deps && npm audit --fix && npm run spellcheck",
+    "housekeeping": "npm update --save --legacy-peer-deps && npm i --legacy-peer-deps && npm run type-check && npm run prettier:fix && npm run lint:fix && npm run validate:yml && npm run audit:fix && npm run spellcheck",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "prettier": "prettier --no-error-on-unmatched-pattern --check **/*.{ts,js}",
+    "prettier:fix": "prettier --write **/*.{ts,js}",
+    "type-check": "tsc --noEmit --pretty",
     "spellcheck": "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color '**/*'",
     "start": "nest start",
     "start:debug": "nest start --debug --watch",
     "start:dev": "nest start --tsc --watch",
     "start:prod": "node dist/src/main",
-    "unit-test": "jest --selectProjects=Unit"
+    "unit-test": "jest --selectProjects=Unit",
+    "validate:all": "npm run lint:fix && npm run prettier:fix && npm run type-check && npm run validate:yml",
+    "validate:yml": "npx yaml-lint **/*.yml --ignore=**/node_modules"
   },
   "lint-staged": {
     "**/package.json": "sort-package-json",
     "**/*.{js,ts}": [
-      "eslint --fix",
+      "lint:fix",
+      "prettier:fix"
+    ],
+    "**/*.md": [
       "prettier --write"
+    ],
+    "**/*.yml": [
+      "npm run validate:yml"
     ],
     "**/*": [
       "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color"
@@ -76,8 +87,8 @@
     "@types/lodash": "^4.17.13",
     "@types/node": "^22.10.1",
     "@types/supertest": "^6.0.2",
-    "@typescript-eslint/eslint-plugin": "^8.17.0",
-    "@typescript-eslint/parser": "^7.18.0",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
     "chance": "^1.1.12",
     "cspell": "^8.16.1",
     "eslint": "^8.57.1",
@@ -109,7 +120,8 @@
     "supertest": "^7.0.0",
     "ts-jest": "29.2.5",
     "ts-loader": "^9.5.1",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "yaml-lint": "^1.7.0"
   },
   "engines": {
     "node": ">=21",
