@@ -37,6 +37,10 @@ export class MarketEntity {
   @ApiProperty({ example: DATE.MAXIMUM_TIMEZONE_LIMIT, description: 'Effective from date' })
   effectiveToDatetime: Date;
 
+  @Column({ name: 'COUNTRY_RATING_DESC' })
+  @ApiProperty({ example: 'B+', description: 'Country rating description' })
+  countryRatingDesc: string;
+
   @Column({ name: 'OECD_RISK_CATEGORY_DESC' })
   @ApiProperty({ example: 5, description: 'OECD risk category description' })
   oecdRiskCategory: number;
