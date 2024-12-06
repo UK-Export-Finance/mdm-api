@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.21.7](https://github.com/UK-Export-Finance/mdm-api/compare/v1.21.6...v1.21.7) (2024-12-06)
+
+
+### Bug Fixes
+
+* **APIM-608:** eslint downgraded ([b0e349c](https://github.com/UK-Export-Finance/mdm-api/commit/b0e349cb96d2ef65a77826eee3b311e274cdbaa8))
+* **APIM-608:** make GovNotify properties optional ([#1082](https://github.com/UK-Export-Finance/mdm-api/issues/1082)) ([9240907](https://github.com/UK-Export-Finance/mdm-api/commit/92409076d396244c8f1a7d107a795ab7f25c762d))
+
 ## [1.21.6](https://github.com/UK-Export-Finance/mdm-api/compare/v1.21.5...v1.21.6) (2024-11-04)
 
 
