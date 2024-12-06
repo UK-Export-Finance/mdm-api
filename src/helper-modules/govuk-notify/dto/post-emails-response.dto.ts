@@ -69,6 +69,7 @@ export class PostEmailsResponseData {
     example: null,
     description: 'Email scheduling is not used, so this field should always be null',
     nullable: true,
+    required: false,
   })
   public scheduled_for: string | null;
 
