@@ -84,7 +84,7 @@ jobs:
 
       - name: Linting
         working-directory: ./
-        run: npm run lint:all
+        run: npm run lint
 
   # 3. Prettier
   prettier:
@@ -112,7 +112,7 @@ jobs:
 
       - name: Linting
         working-directory: ./
-        run: npm run prettier:all
+        run: npm run prettier
 
   # 4. Type check
   typecheck:
@@ -140,7 +140,7 @@ jobs:
 
       - name: Validate
         working-directory: ./
-        run: npm run type-check:all
+        run: npm run type-check
 
   # 5. YAML check
   yaml:
