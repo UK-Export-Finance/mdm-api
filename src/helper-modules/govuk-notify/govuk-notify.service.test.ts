@@ -1,11 +1,11 @@
-import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
-import expectedResponse = require('./examples/example-response-for-send-emails.json');
 import { BadRequestException, ForbiddenException, InternalServerErrorException, UnauthorizedException, UnprocessableEntityException } from '@nestjs/common';
 import { GOVUK_NOTIFY } from '@ukef/constants';
+import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { AxiosError, AxiosResponse } from 'axios';
 import { PinoLogger } from 'nestjs-pino';
 import { NotifyClient } from 'notifications-node-client';
 
+import expectedResponse from './examples/example-response-for-send-emails.json';
 import { GovukNotifyService } from './govuk-notify.service';
 jest.mock('notifications-node-client');
 

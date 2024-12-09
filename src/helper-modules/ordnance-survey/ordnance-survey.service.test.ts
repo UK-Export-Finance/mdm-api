@@ -1,14 +1,13 @@
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
+import { GEOSPATIAL } from '@ukef/constants';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { AxiosError } from 'axios';
 import { when } from 'jest-when';
 import { of, throwError } from 'rxjs';
-import expectedResponseData = require('./examples/example-response-for-search-places-v1-postcode.json');
-import noResultsResponseData = require('./examples/example-response-for-search-places-v1-postcode-no-results.json');
 
-import { GEOSPATIAL } from '@ukef/constants';
-
+import expectedResponseData from './examples/example-response-for-search-places-v1-postcode.json';
+import noResultsResponseData from './examples/example-response-for-search-places-v1-postcode-no-results.json';
 import { OrdnanceSurveyException } from './exception/ordnance-survey.exception';
 import { OrdnanceSurveyService } from './ordnance-survey.service';
 
