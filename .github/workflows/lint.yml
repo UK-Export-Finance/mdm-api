@@ -20,7 +20,7 @@
 # Sets the timezone using the specified value.
 # Checks out the repository code.
 # Sets up the specified Node.js version.
-# Installs dependencies using npm ci.
+# Installs dependencies using npm ci --legacy-peer-deps.
 # Runs linting using the command npm run lint:all.
 #
 # Key Points:
@@ -80,7 +80,7 @@ jobs:
 
       - name: Dependencies
         working-directory: ./
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
       - name: Linting
         working-directory: ./
@@ -108,7 +108,7 @@ jobs:
 
       - name: Dependencies
         working-directory: ./
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
       - name: Linting
         working-directory: ./
@@ -136,7 +136,7 @@ jobs:
 
       - name: Dependencies
         working-directory: ./
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
       - name: Validate
         working-directory: ./
@@ -164,7 +164,7 @@ jobs:
 
       - name: Dependencies
         working-directory: ./
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
       - name: Validate
         working-directory: ./
