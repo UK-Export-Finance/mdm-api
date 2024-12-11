@@ -5,7 +5,6 @@ export interface LogKeysToRedactOptions {
   clientRequest: {
     logKey: string;
     headersLogKey: string;
-    bodyLogKey: string;
   };
   outgoingRequest: {
     logKey: string;
