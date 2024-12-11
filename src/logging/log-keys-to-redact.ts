@@ -10,11 +10,11 @@ export interface LogKeysToRedactOptions {
   outgoingRequest: {
     logKey: string;
     headersLogKey: string;
-    bodyLogKey: string;
   };
   incomingResponse: {
     logKey: string;
     bodyLogKey: string;
+    accessTokenLogKey: string;
   };
 
   error: {
@@ -47,19 +47,17 @@ const getClientRequestLogKeysToRedact = ({ logKey, headersLogKey, bodyLogKey }: 
   buildKeyToRedact([logKey, headersLogKey]),
 ];
 
-const getIncomingResponseLogKeysToRedact = ({ logKey, bodyLogKey }: LogKeysToRedactOptions['incomingResponse']): string[] => [
+const getIncomingResponseLogKeysToRedact = ({ logKey, bodyLogKey, accessTokenLogKey }: LogKeysToRedactOptions['incomingResponse']): string[] => [
   // We redact the client request body as they contain the Dun and Bradstreet access token
-  buildKeyToRedact([logKey, bodyLogKey]),
+  buildKeyToRedact([logKey, bodyLogKey, accessTokenLogKey]),
 ];
 
-const getOutgoingRequestLogKeysToRedact = ({ logKey, headersLogKey, bodyLogKey }: LogKeysToRedactOptions['outgoingRequest']): string[] => {
+const getOutgoingRequestLogKeysToRedact = ({ logKey, headersLogKey }: LogKeysToRedactOptions['outgoingRequest']): string[] => {
   return [
     // We redact the outgoing request headers as they contain:
     //  - our Basic auth details for Informatica
-    // We redact the outgoing request body as it contains:
     //  - our Client auth details for Dun and Bradstreet
     buildKeyToRedact([logKey, headersLogKey]),
-    buildKeyToRedact([logKey, bodyLogKey]),
   ];
 };
 
