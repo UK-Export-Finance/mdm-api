@@ -42,7 +42,7 @@ export const logKeysToRedact = ({ redactLogs, clientRequest, outgoingRequest, in
   return keys;
 };
 
-const getClientRequestLogKeysToRedact = ({ logKey, headersLogKey, bodyLogKey }: LogKeysToRedactOptions['clientRequest']): string[] => [
+const getClientRequestLogKeysToRedact = ({ logKey, headersLogKey }: LogKeysToRedactOptions['clientRequest']): string[] => [
   // We redact the client request headers as they contain the secret API key that the client uses to authenticate with our API.
   buildKeyToRedact([logKey, headersLogKey]),
 ];
