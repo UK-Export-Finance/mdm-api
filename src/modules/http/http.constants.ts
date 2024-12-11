@@ -5,4 +5,4 @@ export const BODY_LOG_KEY = 'data';
 export const HEADERS_LOG_KEY = 'headers';
 export const SENSITIVE_REQUEST_HEADER_NAMES = 'headers';
 export const SENSITIVE_RESPONSE_HEADER_NAMES = 'headers';
-export const ACCESS_TOKEN_LOG_KEY = 'access_token'
+export const ACCESS_TOKEN_LOG_KEY = 'access_token';
