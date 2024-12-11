@@ -8,7 +8,7 @@ import { DunAndBradstreetException } from './exception/dun-and-bradstreet.except
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { AxiosError } from 'axios';
 
-describe('CompaniesHouseService', () => {
+describe('DunAndBradstreetService', () => {
   let httpServiceGet: jest.Mock;
   let configServiceGet: jest.Mock;
   let service: DunAndBradstreetService;
