@@ -2,7 +2,7 @@ import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-
 
 import { DunAndBradstreetException } from './dun-and-bradstreet.exception';
 
-describe('CompaniesHouseException', () => {
+describe('DunAndBradstreetException', () => {
   const valueGenerator = new RandomValueGenerator();
   const message = valueGenerator.string();
 
