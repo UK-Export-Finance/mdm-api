@@ -14,11 +14,11 @@ describe('logKeysToRedact', () => {
     outgoingRequest: {
       logKey: valueGenerator.string(),
       headersLogKey: valueGenerator.string(),
-      bodyLogKey: valueGenerator.string(),
     },
     incomingResponse: {
       logKey: valueGenerator.string(),
       bodyLogKey: valueGenerator.string(),
+      accessTokenLogKey: valueGenerator.string(),
     },
     error: {
       logKey: valueGenerator.string(),
