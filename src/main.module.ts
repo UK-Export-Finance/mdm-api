@@ -49,7 +49,6 @@ import { LoggingInterceptor } from './logging/logging-interceptor.helper';
             clientRequest: {
               logKey: CLIENT_REQUEST_LOG_KEY,
               headersLogKey: HEADERS_LOG_KEY,
-              bodyLogKey: BODY_LOG_KEY,
             },
             outgoingRequest: {
               logKey: OUTGOING_REQUEST_LOG_KEY,
