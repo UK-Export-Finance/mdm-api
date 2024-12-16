@@ -10,12 +10,12 @@ run-name: Executing test QA on ${{ github.repository }} 🚀
 
 on:
   pull_request:
-    branches: [main]
-    paths:
-      - "**"
+    branches:
+      - main
+      - 'release-*'
 
 env:
-  environment: "qa"
+  environment: 'qa'
   TIMEZONE: ${{ vars.TIMEZONE }}
 
 jobs:
