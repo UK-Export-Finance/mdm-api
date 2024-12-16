@@ -15,8 +15,30 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
 
   protected generateValues(): CompanyValues {
     return {
+      accounts: {
+        accountingReferenceDate: {
+          day: this.valueGenerator.date().getDate().toString(),
+          month: this.valueGenerator.date().getMonth().toString(),
+        },
+        lastAccounts: {
+          madeUpTo: this.valueGenerator.date().toString(),
+          periodEndOn: this.valueGenerator.date().toString(),
+          periodStartOn: this.valueGenerator.date().toString(),
+          type: this.valueGenerator.date().toString(),
+        },
+        nextAccounts: {
+          dueOn: this.valueGenerator.date().toString(),
+          overdue: this.valueGenerator.boolean.toString(),
+          periodEndOn: this.valueGenerator.date().toString(),
+          periodStartOn: this.valueGenerator.date().toString(),
+        },
+        nextDue: this.valueGenerator.date().toString(),
+        nextMadeUpTo: this.valueGenerator.date().toString(),
+        overdue: this.valueGenerator.boolean.toString(),
+      },
       companiesHouseRegistrationNumber: this.valueGenerator.stringOfNumericCharacters({ length: 8 }),
       companyName: this.valueGenerator.sentence({ words: 2 }),
+      dateOfCreation: this.valueGenerator.date().toString(),
       buildingName: this.valueGenerator.sentence({ words: 2 }),
       buildingNumber: this.valueGenerator.nonnegativeInteger({ max: 99 }).toString(),
       thoroughfareName: this.valueGenerator.sentence({ words: 2 }),
@@ -161,8 +183,15 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
     }));
 
     const getCompanyResponse: GetCompanyResponse = {
+      accounts: {
+        accountingReferenceDate: {
+          day: this.valueGenerator.date().getDate().toString(),
+          month: this.valueGenerator.date().getMonth().toString(),
+        },
+      },
       companiesHouseRegistrationNumber: registrationNumberToUse,
       companyName: v.companyName,
+      dateOfCreation: v.dateOfCreation,
       registeredAddress: {
         addressLine1: `${v.buildingName} ${v.buildingNumber} ${v.thoroughfareName}`,
         locality: v.locality,
@@ -202,8 +231,10 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
 }
 
 interface CompanyValues {
+  accounts: object;
   companiesHouseRegistrationNumber: string;
   companyName: string;
+  dateOfCreation: string;
   buildingName: string;
   buildingNumber: string;
   thoroughfareName: string;

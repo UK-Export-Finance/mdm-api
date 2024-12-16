@@ -27,13 +27,13 @@ class Accounts {
 }
 
 class RegisteredAddress {
+  organisationName?: string;
   addressLine1?: string;
   addressLine2?: string;
   addressLine3?: string;
   careOf?: string;
   country?: string;
   locality?: string;
-  organisationName?: string;
   postalCode?: string;
   premises?: string;
   region?: string;

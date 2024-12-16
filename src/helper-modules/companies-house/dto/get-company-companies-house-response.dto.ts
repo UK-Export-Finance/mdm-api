@@ -41,16 +41,16 @@ export type GetCompanyCompaniesHouseResponse = {
   has_insolvency_history: boolean;
   jurisdiction: string;
   registered_office_address: {
+    organisation_name?: string;
     address_line_1: string;
     address_line_2?: string;
     address_line_3?: string;
     care_of?: string;
     country: string;
     locality: string;
-    organisation_name?: string;
     postal_code: string;
     premises?: string;
-    region: string;
+    region?: string;
   };
   registered_office_is_in_dispute: boolean;
   sic_codes: string[];
