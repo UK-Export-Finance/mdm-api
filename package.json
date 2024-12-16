@@ -21,6 +21,7 @@
     "start:prod": "node dist/src/main",
     "type-check": "tsc --noEmit --pretty",
     "unit-test": "jest --selectProjects=Unit",
+    "unit-test-dev": "jest --verbose --config=jest.config.ts",
     "validate:all": "npm run lint:fix && npm run prettier:fix && npm run type-check && npm run validate:yml",
     "validate:yml": "npx yaml-lint **/*.yml --ignore=**/node_modules"
   },
@@ -87,8 +88,8 @@
     "@types/lodash": "^4.17.13",
     "@types/node": "^22.10.2",
     "@types/supertest": "^6.0.2",
-    "@typescript-eslint/eslint-plugin": "^8.18.0",
-    "@typescript-eslint/parser": "^8.18.0",
+    "@typescript-eslint/eslint-plugin": "^8.18.1",
+    "@typescript-eslint/parser": "^8.18.1",
     "chance": "^1.1.12",
     "cspell": "^8.17.1",
     "eslint": "^8.57.1",
