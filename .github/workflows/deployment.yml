@@ -135,6 +135,11 @@ jobs:
             "DATABASE_NUMBER_GENERATOR_NAME=${{ secrets.DATABASE_NUMBER_GENERATOR_NAME }}" \
             "DATABASE_CEDAR_NAME=${{ secrets.DATABASE_CEDAR_NAME }}" \
             "DATABASE_CIS_NAME=${{ secrets.DATABASE_CIS_NAME }}" \
+            "DATABASE_ODS_HOST=${{ secrets.DATABASE_ODS_HOST }}" \
+            "DATABASE_ODS_CLIENT_ID=${{ secrets.DATABASE_ODS_CLIENT_ID }}" \
+            "DATABASE_ODS_TENANT_ID=${{ secrets.DATABASE_ODS_TENANT_ID }}" \
+            "DATABASE_ODS_CLIENT_SECRET=${{ secrets.DATABASE_ODS_CLIENT_SECRET }}" \
+            "DATABASE_ODS_NAME=${{ secrets.DATABASE_ODS_NAME }}" \
             "APIM_INFORMATICA_URL=${{ secrets.APIM_INFORMATICA_URL }}" \
             "APIM_INFORMATICA_USERNAME=${{ secrets.APIM_INFORMATICA_USERNAME }}" \
             "APIM_INFORMATICA_PASSWORD=${{ secrets.APIM_INFORMATICA_PASSWORD }}" \

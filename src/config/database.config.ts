@@ -39,7 +39,6 @@ export default registerAs(
       tenant_id: process.env.DATABASE_ODS_TENANT_ID,
       client_secret: process.env.DATABASE_ODS_CLIENT_SECRET,
       name: process.env.DATABASE_ODS_NAME,
-      ods_integration_enabled: process.env.FF_ODS_INTEGRATION_ENABLED
-    }
+    },
   }),
 );
