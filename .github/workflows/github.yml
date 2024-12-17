@@ -12,7 +12,7 @@ on:
     branches: [main, main-*]
 
 env:
-  environment: "qa"
+  environment: 'qa'
   TIMEZONE: ${{ vars.TIMEZONE }}
 
 jobs:

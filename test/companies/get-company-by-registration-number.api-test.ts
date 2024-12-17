@@ -1,12 +1,12 @@
+import getCompanyCompaniesHouseResponse from '@ukef/helper-modules/companies-house/examples/example-response-for-get-company-by-registration-number.json';
+import getCompanyCompaniesHouseOverseasCompanyResponse from '@ukef/helper-modules/companies-house/examples/example-response-for-get-company-by-registration-number-overseas-company.json';
+import getCompanyResponse from '@ukef/modules/companies/examples/example-response-for-get-company-by-registration-number.json';
 import { IncorrectAuthArg, withClientAuthenticationTests } from '@ukef-test/common-tests/client-authentication-api-tests';
 import { Api } from '@ukef-test/support/api';
 import { ENVIRONMENT_VARIABLES, TIME_EXCEEDING_COMPANIES_HOUSE_TIMEOUT } from '@ukef-test/support/environment-variables';
 import { GetCompanyGenerator } from '@ukef-test/support/generator/get-company-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import nock from 'nock';
-import getCompanyCompaniesHouseResponse = require('@ukef/helper-modules/companies-house/examples/example-response-for-get-company-by-registration-number.json');
-import getCompanyResponse = require('@ukef/modules/companies/examples/example-response-for-get-company-by-registration-number.json');
-import getCompanyCompaniesHouseOverseasCompanyResponse = require('@ukef/helper-modules/companies-house/examples/example-response-for-get-company-by-registration-number-overseas-company.json');
 
 describe('GET /companies?registrationNumber=', () => {
   let api: Api;
