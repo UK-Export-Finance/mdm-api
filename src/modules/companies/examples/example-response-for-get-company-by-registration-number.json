@@ -1,44 +1,59 @@
 {
+    "accounts": {
+        "accountingReferenceDate": {
+            "day": "31",
+            "month": "12"
+        },
+        "lastAccounts": {
+            "madeUpTo": "2024-12-31",
+            "periodEndOn": "2024-12-31",
+            "periodStartOn": "2024-01-01",
+            "type": "2024-01-01"
+        },
+        "nextAccounts": {
+            "dueOn": "2026-09-30",
+            "overdue": false,
+            "periodEndOn": "2024-12-31",
+            "periodStartOn": "2024-01-01"
+        },
+        "nextDue": "2026-09-30",
+        "nextMadeUpTo": "2024-12-31",
+        "overdue": false
+    },
     "companiesHouseRegistrationNumber": "00000001",
     "companyName": "TEST COMPANY LTD",
+    "dateOfCreation": "1989-09-20",
     "registeredAddress": {
-        "addressLine1": "1 Test Street",
-        "locality": "Test City",
-        "postalCode": "A1 2BC",
-        "country": "United Kingdom"
+        "addressLine1": "1 Test",
+        "addressLine2": "Test",
+        "country": "England",
+        "locality": "London",
+        "postalCode": "A12 3AB"
     },
     "industries": [
         {
-            "class":  {
-                "code": "59112",
-                "name": "Video production activities"
-            },
-            "code": "1009",
-            "name": "Information and communication"
+            "code": "1003",
+            "name": "Manufacturing",
+            "class": {
+                "code": "26110",
+                "name": "Manufacture of electronic components"
+            }
         },
         {
-            "class":  {
-                "code": "62012",
-                "name": "Business and domestic software development"
-            },
-            "code": "1009",
-            "name": "Information and communication"
+            "code": "1003",
+            "name": "Manufacturing",
+            "class": {
+                "code": "27120",
+                "name": "Manufacture of electricity distribution and control apparatus"
+            }
         },
         {
-            "class":  {
-                "code": "62020",
-                "name": "Information technology consultancy activities"
-            },
-            "code": "1009",
-            "name": "Information and communication"
-        },
-        {
-            "class":  {
-                "code": "62090",
-                "name": "Other information technology service activities"
-            },
-            "code": "1009",
-            "name": "Information and communication"
+            "code": "1006",
+            "name": "Wholesale and retail trade; repair of motor vehicles and motorcycles",
+            "class": {
+                "code": "46520",
+                "name": "Wholesale of electronic and telecommunications equipment and parts"
+            }
         }
     ]
 }
