@@ -92,12 +92,12 @@ describe('GovukNotifyService', () => {
 
         expect(sendEmailMethodMock).toHaveBeenCalledTimes(1);
 
-        const expectedPersonlisation = {
+        const expectedPersonalisation = {
           ...personalisation,
           linkToFile: mockPrepareUploadResponse,
         };
 
-        expect(sendEmailMethodMock).toHaveBeenCalledWith(templateId, sendToEmailAddress, { personalisation: expectedPersonlisation, reference });
+        expect(sendEmailMethodMock).toHaveBeenCalledWith(templateId, sendToEmailAddress, { personalisation: expectedPersonalisation, reference });
       });
     });
 
