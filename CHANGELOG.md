@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.22.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.21.6...v1.22.0) (2024-12-17)
+
+
+### Features
+
+* **APIM-608:** gov notify - file upload/link support ([#1083](https://github.com/UK-Export-Finance/mdm-api/issues/1083)) ([dddf3e6](https://github.com/UK-Export-Finance/mdm-api/commit/dddf3e6b109163852b9a69d6761346f45e7ce922))
+* **APIM-609:** companies house - extend returned fields ([#1089](https://github.com/UK-Export-Finance/mdm-api/issues/1089)) ([041124c](https://github.com/UK-Export-Finance/mdm-api/commit/041124cf54874c9c40896b64573ee6e9d4a1c633))
+* **APIM-610:** markets - add country rating description field ([#1090](https://github.com/UK-Export-Finance/mdm-api/issues/1090)) ([11ec0d4](https://github.com/UK-Export-Finance/mdm-api/commit/11ec0d4012e0a6e8d2aefc3745dd463369fbd733))
+
+
+### Bug Fixes
+
+* **APIM-608:** eslint downgraded ([b0e349c](https://github.com/UK-Export-Finance/mdm-api/commit/b0e349cb96d2ef65a77826eee3b311e274cdbaa8))
+* **APIM-608:** make GovNotify properties optional ([#1082](https://github.com/UK-Export-Finance/mdm-api/issues/1082)) ([9240907](https://github.com/UK-Export-Finance/mdm-api/commit/92409076d396244c8f1a7d107a795ab7f25c762d))
+
 ## [1.21.6](https://github.com/UK-Export-Finance/mdm-api/compare/v1.21.5...v1.21.6) (2024-11-04)
 
 
