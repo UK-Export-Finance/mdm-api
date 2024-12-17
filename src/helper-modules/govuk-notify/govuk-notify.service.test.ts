@@ -5,7 +5,9 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { PinoLogger } from 'nestjs-pino';
 import { NotifyClient } from 'notifications-node-client';
 
-import expectedResponse from './examples/example-response-for-send-emails.json';
+import { PostEmailsRequestDto } from '../../modules/emails/dto/post-emails-request.dto';
+import expectedPrepareUploadResponse from './examples/example-response-for-prepare-upload.json';
+import expectedSendEmailsResponse from './examples/example-response-for-send-emails.json';
 import { GovukNotifyService } from './govuk-notify.service';
 jest.mock('notifications-node-client');
 
@@ -24,9 +26,18 @@ describe('GovukNotifyService', () => {
     supplierName: valueGenerator.word(),
   };
 
-  const sendEmailMethodMock = jest
-    .spyOn(NotifyClient.prototype, 'sendEmail')
-    .mockImplementation(() => Promise.resolve({ status: 201, data: expectedResponse }));
+  const filePersonalisation = {
+    ...personalisation,
+    file: 'mock-file-buffer',
+  };
+
+  const mockSendEmailResponse = { status: 201, data: expectedSendEmailsResponse };
+  const mockPrepareUploadResponse = { status: 201, data: expectedPrepareUploadResponse };
+
+  const sendEmailMethodMock = jest.spyOn(NotifyClient.prototype, 'sendEmail').mockImplementation(() => Promise.resolve(mockSendEmailResponse));
+
+  const prepareUploadMethodMock = jest.spyOn(NotifyClient.prototype, 'prepareUpload').mockImplementation(() => Promise.resolve(mockPrepareUploadResponse));
+
   const logger = new PinoLogger({});
   logger.error = loggerError;
   const service = new GovukNotifyService(logger);
@@ -65,10 +76,40 @@ describe('GovukNotifyService', () => {
       expect(sendEmailMethodMock).toHaveBeenCalledWith(templateId, sendToEmailAddress, { personalisation, reference });
     });
 
+    describe('when a file property is provided', () => {
+      it('calls GOV.UK Notify client prepareUpload function with the correct arguments', async () => {
+        const mockParams: PostEmailsRequestDto = {
+          sendToEmailAddress,
+          templateId,
+          personalisation: filePersonalisation,
+          reference,
+          file: 'mock-file-buffer',
+        };
+
+        await service.sendEmail(govUkNotifyKey, mockParams);
+
+        expect(prepareUploadMethodMock).toHaveBeenCalledTimes(1);
+        expect(prepareUploadMethodMock).toHaveBeenCalledWith(mockParams.file, { confirmEmailBeforeDownload: true });
+      });
+
+      it('calls GOV.UK Notify client sendEmail function with the correct arguments', async () => {
+        await service.sendEmail(govUkNotifyKey, { sendToEmailAddress, templateId, personalisation: filePersonalisation, reference });
+
+        expect(sendEmailMethodMock).toHaveBeenCalledTimes(1);
+
+        const expectedPersonalisation = {
+          ...filePersonalisation,
+          linkToFile: mockPrepareUploadResponse,
+        };
+
+        expect(sendEmailMethodMock).toHaveBeenCalledWith(templateId, sendToEmailAddress, { personalisation: expectedPersonalisation, reference });
+      });
+    });
+
     it('returns a 201 response from GOV.UK Notify when sending the email is successful', async () => {
       const response = await service.sendEmail(govUkNotifyKey, { sendToEmailAddress, templateId, personalisation });
 
-      expect(response).toEqual({ status: 201, data: expectedResponse });
+      expect(response).toEqual({ status: 201, data: expectedSendEmailsResponse });
     });
 
     it.each([
