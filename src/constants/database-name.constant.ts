@@ -3,4 +3,5 @@ export const DATABASE = {
   MDM: 'mssql-mdm',
   CIS: 'mssql-cis',
   NUMBER_GENERATOR: 'mssql-number-generator',
+  ODS: 'mssql-ods',
 };
