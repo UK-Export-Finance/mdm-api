@@ -24,6 +24,10 @@ describe('GovukNotifyService', () => {
     firstName: valueGenerator.word(),
     surname: valueGenerator.word(),
     supplierName: valueGenerator.word(),
+  };
+
+  const filePersonalisation = {
+    ...personalisation,
     file: 'mock-file-buffer',
   };
 
@@ -77,7 +81,7 @@ describe('GovukNotifyService', () => {
         const mockParams: PostEmailsRequestDto = {
           sendToEmailAddress,
           templateId,
-          personalisation,
+          personalisation: filePersonalisation,
           reference,
           file: 'mock-file-buffer',
         };
@@ -89,12 +93,12 @@ describe('GovukNotifyService', () => {
       });
 
       it('calls GOV.UK Notify client sendEmail function with the correct arguments', async () => {
-        await service.sendEmail(govUkNotifyKey, { sendToEmailAddress, templateId, personalisation, reference });
+        await service.sendEmail(govUkNotifyKey, { sendToEmailAddress, templateId, personalisation: filePersonalisation, reference });
 
         expect(sendEmailMethodMock).toHaveBeenCalledTimes(1);
 
         const expectedPersonalisation = {
-          ...personalisation,
+          ...filePersonalisation,
           linkToFile: mockPrepareUploadResponse,
         };
 
