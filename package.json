@@ -21,6 +21,7 @@
     "start:prod": "node dist/src/main",
     "type-check": "tsc --noEmit --pretty",
     "unit-test": "jest --selectProjects=Unit",
+    "unit-test-dev": "jest --verbose --config=jest.config.ts",
     "validate:all": "npm run lint:fix && npm run prettier:fix && npm run type-check && npm run validate:yml",
     "validate:yml": "npx yaml-lint **/*.yml --ignore=**/node_modules"
   },
