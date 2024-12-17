@@ -58,7 +58,7 @@ export class PostEmailsRequestDto {
   @MaxLength(400)
   @ApiProperty({
     example: GOVUK_NOTIFY.EXAMPLES.FILE,
-    description: 'File for Notify to consume and generate a link to download',
+    description: 'File for GovNotify to consume and generate a link to download',
     required: false,
     nullable: true,
     minLength: 1,

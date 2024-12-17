@@ -24,6 +24,7 @@ describe('GovukNotifyService', () => {
     firstName: valueGenerator.word(),
     surname: valueGenerator.word(),
     supplierName: valueGenerator.word(),
+    file: 'mock-file-buffer',
   };
 
   const mockSendEmailResponse = { status: 201, data: expectedSendEmailsResponse };

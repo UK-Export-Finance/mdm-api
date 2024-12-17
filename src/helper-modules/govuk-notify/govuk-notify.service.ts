@@ -38,13 +38,13 @@ export class GovukNotifyService {
 
     const { personalisation } = postEmailsRequest;
 
-    if (postEmailsRequest.file) {
-      personalisation.linkToFile = await notifyClient.prepareUpload(postEmailsRequest.file, { confirmEmailBeforeDownload: true });
+    if (personalisation.file) {
+      personalisation.linkToFile = await notifyClient.prepareUpload(personalisation.file, { confirmEmailBeforeDownload: true });
     }
 
     const notifyResponse = await notifyClient
       .sendEmail(postEmailsRequest.templateId, postEmailsRequest.sendToEmailAddress, {
-        personalisation: postEmailsRequest.personalisation,
+        personalisation,
         reference,
       })
       .then((response: any) => response)
