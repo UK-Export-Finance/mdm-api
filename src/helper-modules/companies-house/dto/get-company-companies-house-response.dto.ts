@@ -16,14 +16,14 @@ export type GetCompanyCompaniesHouseResponse = {
       month: string;
       day: string;
     };
-    overdue: boolean;
-    next_made_up_to: string;
-    next_due: string;
+    overdue?: boolean;
+    next_made_up_to?: string;
+    next_due?: string;
     next_accounts: {
-      period_start_on: string;
-      due_on: string;
-      period_end_on: string;
-      overdue: boolean;
+      period_start_on?: string;
+      due_on?: string;
+      period_end_on?: string;
+      overdue?: boolean;
     };
   };
   company_name: string;

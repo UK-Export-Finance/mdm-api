@@ -11,10 +11,10 @@ class AccountsLastAccounts {
 }
 
 class AccountsNextAccounts {
-  dueOn: string;
-  overdue: boolean;
-  periodEndOn: string;
-  periodStartOn: string;
+  dueOn?: string;
+  overdue?: boolean;
+  periodEndOn?: string;
+  periodStartOn?: string;
 }
 
 class Accounts {

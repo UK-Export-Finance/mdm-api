@@ -18,4 +18,9 @@ export const GOVUK_NOTIFY = {
     TRANSACTION_ID: 36,
     SERVICE_ID: 36,
   },
+  FILE: {
+    SIZE: {
+      MAX: '2mb',
+    },
+  },
 };
