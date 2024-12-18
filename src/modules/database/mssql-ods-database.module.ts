@@ -18,9 +18,9 @@ import { DATABASE } from '@ukef/constants';
         authentication: {
           type: 'azure-active-directory-service-principal-secret',
           options: {
-            clientId: configService.get<string>('database.mssql_ods.client_id'), // Your Azure AD service principal client ID
-            clientSecret: configService.get<string>('database.mssql_ods.client_secret'), // Your Azure AD service principal client secret
-            tenantId: configService.get<string>('database.mssql_ods.tenant_id'), // Your Azure AD tenant ID
+            clientId: configService.get<string>('database.mssql_ods.client_id'),
+            clientSecret: configService.get<string>('database.mssql_ods.client_secret'),
+            tenantId: configService.get<string>('database.mssql_ods.tenant_id'),
           },
         },
         extra: {
