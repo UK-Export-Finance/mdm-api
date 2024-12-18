@@ -3,8 +3,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import config from '@ukef/config';
 import {
-  BODY_LOG_KEY,
   ACCESS_TOKEN_LOG_KEY,
+  BODY_LOG_KEY,
   CLIENT_REQUEST_LOG_KEY,
   HEADERS_LOG_KEY,
   INCOMING_RESPONSE_LOG_KEY,
