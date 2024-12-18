@@ -1,10 +1,10 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { DunAndBradstreetConfig } from '@ukef/config/dun-and-bradstreet.config';
 import { DUN_AND_BRADSTREET } from '@ukef/constants';
 import { HttpClient } from '@ukef/modules/http/http.client';
 
-import { DunAndBradstreetConfig } from '@ukef/config/dun-and-bradstreet.config';
 import { createWrapDunAndBradstreetHttpGetErrorCallback } from './wrap-dun-and-bradstreet-http-error-callback';
 
 @Injectable()

@@ -1,12 +1,12 @@
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
+import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
+import { AxiosError } from 'axios';
 import { resetAllWhenMocks, when } from 'jest-when';
 import { of, throwError } from 'rxjs';
 
 import { DunAndBradstreetService } from './dun-and-bradstreet.service';
 import { DunAndBradstreetException } from './exception/dun-and-bradstreet.exception';
-import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
-import { AxiosError } from 'axios';
 
 describe('DunAndBradstreetService', () => {
   let httpServiceGet: jest.Mock;
