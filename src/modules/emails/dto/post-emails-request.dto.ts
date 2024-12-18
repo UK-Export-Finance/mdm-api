@@ -57,8 +57,7 @@ export class PostEmailsRequestDto {
   @MaxLength(400)
   @ApiProperty({
     example: GOVUK_NOTIFY.EXAMPLES.FILE,
-    description:
-      'File for GovNotify to consume and generate a link to download with supported file types CSV (.csv), image (.jpeg, .jpg, .png), Microsoft Excel Spreadsheet (.xlsx), Microsoft Word Document (.doc, .docx), PDF (.pdf), text (.json, .odt, .rtf, .txt). File size mus tbe smaller than 2MB.',
+    description: `File for GovNotify to consume and generate a link to download with supported file types. The file size must be smaller than ${GOVUK_NOTIFY.FILE.SIZE.MAX}`,
     required: false,
     nullable: true,
     minLength: 1,
