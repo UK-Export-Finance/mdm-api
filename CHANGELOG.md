@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.22.1](https://github.com/UK-Export-Finance/mdm-api/compare/v1.22.0...v1.22.1) (2024-12-18)
+
+
+### Bug Fixes
+
+* **APIM-611:** notify, companies house bug fixes ([#1113](https://github.com/UK-Export-Finance/mdm-api/issues/1113)) ([2c5b84a](https://github.com/UK-Export-Finance/mdm-api/commit/2c5b84a4f459f60e12b6ce981de037479b1c2074))
+
 ## [1.22.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.21.6...v1.22.0) (2024-12-17)
 
 
