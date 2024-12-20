@@ -34,4 +34,4 @@ import { DATABASE } from '@ukef/constants';
     }),
   ],
 })
-export class MsSqlODSDatabaseModule {}
+export class MsSqlOdsDatabaseModule {}
