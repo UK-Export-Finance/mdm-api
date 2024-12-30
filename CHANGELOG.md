@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.22.2](https://github.com/UK-Export-Finance/mdm-api/compare/v1.22.1...v1.22.2) (2024-12-30)
+
+
+### Bug Fixes
+
+* **deps:** replace all ([#1118](https://github.com/UK-Export-Finance/mdm-api/issues/1118)) ([b712981](https://github.com/UK-Export-Finance/mdm-api/commit/b71298111f9095905c9669a275b1f445e5794ee1))
+
 ## [1.22.1](https://github.com/UK-Export-Finance/mdm-api/compare/v1.22.0...v1.22.1) (2024-12-18)
 
 
