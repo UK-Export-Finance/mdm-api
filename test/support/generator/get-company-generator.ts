@@ -24,7 +24,7 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
           madeUpTo: this.valueGenerator.dateISO8601(),
           periodEndOn: this.valueGenerator.dateISO8601(),
           periodStartOn: this.valueGenerator.dateISO8601(),
-          type: '2051-12-12',
+          type: '2052-12-12',
         },
         nextAccounts: {
           dueOn: this.valueGenerator.dateISO8601(),
