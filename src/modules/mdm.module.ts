@@ -14,6 +14,7 @@ import { NumbersModule } from '@ukef/modules/numbers/numbers.module';
 import { PremiumSchedulesModule } from '@ukef/modules/premium-schedules/premium-schedules.module';
 import { SectorIndustriesModule } from '@ukef/modules/sector-industries/sector-industries.module';
 import { YieldRatesModule } from '@ukef/modules/yield-rates/yield-rates.module';
+import { OdsModule } from './ods/ods.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { YieldRatesModule } from '@ukef/modules/yield-rates/yield-rates.module';
     InterestRatesModule,
     MarketsModule,
     NumbersModule,
+    OdsModule,
     PremiumSchedulesModule,
     SectorIndustriesModule,
     YieldRatesModule,
@@ -44,6 +46,7 @@ import { YieldRatesModule } from '@ukef/modules/yield-rates/yield-rates.module';
     InterestRatesModule,
     MarketsModule,
     NumbersModule,
+    OdsModule,
     PremiumSchedulesModule,
     SectorIndustriesModule,
     YieldRatesModule,
