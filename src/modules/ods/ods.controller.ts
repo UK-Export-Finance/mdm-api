@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiNotFoundResponse, ApiOperation, ApiResponse, ApiTags, ApiBadRequestResponse } from '@nestjs/swagger';
 import { OdsService } from './ods.service';
 import { GetCustomerQueryDto } from './dto/get-ods-customer-query.dto';
@@ -9,7 +9,7 @@ import { GetOdsCustomerResponse } from './dto/get-ods-customer-response.dto';
 export class OdsController {
   constructor(private readonly odsService: OdsService) {}
 
-  @Get('customers')
+  @Get('customers/:customerUrn')
   @ApiOperation({
     summary: 'Get customers from ODS',
   })
@@ -24,7 +24,7 @@ export class OdsController {
   @ApiBadRequestResponse({
     description: 'Invalid search parameters provided.',
   })
-  findCustomer(@Query() query: GetCustomerQueryDto): Promise<GetOdsCustomerResponse> {
-    return this.odsService.findCustomer(query.partyUrn);
+  findCustomer(@Param() param: GetCustomerQueryDto): Promise<GetOdsCustomerResponse> {
+    return this.odsService.findCustomer(param.customerUrn);
   }
 }

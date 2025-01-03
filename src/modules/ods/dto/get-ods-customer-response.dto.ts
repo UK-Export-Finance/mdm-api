@@ -4,7 +4,7 @@ export class GetOdsCustomerResponse {
   @ApiProperty({
     description: 'The unique UKEF id of the customer',
   })
-  readonly partyUrn: string;
+  readonly customerUrn: string;
 
   @ApiProperty({
     description: 'Customer company name',

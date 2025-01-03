@@ -15,7 +15,6 @@ export class OdsService {
   ) {}
 
   async findCustomer(partyUrn: string): Promise<GetOdsCustomerResponse> {
-    const queryRunner = this.odsDataSource.createQueryRunner();
     try {
       const spInput = this.createOdsStoredProcedureInput(ODS_ENTITIES.CUSTOMER, { customer_party_unique_reference_number: partyUrn });
 
@@ -31,14 +30,14 @@ export class OdsService {
         throw new NotFoundException('No matching customer found');
       }
 
-      return { partyUrn: resultJson.results[0].customer_party_unique_reference_number, name: resultJson.results[0].customer_name };
+      return { customerUrn: resultJson.results[0].customer_party_unique_reference_number, name: resultJson.results[0].customer_name };
     } catch (err) {
       if (err instanceof NotFoundException) {
         this.logger.warn(err);
         throw err;
       } else {
         this.logger.error(err);
-        throw new InternalServerErrorException();
+        throw new InternalServerErrorException('Error trying to find a customer');
       }
     }
   }
