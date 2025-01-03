@@ -24,7 +24,7 @@ export class OdsController {
   @ApiBadRequestResponse({
     description: 'Invalid search parameters provided.',
   })
-  getCustomers(@Query() query: GetCustomerQueryDto): Promise<GetOdsCustomerResponse> {
-    return this.odsService.getCustomer(query.partyUrn);
+  findCustomer(@Query() query: GetCustomerQueryDto): Promise<GetOdsCustomerResponse> {
+    return this.odsService.findCustomer(query.partyUrn);
   }
 }
