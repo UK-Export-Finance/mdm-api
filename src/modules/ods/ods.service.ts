@@ -18,19 +18,23 @@ export class OdsService {
     try {
       const spInput = this.createOdsStoredProcedureInput(ODS_ENTITIES.CUSTOMER, { customer_party_unique_reference_number: partyUrn });
 
-      const result = await this.callOdsStoredProcedure(spInput);
+      const storedProcedureResult = await this.callOdsStoredProcedure(spInput);
 
-      const resultJson = JSON.parse(result[0].output_body);
+      const storedProcedureJson = JSON.parse(storedProcedureResult[0]?.output_body);
 
-      if (!resultJson || resultJson?.status != 'SUCCESS') {
+      if (storedProcedureJson == undefined || storedProcedureJson?.status != 'SUCCESS') {
+        this.logger.error('Error from ODS stored procedure, output: %o', storedProcedureResult);
         throw new InternalServerErrorException('Error trying to find a customer');
       }
 
-      if (resultJson?.total_result_count == 0) {
+      if (storedProcedureJson?.total_result_count == 0) {
         throw new NotFoundException('No matching customer found');
       }
 
-      return { customerUrn: resultJson.results[0].customer_party_unique_reference_number, name: resultJson.results[0].customer_name };
+      return {
+        customerUrn: storedProcedureJson.results[0]?.customer_party_unique_reference_number,
+        customerName: storedProcedureJson.results[0]?.customer_name,
+      };
     } catch (err) {
       if (err instanceof NotFoundException) {
         this.logger.warn(err);
@@ -42,6 +46,13 @@ export class OdsService {
     }
   }
 
+  /**
+   * Creates the input parameter for the stored procedure
+   * @param {OdsEntity} entityToQuery The entity you want to query in ODS
+   * @param {odsStoredProcedureQueryParams} queryParameters The query parameters and filters to apply to the query
+   *
+   * @returns {odsStoredProcedureInput} The ODS stored procedure input in object format
+   */
   createOdsStoredProcedureInput(entityToQuery: OdsEntity, queryParameters: odsStoredProcedureQueryParams): odsStoredProcedureInput {
     return {
       query_method: 'get',
@@ -52,7 +63,13 @@ export class OdsService {
     };
   }
 
-  async callOdsStoredProcedure(input: odsStoredProcedureInput): Promise<any> {
+  /**
+   * Calls the ODS stored procedure with the input provided and returns the output of it
+   * @param {odsStoredProcedureInput} storedProcedureInput The input parameter of the stored procedure
+   *
+   * @returns {Promise<any>} The result of the stored procedure
+   */
+  async callOdsStoredProcedure(storedProcedureInput: odsStoredProcedureInput): Promise<any> {
     const queryRunner = this.odsDataSource.createQueryRunner();
     try {
       // Use the query runner to call a stored procedure
@@ -62,7 +79,7 @@ export class OdsService {
         EXEC t_apim.sp_ODS_query @input_body=@0, @output_body=@output_body OUTPUT;
         SELECT @output_body as output_body
       `,
-        [JSON.stringify(input)],
+        [JSON.stringify(storedProcedureInput)],
       );
 
       return result;

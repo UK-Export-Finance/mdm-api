@@ -9,5 +9,5 @@ export class GetOdsCustomerResponse {
   @ApiProperty({
     description: 'Customer company name',
   })
-  readonly name: string;
+  readonly customerName: string;
 }
