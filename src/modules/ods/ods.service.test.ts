@@ -48,7 +48,28 @@ describe('OdsService', () => {
     const mockCustomer = { customerUrn: CUSTOMERS.EXAMPLES.PARTYURN, customerName: 'Test Customer' };
     const mockStoredProcedureOutput = [
       {
-        output_body: `{"query_request_id":"9E2A4295-2EF9-482E-88AC-7DBF0FE19140","message":"SUCCESS","status":"SUCCESS","total_result_count":1,"results":[{"customer_party_unique_reference_number":"${mockCustomer.customerUrn}","customer_name":"${mockCustomer.customerName}","customer_companies_house_number":"05210925","customer_addresses":[{"customer_address_type":"Registered","customer_address_street":"Unit 3, Campus 5\\r\\nThird Avenue","customer_address_postcode":"SG6 2JF","customer_address_country":"United Kingdom","customer_address_city":"Letchworth Garden City"}]}]}`,
+        output_body: `{
+          "query_request_id": "Test ID",
+          "message": "SUCCESS",
+          "status": "SUCCESS",
+          "total_result_count": 1,
+          "results": [
+            {
+              "customer_party_unique_reference_number": "${mockCustomer.customerUrn}",
+              "customer_name": "${mockCustomer.customerName}",
+              "customer_companies_house_number": "12345678",
+              "customer_addresses": [
+                {
+                  "customer_address_type": "Registered",
+                  "customer_address_street": "Test Street",
+                  "customer_address_postcode": "AA1 1BB",
+                  "customer_address_country": "United Kingdom",
+                  "customer_address_city": "Test City"
+                }
+              ]
+            }
+          ]
+        }`,
       },
     ];
     const mockInput: odsStoredProcedureInput = service.createOdsStoredProcedureInput(ODS_ENTITIES.CUSTOMER, {
