@@ -1,7 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
-import { AxiosError } from 'axios';
+import { AxiosError, HttpStatusCode } from 'axios';
 import { resetAllWhenMocks, when } from 'jest-when';
 import { of, throwError } from 'rxjs';
 
@@ -44,7 +44,7 @@ describe('DunAndBradstreetService', () => {
 
   const expectedHttpServiceGetResponse = of({
     data: getDunsNumberDunAndBradstreetResponse,
-    status: 200,
+    status: HttpStatusCode.Ok,
     statusText: 'OK',
     config: undefined,
     headers: undefined,
