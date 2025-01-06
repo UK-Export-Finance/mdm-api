@@ -7,7 +7,10 @@ import { DunAndBradstreetService } from '@ukef/helper-modules/dun-and-bradstreet
 
 @Injectable()
 export class CustomersService {
-  constructor(private readonly informaticaService: InformaticaService, private readonly dunAndBradstreetService: DunAndBradstreetService) {}
+  constructor(
+    private readonly informaticaService: InformaticaService,
+    private readonly dunAndBradstreetService: DunAndBradstreetService,
+  ) {}
 
   async getCustomers(backendQuery: GetCustomersInformaticaQueryDto): Promise<GetCustomersResponse> {
     const customersInInformatica = await this.informaticaService.getCustomers(backendQuery);
