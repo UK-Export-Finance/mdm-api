@@ -3,7 +3,7 @@ import { CUSTOMERS, UKEFID } from '@ukef/constants';
 import { regexToString } from '@ukef/helpers/regex.helper';
 import { Matches } from 'class-validator';
 
-export class GetCustomerQueryDto {
+export class GetOdsCustomerQueryDto {
   @ApiProperty({
     required: true,
     example: CUSTOMERS.EXAMPLES.PARTYURN,
