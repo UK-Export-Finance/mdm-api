@@ -5,6 +5,7 @@ import { GetCustomersInformaticaQueryDto } from '../informatica/dto/get-customer
 import { CustomersService } from './customers.service';
 import { GetCustomersQueryDto } from './dto/get-customers-query.dto';
 import { GetCustomersResponse, GetCustomersResponseItem } from './dto/get-customers-response.dto';
+import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
 
 @ApiTags('customers')
 @Controller('customers')
@@ -32,6 +33,22 @@ export class CustomersController {
       ...{ includeLegacyData: query.fallbackToLegacyData },
     };
     return this.customersService.getCustomers(backendQuery);
+  }
+
+  @Get('dun-and-bradstreet')
+  @ApiOperation({
+    summary: 'Get DUNS number for a Company Registration Number',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'DUNS number',
+    type: String,
+  })
+  @ApiNotFoundResponse({
+    description: 'Customer not found.',
+  })
+  getDunAndBradstreetNumber(@Query() query: CompanyRegistrationNumberDto): Promise<String> {
+    return this.customersService.getDunAndBradstreetNumber(query.companyRegistrationNumber);
   }
 
   private ensureOneIsNotEmpty(...args) {

@@ -6,6 +6,7 @@ import { DUN_AND_BRADSTREET } from '@ukef/constants';
 import { HttpClient } from '@ukef/modules/http/http.client';
 
 import { createWrapDunAndBradstreetHttpGetErrorCallback } from './wrap-dun-and-bradstreet-http-error-callback';
+import { getDunAndBradstreetNumberByRegistrationNumberNotFoundError } from './known-errors';
 
 @Injectable()
 export class DunAndBradstreetService {
@@ -29,7 +30,7 @@ export class DunAndBradstreetService {
       },
       onError: createWrapDunAndBradstreetHttpGetErrorCallback({
         messageForUnknownError: 'Failed to get response from Dun and Bradstreet API',
-        knownErrors: [],
+        knownErrors: [getDunAndBradstreetNumberByRegistrationNumberNotFoundError()],
       }),
     });
     return data?.matchCandidates[0]?.organization?.duns;
@@ -51,6 +52,6 @@ export class DunAndBradstreetService {
         knownErrors: [],
       }),
     });
-    return response.data.accessToken;
+    return response.data.access_token;
   }
 }
