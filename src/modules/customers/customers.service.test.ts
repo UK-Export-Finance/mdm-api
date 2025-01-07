@@ -1,3 +1,4 @@
+import { NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DunAndBradstreetService } from '@ukef/helper-modules/dun-and-bradstreet/dun-and-bradstreet.service';
 import { InformaticaService } from '@ukef/modules/informatica/informatica.service';
@@ -6,7 +7,6 @@ import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-
 import { resetAllWhenMocks, when } from 'jest-when';
 
 import { CustomersService } from './customers.service';
-import { NotFoundException } from '@nestjs/common';
 
 jest.mock('@ukef/modules/informatica/informatica.service');
 

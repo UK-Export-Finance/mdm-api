@@ -2,12 +2,12 @@ import { BadRequestException } from '@nestjs/common';
 import { CUSTOMERS, ENUMS } from '@ukef/constants';
 import { GetCustomersGenerator } from '@ukef-test/support/generator/get-customers-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
+import { validate } from 'class-validator';
 import { when } from 'jest-when';
 
 import { CustomersController } from './customers.controller';
 import { CustomersService } from './customers.service';
 import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
-import { validate } from 'class-validator';
 
 describe('CustomersController', () => {
   const valueGenerator = new RandomValueGenerator();
@@ -121,6 +121,7 @@ describe('CustomersController', () => {
       dto.companyRegistrationNumber = query.companyRegistrationNumber;
 
       const validationErrors = await validate(dto);
+
       expect(validationErrors.length).toBeGreaterThan(0);
     });
 
