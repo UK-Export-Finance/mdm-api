@@ -1,9 +1,11 @@
+import { ConfigService } from '@nestjs/config';
 import { InformaticaService } from '@ukef/modules/informatica/informatica.service';
 import { GetCustomersGenerator } from '@ukef-test/support/generator/get-customers-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { resetAllWhenMocks, when } from 'jest-when';
 
 import { CustomersService } from './customers.service';
+import { DunAndBradstreetService } from '@ukef/helper-modules/dun-and-bradstreet/dun-and-bradstreet.service';
 
 jest.mock('@ukef/modules/informatica/informatica.service');
 
@@ -12,14 +14,27 @@ describe('CustomerService', () => {
 
   let service: CustomersService;
   let informaticaServiceGetCustomers: jest.Mock;
+  let dunAndBradstreetServiceGetDunsNumber: jest.Mock;
+  let configServiceGet: jest.Mock;
+
+  const testKey = valueGenerator.string({ length: 40 });
 
   beforeEach(() => {
     informaticaServiceGetCustomers = jest.fn();
     const informaticaService = new InformaticaService(null);
     informaticaService.getCustomers = informaticaServiceGetCustomers;
+
+    const configService = new ConfigService();
+    configServiceGet = jest.fn().mockReturnValue({ key: testKey });
+    configService.get = configServiceGet;
+
+    dunAndBradstreetServiceGetDunsNumber = jest.fn();
+    const dunAndBradstreetService = new DunAndBradstreetService(null, configService);
+    dunAndBradstreetService.getDunAndBradstreetNumberByRegistrationNumber = dunAndBradstreetServiceGetDunsNumber;
+
     resetAllWhenMocks();
 
-    service = new CustomersService(informaticaService);
+    service = new CustomersService(informaticaService, dunAndBradstreetService);
   });
 
   describe('getCustomers', () => {
@@ -31,6 +46,18 @@ describe('CustomerService', () => {
       const response = await service.getCustomers(informaticaRequest[0]);
 
       expect(response).toEqual(getCustomersResponse[0]);
+    });
+  });
+
+  describe('getDunAndBradstreetNumberByRegistrationNumber', () => {
+    const companyRegistrationNumber = '12341234';
+    const dunsNumber = '56785678';
+    it('returns duns number for the registration number', async () => {
+      when(dunAndBradstreetServiceGetDunsNumber).calledWith(companyRegistrationNumber).mockResolvedValueOnce(dunsNumber);
+
+      const response = await service.getDunAndBradstreetNumber(companyRegistrationNumber);
+
+      expect(response).toEqual(dunsNumber);
     });
   });
 });
