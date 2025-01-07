@@ -11,10 +11,10 @@ export const createWrapDunAndBradstreetHttpGetErrorCallback =
   (error: Error) => {
     let errorString;
     if (error instanceof AxiosError && error.response) {
-      if (typeof error.response.data === 'object') {
+      if (typeof error.response?.data === 'object') {
         errorString = JSON.stringify(error.response.data);
       }
-      if (typeof error.response.data === 'string') {
+      if (typeof error.response?.data === 'string') {
         errorString = error.response.data;
       }
       if (errorString) {

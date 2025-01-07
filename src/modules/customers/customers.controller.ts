@@ -6,6 +6,7 @@ import { CustomersService } from './customers.service';
 import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
 import { GetCustomersQueryDto } from './dto/get-customers-query.dto';
 import { GetCustomersResponse, GetCustomersResponseItem } from './dto/get-customers-response.dto';
+import { HttpStatusCode } from 'axios';
 
 @ApiTags('customers')
 @Controller('customers')
@@ -17,7 +18,7 @@ export class CustomersController {
     summary: 'Get customers from Salesforce',
   })
   @ApiResponse({
-    status: 200,
+    status: HttpStatusCode.Ok,
     description: 'Customers matching search parameters',
     type: [GetCustomersResponseItem],
   })
@@ -35,12 +36,12 @@ export class CustomersController {
     return this.customersService.getCustomers(backendQuery);
   }
 
-  @Get('dun-and-bradstreet')
+  @Get('dun-bradstreet')
   @ApiOperation({
     summary: 'Get DUNS number for a Company Registration Number',
   })
   @ApiResponse({
-    status: 200,
+    status: HttpStatusCode.Ok,
     description: 'DUNS number',
     type: String,
   })
