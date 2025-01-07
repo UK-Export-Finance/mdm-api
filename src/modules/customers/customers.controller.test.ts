@@ -133,7 +133,7 @@ describe('CustomersController', () => {
       const response = await controller.getDunAndBradstreetNumber(query);
 
       expect(response).toEqual(duns_number);
-      expect(controller.getDunAndBradstreetNumber).toHaveBeenCalledWith(query.companyRegistrationNumber);
+      expect(customersServiceGetDunAndBradstreetNumber).toHaveBeenCalledWith(query.companyRegistrationNumber);
     });
   });
 });
