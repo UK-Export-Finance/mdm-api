@@ -5,8 +5,8 @@ import { DunAndBradstreetConfig } from '@ukef/config/dun-and-bradstreet.config';
 import { DUN_AND_BRADSTREET } from '@ukef/constants';
 import { HttpClient } from '@ukef/modules/http/http.client';
 
-import { createWrapDunAndBradstreetHttpGetErrorCallback } from './wrap-dun-and-bradstreet-http-error-callback';
 import { getDunAndBradstreetNumberByRegistrationNumberNotFoundError } from './known-errors';
+import { createWrapDunAndBradstreetHttpGetErrorCallback } from './wrap-dun-and-bradstreet-http-error-callback';
 
 @Injectable()
 export class DunAndBradstreetService {

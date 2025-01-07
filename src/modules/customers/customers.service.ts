@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import { DunAndBradstreetService } from '@ukef/helper-modules/dun-and-bradstreet/dun-and-bradstreet.service';
 import { GetCustomersInformaticaQueryDto } from '@ukef/modules/informatica/dto/get-customers-informatica-query.dto';
 import { InformaticaService } from '@ukef/modules/informatica/informatica.service';
 
 import { GetCustomersResponse, GetCustomersResponseItem } from './dto/get-customers-response.dto';
-import { DunAndBradstreetService } from '@ukef/helper-modules/dun-and-bradstreet/dun-and-bradstreet.service';
 
 @Injectable()
 export class CustomersService {
@@ -27,7 +27,7 @@ export class CustomersService {
     );
   }
 
-  async getDunAndBradstreetNumber(registrationNumber: string): Promise<String> {
+  async getDunAndBradstreetNumber(registrationNumber: string): Promise<string> {
     const dunAndBrastreetNumber = await this.dunAndBradstreetService.getDunAndBradstreetNumberByRegistrationNumber(registrationNumber);
     return dunAndBrastreetNumber;
   }

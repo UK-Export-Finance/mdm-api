@@ -1,11 +1,11 @@
 import { ConfigService } from '@nestjs/config';
+import { DunAndBradstreetService } from '@ukef/helper-modules/dun-and-bradstreet/dun-and-bradstreet.service';
 import { InformaticaService } from '@ukef/modules/informatica/informatica.service';
 import { GetCustomersGenerator } from '@ukef-test/support/generator/get-customers-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { resetAllWhenMocks, when } from 'jest-when';
 
 import { CustomersService } from './customers.service';
-import { DunAndBradstreetService } from '@ukef/helper-modules/dun-and-bradstreet/dun-and-bradstreet.service';
 
 jest.mock('@ukef/modules/informatica/informatica.service');
 
@@ -52,6 +52,7 @@ describe('CustomerService', () => {
   describe('getDunAndBradstreetNumberByRegistrationNumber', () => {
     const companyRegistrationNumber = '12341234';
     const dunsNumber = '56785678';
+
     it('returns duns number for the registration number', async () => {
       when(dunAndBradstreetServiceGetDunsNumber).calledWith(companyRegistrationNumber).mockResolvedValueOnce(dunsNumber);
 
