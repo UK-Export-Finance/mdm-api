@@ -28,7 +28,7 @@ export class CustomersService {
   }
 
   async getDunAndBradstreetNumber(registrationNumber: string): Promise<string> {
-    const dunAndBrastreetNumber = await this.dunAndBradstreetService.getDunAndBradstreetNumberByRegistrationNumber(registrationNumber);
-    return dunAndBrastreetNumber;
+    const dunAndBradstreetNumber = await this.dunAndBradstreetService.getDunAndBradstreetNumberByRegistrationNumber(registrationNumber);
+    return dunAndBradstreetNumber;
   }
 }

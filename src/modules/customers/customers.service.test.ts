@@ -6,6 +6,7 @@ import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-
 import { resetAllWhenMocks, when } from 'jest-when';
 
 import { CustomersService } from './customers.service';
+import { NotFoundException } from '@nestjs/common';
 
 jest.mock('@ukef/modules/informatica/informatica.service');
 
@@ -59,6 +60,14 @@ describe('CustomerService', () => {
       const response = await service.getDunAndBradstreetNumber(companyRegistrationNumber);
 
       expect(response).toEqual(dunsNumber);
+    });
+
+    it('returns a NotFoundException when no a DUNS number was not found', async () => {
+      when(dunAndBradstreetServiceGetDunsNumber).calledWith(companyRegistrationNumber).mockRejectedValueOnce(new NotFoundException());
+
+      const responsePromise = service.getDunAndBradstreetNumber(companyRegistrationNumber);
+
+      await expect(responsePromise).rejects.toBeInstanceOf(NotFoundException);
     });
   });
 });
