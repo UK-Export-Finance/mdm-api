@@ -5,14 +5,14 @@ import { InformaticaService } from '@ukef/modules/informatica/informatica.servic
 import { SalesforceService } from '@ukef/modules/salesforce/salesforce.service';
 import { Response } from 'express';
 
-import { GetCustomersResponse, GetCustomersResponseItem } from './dto/get-customers-response.dto';
-import { CreateCustomerDto } from './dto/create-customer.dto';
-import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
-import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-customer-salesforce-response.dto';
-import { GetCustomersSalesforceResponse } from './dto/get-customers-salesforce-response.dto';
-import { NumbersService } from '../numbers/numbers.service';
 import { CreateUkefIdDto } from '../numbers/dto/create-ukef-id.dto';
 import { UkefId } from '../numbers/entities/ukef-id.entity';
+import { NumbersService } from '../numbers/numbers.service';
+import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-customer-salesforce-response.dto';
+import { CreateCustomerDto } from './dto/create-customer.dto';
+import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
+import { GetCustomersResponse, GetCustomersResponseItem } from './dto/get-customers-response.dto';
+import { GetCustomersSalesforceResponse } from './dto/get-customers-salesforce-response.dto';
 
 @Injectable()
 export class CustomersService {
@@ -73,7 +73,7 @@ export class CustomersService {
             throw error;
           }
           try {
-            const partyUrn = existingCustomersInInformatica[0].partyUrn;
+            const [{ partyUrn }] = existingCustomersInInformatica;
             const isLegacyRecord = true;
             const createdCustomer = await this.createCustomerByURNAndDUNS(DTFSCustomerDto, partyUrn, dunsNumber, isLegacyRecord);
             res.status(201).json(createdCustomer);
@@ -105,7 +105,7 @@ export class CustomersService {
         try {
           const numbersServiceResponse: UkefId[] = await this.numbersService.create(createUkefIdDto);
           partyUrn = numbersServiceResponse[0].maskedId;
-        } catch (error) {}
+        } catch {}
         try {
           const isLegacyRecord = false;
           const createdCustomer = await this.createCustomerByURNAndDUNS(DTFSCustomerDto, partyUrn, dunsNumber, isLegacyRecord);

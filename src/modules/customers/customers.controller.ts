@@ -1,14 +1,14 @@
 import { BadRequestException, Body, Controller, Get, Post, Query, Res } from '@nestjs/common';
-import { ApiCreatedResponse, ApiNotFoundResponse, ApiBadRequestResponse, ApiOperation, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOperation, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { HttpStatusCode } from 'axios';
+import { Response } from 'express';
 
 import { GetCustomersInformaticaQueryDto } from '../informatica/dto/get-customers-informatica-query.dto';
 import { CustomersService } from './customers.service';
 import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
+import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
 import { GetCustomersQueryDto } from './dto/get-customers-query.dto';
 import { GetCustomersResponse, GetCustomersResponseItem } from './dto/get-customers-response.dto';
-import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
-import { Response } from 'express';
 
 @ApiTags('customers')
 @Controller('customers')

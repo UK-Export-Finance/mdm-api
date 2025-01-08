@@ -1,21 +1,21 @@
+import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { DunAndBradstreetService } from '@ukef/helper-modules/dun-and-bradstreet/dun-and-bradstreet.service';
 import { InformaticaService } from '@ukef/modules/informatica/informatica.service';
 import { SalesforceService } from '@ukef/modules/salesforce/salesforce.service';
-import { NumbersService } from '../numbers/numbers.service';
-import { DunAndBradstreetService } from '@ukef/helper-modules/dun-and-bradstreet/dun-and-bradstreet.service';
 import { GetCustomersGenerator } from '@ukef-test/support/generator/get-customers-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
-import { resetAllWhenMocks, when } from 'jest-when';
-import { ConfigService } from '@nestjs/config';
-import { CustomersService } from './customers.service';
+import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
+import { resetAllWhenMocks, when } from 'jest-when';
 
-import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
-import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-customer-salesforce-response.dto';
-import { UkefId } from '../numbers/entities/ukef-id.entity';
-import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { GetCustomersInformaticaResponseItem } from '../informatica/dto/get-customers-informatica-response.dto';
 import { InformaticaException } from '../informatica/exception/informatica.exception';
-import { HttpStatusCode } from 'axios';
+import { UkefId } from '../numbers/entities/ukef-id.entity';
+import { NumbersService } from '../numbers/numbers.service';
+import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-customer-salesforce-response.dto';
+import { CustomersService } from './customers.service';
+import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
 
 jest.mock('@ukef/modules/informatica/informatica.service');
 
@@ -30,9 +30,6 @@ describe('CustomerService', () => {
   let service: CustomersService;
 
   let informaticaServiceGetCustomers: jest.Mock;
-  let configServiceGet: jest.Mock;
-
-  const testKey = valueGenerator.string({ length: 40 });
 
   let salesforceConfigServiceGet: jest.Mock;
   let salesforceServiceCreateCustomer: jest.Mock;

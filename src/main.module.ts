@@ -2,14 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import config from '@ukef/config';
-import {
-  ACCESS_TOKEN_LOG_KEY,
-  BODY_LOG_KEY,
-  CLIENT_REQUEST_LOG_KEY,
-  HEADERS_LOG_KEY,
-  INCOMING_RESPONSE_LOG_KEY,
-  OUTGOING_REQUEST_LOG_KEY,
-} from '@ukef/modules/http/http.constants';
+import { BODY_LOG_KEY, CLIENT_REQUEST_LOG_KEY, HEADERS_LOG_KEY, INCOMING_RESPONSE_LOG_KEY, OUTGOING_REQUEST_LOG_KEY } from '@ukef/modules/http/http.constants';
 import { MdmModule } from '@ukef/modules/mdm.module';
 import { LoggerModule } from 'nestjs-pino';
 

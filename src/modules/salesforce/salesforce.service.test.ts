@@ -1,13 +1,13 @@
 import { HttpService } from '@nestjs/axios';
+import { ConfigService } from '@nestjs/config';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { AxiosError } from 'axios';
 import { when } from 'jest-when';
 import { of, throwError } from 'rxjs';
-import { ConfigService } from '@nestjs/config';
 
+import { CreateCustomerDto } from '../customers/dto/create-customer.dto';
 import { SalesforceException } from './exception/salesforce.exception';
 import { SalesforceService } from './salesforce.service';
-import { CreateCustomerDto } from '../customers/dto/create-customer.dto';
 
 describe('SalesforceService', () => {
   const valueGenerator = new RandomValueGenerator();

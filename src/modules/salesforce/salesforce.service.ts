@@ -1,13 +1,13 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { HttpClient } from '@ukef/modules/http/http.client';
 import { ConfigService } from '@nestjs/config';
+import { HttpClient } from '@ukef/modules/http/http.client';
 
-import { createWrapSalesforceHttpGetErrorCallback } from './wrap-salesforce-http-error-callback';
+import { KEY, SalesforceConfig } from '../../config/salesforce.config';
 import { CreateCustomerDto } from '../customers/dto/create-customer.dto';
 import { CreateCustomerSalesforceResponseDto } from './dto/create-customer-salesforce-response.dto';
-import { SalesforceConfig, KEY } from '../../config/salesforce.config';
 import { customerAlreadyExistsSalesforceError } from './known-errors';
+import { createWrapSalesforceHttpGetErrorCallback } from './wrap-salesforce-http-error-callback';
 
 @Injectable()
 export class SalesforceService {

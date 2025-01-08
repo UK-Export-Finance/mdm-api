@@ -3,14 +3,14 @@ import { CUSTOMERS, ENUMS } from '@ukef/constants';
 import { GetCustomersGenerator } from '@ukef-test/support/generator/get-customers-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { validate } from 'class-validator';
-import { when } from 'jest-when';
 import { Response } from 'express';
+import { when } from 'jest-when';
 
 import { CustomersController } from './customers.controller';
 import { CustomersService } from './customers.service';
+import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
 import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
 import { GetCustomersResponse } from './dto/get-customers-response.dto';
-import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
 
 const mockResponseObject = {
   json: jest.fn(),
