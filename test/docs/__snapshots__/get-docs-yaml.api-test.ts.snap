@@ -29,27 +29,27 @@ paths:
         - name: source
           required: true
           in: query
-          example: GBP
           description: >-
             Source currency for exchange rate - Use ISO 3 alpha currency code
             standard. Only GBP and USD currencies are supported
           schema:
+            example: GBP
             type: string
         - name: target
           required: true
           in: query
-          example: AED
           description: >-
             Target currency for exchange rate - Use ISO 3 alpha currency code
             standard
           schema:
+            example: AED
             type: string
         - name: exchangeRateDate
           required: false
           in: query
-          example: '2021-01-26'
           description: Retrieve the exchange rate for a specific date
           schema:
+            example: '2021-01-26'
             type: string
       responses:
         '200':
@@ -68,9 +68,9 @@ paths:
         - name: isoCode
           required: true
           in: path
-          example: GBP
           description: ISO Code
           schema:
+            example: GBP
             type: string
       responses:
         '200':
@@ -91,33 +91,32 @@ paths:
         - name: companyReg
           required: false
           in: query
-          example: '06012345'
           description: >-
             The company registration number (in the country where the customer
             is registered) of the customer to search for.
           schema:
+            example: '06012345'
             type: string
         - name: partyUrn
           required: false
           in: query
-          example: '00302069'
           description: The unique UKEF id of the customer to search for.
           schema:
             pattern: ^\\d{8}$
+            example: '00302069'
             type: string
         - name: name
           required: false
           in: query
-          example: Testing Systems Ltd
           description: >-
             The name of the customer to search for, allows partial matches, not
             case sensitive.
           schema:
+            example: Testing Systems Ltd
             type: string
         - name: fallbackToLegacyData
           required: false
           in: query
-          example: legacy-only
           description: >-
             Determines if the search results will include legacy records. If
             this value is 'yes' then we search for a Salesforce Account first
@@ -125,6 +124,7 @@ paths:
             Party DB).
           schema:
             default: 'yes'
+            example: legacy-only
             enum:
               - 'yes'
               - 'no'
@@ -186,23 +186,23 @@ paths:
         - name: startdate
           required: true
           in: query
-          example: '2017-07-04'
           description: Guarantee commencement date for a facility
           schema:
+            example: '2017-07-04'
             type: string
         - name: enddate
           required: true
           in: query
-          example: '2018-07-04'
           description: Guarantee expiry date for a facility
           schema:
+            example: '2018-07-04'
             type: string
         - name: productgroup
           required: true
           in: query
-          example: EW
           description: 'Two products are accepted: EW and BS'
           schema:
+            example: EW
             type: string
       responses:
         '200':
@@ -349,11 +349,11 @@ paths:
         - name: active
           required: false
           in: query
-          example: 'Y'
           description: >-
             Optional filtering by field "active". If parameter is not provided
             result will include active and not active markets
           schema:
+            example: 'Y'
             enum:
               - 'Y'
               - 'N'
@@ -361,11 +361,11 @@ paths:
         - name: search
           required: false
           in: query
-          example: korea
           description: >-
             Optional filtering by fields "marketName" or "isoCode". Partial
             matches are allowed and search is not case sensitive
           schema:
+            example: korea
             type: string
       responses:
         '200':
@@ -401,18 +401,18 @@ paths:
         - name: type
           required: true
           in: query
-          example: 1
           description: >-
             Id of UKEF ID type. Common types are: 1 for Deal/Facility, 2 for
             Party, 8 for Covenant
           schema:
+            example: 1
             type: number
         - name: ukefId
           required: true
           in: query
-          example: '0030052431'
           description: UKEF ID to check
           schema:
+            example: '0030052431'
             type: string
       responses:
         '200':
@@ -453,9 +453,9 @@ paths:
         - name: facilityId
           required: true
           in: path
-          example: '30000425'
           description: UKEF id for Facility, but without 00 at beginning
           schema:
+            example: '30000425'
             type: string
       responses:
         '200':
@@ -476,16 +476,16 @@ paths:
         - name: ukefSectorId
           required: false
           in: query
-          example: '1010'
           description: Search by UKEF Sector id, returns multiple Industries
           schema:
+            example: '1010'
             type: string
         - name: ukefIndustryId
           required: false
           in: query
-          example: '02400'
           description: Search by UKEF Industry id, most likely returns 1 result
           schema:
+            example: '02400'
             type: string
       responses:
         '200':
@@ -506,9 +506,9 @@ paths:
         - name: searchDate
           required: false
           in: query
-          example: '2023-03-01'
           description: Filter yield rates for specific date. Can go back to 2010-03-15
           schema:
+            example: '2023-03-01'
             type: string
       responses:
         '200':
@@ -532,13 +532,13 @@ paths:
         - name: postcode
           required: true
           in: query
-          example: SW1A 2AQ
           description: Postcode to search for
           schema:
             minLength: 5
             maxLength: 8
             pattern: >-
               ^[A-Za-z]{1,2}[\\dRr][\\dA-Za-z]?\\s?\\d[ABD-HJLNP-UW-Zabd-hjlnp-uw-z]{2}$
+            example: SW1A 2AQ
             type: string
       responses:
         '200':
@@ -562,11 +562,11 @@ paths:
           required: true
           in: query
           description: The Companies House registration number of the company to find.
-          example: '00000001'
           schema:
             minLength: 8
             maxLength: 8
             pattern: ^(([A-Z]{2}|[A-Z]\\d|\\d{2})(\\d{6}|\\d{5}[A-Z]))$
+            example: '00000001'
             type: string
       responses:
         '200':

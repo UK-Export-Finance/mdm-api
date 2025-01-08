@@ -1,8 +1,10 @@
 import { BadRequestException, Controller, Get, Query } from '@nestjs/common';
 import { ApiNotFoundResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { HttpStatusCode } from 'axios';
 
 import { GetCustomersInformaticaQueryDto } from '../informatica/dto/get-customers-informatica-query.dto';
 import { CustomersService } from './customers.service';
+import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
 import { GetCustomersQueryDto } from './dto/get-customers-query.dto';
 import { GetCustomersResponse, GetCustomersResponseItem } from './dto/get-customers-response.dto';
 
@@ -16,7 +18,7 @@ export class CustomersController {
     summary: 'Get customers from Salesforce',
   })
   @ApiResponse({
-    status: 200,
+    status: HttpStatusCode.Ok,
     description: 'Customers matching search parameters',
     type: [GetCustomersResponseItem],
   })
@@ -32,6 +34,22 @@ export class CustomersController {
       ...{ includeLegacyData: query.fallbackToLegacyData },
     };
     return this.customersService.getCustomers(backendQuery);
+  }
+
+  @Get('dun-bradstreet')
+  @ApiOperation({
+    summary: 'Get DUNS number for a Company Registration Number',
+  })
+  @ApiResponse({
+    status: HttpStatusCode.Ok,
+    description: 'DUNS number',
+    type: String,
+  })
+  @ApiNotFoundResponse({
+    description: 'Customer not found.',
+  })
+  getDunAndBradstreetNumber(@Query() query: CompanyRegistrationNumberDto): Promise<string> {
+    return this.customersService.getDunAndBradstreetNumber(query.companyRegistrationNumber);
   }
 
   private ensureOneIsNotEmpty(...args) {
