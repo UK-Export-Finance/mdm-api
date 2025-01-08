@@ -19,7 +19,7 @@ describe('OdsController', () => {
 
   describe('findCustomer', () => {
     it('should return the customer when a valid customer URN is provided', async () => {
-      const mockCustomerDetails = { customerUrn: CUSTOMERS.EXAMPLES.PARTYURN, name: 'Test name' };
+      const mockCustomerDetails = { urn: CUSTOMERS.EXAMPLES.PARTYURN, name: 'Test name' };
 
       when(odsServiceFindCustomer).calledWith(CUSTOMERS.EXAMPLES.PARTYURN).mockResolvedValueOnce(mockCustomerDetails);
 

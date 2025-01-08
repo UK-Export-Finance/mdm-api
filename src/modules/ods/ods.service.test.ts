@@ -45,7 +45,7 @@ describe('OdsService', () => {
   });
 
   it('findCustomer should return a customer the customer urn and name when findCustomer is called', async () => {
-    const mockCustomer = { customerUrn: CUSTOMERS.EXAMPLES.PARTYURN, customerName: 'Test Customer' };
+    const mockCustomer = { urn: CUSTOMERS.EXAMPLES.PARTYURN, name: 'Test Customer' };
     const mockStoredProcedureOutput = [
       {
         output_body: `{
