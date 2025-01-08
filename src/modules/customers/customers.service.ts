@@ -1,4 +1,5 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { DunAndBradstreetService } from '@ukef/helper-modules/dun-and-bradstreet/dun-and-bradstreet.service';
 import { GetCustomersInformaticaQueryDto } from '@ukef/modules/informatica/dto/get-customers-informatica-query.dto';
 import { InformaticaService } from '@ukef/modules/informatica/informatica.service';
 import { SalesforceService } from '@ukef/modules/salesforce/salesforce.service';
@@ -12,7 +13,6 @@ import { GetCustomersSalesforceResponse } from './dto/get-customers-salesforce-r
 import { NumbersService } from '../numbers/numbers.service';
 import { CreateUkefIdDto } from '../numbers/dto/create-ukef-id.dto';
 import { UkefId } from '../numbers/entities/ukef-id.entity';
-import { DunAndBradstreetService } from '@ukef/helper-modules/dun-and-bradstreet/dun-and-bradstreet.service';
 
 @Injectable()
 export class CustomersService {
@@ -36,6 +36,10 @@ export class CustomersService {
         isLegacyRecord: customerInInformatica.isLegacyRecord,
       }),
     );
+  }
+
+  async getDunAndBradstreetNumber(registrationNumber: string): Promise<string> {
+    return await this.dunAndBradstreetService.getDunAndBradstreetNumberByRegistrationNumber(registrationNumber);
   }
 
   async getOrCreateCustomer(res: Response, DTFSCustomerDto: DTFSCustomerDto): Promise<GetCustomersResponse> {

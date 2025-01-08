@@ -55,9 +55,8 @@ services:
       SALESFORCE_TIMEOUT:
       API_KEY:
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:${PORT}"]
+      test: ['CMD', 'curl', '-f', 'http://localhost:${PORT}']
       retries: 3
       interval: 60s
       timeout: 10s
       start_period: 30s
-

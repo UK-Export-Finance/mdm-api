@@ -30,6 +30,9 @@ describe('CustomerService', () => {
   let service: CustomersService;
 
   let informaticaServiceGetCustomers: jest.Mock;
+  let configServiceGet: jest.Mock;
+
+  const testKey = valueGenerator.string({ length: 40 });
 
   let salesforceConfigServiceGet: jest.Mock;
   let salesforceServiceCreateCustomer: jest.Mock;
@@ -367,6 +370,27 @@ describe('CustomerService', () => {
         expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(0);
         expect(numbersServiceCreate).toHaveBeenCalledTimes(0);
       });
+    });
+  });
+
+  describe('getDunAndBradstreetNumberByRegistrationNumber', () => {
+    const companyRegistrationNumber = '12341234';
+    const dunsNumber = '56785678';
+
+    it('returns duns number for the registration number', async () => {
+      when(dunAndBradstreetServiceGetDunsNumber).calledWith(companyRegistrationNumber).mockResolvedValueOnce(dunsNumber);
+
+      const response = await service.getDunAndBradstreetNumber(companyRegistrationNumber);
+
+      expect(response).toEqual(dunsNumber);
+    });
+
+    it('returns a NotFoundException when no a DUNS number was not found', async () => {
+      when(dunAndBradstreetServiceGetDunsNumber).calledWith(companyRegistrationNumber).mockRejectedValueOnce(new NotFoundException());
+
+      const responsePromise = service.getDunAndBradstreetNumber(companyRegistrationNumber);
+
+      await expect(responsePromise).rejects.toBeInstanceOf(NotFoundException);
     });
   });
 });

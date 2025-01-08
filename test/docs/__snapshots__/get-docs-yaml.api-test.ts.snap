@@ -450,6 +450,55 @@ paths:
                 $ref: '#/components/schemas/MarketEntity'
       tags:
         - markets
+  /api/v1/numbers:
+    post:
+      operationId: NumbersController_create
+      summary: Create Number
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CreateUkefIdDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+        - numbers
+    get:
+      operationId: NumbersController_findOne
+      summary: Get information about UKEF ID
+      parameters:
+        - name: type
+          required: true
+          in: query
+          description: >-
+            Id of UKEF ID type. Common types are: 1 for Deal/Facility, 2 for
+            Party, 8 for Covenant
+          schema:
+            example: 1
+            type: number
+        - name: ukefId
+          required: true
+          in: query
+          description: UKEF ID to check
+          schema:
+            example: '0030052431'
+            type: string
+      responses:
+        '200':
+          description: The found record
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UkefId'
+      tags:
+        - numbers
   /api/v1/premium/schedule:
     post:
       operationId: PremiumSchedulesController_create

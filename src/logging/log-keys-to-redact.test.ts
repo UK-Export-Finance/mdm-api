@@ -20,6 +20,11 @@ describe('logKeysToRedact', () => {
       logKey: valueGenerator.string(),
       bodyLogKey: valueGenerator.string(),
     },
+    incomingResponse: {
+      logKey: valueGenerator.string(),
+      bodyLogKey: valueGenerator.string(),
+      accessTokenLogKey: valueGenerator.string(),
+    },
     error: {
       logKey: valueGenerator.string(),
       sensitiveChildKeys: [valueGenerator.string(), valueGenerator.string()],
