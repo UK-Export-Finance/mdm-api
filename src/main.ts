@@ -16,6 +16,7 @@ const main = async () => {
   logger.log(`==========================================================`);
   logger.log(`Main app will serve on PORT ${app.port}`, 'MainApplication');
   logger.log(`==========================================================`);
+
   return app.listen();
 };
 

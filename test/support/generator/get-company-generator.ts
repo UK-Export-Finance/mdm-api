@@ -15,13 +15,38 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
 
   protected generateValues(): CompanyValues {
     return {
+      accounts: {
+        accountingReferenceDate: {
+          day: this.valueGenerator.integer({ max: 31 }).toString(),
+          month: this.valueGenerator.integer({ max: 12 }).toString(),
+        },
+        lastAccounts: {
+          madeUpTo: this.valueGenerator.dateISO8601(),
+          periodEndOn: this.valueGenerator.dateISO8601(),
+          periodStartOn: this.valueGenerator.dateISO8601(),
+          type: '2052-12-12',
+        },
+        nextAccounts: {
+          dueOn: this.valueGenerator.dateISO8601(),
+          overdue: this.valueGenerator.boolean(),
+          periodEndOn: this.valueGenerator.dateISO8601(),
+          periodStartOn: this.valueGenerator.dateISO8601(),
+        },
+        nextDue: this.valueGenerator.dateISO8601(),
+        nextMadeUpTo: this.valueGenerator.dateISO8601(),
+        overdue: this.valueGenerator.boolean(),
+      },
       companiesHouseRegistrationNumber: this.valueGenerator.stringOfNumericCharacters({ length: 8 }),
       companyName: this.valueGenerator.sentence({ words: 2 }),
+      dateOfCreation: this.valueGenerator.dateISO8601(),
       buildingName: this.valueGenerator.sentence({ words: 2 }),
       buildingNumber: this.valueGenerator.nonnegativeInteger({ max: 99 }).toString(),
       thoroughfareName: this.valueGenerator.sentence({ words: 2 }),
+      careOf: this.valueGenerator.sentence({ words: 3 }),
       locality: this.valueGenerator.word(),
       postalCode: this.valueGenerator.postcode(),
+      premises: this.valueGenerator.city(),
+      region: this.valueGenerator.city(),
       country: this.valueGenerator.word(),
       sicCodes: [
         this.valueGenerator.stringOfNumericCharacters({ length: 5 }),
@@ -48,8 +73,7 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
 
     const mdmPath = `${COMPANIES.ENDPOINT_BASE_URL}${registrationNumberToUse}`;
 
-    const randomDateString = () => this.valueGenerator.date().toISOString().split('T')[0];
-    const randomAccountingReferenceDate = this.valueGenerator.date();
+    const randomISO8601Date = () => this.valueGenerator.dateISO8601();
 
     const shuffleArray = <T>(array: Array<T>) => {
       for (const i of [...Array(array.length).keys()].reverse().slice(0, -1)) {
@@ -67,43 +91,49 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
       },
       accounts: {
         last_accounts: {
-          period_end_on: randomDateString(),
-          type: 'micro-entity',
-          made_up_to: randomDateString(),
-          period_start_on: randomDateString(),
+          period_end_on: v.accounts.lastAccounts.periodEndOn,
+          type: v.accounts.lastAccounts.type,
+          made_up_to: v.accounts.lastAccounts.madeUpTo,
+          period_start_on: v.accounts.lastAccounts.periodStartOn,
         },
         accounting_reference_date: {
-          month: (randomAccountingReferenceDate.getMonth() + 1).toString(),
-          day: randomAccountingReferenceDate.getDate().toString(),
+          month: v.accounts.accountingReferenceDate.month,
+          day: v.accounts.accountingReferenceDate.day,
         },
-        overdue: false,
-        next_made_up_to: randomDateString(),
-        next_due: randomDateString(),
         next_accounts: {
-          period_start_on: randomDateString(),
-          due_on: randomDateString(),
-          period_end_on: randomDateString(),
-          overdue: false,
+          period_start_on: v.accounts.nextAccounts.periodStartOn,
+          due_on: v.accounts.nextAccounts.dueOn,
+          period_end_on: v.accounts.nextAccounts.periodEndOn,
+          overdue: v.accounts.nextAccounts.overdue,
         },
+        overdue: v.accounts.overdue,
+        next_made_up_to: v.accounts.nextMadeUpTo,
+        next_due: v.accounts.nextDue,
       },
       company_name: v.companyName,
       company_number: registrationNumberToUse,
       company_status: 'active',
       confirmation_statement: {
-        next_made_up_to: randomDateString(),
-        next_due: randomDateString(),
+        next_made_up_to: randomISO8601Date(),
+        next_due: randomISO8601Date(),
         overdue: false,
-        last_made_up_to: randomDateString(),
+        last_made_up_to: randomISO8601Date(),
       },
-      date_of_creation: randomDateString(),
+      date_of_creation: v.dateOfCreation,
       etag: this.valueGenerator.stringOfNumericCharacters({ length: 40 }),
       has_charges: false,
       has_insolvency_history: false,
       jurisdiction: this.valueGenerator.word(),
       registered_office_address: {
+        organisation_name: v.companyName,
         address_line_1: `${v.buildingName} ${v.buildingNumber} ${v.thoroughfareName}`,
+        address_line_2: v.buildingNumber,
+        address_line_3: v.thoroughfareName,
+        care_of: v.careOf,
         locality: v.locality,
         postal_code: v.postalCode,
+        premises: v.premises,
+        region: v.region,
         country: v.country,
       },
       registered_office_is_in_dispute: false,
@@ -161,12 +191,40 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
     }));
 
     const getCompanyResponse: GetCompanyResponse = {
+      accounts: {
+        accountingReferenceDate: {
+          month: v.accounts.accountingReferenceDate.month,
+          day: v.accounts.accountingReferenceDate.day,
+        },
+        lastAccounts: {
+          periodEndOn: v.accounts.lastAccounts.periodEndOn,
+          type: v.accounts.lastAccounts.type,
+          madeUpTo: v.accounts.lastAccounts.madeUpTo,
+          periodStartOn: v.accounts.lastAccounts.periodStartOn,
+        },
+        nextAccounts: {
+          periodStartOn: v.accounts.nextAccounts.periodStartOn,
+          dueOn: v.accounts.nextAccounts.dueOn,
+          periodEndOn: v.accounts.nextAccounts.periodEndOn,
+          overdue: v.accounts.nextAccounts.overdue,
+        },
+        nextDue: v.accounts.nextDue,
+        nextMadeUpTo: v.accounts.nextMadeUpTo,
+        overdue: v.accounts.overdue,
+      },
       companiesHouseRegistrationNumber: registrationNumberToUse,
       companyName: v.companyName,
+      dateOfCreation: v.dateOfCreation,
       registeredAddress: {
+        organisationName: v.companyName,
         addressLine1: `${v.buildingName} ${v.buildingNumber} ${v.thoroughfareName}`,
+        addressLine2: v.buildingNumber,
+        addressLine3: v.thoroughfareName,
+        careOf: v.careOf,
         locality: v.locality,
         postalCode: v.postalCode,
+        premises: v.premises,
+        region: v.region,
         country: v.country,
       },
       industries,
@@ -202,12 +260,37 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
 }
 
 interface CompanyValues {
+  accounts: {
+    accountingReferenceDate: {
+      day: string;
+      month: string;
+    };
+    lastAccounts: {
+      madeUpTo: string;
+      periodEndOn: string;
+      periodStartOn: string;
+      type: string;
+    };
+    nextAccounts: {
+      dueOn: string;
+      overdue: boolean;
+      periodEndOn: string;
+      periodStartOn: string;
+    };
+    nextDue?: string;
+    nextMadeUpTo?: string;
+    overdue?: boolean;
+  };
   companiesHouseRegistrationNumber: string;
   companyName: string;
+  dateOfCreation: string;
   buildingName: string;
   buildingNumber: string;
   thoroughfareName: string;
   locality: string;
+  premises: string;
+  careOf?: string;
+  region: string;
   postalCode: string;
   country: string;
   sicCodes: string[];

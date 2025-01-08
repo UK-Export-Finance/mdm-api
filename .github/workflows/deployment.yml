@@ -28,13 +28,13 @@ on:
       - production
 
     paths:
-      - "src/**"
-      - "package.json"
-      - "package-lock.json"
-      - "Dockerfile"
-      - "tsconfig.json"
-      - "tsconfig.build.json"
-      - ".github/workflows/deployment.yml"
+      - 'src/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'Dockerfile'
+      - 'tsconfig.json'
+      - 'tsconfig.build.json'
+      - '.github/workflows/deployment.yml'
 
 env:
   PRODUCT: apim

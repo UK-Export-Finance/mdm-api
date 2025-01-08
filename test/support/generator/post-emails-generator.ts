@@ -82,7 +82,7 @@ interface PostEmailsValues {
   };
 }
 
-interface GenerateOptions {}
+type GenerateOptions = object;
 
 interface GenerateResult {
   requests: PostEmailsRequestDto[];
