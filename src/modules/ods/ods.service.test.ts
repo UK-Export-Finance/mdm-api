@@ -55,8 +55,8 @@ describe('OdsService', () => {
           "total_result_count": 1,
           "results": [
             {
-              "customer_party_unique_reference_number": "${mockCustomer.customerUrn}",
-              "customer_name": "${mockCustomer.customerName}",
+              "customer_party_unique_reference_number": "${mockCustomer.urn}",
+              "customer_name": "${mockCustomer.name}",
               "customer_companies_house_number": "12345678",
               "customer_addresses": [
                 {
@@ -73,12 +73,12 @@ describe('OdsService', () => {
       },
     ];
     const mockInput: odsStoredProcedureInput = service.createOdsStoredProcedureInput(ODS_ENTITIES.CUSTOMER, {
-      customer_party_unique_reference_number: mockCustomer.customerUrn,
+      customer_party_unique_reference_number: mockCustomer.urn,
     });
 
     jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
 
-    const result = await service.findCustomer(mockCustomer.customerUrn);
+    const result = await service.findCustomer(mockCustomer.urn);
 
     expect(service.callOdsStoredProcedure).toHaveBeenCalledWith(mockInput);
     expect(result).toEqual(mockCustomer);
