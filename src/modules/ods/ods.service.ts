@@ -15,10 +15,12 @@ export class OdsService {
   ) {}
 
   /**
-   * Calls the ODS stored procedure with the input provided and returns the output of it
-   * @param {string} urn The input parameter of the stored procedure
+   * Finds a customer in ODS based on the URN provided
+   * @param {string} urn The customer URN to search for
    *
-   * @returns {Promise<GetOdsCustomerResponse>} The result of the stored procedure
+   * @returns {Promise<GetOdsCustomerResponse>} The customer response
+   * @throws {InternalServerErrorException} If there is an error trying to find a customer
+   * @throws {NotFoundException} If no matching customer is found
    */
   async findCustomer(urn: string): Promise<GetOdsCustomerResponse> {
     try {
