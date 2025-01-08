@@ -11,5 +11,5 @@ export class GetOdsCustomerQueryDto {
     pattern: regexToString(UKEFID.PARTY_ID.REGEX),
   })
   @Matches(UKEFID.PARTY_ID.REGEX)
-  public customerUrn: string;
+  public urn: string;
 }

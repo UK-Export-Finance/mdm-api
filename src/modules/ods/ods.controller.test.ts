@@ -23,7 +23,7 @@ describe('OdsController', () => {
 
       when(odsServiceFindCustomer).calledWith(CUSTOMERS.EXAMPLES.PARTYURN).mockResolvedValueOnce(mockCustomerDetails);
 
-      const customers = await controller.findCustomer({ customerUrn: CUSTOMERS.EXAMPLES.PARTYURN });
+      const customers = await controller.findCustomer({ urn: CUSTOMERS.EXAMPLES.PARTYURN });
 
       expect(customers).toEqual(mockCustomerDetails);
     });

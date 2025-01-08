@@ -14,9 +14,15 @@ export class OdsService {
     private readonly logger: PinoLogger,
   ) {}
 
-  async findCustomer(partyUrn: string): Promise<GetOdsCustomerResponse> {
+  /**
+   * Calls the ODS stored procedure with the input provided and returns the output of it
+   * @param {string} urn The input parameter of the stored procedure
+   *
+   * @returns {Promise<GetOdsCustomerResponse>} The result of the stored procedure
+   */
+  async findCustomer(urn: string): Promise<GetOdsCustomerResponse> {
     try {
-      const spInput = this.createOdsStoredProcedureInput(ODS_ENTITIES.CUSTOMER, { customer_party_unique_reference_number: partyUrn });
+      const spInput = this.createOdsStoredProcedureInput(ODS_ENTITIES.CUSTOMER, { customer_party_unique_reference_number: urn });
 
       const storedProcedureResult = await this.callOdsStoredProcedure(spInput);
 
@@ -32,8 +38,8 @@ export class OdsService {
       }
 
       return {
-        customerUrn: storedProcedureJson.results[0]?.customer_party_unique_reference_number,
-        customerName: storedProcedureJson.results[0]?.customer_name,
+        urn: storedProcedureJson.results[0]?.customer_party_unique_reference_number,
+        name: storedProcedureJson.results[0]?.customer_name,
       };
     } catch (err) {
       if (err instanceof NotFoundException) {

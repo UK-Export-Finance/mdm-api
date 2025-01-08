@@ -25,6 +25,6 @@ export class OdsController {
     description: 'Invalid search parameters provided.',
   })
   findCustomer(@Param() param: GetOdsCustomerQueryDto): Promise<GetOdsCustomerResponse> {
-    return this.odsService.findCustomer(param.customerUrn);
+    return this.odsService.findCustomer(param.urn);
   }
 }
