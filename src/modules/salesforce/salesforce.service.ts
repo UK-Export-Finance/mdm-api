@@ -29,6 +29,14 @@ export class SalesforceService {
     this.httpClient = new HttpClient(httpService);
   }
 
+  /**
+   * Creates a new customer record in Salesforce.
+   *
+   * @param {CreateCustomerDto} createCustomerDto - The data transfer object containing customer information to be created in Salesforce.
+   * @returns {Promise<CreateCustomerSalesforceResponseDto>} A promise that resolves to the response from Salesforce, containing details of the created customer.
+   *
+   * @throws Will throw an error if the Salesforce API returns an error during the creation process.
+   */
   async createCustomer(createCustomerDto: CreateCustomerDto): Promise<CreateCustomerSalesforceResponseDto> {
     const path = '/sobjects/Account';
     const access_token = await this.getAccessToken();
@@ -46,6 +54,13 @@ export class SalesforceService {
     return data;
   }
 
+  /**
+   * Retrieves an access token from Salesforce for API authentication.
+   *
+   * @returns {Promise<string>} A promise that resolves to the access token as a string.
+   *
+   * @throws Will throw an error if the Salesforce API fails to provide an access token.
+   */
   private async getAccessToken(): Promise<string> {
     const path = this.access_url;
     const response = await this.httpClient.post<any, any>({

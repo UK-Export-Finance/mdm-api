@@ -57,8 +57,8 @@ describe('SalesforceService', () => {
 
     const query: CreateCustomerDto = {
       Name: companyRegNo,
-      Party_URN__c: null,
-      D_B_Number__c: null,
+      Party_URN__c: '00312345',
+      D_B_Number__c: '12341234',
       Company_Registration_Number__c: companyRegNo,
     };
 
@@ -97,6 +97,21 @@ describe('SalesforceService', () => {
       await expect(getCustomersPromise).rejects.toBeInstanceOf(SalesforceException);
       await expect(getCustomersPromise).rejects.toThrow('Failed to create customer in Salesforce');
       await expect(getCustomersPromise).rejects.toHaveProperty('innerError', axiosRequestError);
+    });
+
+    it('throws a TypeError if the request is malformed', async () => {
+      const malformedQuery: CreateCustomerDto = {
+        Name: companyRegNo,
+        Party_URN__c: null,
+        D_B_Number__c: null,
+        Company_Registration_Number__c: '12341234',
+      };
+
+      const typeError = new TypeError("Cannot read properties of undefined (reading 'pipe')");
+      const getCustomersPromise = service.createCustomer(malformedQuery);
+
+      await expect(getCustomersPromise).rejects.toBeInstanceOf(TypeError);
+      await expect(getCustomersPromise).rejects.toEqual(typeError);
     });
   });
 });

@@ -12,7 +12,6 @@ import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-cu
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
 import { GetCustomersResponse, GetCustomersResponseItem } from './dto/get-customers-response.dto';
-import { GetCustomersSalesforceResponse } from './dto/get-customers-salesforce-response.dto';
 import { HttpStatusCode } from 'axios';
 
 @Injectable()
@@ -159,8 +158,7 @@ export class CustomersService {
     let isLegacyRecord: boolean;
 
     // TODO: replace this with a call to Salesforce's NUMGEN table once that's in place
-    let dunsNumber: string = null;
-    dunsNumber = await this.dunAndBradstreetService.getDunAndBradstreetNumberByRegistrationNumber(DTFSCustomerDto.companyRegistrationNumber);
+    let dunsNumber = await this.dunAndBradstreetService.getDunAndBradstreetNumberByRegistrationNumber(DTFSCustomerDto.companyRegistrationNumber);
 
     if (existingCustomersInInformatica) {
       isLegacyRecord = true;
@@ -208,25 +206,19 @@ export class CustomersService {
       D_B_Number__c: dunsNumber,
       Company_Registration_Number__c: DTFSCustomerDto.companyRegistrationNumber,
     };
-    const createCustomerResponse: CreateCustomerSalesforceResponseDto = await this.salesforceService.createCustomer(createCustomerDto);
-    const createdCustomerResponse: GetCustomersSalesforceResponse = [
+
+    const salesforceCreateCustomerResponse: CreateCustomerSalesforceResponseDto = await this.salesforceService.createCustomer(createCustomerDto);
+
+    return [
       {
         partyUrn: partyUrn,
         name: DTFSCustomerDto.companyName,
-        sfId: createCustomerResponse?.success ? createCustomerResponse.id : null,
+        sfId: salesforceCreateCustomerResponse?.success ? salesforceCreateCustomerResponse.id : null,
         companyRegNo: DTFSCustomerDto.companyRegistrationNumber,
-      },
-    ];
-    return createdCustomerResponse.map(
-      (createdCustomer): GetCustomersResponseItem => ({
-        partyUrn: createdCustomer.partyUrn,
-        name: createdCustomer.name,
-        sfId: createdCustomer.sfId,
-        companyRegNo: createdCustomer.companyRegNo,
         type: null,
         subtype: null,
         isLegacyRecord: isLegacyRecord,
-      }),
-    );
+      },
+    ];
   }
 }

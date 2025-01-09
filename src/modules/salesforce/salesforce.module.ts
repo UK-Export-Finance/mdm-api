@@ -26,10 +26,10 @@ import { SalesforceService } from './salesforce.service';
           // TODO: cleanup rejectUnauthorized when Salesforce SSL issue is resolved
           // "rejectUnauthorized: false" is just for local DEV laptop environment, not for DEV/PROD.
           // to ignore https issues, enable agent and rejectUnauthorized:false below.
-          httpsAgent: new https.Agent({
-            // Allow self signed negotiations
-            // rejectUnauthorized: false,
-          }),
+          // httpsAgent: new https.Agent({
+          // Allow self signed negotiations
+          // rejectUnauthorized: false,
+          // }),
         };
       },
     }),
