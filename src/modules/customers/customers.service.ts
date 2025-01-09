@@ -108,11 +108,12 @@ export class CustomersService {
           requestingSystem: 'MDM',
         },
       ];
-      let partyUrn: string = null;
       try {
         const numbersServiceResponse: UkefId[] = await this.numbersService.create(createUkefIdDto);
         partyUrn = numbersServiceResponse[0].maskedId;
-      } catch {}
+      } catch {
+        partyUrn = null;
+      }
     }
 
     // TODO: replace this with a call to Salesforce's NUMGEN table once that's in place
