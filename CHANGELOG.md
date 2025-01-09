@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.23.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.22.2...v1.23.0) (2025-01-09)
+
+
+### Features
+
+* **FN-3163:** automate new DTFS customer creation in Salesforce (D&B service only) ([#1130](https://github.com/UK-Export-Finance/mdm-api/issues/1130)) ([8a6403c](https://github.com/UK-Export-Finance/mdm-api/commit/8a6403c4667ccdd8deaa631eadcb9bf06ad7d555))
+
+
+### Bug Fixes
+
+* **deps:** replace all ([#1133](https://github.com/UK-Export-Finance/mdm-api/issues/1133)) ([8454434](https://github.com/UK-Export-Finance/mdm-api/commit/845443452d5b49603b68478823c6f92f6cffcf73))
+
 ## [1.22.2](https://github.com/UK-Export-Finance/mdm-api/compare/v1.22.1...v1.22.2) (2024-12-30)
 
 
