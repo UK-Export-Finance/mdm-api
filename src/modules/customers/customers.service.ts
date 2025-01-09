@@ -50,74 +50,70 @@ export class CustomersService {
     try {
       const existingCustomersInInformatica = await this.informaticaService.getCustomers(backendQuery);
       if (existingCustomersInInformatica?.[0]) {
-        if (existingCustomersInInformatica[0]?.isLegacyRecord === false) {
-          res.status(200).json(
-            existingCustomersInInformatica.map(
-              (customerInInformatica): GetCustomersResponseItem => ({
-                partyUrn: customerInInformatica.partyUrn,
-                name: customerInInformatica.name,
-                sfId: customerInInformatica.sfId,
-                companyRegNo: customerInInformatica.companyRegNo,
-                type: customerInInformatica.type,
-                subtype: customerInInformatica.subtype,
-                isLegacyRecord: customerInInformatica.isLegacyRecord,
-              }),
-            ),
-          );
-          return;
-        } else if (existingCustomersInInformatica[0]?.isLegacyRecord === true && existingCustomersInInformatica[0]?.partyUrn) {
-          let dunsNumber: string = null;
-          try {
-            dunsNumber = await this.dunAndBradstreetService.getDunAndBradstreetNumberByRegistrationNumber(DTFSCustomerDto.companyRegistrationNumber);
-          } catch (error) {
-            throw error;
-          }
-          try {
-            const [{ partyUrn }] = existingCustomersInInformatica;
-            const isLegacyRecord = true;
-            const createdCustomer = await this.createCustomerByURNAndDUNS(DTFSCustomerDto, partyUrn, dunsNumber, isLegacyRecord);
-            res.status(201).json(createdCustomer);
-            return;
-          } catch (error) {
-            throw error;
-          }
-        }
+        return await this.handleInformaticaResponse(existingCustomersInInformatica, res, DTFSCustomerDto);
       } else {
         throw new InternalServerErrorException();
       }
     } catch (error) {
       if (error instanceof NotFoundException) {
-        const createUkefIdDto: CreateUkefIdDto[] = [
-          {
-            numberTypeId: 2,
-            createdBy: 'DTFS Automated Customer Creation User',
-            requestingSystem: 'MDM',
-          },
-        ];
-        // TODO: replace this with a call to Salesforce's NUMGEN table once that's in place
-        let dunsNumber: string = null;
-        try {
-          dunsNumber = await this.dunAndBradstreetService.getDunAndBradstreetNumberByRegistrationNumber(DTFSCustomerDto.companyRegistrationNumber);
-        } catch (error) {
-          throw error;
-        }
-        let partyUrn: string = null;
-        try {
-          const numbersServiceResponse: UkefId[] = await this.numbersService.create(createUkefIdDto);
-          partyUrn = numbersServiceResponse[0].maskedId;
-        } catch {}
-        try {
-          const isLegacyRecord = false;
-          const createdCustomer = await this.createCustomerByURNAndDUNS(DTFSCustomerDto, partyUrn, dunsNumber, isLegacyRecord);
-          res.status(201).json(createdCustomer);
-          return;
-        } catch (error) {
-          throw error;
-        }
+        await this.handleInformaticaCustomerNotFound(res, DTFSCustomerDto);
       } else {
         throw error;
       }
     }
+  }
+
+  private async handleInformaticaResponse(existingCustomersInInformatica, res, DTFSCustomerDto): Promise<GetCustomersResponse> {
+    if (existingCustomersInInformatica[0]?.isLegacyRecord === false) {
+      res.status(200).json(
+        existingCustomersInInformatica.map(
+          (customerInInformatica): GetCustomersResponseItem => ({
+            partyUrn: customerInInformatica.partyUrn,
+            name: customerInInformatica.name,
+            sfId: customerInInformatica.sfId,
+            companyRegNo: customerInInformatica.companyRegNo,
+            type: customerInInformatica.type,
+            subtype: customerInInformatica.subtype,
+            isLegacyRecord: customerInInformatica.isLegacyRecord,
+          }),
+        ),
+      );
+      return;
+    } else if (existingCustomersInInformatica[0]?.isLegacyRecord === true && existingCustomersInInformatica[0]?.partyUrn) {
+      await this.createCustomerWithLegacyUrn(existingCustomersInInformatica, res, DTFSCustomerDto);
+    }
+  }
+
+  private async createCustomerWithLegacyUrn(existingCustomersInInformatica, res, DTFSCustomerDto) {
+    let dunsNumber: string = null;
+    dunsNumber = await this.dunAndBradstreetService.getDunAndBradstreetNumberByRegistrationNumber(DTFSCustomerDto.companyRegistrationNumber);
+    const [{ partyUrn }] = existingCustomersInInformatica;
+    const isLegacyRecord = true;
+    const createdCustomer = await this.createCustomerByURNAndDUNS(DTFSCustomerDto, partyUrn, dunsNumber, isLegacyRecord);
+    res.status(201).json(createdCustomer);
+    return;
+  }
+
+  private async handleInformaticaCustomerNotFound(res, DTFSCustomerDto) {
+    const createUkefIdDto: CreateUkefIdDto[] = [
+      {
+        numberTypeId: 2,
+        createdBy: 'DTFS Automated Customer Creation User',
+        requestingSystem: 'MDM',
+      },
+    ];
+    // TODO: replace this with a call to Salesforce's NUMGEN table once that's in place
+    let dunsNumber: string = null;
+    dunsNumber = await this.dunAndBradstreetService.getDunAndBradstreetNumberByRegistrationNumber(DTFSCustomerDto.companyRegistrationNumber);
+    let partyUrn: string = null;
+    try {
+      const numbersServiceResponse: UkefId[] = await this.numbersService.create(createUkefIdDto);
+      partyUrn = numbersServiceResponse[0].maskedId;
+    } catch {}
+    const isLegacyRecord = false;
+    const createdCustomer = await this.createCustomerByURNAndDUNS(DTFSCustomerDto, partyUrn, dunsNumber, isLegacyRecord);
+    res.status(201).json(createdCustomer);
+    return;
   }
 
   private async createCustomerByURNAndDUNS(
@@ -132,29 +128,25 @@ export class CustomersService {
       D_B_Number__c: dunsNumber,
       Company_Registration_Number__c: DTFSCustomerDto.companyRegistrationNumber,
     };
-    try {
-      const createCustomerResponse: CreateCustomerSalesforceResponseDto = await this.salesforceService.createCustomer(createCustomerDto);
-      const createdCustomerResponse: GetCustomersSalesforceResponse = [
-        {
-          partyUrn: partyUrn,
-          name: DTFSCustomerDto.companyName,
-          sfId: createCustomerResponse?.success ? createCustomerResponse.id : null,
-          companyRegNo: DTFSCustomerDto.companyRegistrationNumber,
-        },
-      ];
-      return createdCustomerResponse.map(
-        (createdCustomer): GetCustomersResponseItem => ({
-          partyUrn: createdCustomer.partyUrn,
-          name: createdCustomer.name,
-          sfId: createdCustomer.sfId,
-          companyRegNo: createdCustomer.companyRegNo,
-          type: null,
-          subtype: null,
-          isLegacyRecord: isLegacyRecord,
-        }),
-      );
-    } catch (error) {
-      throw error;
-    }
+    const createCustomerResponse: CreateCustomerSalesforceResponseDto = await this.salesforceService.createCustomer(createCustomerDto);
+    const createdCustomerResponse: GetCustomersSalesforceResponse = [
+      {
+        partyUrn: partyUrn,
+        name: DTFSCustomerDto.companyName,
+        sfId: createCustomerResponse?.success ? createCustomerResponse.id : null,
+        companyRegNo: DTFSCustomerDto.companyRegistrationNumber,
+      },
+    ];
+    return createdCustomerResponse.map(
+      (createdCustomer): GetCustomersResponseItem => ({
+        partyUrn: createdCustomer.partyUrn,
+        name: createdCustomer.name,
+        sfId: createdCustomer.sfId,
+        companyRegNo: createdCustomer.companyRegNo,
+        type: null,
+        subtype: null,
+        isLegacyRecord: isLegacyRecord,
+      }),
+    );
   }
 }
