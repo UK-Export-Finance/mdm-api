@@ -3,6 +3,7 @@ import { DunAndBradstreetService } from '@ukef/helper-modules/dun-and-bradstreet
 import { GetCustomersInformaticaQueryDto } from '@ukef/modules/informatica/dto/get-customers-informatica-query.dto';
 import { InformaticaService } from '@ukef/modules/informatica/informatica.service';
 import { SalesforceService } from '@ukef/modules/salesforce/salesforce.service';
+import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 
 import { CreateUkefIdDto } from '../numbers/dto/create-ukef-id.dto';
@@ -12,7 +13,6 @@ import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-cu
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
 import { GetCustomersResponse, GetCustomersResponseItem } from './dto/get-customers-response.dto';
-import { HttpStatusCode } from 'axios';
 
 @Injectable()
 export class CustomersService {
@@ -158,7 +158,7 @@ export class CustomersService {
     let isLegacyRecord: boolean;
 
     // TODO: replace this with a call to Salesforce's NUMGEN table once that's in place
-    let dunsNumber = await this.dunAndBradstreetService.getDunAndBradstreetNumberByRegistrationNumber(DTFSCustomerDto.companyRegistrationNumber);
+    const dunsNumber = await this.dunAndBradstreetService.getDunAndBradstreetNumberByRegistrationNumber(DTFSCustomerDto.companyRegistrationNumber);
 
     if (existingCustomersInInformatica) {
       isLegacyRecord = true;

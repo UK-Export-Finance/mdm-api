@@ -33,7 +33,8 @@ export class SalesforceService {
    * Creates a new customer record in Salesforce.
    *
    * @param {CreateCustomerDto} createCustomerDto - The data transfer object containing customer information to be created in Salesforce.
-   * @returns {Promise<CreateCustomerSalesforceResponseDto>} A promise that resolves to the response from Salesforce, containing details of the created customer.
+   * @returns {Promise<CreateCustomerSalesforceResponseDto>} A promise that resolves to the response from Salesforce,
+   * containing details of the created customer.
    *
    * @throws Will throw an error if the Salesforce API returns an error during the creation process.
    */
