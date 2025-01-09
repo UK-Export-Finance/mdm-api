@@ -96,6 +96,10 @@ export class CustomersService {
     let partyUrn: string;
     let isLegacyRecord: boolean;
 
+    // TODO: replace this with a call to Salesforce's NUMGEN table once that's in place
+    let dunsNumber: string = null;
+    dunsNumber = await this.dunAndBradstreetService.getDunAndBradstreetNumberByRegistrationNumber(DTFSCustomerDto.companyRegistrationNumber);
+
     if (existingCustomersInInformatica) {
       isLegacyRecord = true;
       [{ partyUrn }] = existingCustomersInInformatica;
@@ -116,9 +120,6 @@ export class CustomersService {
       }
     }
 
-    // TODO: replace this with a call to Salesforce's NUMGEN table once that's in place
-    let dunsNumber: string = null;
-    dunsNumber = await this.dunAndBradstreetService.getDunAndBradstreetNumberByRegistrationNumber(DTFSCustomerDto.companyRegistrationNumber);
     const createdCustomer = await this.createCustomerByURNAndDUNS(DTFSCustomerDto, partyUrn, dunsNumber, isLegacyRecord);
     res.status(201).json(createdCustomer);
     return;
