@@ -43,7 +43,7 @@ export class CustomersController {
     summary: 'Get a customer in Salesforce, or create one if it does not exist',
   })
   @ApiResponse({
-    status: 200,
+    status: HttpStatusCode.Ok,
     description: 'Customers matching search parameters',
     type: [GetCustomersResponseItem],
   })
@@ -52,7 +52,7 @@ export class CustomersController {
     type: [GetCustomersResponseItem],
   })
   @ApiBadRequestResponse({
-    description: 'Failed to create customer as a duplicate record without a company registration number exists',
+    description: 'Failed to create a customer in Salesforce, as a duplicate record without a company registration number exists',
   })
   @ApiUnauthorizedResponse({
     description: 'Failed to get access token',

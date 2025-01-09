@@ -6,7 +6,7 @@ export type GetCustomersResponse = GetCustomersResponseItem[];
 
 export class GetCustomersResponseItem {
   @ApiProperty({
-    description: 'The unique UKEF id of the customer',
+    description: 'The unique UKEF ID of the customer',
   })
   readonly partyUrn: string | null;
 
@@ -16,12 +16,12 @@ export class GetCustomersResponseItem {
   readonly name: string;
 
   @ApiProperty({
-    description: 'The unique Salesforce id',
+    description: 'The unique Salesforce ID',
   })
   readonly sfId: string;
 
   @ApiProperty({
-    description: 'The Companies house registration number',
+    description: 'The Companies House registration number',
   })
   readonly companyRegNo: string | null;
 

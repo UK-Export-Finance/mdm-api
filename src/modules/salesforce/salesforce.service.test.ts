@@ -1,7 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
-import { AxiosError } from 'axios';
+import { AxiosError, HttpStatusCode } from 'axios';
 import { when } from 'jest-when';
 import { of, throwError } from 'rxjs';
 
@@ -74,7 +74,7 @@ describe('SalesforceService', () => {
         .mockReturnValueOnce(
           of({
             data: expectedResponse,
-            status: 201,
+            status: HttpStatusCode.Created,
             statusText: 'OK',
             config: undefined,
             headers: undefined,
