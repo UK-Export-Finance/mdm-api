@@ -3,24 +3,35 @@ import { CUSTOMERS, ENUMS } from '@ukef/constants';
 import { GetCustomersGenerator } from '@ukef-test/support/generator/get-customers-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { validate } from 'class-validator';
+import { Response } from 'express';
 import { when } from 'jest-when';
 
 import { CustomersController } from './customers.controller';
 import { CustomersService } from './customers.service';
 import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
+import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
+import { GetCustomersResponse } from './dto/get-customers-response.dto';
+
+const mockResponseObject = {
+  json: jest.fn(),
+  status: jest.fn().mockReturnThis(),
+} as any as Response;
 
 describe('CustomersController', () => {
   const valueGenerator = new RandomValueGenerator();
 
   let customersServiceGetCustomers: jest.Mock;
+  let customersServiceGetOrCreateCustomer: jest.Mock;
   let customersServiceGetDunAndBradstreetNumber: jest.Mock;
 
   let controller: CustomersController;
 
   beforeEach(() => {
-    const customersService = new CustomersService(null, null);
+    const customersService = new CustomersService(null, null, null, null);
     customersServiceGetCustomers = jest.fn();
+    customersServiceGetOrCreateCustomer = jest.fn();
     customersService.getCustomers = customersServiceGetCustomers;
+    customersService.getOrCreateCustomer = customersServiceGetOrCreateCustomer;
     customersServiceGetDunAndBradstreetNumber = jest.fn();
     customersService.getDunAndBradstreetNumber = customersServiceGetDunAndBradstreetNumber;
 
@@ -102,6 +113,37 @@ describe('CustomersController', () => {
 
       expect(getCustomers(query)).toThrow('One and just one search parameter is required');
       expect(getCustomers(query)).toThrow(BadRequestException);
+    });
+  });
+
+  describe('getOrCreateCustomer', () => {
+    const DTFSCustomerDto: DTFSCustomerDto = { companyRegistrationNumber: CUSTOMERS.EXAMPLES.COMPANYREG, companyName: 'TEST NAME' };
+
+    const getOrCreateCustomerResponse: GetCustomersResponse = [
+      {
+        partyUrn: 'string',
+        name: 'string',
+        sfId: 'string',
+        companyRegNo: 'string',
+        type: 'Association',
+        subtype: 'Alternative Finance Provider',
+        isLegacyRecord: true,
+      },
+    ];
+
+    it('creates a customer successfully and returns the response', async () => {
+      when(customersServiceGetOrCreateCustomer).calledWith(mockResponseObject, DTFSCustomerDto).mockResolvedValueOnce(getOrCreateCustomerResponse);
+
+      const response = await controller.getOrCreateCustomer(mockResponseObject, DTFSCustomerDto);
+
+      expect(customersServiceGetOrCreateCustomer).toHaveBeenCalledTimes(1);
+      expect(response).toEqual(getOrCreateCustomerResponse);
+    });
+
+    it('throws an error if the service fails to create a customer', async () => {
+      when(customersServiceGetOrCreateCustomer).calledWith(mockResponseObject, DTFSCustomerDto).mockRejectedValueOnce(new Error('Service Error'));
+
+      await expect(controller.getOrCreateCustomer(mockResponseObject, DTFSCustomerDto)).rejects.toThrow('Service Error');
     });
   });
 

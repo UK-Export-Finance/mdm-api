@@ -45,11 +45,18 @@ services:
       DUN_AND_BRADSTREET_KEY:
       DUN_AND_BRADSTREET_MAX_REDIRECTS:
       DUN_AND_BRADSTREET_TIMEOUT:
+      SALESFORCE_CLIENT_ID:
+      SALESFORCE_CLIENT_SECRET:
+      SALESFORCE_USERNAME:
+      SALESFORCE_PASSWORD:
+      SALESFORCE_INSTANCE_URL:
+      SALESFORCE_ACCESS_URL:
+      SALESFORCE_MAX_REDIRECTS:
+      SALESFORCE_TIMEOUT:
       API_KEY:
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:${PORT}"]
+      test: ['CMD', 'curl', '-f', 'http://localhost:${PORT}']
       retries: 3
       interval: 60s
       timeout: 10s
       start_period: 30s
-
