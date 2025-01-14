@@ -70,8 +70,7 @@
     "venv",
     "VNET",
     "WOGAN",
-    "Zabd",
-    "ZXhhbXBsZS1maWxlLnhsc3g="
+    "Zabd"
   ],
   "dictionaries": ["en-gb", "companies", "softwareTerms", "misc", "lorem-ipsum", "typescript", "node", "bash", "npm"],
   "languageSettings": [
