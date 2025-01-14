@@ -236,7 +236,10 @@ paths:
         - name: ukefId
           required: true
           in: query
-          description: UKEF ID to check
+          description: |-
+            UKEF ID to check. Examples: 
+            - Facility/Deal/Covenant ID: 0020019715 
+            - Party URN: 00300524
           schema:
             example: '00300524'
             type: string
