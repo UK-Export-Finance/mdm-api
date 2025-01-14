@@ -4,6 +4,7 @@ import { KEY as SALESFORCE_CONFIG_KEY, SalesforceConfig } from '@ukef/config/sal
 import { HttpModule } from '@ukef/modules/http/http.module';
 
 import { SalesforceService } from './salesforce.service';
+import https from 'https';
 
 @Module({
   imports: [
@@ -24,11 +25,11 @@ import { SalesforceService } from './salesforce.service';
           timeout,
           // TODO: cleanup rejectUnauthorized when Salesforce SSL issue is resolved
           // "rejectUnauthorized: false" is just for local DEV laptop environment, not for DEV/PROD.
-          // to ignore https issues, enable agent and rejectUnauthorized:false below.
-          // httpsAgent: new https.Agent({
-          // Allow self signed negotiations
-          // rejectUnauthorized: false,
-          // }),
+          // There's a helpdesk ticket pending to whitelist this domain
+          httpsAgent: new https.Agent({
+            // Allow self signed negotiations
+            rejectUnauthorized: process.env.NODE_ENV == 'development' ? false : true,
+          }),
         };
       },
     }),
