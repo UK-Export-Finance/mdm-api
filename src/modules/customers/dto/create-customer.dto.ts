@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, Length } from 'class-validator';
+import { IsNotEmpty, IsString, Length, MaxLength, MinLength } from 'class-validator';
 
 export class CreateCustomerDto {
   @ApiProperty({ description: 'Account Name' })
@@ -7,9 +7,10 @@ export class CreateCustomerDto {
   @IsNotEmpty()
   Name: string;
 
-  @ApiProperty({ description: 'Party URN' })
+  @ApiProperty({ description: 'Party URN', maxLength: 10 })
   @IsString()
   @IsNotEmpty()
+  @MaxLength(10)
   Party_URN__c: string;
 
   @ApiProperty({ description: 'D&B Number', minLength: 9, maxLength: 9 })
@@ -21,6 +22,7 @@ export class CreateCustomerDto {
   @ApiProperty({ description: 'Companies House Number', minLength: 8, maxLength: 10 })
   @IsString()
   @IsNotEmpty()
-  @Length(8, 10)
+  @MinLength(8)
+  @MaxLength(10)
   Company_Registration_Number__c: string;
 }
