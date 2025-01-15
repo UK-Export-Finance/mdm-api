@@ -1,5 +1,5 @@
 import { OdsService } from './ods.service';
-import { ODS_ENTITIES, odsStoredProcedureInput } from './dto/ods-payloads.dto';
+import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { CUSTOMERS } from '@ukef/constants';
 import { DataSource, QueryRunner } from 'typeorm';
 
@@ -22,7 +22,7 @@ describe('OdsService', () => {
   });
 
   it('callOdsPrcedure should call the stored procedure with the query runner', async () => {
-    const mockInput: odsStoredProcedureInput = service.createOdsStoredProcedureInput(ODS_ENTITIES.CUSTOMER, {
+    const mockInput: OdsStoredProcedureInput = service.createOdsStoredProcedureInput(ODS_ENTITIES.CUSTOMER, {
       customer_party_unique_reference_number: CUSTOMERS.EXAMPLES.PARTYURN,
     });
 
@@ -72,7 +72,7 @@ describe('OdsService', () => {
         }`,
       },
     ];
-    const mockInput: odsStoredProcedureInput = service.createOdsStoredProcedureInput(ODS_ENTITIES.CUSTOMER, {
+    const mockInput: OdsStoredProcedureInput = service.createOdsStoredProcedureInput(ODS_ENTITIES.CUSTOMER, {
       customer_party_unique_reference_number: mockCustomer.urn,
     });
 
@@ -89,7 +89,7 @@ describe('OdsService', () => {
       customer_party_unique_reference_number: CUSTOMERS.EXAMPLES.PARTYURN,
     };
 
-    const expected: odsStoredProcedureInput = {
+    const expected: OdsStoredProcedureInput = {
       query_method: 'get',
       query_object: ODS_ENTITIES.CUSTOMER,
       query_page_size: 1,

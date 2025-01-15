@@ -4,7 +4,7 @@ import { InjectDataSource } from '@nestjs/typeorm';
 import { DATABASE } from '@ukef/constants';
 import { DataSource } from 'typeorm';
 import { PinoLogger } from 'nestjs-pino';
-import { ODS_ENTITIES, OdsEntity, odsStoredProcedureInput, odsStoredProcedureQueryParams } from './dto/ods-payloads.dto';
+import { ODS_ENTITIES, OdsEntity, OdsStoredProcedureInput, OdsStoredProcedureOuputBody, OdsStoredProcedureQueryParams } from './dto/ods-payloads.dto';
 
 @Injectable()
 export class OdsService {
@@ -28,14 +28,14 @@ export class OdsService {
 
       const storedProcedureResult = await this.callOdsStoredProcedure(spInput);
 
-      const storedProcedureJson = JSON.parse(storedProcedureResult[0]?.output_body);
+      const storedProcedureJson: OdsStoredProcedureOuputBody = JSON.parse(storedProcedureResult[0]?.output_body);
 
-      if (storedProcedureJson == undefined || storedProcedureJson?.status != 'SUCCESS') {
+      if (storedProcedureJson === undefined || storedProcedureJson?.status != 'SUCCESS') {
         this.logger.error('Error from ODS stored procedure, output: %o', storedProcedureResult);
         throw new InternalServerErrorException('Error trying to find a customer');
       }
 
-      if (storedProcedureJson?.total_result_count == 0) {
+      if (storedProcedureJson?.total_result_count === 0) {
         throw new NotFoundException('No matching customer found');
       }
 
@@ -57,11 +57,11 @@ export class OdsService {
   /**
    * Creates the input parameter for the stored procedure
    * @param {OdsEntity} entityToQuery The entity you want to query in ODS
-   * @param {odsStoredProcedureQueryParams} queryParameters The query parameters and filters to apply to the query
+   * @param {OdsStoredProcedureQueryParams} queryParameters The query parameters and filters to apply to the query
    *
-   * @returns {odsStoredProcedureInput} The ODS stored procedure input in object format
+   * @returns {OdsStoredProcedureInput} The ODS stored procedure input in object format
    */
-  createOdsStoredProcedureInput(entityToQuery: OdsEntity, queryParameters: odsStoredProcedureQueryParams): odsStoredProcedureInput {
+  createOdsStoredProcedureInput(entityToQuery: OdsEntity, queryParameters: OdsStoredProcedureQueryParams): OdsStoredProcedureInput {
     return {
       query_method: 'get',
       query_object: entityToQuery,
@@ -73,11 +73,11 @@ export class OdsService {
 
   /**
    * Calls the ODS stored procedure with the input provided and returns the output of it
-   * @param {odsStoredProcedureInput} storedProcedureInput The input parameter of the stored procedure
+   * @param {OdsStoredProcedureInput} storedProcedureInput The input parameter of the stored procedure
    *
-   * @returns {Promise<any>} The result of the stored procedure
+   * @returns {Promise<OdsStoredProcedureOuput>} The result of the stored procedure
    */
-  async callOdsStoredProcedure(storedProcedureInput: odsStoredProcedureInput): Promise<any> {
+  async callOdsStoredProcedure(storedProcedureInput: OdsStoredProcedureInput): Promise<OdsStoredProcedureOuput> {
     const queryRunner = this.odsDataSource.createQueryRunner();
     try {
       // Use the query runner to call a stored procedure
@@ -92,7 +92,7 @@ export class OdsService {
 
       return result;
     } finally {
-      queryRunner.release();
+      await queryRunner.release();
     }
   }
 }
