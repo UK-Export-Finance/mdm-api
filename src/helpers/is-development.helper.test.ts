@@ -1,4 +1,3 @@
-import { after } from 'lodash';
 import { isDevelopment } from './is-development.helper';
 
 describe('isDevelopment function', () => {
