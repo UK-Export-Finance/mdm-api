@@ -1,7 +1,14 @@
 {
   "parser": "@typescript-eslint/parser",
   "root": true,
-  "plugins": ["switch-case", "simple-import-sort", "deprecation", "import", "prettier", "unused-imports"],
+  "plugins": [
+    "switch-case",
+    "simple-import-sort",
+    "deprecation",
+    "import",
+    "prettier",
+    "unused-imports"
+  ],
   "extends": [
     "plugin:@typescript-eslint/recommended",
     "plugin:node/recommended",
@@ -24,11 +31,19 @@
   },
   "settings": {
     "node": {
-      "allowModules": ["express"],
-      "tryExtensions": [".js", ".json", ".ts"]
+      "allowModules": [
+        "express"
+      ],
+      "tryExtensions": [
+        ".js",
+        ".json",
+        ".ts"
+      ]
     },
     "import/parsers": {
-      "@typescript-eslint/parser": [".ts"]
+      "@typescript-eslint/parser": [
+        ".ts"
+      ]
     },
     "import/resolver": {
       "node": {
@@ -40,22 +55,21 @@
     }
   },
   "rules": {
-    "switch-case/newline-between-switch-case": "off",
-    "node/no-deprecated-api": "off",
-    "node/no-extraneous-require": "off",
-    "node/no-missing-require": "off",
-    "node/no-unpublished-require": "off",
-    "node/no-unsupported-features/es-builtins": "off",
-    "node/no-unsupported-features/es-syntax": "off",
-    "node/no-unsupported-features/node-builtins": "off",
-    "node/no-exports-assign": "off",
+    "node/no-unsupported-features/es-syntax": [
+      "error",
+      {
+        "ignores": [
+          "modules"
+        ]
+      }
+    ],
     "node/no-missing-import": "off",
     "node/no-unpublished-import": "off",
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error",
     "import/first": "error",
     "import/no-duplicates": "error",
-    "deprecation/deprecation": "off",
+    "deprecation/deprecation": "warn",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "import/no-unresolved": "error",
@@ -82,7 +96,10 @@
     "no-console": [
       "error",
       {
-        "allow": ["info", "error"]
+        "allow": [
+          "info",
+          "error"
+        ]
       }
     ],
     "import/no-named-as-default": "off",
@@ -93,7 +110,10 @@
     "consistent-return": "off",
     "no-unused-vars": "off",
     "unused-imports/no-unused-imports": "error",
-    "unused-imports/no-unused-vars": ["error", { "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }],
+    "unused-imports/no-unused-vars": [
+      "error",
+      { "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
+    ],
     "@typescript-eslint/no-unused-vars": "off",
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/no-explicit-any": "off",
@@ -109,23 +129,31 @@
       }
     ],
     "import/no-named-as-default-member": "off",
-    "prefer-destructuring": [
-      "error",
-      {
-        "array": true,
-        "object": true
-      }
-    ]
+    "prefer-destructuring": ["error", {
+      "array": true,
+      "object": true
+    }]
   },
   "overrides": [
     {
-      "files": ["**/*.test.ts", "**/*.api-test.ts"],
-      "extends": ["plugin:jest/recommended", "plugin:jest/style", "plugin:jest-formatting/strict"],
+      "files": [
+        "**/*.test.ts",
+        "**/*.api-test.ts"
+      ],
+      "extends": [
+        "plugin:jest/recommended",
+        "plugin:jest/style",
+        "plugin:jest-formatting/strict"
+      ],
       "rules": {
         "jest/expect-expect": [
           "warn",
           {
-            "assertFunctionNames": ["expect", "request.**.expect", "**.expect\\w+"]
+            "assertFunctionNames": [
+              "expect",
+              "request.**.expect",
+              "**.expect\\w+"
+            ]
           }
         ],
         "@typescript-eslint/no-unsafe-assignment": "off",
@@ -135,5 +163,11 @@
       }
     }
   ],
-  "ignorePatterns": ["node_modules/**", ".eslintrc.js", "dist/**", "coverage/**", "report/**"]
+  "ignorePatterns": [
+    "node_modules/**",
+    ".eslintrc.js",
+    "dist/**",
+    "coverage/**",
+    "report/**"
+  ]
 }
