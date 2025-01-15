@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { KEY as SALESFORCE_CONFIG_KEY, SalesforceConfig } from '@ukef/config/salesforce.config';
-import { isDevelopment } from '@ukef/helpers/https-agent.helper';
+import { isDevelopment } from '@ukef/helpers/is-development.helper';
 import { HttpModule } from '@ukef/modules/http/http.module';
 import https from 'https';
 
