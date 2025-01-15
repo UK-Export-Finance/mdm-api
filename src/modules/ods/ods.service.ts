@@ -4,7 +4,14 @@ import { InjectDataSource } from '@nestjs/typeorm';
 import { DATABASE } from '@ukef/constants';
 import { DataSource } from 'typeorm';
 import { PinoLogger } from 'nestjs-pino';
-import { ODS_ENTITIES, OdsEntity, OdsStoredProcedureInput, OdsStoredProcedureOuputBody, OdsStoredProcedureQueryParams } from './dto/ods-payloads.dto';
+import {
+  ODS_ENTITIES,
+  OdsEntity,
+  OdsStoredProcedureInput,
+  OdsStoredProcedureOuputBody,
+  OdsStoredProcedureOutput,
+  OdsStoredProcedureQueryParams,
+} from './dto/ods-payloads.dto';
 
 @Injectable()
 export class OdsService {
@@ -77,7 +84,7 @@ export class OdsService {
    *
    * @returns {Promise<OdsStoredProcedureOuput>} The result of the stored procedure
    */
-  async callOdsStoredProcedure(storedProcedureInput: OdsStoredProcedureInput): Promise<OdsStoredProcedureOuput> {
+  async callOdsStoredProcedure(storedProcedureInput: OdsStoredProcedureInput): Promise<OdsStoredProcedureOutput> {
     const queryRunner = this.odsDataSource.createQueryRunner();
     try {
       // Use the query runner to call a stored procedure
