@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, MinLength, MaxLength } from 'class-validator';
+import { IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
 
 export class DTFSCustomerDto {
   @ApiProperty({ description: 'Company Registration Number', minLength: 8, maxLength: 10 })
