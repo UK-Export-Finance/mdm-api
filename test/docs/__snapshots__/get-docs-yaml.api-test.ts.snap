@@ -86,7 +86,7 @@ paths:
   /api/v1/customers:
     get:
       operationId: CustomersController_getCustomers
-      summary: Get customers from Salesforce
+      summary: Get customers from Salesforce via Informatica
       parameters:
         - name: companyReg
           required: false
@@ -140,9 +140,120 @@ paths:
                 items:
                   $ref: '#/components/schemas/GetCustomersResponseItem'
         '404':
+          description: Customer not found
+      tags:
+        - customers
+    post:
+      operationId: CustomersController_getOrCreateCustomer
+      summary: Get a customer in Salesforce, or create one if it does not exist
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DTFSCustomerDto'
+      responses:
+        '200':
+          description: Customers matching search parameters
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetCustomersResponseItem'
+        '201':
+          description: Customer successfully created
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetCustomersResponseItem'
+        '400':
+          description: >-
+            Failed to create a customer in Salesforce, as a duplicate record
+            without a company registration number exists
+        '401':
+          description: Failed to get access token
+      tags:
+        - customers
+  /api/v1/customers/dun-bradstreet:
+    get:
+      operationId: CustomersController_getDunAndBradstreetNumber
+      summary: Get DUNS number for a Company Registration Number
+      parameters:
+        - name: companyRegistrationNumber
+          required: true
+          in: query
+          description: Company Registration Number
+          schema:
+            minLength: 8
+            maxLength: 10
+            type: string
+      responses:
+        '200':
+          description: DUNS number
+          content:
+            application/json:
+              schema:
+                type: string
+        '404':
           description: Customer not found.
       tags:
         - customers
+  /api/v1/numbers:
+    post:
+      operationId: NumbersController_create
+      summary: Create Number
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CreateUkefIdDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+        - numbers
+    get:
+      operationId: NumbersController_findOne
+      summary: Get information about UKEF ID
+      parameters:
+        - name: type
+          required: true
+          in: query
+          description: >-
+            Id of UKEF ID type. Common types are: 1 for Deal/Facility, 2 for
+            Party, 8 for Covenant
+          schema:
+            example: 1
+            type: number
+        - name: ukefId
+          required: true
+          in: query
+          description: |-
+            UKEF ID to check. Examples: 
+            - Facility/Deal/Covenant ID: 0020019715 
+            - Party URN: 00300524
+          schema:
+            example: '00300524'
+            type: string
+      responses:
+        '200':
+          description: The found record
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UkefId'
+      tags:
+        - numbers
   /api/v1/emails:
     post:
       operationId: EmailsController_postEmail
@@ -376,55 +487,6 @@ paths:
                 $ref: '#/components/schemas/MarketEntity'
       tags:
         - markets
-  /api/v1/numbers:
-    post:
-      operationId: NumbersController_create
-      summary: Create Number
-      parameters: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/CreateUkefIdDto'
-      responses:
-        '201':
-          description: ''
-      tags:
-        - numbers
-    get:
-      operationId: NumbersController_findOne
-      summary: Get information about UKEF ID
-      parameters:
-        - name: type
-          required: true
-          in: query
-          description: >-
-            Id of UKEF ID type. Common types are: 1 for Deal/Facility, 2 for
-            Party, 8 for Covenant
-          schema:
-            example: 1
-            type: number
-        - name: ukefId
-          required: true
-          in: query
-          description: UKEF ID to check
-          schema:
-            example: '0030052431'
-            type: string
-      responses:
-        '200':
-          description: The found record
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/UkefId'
-      tags:
-        - numbers
   /api/v1/premium/schedule:
     post:
       operationId: PremiumSchedulesController_create
@@ -671,16 +733,16 @@ components:
       properties:
         partyUrn:
           type: string
-          description: The unique UKEF id of the customer
+          description: The unique UKEF ID of the customer
         name:
           type: string
           description: Customer company name
         sfId:
           type: string
-          description: The uniqueue Salesforce id
+          description: The unique Salesforce ID
         companyRegNo:
           type: string
-          description: The Companies house registration number
+          description: The Companies House registration number
         type:
           type: string
           description: Customer company type
@@ -735,6 +797,70 @@ components:
         - type
         - subtype
         - isLegacyRecord
+    DTFSCustomerDto:
+      type: object
+      properties:
+        companyRegistrationNumber:
+          type: string
+          description: Company Registration Number
+          minLength: 8
+          maxLength: 10
+        companyName:
+          type: string
+          description: Company Name
+      required:
+        - companyRegistrationNumber
+        - companyName
+    CreateUkefIdDto:
+      type: object
+      properties:
+        numberTypeId:
+          type: number
+          example: 1
+        createdBy:
+          type: string
+          example: ECGD\\jsmith
+          description: User if it is known
+        requestingSystem:
+          type: string
+          example: NodeJs/App
+      required:
+        - numberTypeId
+        - createdBy
+        - requestingSystem
+    UkefId:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 20057861
+          description: Internal id
+        maskedId:
+          type: string
+          example: '0030570680'
+          description: UKEF ID
+        type:
+          type: number
+          example: 1
+        createdBy:
+          type: string
+          example: ECGD\\jsmith
+          description: User if it is known
+        createdDatetime:
+          format: date-time
+          type: string
+          example: '2021-11-30T09:44:04.15Z'
+          description: Created timestamp
+        requestingSystem:
+          type: string
+          example: NodeJs/App
+      required:
+        - id
+        - maskedId
+        - type
+        - createdBy
+        - createdDatetime
+        - requestingSystem
     PostEmailsRequestDto:
       type: object
       properties:
@@ -762,7 +888,16 @@ components:
           description: Reference for the email sent
           nullable: true
           minLength: 1
-          maxLength: 100
+          maxLength: 400
+        file:
+          type: string
+          example: !!binary ZXhhbXBsZS1maWxlLnhsc3g=
+          description: >-
+            File for GovNotify to consume and generate a link to download with
+            supported file types. The file size must be smaller than 2mb
+          nullable: true
+          minLength: 1
+          maxLength: 400
       required:
         - templateId
         - sendToEmailAddress
@@ -790,7 +925,6 @@ components:
         - body
         - from_email
         - subject
-        - unsubscribe_link
     PostEmailsResponseDataTemplate:
       type: object
       properties:
@@ -840,7 +974,6 @@ components:
         - content
         - id
         - reference
-        - scheduled_for
         - template
         - uri
     PostEmailsResponseDto:
@@ -954,6 +1087,10 @@ components:
           type: string
           example: '9999-12-31T00:00:00.000Z'
           description: Effective from date
+        countryRatingDesc:
+          type: string
+          example: B+
+          description: Country rating description
         oecdRiskCategory:
           type: number
           example: 5
@@ -1006,6 +1143,7 @@ components:
         - lastUpdatedDatetime
         - effectiveFromDatetime
         - effectiveToDatetime
+        - countryRatingDesc
         - oecdRiskCategory
         - marketRiskAppetitePublicDesc
         - geographicalRegionId
@@ -1017,56 +1155,6 @@ components:
         - shortTermCoverAvailabilityDesc
         - NBIIssue
         - active
-    CreateUkefIdDto:
-      type: object
-      properties:
-        numberTypeId:
-          type: number
-          example: 1
-        createdBy:
-          type: string
-          example: ECGD\\jsmith
-          description: User if it is known
-        requestingSystem:
-          type: string
-          example: NodeJs/App
-      required:
-        - numberTypeId
-        - createdBy
-        - requestingSystem
-    UkefId:
-      type: object
-      properties:
-        id:
-          type: number
-          example: 20057861
-          description: Internal id
-        maskedId:
-          type: string
-          example: '0030570680'
-          description: UKEF ID
-        type:
-          type: number
-          example: 1
-        createdBy:
-          type: string
-          example: ECGD\\jsmith
-          description: User if it is known
-        createdDatetime:
-          format: date-time
-          type: string
-          example: '2021-11-30T09:44:04.15Z'
-          description: Created timestamp
-        requestingSystem:
-          type: string
-          example: NodeJs/App
-      required:
-        - id
-        - maskedId
-        - type
-        - createdBy
-        - createdDatetime
-        - requestingSystem
     CreatePremiumScheduleDto:
       type: object
       properties:

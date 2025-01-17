@@ -5,15 +5,16 @@ export interface LogKeysToRedactOptions {
   clientRequest: {
     logKey: string;
     headersLogKey: string;
+    bodyLogKey: string;
   };
   outgoingRequest: {
     logKey: string;
     headersLogKey: string;
+    bodyLogKey: string;
   };
   incomingResponse: {
     logKey: string;
     bodyLogKey: string;
-    accessTokenLogKey: string;
   };
 
   error: {
@@ -46,17 +47,19 @@ const getClientRequestLogKeysToRedact = ({ logKey, headersLogKey }: LogKeysToRed
   buildKeyToRedact([logKey, headersLogKey]),
 ];
 
-const getIncomingResponseLogKeysToRedact = ({ logKey, bodyLogKey, accessTokenLogKey }: LogKeysToRedactOptions['incomingResponse']): string[] => [
-  // We redact the client request body as they contain the Dun and Bradstreet access token
-  buildKeyToRedact([logKey, bodyLogKey, accessTokenLogKey]),
+const getIncomingResponseLogKeysToRedact = ({ logKey, bodyLogKey }: LogKeysToRedactOptions['incomingResponse']): string[] => [
+  // We redact the client request body as they contain the Dun and Bradstreet and Salesforce access tokens
+  buildKeyToRedact([logKey, bodyLogKey]),
 ];
 
-const getOutgoingRequestLogKeysToRedact = ({ logKey, headersLogKey }: LogKeysToRedactOptions['outgoingRequest']): string[] => {
+const getOutgoingRequestLogKeysToRedact = ({ logKey, headersLogKey, bodyLogKey }: LogKeysToRedactOptions['outgoingRequest']): string[] => {
   return [
     // We redact the outgoing request headers as they contain:
     //  - our Basic auth details for Informatica
-    //  - our Client auth details for Dun and Bradstreet
+    // We redact the outgoing request body as it contains:
+    //  - our Client auth details for Dun and Bradstreet and Salesforce
     buildKeyToRedact([logKey, headersLogKey]),
+    buildKeyToRedact([logKey, bodyLogKey]),
   ];
 };
 
