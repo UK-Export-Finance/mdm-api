@@ -208,6 +208,7 @@ export class CustomersService {
       CCM_Credit_Risk_Rating__c: 'B+',
       CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
       CCM_Loss_Given_Default__c: 50,
+      CCM_Probability_of_Default__c: DTFSCustomerDto.probabilityOfDefault,
     };
 
     const salesforceCreateCustomerResponse: CreateCustomerSalesforceResponseDto = await this.salesforceService.createCustomer(createCustomerDto);

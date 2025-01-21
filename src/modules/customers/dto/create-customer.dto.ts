@@ -40,4 +40,9 @@ export class CreateCustomerDto {
   @IsNumber()
   @IsNotEmpty()
   CCM_Loss_Given_Default__c: number;
+
+  @ApiProperty({ description: 'Probability of Default' })
+  @IsNumber()
+  @IsNotEmpty()
+  CCM_Probability_of_Default__c: number;
 }
