@@ -87,7 +87,7 @@ describe('CustomerService', () => {
   });
 
   describe('getOrCreateCustomer', () => {
-    const DTFSCustomerDto: DTFSCustomerDto = { companyRegistrationNumber: '12345678', companyName: 'TEST NAME' };
+    const DTFSCustomerDto: DTFSCustomerDto = { companyRegistrationNumber: '12345678', companyName: 'TEST NAME', probabilityOfDefault: 3 };
     const salesforceCreateCustomerResponse: CreateCustomerSalesforceResponseDto = {
       id: 'customer-id',
       errors: null,

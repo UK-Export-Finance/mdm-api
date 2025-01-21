@@ -60,6 +60,10 @@ describe('SalesforceService', () => {
       Party_URN__c: '00312345',
       D_B_Number__c: '12341234',
       Company_Registration_Number__c: companyRegNo,
+      CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
+      CCM_Credit_Risk_Rating__c: 'B+',
+      CCM_Loss_Given_Default__c: 50,
+      CCM_Probability_of_Default__c: 3,
     };
 
     const expectedHttpServicePostArgs: [string, body: CreateCustomerDto, object] = [
@@ -105,6 +109,10 @@ describe('SalesforceService', () => {
         Party_URN__c: null,
         D_B_Number__c: null,
         Company_Registration_Number__c: '12341234',
+        CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
+        CCM_Credit_Risk_Rating__c: 'B+',
+        CCM_Loss_Given_Default__c: 50,
+        CCM_Probability_of_Default__c: null,
       };
 
       const typeError = new TypeError("Cannot read properties of undefined (reading 'pipe')");

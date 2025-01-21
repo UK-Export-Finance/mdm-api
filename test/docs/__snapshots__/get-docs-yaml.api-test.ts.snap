@@ -808,9 +808,13 @@ components:
         companyName:
           type: string
           description: Company Name
+        probabilityOfDefault:
+          type: number
+          description: Probability of Default
       required:
         - companyRegistrationNumber
         - companyName
+        - probabilityOfDefault
     CreateUkefIdDto:
       type: object
       properties:
