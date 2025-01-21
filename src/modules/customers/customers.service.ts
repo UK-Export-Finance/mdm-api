@@ -70,7 +70,7 @@ export class CustomersService {
 
     try {
       const existingCustomersInInformatica = await this.informaticaService.getCustomers(backendQuery);
-      // If the customer exist in Informatica
+      // If the customer does exist in Informatica
       if (existingCustomersInInformatica?.[0]) {
         return await this.handleInformaticaResponse(res, DTFSCustomerDto, existingCustomersInInformatica);
       } else {
@@ -205,6 +205,9 @@ export class CustomersService {
       Party_URN__c: partyUrn,
       D_B_Number__c: dunsNumber,
       Company_Registration_Number__c: DTFSCustomerDto.companyRegistrationNumber,
+      CCM_Credit_Risk_Rating__c: 'B+',
+      CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
+      CCM_Loss_Given_Default__c: 50,
     };
 
     const salesforceCreateCustomerResponse: CreateCustomerSalesforceResponseDto = await this.salesforceService.createCustomer(createCustomerDto);
@@ -221,4 +224,12 @@ export class CustomersService {
       },
     ];
   }
+}
+
+function salesforceFormattedCurrentDate(): string {
+  const today = new Date();
+  const dd = String(today.getDate()).padStart(2, '0');
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const yyyy = String(today.getFullYear());
+  return `${yyyy}-${mm}-${dd}`;
 }
