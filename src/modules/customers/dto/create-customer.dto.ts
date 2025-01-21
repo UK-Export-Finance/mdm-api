@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString, Length, MaxLength, MinLength } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString, Length, Max, MaxLength, Min, MinLength } from 'class-validator';
 
 export class CreateCustomerDto {
   @ApiProperty({ description: 'Account Name' })
@@ -39,10 +39,14 @@ export class CreateCustomerDto {
   @ApiProperty({ description: 'Loss Given Default' })
   @IsNumber()
   @IsNotEmpty()
+  @Min(0)
+  @Max(100)
   CCM_Loss_Given_Default__c: number;
 
   @ApiProperty({ description: 'Probability of Default' })
   @IsNumber()
   @IsNotEmpty()
+  @Min(0)
+  @Max(100)
   CCM_Probability_of_Default__c: number;
 }
