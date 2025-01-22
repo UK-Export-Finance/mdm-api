@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString, Max, MaxLength, Min, MinLength } from 'class-validator';
 
 export class DTFSCustomerDto {
   @ApiProperty({ description: 'Company Registration Number', minLength: 8, maxLength: 10 })
@@ -17,5 +17,7 @@ export class DTFSCustomerDto {
   @ApiProperty({ description: 'Probability of Default' })
   @IsNumber()
   @IsNotEmpty()
+  @Min(0)
+  @Max(100)
   probabilityOfDefault: number;
 }

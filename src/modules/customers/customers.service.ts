@@ -1,4 +1,5 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { CUSTOMERS } from '@ukef/constants';
 import { DunAndBradstreetService } from '@ukef/helper-modules/dun-and-bradstreet/dun-and-bradstreet.service';
 import { salesforceFormattedCurrentDate } from '@ukef/helpers/date-formatter.helper';
 import { GetCustomersInformaticaQueryDto } from '@ukef/modules/informatica/dto/get-customers-informatica-query.dto';
@@ -206,9 +207,9 @@ export class CustomersService {
       Party_URN__c: partyUrn,
       D_B_Number__c: dunsNumber,
       Company_Registration_Number__c: DTFSCustomerDto.companyRegistrationNumber,
-      CCM_Credit_Risk_Rating__c: 'B+',
+      CCM_Credit_Risk_Rating__c: CUSTOMERS.EXAMPLES.CREDIT_RISK_RATING,
       CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
-      CCM_Loss_Given_Default__c: 50,
+      CCM_Loss_Given_Default__c: CUSTOMERS.EXAMPLES.LOSS_GIVEN_DEFAULT,
       CCM_Probability_of_Default__c: DTFSCustomerDto.probabilityOfDefault,
     };
 

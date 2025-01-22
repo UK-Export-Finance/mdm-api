@@ -31,8 +31,9 @@ export class CreateCustomerDto {
   @IsNotEmpty()
   CCM_Credit_Risk_Rating__c: string;
 
-  @ApiProperty({ description: 'Credit Risk Rating Date' })
+  @ApiProperty({ description: 'Credit Risk Rating Date (YYYY-MM-DD)' })
   @IsString()
+  @Length(10)
   @IsNotEmpty()
   CCM_Credit_Risk_Rating_Date__c: string;
 
