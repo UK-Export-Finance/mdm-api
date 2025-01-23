@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.24.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.23.0...v1.24.0) (2025-01-23)
+
+
+### Features
+
+* **FN-3664:** add risk data to created customers ([#1163](https://github.com/UK-Export-Finance/mdm-api/issues/1163)) ([5ff21fa](https://github.com/UK-Export-Finance/mdm-api/commit/5ff21fa3607fc5889f7cef31f2afb4fc1e3d0065))
+
 ## [1.23.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.22.2...v1.23.0) (2025-01-17)
 
 
