@@ -1,22 +1,22 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DATABASE } from '@ukef/constants';
+import { DATABASE_NAME, DATABASE_TYPE } from '@ukef/constants';
 
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
-      name: DATABASE.MDM,
+      name: DATABASE_NAME.MDM,
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        name: DATABASE.MDM,
+        name: DATABASE_NAME.MDM,
         host: configService.get<string>('database.mssql_mdm.host'),
         port: configService.get<number>('database.mssql_mdm.port'),
         username: configService.get<string>('database.mssql_mdm.username'),
         password: configService.get<string>('database.mssql_mdm.password'),
         database: configService.get<string>('database.mssql_mdm.name'),
-        type: 'mssql',
+        type: DATABASE_TYPE.MSSQL,
         extra: {
           options: {
             encrypt: true,
