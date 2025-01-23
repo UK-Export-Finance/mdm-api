@@ -1,20 +1,20 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DATABASE } from '@ukef/constants';
+import { DATABASE_NAME, DATABASE_TYPE } from '@ukef/constants';
 
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
-      name: DATABASE.ODS,
+      name: DATABASE_NAME.ODS,
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        name: DATABASE.ODS,
+        name: DATABASE_NAME.ODS,
         host: configService.get<string>('database.mssql_ods.host'),
         port: configService.get<number>('database.mssql_ods.port'),
         database: configService.get<string>('database.mssql_ods.name'),
-        type: 'mssql',
+        type: DATABASE_TYPE.MSSQL,
         authentication: {
           type: 'azure-active-directory-service-principal-secret',
           options: {
