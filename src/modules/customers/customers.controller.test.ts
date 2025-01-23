@@ -117,7 +117,7 @@ describe('CustomersController', () => {
   });
 
   describe('getOrCreateCustomer', () => {
-    const DTFSCustomerDto: DTFSCustomerDto = { companyRegistrationNumber: CUSTOMERS.EXAMPLES.COMPANYREG, companyName: 'TEST NAME' };
+    const DTFSCustomerDto: DTFSCustomerDto = { companyRegistrationNumber: CUSTOMERS.EXAMPLES.COMPANYREG, companyName: 'TEST NAME', probabilityOfDefault: 3 };
 
     const getOrCreateCustomerResponse: GetCustomersResponse = [
       {

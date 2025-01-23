@@ -1,5 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
+import { CUSTOMERS } from '@ukef/constants';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { AxiosError, HttpStatusCode } from 'axios';
 import { when } from 'jest-when';
@@ -54,21 +55,61 @@ describe('SalesforceService', () => {
       errors: null,
       success: true,
     };
-
-    const query: CreateCustomerDto = {
+    const baseQuery = {
       Name: companyRegNo,
       Party_URN__c: '00312345',
       D_B_Number__c: '12341234',
       Company_Registration_Number__c: companyRegNo,
+      CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
+      CCM_Credit_Risk_Rating__c: CUSTOMERS.EXAMPLES.CREDIT_RISK_RATING,
+      CCM_Loss_Given_Default__c: CUSTOMERS.EXAMPLES.LOSS_GIVEN_DEFAULT,
+      CCM_Probability_of_Default__c: 3,
     };
-
-    const expectedHttpServicePostArgs: [string, body: CreateCustomerDto, object] = [
+    const baseExpectedHttpServicePostArgs: [string, body: CreateCustomerDto, object] = [
       customerBasePath,
-      query,
+      baseQuery,
       { headers: { Authorization: 'Bearer ' + expectedAccessToken } },
     ];
 
-    it('sends a POST to the Salesforce /sobjects/Account endpoint with the specified request', async () => {
+    it.each([
+      baseQuery,
+      {
+        Name: companyRegNo,
+        Party_URN__c: '00312345',
+        D_B_Number__c: '12341234',
+        Company_Registration_Number__c: companyRegNo,
+        CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
+        CCM_Credit_Risk_Rating__c: CUSTOMERS.EXAMPLES.CREDIT_RISK_RATING,
+        CCM_Loss_Given_Default__c: CUSTOMERS.EXAMPLES.LOSS_GIVEN_DEFAULT,
+        CCM_Probability_of_Default__c: 0.0,
+      },
+      {
+        Name: companyRegNo,
+        Party_URN__c: '00312345',
+        D_B_Number__c: '12341234',
+        Company_Registration_Number__c: companyRegNo,
+        CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
+        CCM_Credit_Risk_Rating__c: CUSTOMERS.EXAMPLES.CREDIT_RISK_RATING,
+        CCM_Loss_Given_Default__c: CUSTOMERS.EXAMPLES.LOSS_GIVEN_DEFAULT,
+        CCM_Probability_of_Default__c: 100.0,
+      },
+      {
+        Name: companyRegNo,
+        Party_URN__c: '00312345',
+        D_B_Number__c: '12341234',
+        Company_Registration_Number__c: companyRegNo,
+        CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
+        CCM_Credit_Risk_Rating__c: 'A+++',
+        CCM_Loss_Given_Default__c: 100,
+        CCM_Probability_of_Default__c: 14.1,
+      },
+    ])('sends a POST to the Salesforce /sobjects/Account endpoint with the specified request', async (query) => {
+      const expectedHttpServicePostArgs: [string, body: CreateCustomerDto, object] = [
+        customerBasePath,
+        query,
+        { headers: { Authorization: 'Bearer ' + expectedAccessToken } },
+      ];
+
       when(httpServicePost)
         .calledWith(...expectedHttpServicePostArgs)
         .mockReturnValueOnce(
@@ -90,23 +131,47 @@ describe('SalesforceService', () => {
     it('throws a SalesforceException if the request to Salesforce fails', async () => {
       const axiosRequestError = new AxiosError();
       when(httpServicePost)
-        .calledWith(...expectedHttpServicePostArgs)
+        .calledWith(...baseExpectedHttpServicePostArgs)
         .mockReturnValueOnce(throwError(() => axiosRequestError));
-      const getCustomersPromise = service.createCustomer(query);
+      const getCustomersPromise = service.createCustomer(baseQuery);
 
       await expect(getCustomersPromise).rejects.toBeInstanceOf(SalesforceException);
       await expect(getCustomersPromise).rejects.toThrow('Failed to create customer in Salesforce');
       await expect(getCustomersPromise).rejects.toHaveProperty('innerError', axiosRequestError);
     });
 
-    it('throws a TypeError if the request is malformed', async () => {
-      const malformedQuery: CreateCustomerDto = {
+    it.each([
+      {
         Name: companyRegNo,
         Party_URN__c: null,
         D_B_Number__c: null,
         Company_Registration_Number__c: '12341234',
-      };
-
+        CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
+        CCM_Credit_Risk_Rating__c: null,
+        CCM_Loss_Given_Default__c: CUSTOMERS.EXAMPLES.LOSS_GIVEN_DEFAULT,
+        CCM_Probability_of_Default__c: null,
+      },
+      {
+        Name: companyRegNo,
+        Party_URN__c: null,
+        D_B_Number__c: null,
+        Company_Registration_Number__c: '12341234',
+        CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
+        CCM_Credit_Risk_Rating__c: CUSTOMERS.EXAMPLES.CREDIT_RISK_RATING,
+        CCM_Loss_Given_Default__c: CUSTOMERS.EXAMPLES.LOSS_GIVEN_DEFAULT,
+        CCM_Probability_of_Default__c: 101,
+      },
+      {
+        Name: companyRegNo,
+        Party_URN__c: null,
+        D_B_Number__c: null,
+        Company_Registration_Number__c: '12341234',
+        CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
+        CCM_Credit_Risk_Rating__c: CUSTOMERS.EXAMPLES.CREDIT_RISK_RATING,
+        CCM_Loss_Given_Default__c: CUSTOMERS.EXAMPLES.LOSS_GIVEN_DEFAULT,
+        CCM_Probability_of_Default__c: -1,
+      },
+    ])('throws a TypeError if the request is malformed', async (malformedQuery) => {
       const typeError = new TypeError("Cannot read properties of undefined (reading 'pipe')");
       const getCustomersPromise = service.createCustomer(malformedQuery);
 

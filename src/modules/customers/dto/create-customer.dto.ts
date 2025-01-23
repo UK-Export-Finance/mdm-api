@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, Length, MaxLength, MinLength } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString, Length, Max, MaxLength, Min, MinLength } from 'class-validator';
 
 export class CreateCustomerDto {
   @ApiProperty({ description: 'Account Name' })
@@ -25,4 +25,29 @@ export class CreateCustomerDto {
   @MinLength(8)
   @MaxLength(10)
   Company_Registration_Number__c: string;
+
+  @ApiProperty({ description: 'Credit Risk Rating' })
+  @IsString()
+  @IsNotEmpty()
+  CCM_Credit_Risk_Rating__c: string;
+
+  @ApiProperty({ description: 'Credit Risk Rating Date (YYYY-MM-DD)' })
+  @IsString()
+  @Length(10)
+  @IsNotEmpty()
+  CCM_Credit_Risk_Rating_Date__c: string;
+
+  @ApiProperty({ description: 'Loss Given Default' })
+  @IsNumber()
+  @IsNotEmpty()
+  @Min(0)
+  @Max(100)
+  CCM_Loss_Given_Default__c: number;
+
+  @ApiProperty({ description: 'Probability of Default' })
+  @IsNumber()
+  @IsNotEmpty()
+  @Min(0)
+  @Max(100)
+  CCM_Probability_of_Default__c: number;
 }

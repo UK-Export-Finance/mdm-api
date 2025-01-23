@@ -1,5 +1,7 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { CUSTOMERS } from '@ukef/constants';
 import { DunAndBradstreetService } from '@ukef/helper-modules/dun-and-bradstreet/dun-and-bradstreet.service';
+import { salesforceFormattedCurrentDate } from '@ukef/helpers/date-formatter.helper';
 import { GetCustomersInformaticaQueryDto } from '@ukef/modules/informatica/dto/get-customers-informatica-query.dto';
 import { InformaticaService } from '@ukef/modules/informatica/informatica.service';
 import { SalesforceService } from '@ukef/modules/salesforce/salesforce.service';
@@ -70,7 +72,7 @@ export class CustomersService {
 
     try {
       const existingCustomersInInformatica = await this.informaticaService.getCustomers(backendQuery);
-      // If the customer exist in Informatica
+      // If the customer does exist in Informatica
       if (existingCustomersInInformatica?.[0]) {
         return await this.handleInformaticaResponse(res, DTFSCustomerDto, existingCustomersInInformatica);
       } else {
@@ -205,6 +207,10 @@ export class CustomersService {
       Party_URN__c: partyUrn,
       D_B_Number__c: dunsNumber,
       Company_Registration_Number__c: DTFSCustomerDto.companyRegistrationNumber,
+      CCM_Credit_Risk_Rating__c: CUSTOMERS.EXAMPLES.CREDIT_RISK_RATING,
+      CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
+      CCM_Loss_Given_Default__c: CUSTOMERS.EXAMPLES.LOSS_GIVEN_DEFAULT,
+      CCM_Probability_of_Default__c: DTFSCustomerDto.probabilityOfDefault,
     };
 
     const salesforceCreateCustomerResponse: CreateCustomerSalesforceResponseDto = await this.salesforceService.createCustomer(createCustomerDto);
