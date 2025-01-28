@@ -46,7 +46,7 @@
     "@nestjs/common": "^10.4.15",
     "@nestjs/config": "^4.0.0",
     "@nestjs/core": "^11.0.5",
-    "@nestjs/passport": "^10.0.3",
+    "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^10.4.15",
     "@nestjs/swagger": "^7.4.2",
     "@nestjs/terminus": "^11.0.0",
