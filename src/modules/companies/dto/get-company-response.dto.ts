@@ -46,6 +46,7 @@ export class GetCompanyResponse {
   dateOfCreation: string;
   registeredAddress: RegisteredAddress;
   industries: Industry[];
+  isActive: boolean;
 }
 
 export class Industry {

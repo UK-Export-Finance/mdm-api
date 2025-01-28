@@ -84,6 +84,7 @@ export class CompaniesService {
         region: address?.region,
       },
       industries: this.mapSicCodes(company.sic_codes, industryClasses),
+      isActive: company.company_status === 'active',
     };
   }
 
