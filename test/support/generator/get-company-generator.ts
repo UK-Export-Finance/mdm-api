@@ -62,6 +62,7 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
       ],
       industrySectorCode: this.valueGenerator.integer({ min: 1001, max: 1020 }),
       industrySectorName: this.valueGenerator.sentence({ words: 4 }),
+      isActive: this.valueGenerator.boolean(),
     };
   }
 
@@ -228,6 +229,7 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
         country: v.country,
       },
       industries,
+      isActive: v.isActive,
     };
 
     const getCompanyCompaniesHouseOverseasCompanyResponse = structuredClone(getCompanyCompaniesHouseResponse);
@@ -297,6 +299,7 @@ interface CompanyValues {
   industryClassNames: string[];
   industrySectorCode: number;
   industrySectorName: string;
+  isActive: boolean;
 }
 
 interface GenerateOptions {
