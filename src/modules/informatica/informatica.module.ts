@@ -20,18 +20,6 @@ import { InformaticaService } from './informatica.service';
             username,
             password,
           },
-          // TODO: APIM-471 - cleanup rejectUnauthorized when Informatica SSL issue is resolved
-          // "rejectUnauthorized: false" is just for local DEV laptop environment, not for DEV/PROD.
-          // to ignore https issues, enable agent and rejectUnauthorized:false below.
-          // import https from 'https';
-          // import crypto from 'crypto';
-          // httpsAgent: new https.Agent({
-          //   // Allow self signed negotiations
-          //   rejectUnauthorized: false,
-
-          //   // Allow legacy server
-          //   secureOptions: crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT,
-          // }),
         };
       },
     }),
