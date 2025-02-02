@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.25.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.24.0...v1.25.0) (2025-02-02)
+
+
+### Features
+
+* **FN-3163:** remove local ssl workaround ([#1188](https://github.com/UK-Export-Finance/mdm-api/issues/1188)) ([f65b047](https://github.com/UK-Export-Finance/mdm-api/commit/f65b0477cc68151b492f90bc9f80c3ef199b9006))
+
 ## [1.24.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.23.0...v1.24.0) (2025-01-23)
 
 
