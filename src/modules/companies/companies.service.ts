@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
+import { COMPANIES } from '@ukef/constants';
 import { CompaniesHouseService } from '@ukef/helper-modules/companies-house/companies-house.service';
 import { GetCompanyCompaniesHouseResponse } from '@ukef/helper-modules/companies-house/dto/get-company-companies-house-response.dto';
 import { CompaniesHouseNotFoundException } from '@ukef/helper-modules/companies-house/exception/companies-house-not-found.exception';
@@ -84,6 +85,7 @@ export class CompaniesService {
         region: address?.region,
       },
       industries: this.mapSicCodes(company.sic_codes, industryClasses),
+      isActive: company?.company_status === COMPANIES.STATUS.ACTIVE,
     };
   }
 
