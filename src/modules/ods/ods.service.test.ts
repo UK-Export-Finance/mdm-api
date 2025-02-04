@@ -47,32 +47,28 @@ describe('OdsService', () => {
   describe('findCustomer', () => {
     it('should return a customer the customer urn and name when findCustomer is called', async () => {
       const mockCustomer = { urn: CUSTOMERS.EXAMPLES.PARTYURN, name: 'Test Customer' };
-      const mockStoredProcedureOutput = [
-        {
-          output_body: `{
-            "query_request_id": "Test ID",
-            "message": "SUCCESS",
-            "status": "SUCCESS",
-            "total_result_count": 1,
-            "results": [
-              {
-                "customer_party_unique_reference_number": "${mockCustomer.urn}",
-                "customer_name": "${mockCustomer.name}",
-                "customer_companies_house_number": "12345678",
-                "customer_addresses": [
-                  {
-                    "customer_address_type": "Registered",
-                    "customer_address_street": "Test Street",
-                    "customer_address_postcode": "AA1 1BB",
-                    "customer_address_country": "United Kingdom",
-                    "customer_address_city": "Test City"
-                  }
-                ]
-              }
-            ]
-          }`,
-        },
-      ];
+      const mockStoredProcedureOutput = `{
+          "query_request_id": "Test ID",
+          "message": "SUCCESS",
+          "status": "SUCCESS",
+          "total_result_count": 1,
+          "results": [
+            {
+              "customer_party_unique_reference_number": "${mockCustomer.urn}",
+              "customer_name": "${mockCustomer.name}",
+              "customer_companies_house_number": "12345678",
+              "customer_addresses": [
+                {
+                  "customer_address_type": "Registered",
+                  "customer_address_street": "Test Street",
+                  "customer_address_postcode": "AA1 1BB",
+                  "customer_address_country": "United Kingdom",
+                  "customer_address_city": "Test City"
+                }
+              ]
+            }
+          ]
+        }`;
       const mockInput: OdsStoredProcedureInput = service.createOdsStoredProcedureInput(ODS_ENTITIES.CUSTOMER, {
         customer_party_unique_reference_number: mockCustomer.urn,
       });

@@ -9,7 +9,6 @@ import {
   OdsEntity,
   OdsStoredProcedureInput,
   OdsStoredProcedureOuputBody,
-  OdsStoredProcedureOutput,
   OdsStoredProcedureQueryParams,
 } from './dto/ods-payloads.dto';
 
