@@ -35,9 +35,9 @@ export class OdsService {
 
       const storedProcedureResult = await this.callOdsStoredProcedure(spInput);
 
-      const storedProcedureJson: OdsStoredProcedureOuputBody = JSON.parse(storedProcedureResult[0]?.output_body);
+      const storedProcedureJson: OdsStoredProcedureOuputBody = JSON.parse(storedProcedureResult);
 
-      if (storedProcedureJson === undefined || storedProcedureJson?.status != 'SUCCESS') {
+      if (storedProcedureJson?.status !== 'SUCCESS') {
         this.logger.error('Error from ODS stored procedure, output: %o', storedProcedureResult);
         throw new InternalServerErrorException('Error trying to find a customer');
       }
@@ -97,7 +97,9 @@ export class OdsService {
         [JSON.stringify(storedProcedureInput)],
       );
 
-      return result;
+      return result[0]?.output_body || null;
+    } catch (error) {
+      throw error;
     } finally {
       await queryRunner.release();
     }

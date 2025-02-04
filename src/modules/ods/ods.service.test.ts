@@ -45,7 +45,7 @@ describe('OdsService', () => {
   });
 
   describe('findCustomer', () => {
-    it('findCustomer should return a customer the customer urn and name when findCustomer is called', async () => {
+    it('should return a customer the customer urn and name when findCustomer is called', async () => {
       const mockCustomer = { urn: CUSTOMERS.EXAMPLES.PARTYURN, name: 'Test Customer' };
       const mockStoredProcedureOutput = [
         {

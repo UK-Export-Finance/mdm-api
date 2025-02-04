@@ -7,7 +7,7 @@ export class GetOdsCustomerParamDto {
   @ApiProperty({
     required: true,
     example: CUSTOMERS.EXAMPLES.PARTYURN,
-    description: 'The unique UKEF id of the customer to search for.',
+    description: 'The unique UKEF ID of the customer to search for.',
     pattern: regexToString(UKEFID.PARTY_ID.REGEX),
   })
   @Matches(UKEFID.PARTY_ID.REGEX)
