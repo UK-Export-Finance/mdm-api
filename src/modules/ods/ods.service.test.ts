@@ -27,7 +27,8 @@ describe('OdsService', () => {
         customer_party_unique_reference_number: CUSTOMERS.EXAMPLES.PARTYURN,
       });
 
-      const mockResult = [{ output_body: JSON.stringify({ id: '123', name: 'Test Customer' }) }];
+      const mockOutputBody = JSON.stringify({ id: '123', name: 'Test Customer' });
+      const mockResult = [{ output_body: mockOutputBody }];
       mockQueryRunner.query.mockResolvedValue(mockResult);
 
       const result = await service.callOdsStoredProcedure(mockInput);
@@ -39,7 +40,7 @@ describe('OdsService', () => {
         ),
         [JSON.stringify(mockInput)],
       );
-      expect(result).toEqual(mockResult);
+      expect(result).toEqual(mockOutputBody);
       expect(mockQueryRunner.release).toHaveBeenCalled();
     });
   });
