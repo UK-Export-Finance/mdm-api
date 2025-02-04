@@ -14,12 +14,6 @@ export type OdsStoredProcedureInput = {
   query_parameters: OdsStoredProcedureQueryParams;
 };
 
-// The output of the stored procedure is in this format, returning a string that needs to be parsed
-// to JSON to give the OdsStoredProcedureOuputBody type
-export type OdsStoredProcedureOutput = {
-  output_body: string;
-}[];
-
 // Stored Procedure output definition can be found here https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_query.sql#L279-L286
 export type OdsStoredProcedureOuputBody = {
   query_request_id: string;

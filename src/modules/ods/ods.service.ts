@@ -84,7 +84,7 @@ export class OdsService {
    *
    * @returns {Promise<OdsStoredProcedureOuput>} The result of the stored procedure
    */
-  async callOdsStoredProcedure(storedProcedureInput: OdsStoredProcedureInput): Promise<OdsStoredProcedureOutput> {
+  async callOdsStoredProcedure(storedProcedureInput: OdsStoredProcedureInput): Promise<string> {
     const queryRunner = this.odsDataSource.createQueryRunner();
     try {
       // Use the query runner to call a stored procedure
