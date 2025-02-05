@@ -26,6 +26,7 @@ on:
       - dev
       - staging
       - production
+      - feat/GIFT-3546/deploy-base-3546-branch-to-dev
 
     paths:
       - "src/**"
@@ -50,7 +51,7 @@ jobs:
     runs-on: [self-hosted, APIM, deployment]
     outputs:
       product: ${{ env.PRODUCT }}
-      environment: ${{ env.ENVIRONMENT }}
+      environment: ${{ github.ref_name == 'feat/GIFT-3546/deploy-base-3546-branch-to-dev' && 'dev' || env.ENVIRONMENT }}
       timezone: ${{ env.TIMEZONE }}
     steps:
       - name: Environment 🧪
