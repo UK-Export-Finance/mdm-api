@@ -117,7 +117,17 @@ describe('CustomersController', () => {
   });
 
   describe('getOrCreateCustomer', () => {
-    const DTFSCustomerDto: DTFSCustomerDto = { companyRegistrationNumber: CUSTOMERS.EXAMPLES.COMPANYREG, companyName: 'TEST NAME', probabilityOfDefault: 3 };
+    const DTFSCustomerDtoWithProbabilityOfDefault: DTFSCustomerDto = {
+      companyRegistrationNumber: CUSTOMERS.EXAMPLES.COMPANYREG,
+      companyName: 'TEST NAME',
+      probabilityOfDefault: 3,
+    };
+
+    const DTFSCustomerDtoWithoutProbabilityOfDefault: DTFSCustomerDto = {
+      companyRegistrationNumber: CUSTOMERS.EXAMPLES.COMPANYREG,
+      companyName: 'TEST NAME',
+      probabilityOfDefault: undefined,
+    };
 
     const getOrCreateCustomerResponse: GetCustomersResponse = [
       {
@@ -131,19 +141,42 @@ describe('CustomersController', () => {
       },
     ];
 
-    it('creates a customer successfully and returns the response', async () => {
-      when(customersServiceGetOrCreateCustomer).calledWith(mockResponseObject, DTFSCustomerDto).mockResolvedValueOnce(getOrCreateCustomerResponse);
+    it('creates a customer successfully and returns the response when probabilityOfDefault is present', async () => {
+      when(customersServiceGetOrCreateCustomer)
+        .calledWith(mockResponseObject, DTFSCustomerDtoWithProbabilityOfDefault)
+        .mockResolvedValueOnce(getOrCreateCustomerResponse);
 
-      const response = await controller.getOrCreateCustomer(mockResponseObject, DTFSCustomerDto);
+      const response = await controller.getOrCreateCustomer(mockResponseObject, DTFSCustomerDtoWithProbabilityOfDefault);
 
       expect(customersServiceGetOrCreateCustomer).toHaveBeenCalledTimes(1);
       expect(response).toEqual(getOrCreateCustomerResponse);
     });
 
     it('throws an error if the service fails to create a customer', async () => {
-      when(customersServiceGetOrCreateCustomer).calledWith(mockResponseObject, DTFSCustomerDto).mockRejectedValueOnce(new Error('Service Error'));
+      when(customersServiceGetOrCreateCustomer)
+        .calledWith(mockResponseObject, DTFSCustomerDtoWithProbabilityOfDefault)
+        .mockRejectedValueOnce(new Error('Service Error'));
 
-      await expect(controller.getOrCreateCustomer(mockResponseObject, DTFSCustomerDto)).rejects.toThrow('Service Error');
+      await expect(controller.getOrCreateCustomer(mockResponseObject, DTFSCustomerDtoWithProbabilityOfDefault)).rejects.toThrow('Service Error');
+    });
+
+    it('creates a customer successfully and returns the response when probabilityOfDefault is not present', async () => {
+      when(customersServiceGetOrCreateCustomer)
+        .calledWith(mockResponseObject, DTFSCustomerDtoWithoutProbabilityOfDefault)
+        .mockResolvedValueOnce(getOrCreateCustomerResponse);
+
+      const response = await controller.getOrCreateCustomer(mockResponseObject, DTFSCustomerDtoWithoutProbabilityOfDefault);
+
+      expect(customersServiceGetOrCreateCustomer).toHaveBeenCalledTimes(1);
+      expect(response).toEqual(getOrCreateCustomerResponse);
+    });
+
+    it('throws an error if the service fails to create a customer when probabilityOfDefault is not present', async () => {
+      when(customersServiceGetOrCreateCustomer)
+        .calledWith(mockResponseObject, DTFSCustomerDtoWithoutProbabilityOfDefault)
+        .mockRejectedValueOnce(new Error('Service Error'));
+
+      await expect(controller.getOrCreateCustomer(mockResponseObject, DTFSCustomerDtoWithoutProbabilityOfDefault)).rejects.toThrow('Service Error');
     });
   });
 
