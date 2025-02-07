@@ -87,7 +87,16 @@ describe('CustomerService', () => {
   });
 
   describe('getOrCreateCustomer', () => {
-    const DTFSCustomerDto: DTFSCustomerDto = { companyRegistrationNumber: '12345678', companyName: 'TEST NAME', probabilityOfDefault: 3 };
+    const DTFSCustomerDtoWithProbabilityOfDefault: DTFSCustomerDto = {
+      companyRegistrationNumber: '12345678',
+      companyName: 'TEST NAME',
+      probabilityOfDefault: 3,
+    };
+    const DTFSCustomerDtoWithoutProbabilityOfDefault: DTFSCustomerDto = {
+      companyRegistrationNumber: '12345678',
+      companyName: 'TEST NAME',
+      probabilityOfDefault: undefined,
+    };
     const salesforceCreateCustomerResponse: CreateCustomerSalesforceResponseDto = {
       id: 'customer-id',
       errors: null,
@@ -123,18 +132,10 @@ describe('CustomerService', () => {
 
         it.each([
           {
-            DTFSCustomerDto: {
-              companyRegistrationNumber: '12345678',
-              companyName: 'TEST NAME',
-              probabilityOfDefault: 3,
-            },
+            DTFSCustomerDto: DTFSCustomerDtoWithProbabilityOfDefault,
           },
           {
-            DTFSCustomerDto: {
-              companyRegistrationNumber: '12345678',
-              companyName: 'TEST NAME',
-              probabilityOfDefault: undefined,
-            },
+            DTFSCustomerDto: DTFSCustomerDtoWithoutProbabilityOfDefault,
           },
         ])('returns the existing customer both with and without probability of default', async ({ DTFSCustomerDto }) => {
           when(informaticaServiceGetCustomers)
@@ -172,18 +173,10 @@ describe('CustomerService', () => {
 
           it.each([
             {
-              DTFSCustomerDto: {
-                companyRegistrationNumber: '12345678',
-                companyName: 'TEST NAME',
-                probabilityOfDefault: 3,
-              },
+              DTFSCustomerDto: DTFSCustomerDtoWithProbabilityOfDefault,
             },
             {
-              DTFSCustomerDto: {
-                companyRegistrationNumber: '12345678',
-                companyName: 'TEST NAME',
-                probabilityOfDefault: undefined,
-              },
+              DTFSCustomerDto: DTFSCustomerDtoWithoutProbabilityOfDefault,
             },
           ])(
             'creates a new customer using the legacy URN and returns the response if there are no errors both with and without probability of default',
@@ -224,11 +217,11 @@ describe('CustomerService', () => {
             when(dunAndBradstreetServiceGetDunsNumber).calledWith(expect.any(String)).mockResolvedValueOnce(dunAndBradstreetGetDunsNumberResponse);
             when(informaticaServiceGetCustomers)
               .calledWith({
-                companyreg: DTFSCustomerDto.companyRegistrationNumber,
+                companyreg: DTFSCustomerDtoWithProbabilityOfDefault.companyRegistrationNumber,
               })
               .mockRejectedValueOnce(new NotFoundException('Customer not found.'));
 
-            await expect(service.getOrCreateCustomer(mockResponseObject, DTFSCustomerDto)).rejects.toThrow('Service Error');
+            await expect(service.getOrCreateCustomer(mockResponseObject, DTFSCustomerDtoWithProbabilityOfDefault)).rejects.toThrow('Service Error');
             expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(1);
             expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(1);
             expect(numbersServiceCreate).toHaveBeenCalledTimes(1);
@@ -240,11 +233,11 @@ describe('CustomerService', () => {
             when(dunAndBradstreetServiceGetDunsNumber).calledWith(expect.any(String)).mockRejectedValueOnce(new InternalServerErrorException());
             when(informaticaServiceGetCustomers)
               .calledWith({
-                companyreg: DTFSCustomerDto.companyRegistrationNumber,
+                companyreg: DTFSCustomerDtoWithProbabilityOfDefault.companyRegistrationNumber,
               })
               .mockRejectedValueOnce(new NotFoundException('Customer not found.'));
 
-            await expect(service.getOrCreateCustomer(mockResponseObject, DTFSCustomerDto)).rejects.toThrow('Internal Server Error');
+            await expect(service.getOrCreateCustomer(mockResponseObject, DTFSCustomerDtoWithProbabilityOfDefault)).rejects.toThrow('Internal Server Error');
             expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(1);
             expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(0);
             expect(numbersServiceCreate).toHaveBeenCalledTimes(0);
@@ -269,18 +262,10 @@ describe('CustomerService', () => {
 
         it.each([
           {
-            DTFSCustomerDto: {
-              companyRegistrationNumber: '12345678',
-              companyName: 'TEST NAME',
-              probabilityOfDefault: 3,
-            },
+            DTFSCustomerDto: DTFSCustomerDtoWithProbabilityOfDefault,
           },
           {
-            DTFSCustomerDto: {
-              companyRegistrationNumber: '12345678',
-              companyName: 'TEST NAME',
-              probabilityOfDefault: undefined,
-            },
+            DTFSCustomerDto: DTFSCustomerDtoWithoutProbabilityOfDefault,
           },
         ])(
           'creates a new customer with a new URN and returns the response if there are no errors both with and without probability of default',
@@ -321,11 +306,11 @@ describe('CustomerService', () => {
           when(dunAndBradstreetServiceGetDunsNumber).calledWith(expect.any(String)).mockResolvedValueOnce(dunAndBradstreetGetDunsNumberResponse);
           when(informaticaServiceGetCustomers)
             .calledWith({
-              companyreg: DTFSCustomerDto.companyRegistrationNumber,
+              companyreg: DTFSCustomerDtoWithProbabilityOfDefault.companyRegistrationNumber,
             })
             .mockRejectedValueOnce(new NotFoundException('Customer not found.'));
 
-          await expect(service.getOrCreateCustomer(mockResponseObject, DTFSCustomerDto)).rejects.toThrow('Service Error');
+          await expect(service.getOrCreateCustomer(mockResponseObject, DTFSCustomerDtoWithProbabilityOfDefault)).rejects.toThrow('Service Error');
           expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(1);
           expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(1);
           expect(numbersServiceCreate).toHaveBeenCalledTimes(1);
@@ -333,18 +318,10 @@ describe('CustomerService', () => {
 
         it.each([
           {
-            DTFSCustomerDto: {
-              companyRegistrationNumber: '12345678',
-              companyName: 'TEST NAME',
-              probabilityOfDefault: 3,
-            },
+            DTFSCustomerDto: DTFSCustomerDtoWithProbabilityOfDefault,
           },
           {
-            DTFSCustomerDto: {
-              companyRegistrationNumber: '12345678',
-              companyName: 'TEST NAME',
-              probabilityOfDefault: undefined,
-            },
+            DTFSCustomerDto: DTFSCustomerDtoWithoutProbabilityOfDefault,
           },
         ])(
           'continues creating customer with null PartyURN if numbers service fails to create a party urn both with and without probability of default',
@@ -384,11 +361,11 @@ describe('CustomerService', () => {
           when(dunAndBradstreetServiceGetDunsNumber).calledWith(expect.any(String)).mockRejectedValueOnce(new InternalServerErrorException());
           when(informaticaServiceGetCustomers)
             .calledWith({
-              companyreg: DTFSCustomerDto.companyRegistrationNumber,
+              companyreg: DTFSCustomerDtoWithProbabilityOfDefault.companyRegistrationNumber,
             })
             .mockRejectedValueOnce(new NotFoundException('Customer not found.'));
 
-          await expect(service.getOrCreateCustomer(mockResponseObject, DTFSCustomerDto)).rejects.toThrow('Internal Server Error');
+          await expect(service.getOrCreateCustomer(mockResponseObject, DTFSCustomerDtoWithProbabilityOfDefault)).rejects.toThrow('Internal Server Error');
           expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(1);
           expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(0);
           expect(numbersServiceCreate).toHaveBeenCalledTimes(0);
@@ -399,18 +376,10 @@ describe('CustomerService', () => {
     describe('when the customer does not exist', () => {
       it.each([
         {
-          DTFSCustomerDto: {
-            companyRegistrationNumber: '12345678',
-            companyName: 'TEST NAME',
-            probabilityOfDefault: 3,
-          },
+          DTFSCustomerDto: DTFSCustomerDtoWithProbabilityOfDefault,
         },
         {
-          DTFSCustomerDto: {
-            companyRegistrationNumber: '12345678',
-            companyName: 'TEST NAME',
-            probabilityOfDefault: undefined,
-          },
+          DTFSCustomerDto: DTFSCustomerDtoWithoutProbabilityOfDefault,
         },
       ])(
         'creates a customer successfully and returns the response if there are no errors both with and without probability of default',
@@ -450,11 +419,11 @@ describe('CustomerService', () => {
         when(dunAndBradstreetServiceGetDunsNumber).calledWith(expect.any(String)).mockResolvedValueOnce(dunAndBradstreetGetDunsNumberResponse);
         when(informaticaServiceGetCustomers)
           .calledWith({
-            companyreg: DTFSCustomerDto.companyRegistrationNumber,
+            companyreg: DTFSCustomerDtoWithProbabilityOfDefault.companyRegistrationNumber,
           })
           .mockRejectedValueOnce(new NotFoundException('Customer not found.'));
 
-        await expect(service.getOrCreateCustomer(mockResponseObject, DTFSCustomerDto)).rejects.toThrow('Service Error');
+        await expect(service.getOrCreateCustomer(mockResponseObject, DTFSCustomerDtoWithProbabilityOfDefault)).rejects.toThrow('Service Error');
         expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(1);
         expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(1);
         expect(numbersServiceCreate).toHaveBeenCalledTimes(1);
@@ -462,18 +431,10 @@ describe('CustomerService', () => {
 
       it.each([
         {
-          DTFSCustomerDto: {
-            companyRegistrationNumber: '12345678',
-            companyName: 'TEST NAME',
-            probabilityOfDefault: 3,
-          },
+          DTFSCustomerDto: DTFSCustomerDtoWithProbabilityOfDefault,
         },
         {
-          DTFSCustomerDto: {
-            companyRegistrationNumber: '12345678',
-            companyName: 'TEST NAME',
-            probabilityOfDefault: undefined,
-          },
+          DTFSCustomerDto: DTFSCustomerDtoWithoutProbabilityOfDefault,
         },
       ])(
         'continues creating customer with null PartyURN if numbers service fails to create a party urn both with and without probability of default',
@@ -513,11 +474,11 @@ describe('CustomerService', () => {
         when(dunAndBradstreetServiceGetDunsNumber).calledWith(expect.any(String)).mockRejectedValueOnce(new InternalServerErrorException());
         when(informaticaServiceGetCustomers)
           .calledWith({
-            companyreg: DTFSCustomerDto.companyRegistrationNumber,
+            companyreg: DTFSCustomerDtoWithProbabilityOfDefault.companyRegistrationNumber,
           })
           .mockRejectedValueOnce(new NotFoundException('Customer not found.'));
 
-        await expect(service.getOrCreateCustomer(mockResponseObject, DTFSCustomerDto)).rejects.toThrow('Internal Server Error');
+        await expect(service.getOrCreateCustomer(mockResponseObject, DTFSCustomerDtoWithProbabilityOfDefault)).rejects.toThrow('Internal Server Error');
         expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(1);
         expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(0);
         expect(numbersServiceCreate).toHaveBeenCalledTimes(0);
@@ -528,11 +489,13 @@ describe('CustomerService', () => {
       it('throws an error if there is an InformaticaException', async () => {
         when(informaticaServiceGetCustomers)
           .calledWith({
-            companyreg: DTFSCustomerDto.companyRegistrationNumber,
+            companyreg: DTFSCustomerDtoWithProbabilityOfDefault.companyRegistrationNumber,
           })
           .mockRejectedValueOnce(new InformaticaException('Failed to get customers in Informatica'));
 
-        await expect(service.getOrCreateCustomer(mockResponseObject, DTFSCustomerDto)).rejects.toThrow('Failed to get customers in Informatica');
+        await expect(service.getOrCreateCustomer(mockResponseObject, DTFSCustomerDtoWithProbabilityOfDefault)).rejects.toThrow(
+          'Failed to get customers in Informatica',
+        );
 
         expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(0);
         expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(0);
@@ -542,11 +505,11 @@ describe('CustomerService', () => {
       it('throws an error if the Informatica response does not contain valid customers', async () => {
         when(informaticaServiceGetCustomers)
           .calledWith({
-            companyreg: DTFSCustomerDto.companyRegistrationNumber,
+            companyreg: DTFSCustomerDtoWithProbabilityOfDefault.companyRegistrationNumber,
           })
           .mockResolvedValueOnce([]);
 
-        await expect(service.getOrCreateCustomer(mockResponseObject, DTFSCustomerDto)).rejects.toThrow('Internal Server Error');
+        await expect(service.getOrCreateCustomer(mockResponseObject, DTFSCustomerDtoWithProbabilityOfDefault)).rejects.toThrow('Internal Server Error');
 
         expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(0);
         expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(0);
