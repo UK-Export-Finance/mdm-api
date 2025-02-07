@@ -20,5 +20,5 @@ export class DTFSCustomerDto {
   @IsNotEmpty()
   @Min(0)
   @Max(100)
-  probabilityOfDefault: number;
+  probabilityOfDefault?: number;
 }

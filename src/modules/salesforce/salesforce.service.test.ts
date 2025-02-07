@@ -101,6 +101,15 @@ describe('SalesforceService', () => {
         CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
         CCM_Credit_Risk_Rating__c: CUSTOMERS.EXAMPLES.CREDIT_RISK_RATING,
         CCM_Loss_Given_Default__c: CUSTOMERS.EXAMPLES.LOSS_GIVEN_DEFAULT,
+      },
+      {
+        Name: companyRegNo,
+        Party_URN__c: '00312345',
+        D_B_Number__c: '12341234',
+        Company_Registration_Number__c: companyRegNo,
+        CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
+        CCM_Credit_Risk_Rating__c: CUSTOMERS.EXAMPLES.CREDIT_RISK_RATING,
+        CCM_Loss_Given_Default__c: CUSTOMERS.EXAMPLES.LOSS_GIVEN_DEFAULT,
         CCM_Probability_of_Default__c: 100.0,
       },
       {

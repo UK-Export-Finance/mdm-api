@@ -123,10 +123,15 @@ describe('CustomersController', () => {
       probabilityOfDefault: 3,
     };
 
-    const DTFSCustomerDtoWithoutProbabilityOfDefault: DTFSCustomerDto = {
+    const DTFSCustomerDtoWithFalsyProbabilityOfDefault: DTFSCustomerDto = {
       companyRegistrationNumber: CUSTOMERS.EXAMPLES.COMPANYREG,
       companyName: 'TEST NAME',
       probabilityOfDefault: undefined,
+    };
+
+    const DTFSCustomerDtoWithoutProbabilityOfDefault: DTFSCustomerDto = {
+      companyRegistrationNumber: CUSTOMERS.EXAMPLES.COMPANYREG,
+      companyName: 'TEST NAME',
     };
 
     const getOrCreateCustomerResponse: GetCustomersResponse = [
@@ -160,6 +165,17 @@ describe('CustomersController', () => {
       await expect(controller.getOrCreateCustomer(mockResponseObject, DTFSCustomerDtoWithProbabilityOfDefault)).rejects.toThrow('Service Error');
     });
 
+    it('creates a customer successfully and returns the response when probabilityOfDefault is falsy', async () => {
+      when(customersServiceGetOrCreateCustomer)
+        .calledWith(mockResponseObject, DTFSCustomerDtoWithFalsyProbabilityOfDefault)
+        .mockResolvedValueOnce(getOrCreateCustomerResponse);
+
+      const response = await controller.getOrCreateCustomer(mockResponseObject, DTFSCustomerDtoWithFalsyProbabilityOfDefault);
+
+      expect(customersServiceGetOrCreateCustomer).toHaveBeenCalledTimes(1);
+      expect(response).toEqual(getOrCreateCustomerResponse);
+    });
+
     it('creates a customer successfully and returns the response when probabilityOfDefault is not present', async () => {
       when(customersServiceGetOrCreateCustomer)
         .calledWith(mockResponseObject, DTFSCustomerDtoWithoutProbabilityOfDefault)
@@ -169,14 +185,6 @@ describe('CustomersController', () => {
 
       expect(customersServiceGetOrCreateCustomer).toHaveBeenCalledTimes(1);
       expect(response).toEqual(getOrCreateCustomerResponse);
-    });
-
-    it('throws an error if the service fails to create a customer when probabilityOfDefault is not present', async () => {
-      when(customersServiceGetOrCreateCustomer)
-        .calledWith(mockResponseObject, DTFSCustomerDtoWithoutProbabilityOfDefault)
-        .mockRejectedValueOnce(new Error('Service Error'));
-
-      await expect(controller.getOrCreateCustomer(mockResponseObject, DTFSCustomerDtoWithoutProbabilityOfDefault)).rejects.toThrow('Service Error');
     });
   });
 
