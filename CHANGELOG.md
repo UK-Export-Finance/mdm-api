@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.26.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.25.0...v1.26.0) (2025-02-10)
+
+
+### Features
+
+* **FN-3163:** allow non gef deals ([#1201](https://github.com/UK-Export-Finance/mdm-api/issues/1201)) ([79fbe45](https://github.com/UK-Export-Finance/mdm-api/commit/79fbe45d13849a7c62ed671a49a9456385bb1e66))
+
 ## [1.25.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.24.0...v1.25.0) (2025-02-02)
 
 
