@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { GetOdsCustomerResponse } from './dto/get-ods-customer-response.dto';
 import { InjectDataSource } from '@nestjs/typeorm';
-import { DATABASE } from '@ukef/constants';
+import { DATABASE_NAME } from '@ukef/constants';
 import { DataSource } from 'typeorm';
 import { PinoLogger } from 'nestjs-pino';
 import {
@@ -15,7 +15,7 @@ import {
 @Injectable()
 export class OdsService {
   constructor(
-    @InjectDataSource(DATABASE.ODS)
+    @InjectDataSource(DATABASE_NAME.ODS)
     private readonly odsDataSource: DataSource,
     private readonly logger: PinoLogger,
   ) {}
