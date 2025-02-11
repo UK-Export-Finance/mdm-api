@@ -10,7 +10,7 @@ run-name: Executing test QA on ${{ github.repository }} 🚀
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, feat/FN-3543/integrate-with-ods]
     paths:
       - "**"
 
