@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.26.1](https://github.com/UK-Export-Finance/mdm-api/compare/v1.26.0...v1.26.1) (2025-02-10)
+
+
+### Bug Fixes
+
+* **error:** added globalexceptional handling ([#1212](https://github.com/UK-Export-Finance/mdm-api/issues/1212)) ([2ff1d05](https://github.com/UK-Export-Finance/mdm-api/commit/2ff1d05da63d8e1f1f9dcc85ccf241ef424e1d42))
+
 ## [1.26.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.25.0...v1.26.0) (2025-02-10)
 
 
