@@ -19,6 +19,23 @@ export class HttpClient {
     return this.responseFrom({ request: this.httpService.get<never>(path, { headers }), onError });
   }
 
+  post<RequestBody, ResponseBody>({
+    path,
+    headers,
+    body,
+    onError,
+  }: {
+    path: string;
+    headers: RequestHeaders;
+    body: RequestBody;
+    onError: (error: Error) => ObservableInput<never>;
+  }): Promise<AxiosResponse<ResponseBody>> {
+    return this.responseFrom({
+      request: this.httpService.post<never>(path, body, { headers }),
+      onError,
+    });
+  }
+
   private async responseFrom<ResponseBody = never>({
     request,
     onError,

@@ -1,5 +1,76 @@
 # Changelog
 
+## [1.26.1](https://github.com/UK-Export-Finance/mdm-api/compare/v1.26.0...v1.26.1) (2025-02-10)
+
+
+### Bug Fixes
+
+* **error:** added globalexceptional handling ([#1212](https://github.com/UK-Export-Finance/mdm-api/issues/1212)) ([2ff1d05](https://github.com/UK-Export-Finance/mdm-api/commit/2ff1d05da63d8e1f1f9dcc85ccf241ef424e1d42))
+
+## [1.26.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.25.0...v1.26.0) (2025-02-10)
+
+
+### Features
+
+* **FN-3163:** allow non gef deals ([#1201](https://github.com/UK-Export-Finance/mdm-api/issues/1201)) ([79fbe45](https://github.com/UK-Export-Finance/mdm-api/commit/79fbe45d13849a7c62ed671a49a9456385bb1e66))
+
+## [1.25.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.24.0...v1.25.0) (2025-02-02)
+
+
+### Features
+
+* **FN-3163:** remove local ssl workaround ([#1188](https://github.com/UK-Export-Finance/mdm-api/issues/1188)) ([f65b047](https://github.com/UK-Export-Finance/mdm-api/commit/f65b0477cc68151b492f90bc9f80c3ef199b9006))
+
+## [1.24.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.23.0...v1.24.0) (2025-01-23)
+
+
+### Features
+
+* **FN-3664:** add risk data to created customers ([#1163](https://github.com/UK-Export-Finance/mdm-api/issues/1163)) ([5ff21fa](https://github.com/UK-Export-Finance/mdm-api/commit/5ff21fa3607fc5889f7cef31f2afb4fc1e3d0065))
+
+## [1.23.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.22.2...v1.23.0) (2025-01-17)
+
+
+### Features
+
+* **FN-3163:** add get or create customer endpoint ([#1132](https://github.com/UK-Export-Finance/mdm-api/issues/1132)) ([73a5b2a](https://github.com/UK-Export-Finance/mdm-api/commit/73a5b2aded4b0eb05512472064d84b81e7ca8729))
+* **FN-3163:** automate new DTFS customer creation in Salesforce (D&B service only) ([#1130](https://github.com/UK-Export-Finance/mdm-api/issues/1130)) ([8a6403c](https://github.com/UK-Export-Finance/mdm-api/commit/8a6403c4667ccdd8deaa631eadcb9bf06ad7d555))
+
+
+### Bug Fixes
+
+* **deps:** replace all ([#1133](https://github.com/UK-Export-Finance/mdm-api/issues/1133)) ([8454434](https://github.com/UK-Export-Finance/mdm-api/commit/845443452d5b49603b68478823c6f92f6cffcf73))
+* **deps:** update all to v4 (major) ([#1148](https://github.com/UK-Export-Finance/mdm-api/issues/1148)) ([e9be73b](https://github.com/UK-Export-Finance/mdm-api/commit/e9be73ba7960da343fa0fe7d9305eb0a04319063))
+
+## [1.22.2](https://github.com/UK-Export-Finance/mdm-api/compare/v1.22.1...v1.22.2) (2024-12-30)
+
+
+### Bug Fixes
+
+* **deps:** replace all ([#1118](https://github.com/UK-Export-Finance/mdm-api/issues/1118)) ([b712981](https://github.com/UK-Export-Finance/mdm-api/commit/b71298111f9095905c9669a275b1f445e5794ee1))
+
+## [1.22.1](https://github.com/UK-Export-Finance/mdm-api/compare/v1.22.0...v1.22.1) (2024-12-18)
+
+
+### Bug Fixes
+
+* **APIM-611:** notify, companies house bug fixes ([#1113](https://github.com/UK-Export-Finance/mdm-api/issues/1113)) ([2c5b84a](https://github.com/UK-Export-Finance/mdm-api/commit/2c5b84a4f459f60e12b6ce981de037479b1c2074))
+
+## [1.22.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.21.6...v1.22.0) (2024-12-17)
+
+
+### Features
+
+* **APIM-608:** gov notify - file upload/link support ([#1083](https://github.com/UK-Export-Finance/mdm-api/issues/1083)) ([dddf3e6](https://github.com/UK-Export-Finance/mdm-api/commit/dddf3e6b109163852b9a69d6761346f45e7ce922))
+* **APIM-609:** companies house - extend returned fields ([#1089](https://github.com/UK-Export-Finance/mdm-api/issues/1089)) ([041124c](https://github.com/UK-Export-Finance/mdm-api/commit/041124cf54874c9c40896b64573ee6e9d4a1c633))
+* **APIM-610:** markets - add country rating description field ([#1090](https://github.com/UK-Export-Finance/mdm-api/issues/1090)) ([11ec0d4](https://github.com/UK-Export-Finance/mdm-api/commit/11ec0d4012e0a6e8d2aefc3745dd463369fbd733))
+
+
+### Bug Fixes
+
+* **APIM-608:** eslint downgraded ([b0e349c](https://github.com/UK-Export-Finance/mdm-api/commit/b0e349cb96d2ef65a77826eee3b311e274cdbaa8))
+* **APIM-608:** make GovNotify properties optional ([#1082](https://github.com/UK-Export-Finance/mdm-api/issues/1082)) ([9240907](https://github.com/UK-Export-Finance/mdm-api/commit/92409076d396244c8f1a7d107a795ab7f25c762d))
+
 ## [1.21.6](https://github.com/UK-Export-Finance/mdm-api/compare/v1.21.5...v1.21.6) (2024-11-04)
 
 

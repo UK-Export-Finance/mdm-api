@@ -29,27 +29,27 @@ paths:
         - name: source
           required: true
           in: query
-          example: GBP
           description: >-
             Source currency for exchange rate - Use ISO 3 alpha currency code
             standard. Only GBP and USD currencies are supported
           schema:
+            example: GBP
             type: string
         - name: target
           required: true
           in: query
-          example: AED
           description: >-
             Target currency for exchange rate - Use ISO 3 alpha currency code
             standard
           schema:
+            example: AED
             type: string
         - name: exchangeRateDate
           required: false
           in: query
-          example: '2021-01-26'
           description: Retrieve the exchange rate for a specific date
           schema:
+            example: '2021-01-26'
             type: string
       responses:
         '200':
@@ -68,9 +68,9 @@ paths:
         - name: isoCode
           required: true
           in: path
-          example: GBP
           description: ISO Code
           schema:
+            example: GBP
             type: string
       responses:
         '200':
@@ -86,38 +86,37 @@ paths:
   /api/v1/customers:
     get:
       operationId: CustomersController_getCustomers
-      summary: Get customers from Salesforce
+      summary: Get customers from Salesforce via Informatica
       parameters:
         - name: companyReg
           required: false
           in: query
-          example: '06012345'
           description: >-
             The company registration number (in the country where the customer
             is registered) of the customer to search for.
           schema:
+            example: '06012345'
             type: string
         - name: partyUrn
           required: false
           in: query
-          example: '00302069'
           description: The unique UKEF id of the customer to search for.
           schema:
             pattern: ^\\d{8}$
+            example: '00302069'
             type: string
         - name: name
           required: false
           in: query
-          example: Testing Systems Ltd
           description: >-
             The name of the customer to search for, allows partial matches, not
             case sensitive.
           schema:
+            example: Testing Systems Ltd
             type: string
         - name: fallbackToLegacyData
           required: false
           in: query
-          example: legacy-only
           description: >-
             Determines if the search results will include legacy records. If
             this value is 'yes' then we search for a Salesforce Account first
@@ -125,6 +124,7 @@ paths:
             Party DB).
           schema:
             default: 'yes'
+            example: legacy-only
             enum:
               - 'yes'
               - 'no'
@@ -140,9 +140,120 @@ paths:
                 items:
                   $ref: '#/components/schemas/GetCustomersResponseItem'
         '404':
+          description: Customer not found
+      tags:
+        - customers
+    post:
+      operationId: CustomersController_getOrCreateCustomer
+      summary: Get a customer in Salesforce, or create one if it does not exist
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DTFSCustomerDto'
+      responses:
+        '200':
+          description: Customers matching search parameters
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetCustomersResponseItem'
+        '201':
+          description: Customer successfully created
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetCustomersResponseItem'
+        '400':
+          description: >-
+            Failed to create a customer in Salesforce, as a duplicate record
+            without a company registration number exists
+        '401':
+          description: Failed to get access token
+      tags:
+        - customers
+  /api/v1/customers/dun-bradstreet:
+    get:
+      operationId: CustomersController_getDunAndBradstreetNumber
+      summary: Get DUNS number for a Company Registration Number
+      parameters:
+        - name: companyRegistrationNumber
+          required: true
+          in: query
+          description: Company Registration Number
+          schema:
+            minLength: 8
+            maxLength: 10
+            type: string
+      responses:
+        '200':
+          description: DUNS number
+          content:
+            application/json:
+              schema:
+                type: string
+        '404':
           description: Customer not found.
       tags:
         - customers
+  /api/v1/numbers:
+    post:
+      operationId: NumbersController_create
+      summary: Create Number
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CreateUkefIdDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+        - numbers
+    get:
+      operationId: NumbersController_findOne
+      summary: Get information about UKEF ID
+      parameters:
+        - name: type
+          required: true
+          in: query
+          description: >-
+            Id of UKEF ID type. Common types are: 1 for Deal/Facility, 2 for
+            Party, 8 for Covenant
+          schema:
+            example: 1
+            type: number
+        - name: ukefId
+          required: true
+          in: query
+          description: |-
+            UKEF ID to check. Examples: 
+            - Facility/Deal/Covenant ID: 0020019715 
+            - Party URN: 00300524
+          schema:
+            example: '00300524'
+            type: string
+      responses:
+        '200':
+          description: The found record
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UkefId'
+      tags:
+        - numbers
   /api/v1/emails:
     post:
       operationId: EmailsController_postEmail
@@ -186,23 +297,23 @@ paths:
         - name: startdate
           required: true
           in: query
-          example: '2017-07-04'
           description: Guarantee commencement date for a facility
           schema:
+            example: '2017-07-04'
             type: string
         - name: enddate
           required: true
           in: query
-          example: '2018-07-04'
           description: Guarantee expiry date for a facility
           schema:
+            example: '2018-07-04'
             type: string
         - name: productgroup
           required: true
           in: query
-          example: EW
           description: 'Two products are accepted: EW and BS'
           schema:
+            example: EW
             type: string
       responses:
         '200':
@@ -349,11 +460,11 @@ paths:
         - name: active
           required: false
           in: query
-          example: 'Y'
           description: >-
             Optional filtering by field "active". If parameter is not provided
             result will include active and not active markets
           schema:
+            example: 'Y'
             enum:
               - 'Y'
               - 'N'
@@ -361,11 +472,11 @@ paths:
         - name: search
           required: false
           in: query
-          example: korea
           description: >-
             Optional filtering by fields "marketName" or "isoCode". Partial
             matches are allowed and search is not case sensitive
           schema:
+            example: korea
             type: string
       responses:
         '200':
@@ -376,55 +487,6 @@ paths:
                 $ref: '#/components/schemas/MarketEntity'
       tags:
         - markets
-  /api/v1/numbers:
-    post:
-      operationId: NumbersController_create
-      summary: Create Number
-      parameters: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/CreateUkefIdDto'
-      responses:
-        '201':
-          description: ''
-      tags:
-        - numbers
-    get:
-      operationId: NumbersController_findOne
-      summary: Get information about UKEF ID
-      parameters:
-        - name: type
-          required: true
-          in: query
-          example: 1
-          description: >-
-            Id of UKEF ID type. Common types are: 1 for Deal/Facility, 2 for
-            Party, 8 for Covenant
-          schema:
-            type: number
-        - name: ukefId
-          required: true
-          in: query
-          example: '0030052431'
-          description: UKEF ID to check
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The found record
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/UkefId'
-      tags:
-        - numbers
   /api/v1/premium/schedule:
     post:
       operationId: PremiumSchedulesController_create
@@ -453,9 +515,9 @@ paths:
         - name: facilityId
           required: true
           in: path
-          example: '30000425'
           description: UKEF id for Facility, but without 00 at beginning
           schema:
+            example: '30000425'
             type: string
       responses:
         '200':
@@ -476,16 +538,16 @@ paths:
         - name: ukefSectorId
           required: false
           in: query
-          example: '1010'
           description: Search by UKEF Sector id, returns multiple Industries
           schema:
+            example: '1010'
             type: string
         - name: ukefIndustryId
           required: false
           in: query
-          example: '02400'
           description: Search by UKEF Industry id, most likely returns 1 result
           schema:
+            example: '02400'
             type: string
       responses:
         '200':
@@ -506,9 +568,9 @@ paths:
         - name: searchDate
           required: false
           in: query
-          example: '2023-03-01'
           description: Filter yield rates for specific date. Can go back to 2010-03-15
           schema:
+            example: '2023-03-01'
             type: string
       responses:
         '200':
@@ -532,13 +594,13 @@ paths:
         - name: postcode
           required: true
           in: query
-          example: SW1A 2AQ
           description: Postcode to search for
           schema:
             minLength: 5
             maxLength: 8
             pattern: >-
               ^[A-Za-z]{1,2}[\\dRr][\\dA-Za-z]?\\s?\\d[ABD-HJLNP-UW-Zabd-hjlnp-uw-z]{2}$
+            example: SW1A 2AQ
             type: string
       responses:
         '200':
@@ -562,11 +624,11 @@ paths:
           required: true
           in: query
           description: The Companies House registration number of the company to find.
-          example: '00000001'
           schema:
             minLength: 8
             maxLength: 8
             pattern: ^(([A-Z]{2}|[A-Z]\\d|\\d{2})(\\d{6}|\\d{5}[A-Z]))$
+            example: '00000001'
             type: string
       responses:
         '200':
@@ -671,16 +733,16 @@ components:
       properties:
         partyUrn:
           type: string
-          description: The unique UKEF id of the customer
+          description: The unique UKEF ID of the customer
         name:
           type: string
           description: Customer company name
         sfId:
           type: string
-          description: The uniqueue Salesforce id
+          description: The unique Salesforce ID
         companyRegNo:
           type: string
-          description: The Companies house registration number
+          description: The Companies House registration number
         type:
           type: string
           description: Customer company type
@@ -735,6 +797,74 @@ components:
         - type
         - subtype
         - isLegacyRecord
+    DTFSCustomerDto:
+      type: object
+      properties:
+        companyRegistrationNumber:
+          type: string
+          description: Company Registration Number
+          minLength: 8
+          maxLength: 10
+        companyName:
+          type: string
+          description: Company Name
+        probabilityOfDefault:
+          type: number
+          description: Probability of Default
+      required:
+        - companyRegistrationNumber
+        - companyName
+        - probabilityOfDefault
+    CreateUkefIdDto:
+      type: object
+      properties:
+        numberTypeId:
+          type: number
+          example: 1
+        createdBy:
+          type: string
+          example: ECGD\\jsmith
+          description: User if it is known
+        requestingSystem:
+          type: string
+          example: NodeJs/App
+      required:
+        - numberTypeId
+        - createdBy
+        - requestingSystem
+    UkefId:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 20057861
+          description: Internal id
+        maskedId:
+          type: string
+          example: '0030570680'
+          description: UKEF ID
+        type:
+          type: number
+          example: 1
+        createdBy:
+          type: string
+          example: ECGD\\jsmith
+          description: User if it is known
+        createdDatetime:
+          format: date-time
+          type: string
+          example: '2021-11-30T09:44:04.15Z'
+          description: Created timestamp
+        requestingSystem:
+          type: string
+          example: NodeJs/App
+      required:
+        - id
+        - maskedId
+        - type
+        - createdBy
+        - createdDatetime
+        - requestingSystem
     PostEmailsRequestDto:
       type: object
       properties:
@@ -762,7 +892,16 @@ components:
           description: Reference for the email sent
           nullable: true
           minLength: 1
-          maxLength: 100
+          maxLength: 400
+        file:
+          type: string
+          example: !!binary ZXhhbXBsZS1maWxlLnhsc3g=
+          description: >-
+            File for GovNotify to consume and generate a link to download with
+            supported file types. The file size must be smaller than 2mb
+          nullable: true
+          minLength: 1
+          maxLength: 400
       required:
         - templateId
         - sendToEmailAddress
@@ -790,7 +929,6 @@ components:
         - body
         - from_email
         - subject
-        - unsubscribe_link
     PostEmailsResponseDataTemplate:
       type: object
       properties:
@@ -840,7 +978,6 @@ components:
         - content
         - id
         - reference
-        - scheduled_for
         - template
         - uri
     PostEmailsResponseDto:
@@ -954,6 +1091,10 @@ components:
           type: string
           example: '9999-12-31T00:00:00.000Z'
           description: Effective from date
+        countryRatingDesc:
+          type: string
+          example: B+
+          description: Country rating description
         oecdRiskCategory:
           type: number
           example: 5
@@ -1006,6 +1147,7 @@ components:
         - lastUpdatedDatetime
         - effectiveFromDatetime
         - effectiveToDatetime
+        - countryRatingDesc
         - oecdRiskCategory
         - marketRiskAppetitePublicDesc
         - geographicalRegionId
@@ -1017,56 +1159,6 @@ components:
         - shortTermCoverAvailabilityDesc
         - NBIIssue
         - active
-    CreateUkefIdDto:
-      type: object
-      properties:
-        numberTypeId:
-          type: number
-          example: 1
-        createdBy:
-          type: string
-          example: ECGD\\jsmith
-          description: User if it is known
-        requestingSystem:
-          type: string
-          example: NodeJs/App
-      required:
-        - numberTypeId
-        - createdBy
-        - requestingSystem
-    UkefId:
-      type: object
-      properties:
-        id:
-          type: number
-          example: 20057861
-          description: Internal id
-        maskedId:
-          type: string
-          example: '0030570680'
-          description: UKEF ID
-        type:
-          type: number
-          example: 1
-        createdBy:
-          type: string
-          example: ECGD\\jsmith
-          description: User if it is known
-        createdDatetime:
-          format: date-time
-          type: string
-          example: '2021-11-30T09:44:04.15Z'
-          description: Created timestamp
-        requestingSystem:
-          type: string
-          example: NodeJs/App
-      required:
-        - id
-        - maskedId
-        - type
-        - createdBy
-        - createdDatetime
-        - requestingSystem
     CreatePremiumScheduleDto:
       type: object
       properties:

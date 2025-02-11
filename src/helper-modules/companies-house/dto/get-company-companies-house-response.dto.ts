@@ -16,14 +16,14 @@ export type GetCompanyCompaniesHouseResponse = {
       month: string;
       day: string;
     };
-    overdue: boolean;
-    next_made_up_to: string;
-    next_due: string;
+    overdue?: boolean;
+    next_made_up_to?: string;
+    next_due?: string;
     next_accounts: {
-      period_start_on: string;
-      due_on: string;
-      period_end_on: string;
-      overdue: boolean;
+      period_start_on?: string;
+      due_on?: string;
+      period_end_on?: string;
+      overdue?: boolean;
     };
   };
   company_name: string;
@@ -45,9 +45,12 @@ export type GetCompanyCompaniesHouseResponse = {
     address_line_1: string;
     address_line_2?: string;
     address_line_3?: string;
+    care_of?: string;
+    country: string;
     locality: string;
     postal_code: string;
-    country: string;
+    premises?: string;
+    region?: string;
   };
   registered_office_is_in_dispute: boolean;
   sic_codes: string[];
