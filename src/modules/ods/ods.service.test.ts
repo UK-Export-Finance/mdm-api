@@ -43,6 +43,20 @@ describe('OdsService', () => {
       expect(result).toEqual(mockOutputBody);
       expect(mockQueryRunner.release).toHaveBeenCalled();
     });
+
+    it('throws an error if calling the stored procedure fails', async () => {
+      const mockInput: OdsStoredProcedureInput = service.createOdsStoredProcedureInput(ODS_ENTITIES.CUSTOMER, {
+        customer_party_unique_reference_number: CUSTOMERS.EXAMPLES.PARTYURN,
+      });
+
+      mockQueryRunner.query.mockRejectedValue(new Error('Test Error'));
+
+      const resultPromise = service.callOdsStoredProcedure(mockInput);
+
+      await expect(resultPromise).rejects.toThrow('Test Error');
+      expect(mockDataSource.createQueryRunner).toHaveBeenCalled();
+      expect(mockQueryRunner.release).toHaveBeenCalled();
+    });
   });
 
   describe('findCustomer', () => {

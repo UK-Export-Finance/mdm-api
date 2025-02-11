@@ -26,6 +26,7 @@ on:
       - dev
       - staging
       - production
+      # TODO: Remove the branch name before merging to dev
       - feat/FN-3543/integrate-with-ods
 
     paths:
