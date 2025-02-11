@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DATABASE, DATE } from '@ukef/constants';
+import { DATABASE_NAME, DATE } from '@ukef/constants';
 import { PinoLogger } from 'nestjs-pino';
 import { Equal, Repository } from 'typeorm';
 
@@ -9,7 +9,7 @@ import { SectorIndustryEntity } from './entities/sector-industry.entity';
 @Injectable()
 export class SectorIndustriesService {
   constructor(
-    @InjectRepository(SectorIndustryEntity, DATABASE.MDM)
+    @InjectRepository(SectorIndustryEntity, DATABASE_NAME.MDM)
     private readonly sectorIndustries: Repository<SectorIndustryEntity>,
     private readonly logger: PinoLogger,
   ) {}
