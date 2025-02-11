@@ -2,14 +2,14 @@ import { Injectable, InternalServerErrorException, NotFoundException } from '@ne
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { PinoLogger } from 'nestjs-pino';
-import { DATABASE } from '@ukef/constants';
+import { DATABASE_NAME } from '@ukef/constants';
 import { GetOdsCustomerResponse } from './dto/get-ods-customer-response.dto';
 import { ODS_ENTITIES, OdsEntity, OdsStoredProcedureInput, OdsStoredProcedureOuputBody, OdsStoredProcedureQueryParams } from './dto/ods-payloads.dto';
 
 @Injectable()
 export class OdsService {
   constructor(
-    @InjectDataSource(DATABASE.ODS)
+    @InjectDataSource(DATABASE_NAME.ODS)
     private readonly odsDataSource: DataSource,
     private readonly logger: PinoLogger,
   ) {}
@@ -79,6 +79,7 @@ export class OdsService {
    */
   async callOdsStoredProcedure(storedProcedureInput: OdsStoredProcedureInput): Promise<string> {
     const queryRunner = this.odsDataSource.createQueryRunner();
+
     try {
       // Use the query runner to call a stored procedure
       const result = await queryRunner.query(

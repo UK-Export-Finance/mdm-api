@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
-import { DATABASE } from '@ukef/constants';
+import { DATABASE_NAME } from '@ukef/constants';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource } from 'typeorm';
 
@@ -9,7 +9,7 @@ import { ExposurePeriodDto } from './dto/exposure-period.dto';
 @Injectable()
 export class ExposurePeriodService {
   constructor(
-    @InjectDataSource(DATABASE.MDM)
+    @InjectDataSource(DATABASE_NAME.MDM)
     private readonly mdmDataSource: DataSource,
     private readonly logger: PinoLogger,
   ) {}
