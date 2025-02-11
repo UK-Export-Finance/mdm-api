@@ -9,7 +9,7 @@ import { GetOdsCustomerResponse } from './dto/get-ods-customer-response.dto';
 export class OdsController {
   constructor(private readonly odsService: OdsService) {}
 
-  @Get('customers/:customerUrn')
+  @Get('customers/:urn')
   @ApiOperation({
     summary: 'Get customers from ODS',
   })

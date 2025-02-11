@@ -1,16 +1,10 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { GetOdsCustomerResponse } from './dto/get-ods-customer-response.dto';
 import { InjectDataSource } from '@nestjs/typeorm';
-import { DATABASE_NAME } from '@ukef/constants';
 import { DataSource } from 'typeorm';
 import { PinoLogger } from 'nestjs-pino';
-import {
-  ODS_ENTITIES,
-  OdsEntity,
-  OdsStoredProcedureInput,
-  OdsStoredProcedureOuputBody,
-  OdsStoredProcedureQueryParams,
-} from './dto/ods-payloads.dto';
+import { DATABASE_NAME } from '@ukef/constants';
+import { GetOdsCustomerResponse } from './dto/get-ods-customer-response.dto';
+import { ODS_ENTITIES, OdsEntity, OdsStoredProcedureInput, OdsStoredProcedureOuputBody, OdsStoredProcedureQueryParams } from './dto/ods-payloads.dto';
 
 @Injectable()
 export class OdsService {

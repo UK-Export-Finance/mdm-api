@@ -21,6 +21,7 @@ export * from './companies-house.constant';
 export * from './customers.constant';
 export * from './database.constant';
 export * from './date.constant';
+export * from './dun-and-bradstreet.constant';
 export * from './enums';
 export * from './geospatial.constant';
 export * from './govuk-notify.constant';

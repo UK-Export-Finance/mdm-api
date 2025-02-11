@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
+import { MsSqlOdsDatabaseModule } from '../database/mssql-ods-database.module';
 import { OdsController } from './ods.controller';
 import { OdsService } from './ods.service';
-import { MsSqlOdsDatabaseModule } from '../database/mssql-ods-database.module';
 
 @Module({
   imports: [MsSqlOdsDatabaseModule],

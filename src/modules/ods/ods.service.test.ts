@@ -1,7 +1,7 @@
+import { DataSource, QueryRunner } from 'typeorm';
+import { CUSTOMERS } from '@ukef/constants';
 import { OdsService } from './ods.service';
 import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
-import { CUSTOMERS } from '@ukef/constants';
-import { DataSource, QueryRunner } from 'typeorm';
 
 describe('OdsService', () => {
   let service: OdsService;
@@ -41,6 +41,20 @@ describe('OdsService', () => {
         [JSON.stringify(mockInput)],
       );
       expect(result).toEqual(mockOutputBody);
+      expect(mockQueryRunner.release).toHaveBeenCalled();
+    });
+
+    it('throws an error if calling the stored procedure fails', async () => {
+      const mockInput: OdsStoredProcedureInput = service.createOdsStoredProcedureInput(ODS_ENTITIES.CUSTOMER, {
+        customer_party_unique_reference_number: CUSTOMERS.EXAMPLES.PARTYURN,
+      });
+
+      mockQueryRunner.query.mockRejectedValue(new Error('Test Error'));
+
+      const resultPromise = service.callOdsStoredProcedure(mockInput);
+
+      await expect(resultPromise).rejects.toThrow('Test Error');
+      expect(mockDataSource.createQueryRunner).toHaveBeenCalled();
       expect(mockQueryRunner.release).toHaveBeenCalled();
     });
   });
