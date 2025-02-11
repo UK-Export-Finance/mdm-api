@@ -10,5 +10,6 @@ import { NumbersService } from './numbers.service';
   imports: [TypeOrmModule.forFeature([UkefId], DATABASE.NUMBER_GENERATOR)],
   controllers: [NumbersController],
   providers: [NumbersService],
+  exports: [NumbersService],
 })
 export class NumbersModule {}

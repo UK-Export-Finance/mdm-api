@@ -20,19 +20,8 @@
 # Sets the timezone using the specified value.
 # Checks out the repository code.
 # Sets up the specified Node.js version.
-# Installs dependencies using npm run ci:all.
-# Runs linting using the command npm run lint
-#
-# Prettier:
-# Name: Prettier
-# Depends on: setup
-# Runs on: ubuntu-latest
-# Steps:
-# Sets the timezone using the specified value.
-# Checks out the repository code.
-# Sets up the specified Node.js version.
-# Installs dependencies using npm run ci:all.
-# Runs prettier using the command npm run prettier.
+# Installs dependencies using npm ci --legacy-peer-deps.
+# Runs linting using the command npm run lint:all.
 #
 # Key Points:
 # The workflow focuses on linting, which checks code for potential errors, style issues, and adherence to best practices.
@@ -46,14 +35,13 @@ run-name: 🎨 Lint checking on ${{ github.event.number }}
 
 on:
   pull_request:
-    branches: [main]
-    paths:
-      - "src/**"
-      - "test/**"
+    branches:
+      - main
+      - 'release-*'
 
 env:
-  environment: "qa"
-  TIMEZONE: ${{ vars.TIMEZONE }}
+  environment: 'qa'
+  timezone: ${{ vars.TIMEZONE }}
 
 jobs:
   # 1. Setup test infrastructure
@@ -125,3 +113,59 @@ jobs:
       - name: Linting
         working-directory: ./
         run: npm run prettier
+
+  # 4. Type check
+  typecheck:
+    name: TypeScript ⌨️
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Timezone
+        uses: szenius/set-timezone@v2.0
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+
+      - name: Repository
+        uses: actions/checkout@v4
+
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: Dependencies
+        working-directory: ./
+        run: npm ci --legacy-peer-deps
+
+      - name: Validate
+        working-directory: ./
+        run: npm run type-check
+
+  # 5. YAML check
+  yaml:
+    name: YAML ⌨️
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Timezone
+        uses: szenius/set-timezone@v2.0
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+
+      - name: Repository
+        uses: actions/checkout@v4
+
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: Dependencies
+        working-directory: ./
+        run: npm ci --legacy-peer-deps
+
+      - name: Validate
+        working-directory: ./
+        run: npm run validate:yml

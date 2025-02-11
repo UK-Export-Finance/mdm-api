@@ -68,8 +68,18 @@ export class RandomValueGenerator {
     return options && options.max ? this.chance.floating({ min, fixed: fixed, max: options.max }) : this.chance.floating({ min, fixed: fixed });
   }
 
+  /**
+   * Returns date in ISO 8601 format
+   * @returns Date in YYYY-MM-DD format
+   * @example "1989-09-20"
+   */
   date(): Date {
     return this.chance.date();
+  }
+
+  dateISO8601(): string {
+    const date = this.chance.date().toISOString().split('T');
+    return date[0];
   }
 
   integer({ min, max }: { min?: number; max?: number } = {}): number {
@@ -82,6 +92,15 @@ export class RandomValueGenerator {
 
   email(): string {
     return this.chance.email();
+  }
+
+  /**
+   * Generates random city name
+   * @returns String city name
+   * @example London
+   */
+  city(): string {
+    return this.chance.city();
   }
 
   postcode(): string {
