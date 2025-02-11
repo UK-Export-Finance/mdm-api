@@ -1,7 +1,7 @@
+import { DataSource, QueryRunner } from 'typeorm';
+import { CUSTOMERS } from '@ukef/constants';
 import { OdsService } from './ods.service';
 import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
-import { CUSTOMERS } from '@ukef/constants';
-import { DataSource, QueryRunner } from 'typeorm';
 
 describe('OdsService', () => {
   let service: OdsService;

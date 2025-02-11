@@ -1,5 +1,5 @@
-import { CUSTOMERS } from '@ukef/constants';
 import { when } from 'jest-when';
+import { CUSTOMERS } from '@ukef/constants';
 import { OdsController } from './ods.controller';
 import { OdsService } from './ods.service';
 
