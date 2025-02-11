@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DATABASE } from '@ukef/constants';
+import { DATABASE_NAME } from '@ukef/constants';
 import { PinoLogger } from 'nestjs-pino';
 import { Repository } from 'typeorm';
 
@@ -10,7 +10,7 @@ import { UkefId } from './entities/ukef-id.entity';
 @Injectable()
 export class NumbersService {
   constructor(
-    @InjectRepository(UkefId, DATABASE.NUMBER_GENERATOR)
+    @InjectRepository(UkefId, DATABASE_NAME.NUMBER_GENERATOR)
     private readonly numberRepository: Repository<UkefId>,
     private readonly logger: PinoLogger,
   ) {}
