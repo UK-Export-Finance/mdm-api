@@ -88,7 +88,7 @@
     "@types/lodash": "^4.17.15",
     "@types/node": "^22.13.4",
     "@types/supertest": "^6.0.2",
-    "@typescript-eslint/eslint-plugin": "^8.24.1",
+    "@typescript-eslint/eslint-plugin": "^8.25.0",
     "@typescript-eslint/parser": "^8.23.0",
     "chance": "^1.1.12",
     "cspell": "^8.17.3",
