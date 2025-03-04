@@ -46,7 +46,7 @@ describe('convertStringToBuffer', () => {
     expect(result).toEqual(expectedBuffer);
   });
 
-  it('should return empty buffer for an empty string', () => {
+  it('should return an empty buffer for an empty string', () => {
     // Arrange
     const stringBuffer = '<Buffer>';
     const expectedBuffer = Buffer.from([]);
