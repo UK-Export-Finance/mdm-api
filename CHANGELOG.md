@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.26.2](https://github.com/UK-Export-Finance/mdm-api/compare/v1.26.1...v1.26.2) (2025-03-05)
+
+
+### Bug Fixes
+
+* **file-upload:** upload file as a buffer type ([#1248](https://github.com/UK-Export-Finance/mdm-api/issues/1248)) ([ce42207](https://github.com/UK-Export-Finance/mdm-api/commit/ce4220770a755552cc384599875b16513dfb9168))
+
 ## [1.26.1](https://github.com/UK-Export-Finance/mdm-api/compare/v1.26.0...v1.26.1) (2025-02-10)
 
 
