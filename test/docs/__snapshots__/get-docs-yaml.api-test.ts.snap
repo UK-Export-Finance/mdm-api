@@ -487,6 +487,34 @@ paths:
                 $ref: '#/components/schemas/MarketEntity'
       tags:
         - markets
+  /api/v1/ods/customers/{urn}:
+    get:
+      operationId: OdsController_findCustomer
+      summary: Get customers from ODS
+      parameters:
+        - name: urn
+          required: true
+          in: path
+          description: The unique UKEF ID of the customer to search for.
+          schema:
+            pattern: ^\\d{8}$
+            example: '00302069'
+            type: string
+      responses:
+        '200':
+          description: Customers matching search parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetOdsCustomerResponse'
+        '400':
+          description: Invalid search parameters provided.
+        '404':
+          description: Customer not found.
+        '500':
+          description: Internal server error.
+      tags:
+        - ods
   /api/v1/premium/schedule:
     post:
       operationId: PremiumSchedulesController_create
@@ -1159,6 +1187,20 @@ components:
         - shortTermCoverAvailabilityDesc
         - NBIIssue
         - active
+    GetOdsCustomerResponse:
+      type: object
+      properties:
+        urn:
+          type: string
+          description: The unique UKEF ID of the customer
+          example: '00312345'
+        name:
+          type: string
+          description: Customer name
+          example: Test Company name
+      required:
+        - urn
+        - name
     CreatePremiumScheduleDto:
       type: object
       properties:
