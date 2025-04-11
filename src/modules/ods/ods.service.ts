@@ -4,7 +4,7 @@ import { DataSource } from 'typeorm';
 import { PinoLogger } from 'nestjs-pino';
 import { DATABASE_NAME } from '@ukef/constants';
 import { GetOdsCustomerResponse } from './dto/get-ods-customer-response.dto';
-import { ODS_ENTITIES, OdsEntity, OdsStoredProcedureInput, OdsStoredProcedureOuputBody, OdsStoredProcedureQueryParams } from './dto/ods-payloads.dto';
+import { ODS_ENTITIES, OdsEntity, OdsStoredProcedureInput, OdsStoredProcedureOutputBody, OdsStoredProcedureQueryParams } from './dto/ods-payloads.dto';
 
 @Injectable()
 export class OdsService {
@@ -28,7 +28,7 @@ export class OdsService {
 
       const storedProcedureResult = await this.callOdsStoredProcedure(spInput);
 
-      const storedProcedureJson: OdsStoredProcedureOuputBody = JSON.parse(storedProcedureResult);
+      const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
       if (storedProcedureJson?.status !== 'SUCCESS') {
         this.logger.error('Error from ODS stored procedure, output: %o', storedProcedureResult);

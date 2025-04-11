@@ -15,7 +15,7 @@ export type OdsStoredProcedureInput = {
 };
 
 // Stored Procedure output definition can be found here https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_query.sql#L279-L286
-export type OdsStoredProcedureOuputBody = {
+export type OdsStoredProcedureOutputBody = {
   query_request_id: string;
   message: string;
   status: 'SUCCESS' | 'ERROR';
