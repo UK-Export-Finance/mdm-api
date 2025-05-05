@@ -91,7 +91,7 @@
     "@typescript-eslint/eslint-plugin": "^8.29.1",
     "@typescript-eslint/parser": "^8.29.1",
     "chance": "^1.1.12",
-    "cspell": "^8.19.2",
+    "cspell": "^9.0.0",
     "eslint": "8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^18.0.0",
