@@ -19,8 +19,8 @@
     "acbs",
     "APIM",
     "azurecr",
-    "Bloggs",
     "BBALIBOR",
+    "Bloggs",
     "BLPU",
     "BLPUs",
     "CICD",
@@ -28,6 +28,8 @@
     "codacy",
     "codeql",
     "commitlintrc",
+    "crapimdev",
+    "crapimstaging",
     "creds",
     "Curncy",
     "Dockerised",
@@ -46,16 +48,19 @@
     "huskyrc",
     "Informatica",
     "isready",
+    "LIBOR",
     "lintstagedrc",
     "mdm",
+    "Nerine",
     "nestjs",
     "npmrc",
     "NUMGEN",
     "NVARCHAR",
     "osgb",
-    "pscs",
     "pino",
     "pinojs",
+    "pscs",
+    "Quastisky",
     "satify",
     "snet",
     "sobjects",
@@ -71,15 +76,25 @@
     "venv",
     "VNET",
     "WOGAN",
-    "Zabd",
-    "crapimdev",
-    "crapimstaging"
+    "Zabd"
   ],
-  "dictionaries": ["en-gb", "companies", "softwareTerms", "misc", "lorem-ipsum", "typescript", "node", "bash", "npm"],
+  "dictionaries": [
+    "en-gb",
+    "companies",
+    "softwareTerms",
+    "misc",
+    "lorem-ipsum",
+    "typescript",
+    "node",
+    "bash",
+    "npm"
+  ],
   "languageSettings": [
     {
       "languageId": "commit-msg",
-      "ignoreRegExpList": ["/^#.*/gm"]
+      "ignoreRegExpList": [
+        "/^#.*/gm"
+      ]
     }
   ],
   "version": "0.2"
