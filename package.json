@@ -86,7 +86,11 @@
     "@types/express": "^5.0.1",
     "@types/jest": "^29.5.14",
     "@types/lodash": "^4.17.16",
+<<<<<<< HEAD
     "@types/node": "^22.15.11",
+=======
+    "@types/node": "^22.15.3",
+>>>>>>> cec56dfeedb67dbe72a324d1b4177e209ff86e10
     "@types/supertest": "^6.0.3",
     "@typescript-eslint/eslint-plugin": "^8.32.0",
     "@typescript-eslint/parser": "^8.32.0",
@@ -106,7 +110,11 @@
     "eslint-plugin-n": "17.17.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-optimize-regex": "^1.2.1",
+<<<<<<< HEAD
     "eslint-plugin-prettier": "^5.4.0",
+=======
+    "eslint-plugin-prettier": "^5.3.1",
+>>>>>>> cec56dfeedb67dbe72a324d1b4177e209ff86e10
     "eslint-plugin-security": "^3.0.1",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "eslint-plugin-switch-case": "^3.0.1",
