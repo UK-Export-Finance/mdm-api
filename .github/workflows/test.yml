@@ -17,6 +17,7 @@ on:
 env:
   environment: 'qa'
   TIMEZONE: ${{ vars.TIMEZONE }}
+  API_KEY: ${{ secrets.API_KEY }}
 
 jobs:
   # 1. Setup test infrastructure
