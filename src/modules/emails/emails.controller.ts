@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Headers, HttpStatus, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Headers, Post } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -26,7 +26,6 @@ export class EmailsController {
   })
   @ApiBody({ type: PostEmailsRequestDto })
   @ApiCreatedResponse({
-    status: HttpStatus.CREATED,
     description: 'Returns information about email transaction.',
     type: PostEmailsResponseDto,
   })
