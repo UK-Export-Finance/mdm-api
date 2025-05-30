@@ -6,7 +6,7 @@ import { GetCustomersGenerator } from '@ukef-test/support/generator/get-customer
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import nock from 'nock';
 
-describe('GET /customers', () => {
+describe('GET /customers/:urn', () => {
   const valueGenerator = new RandomValueGenerator();
 
   let api: Api;
@@ -38,11 +38,15 @@ describe('GET /customers', () => {
   });
 
   it('returns a 200 response with the customers if they are returned by Informatica', async () => {
+    // Arrange
     requestToGetCustomers(informaticaPath).reply(200, getCustomersResponse[0]);
 
+    // Act
     const { status, body } = await api.get(mdmPath);
 
+    // Assert
     expect(status).toBe(200);
+
     expect(body).toStrictEqual(getCustomersResponse[0]);
   });
 
@@ -84,19 +88,25 @@ describe('GET /customers', () => {
       query: { partyUrn: CUSTOMERS.EXAMPLES.PARTYURN },
     },
   ])('returns a 200 response with the customers if query is "$query"', async ({ query }) => {
+    // Arrange
     const { mdmPath, informaticaPath, getCustomersResponse } = new GetCustomersGenerator(valueGenerator).generate({
       numberToGenerate: 1,
       query,
     });
+
     requestToGetCustomers(informaticaPath).reply(200, getCustomersResponse[0]);
 
+    // Act
     const { status, body } = await api.get(mdmPath);
 
+    // Assert
     expect(status).toBe(200);
+
     expect(body).toStrictEqual(getCustomersResponse[0]);
   });
 
   it('returns a 404 response if Informatica returns a 404 response with the string "null"', async () => {
+    // Arrange
     requestToGetCustomers(informaticaPath).reply(404, [
       {
         errorCode: '404',
@@ -106,9 +116,12 @@ describe('GET /customers', () => {
       },
     ]);
 
+    // Act
     const { status, body } = await api.get(mdmPath);
 
+    // Assert
     expect(status).toBe(404);
+
     expect(body).toStrictEqual({
       statusCode: 404,
       message: 'Customer not found.',
@@ -116,11 +129,15 @@ describe('GET /customers', () => {
   });
 
   it('returns a 500 response if Informatica returns a status code that is NOT 200', async () => {
+    // Arrange
     requestToGetCustomers(informaticaPath).reply(401);
 
+    // Act
     const { status, body } = await api.get(mdmPath);
 
+    // Assert
     expect(status).toBe(500);
+
     expect(body).toStrictEqual({
       statusCode: 500,
       message: 'Internal server error',
@@ -128,11 +145,15 @@ describe('GET /customers', () => {
   });
 
   it('returns a 500 response if getting the facility investors from ACBS times out', async () => {
+    // Arrange
     requestToGetCustomers(informaticaPath).delay(TIME_EXCEEDING_INFORMATICA_TIMEOUT).reply(200, getCustomersResponse[0]);
 
+    // Act
     const { status, body } = await api.get(mdmPath);
 
+    // Assert
     expect(status).toBe(500);
+
     expect(body).toStrictEqual({
       statusCode: 500,
       message: 'Internal server error',
@@ -169,9 +190,12 @@ describe('GET /customers', () => {
       expectedError: 'partyUrn must match /^\\d{8}$/ regular expression',
     },
   ])('returns a 400 response with error array if query is "$query"', async ({ query, expectedError }) => {
+    // Act
     const { status, body } = await api.get(getMdmUrl(query));
 
+    // Assert
     expect(status).toBe(400);
+
     expect(body).toMatchObject({
       error: 'Bad Request',
       message: expect.arrayContaining([expectedError]),
@@ -189,9 +213,12 @@ describe('GET /customers', () => {
       expectedError: 'One and just one search parameter is required',
     },
   ])('returns a 400 response with error string if query is "$query"', async ({ query, expectedError }) => {
+    // Act
     const { status, body } = await api.get(getMdmUrl(query));
 
+    // Assert
     expect(status).toBe(400);
+
     expect(body).toMatchObject({
       error: 'Bad Request',
       message: expectedError,
