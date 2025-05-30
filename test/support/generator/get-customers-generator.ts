@@ -38,10 +38,6 @@ export class GetCustomersGenerator extends AbstractGenerator<CustomerValues, Gen
         searchParam = { name: v.name };
       }
 
-      if (Object.keys(searchParam).length === 0) {
-        searchParam = { name: v.name };
-      }
-
       const fallbackToLegacyData = query.fallbackToLegacyData ? query.fallbackToLegacyData : ENUMS.FALLBACK_TO_LEGACY_DATA.YES;
 
       return {
