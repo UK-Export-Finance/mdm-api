@@ -1,8 +1,7 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { ApiNotFoundResponse, ApiOperation, ApiTags, ApiBadRequestResponse, ApiOkResponse, ApiInternalServerErrorResponse } from '@nestjs/swagger';
 import { OdsService } from './ods.service';
-import { GetOdsCustomerParamDto } from './dto/get-ods-customer-param.dto';
-import { GetOdsCustomerResponse } from './dto/get-ods-customer-response.dto';
+import { GetOdsCustomerParamDto, GetOdsCustomerResponse } from './dto';
 
 @ApiTags('ods')
 @Controller('ods')
