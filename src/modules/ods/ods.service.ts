@@ -3,8 +3,15 @@ import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { PinoLogger } from 'nestjs-pino';
 import { DATABASE_NAME } from '@ukef/constants';
-import { GetOdsCustomerResponse } from './dto/get-ods-customer-response.dto';
-import { ODS_ENTITIES, OdsEntity, OdsStoredProcedureInput, OdsStoredProcedureOutputBody, OdsStoredProcedureQueryParams } from './dto/ods-payloads.dto';
+import {
+  GetOdsCustomerResponse,
+  GetOdsDealResponse,
+  ODS_ENTITIES,
+  OdsEntity,
+  OdsStoredProcedureInput,
+  OdsStoredProcedureOutputBody,
+  OdsStoredProcedureQueryParams,
+} from './dto';
 
 @Injectable()
 export class OdsService {
@@ -15,7 +22,7 @@ export class OdsService {
   ) {}
 
   /**
-   * Finds a customer in ODS based on the URN provided
+   * Finds a customer in ODS based on the provided URN
    * @param {string} urn The customer URN to search for
    *
    * @returns {Promise<GetOdsCustomerResponse>} The customer response
@@ -24,19 +31,19 @@ export class OdsService {
    */
   async findCustomer(urn: string): Promise<GetOdsCustomerResponse> {
     try {
-      const spInput = this.createOdsStoredProcedureInput(ODS_ENTITIES.CUSTOMER, { customer_party_unique_reference_number: urn });
+      const storedProcedureInput = this.createOdsStoredProcedureInput(ODS_ENTITIES.CUSTOMER, { customer_party_unique_reference_number: urn });
 
-      const storedProcedureResult = await this.callOdsStoredProcedure(spInput);
+      const storedProcedureResult = await this.callOdsStoredProcedure(storedProcedureInput);
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
       if (storedProcedureJson?.status !== 'SUCCESS') {
-        this.logger.error('Error from ODS stored procedure, output: %o', storedProcedureResult);
+        this.logger.error('Error finding a customer from ODS stored procedure, output: %o', storedProcedureResult);
         throw new InternalServerErrorException('Error trying to find a customer');
       }
 
       if (storedProcedureJson?.total_result_count === 0) {
-        throw new NotFoundException('No matching customer found');
+        throw new NotFoundException('No customer found');
       }
 
       return {
@@ -47,10 +54,49 @@ export class OdsService {
       if (err instanceof NotFoundException) {
         this.logger.warn(err);
         throw err;
-      } else {
-        this.logger.error(err);
-        throw new InternalServerErrorException('Error trying to find a customer');
       }
+
+      this.logger.error(err);
+      throw new InternalServerErrorException('Error trying to find a customer');
+    }
+  }
+
+  /**
+   * Finds a deal in ODS based on provided deal ID
+   * @param {string} dealId The deal ID to search for
+   *
+   * @returns {Promise<GetOdsDealResponse>} The deal response
+   * @throws {InternalServerErrorException} If there is an error trying to find a deal
+   * @throws {NotFoundException} If no matching deal is found
+   */
+  async findDeal(dealId: string): Promise<GetOdsDealResponse> {
+    try {
+      const storedProcedureInput = this.createOdsStoredProcedureInput(ODS_ENTITIES.DEAL, { deal_code: dealId });
+
+      const storedProcedureResult = await this.callOdsStoredProcedure(storedProcedureInput);
+
+      const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
+
+      if (storedProcedureJson?.status !== 'SUCCESS') {
+        this.logger.error('Error finding a deal from ODS stored procedure, output: %o', storedProcedureResult);
+        throw new InternalServerErrorException('Error trying to find a deal');
+      }
+
+      if (storedProcedureJson?.total_result_count === 0) {
+        throw new NotFoundException('No deal found');
+      }
+
+      return {
+        dealId: 'TODO',
+      };
+    } catch (err) {
+      if (err instanceof NotFoundException) {
+        this.logger.warn(err);
+        throw err;
+      }
+
+      this.logger.error(err);
+      throw new InternalServerErrorException('Error trying to find a deal');
     }
   }
 
