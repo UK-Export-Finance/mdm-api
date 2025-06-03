@@ -77,6 +77,8 @@ export class OdsService {
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
+      console.info('>>>>>>>>>>>>>>>>>>>>>>>>> storedProcedureJson ', storedProcedureJson);
+
       if (storedProcedureJson?.status !== 'SUCCESS') {
         this.logger.error('Error finding a deal from ODS stored procedure, output: %o', storedProcedureResult);
         throw new InternalServerErrorException('Error trying to find a deal');
