@@ -6,7 +6,7 @@ import { Matches } from 'class-validator';
 export class GetOdsDealParamDto {
   @ApiProperty({
     required: true,
-    example: DEALS.EXAMPLES.DEAL_ID,
+    example: DEALS.EXAMPLES.ID,
     description: 'The unique UKEF ID of the deal to search for.',
     pattern: regexToString(UKEFID.MAIN_ID.TEN_DIGIT_REGEX),
   })

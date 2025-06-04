@@ -1,7 +1,8 @@
-import { DataSource, QueryRunner } from 'typeorm';
 import { CUSTOMERS, DEALS } from '@ukef/constants';
-import { OdsService } from './ods.service';
+import { DataSource, QueryRunner } from 'typeorm';
+
 import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
+import { OdsService } from './ods.service';
 
 describe('OdsService', () => {
   let service: OdsService;
@@ -109,8 +110,6 @@ describe('OdsService', () => {
 
   describe('findDeal', () => {
     it('should return a deal', async () => {
-      const mockDeal = { dealId: DEALS.EXAMPLES.DEAL_ID };
-
       const mockStoredProcedureOutput = `{
           "query_request_id": "Test ID",
           "message": "SUCCESS",
@@ -118,23 +117,31 @@ describe('OdsService', () => {
           "total_result_count": 1,
           "results": [
             {
-              "TODO": true
+              "deal_code": "${DEALS.EXAMPLES.ID}",
+              "deal_name": "${DEALS.EXAMPLES.NAME}",
+              "deal_description": "${DEALS.EXAMPLES.DESCRIPTION}",
             }
           ]
         }`;
 
       const mockInput: OdsStoredProcedureInput = service.createOdsStoredProcedureInput(ODS_ENTITIES.DEAL, {
-        deal_code: DEALS.EXAMPLES.DEAL_ID,
+        deal_code: DEALS.EXAMPLES.ID,
       });
 
       jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
 
-      const result = await service.findDeal(mockDeal.dealId);
+      const result = await service.findDeal(DEALS.EXAMPLES.ID);
 
       expect(service.callOdsStoredProcedure).toHaveBeenCalledTimes(1);
       expect(service.callOdsStoredProcedure).toHaveBeenCalledWith(mockInput);
 
-      expect(result).toEqual(mockDeal);
+      const expected = {
+        dealId: DEALS.EXAMPLES.ID,
+        name: DEALS.EXAMPLES.NAME,
+        description: DEALS.EXAMPLES.DESCRIPTION,
+      };
+
+      expect(result).toEqual(expected);
     });
   });
 

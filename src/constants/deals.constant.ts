@@ -1,5 +1,7 @@
 export const DEALS = {
   EXAMPLES: {
-    DEAL_ID: '0030000321',
+    ID: '0030000321',
+    NAME: 'ABC PARIS CLUB 01',
+    DESCRIPTION: 'Paris Club agreement',
   },
 };

@@ -1,8 +1,9 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
-import { DataSource } from 'typeorm';
-import { PinoLogger } from 'nestjs-pino';
 import { DATABASE_NAME } from '@ukef/constants';
+import { PinoLogger } from 'nestjs-pino';
+import { DataSource } from 'typeorm';
+
 import {
   GetOdsCustomerResponse,
   GetOdsDealResponse,
@@ -77,8 +78,6 @@ export class OdsService {
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
-      console.info('>>>>>>>>>>>>>>>>>>>>>>>>> storedProcedureJson ', storedProcedureJson);
-
       if (storedProcedureJson?.status !== 'SUCCESS') {
         this.logger.error('Error finding a deal from ODS stored procedure, output: %o', storedProcedureResult);
         throw new InternalServerErrorException('Error trying to find a deal');
@@ -89,7 +88,9 @@ export class OdsService {
       }
 
       return {
-        dealId: 'TODO',
+        dealId: storedProcedureJson.results[0]?.deal_code,
+        name: storedProcedureJson.results[0]?.deal_name,
+        description: storedProcedureJson.results[0]?.deal_type_description,
       };
     } catch (err) {
       if (err instanceof NotFoundException) {

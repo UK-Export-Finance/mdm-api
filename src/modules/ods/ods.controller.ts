@@ -11,10 +11,10 @@ export class OdsController {
 
   @Get('customers/:urn')
   @ApiOperation({
-    summary: 'Get customers from ODS',
+    summary: 'Get a customer from ODS',
   })
   @ApiOkResponse({
-    description: 'Customers matching the provided URN',
+    description: 'A customer matching the provided URN',
     type: GetOdsCustomerResponse,
   })
   @ApiNotFoundResponse({
@@ -30,13 +30,13 @@ export class OdsController {
     return this.odsService.findCustomer(param.urn);
   }
 
-  @Get('deals/:id')
+  @Get('deal/:id')
   @ApiOperation({
-    summary: 'Get deals from ODS',
+    summary: 'Get a deal from ODS',
   })
   @ApiOkResponse({
-    description: 'Deals matching the provided deal ID',
-    type: GetOdsCustomerResponse,
+    description: 'A deal matching the provided deal ID',
+    type: GetOdsDealResponse,
   })
   @ApiNotFoundResponse({
     description: 'Deal not found.',
