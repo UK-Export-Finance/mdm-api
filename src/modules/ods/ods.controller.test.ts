@@ -50,22 +50,22 @@ describe('OdsController', () => {
   describe('findDeal', () => {
     it('should call odsService.findDeal', async () => {
       // Act
-      await controller.findDeal({ id: DEALS.EXAMPLES.DEAL_ID });
+      await controller.findDeal({ id: DEALS.EXAMPLES.ID });
 
       // Assert
       expect(odsServiceFindDeal).toHaveBeenCalledTimes(1);
 
-      expect(odsServiceFindDeal).toHaveBeenCalledWith(DEALS.EXAMPLES.DEAL_ID);
+      expect(odsServiceFindDeal).toHaveBeenCalledWith(DEALS.EXAMPLES.ID);
     });
 
     it('should return a deal when a valid deal ID is provided', async () => {
       // Arrange
-      const mockDeal = { id: DEALS.EXAMPLES.DEAL_ID, name: 'Test deal name' };
+      const mockDeal = { id: DEALS.EXAMPLES.ID, name: 'Test deal name' };
 
-      when(odsServiceFindDeal).calledWith(DEALS.EXAMPLES.DEAL_ID).mockResolvedValueOnce(mockDeal);
+      when(odsServiceFindDeal).calledWith(DEALS.EXAMPLES.ID).mockResolvedValueOnce(mockDeal);
 
       // Act
-      const result = await controller.findDeal({ id: DEALS.EXAMPLES.DEAL_ID });
+      const result = await controller.findDeal({ id: DEALS.EXAMPLES.ID });
 
       // Assert
       expect(result).toEqual(mockDeal);
