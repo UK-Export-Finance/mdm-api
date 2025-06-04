@@ -5,7 +5,7 @@
  * Auth strategy
  * Companies module
  * Companies House helper module
- * Customers 
+ * Customers
  * Date
  * Database name
  * Deals

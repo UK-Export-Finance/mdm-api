@@ -1,4 +1,6 @@
+import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CUSTOMERS, DEALS } from '@ukef/constants';
+import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
 import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
@@ -8,6 +10,7 @@ describe('OdsService', () => {
   let service: OdsService;
   let mockQueryRunner: jest.Mocked<QueryRunner>;
   let mockDataSource: jest.Mocked<DataSource>;
+  const mockLogger = new PinoLogger({});
 
   beforeEach(() => {
     mockQueryRunner = {
@@ -19,77 +22,151 @@ describe('OdsService', () => {
       createQueryRunner: jest.fn().mockReturnValue(mockQueryRunner),
     } as unknown as jest.Mocked<DataSource>;
 
-    service = new OdsService(mockDataSource, null);
+    service = new OdsService(mockDataSource, mockLogger);
   });
 
   describe('findCustomer', () => {
-    it('should return a customer', async () => {
-      const mockCustomer = { urn: CUSTOMERS.EXAMPLES.PARTYURN, name: 'Test Customer' };
+    const mockCustomer = { urn: CUSTOMERS.EXAMPLES.PARTYURN, name: 'Test Customer' };
 
-      const mockStoredProcedureOutput = `{
-          "query_request_id": "Test ID",
-          "message": "SUCCESS",
-          "status": "SUCCESS",
-          "total_result_count": 1,
-          "results": [
+    const mockStoredProcedureOutput = `{
+      "query_request_id": "Test ID",
+      "message": "SUCCESS",
+      "status": "SUCCESS",
+      "total_result_count": 1,
+      "results": [
+        {
+          "customer_party_unique_reference_number": "${mockCustomer.urn}",
+          "customer_name": "${mockCustomer.name}",
+          "customer_companies_house_number": "12345678",
+          "customer_addresses": [
             {
-              "customer_party_unique_reference_number": "${mockCustomer.urn}",
-              "customer_name": "${mockCustomer.name}",
-              "customer_companies_house_number": "12345678",
-              "customer_addresses": [
-                {
-                  "customer_address_type": "Registered",
-                  "customer_address_street": "Test Street",
-                  "customer_address_postcode": "AA1 1BB",
-                  "customer_address_country": "United Kingdom",
-                  "customer_address_city": "Test City"
-                }
-              ]
+              "customer_address_type": "Registered",
+              "customer_address_street": "Test Street",
+              "customer_address_postcode": "AA1 1BB",
+              "customer_address_country": "United Kingdom",
+              "customer_address_city": "Test City"
             }
           ]
-        }`;
+        }
+      ]
+    }`;
 
-      const mockInput: OdsStoredProcedureInput = service.createOdsStoredProcedureInput(ODS_ENTITIES.CUSTOMER, {
+    beforeEach(() => {
+      jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
+    });
+
+    it('should call service.callOdsStoredProcedure', async () => {
+      await service.findCustomer(mockCustomer.urn);
+
+      const expectedStoredProcedureInput: OdsStoredProcedureInput = service.createOdsStoredProcedureInput(ODS_ENTITIES.CUSTOMER, {
         customer_party_unique_reference_number: mockCustomer.urn,
       });
 
-      jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
+      expect(service.callOdsStoredProcedure).toHaveBeenCalledTimes(1);
+      expect(service.callOdsStoredProcedure).toHaveBeenCalledWith(expectedStoredProcedureInput);
+    });
 
+    it('should return a customer', async () => {
       const result = await service.findCustomer(mockCustomer.urn);
 
-      expect(service.callOdsStoredProcedure).toHaveBeenCalledTimes(1);
-      expect(service.callOdsStoredProcedure).toHaveBeenCalledWith(mockInput);
-
       expect(result).toEqual(mockCustomer);
+    });
+
+    describe('when the response from ODS does not have status as SUCCESS', () => {
+      it('should throw an error', async () => {
+        const mockStoredProcedureOutput = `{ "status": "NOT SUCCESS" }`;
+
+        jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
+
+        const expected = new Error('Error trying to find a customer');
+
+        const promise = service.findCustomer(mockCustomer.urn);
+
+        await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
+
+        await expect(promise).rejects.toThrow(expected);
+      });
+    });
+
+    describe('when the response from ODS has total_result_count as 0', () => {
+      it('should throw an error', async () => {
+        const mockStoredProcedureOutput = `{ "status": "SUCCESS", "total_result_count": 0 }`;
+
+        jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
+
+        const expected = new Error('No customer found');
+
+        const promise = service.findCustomer(mockCustomer.urn);
+
+        await expect(promise).rejects.toBeInstanceOf(NotFoundException);
+
+        await expect(promise).rejects.toThrow(expected);
+      });
+    });
+
+    describe('when the method goes into the catch handler', () => {
+      it('should throw an error', async () => {
+        const mockStoredProcedureOutput = `{ "status": "SUCCESS" }`;
+
+        jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
+
+        const expected = new Error('Error trying to find a customer');
+
+        const promise = service.findCustomer(mockCustomer.urn);
+
+        await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
+
+        await expect(promise).rejects.toThrow(expected);
+      });
+    });
+
+    describe('when callOdsStoredProcedure throws an error', () => {
+      it('should throw an error', async () => {
+        jest.spyOn(service, 'callOdsStoredProcedure').mockRejectedValue('Mock ODS error');
+
+        const expected = new Error('Error trying to find a customer');
+
+        const promise = service.findCustomer(mockCustomer.urn);
+
+        await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
+
+        await expect(promise).rejects.toThrow(expected);
+      });
     });
   });
 
   describe('findDeal', () => {
-    it('should return a deal', async () => {
-      const mockStoredProcedureOutput = `{
-        "query_request_id": "Test ID",
-        "message": "SUCCESS",
-        "status": "SUCCESS",
-        "total_result_count": 1,
-        "results": [
-          {
-            "deal_code": "${DEALS.EXAMPLES.ID}",
-            "deal_name": "${DEALS.EXAMPLES.NAME}",
-            "deal_type_description": "${DEALS.EXAMPLES.DESCRIPTION}"
-          }
-        ]
-      }`;
+    const mockStoredProcedureOutput = `{
+      "query_request_id": "Test ID",
+      "message": "SUCCESS",
+      "status": "SUCCESS",
+      "total_result_count": 1,
+      "results": [
+        {
+          "deal_code": "${DEALS.EXAMPLES.ID}",
+          "deal_name": "${DEALS.EXAMPLES.NAME}",
+          "deal_type_description": "${DEALS.EXAMPLES.DESCRIPTION}"
+        }
+      ]
+    }`;
 
-      const mockInput: OdsStoredProcedureInput = service.createOdsStoredProcedureInput(ODS_ENTITIES.DEAL, {
+    beforeEach(() => {
+      jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
+    });
+
+    it('should call service.callOdsStoredProcedure', async () => {
+      const expectedStoredProcedureInput: OdsStoredProcedureInput = service.createOdsStoredProcedureInput(ODS_ENTITIES.DEAL, {
         deal_code: DEALS.EXAMPLES.ID,
       });
 
-      jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
-
-      const result = await service.findDeal(DEALS.EXAMPLES.ID);
+      await service.findDeal(DEALS.EXAMPLES.ID);
 
       expect(service.callOdsStoredProcedure).toHaveBeenCalledTimes(1);
-      expect(service.callOdsStoredProcedure).toHaveBeenCalledWith(mockInput);
+      expect(service.callOdsStoredProcedure).toHaveBeenCalledWith(expectedStoredProcedureInput);
+    });
+
+    it('should return a deal', async () => {
+      const result = await service.findDeal(DEALS.EXAMPLES.ID);
 
       const expected = {
         dealId: DEALS.EXAMPLES.ID,
@@ -98,6 +175,68 @@ describe('OdsService', () => {
       };
 
       expect(result).toEqual(expected);
+    });
+
+    describe('when the response from ODS does not have status as SUCCESS', () => {
+      it('should throw an error', async () => {
+        const mockStoredProcedureOutput = `{ "status": "NOT SUCCESS" }`;
+
+        jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
+
+        const expected = new Error('Error trying to find a deal');
+
+        const promise = service.findDeal(DEALS.EXAMPLES.ID);
+
+        await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
+
+        await expect(promise).rejects.toThrow(expected);
+      });
+    });
+
+    describe('when the response from ODS has total_result_count as 0', () => {
+      it('should throw an error', async () => {
+        const mockStoredProcedureOutput = `{ "status": "SUCCESS", "total_result_count": 0 }`;
+
+        jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
+
+        const expected = new Error('No deal found');
+
+        const promise = service.findDeal(DEALS.EXAMPLES.ID);
+
+        await expect(promise).rejects.toBeInstanceOf(NotFoundException);
+
+        await expect(promise).rejects.toThrow(expected);
+      });
+    });
+
+    describe('when the method goes into the catch handler', () => {
+      it('should throw an error', async () => {
+        const mockStoredProcedureOutput = `{ "status": "SUCCESS" }`;
+
+        jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
+
+        const expected = new Error('Error trying to find a deal');
+
+        const promise = service.findDeal(DEALS.EXAMPLES.ID);
+
+        await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
+
+        await expect(promise).rejects.toThrow(expected);
+      });
+    });
+
+    describe('when callOdsStoredProcedure throws an error', () => {
+      it('should throw an error', async () => {
+        jest.spyOn(service, 'callOdsStoredProcedure').mockRejectedValue('Mock ODS error');
+
+        const expected = new Error('Error trying to find a deal');
+
+        const promise = service.findDeal(DEALS.EXAMPLES.ID);
+
+        await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
+
+        await expect(promise).rejects.toThrow(expected);
+      });
     });
   });
 
