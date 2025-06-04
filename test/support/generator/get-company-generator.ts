@@ -79,7 +79,7 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
     const shuffleArray = <T>(array: Array<T>) => {
       for (const i of [...Array(array.length).keys()].reverse().slice(0, -1)) {
         const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
+        [array[`${i}`], array[`${i}`]] = [array[`${j}`], array[`${i}`]];
       }
     };
 
@@ -151,7 +151,7 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
       ukefSectorName: v.industrySectorName,
       internalNo: null,
       ukefIndustryId: sicCode,
-      ukefIndustryName: v.industryClassNames[index],
+      ukefIndustryName: v.industryClassNames[`${index}`],
       acbsSectorId: this.valueGenerator.stringOfNumericCharacters({ length: 2 }),
       acbsSectorName: this.valueGenerator.sentence({ words: 5 }),
       acbsIndustryId: this.valueGenerator.stringOfNumericCharacters({ length: 2 }),
@@ -187,7 +187,7 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
       name: v.industrySectorName,
       class: {
         code: sicCode,
-        name: v.industryClassNames[index],
+        name: v.industryClassNames[`${index}`],
       },
     }));
 

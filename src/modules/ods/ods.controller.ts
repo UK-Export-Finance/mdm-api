@@ -1,8 +1,8 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import { ApiNotFoundResponse, ApiOperation, ApiTags, ApiBadRequestResponse, ApiOkResponse, ApiInternalServerErrorResponse } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+
+import { GetOdsCustomerParamDto, GetOdsCustomerResponse, GetOdsDealParamDto, GetOdsDealResponse } from './dto';
 import { OdsService } from './ods.service';
-import { GetOdsCustomerParamDto } from './dto/get-ods-customer-param.dto';
-import { GetOdsCustomerResponse } from './dto/get-ods-customer-response.dto';
 
 @ApiTags('ods')
 @Controller('ods')
@@ -11,10 +11,10 @@ export class OdsController {
 
   @Get('customers/:urn')
   @ApiOperation({
-    summary: 'Get customers from ODS',
+    summary: 'Get a customer from ODS',
   })
   @ApiOkResponse({
-    description: 'Customers matching search parameters',
+    description: 'A customer matching the provided URN',
     type: GetOdsCustomerResponse,
   })
   @ApiNotFoundResponse({
@@ -28,5 +28,26 @@ export class OdsController {
   })
   findCustomer(@Param() param: GetOdsCustomerParamDto): Promise<GetOdsCustomerResponse> {
     return this.odsService.findCustomer(param.urn);
+  }
+
+  @Get('deal/:id')
+  @ApiOperation({
+    summary: 'Get a deal from ODS',
+  })
+  @ApiOkResponse({
+    description: 'A deal matching the provided deal ID',
+    type: GetOdsDealResponse,
+  })
+  @ApiNotFoundResponse({
+    description: 'Deal not found.',
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid search parameters provided.',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error.',
+  })
+  findDeal(@Param() param: GetOdsDealParamDto): Promise<GetOdsDealResponse> {
+    return this.odsService.findDeal(param.id);
   }
 }
