@@ -7,7 +7,7 @@ export class GetOdsDealParamDto {
   @ApiProperty({
     required: true,
     example: DEALS.EXAMPLES.ID,
-    description: 'The unique UKEF ID of the deal to search for.',
+    description: 'Unique UKEF deal ID',
     pattern: regexToString(UKEFID.MAIN_ID.TEN_DIGIT_REGEX),
   })
   @Matches(UKEFID.MAIN_ID.TEN_DIGIT_REGEX)
