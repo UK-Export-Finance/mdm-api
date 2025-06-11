@@ -87,10 +87,14 @@ export class OdsService {
         throw new NotFoundException('No deal found');
       }
 
+      const dealId = storedProcedureJson.results[0]?.deal_code;
+      const name = storedProcedureJson.results[0]?.deal_name;
+      const description = storedProcedureJson.results[0]?.deal_type_description;
+
       return {
-        dealId: storedProcedureJson.results[0]?.deal_code,
-        name: storedProcedureJson.results[0]?.deal_name,
-        description: storedProcedureJson.results[0]?.deal_type_description,
+        dealId,
+        name,
+        description,
       };
     } catch (err) {
       if (err instanceof NotFoundException) {
