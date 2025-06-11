@@ -1,17 +1,21 @@
 import { CUSTOMERS, DEALS } from '@ukef/constants';
 import { when } from 'jest-when';
+import { PinoLogger } from 'nestjs-pino';
 
 import { OdsController } from './ods.controller';
 import { OdsService } from './ods.service';
 
+const mockError = new Error('An error occured');
+
 describe('OdsController', () => {
   let odsServiceFindCustomer: jest.Mock;
   let odsServiceFindDeal: jest.Mock;
+  const mockLogger = new PinoLogger({});
 
   let controller: OdsController;
 
   beforeEach(() => {
-    const odsService = new OdsService(null, null);
+    const odsService = new OdsService(null, mockLogger);
 
     odsServiceFindCustomer = jest.fn();
     odsService.findCustomer = odsServiceFindCustomer;
@@ -45,6 +49,22 @@ describe('OdsController', () => {
       // Assert
       expect(result).toEqual(mockCustomerDetails);
     });
+
+    describe('when odsService.findCustomer throw an error', () => {
+      it('should throw an error', async () => {
+        // Arrange
+        const odsService = new OdsService(null, mockLogger);
+
+        odsService.findCustomer = jest.fn().mockRejectedValueOnce(mockError);
+
+        controller = new OdsController(odsService);
+
+        // Act & Assert
+        const promise = controller.findCustomer({ urn: CUSTOMERS.EXAMPLES.PARTYURN });
+
+        await expect(promise).rejects.toThrow(mockError);
+      });
+    });
   });
 
   describe('findDeal', () => {
@@ -69,6 +89,22 @@ describe('OdsController', () => {
 
       // Assert
       expect(result).toEqual(mockDeal);
+    });
+
+    describe('when odsService.findDeal throw an error', () => {
+      it('should throw an error', async () => {
+        // Arrange
+        const odsService = new OdsService(null, mockLogger);
+
+        odsService.findDeal = jest.fn().mockRejectedValueOnce(mockError);
+
+        controller = new OdsController(odsService);
+
+        // Act & Assert
+        const promise = controller.findDeal({ id: DEALS.EXAMPLES.ID });
+
+        await expect(promise).rejects.toThrow(mockError);
+      });
     });
   });
 });
