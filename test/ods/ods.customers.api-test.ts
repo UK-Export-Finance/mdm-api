@@ -1,3 +1,4 @@
+import { HttpStatus } from '@nestjs/common';
 import { Api } from '@ukef-test/support/api';
 
 describe('/ods/customers', () => {
@@ -17,45 +18,45 @@ describe('/ods/customers', () => {
   });
 
   describe('/:urn', () => {
-    it('should return 200 when the urn has a valid format and belongs to an existing customer', async () => {
+    it(`should return ${HttpStatus.OK} when the URN has a valid format and belongs to an existing customer`, async () => {
       const { status, body } = await api.get('/api/v1/ods/customers/00325182');
 
-      expect(status).toBe(200);
+      expect(status).toBe(HttpStatus.OK);
 
       expect(body).toEqual(expectedResult);
     });
 
-    it('should return 404 when the urn has a valid format, but does not match an existing customer', async () => {
+    it(`should return ${HttpStatus.NOT_FOUND} when the URN has a valid format, but does not match an existing customer`, async () => {
       const { status, body } = await api.get('/api/v1/ods/customers/99999999');
 
-      expect(status).toBe(404);
+      expect(status).toBe(HttpStatus.NOT_FOUND);
 
       expect(body).toEqual({
-        statusCode: 404,
+        statusCode: HttpStatus.NOT_FOUND,
         message: 'No matching customer found',
         error: 'Not Found',
       });
     });
 
-    it('should return 400 when the urn is not the right length', async () => {
+    it(`should return ${HttpStatus.BAD_REQUEST} when the URN is not the right length`, async () => {
       const { status, body } = await api.get('/api/v1/ods/customers/1234567');
 
-      expect(status).toBe(400);
+      expect(status).toBe(HttpStatus.BAD_REQUEST);
 
       expect(body).toEqual({
-        statusCode: 400,
+        statusCode: HttpStatus.BAD_REQUEST,
         message: ['urn must match /^\\d{8}$/ regular expression'],
         error: 'Bad Request',
       });
     });
 
-    it('should return 400 when the urn is not a list of numbers', async () => {
+    it(`should return ${HttpStatus.BAD_REQUEST} when the URN does not match the regex`, async () => {
       const { status, body } = await api.get('/api/v1/ods/customers/abc');
 
-      expect(status).toBe(400);
+      expect(status).toBe(HttpStatus.BAD_REQUEST);
 
       expect(body).toEqual({
-        statusCode: 400,
+        statusCode: HttpStatus.BAD_REQUEST,
         message: ['urn must match /^\\d{8}$/ regular expression'],
         error: 'Bad Request',
       });
