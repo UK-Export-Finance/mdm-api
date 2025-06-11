@@ -24,15 +24,15 @@ export class OdsService {
 
   /**
    * Finds a customer in ODS based on the provided URN
-   * @param {string} urn The customer URN to search for
+   * @param {string} uniqueReferenceNumber The customer URN to search for
    *
    * @returns {Promise<GetOdsCustomerResponse>} The customer response
    * @throws {InternalServerErrorException} If there is an error trying to find a customer
    * @throws {NotFoundException} If no matching customer is found
    */
-  async findCustomer(urn: string): Promise<GetOdsCustomerResponse> {
+  async findCustomer(uniqueReferenceNumber: string): Promise<GetOdsCustomerResponse> {
     try {
-      const storedProcedureInput = this.createOdsStoredProcedureInput(ODS_ENTITIES.CUSTOMER, { customer_party_unique_reference_number: urn });
+      const storedProcedureInput = this.createOdsStoredProcedureInput(ODS_ENTITIES.CUSTOMER, { customer_party_unique_reference_number: uniqueReferenceNumber });
 
       const storedProcedureResult = await this.callOdsStoredProcedure(storedProcedureInput);
 
@@ -47,9 +47,12 @@ export class OdsService {
         throw new NotFoundException('No customer found');
       }
 
+      const urn = storedProcedureJson.results[0]?.customer_party_unique_reference_number;
+      const name = storedProcedureJson.results[0]?.customer_name;
+
       return {
-        urn: storedProcedureJson.results[0]?.customer_party_unique_reference_number,
-        name: storedProcedureJson.results[0]?.customer_name,
+        urn,
+        name,
       };
     } catch (err) {
       if (err instanceof NotFoundException) {
@@ -64,15 +67,15 @@ export class OdsService {
 
   /**
    * Finds a deal in ODS based on provided deal ID
-   * @param {string} dealId The deal ID to search for
+   * @param {string} id The deal ID to search for
    *
    * @returns {Promise<GetOdsDealResponse>} The deal response
    * @throws {InternalServerErrorException} If there is an error trying to find a deal
    * @throws {NotFoundException} If no matching deal is found
    */
-  async findDeal(dealId: string): Promise<GetOdsDealResponse> {
+  async findDeal(id: string): Promise<GetOdsDealResponse> {
     try {
-      const storedProcedureInput = this.createOdsStoredProcedureInput(ODS_ENTITIES.DEAL, { deal_code: dealId });
+      const storedProcedureInput = this.createOdsStoredProcedureInput(ODS_ENTITIES.DEAL, { deal_code: id });
 
       const storedProcedureResult = await this.callOdsStoredProcedure(storedProcedureInput);
 
