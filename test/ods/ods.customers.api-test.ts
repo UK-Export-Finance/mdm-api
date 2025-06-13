@@ -61,5 +61,7 @@ describe('/ods/customers', () => {
         error: 'Bad Request',
       });
     });
+
+    // TODO: APIM-613 - create a mock request to mimick receiving a 500 error from ODS.
   });
 });
