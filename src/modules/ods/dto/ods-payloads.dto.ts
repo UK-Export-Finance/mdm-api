@@ -1,11 +1,19 @@
-// Customer Stored Procedure query params can be found here https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_customer.sql#L12
+/**
+ * Customer Stored Procedure query params can be found here:
+ * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_customer.sql#L12
+ * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_deal.sql#L14
+ */
 export type OdsCustomerStoredProcedureQueryParams = {
-  customer_party_unique_reference_number: string;
+  customer_party_unique_reference_number?: string;
+  deal_code?: string;
 };
 
 export type OdsStoredProcedureQueryParams = OdsCustomerStoredProcedureQueryParams;
 
-// Stored Procedure input definition can be found here https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_query.sql#L10-L14
+/**
+ * Stored Procedure input definition can be found here:
+ * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_query.sql#L10-L14
+ */
 export type OdsStoredProcedureInput = {
   query_method: string;
   query_object: OdsEntity;
@@ -14,7 +22,10 @@ export type OdsStoredProcedureInput = {
   query_parameters: OdsStoredProcedureQueryParams;
 };
 
-// Stored Procedure output definition can be found here https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_query.sql#L279-L286
+/**
+ * Stored Procedure output definition can be found here:
+ * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_query.sql#L279-L286
+ */
 export type OdsStoredProcedureOutputBody = {
   query_request_id: string;
   message: string;
@@ -25,6 +36,7 @@ export type OdsStoredProcedureOutputBody = {
 
 export const ODS_ENTITIES = {
   CUSTOMER: 'customer',
+  DEAL: 'deal',
 } as const;
 
 export type OdsEntity = (typeof ODS_ENTITIES)[keyof typeof ODS_ENTITIES];

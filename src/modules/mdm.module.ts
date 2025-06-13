@@ -11,10 +11,10 @@ import { HealthcheckModule } from '@ukef/modules/healthcheck/healthcheck.module'
 import { InterestRatesModule } from '@ukef/modules/interest-rates/interest-rates.module';
 import { MarketsModule } from '@ukef/modules/markets/markets.module';
 import { NumbersModule } from '@ukef/modules/numbers/numbers.module';
+import { OdsModule } from '@ukef/modules/ods/ods.module';
 import { PremiumSchedulesModule } from '@ukef/modules/premium-schedules/premium-schedules.module';
 import { SectorIndustriesModule } from '@ukef/modules/sector-industries/sector-industries.module';
 import { YieldRatesModule } from '@ukef/modules/yield-rates/yield-rates.module';
-import { OdsModule } from './ods/ods.module';
 
 @Module({
   imports: [
