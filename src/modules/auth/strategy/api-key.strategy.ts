@@ -6,37 +6,40 @@ import { HeaderAPIKeyStrategy } from 'passport-headerapikey';
 
 import { AuthService } from '../auth.service';
 
-/**
- * Strategy for API key authentication using the `HeaderAPIKeyStrategy` from Passport.
- * This strategy validates API keys provided in the request headers.
- *
- * @class ApiKeyStrategy
- * @extends {PassportStrategy(HeaderAPIKeyStrategy, AUTH.STRATEGY)}
- *
- * @constructor
- * @param {AuthService} authService - Service for handling authentication logic.
- * @param {ConfigService} configService - Service for accessing application configuration.
- *
- * @method validate
- * Validates the provided API key.
- * Since `@nestjs/passport: 11.0.5`, `validate` is an abstract method
- * which should be implemented by the derived class, unless an abstract class.
- * @param {string} key - The API key extracted from the request header.
- * @returns {Promise<boolean>} - Resolves to `true` if the API key is valid.
- * @throws {UnauthorizedException} - Thrown if the API key is invalid.
- */
 @Injectable()
+/**
+ * Passport strategy for API key authentication using a configurable header.
+ *
+ * This strategy extracts the API key from a specified HTTP header and validates it
+ * using the provided `AuthService`. The header name is configured via the `ConfigService`
+ * using the `app.apiKeyStrategy` configuration key.
+ *
+ * @extends {PassportStrategy}
+ *
+ * @param authService - Service responsible for validating API keys.
+ * @param configService - Service for accessing application configuration.
+ *
+ * @throws {UnauthorizedException} If the supplied API key is invalid.
+ *
+ * @example
+ * // Usage in a controller
+ * @UseGuards(AuthGuard(AUTH.STRATEGY))
+ * @Get('protected')
+ * getProtectedResource() {
+ *   // ...
+ * }
+ */
 export class ApiKeyStrategy extends PassportStrategy(HeaderAPIKeyStrategy, AUTH.STRATEGY) {
   constructor(
     private readonly authService: AuthService,
     private readonly configService: ConfigService,
   ) {
     const headerKeyApiKeyStrategy: string = configService.get<string>('app.apiKeyStrategy');
-    super({ header: headerKeyApiKeyStrategy, prefix: '' }, true);
+    super({ header: headerKeyApiKeyStrategy, prefix: '' }, false);
   }
 
-  validate(key: string): boolean {
-    const valid = this.authService.validateApiKey(key);
+  validate(apikey: string): any {
+    const valid = this.authService.validateApiKey(apikey);
 
     if (!valid) {
       throw new UnauthorizedException('Invalid API key has been supplied');
