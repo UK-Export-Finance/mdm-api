@@ -63,7 +63,7 @@ describe('GET /geospatial/addresses/postcode?postcode=', () => {
     },
     {
       postcode: GEOSPATIAL.EXAMPLES.SCOTLAND_POSTCODE,
-      description: 'for Scotish postcode',
+      description: 'for Scottish postcode',
     },
     {
       postcode: GEOSPATIAL.EXAMPLES.WALES_POSTCODE,

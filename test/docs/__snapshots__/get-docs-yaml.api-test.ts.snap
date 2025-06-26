@@ -5,8 +5,7 @@ exports[`GET /openapi/yaml matches the snapshot 1`] = `
 paths:
   /api/v1/currencies:
     get:
-      operationId: CurrenciesController_findAll
-      summary: Get all currencies
+      operationId: CurrenciesController_findAll_v1
       parameters: []
       responses:
         '200':
@@ -17,14 +16,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/CurrencyEntity'
+      summary: Get all currencies
       tags:
         - currencies
   /api/v1/currencies/exchange:
     get:
-      operationId: CurrenciesController_findExchangeRate
-      summary: >-
-        Get the Active exchange rate based on source and target exchange rates.
-        Query parameters are mandatory for this endpoint.
+      operationId: CurrenciesController_findExchangeRate_v1
       parameters:
         - name: source
           required: true
@@ -58,12 +55,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GetCurrencyExchangeDto'
+      summary: >-
+        Get the Active exchange rate based on source and target exchange rates.
+        Query parameters are mandatory for this endpoint.
       tags:
         - currencies
   /api/v1/currencies/{isoCode}:
     get:
-      operationId: CurrenciesController_findOne
-      summary: Get the currency details based on ISO Code
+      operationId: CurrenciesController_findOne_v1
       parameters:
         - name: isoCode
           required: true
@@ -81,12 +80,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/CurrencyEntity'
+      summary: Get the currency details based on ISO Code
       tags:
         - currencies
   /api/v1/customers:
     get:
-      operationId: CustomersController_getCustomers
-      summary: Get customers from Salesforce via Informatica
+      operationId: CustomersController_getCustomers_v1
       parameters:
         - name: companyReg
           required: false
@@ -125,11 +124,11 @@ paths:
           schema:
             default: 'yes'
             example: legacy-only
+            type: string
             enum:
               - 'yes'
               - 'no'
               - legacy-only
-            type: string
       responses:
         '200':
           description: Customers matching search parameters
@@ -141,11 +140,11 @@ paths:
                   $ref: '#/components/schemas/GetCustomersResponseItem'
         '404':
           description: Customer not found
+      summary: Get customers from Salesforce via Informatica
       tags:
         - customers
     post:
-      operationId: CustomersController_getOrCreateCustomer
-      summary: Get a customer in Salesforce, or create one if it does not exist
+      operationId: CustomersController_getOrCreateCustomer_v1
       parameters: []
       requestBody:
         required: true
@@ -176,12 +175,12 @@ paths:
             without a company registration number exists
         '401':
           description: Failed to get access token
+      summary: Get a customer in Salesforce, or create one if it does not exist
       tags:
         - customers
   /api/v1/customers/dun-bradstreet:
     get:
-      operationId: CustomersController_getDunAndBradstreetNumber
-      summary: Get DUNS number for a Company Registration Number
+      operationId: CustomersController_getDunAndBradstreetNumber_v1
       parameters:
         - name: companyRegistrationNumber
           required: true
@@ -200,12 +199,12 @@ paths:
                 type: string
         '404':
           description: Customer not found.
+      summary: Get DUNS number for a Company Registration Number
       tags:
         - customers
   /api/v1/numbers:
     post:
-      operationId: NumbersController_create
-      summary: Create Number
+      operationId: NumbersController_create_v1
       parameters: []
       requestBody:
         required: true
@@ -218,11 +217,11 @@ paths:
       responses:
         '201':
           description: ''
+      summary: Create Number
       tags:
         - numbers
     get:
-      operationId: NumbersController_findOne
-      summary: Get information about UKEF ID
+      operationId: NumbersController_findOne_v1
       parameters:
         - name: type
           required: true
@@ -252,12 +251,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/UkefId'
+      summary: Get information about UKEF ID
       tags:
         - numbers
   /api/v1/emails:
     post:
-      operationId: EmailsController_postEmail
-      summary: Send email using GOV.UK Notify service
+      operationId: EmailsController_postEmail_v1
       parameters:
         - name: govUkNotifyKey
           required: true
@@ -287,12 +286,12 @@ paths:
           description: No GOV.UK Notify response
         '500':
           description: Internal server error
+      summary: Send email using GOV.UK Notify service
       tags:
         - emails
   /api/v1/exposure-period:
     get:
-      operationId: ExposurePeriodController_find
-      summary: Calculate exposure period in months.
+      operationId: ExposurePeriodController_find_v1
       parameters:
         - name: startdate
           required: true
@@ -322,12 +321,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ExposurePeriodDto'
+      summary: Calculate exposure period in months.
       tags:
         - exposure-period
   /api/v1/ready:
     get:
-      operationId: HealthcheckController_check
-      summary: ready
+      operationId: HealthcheckController_check_v1
       parameters: []
       responses:
         '200':
@@ -434,12 +433,12 @@ paths:
                         status:
                           type: string
                       additionalProperties: true
+      summary: ready
       tags:
         - healthcheck
   /api/v1/interest-rates:
     get:
-      operationId: InterestRatesController_findAll
-      summary: Get all Interest rates
+      operationId: InterestRatesController_findAll_v1
       parameters: []
       responses:
         '200':
@@ -450,12 +449,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/InterestRatesEntity'
+      summary: Get all Interest rates
       tags:
         - interest-rates
   /api/v1/markets:
     get:
-      operationId: MarketsController_findAll
-      summary: Get all markets (aka countries)
+      operationId: MarketsController_findAll_v1
       parameters:
         - name: active
           required: false
@@ -465,10 +464,10 @@ paths:
             result will include active and not active markets
           schema:
             example: 'Y'
+            type: string
             enum:
               - 'Y'
               - 'N'
-            type: string
         - name: search
           required: false
           in: query
@@ -485,6 +484,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MarketEntity'
+      summary: Get all markets (aka countries)
       tags:
         - markets
   /api/v1/ods/customers/{urn}:
@@ -517,8 +517,7 @@ paths:
         - ods
   /api/v1/premium/schedule:
     post:
-      operationId: PremiumSchedulesController_create
-      summary: Create Premium Schedule sequence (aka Income exposure)
+      operationId: PremiumSchedulesController_create_v1
       parameters: []
       requestBody:
         required: true
@@ -531,14 +530,12 @@ paths:
       responses:
         '201':
           description: ''
+      summary: Create Premium Schedule sequence (aka Income exposure)
       tags:
         - premium-schedules
   /api/v1/premium/segments/{facilityId}:
     get:
-      operationId: PremiumSchedulesController_find
-      summary: >-
-        Return previously generated Premium Schedule sequence/segments (aka
-        Income exposures)
+      operationId: PremiumSchedulesController_find_v1
       parameters:
         - name: facilityId
           required: true
@@ -556,12 +553,14 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/PremiumScheduleEntity'
+      summary: >-
+        Return previously generated Premium Schedule sequence/segments (aka
+        Income exposures)
       tags:
         - premium-schedules
   /api/v1/sector-industries:
     get:
-      operationId: SectorIndustriesController_find
-      summary: Get UKEF Sectors/Industries Mapping To ACBS Sectors/Industries
+      operationId: SectorIndustriesController_find_v1
       parameters:
         - name: ukefSectorId
           required: false
@@ -586,12 +585,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/SectorIndustryEntity'
+      summary: Get UKEF Sectors/Industries Mapping To ACBS Sectors/Industries
       tags:
         - sector-industries
   /api/v1/yield-rates:
     get:
-      operationId: YieldRatesController_find
-      summary: Get Yield rates. These are updated daily from bloomberg
+      operationId: YieldRatesController_find_v1
       parameters:
         - name: searchDate
           required: false
@@ -609,15 +608,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/YieldRateEntity'
+      summary: Get Yield rates. These are updated daily from bloomberg
       tags:
         - yield-rates
   /api/v1/geospatial/addresses/postcode:
     get:
-      operationId: GeospatialController_getAddressesByPostcode
-      summary: >-
-        A search based on a property's postcode. Will accept a full valid
-        postcode. Returns addresses from Ordnance Survey Delivery Point Address
-        (DPA) system.
+      operationId: GeospatialController_getAddressesByPostcode_v1
       parameters:
         - name: postcode
           required: true
@@ -641,12 +637,15 @@ paths:
                   $ref: '#/components/schemas/GetAddressesResponseItem'
         '404':
           description: No addresses found
+      summary: >-
+        A search based on a property's postcode. Will accept a full valid
+        postcode. Returns addresses from Ordnance Survey Delivery Point Address
+        (DPA) system.
       tags:
         - geospatial
   /api/v1/companies:
     get:
-      operationId: CompaniesController_getCompanyByRegistrationNumber
-      summary: Get company by Companies House registration number.
+      operationId: CompaniesController_getCompanyByRegistrationNumber_v1
       parameters:
         - name: registrationNumber
           required: true
@@ -677,6 +676,7 @@ paths:
             from companies based in the UK.
         '500':
           description: Internal server error.
+      summary: Get company by Companies House registration number.
       tags:
         - companies
 info:
@@ -923,13 +923,14 @@ components:
           maxLength: 400
         file:
           type: string
-          example: !!binary ZXhhbXBsZS1maWxlLnhsc3g=
+          example: >-
+            <Buffer 43 31 2c 43 32 2c 43 33 0a 41 2c 42 2c 43 0a 44 2c 45 2c 46
+            0a 31 2c 32 2c 33 0a 34 2c 35 2c 36 0a>
           description: >-
             File for GovNotify to consume and generate a link to download with
             supported file types. The file size must be smaller than 2mb
           nullable: true
           minLength: 1
-          maxLength: 400
       required:
         - templateId
         - sendToEmailAddress
