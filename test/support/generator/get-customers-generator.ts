@@ -38,12 +38,7 @@ export class GetCustomersGenerator extends AbstractGenerator<CustomerValues, Gen
         searchParam = { name: v.name };
       }
 
-      const fallbackToLegacyData = query.fallbackToLegacyData ? query.fallbackToLegacyData : ENUMS.FALLBACK_TO_LEGACY_DATA.YES;
-
-      return {
-        ...searchParam,
-        ...fallbackToLegacyData,
-      };
+      return { ...searchParam, ...{ fallbackToLegacyData: query.fallbackToLegacyData ? query.fallbackToLegacyData : ENUMS.FALLBACK_TO_LEGACY_DATA.YES } };
     });
 
     const informaticaRequest: GetCustomersInformaticaQueryDto[] = request.map((v) => ({

@@ -33,7 +33,7 @@ describe('/ods/customers', () => {
 
       expect(body).toEqual({
         statusCode: HttpStatus.NOT_FOUND,
-        message: 'No matching customer found',
+        message: 'No customer found',
         error: 'Not Found',
       });
     });
@@ -62,6 +62,6 @@ describe('/ods/customers', () => {
       });
     });
 
-    // TODO: APIM-613 - create a mock request to mimick receiving a 500 error from ODS.
+    // TODO: APIM-613 - create a mock request to mimic receiving a 500 error from ODS.
   });
 });

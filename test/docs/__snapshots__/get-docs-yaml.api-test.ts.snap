@@ -489,20 +489,19 @@ paths:
         - markets
   /api/v1/ods/customers/{urn}:
     get:
-      operationId: OdsController_findCustomer
-      summary: Get customers from ODS
+      operationId: OdsController_findCustomer_v1
       parameters:
         - name: urn
           required: true
           in: path
-          description: The unique UKEF ID of the customer to search for.
+          description: Unique UKEF customer ID
           schema:
             pattern: ^\\d{8}$
             example: '00302069'
             type: string
       responses:
         '200':
-          description: Customers matching search parameters
+          description: A customer matching the provided URN
           content:
             application/json:
               schema:
@@ -513,6 +512,35 @@ paths:
           description: Customer not found.
         '500':
           description: Internal server error.
+      summary: Get a customer from ODS
+      tags:
+        - ods
+  /api/v1/ods/deal/{id}:
+    get:
+      operationId: OdsController_findDeal_v1
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: Unique UKEF deal ID
+          schema:
+            pattern: ^00\\d{8}$
+            example: '0030000321'
+            type: string
+      responses:
+        '200':
+          description: A deal matching the provided deal ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetOdsDealResponse'
+        '400':
+          description: Invalid search parameters provided.
+        '404':
+          description: Deal not found.
+        '500':
+          description: Internal server error.
+      summary: Get a deal from ODS
       tags:
         - ods
   /api/v1/premium/schedule:
@@ -1193,7 +1221,7 @@ components:
       properties:
         urn:
           type: string
-          description: The unique UKEF ID of the customer
+          description: Unique UKEF customer ID
           example: '00312345'
         name:
           type: string
@@ -1202,6 +1230,25 @@ components:
       required:
         - urn
         - name
+    GetOdsDealResponse:
+      type: object
+      properties:
+        dealId:
+          type: string
+          description: Unique UKEF deal ID
+          example: '0030000321'
+        name:
+          type: string
+          description: Deal name
+          example: ABC PARIS CLUB 01
+        description:
+          type: string
+          description: Deal description
+          example: Paris Club agreement
+      required:
+        - dealId
+        - name
+        - description
     CreatePremiumScheduleDto:
       type: object
       properties:

@@ -19,7 +19,7 @@ describe('/ods/deal', () => {
 
   describe('/:id', () => {
     it(`should return ${HttpStatus.OK} when the deal ID is a valid format and belongs to an existing deal`, async () => {
-      const { status, body } = await api.get('/api/v1/ods/deal/00325182');
+      const { status, body } = await api.get('/api/v1/ods/deal/0000000436');
 
       expect(status).toBe(HttpStatus.OK);
 
@@ -27,13 +27,13 @@ describe('/ods/deal', () => {
     });
 
     it(`should return ${HttpStatus.NOT_FOUND} when the deal ID is a valid format, but does not match an existing deal`, async () => {
-      const { status, body } = await api.get('/api/v1/ods/deal/99999999');
+      const { status, body } = await api.get('/api/v1/ods/deal/0000000001');
 
       expect(status).toBe(HttpStatus.NOT_FOUND);
 
       expect(body).toEqual({
         statusCode: HttpStatus.NOT_FOUND,
-        message: 'No matching deal found',
+        message: 'No deal found',
         error: 'Not Found',
       });
     });
@@ -45,7 +45,7 @@ describe('/ods/deal', () => {
 
       expect(body).toEqual({
         statusCode: HttpStatus.BAD_REQUEST,
-        message: ['urn must match /^\\d{8}$/ regular expression'],
+        message: ['id must match /^00\\d{8}$/ regular expression'],
         error: 'Bad Request',
       });
     });
@@ -57,11 +57,11 @@ describe('/ods/deal', () => {
 
       expect(body).toEqual({
         statusCode: HttpStatus.BAD_REQUEST,
-        message: ['Deal ID must match /^\\d{8}$/ regular expression'],
+        message: ['id must match /^00\\d{8}$/ regular expression'],
         error: 'Bad Request',
       });
     });
 
-    // TODO: APIM-613 - create a mock request to mimick receiving a 500 error from ODS.
+    // TODO: APIM-613 - create a mock request to mimic receiving a 500 error from ODS.
   });
 });
