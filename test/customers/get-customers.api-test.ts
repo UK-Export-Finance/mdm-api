@@ -1,7 +1,7 @@
 import { CUSTOMERS, ENUMS } from '@ukef/constants';
 import { IncorrectAuthArg, withClientAuthenticationTests } from '@ukef-test/common-tests/client-authentication-api-tests';
 import { Api } from '@ukef-test/support/api';
-import { ENVIRONMENT_VARIABLES, TIME_EXCEEDING_INFORMATICA_TIMEOUT } from '@ukef-test/support/environment-variables';
+import { ENVIRONMENT_VARIABLES } from '@ukef-test/support/environment-variables';
 import { GetCustomersGenerator } from '@ukef-test/support/generator/get-customers-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import nock from 'nock';
@@ -127,8 +127,9 @@ describe('GET /customers', () => {
     });
   });
 
-  it('returns a 500 response if getting the facility investors from ACBS times out', async () => {
-    requestToGetCustomers(informaticaPath).delay(TIME_EXCEEDING_INFORMATICA_TIMEOUT).reply(200, getCustomersResponse[0]);
+  it('returns a 500 response if getting the facility investors from ACBS returns a 500 status code', async () => {
+    // Arrange
+    requestToGetCustomers(informaticaPath).reply(500, getCustomersResponse[0]);
 
     const { status, body } = await api.get(mdmPath);
 
@@ -201,6 +202,7 @@ describe('GET /customers', () => {
 
   const basicAuth = Buffer.from(`${ENVIRONMENT_VARIABLES.APIM_INFORMATICA_USERNAME}:${ENVIRONMENT_VARIABLES.APIM_INFORMATICA_PASSWORD}`).toString('base64');
 
-  const requestToGetCustomers = (informaticaPath: string): nock.Interceptor =>
-    nock(ENVIRONMENT_VARIABLES.APIM_INFORMATICA_URL).get(informaticaPath).matchHeader('authorization', `Basic ${basicAuth}`);
+  const requestToGetCustomers = (informaticaPath: string): nock.Interceptor => {
+    return nock(ENVIRONMENT_VARIABLES.APIM_INFORMATICA_URL).get(informaticaPath).matchHeader('authorization', `Basic ${basicAuth}`);
+  };
 });

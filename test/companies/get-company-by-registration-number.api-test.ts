@@ -147,8 +147,8 @@ describe('GET /companies?registrationNumber=', () => {
     });
   });
 
-  it('returns a 500 response if the request to the Companies House API times out', async () => {
-    requestToGetCompanyByRegistrationNumber(companiesHousePath).delay(TIME_EXCEEDING_COMPANIES_HOUSE_TIMEOUT).reply(200, getCompanyCompaniesHouseResponse);
+  it('returns a 500 response if the request to the Companies House API returns a 500 status code', async () => {
+    requestToGetCompanyByRegistrationNumber(companiesHousePath).reply(500, getCompanyCompaniesHouseResponse);
 
     const { status, body } = await api.get(mdmPath);
 

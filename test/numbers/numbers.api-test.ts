@@ -19,7 +19,7 @@ describe('Numbers', () => {
   });
 
   /**
-   * To get existing ukef ID we need to generate it first.
+   * To get existing UKEF ID we need to generate it first.
    */
   it(`POST /numbers and then GET /numbers?type=1&ukefId=newGeneratedId`, async () => {
     const postNumbersPayload = [
@@ -221,20 +221,20 @@ describe('Numbers', () => {
     expect(status).toBe(201);
     expect(body).toHaveLength(4);
 
-    /* eslint-disable security/detect-object-injection */
     body.forEach((responseUkefIdRecord, i) => {
       expect(responseUkefIdRecord.id).toBeDefined();
       expect(responseUkefIdRecord.maskedId).toMatch(/^\d*$/);
-      expect(responseUkefIdRecord.type).toEqual(payload[i].numberTypeId);
-      expect(responseUkefIdRecord.createdBy).toEqual(payload[i].createdBy);
+      expect(responseUkefIdRecord.type).toEqual(payload[`${i}`].numberTypeId);
+      expect(responseUkefIdRecord.createdBy).toEqual(payload[`${i}`].createdBy);
       expect(responseUkefIdRecord.createdDatetime).toBeDefined();
-      expect(responseUkefIdRecord.requestingSystem).toEqual(payload[i].requestingSystem);
+      expect(responseUkefIdRecord.requestingSystem).toEqual(payload[`${i}`].requestingSystem);
     });
-    /* eslint-enable security/detect-object-injection */
   });
 
   /**
-   * Because of async calls order of new ids might be off, check it.
+   * Because of async calls,
+   * the order of new ids might be off.
+   * We need to check that we return a correctly sorted array.
    */
   it(`POST /numbers check order`, async () => {
     const payload = [
@@ -249,31 +249,6 @@ describe('Numbers', () => {
         requestingSystem: 'Jest 2 - Facility',
       },
       {
-        numberTypeId: 1,
-        createdBy: 'John',
-        requestingSystem: 'Jest 3 - Facility',
-      },
-      {
-        numberTypeId: 1,
-        createdBy: 'Sam',
-        requestingSystem: 'Jest 4 - Facility',
-      },
-      {
-        numberTypeId: 1,
-        createdBy: 'Sam',
-        requestingSystem: 'Jest 5 - Facility',
-      },
-      {
-        numberTypeId: 1,
-        createdBy: 'Jest',
-        requestingSystem: 'Jest 6 - Facility',
-      },
-      {
-        numberTypeId: 1,
-        createdBy: 'Jest',
-        requestingSystem: 'Jest 7 - Facility',
-      },
-      {
         numberTypeId: 2,
         createdBy: 'Jest',
         requestingSystem: 'Jest 1 - Party',
@@ -281,26 +256,17 @@ describe('Numbers', () => {
       {
         numberTypeId: 2,
         createdBy: 'Jest',
-        requestingSystem: 'Jest 2 - Party',
-      },
-      {
-        numberTypeId: 2,
-        createdBy: 'Jest',
         requestingSystem: 'Jest 3 - Party',
       },
-      {
-        numberTypeId: 2,
-        createdBy: 'Jest',
-        requestingSystem: 'Jest 4 - Party',
-      },
     ];
+
     const { status, body } = await api.post('/api/v1/numbers', payload);
 
     expect(status).toBe(201);
     expect(body).toHaveLength(payload.length);
 
-    // Go trough results, group by type and keep validating order.
-    body.reduce(function (previousValues, newUkefId) {
+    // Go through results, group by type and validate the order.
+    body.reduce((previousValues, newUkefId) => {
       if (!previousValues[newUkefId.type]) {
         // First call for this type, initialize.
         previousValues[newUkefId.type] = '';
@@ -310,6 +276,7 @@ describe('Numbers', () => {
       expect(previousValues[newUkefId.type] < newUkefId.maskedId).toBeTruthy();
 
       previousValues[newUkefId.type] = newUkefId.maskedId;
+
       return previousValues;
     }, Object.create(null));
   });

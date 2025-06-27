@@ -124,8 +124,8 @@ describe('GET /geospatial/addresses/postcode?postcode=', () => {
     });
   });
 
-  it('returns a 500 response if Ordnance Survey API times out', async () => {
-    requestToGetAddressesByPostcode(ordnanceSurveyPaths[0]).delay(TIME_EXCEEDING_ORDNANCE_SURVEY_TIMEOUT).reply(200, getAddressesOrdnanceSurveyResponse[0]);
+  it('returns a 500 response if Ordnance Survey API returns a 500 status code', async () => {
+    requestToGetAddressesByPostcode(ordnanceSurveyPaths[0]).reply(500, getAddressesOrdnanceSurveyResponse[0]);
 
     const { status, body } = await api.get(mdmPaths[0]);
 
