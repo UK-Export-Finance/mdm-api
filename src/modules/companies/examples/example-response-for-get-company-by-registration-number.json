@@ -5,54 +5,62 @@
             "month": "12"
         },
         "lastAccounts": {
-            "madeUpTo": "2024-12-31",
-            "periodEndOn": "2024-12-31",
-            "periodStartOn": "2024-01-01",
-            "type": "2024-01-01"
+            "madeUpTo": "2022-12-31",
+            "periodEndOn": "2022-12-31",
+            "periodStartOn": "2022-01-01",
+            "type": "2022-01-01"
         },
         "nextAccounts": {
-            "dueOn": "2026-09-30",
+            "dueOn": "2024-09-30",
             "overdue": false,
-            "periodEndOn": "2024-12-31",
-            "periodStartOn": "2024-01-01"
+            "periodEndOn": "2023-12-31",
+            "periodStartOn": "2023-01-01"
         },
-        "nextDue": "2026-09-30",
-        "nextMadeUpTo": "2024-12-31",
+        "nextDue": "2024-09-30",
+        "nextMadeUpTo": "2023-12-31",
         "overdue": false
     },
     "companiesHouseRegistrationNumber": "00000001",
     "companyName": "TEST COMPANY LTD",
-    "dateOfCreation": "1989-09-20",
+    "dateOfCreation": "2020-01-21",
+    "isActive": true,
     "registeredAddress": {
-        "addressLine1": "1 Test",
-        "addressLine2": "Test",
-        "country": "England",
-        "locality": "London",
-        "postalCode": "A12 3AB"
+        "addressLine1": "1 Test Street",
+        "country": "United Kingdom",
+        "locality": "Test City",
+        "postalCode": "A1 2BC"
     },
     "industries": [
         {
-            "code": "1003",
-            "name": "Manufacturing",
+            "code": "1009",
+            "name": "Information and communication",
             "class": {
-                "code": "26110",
-                "name": "Manufacture of electronic components"
+                "code": "59112",
+                "name": "Video production activities"
             }
         },
         {
-            "code": "1003",
-            "name": "Manufacturing",
+            "code": "1009",
+            "name": "Information and communication",
             "class": {
-                "code": "27120",
-                "name": "Manufacture of electricity distribution and control apparatus"
+                "code": "62012",
+                "name": "Business and domestic software development"
             }
         },
         {
-            "code": "1006",
-            "name": "Wholesale and retail trade; repair of motor vehicles and motorcycles",
+            "code": "1009",
+            "name": "Information and communication",
             "class": {
-                "code": "46520",
-                "name": "Wholesale of electronic and telecommunications equipment and parts"
+                "code": "62020",
+                "name": "Information technology consultancy activities"
+            }
+        },
+        {
+            "code": "1009",
+            "name": "Information and communication",
+            "class": {
+                "code": "62090",
+                "name": "Other information technology service activities"
             }
         }
     ]

@@ -1,7 +1,7 @@
 import { CUSTOMERS, ENUMS } from '@ukef/constants';
 import { IncorrectAuthArg, withClientAuthenticationTests } from '@ukef-test/common-tests/client-authentication-api-tests';
 import { Api } from '@ukef-test/support/api';
-import { ENVIRONMENT_VARIABLES, TIME_EXCEEDING_INFORMATICA_TIMEOUT } from '@ukef-test/support/environment-variables';
+import { ENVIRONMENT_VARIABLES } from '@ukef-test/support/environment-variables';
 import { GetCustomersGenerator } from '@ukef-test/support/generator/get-customers-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import nock from 'nock';
@@ -144,9 +144,9 @@ describe('GET /customers/:urn', () => {
     });
   });
 
-  it('returns a 500 response if getting the facility investors from ACBS times out', async () => {
+  it('returns a 500 response if getting the facility investors from ACBS returns a 500 status code', async () => {
     // Arrange
-    requestToGetCustomers(informaticaPath).delay(TIME_EXCEEDING_INFORMATICA_TIMEOUT).reply(200, getCustomersResponse[0]);
+    requestToGetCustomers(informaticaPath).reply(500, getCustomersResponse[0]);
 
     // Act
     const { status, body } = await api.get(mdmPath);

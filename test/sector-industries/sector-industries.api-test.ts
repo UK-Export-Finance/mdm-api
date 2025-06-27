@@ -29,27 +29,39 @@ describe('Sector industries', () => {
   });
 
   it(`GET /sector-industries`, async () => {
+    // Act
     const { status, body } = await api.get('/api/v1/sector-industries');
+
+    // Assert
     expect(status).toBe(200);
     expect(body).toEqual(expect.arrayContaining([expect.objectContaining(sectorIndustriesSchema)]));
   });
 
   it(`GET /sector-industries?ukefSectorId=1001`, async () => {
+    // Act
     const { status, body } = await api.get('/api/v1/sector-industries?ukefSectorId=1001');
+
+    // Assert
     expect(status).toBe(200);
     expect(body).toEqual(expect.arrayContaining([expect.objectContaining(sectorIndustriesSchema)]));
     expect(body.length).toBeGreaterThan(1);
   });
 
   it(`GET /sector-industries?ukefIndustryId=01120`, async () => {
+    // Act
     const { status, body } = await api.get('/api/v1/sector-industries?ukefIndustryId=01120');
+
+    // Assert
     expect(status).toBe(200);
     expect(body).toEqual(expect.arrayContaining([expect.objectContaining(sectorIndustriesSchema)]));
     expect(body).toHaveLength(1);
   });
 
   it(`GET /sector-industries?ukefSectorId=1001&ukefIndustryId=01120`, async () => {
+    // Act
     const { status, body } = await api.get('/api/v1/sector-industries?ukefSectorId=1001&ukefIndustryId=01120');
+
+    // Assert
     expect(status).toBe(200);
     expect(body).toHaveLength(1);
   });
@@ -60,21 +72,30 @@ describe('Sector industries', () => {
   });
 
   it(`GET /sector-industries?ukefSectorId=a&ukefIndustryId=a`, async () => {
+    // Act
     const { status, body } = await api.get('/api/v1/sector-industries?ukefSectorId=a&ukefIndustryId=a');
+
+    // Assert
     expect(status).toBe(400);
     expect(body.message).toContain('ukefSectorId must match /^\\d{4}$/ regular expression');
     expect(body.message).toContain('ukefIndustryId must match /^\\d{5}$/ regular expression');
   });
 
   it(`GET /sector-industries?ukefSectorId=null&ukefIndustryId=null`, async () => {
+    // Act
     const { status, body } = await api.get('/api/v1/sector-industries?ukefSectorId=null&ukefIndustryId=null');
+
+    // Assert
     expect(status).toBe(400);
     expect(body.message).toContain('ukefSectorId must match /^\\d{4}$/ regular expression');
     expect(body.message).toContain('ukefIndustryId must match /^\\d{5}$/ regular expression');
   });
 
   it(`GET /sector-industries?ukefSectorId=undefined&ukefIndustryId=undefined`, async () => {
+    // Act
     const { status, body } = await api.get('/api/v1/sector-industries?ukefSectorId=undefined&ukefIndustryId=undefined');
+
+    // Assert
     expect(status).toBe(400);
     expect(body.message).toContain('ukefSectorId must match /^\\d{4}$/ regular expression');
     expect(body.message).toContain('ukefIndustryId must match /^\\d{5}$/ regular expression');
