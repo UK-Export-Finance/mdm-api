@@ -1,7 +1,7 @@
 import { CUSTOMERS, ENUMS } from '@ukef/constants';
 import { IncorrectAuthArg, withClientAuthenticationTests } from '@ukef-test/common-tests/client-authentication-api-tests';
 import { Api } from '@ukef-test/support/api';
-import { ENVIRONMENT_VARIABLES, TIME_EXCEEDING_INFORMATICA_TIMEOUT } from '@ukef-test/support/environment-variables';
+import { ENVIRONMENT_VARIABLES } from '@ukef-test/support/environment-variables';
 import { GetCustomersGenerator } from '@ukef-test/support/generator/get-customers-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import nock from 'nock';
@@ -38,10 +38,13 @@ describe('GET /customers', () => {
   });
 
   it('returns a 200 response with the customers if they are returned by Informatica', async () => {
+    // Arrange
     requestToGetCustomers(informaticaPath).reply(200, getCustomersResponse[0]);
 
+    // Act
     const { status, body } = await api.get(mdmPath);
 
+    // Assert
     expect(status).toBe(200);
     expect(body).toStrictEqual(getCustomersResponse[0]);
   });
@@ -84,19 +87,24 @@ describe('GET /customers', () => {
       query: { partyUrn: CUSTOMERS.EXAMPLES.PARTYURN },
     },
   ])('returns a 200 response with the customers if query is "$query"', async ({ query }) => {
+    // Arrange
     const { mdmPath, informaticaPath, getCustomersResponse } = new GetCustomersGenerator(valueGenerator).generate({
       numberToGenerate: 1,
       query,
     });
+
     requestToGetCustomers(informaticaPath).reply(200, getCustomersResponse[0]);
 
+    // Act
     const { status, body } = await api.get(mdmPath);
 
+    // Assert
     expect(status).toBe(200);
     expect(body).toStrictEqual(getCustomersResponse[0]);
   });
 
   it('returns a 404 response if Informatica returns a 404 response with the string "null"', async () => {
+    // Arrange
     requestToGetCustomers(informaticaPath).reply(404, [
       {
         errorCode: '404',
@@ -106,8 +114,10 @@ describe('GET /customers', () => {
       },
     ]);
 
+    // Act
     const { status, body } = await api.get(mdmPath);
 
+    // Assert
     expect(status).toBe(404);
     expect(body).toStrictEqual({
       statusCode: 404,
@@ -116,10 +126,13 @@ describe('GET /customers', () => {
   });
 
   it('returns a 500 response if Informatica returns a status code that is NOT 200', async () => {
+    // Arrange
     requestToGetCustomers(informaticaPath).reply(401);
 
+    // Act
     const { status, body } = await api.get(mdmPath);
 
+    // Assert
     expect(status).toBe(500);
     expect(body).toStrictEqual({
       statusCode: 500,
@@ -127,11 +140,14 @@ describe('GET /customers', () => {
     });
   });
 
-  it('returns a 500 response if getting the facility investors from ACBS times out', async () => {
-    requestToGetCustomers(informaticaPath).delay(TIME_EXCEEDING_INFORMATICA_TIMEOUT).reply(200, getCustomersResponse[0]);
+  it('returns a 500 response if getting the facility investors from ACBS returns a 500 status code', async () => {
+    // Arrange
+    requestToGetCustomers(informaticaPath).reply(500, getCustomersResponse[0]);
 
+    // Act
     const { status, body } = await api.get(mdmPath);
 
+    // Assert
     expect(status).toBe(500);
     expect(body).toStrictEqual({
       statusCode: 500,
@@ -169,8 +185,10 @@ describe('GET /customers', () => {
       expectedError: 'partyUrn must match /^\\d{8}$/ regular expression',
     },
   ])('returns a 400 response with error array if query is "$query"', async ({ query, expectedError }) => {
+    // Act
     const { status, body } = await api.get(getMdmUrl(query));
 
+    // Assert
     expect(status).toBe(400);
     expect(body).toMatchObject({
       error: 'Bad Request',
@@ -189,8 +207,10 @@ describe('GET /customers', () => {
       expectedError: 'One and just one search parameter is required',
     },
   ])('returns a 400 response with error string if query is "$query"', async ({ query, expectedError }) => {
+    // Act
     const { status, body } = await api.get(getMdmUrl(query));
 
+    // Assert
     expect(status).toBe(400);
     expect(body).toMatchObject({
       error: 'Bad Request',

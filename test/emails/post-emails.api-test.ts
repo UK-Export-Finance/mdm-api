@@ -67,15 +67,19 @@ describe('POST /emails', () => {
   });
 
   it('returns a 201 response with receipt for sent email', async () => {
+    // Act
     const { status, body } = await api.post(mdmPath, request, { govUkNotifyKey });
 
+    // Assert
     expect(status).toBe(201);
     expect(body).toStrictEqual(postEmailsResponse[0]);
   });
 
   it('calls NotifyClient.sendEmail with the correct arguments', async () => {
+    // Act
     await api.post(mdmPath, request, { govUkNotifyKey });
 
+    // Assert
     expect(sendEmailMethodMock).toHaveBeenCalledWith(
       request.templateId,
       request.sendToEmailAddress,
@@ -89,10 +93,13 @@ describe('POST /emails', () => {
   });
 
   it('calls NotifyClient.sendEmail with custom reference', async () => {
+    // Arrange
     const customReference = valueGenerator.string({ length: 10 });
 
+    // Act
     await api.post(mdmPath, { ...request, reference: customReference }, { govUkNotifyKey });
 
+    // Assert
     expect(sendEmailMethodMock).toHaveBeenCalledWith(request.templateId, request.sendToEmailAddress, {
       personalisation: request.personalisation,
       reference: customReference,
@@ -100,8 +107,10 @@ describe('POST /emails', () => {
   });
 
   it('returns a 400 response if header `govUkNotifyKey` is missing', async () => {
+    // Act
     const { status, body } = await api.post(mdmPath, request);
 
+    // Assert
     expect(status).toBe(400);
     expect(body).toStrictEqual({ error: 'Bad Request', message: 'Header "govUkNotifyKey" is required', statusCode: 400 });
   });
@@ -120,10 +129,13 @@ describe('POST /emails', () => {
       expectedStatus: 500,
     },
   ])('returns a $expectedStatus response if the Notify client responds with status $expectedStatus', async ({ expectedStatus }) => {
+    // Arrange
     jest.mocked(sendEmailMethodMock).mockImplementation(() => Promise.reject(generateNotifyError(expectedStatus, errorMessage)));
 
+    // Act
     const { status, body } = await api.post(mdmPath, request, { govUkNotifyKey });
 
+    // Assert
     expect(status).toBe(expectedStatus);
     expect(body).toMatchObject({
       message: errorMessage,
@@ -132,11 +144,14 @@ describe('POST /emails', () => {
   });
 
   it('returns a 500 response if the Notify client responds with unexpected status', async () => {
+    // Arrange
     const unexpectedStatus = valueGenerator.integer({ min: 900, max: 999 });
     jest.mocked(sendEmailMethodMock).mockImplementation(() => Promise.reject(generateNotifyError(unexpectedStatus, errorMessage)));
 
+    // Act
     const { status, body } = await api.post(mdmPath, request, { govUkNotifyKey });
 
+    // Assert
     expect(status).toBe(500);
     expect(body).toMatchObject({
       statusCode: 500,
@@ -145,10 +160,13 @@ describe('POST /emails', () => {
   });
 
   it("returns a 500 response if the Notify client error doesn't have message attribute", async () => {
+    // Arrange
     jest.mocked(sendEmailMethodMock).mockImplementation(() => Promise.reject(generateNotifyError(400)));
 
+    // Act
     const { status, body } = await api.post(mdmPath, request, { govUkNotifyKey });
 
+    // Assert
     expect(status).toBe(500);
     expect(body).toMatchObject({
       statusCode: 500,
@@ -157,10 +175,13 @@ describe('POST /emails', () => {
   });
 
   it('returns a 422 response if the Notify client responds with empty response', async () => {
+    // Arrange
     jest.mocked(sendEmailMethodMock).mockImplementation(() => Promise.resolve(''));
 
+    // Act
     const { status, body } = await api.post(mdmPath, request, { govUkNotifyKey });
 
+    // Assert
     expect(status).toBe(422);
     expect(body).toStrictEqual({
       statusCode: 422,
@@ -170,9 +191,13 @@ describe('POST /emails', () => {
   });
 
   it(`returns a 400 response for empty payload`, async () => {
-    const payload = '';
+    // Arrange
+    const payload = {};
+
+    // Act
     const { status } = await api.post(mdmPath, payload, { govUkNotifyKey });
 
+    // Assert
     expect(status).toBe(400);
   });
 
@@ -202,7 +227,7 @@ describe('POST /emails', () => {
     withStringFieldValidationApiTests({
       fieldName: 'reference',
       minLength: 1,
-      maxLength: 100,
+      maxLength: 400,
       required: false,
       generateFieldValueOfLength: (length: number) => valueGenerator.string({ length }),
       validRequestBody: request,

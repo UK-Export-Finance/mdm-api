@@ -39,7 +39,7 @@ export class GovukNotifyService {
 
     const { personalisation } = postEmailsRequest;
 
-    if (personalisation.file) {
+    if (personalisation?.file) {
       const buffer = convertStringToBuffer(personalisation.file.toString());
       personalisation.linkToFile = await notifyClient.prepareUpload(buffer, { confirmEmailBeforeDownload: true });
     }

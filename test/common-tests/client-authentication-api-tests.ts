@@ -41,7 +41,11 @@ export const withClientAuthenticationTests = ({ givenTheRequestWouldOtherwiseSuc
     const { status, body } = await makeRequestWithoutAuth({ headerName: strategy, headerValue: randomisedApiKey });
 
     expect(status).toBe(401);
-    expect(body).toStrictEqual({ message: 'Unauthorized', statusCode: 401 });
+    expect(body).toStrictEqual({
+      error: 'Unauthorized',
+      message: 'Invalid API key has been supplied',
+      statusCode: 401,
+    });
   });
 
   it('returns a 401 response when the API key header value is empty', async () => {

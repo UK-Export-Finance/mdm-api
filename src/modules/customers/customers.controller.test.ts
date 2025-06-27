@@ -176,7 +176,7 @@ describe('CustomersController', () => {
       expect(response).toEqual(getOrCreateCustomerResponse);
     });
 
-    it('creates a customer successfully and returns the response when probabilityOfDefault is not present', async () => {
+    it('creates a customer successfully and returns the response when probabilityOfDefault is not provided', async () => {
       when(customersServiceGetOrCreateCustomer)
         .calledWith(mockResponseObject, DTFSCustomerDtoWithoutProbabilityOfDefault)
         .mockResolvedValueOnce(getOrCreateCustomerResponse);
