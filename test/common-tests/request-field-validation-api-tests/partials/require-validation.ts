@@ -41,7 +41,7 @@ export function withRequiredFieldValidationApiTests<RequestBodyItem, RequestBody
           ? `${fieldName} must be one of the following values: ${Object.values(theEnum).join(', ')}`
           : `${fieldName} must be ${typeNameForErrorMessages}`;
 
-      it(`returns a 400 response if ${fieldName} is not present`, async () => {
+      it(`returns a 400 response if ${fieldName} is not provided`, async () => {
         const { [fieldNameSymbol]: _removed, ...requestWithoutTheField } = requestBodyItem;
         const preparedRequestWithoutTheField = prepareModifiedRequest(requestIsAnArray, requestWithoutTheField);
 
@@ -69,7 +69,7 @@ export function withRequiredFieldValidationApiTests<RequestBodyItem, RequestBody
         });
       });
     } else {
-      it(`returns a 2xx response if ${fieldName} is not present`, async () => {
+      it(`returns a 2xx response if ${fieldName} is not provided`, async () => {
         const { [fieldNameSymbol]: _removed, ...requestWithField } = requestBodyItem;
         const preparedRequestWithField = prepareModifiedRequest(requestIsAnArray, requestWithField);
 
