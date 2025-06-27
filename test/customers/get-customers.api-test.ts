@@ -38,10 +38,13 @@ describe('GET /customers', () => {
   });
 
   it('returns a 200 response with the customers if they are returned by Informatica', async () => {
+    // Arrange
     requestToGetCustomers(informaticaPath).reply(200, getCustomersResponse[0]);
 
+    // Act
     const { status, body } = await api.get(mdmPath);
 
+    // Assert
     expect(status).toBe(200);
     expect(body).toStrictEqual(getCustomersResponse[0]);
   });
@@ -84,19 +87,24 @@ describe('GET /customers', () => {
       query: { partyUrn: CUSTOMERS.EXAMPLES.PARTYURN },
     },
   ])('returns a 200 response with the customers if query is "$query"', async ({ query }) => {
+    // Arrange
     const { mdmPath, informaticaPath, getCustomersResponse } = new GetCustomersGenerator(valueGenerator).generate({
       numberToGenerate: 1,
       query,
     });
+
     requestToGetCustomers(informaticaPath).reply(200, getCustomersResponse[0]);
 
+    // Act
     const { status, body } = await api.get(mdmPath);
 
+    // Assert
     expect(status).toBe(200);
     expect(body).toStrictEqual(getCustomersResponse[0]);
   });
 
   it('returns a 404 response if Informatica returns a 404 response with the string "null"', async () => {
+    // Arrange
     requestToGetCustomers(informaticaPath).reply(404, [
       {
         errorCode: '404',
@@ -106,8 +114,10 @@ describe('GET /customers', () => {
       },
     ]);
 
+    // Act
     const { status, body } = await api.get(mdmPath);
 
+    // Assert
     expect(status).toBe(404);
     expect(body).toStrictEqual({
       statusCode: 404,
@@ -116,10 +126,13 @@ describe('GET /customers', () => {
   });
 
   it('returns a 500 response if Informatica returns a status code that is NOT 200', async () => {
+    // Arrange
     requestToGetCustomers(informaticaPath).reply(401);
 
+    // Act
     const { status, body } = await api.get(mdmPath);
 
+    // Assert
     expect(status).toBe(500);
     expect(body).toStrictEqual({
       statusCode: 500,
@@ -131,8 +144,10 @@ describe('GET /customers', () => {
     // Arrange
     requestToGetCustomers(informaticaPath).reply(500, getCustomersResponse[0]);
 
+    // Act
     const { status, body } = await api.get(mdmPath);
 
+    // Assert
     expect(status).toBe(500);
     expect(body).toStrictEqual({
       statusCode: 500,
@@ -170,8 +185,10 @@ describe('GET /customers', () => {
       expectedError: 'partyUrn must match /^\\d{8}$/ regular expression',
     },
   ])('returns a 400 response with error array if query is "$query"', async ({ query, expectedError }) => {
+    // Act
     const { status, body } = await api.get(getMdmUrl(query));
 
+    // Assert
     expect(status).toBe(400);
     expect(body).toMatchObject({
       error: 'Bad Request',
@@ -190,8 +207,10 @@ describe('GET /customers', () => {
       expectedError: 'One and just one search parameter is required',
     },
   ])('returns a 400 response with error string if query is "$query"', async ({ query, expectedError }) => {
+    // Act
     const { status, body } = await api.get(getMdmUrl(query));
 
+    // Assert
     expect(status).toBe(400);
     expect(body).toMatchObject({
       error: 'Bad Request',
