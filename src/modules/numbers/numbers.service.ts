@@ -22,9 +22,11 @@ export class NumbersService {
         .query('sp_NUMBER_GENERATOR @0, @1, @2', [createNumber.numberTypeId, createNumber.requestingSystem, createNumber.createdBy])
         .then((postNumberGeneratorResponse) => {
           const ukefIdString = postNumberGeneratorResponse[0].NBR_GENERATED;
+
           return this.findOne(createNumber.numberTypeId, ukefIdString);
         });
     });
+
     const newIds = await Promise.all(activeRequests);
     const sortedNewIds = this.sortIds(newIds);
 
@@ -37,9 +39,11 @@ export class NumbersService {
       if (!dbNumber.length) {
         throw new NotFoundException('UKEF ID is not found');
       }
+
       if (dbNumber[0]?.ERR === 'INVALID NUMBER TYPE') {
         throw new BadRequestException('Invalid UKEF ID type');
       }
+
       return this.mapFieldsFromDbToApi(dbNumber[0]);
     } catch (err) {
       if (err instanceof NotFoundException || err instanceof BadRequestException) {
@@ -79,6 +83,7 @@ export class NumbersService {
       newId['maskedId'] = sortednewIdsByType[newId['type']].shift();
       sortedIds.push(newId);
     });
+
     return sortedIds;
   }
 
@@ -88,6 +93,7 @@ export class NumbersService {
   sortGroupedByTypeIds(newIdsByType: unknown): unknown {
     return Object.entries(newIdsByType).reduce((acc, typeWithIds) => {
       acc[typeWithIds[0]] = typeWithIds[1].sort();
+
       return acc;
     }, Object.create(null));
   }
@@ -99,6 +105,7 @@ export class NumbersService {
     return newUkefIds.reduce(function (acc, newUkefId) {
       acc[newUkefId.type] = acc[newUkefId.type] || []; //Reasign or initialize
       acc[newUkefId.type].push(newUkefId.maskedId);
+
       return acc;
     }, Object.create(null));
   }

@@ -21,6 +21,7 @@ export class SectorIndustriesService {
       if (ukefSectorId) {
         query = { ...query, ukefSectorId };
       }
+
       if (ukefIndustryId) {
         query = { ...query, ukefIndustryId };
       }
