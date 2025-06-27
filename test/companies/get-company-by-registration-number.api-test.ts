@@ -47,8 +47,7 @@ describe('GET /companies?registrationNumber=', () => {
     makeRequestWithoutAuth: (incorrectAuth?: IncorrectAuthArg) => api.getWithoutAuth(mdmPath, incorrectAuth?.headerName, incorrectAuth?.headerValue),
   });
 
-  it('returns a 200 response with the company if it is returned by the Companies House API', async () => {
-    // Arrange
+  it('returns a 200 response with the company when returned by Companies House API', async () => {
     requestToGetCompanyByRegistrationNumber(companiesHousePath).reply(200, getCompanyCompaniesHouseResponse);
 
     // Act
