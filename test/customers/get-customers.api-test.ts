@@ -221,7 +221,7 @@ describe('GET /customers', () => {
 
   const basicAuth = Buffer.from(`${ENVIRONMENT_VARIABLES.APIM_INFORMATICA_USERNAME}:${ENVIRONMENT_VARIABLES.APIM_INFORMATICA_PASSWORD}`).toString('base64');
 
-  const requestToGetCustomers = (informaticaPath: string): nock.Interceptor => {
-    return nock(ENVIRONMENT_VARIABLES.APIM_INFORMATICA_URL).get(informaticaPath).matchHeader('authorization', `Basic ${basicAuth}`);
-  };
+  const requestToGetCustomers = (informaticaPath: string): nock.Interceptor =>
+    nock(ENVIRONMENT_VARIABLES.APIM_INFORMATICA_URL).get(informaticaPath).matchHeader('authorization', `Basic ${basicAuth}`);
+
 });
