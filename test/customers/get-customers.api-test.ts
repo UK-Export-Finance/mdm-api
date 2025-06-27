@@ -223,5 +223,4 @@ describe('GET /customers', () => {
 
   const requestToGetCustomers = (informaticaPath: string): nock.Interceptor =>
     nock(ENVIRONMENT_VARIABLES.APIM_INFORMATICA_URL).get(informaticaPath).matchHeader('authorization', `Basic ${basicAuth}`);
-
 });

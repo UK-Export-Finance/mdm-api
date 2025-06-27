@@ -1,7 +1,7 @@
 import { GEOSPATIAL } from '@ukef/constants';
 import { IncorrectAuthArg, withClientAuthenticationTests } from '@ukef-test/common-tests/client-authentication-api-tests';
 import { Api } from '@ukef-test/support/api';
-import { ENVIRONMENT_VARIABLES, TIME_EXCEEDING_ORDNANCE_SURVEY_TIMEOUT } from '@ukef-test/support/environment-variables';
+import { ENVIRONMENT_VARIABLES } from '@ukef-test/support/environment-variables';
 import { GetGeospatialAddressesGenerator } from '@ukef-test/support/generator/get-geospatial-addresses-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import nock from 'nock';
