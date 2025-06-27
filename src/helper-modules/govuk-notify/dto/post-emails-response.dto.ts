@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { GOVUK_NOTIFY } from '@ukef/constants';
-import { IsString, Max } from 'class-validator';
 
 export class PostEmailsResponseDataContent {
   @ApiProperty({
@@ -64,8 +63,6 @@ export class PostEmailsResponseData {
     example: GOVUK_NOTIFY.EXAMPLES.REFERENCE,
     description: 'Reference that was sent to GOV.UK Notify',
   })
-  @IsString()
-  @Max(100)
   public reference: string;
 
   @ApiProperty({
