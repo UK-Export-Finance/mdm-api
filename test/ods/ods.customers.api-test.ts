@@ -19,16 +19,20 @@ describe('/ods/customers', () => {
 
   describe('/:urn', () => {
     it(`should return ${HttpStatus.OK} when the URN has a valid format and belongs to an existing customer`, async () => {
+      // Act
       const { status, body } = await api.get('/api/v1/ods/customers/00325182');
 
+      // Assert
       expect(status).toBe(HttpStatus.OK);
 
       expect(body).toEqual(expectedResult);
     });
 
     it(`should return ${HttpStatus.NOT_FOUND} when the URN has a valid format, but does not match an existing customer`, async () => {
+      // Act
       const { status, body } = await api.get('/api/v1/ods/customers/99999999');
 
+      // Assert
       expect(status).toBe(HttpStatus.NOT_FOUND);
 
       expect(body).toEqual({
@@ -39,8 +43,10 @@ describe('/ods/customers', () => {
     });
 
     it(`should return ${HttpStatus.BAD_REQUEST} when the URN is not the right length`, async () => {
+      // Act
       const { status, body } = await api.get('/api/v1/ods/customers/1234567');
 
+      // Assert
       expect(status).toBe(HttpStatus.BAD_REQUEST);
 
       expect(body).toEqual({
@@ -51,8 +57,10 @@ describe('/ods/customers', () => {
     });
 
     it(`should return ${HttpStatus.BAD_REQUEST} when the URN does not match the regex`, async () => {
+      // Act
       const { status, body } = await api.get('/api/v1/ods/customers/abc');
 
+      // Assert
       expect(status).toBe(HttpStatus.BAD_REQUEST);
 
       expect(body).toEqual({

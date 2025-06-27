@@ -19,16 +19,20 @@ describe('/ods/deal', () => {
 
   describe('/:id', () => {
     it(`should return ${HttpStatus.OK} when the deal ID is a valid format and belongs to an existing deal`, async () => {
+      // Act
       const { status, body } = await api.get('/api/v1/ods/deal/0000000436');
 
+      // Assert
       expect(status).toBe(HttpStatus.OK);
 
       expect(body).toEqual(expectedResult);
     });
 
     it(`should return ${HttpStatus.NOT_FOUND} when the deal ID is a valid format, but does not match an existing deal`, async () => {
+      // Act
       const { status, body } = await api.get('/api/v1/ods/deal/0000000001');
 
+      // Assert
       expect(status).toBe(HttpStatus.NOT_FOUND);
 
       expect(body).toEqual({
@@ -39,8 +43,10 @@ describe('/ods/deal', () => {
     });
 
     it(`should return ${HttpStatus.BAD_REQUEST} when the deal ID is not the right length`, async () => {
+      // Act
       const { status, body } = await api.get('/api/v1/ods/deal/1234567');
 
+      // Assert
       expect(status).toBe(HttpStatus.BAD_REQUEST);
 
       expect(body).toEqual({
@@ -51,8 +57,10 @@ describe('/ods/deal', () => {
     });
 
     it(`should return ${HttpStatus.BAD_REQUEST} when the deal ID does not match the regex`, async () => {
+      // Act
       const { status, body } = await api.get('/api/v1/ods/deal/abc');
 
+      // Assert
       expect(status).toBe(HttpStatus.BAD_REQUEST);
 
       expect(body).toEqual({
