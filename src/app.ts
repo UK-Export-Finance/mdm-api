@@ -65,8 +65,6 @@ export class App {
      */
     app.use(express.json({ limit: GOVUK_NOTIFY.FILE.SIZE.MAX }));
     app.use(express.urlencoded({ limit: GOVUK_NOTIFY.FILE.SIZE.MAX, extended: true }));
-
-    console.info(`🚀 MDM API listening on port ${this.port}`);
   }
 
   private getConfig<T = any>(key: string): T {
