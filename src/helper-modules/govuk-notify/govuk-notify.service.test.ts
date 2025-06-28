@@ -5,10 +5,12 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { PinoLogger } from 'nestjs-pino';
 import { NotifyClient } from 'notifications-node-client';
 
+import { convertStringToBuffer } from '../../helpers';
 import { PostEmailsRequestDto } from '../../modules/emails/dto/post-emails-request.dto';
 import expectedPrepareUploadResponse from './examples/example-response-for-prepare-upload.json';
 import expectedSendEmailsResponse from './examples/example-response-for-send-emails.json';
 import { GovukNotifyService } from './govuk-notify.service';
+
 jest.mock('notifications-node-client');
 
 describe('GovukNotifyService', () => {
@@ -28,7 +30,7 @@ describe('GovukNotifyService', () => {
 
   const filePersonalisation = {
     ...personalisation,
-    file: 'mock-file-buffer',
+    file: '<Buffer 43 31 2c 43 32 2c 43 33 0a 41 2c 42 2c 43 0a 44 2c 45 2c 46 0a 31 2c 32 2c 33 0a 34 2c 35 2c 36 0a>',
   };
 
   const mockSendEmailResponse = { status: 201, data: expectedSendEmailsResponse };
@@ -78,18 +80,22 @@ describe('GovukNotifyService', () => {
 
     describe('when a file property is provided', () => {
       it('calls GOV.UK Notify client prepareUpload function with the correct arguments', async () => {
+        // Arrange
         const mockParams: PostEmailsRequestDto = {
           sendToEmailAddress,
           templateId,
           personalisation: filePersonalisation,
           reference,
-          file: 'mock-file-buffer',
+          file: filePersonalisation.file,
         };
+        const buffer = convertStringToBuffer(mockParams.file);
 
+        // Act
         await service.sendEmail(govUkNotifyKey, mockParams);
 
+        // Assert
         expect(prepareUploadMethodMock).toHaveBeenCalledTimes(1);
-        expect(prepareUploadMethodMock).toHaveBeenCalledWith(mockParams.file, { confirmEmailBeforeDownload: true });
+        expect(prepareUploadMethodMock).toHaveBeenCalledWith(buffer, { confirmEmailBeforeDownload: true });
       });
 
       it('calls GOV.UK Notify client sendEmail function with the correct arguments', async () => {

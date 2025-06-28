@@ -33,12 +33,11 @@ export class GetCustomersGenerator extends AbstractGenerator<CustomerValues, Gen
         ...(query.name ? { name: query.name } : {}),
         ...(query.partyUrn ? { partyUrn: query.partyUrn } : {}),
       };
+
       if (Object.keys(searchParam).length === 0) {
         searchParam = { name: v.name };
       }
-      if (Object.keys(searchParam).length === 0) {
-        searchParam = { name: v.name };
-      }
+
       return { ...searchParam, ...{ fallbackToLegacyData: query.fallbackToLegacyData ? query.fallbackToLegacyData : ENUMS.FALLBACK_TO_LEGACY_DATA.YES } };
     });
 

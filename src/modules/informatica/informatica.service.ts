@@ -17,6 +17,7 @@ export class InformaticaService {
 
   async getCustomers(query: GetCustomersInformaticaQueryDto): Promise<GetCustomersInformaticaResponse> {
     const path = '/account?' + new URLSearchParams(query as URLSearchParams).toString();
+
     const { data } = await this.httpClient.get<GetCustomersInformaticaResponse>({
       path,
       headers: { 'Content-Type': 'application/json' },
@@ -25,6 +26,7 @@ export class InformaticaService {
         knownErrors: [getCustomersNotFoundKnownInformaticaError()],
       }),
     });
+
     return data;
   }
 }

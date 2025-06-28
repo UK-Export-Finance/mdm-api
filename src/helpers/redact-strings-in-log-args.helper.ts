@@ -15,7 +15,7 @@ export const redactStringsInLogArgs = (
       const value: string = get(arg, path);
       if (value) {
         const safeValue = redactString(redactStrings, value);
-        set(args[index], path, safeValue);
+        set(args[`${index}`], path, safeValue);
       }
     });
   });

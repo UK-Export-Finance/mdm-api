@@ -54,14 +54,12 @@ export class PostEmailsRequestDto {
   @IsString()
   @IsOptional()
   @MinLength(1)
-  @MaxLength(400)
   @ApiProperty({
     example: GOVUK_NOTIFY.EXAMPLES.FILE,
     description: `File for GovNotify to consume and generate a link to download with supported file types. The file size must be smaller than ${GOVUK_NOTIFY.FILE.SIZE.MAX}`,
     required: false,
     nullable: true,
     minLength: 1,
-    maxLength: 400,
   })
   readonly file?: string | null;
 }

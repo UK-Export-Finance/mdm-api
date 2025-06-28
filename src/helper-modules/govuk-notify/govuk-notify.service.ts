@@ -9,6 +9,7 @@ import {
 import { PinoLogger } from 'nestjs-pino';
 import { NotifyClient } from 'notifications-node-client';
 
+import { convertStringToBuffer } from '../../helpers';
 import { PostEmailsRequestDto } from '../../modules/emails/dto/post-emails-request.dto';
 import { PostEmailsResponseDto } from './dto/post-emails-response.dto';
 
@@ -38,8 +39,9 @@ export class GovukNotifyService {
 
     const { personalisation } = postEmailsRequest;
 
-    if (personalisation.file) {
-      personalisation.linkToFile = await notifyClient.prepareUpload(personalisation.file, { confirmEmailBeforeDownload: true });
+    if (personalisation?.file) {
+      const buffer = convertStringToBuffer(personalisation.file.toString());
+      personalisation.linkToFile = await notifyClient.prepareUpload(buffer, { confirmEmailBeforeDownload: true });
     }
 
     const notifyResponse = await notifyClient

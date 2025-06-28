@@ -19,9 +19,10 @@ describe('Numbers', () => {
   });
 
   /**
-   * To get existing ukef ID we need to generate it first.
+   * To get existing UKEF ID we need to generate it first.
    */
   it(`POST /numbers and then GET /numbers?type=1&ukefId=newGeneratedId`, async () => {
+    // Arrange
     const postNumbersPayload = [
       {
         numberTypeId: 1,
@@ -29,27 +30,34 @@ describe('Numbers', () => {
         requestingSystem: 'Jest 1 - Deal',
       },
     ];
-    // Generate
+
+    // Act - generate a number
     const postResponse = await api.post('/api/v1/numbers', postNumbersPayload);
 
+    // Assert
     expect(postResponse.status).toBe(201);
 
-    // Test
+    // Act - get the number
     const getResponse = await api.get('/api/v1/numbers?type=' + postResponse.body[0].type + '&ukefId=' + postResponse.body[0].maskedId);
 
+    // Assert
     expect(getResponse.status).toBe(200);
     expect(postResponse.body[0]).toEqual(getResponse.body);
   });
 
   it(`GET /numbers?type=2&ukefId=0030581069`, async () => {
+    // Act
     const { status } = await api.get('/api/v1/numbers?type=2&ukefId=0030581069');
 
+    // Assert
     expect(status).toBe(404);
   });
 
   it(`GET /numbers?type=a&ukefId=a`, async () => {
+    // Act
     const { status, body } = await api.get('/api/v1/numbers?type=a&ukefId=a');
 
+    // Assert
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
     expect(body.message).toContain('type must be an integer number');
@@ -57,8 +65,10 @@ describe('Numbers', () => {
   });
 
   it(`GET /numbers?type=null&ukefId=null`, async () => {
+    // Act
     const { status, body } = await api.get('/api/v1/numbers?type=null&ukefId=null');
 
+    // Assert
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
     expect(body.message).toContain('type must be an integer number');
@@ -66,8 +76,10 @@ describe('Numbers', () => {
   });
 
   it(`GET /numbers?type=undefined&ukefId=undefined`, async () => {
+    // Act
     const { status, body } = await api.get('/api/v1/numbers?type=undefined&ukefId=undefined');
 
+    // Assert
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
     expect(body.message).toContain('type must be an integer number');
@@ -75,22 +87,27 @@ describe('Numbers', () => {
   });
 
   it(`GET /numbers?type=a&ukefId=0030581069`, async () => {
+    // Act
     const { status, body } = await api.get('/api/v1/numbers?type=a&ukefId=0030581069');
 
+    // Assert
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
     expect(body.message).toContain('type must be an integer number');
   });
 
   it(`GET /numbers?type=3&ukefId=0030581069`, async () => {
+    // Act
     const { status, body } = await api.get('/api/v1/numbers?type=3&ukefId=0030581069');
 
+    // Assert
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
     expect(body.message).toMatch('Invalid UKEF ID type');
   });
 
   it(`POST /numbers single`, async () => {
+    // Arrange
     const payload = [
       {
         numberTypeId: 1,
@@ -98,8 +115,11 @@ describe('Numbers', () => {
         requestingSystem: 'Jest 1 - Deal',
       },
     ];
+
+    // Act
     const { status, body } = await api.post('/api/v1/numbers', payload);
 
+    // Assert
     expect(status).toBe(201);
     expect(body).toHaveLength(1);
     expect(body[0].id).toBeDefined();
@@ -111,6 +131,7 @@ describe('Numbers', () => {
   });
 
   it(`POST /numbers single, long values`, async () => {
+    // Arrange
     const payload = [
       {
         numberTypeId: 1,
@@ -118,8 +139,11 @@ describe('Numbers', () => {
         requestingSystem: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mau',
       },
     ];
+
+    // Act
     const { status, body } = await api.post('/api/v1/numbers', payload);
 
+    // Assert
     expect(status).toBe(201);
     expect(body).toHaveLength(1);
     expect(body[0].id).toBeDefined();
@@ -131,6 +155,7 @@ describe('Numbers', () => {
   });
 
   it(`POST /numbers single, long value error`, async () => {
+    // Arrange
     const payload = [
       {
         numberTypeId: 1,
@@ -138,8 +163,11 @@ describe('Numbers', () => {
         requestingSystem: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ac magna ipsum',
       },
     ];
+
+    // Act
     const { status, body } = await api.post('/api/v1/numbers', payload);
 
+    // Assert
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
     expect(body.message).toContain('createdBy must be shorter than or equal to 60 characters');
@@ -147,9 +175,13 @@ describe('Numbers', () => {
   });
 
   it(`POST /numbers single, missing fields`, async () => {
+    // Arrange
     const payload = [{}];
+
+    // Act
     const { status, body } = await api.post('/api/v1/numbers', payload);
 
+    // Assert
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
     expect(body.message).toContain('numberTypeId should not be empty');
@@ -158,42 +190,59 @@ describe('Numbers', () => {
   });
 
   it(`POST /numbers single, empty payload`, async () => {
+    // Arrange
     const payload = '';
+
+    // Act
     const { status, body } = await api.post('/api/v1/numbers', payload);
 
+    // Assert
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
     expect(body.message).toMatch('Validation failed (parsable array expected)');
   });
 
   it(`POST /numbers single, empty array`, async () => {
+    // Arrange
     const payload = [];
+
+    // Act
     const { status, body } = await api.post('/api/v1/numbers', payload);
 
+    // Assert
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
     expect(body.message).toMatch('Request payload is empty');
   });
 
   it(`POST /numbers single, not parsable array`, async () => {
+    // Arrange
     const payload = '[]';
+
+    // Act
     const { status, body } = await api.post('/api/v1/numbers', payload);
 
+    // Assert
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
     expect(body.message).toMatch('Validation failed (parsable array expected)');
   });
 
   it(`POST /numbers single, bad json`, async () => {
+    // Arrange
     const payload = 'asd';
+
+    // Act
     const { status, body } = await api.post('/api/v1/numbers', payload);
 
+    // Assert
     expect(status).toBe(400);
     expect(body.error).toMatch('Bad Request');
     expect(body.message).toMatch('Validation failed (parsable array expected)');
   });
 
   it(`POST /numbers multiple numbers`, async () => {
+    // Arrange
     const payload = [
       {
         numberTypeId: 1,
@@ -216,27 +265,31 @@ describe('Numbers', () => {
         requestingSystem: 'Jest 4 - Covenant',
       },
     ];
+
+    // Act
     const { status, body } = await api.post('/api/v1/numbers', payload);
 
+    // Assert
     expect(status).toBe(201);
     expect(body).toHaveLength(4);
 
-    /* eslint-disable security/detect-object-injection */
     body.forEach((responseUkefIdRecord, i) => {
       expect(responseUkefIdRecord.id).toBeDefined();
       expect(responseUkefIdRecord.maskedId).toMatch(/^\d*$/);
-      expect(responseUkefIdRecord.type).toEqual(payload[i].numberTypeId);
-      expect(responseUkefIdRecord.createdBy).toEqual(payload[i].createdBy);
+      expect(responseUkefIdRecord.type).toEqual(payload[`${i}`].numberTypeId);
+      expect(responseUkefIdRecord.createdBy).toEqual(payload[`${i}`].createdBy);
       expect(responseUkefIdRecord.createdDatetime).toBeDefined();
-      expect(responseUkefIdRecord.requestingSystem).toEqual(payload[i].requestingSystem);
+      expect(responseUkefIdRecord.requestingSystem).toEqual(payload[`${i}`].requestingSystem);
     });
-    /* eslint-enable security/detect-object-injection */
   });
 
   /**
-   * Because of async calls order of new ids might be off, check it.
+   * Because of async calls,
+   * the order of new ids might be off.
+   * We need to check that we return a correctly sorted array.
    */
   it(`POST /numbers check order`, async () => {
+    // Arrange
     const payload = [
       {
         numberTypeId: 1,
@@ -249,31 +302,6 @@ describe('Numbers', () => {
         requestingSystem: 'Jest 2 - Facility',
       },
       {
-        numberTypeId: 1,
-        createdBy: 'John',
-        requestingSystem: 'Jest 3 - Facility',
-      },
-      {
-        numberTypeId: 1,
-        createdBy: 'Sam',
-        requestingSystem: 'Jest 4 - Facility',
-      },
-      {
-        numberTypeId: 1,
-        createdBy: 'Sam',
-        requestingSystem: 'Jest 5 - Facility',
-      },
-      {
-        numberTypeId: 1,
-        createdBy: 'Jest',
-        requestingSystem: 'Jest 6 - Facility',
-      },
-      {
-        numberTypeId: 1,
-        createdBy: 'Jest',
-        requestingSystem: 'Jest 7 - Facility',
-      },
-      {
         numberTypeId: 2,
         createdBy: 'Jest',
         requestingSystem: 'Jest 1 - Party',
@@ -281,26 +309,19 @@ describe('Numbers', () => {
       {
         numberTypeId: 2,
         createdBy: 'Jest',
-        requestingSystem: 'Jest 2 - Party',
-      },
-      {
-        numberTypeId: 2,
-        createdBy: 'Jest',
         requestingSystem: 'Jest 3 - Party',
       },
-      {
-        numberTypeId: 2,
-        createdBy: 'Jest',
-        requestingSystem: 'Jest 4 - Party',
-      },
     ];
+
+    // Act
     const { status, body } = await api.post('/api/v1/numbers', payload);
 
+    // Assert
     expect(status).toBe(201);
     expect(body).toHaveLength(payload.length);
 
-    // Go trough results, group by type and keep validating order.
-    body.reduce(function (previousValues, newUkefId) {
+    // Go through results, group by type and validate the order.
+    body.reduce((previousValues, newUkefId) => {
       if (!previousValues[newUkefId.type]) {
         // First call for this type, initialize.
         previousValues[newUkefId.type] = '';
@@ -310,6 +331,7 @@ describe('Numbers', () => {
       expect(previousValues[newUkefId.type] < newUkefId.maskedId).toBeTruthy();
 
       previousValues[newUkefId.type] = newUkefId.maskedId;
+
       return previousValues;
     }, Object.create(null));
   });
