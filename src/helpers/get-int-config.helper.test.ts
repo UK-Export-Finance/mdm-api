@@ -2,8 +2,8 @@ import { InvalidConfigException } from '@ukef/config/invalid-config.exception';
 
 import { getIntConfig } from './get-int-config';
 
-describe('GetIntConfig helper', () => {
-  describe('getIntConfig returns value', () => {
+describe('getIntConfig', () => {
+  describe('returns a value', () => {
     it.each([
       { value: undefined, defaultValue: 60, expectedResult: 60 },
       { value: '123', defaultValue: 60, expectedResult: 123 },
@@ -17,7 +17,7 @@ describe('GetIntConfig helper', () => {
     });
   });
 
-  describe('getIntConfig throws invalid integer exception', () => {
+  describe('throws an invalid integer exception', () => {
     it.each(['abc', '12.5', '20th', '0xFF', '0b101'])(`throws InvalidConfigException for "%s" because it is not valid integer`, (value) => {
       const gettingTheConfig = () => getIntConfig(value as unknown as string);
 
@@ -26,7 +26,7 @@ describe('GetIntConfig helper', () => {
     });
   });
 
-  describe('getIntConfig throws InvalidConfigException because environment variable type is not string', () => {
+  describe('throws an InvalidConfigException if environment variable type is not string', () => {
     it.each([12, true, null, false, /.*/, {}, [], 0xff, 0b101])(
       'throws InvalidConfigException for "%s" because environment variable type is not string',
       (value) => {

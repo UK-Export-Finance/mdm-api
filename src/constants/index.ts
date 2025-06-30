@@ -3,6 +3,7 @@
  * Following constants are served:
  *
  * Auth strategy
+ * Business centre
  * Companies module
  * Companies House helper module
  * Customers
@@ -17,6 +18,7 @@
  */
 
 export * from './auth.constant';
+export * from './business-centre.constant';
 export * from './companies.constant';
 export * from './companies-house.constant';
 export * from './customers.constant';

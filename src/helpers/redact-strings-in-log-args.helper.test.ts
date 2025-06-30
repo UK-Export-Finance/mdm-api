@@ -3,7 +3,7 @@ import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-
 
 import { redactStringsInLogArgs } from './redact-strings-in-log-args.helper';
 
-describe('Redact errors helper', () => {
+describe('redactStringsInLogArgs', () => {
   const valueGenerator = new RandomValueGenerator();
 
   describe('redactStringsInLogArgs', () => {

@@ -1,6 +1,6 @@
 import { salesforceFormattedCurrentDate } from './date-formatter.helper';
 
-describe('salesforceFormattedCurrentDate function', () => {
+describe('salesforceFormattedCurrentDate', () => {
   afterEach(() => {
     jest.restoreAllMocks();
   });

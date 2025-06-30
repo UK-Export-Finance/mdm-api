@@ -1,5 +1,6 @@
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { CUSTOMERS, DEALS } from '@ukef/constants';
+import { BUSINESS_CENTRE, CUSTOMERS, DEALS } from '@ukef/constants';
+import { mapBusinessCentres } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
@@ -58,8 +59,10 @@ describe('OdsService', () => {
     it('should call service.callOdsStoredProcedure', async () => {
       await service.findCustomer(mockCustomer.urn);
 
-      const expectedStoredProcedureInput: OdsStoredProcedureInput = service.createOdsStoredProcedureInput(ODS_ENTITIES.CUSTOMER, {
-        customer_party_unique_reference_number: mockCustomer.urn,
+      const expectedStoredProcedureInput: OdsStoredProcedureInput = service.createOdsStoredProcedureInput({
+        entityToQuery: ODS_ENTITIES.CUSTOMER,
+        queryPageSize: 1,
+        queryParameters: { customer_party_unique_reference_number: mockCustomer.urn },
       });
 
       expect(service.callOdsStoredProcedure).toHaveBeenCalledTimes(1);
@@ -78,7 +81,7 @@ describe('OdsService', () => {
 
         jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
 
-        const expected = new Error('Error trying to find a customer');
+        const expected = new Error('Error finding a customer');
 
         const promise = service.findCustomer(mockCustomer.urn);
 
@@ -110,7 +113,7 @@ describe('OdsService', () => {
 
         jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
 
-        const expected = new Error('Error trying to find a customer');
+        const expected = new Error('Error finding a customer');
 
         const promise = service.findCustomer(mockCustomer.urn);
 
@@ -124,7 +127,7 @@ describe('OdsService', () => {
       it('should throw an error', async () => {
         jest.spyOn(service, 'callOdsStoredProcedure').mockRejectedValue('Mock ODS error');
 
-        const expected = new Error('Error trying to find a customer');
+        const expected = new Error('Error finding a customer');
 
         const promise = service.findCustomer(mockCustomer.urn);
 
@@ -155,8 +158,10 @@ describe('OdsService', () => {
     });
 
     it('should call service.callOdsStoredProcedure', async () => {
-      const expectedStoredProcedureInput: OdsStoredProcedureInput = service.createOdsStoredProcedureInput(ODS_ENTITIES.DEAL, {
-        deal_code: DEALS.EXAMPLES.ID,
+      const expectedStoredProcedureInput: OdsStoredProcedureInput = service.createOdsStoredProcedureInput({
+        entityToQuery: ODS_ENTITIES.DEAL,
+        queryPageSize: 1,
+        queryParameters: { deal_code: DEALS.EXAMPLES.ID },
       });
 
       await service.findDeal(DEALS.EXAMPLES.ID);
@@ -183,7 +188,7 @@ describe('OdsService', () => {
 
         jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
 
-        const expected = new Error('Error trying to find a deal');
+        const expected = new Error('Error finding a deal');
 
         const promise = service.findDeal(DEALS.EXAMPLES.ID);
 
@@ -215,7 +220,7 @@ describe('OdsService', () => {
 
         jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
 
-        const expected = new Error('Error trying to find a deal');
+        const expected = new Error('Error finding a deal');
 
         const promise = service.findDeal(DEALS.EXAMPLES.ID);
 
@@ -229,9 +234,112 @@ describe('OdsService', () => {
       it('should throw an error', async () => {
         jest.spyOn(service, 'callOdsStoredProcedure').mockRejectedValue('Mock ODS error');
 
-        const expected = new Error('Error trying to find a deal');
+        const expected = new Error('Error finding a deal');
 
         const promise = service.findDeal(DEALS.EXAMPLES.ID);
+
+        await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
+
+        await expect(promise).rejects.toThrow(expected);
+      });
+    });
+  });
+
+  describe('getBusinessCentres', () => {
+    const mockStoredProcedureOutput = `{
+      "message": "SUCCESS",
+      "status": "SUCCESS",
+      "total_result_count": 2,
+      "results": [
+        {
+          "business_centre_code": "${BUSINESS_CENTRE.EXAMPLES.CODE}",
+          "business_centre_name": "${BUSINESS_CENTRE.EXAMPLES.NAME}"
+        },
+        {
+          "business_centre_code": "${BUSINESS_CENTRE.EXAMPLES.CODE}",
+          "business_centre_name": "${BUSINESS_CENTRE.EXAMPLES.NAME}"
+        }
+      ]
+    }`;
+
+    beforeEach(() => {
+      jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
+    });
+
+    it('should call service.callOdsStoredProcedure', async () => {
+      const expectedStoredProcedureInput: OdsStoredProcedureInput = service.createOdsStoredProcedureInput({
+        entityToQuery: ODS_ENTITIES.BUSINESS_CENTRE,
+      });
+
+      await service.getBusinessCentres();
+
+      expect(service.callOdsStoredProcedure).toHaveBeenCalledTimes(1);
+      expect(service.callOdsStoredProcedure).toHaveBeenCalledWith(expectedStoredProcedureInput);
+    });
+
+    it('should return mapped business centres', async () => {
+      const result = await service.getBusinessCentres();
+
+      const expected = mapBusinessCentres(JSON.parse(mockStoredProcedureOutput).results);
+
+      expect(result).toEqual(expected);
+    });
+
+    describe('when the response from ODS does not have status as SUCCESS', () => {
+      it('should throw an error', async () => {
+        const mockStoredProcedureOutput = `{ "status": "NOT SUCCESS" }`;
+
+        jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
+
+        const expected = new Error('Error getting business centres');
+
+        const promise = service.getBusinessCentres();
+
+        await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
+
+        await expect(promise).rejects.toThrow(expected);
+      });
+    });
+
+    describe('when the response from ODS has total_result_count as 0', () => {
+      it('should throw an error', async () => {
+        const mockStoredProcedureOutput = `{ "status": "SUCCESS", "total_result_count": 0 }`;
+
+        jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
+
+        const expected = new Error('Error getting business centres');
+
+        const promise = service.getBusinessCentres();
+
+        await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
+
+        await expect(promise).rejects.toThrow(expected);
+      });
+    });
+
+    describe('when the method goes into the catch handler', () => {
+      it('should throw an error', async () => {
+        const mockStoredProcedureOutput = `{ "status": "SUCCESS" }`;
+
+        jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
+
+        const expected = new Error('Error getting business centres');
+
+        const promise = service.getBusinessCentres();
+
+        await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
+
+        await expect(promise).rejects.toThrow(expected);
+      });
+    });
+
+    describe('when callOdsStoredProcedure throws an error', () => {
+      it('should throw an error', async () => {
+        jest.spyOn(service, 'callOdsStoredProcedure').mockRejectedValue('Mock ODS error');
+
+        const expected = new Error('Error getting business centres');
+
+        const promise = service.getBusinessCentres();
 
         await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
@@ -246,14 +354,19 @@ describe('OdsService', () => {
         customer_party_unique_reference_number: CUSTOMERS.EXAMPLES.PARTYURN,
       };
 
+      const result = service.createOdsStoredProcedureInput({
+        entityToQuery: ODS_ENTITIES.CUSTOMER,
+        queryPageSize: 100,
+        queryParameters: exampleCustomerQueryParameters,
+      });
+
       const expected: OdsStoredProcedureInput = {
         query_method: 'get',
         query_object: ODS_ENTITIES.CUSTOMER,
-        query_page_size: 1,
+        query_page_size: 100,
         query_page_index: 1,
         query_parameters: exampleCustomerQueryParameters,
       };
-      const result = service.createOdsStoredProcedureInput(ODS_ENTITIES.CUSTOMER, exampleCustomerQueryParameters);
 
       expect(result).toEqual(expected);
     });
@@ -261,8 +374,10 @@ describe('OdsService', () => {
 
   describe('callOdsStoredProcedure', () => {
     it('should call the stored procedure with the query runner', async () => {
-      const mockInput: OdsStoredProcedureInput = service.createOdsStoredProcedureInput(ODS_ENTITIES.CUSTOMER, {
-        customer_party_unique_reference_number: CUSTOMERS.EXAMPLES.PARTYURN,
+      const mockInput: OdsStoredProcedureInput = service.createOdsStoredProcedureInput({
+        entityToQuery: ODS_ENTITIES.CUSTOMER,
+        queryPageSize: 100,
+        queryParameters: { customer_party_unique_reference_number: CUSTOMERS.EXAMPLES.PARTYURN },
       });
 
       const mockOutputBody = JSON.stringify({ id: '123', name: 'Test Customer' });
@@ -288,8 +403,9 @@ describe('OdsService', () => {
     });
 
     it('throws an error if calling the stored procedure fails', async () => {
-      const mockInput: OdsStoredProcedureInput = service.createOdsStoredProcedureInput(ODS_ENTITIES.CUSTOMER, {
-        customer_party_unique_reference_number: CUSTOMERS.EXAMPLES.PARTYURN,
+      const mockInput: OdsStoredProcedureInput = service.createOdsStoredProcedureInput({
+        entityToQuery: ODS_ENTITIES.CUSTOMER,
+        queryParameters: { customer_party_unique_reference_number: CUSTOMERS.EXAMPLES.PARTYURN },
       });
 
       mockQueryRunner.query.mockRejectedValue(new Error('Test Error'));
