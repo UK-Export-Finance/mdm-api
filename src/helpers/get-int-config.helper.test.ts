@@ -38,7 +38,7 @@ describe('getIntConfig', () => {
 
         // Assert
         expect(gettingTheConfig).toThrow(InvalidConfigException);
-        expect(gettingTheConfig).toThrow(`Input environment variable type for ${value} should be string.`);
+        expect(gettingTheConfig).toThrow(`Input environment variable type for ${value} should be a string.`);
       },
     );
   });
