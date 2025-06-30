@@ -487,6 +487,22 @@ paths:
       summary: Get all markets (aka countries)
       tags:
         - markets
+  /api/v1/ods/business-centres:
+    get:
+      operationId: OdsController_getBusinessCentres_v1
+      parameters: []
+      responses:
+        '200':
+          description: Business centres
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetOdsBusinessCentreMappedResponse'
+        '500':
+          description: Internal server error.
+      summary: Get business centres from ODS
+      tags:
+        - ods
   /api/v1/ods/customers/{urn}:
     get:
       operationId: OdsController_findCustomer_v1
@@ -1216,6 +1232,20 @@ components:
         - shortTermCoverAvailabilityDesc
         - NBIIssue
         - active
+    GetOdsBusinessCentreMappedResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Business centre code
+          example: DbB
+        name:
+          type: string
+          description: Business centre name
+          example: Dubai bank holidays
+      required:
+        - code
+        - name
     GetOdsCustomerResponse:
       type: object
       properties:
