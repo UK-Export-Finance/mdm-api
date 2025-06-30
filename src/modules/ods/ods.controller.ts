@@ -15,6 +15,7 @@ export class OdsController {
   })
   @ApiOkResponse({
     description: 'Business centres',
+    isArray: true,
     type: GetOdsBusinessCentreMappedResponse,
   })
   @ApiInternalServerErrorResponse({
