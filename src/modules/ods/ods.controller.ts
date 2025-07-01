@@ -18,6 +18,9 @@ export class OdsController {
     isArray: true,
     type: GetOdsBusinessCentreMappedResponse,
   })
+  @ApiBadRequestResponse({
+    description: 'Bad request.',
+  })
   @ApiInternalServerErrorResponse({
     description: 'Internal server error.',
   })
