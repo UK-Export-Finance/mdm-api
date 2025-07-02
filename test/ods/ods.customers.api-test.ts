@@ -4,11 +4,6 @@ import { Api } from '@ukef-test/support/api';
 describe('/ods/customers', () => {
   let api: Api;
 
-  const expectedResult = expect.objectContaining({
-    name: expect.any(String),
-    urn: expect.any(String),
-  });
-
   beforeAll(async () => {
     api = await Api.create();
   });
@@ -25,7 +20,12 @@ describe('/ods/customers', () => {
       // Assert
       expect(status).toBe(HttpStatus.OK);
 
-      expect(body).toEqual(expectedResult);
+      const expected = expect.objectContaining({
+        name: expect.any(String),
+        urn: expect.any(String),
+      });
+
+      expect(body).toEqual(expected);
     });
 
     it(`should return ${HttpStatus.NOT_FOUND} when the URN has a valid format, but does not match an existing customer`, async () => {

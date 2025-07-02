@@ -4,11 +4,6 @@ import { Api } from '@ukef-test/support/api';
 describe('/ods/deal', () => {
   let api: Api;
 
-  const expectedResult = expect.objectContaining({
-    dealId: expect.any(String),
-    name: expect.any(String),
-  });
-
   beforeAll(async () => {
     api = await Api.create();
   });
@@ -25,7 +20,12 @@ describe('/ods/deal', () => {
       // Assert
       expect(status).toBe(HttpStatus.OK);
 
-      expect(body).toEqual(expectedResult);
+      const expected = expect.objectContaining({
+        dealId: expect.any(String),
+        name: expect.any(String),
+      });
+
+      expect(body).toEqual(expected);
     });
 
     it(`should return ${HttpStatus.NOT_FOUND} when the deal ID is a valid format, but does not match an existing deal`, async () => {

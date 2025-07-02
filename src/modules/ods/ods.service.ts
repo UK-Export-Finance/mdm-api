@@ -1,10 +1,13 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DATABASE_NAME } from '@ukef/constants';
+import { mapBusinessCentres } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource } from 'typeorm';
 
 import {
+  GetOdsBusinessCentreMappedResponse,
+  GetOdsBusinessCentreResponse,
   GetOdsCustomerResponse,
   GetOdsDealResponse,
   ODS_ENTITIES,
@@ -13,6 +16,12 @@ import {
   OdsStoredProcedureOutputBody,
   OdsStoredProcedureQueryParams,
 } from './dto';
+
+interface CreateOdsStoredProcedureInputParams {
+  entityToQuery: OdsEntity;
+  queryPageSize?: number;
+  queryParameters?: OdsStoredProcedureQueryParams;
+}
 
 @Injectable()
 export class OdsService {
@@ -32,7 +41,11 @@ export class OdsService {
    */
   async findCustomer(uniqueReferenceNumber: string): Promise<GetOdsCustomerResponse> {
     try {
-      const storedProcedureInput = this.createOdsStoredProcedureInput(ODS_ENTITIES.CUSTOMER, { customer_party_unique_reference_number: uniqueReferenceNumber });
+      const storedProcedureInput = this.createOdsStoredProcedureInput({
+        entityToQuery: ODS_ENTITIES.CUSTOMER,
+        queryPageSize: 1,
+        queryParameters: { customer_party_unique_reference_number: uniqueReferenceNumber },
+      });
 
       const storedProcedureResult = await this.callOdsStoredProcedure(storedProcedureInput);
 
@@ -40,7 +53,8 @@ export class OdsService {
 
       if (storedProcedureJson?.status !== 'SUCCESS') {
         this.logger.error('Error finding a customer from ODS stored procedure, output: %o', storedProcedureResult);
-        throw new InternalServerErrorException('Error trying to find a customer');
+
+        throw new InternalServerErrorException('Error finding a customer from ODS stored procedure');
       }
 
       if (storedProcedureJson?.total_result_count === 0) {
@@ -61,7 +75,7 @@ export class OdsService {
       }
 
       this.logger.error(err);
-      throw new InternalServerErrorException('Error trying to find a customer');
+      throw new InternalServerErrorException('Error finding a customer');
     }
   }
 
@@ -75,7 +89,11 @@ export class OdsService {
    */
   async findDeal(id: string): Promise<GetOdsDealResponse> {
     try {
-      const storedProcedureInput = this.createOdsStoredProcedureInput(ODS_ENTITIES.DEAL, { deal_code: id });
+      const storedProcedureInput = this.createOdsStoredProcedureInput({
+        entityToQuery: ODS_ENTITIES.DEAL,
+        queryPageSize: 1,
+        queryParameters: { deal_code: id },
+      });
 
       const storedProcedureResult = await this.callOdsStoredProcedure(storedProcedureInput);
 
@@ -83,7 +101,8 @@ export class OdsService {
 
       if (storedProcedureJson?.status !== 'SUCCESS') {
         this.logger.error('Error finding a deal from ODS stored procedure, output: %o', storedProcedureResult);
-        throw new InternalServerErrorException('Error trying to find a deal');
+
+        throw new InternalServerErrorException('Error finding a deal from ODS stored procedure');
       }
 
       if (storedProcedureJson?.total_result_count === 0) {
@@ -106,22 +125,55 @@ export class OdsService {
       }
 
       this.logger.error(err);
-      throw new InternalServerErrorException('Error trying to find a deal');
+      throw new InternalServerErrorException('Error finding a deal');
+    }
+  }
+
+  /**
+   * Get and map business centres from ODS
+   * @returns {Promise<any>} Business centres
+   * @throws {InternalServerErrorException} If there is an error trying to get business centres
+   */
+  async getBusinessCentres(): Promise<GetOdsBusinessCentreMappedResponse[]> {
+    try {
+      const storedProcedureInput = this.createOdsStoredProcedureInput({ entityToQuery: ODS_ENTITIES.BUSINESS_CENTRE });
+
+      const storedProcedureResult = await this.callOdsStoredProcedure(storedProcedureInput);
+
+      const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
+
+      if (storedProcedureJson?.status !== 'SUCCESS') {
+        this.logger.error('Error getting business centres from ODS stored procedure, output: %o', storedProcedureResult);
+
+        throw new InternalServerErrorException('Error getting business centres from ODS stored procedure');
+      }
+
+      if (storedProcedureJson?.total_result_count === 0) {
+        throw new InternalServerErrorException('No business centres found');
+      }
+
+      const businessCentres = storedProcedureJson.results as GetOdsBusinessCentreResponse[];
+
+      return mapBusinessCentres(businessCentres);
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException('Error getting business centres');
     }
   }
 
   /**
    * Creates the input parameter for the stored procedure
    * @param {OdsEntity} entityToQuery The entity you want to query in ODS
+   * @param {Number} queryPageSize The page size to query in ODS
    * @param {OdsStoredProcedureQueryParams} queryParameters The query parameters and filters to apply to the query
    *
    * @returns {OdsStoredProcedureInput} The ODS stored procedure input in object format
    */
-  createOdsStoredProcedureInput(entityToQuery: OdsEntity, queryParameters: OdsStoredProcedureQueryParams): OdsStoredProcedureInput {
+  createOdsStoredProcedureInput({ entityToQuery, queryPageSize, queryParameters }: CreateOdsStoredProcedureInputParams): OdsStoredProcedureInput {
     return {
       query_method: 'get',
       query_object: entityToQuery,
-      query_page_size: 1,
+      query_page_size: queryPageSize,
       query_page_index: 1,
       query_parameters: queryParameters,
     };
@@ -131,7 +183,7 @@ export class OdsService {
    * Calls the ODS stored procedure with the input provided and returns the output of it
    * @param {OdsStoredProcedureInput} storedProcedureInput The input parameter of the stored procedure
    *
-   * @returns {Promise<OdsStoredProcedureOuput>} The result of the stored procedure
+   * @returns {Promise<OdsStoredProcedureOutput>} The result of the stored procedure
    */
   async callOdsStoredProcedure(storedProcedureInput: OdsStoredProcedureInput): Promise<string> {
     const queryRunner = this.odsDataSource.createQueryRunner();

@@ -1,21 +1,25 @@
-import { CUSTOMERS, DEALS } from '@ukef/constants';
+import { BUSINESS_CENTRE, CUSTOMERS, DEALS } from '@ukef/constants';
 import { when } from 'jest-when';
 import { PinoLogger } from 'nestjs-pino';
 
 import { OdsController } from './ods.controller';
 import { OdsService } from './ods.service';
 
-const mockError = new Error('An error occured');
+const mockError = new Error('An error occurred');
 
 describe('OdsController', () => {
+  const mockLogger = new PinoLogger({});
+
+  const odsService = new OdsService(null, mockLogger);
+  let odsServiceGetBusinessCentres: jest.Mock;
   let odsServiceFindCustomer: jest.Mock;
   let odsServiceFindDeal: jest.Mock;
-  const mockLogger = new PinoLogger({});
 
   let controller: OdsController;
 
   beforeEach(() => {
-    const odsService = new OdsService(null, mockLogger);
+    odsServiceGetBusinessCentres = jest.fn();
+    odsService.getBusinessCentres = odsServiceGetBusinessCentres;
 
     odsServiceFindCustomer = jest.fn();
     odsService.findCustomer = odsServiceFindCustomer;
@@ -24,6 +28,52 @@ describe('OdsController', () => {
     odsService.findDeal = odsServiceFindDeal;
 
     controller = new OdsController(odsService);
+  });
+
+  describe('getBusinessCentres', () => {
+    it('should call odsService.getBusinessCentres', async () => {
+      // Act
+      await controller.getBusinessCentres();
+
+      // Assert
+      expect(odsServiceGetBusinessCentres).toHaveBeenCalledTimes(1);
+    });
+
+    it('should return business centres', async () => {
+      // Arrange
+      const mockBusinessCentres = [
+        {
+          code: BUSINESS_CENTRE.EXAMPLES.CODE,
+          name: BUSINESS_CENTRE.EXAMPLES.NAME,
+        },
+      ];
+
+      odsService.getBusinessCentres = jest.fn().mockResolvedValueOnce(mockBusinessCentres);
+
+      controller = new OdsController(odsService);
+
+      // Act
+      const result = await controller.getBusinessCentres();
+
+      // Assert
+      expect(result).toEqual(mockBusinessCentres);
+    });
+
+    describe('when odsService.getBusinessCentres throws an error', () => {
+      it('should throw an error', async () => {
+        // Arrange
+        const odsService = new OdsService(null, mockLogger);
+
+        odsService.getBusinessCentres = jest.fn().mockRejectedValueOnce(mockError);
+
+        controller = new OdsController(odsService);
+
+        // Act & Assert
+        const promise = controller.getBusinessCentres();
+
+        await expect(promise).rejects.toThrow(mockError);
+      });
+    });
   });
 
   describe('findCustomer', () => {
@@ -50,7 +100,7 @@ describe('OdsController', () => {
       expect(result).toEqual(mockCustomerDetails);
     });
 
-    describe('when odsService.findCustomer throw an error', () => {
+    describe('when odsService.findCustomer throws an error', () => {
       it('should throw an error', async () => {
         // Arrange
         const odsService = new OdsService(null, mockLogger);
@@ -91,7 +141,7 @@ describe('OdsController', () => {
       expect(result).toEqual(mockDeal);
     });
 
-    describe('when odsService.findDeal throw an error', () => {
+    describe('when odsService.findDeal throws an error', () => {
       it('should throw an error', async () => {
         // Arrange
         const odsService = new OdsService(null, mockLogger);
