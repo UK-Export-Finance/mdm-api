@@ -1,12 +1,14 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DATABASE_NAME } from '@ukef/constants';
-import { mapBusinessCentres } from '@ukef/helpers';
+import { mapBusinessCentreNonWorkingDays, mapBusinessCentres } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource } from 'typeorm';
 
 import {
   GetOdsBusinessCentreMappedResponse,
+  GetOdsBusinessCentreNonWorkingDayMappedResponse,
+  GetOdsBusinessCentreNonWorkingDayResponse,
   GetOdsBusinessCentreResponse,
   GetOdsCustomerResponse,
   GetOdsDealResponse,
@@ -130,9 +132,9 @@ export class OdsService {
   }
 
   /**
-   * Get and map business centres from ODS
-   * @returns {Promise<any>} Business centres
-   * @throws {InternalServerErrorException} If there is an error trying to get business centres
+   * Get and map "business centres" from ODS
+   * @returns {Promise<GetOdsBusinessCentreMappedResponse[]>} Business centres
+   * @throws {InternalServerErrorException} If there is an error getting "business centres"
    */
   async getBusinessCentres(): Promise<GetOdsBusinessCentreMappedResponse[]> {
     try {
@@ -158,6 +160,44 @@ export class OdsService {
     } catch (err) {
       this.logger.error(err);
       throw new InternalServerErrorException('Error getting business centres');
+    }
+  }
+
+  /**
+   * Find and map a business centre's non working days from ODS
+   * @param {String} centreCode The business centre's code
+   * @returns {Promise<GetOdsBusinessCentreNonWorkingDayMappedResponse[]>} Business centres
+   * @throws {InternalServerErrorException} If there is an error finding a business centre's non working days
+   */
+  async findBusinessCentreNonWorkingDays(centreCode: string): Promise<GetOdsBusinessCentreNonWorkingDayMappedResponse[]> {
+    try {
+      const storedProcedureInput = this.createOdsStoredProcedureInput({
+        entityToQuery: ODS_ENTITIES.BUSINESS_CENTRE_NON_WORKING_DAY,
+        queryParameters: {
+          business_centre_code: centreCode,
+        },
+      });
+
+      const storedProcedureResult = await this.callOdsStoredProcedure(storedProcedureInput);
+
+      const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
+
+      if (storedProcedureJson?.status !== 'SUCCESS') {
+        this.logger.error('Error getting business centre non working days from ODS stored procedure, output: %o', storedProcedureResult);
+
+        throw new InternalServerErrorException('Error getting business centre non working days from ODS stored procedure');
+      }
+
+      if (storedProcedureJson?.total_result_count === 0) {
+        throw new InternalServerErrorException('No business centre non working days found');
+      }
+
+      const nonWorkingDays = storedProcedureJson.results as GetOdsBusinessCentreNonWorkingDayResponse[];
+
+      return mapBusinessCentreNonWorkingDays(nonWorkingDays);
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException('Error getting business centre non working days');
     }
   }
 

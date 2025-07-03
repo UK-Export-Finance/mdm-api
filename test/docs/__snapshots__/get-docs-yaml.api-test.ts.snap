@@ -497,10 +497,41 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetOdsBusinessCentreMappedResponse'
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetOdsBusinessCentreMappedResponse'
+        '400':
+          description: Bad request.
         '500':
           description: Internal server error.
       summary: Get business centres from ODS
+      tags:
+        - ods
+  /api/v1/ods/business-centre/{code}/non-working-days:
+    get:
+      operationId: OdsController_findBusinessCentreNonWorkingDays_v1
+      parameters:
+        - name: code
+          required: true
+          in: path
+          description: Unique business centre code
+          schema:
+            example: DbB
+            type: string
+      responses:
+        '200':
+          description: Business centre's non working days
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetOdsBusinessCentreMappedResponse'
+        '400':
+          description: Bad request.
+        '500':
+          description: Internal server error.
+      summary: Get a business centre's non working days from ODS
       tags:
         - ods
   /api/v1/ods/customers/{urn}:

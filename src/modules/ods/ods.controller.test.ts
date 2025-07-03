@@ -12,6 +12,7 @@ describe('OdsController', () => {
 
   const odsService = new OdsService(null, mockLogger);
   let odsServiceGetBusinessCentres: jest.Mock;
+  let odsServiceFindBusinessCentreNonWorkingDays: jest.Mock;
   let odsServiceFindCustomer: jest.Mock;
   let odsServiceFindDeal: jest.Mock;
 
@@ -20,6 +21,9 @@ describe('OdsController', () => {
   beforeEach(() => {
     odsServiceGetBusinessCentres = jest.fn();
     odsService.getBusinessCentres = odsServiceGetBusinessCentres;
+
+    odsServiceFindBusinessCentreNonWorkingDays = jest.fn();
+    odsService.findBusinessCentreNonWorkingDays = odsServiceFindBusinessCentreNonWorkingDays;
 
     odsServiceFindCustomer = jest.fn();
     odsService.findCustomer = odsServiceFindCustomer;
@@ -70,6 +74,54 @@ describe('OdsController', () => {
 
         // Act & Assert
         const promise = controller.getBusinessCentres();
+
+        await expect(promise).rejects.toThrow(mockError);
+      });
+    });
+  });
+
+  describe('findBusinessCentreNonWorkingDays', () => {
+    it('should call odsService.getBusinessCentres', async () => {
+      // Act
+      await controller.findBusinessCentreNonWorkingDays({ code: BUSINESS_CENTRE.EXAMPLES.CODE });
+
+      // Assert
+      expect(odsServiceFindBusinessCentreNonWorkingDays).toHaveBeenCalledTimes(1);
+      expect(odsServiceFindBusinessCentreNonWorkingDays).toHaveBeenCalledWith(BUSINESS_CENTRE.EXAMPLES.CODE);
+    });
+
+    it('should return non working days', async () => {
+      // Arrange
+      const mockNonWorkingDays = [
+        {
+          code: BUSINESS_CENTRE.EXAMPLES.CODE,
+          name: BUSINESS_CENTRE.EXAMPLES.NON_WORKING_DAY.NAME,
+          date: BUSINESS_CENTRE.EXAMPLES.NON_WORKING_DAY.DATE,
+        },
+      ];
+
+      odsService.findBusinessCentreNonWorkingDays = jest.fn().mockResolvedValueOnce(mockNonWorkingDays);
+
+      controller = new OdsController(odsService);
+
+      // Act
+      const result = await controller.findBusinessCentreNonWorkingDays({ code: BUSINESS_CENTRE.EXAMPLES.CODE });
+
+      // Assert
+      expect(result).toEqual(mockNonWorkingDays);
+    });
+
+    describe('when odsService.findBusinessCentreNonWorkingDays throws an error', () => {
+      it('should throw an error', async () => {
+        // Arrange
+        const odsService = new OdsService(null, mockLogger);
+
+        odsService.findBusinessCentreNonWorkingDays = jest.fn().mockRejectedValueOnce(mockError);
+
+        controller = new OdsController(odsService);
+
+        // Act & Assert
+        const promise = controller.findBusinessCentreNonWorkingDays({ code: BUSINESS_CENTRE.EXAMPLES.CODE });
 
         await expect(promise).rejects.toThrow(mockError);
       });
