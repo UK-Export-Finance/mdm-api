@@ -6,6 +6,7 @@
  * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_business_centre_non_working_day.sql#L12
  */
 export type OdsStoredProcedureQueryParams = {
+  business_centre_code?: string;
   customer_party_unique_reference_number?: string;
   deal_code?: string;
 };
@@ -38,6 +39,7 @@ export const ODS_ENTITIES = {
   CUSTOMER: 'customer',
   DEAL: 'deal',
   BUSINESS_CENTRE: 'business_centre',
+  BUSINESS_CENTRE_NON_WORKING_DAY: 'business_centre_non_working_day',
 } as const;
 
 export type OdsEntity = (typeof ODS_ENTITIES)[keyof typeof ODS_ENTITIES];
