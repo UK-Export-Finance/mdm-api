@@ -189,13 +189,18 @@ export class OdsService {
       }
 
       if (storedProcedureJson?.total_result_count === 0) {
-        throw new InternalServerErrorException('No business centre non working days found');
+        throw new NotFoundException('No business centre non working days found');
       }
 
       const nonWorkingDays = storedProcedureJson.results as GetOdsBusinessCentreNonWorkingDayResponse[];
 
       return mapBusinessCentreNonWorkingDays(nonWorkingDays);
     } catch (err) {
+      if (err instanceof NotFoundException) {
+        this.logger.warn(err);
+        throw err;
+      }
+
       this.logger.error(err);
       throw new InternalServerErrorException('Error getting business centre non working days');
     }

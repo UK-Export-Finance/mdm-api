@@ -1,4 +1,4 @@
-import { InternalServerErrorException } from '@nestjs/common';
+import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { BUSINESS_CENTRE } from '@ukef/constants';
 import { mapBusinessCentreNonWorkingDays } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
@@ -99,12 +99,12 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
 
       jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
 
-      const expected = new Error('Error getting business centre non working days');
+      const expected = new Error('No business centre non working days found');
 
       // Act & Assert
       const promise = service.findBusinessCentreNonWorkingDays(BUSINESS_CENTRE.EXAMPLES.CODE);
 
-      await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
+      await expect(promise).rejects.toBeInstanceOf(NotFoundException);
 
       await expect(promise).rejects.toThrow(expected);
     });
