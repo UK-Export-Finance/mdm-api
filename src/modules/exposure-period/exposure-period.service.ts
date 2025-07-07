@@ -24,12 +24,12 @@ export class ExposurePeriodService {
       }
 
       return { exposurePeriod: results[0].EXPOSURE_PERIOD };
-    } catch (err) {
-      if (err instanceof NotFoundException) {
-        this.logger.warn(err);
-        throw err;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        this.logger.warn(error);
+        throw error;
       } else {
-        this.logger.error(err);
+        this.logger.error(error);
         throw new InternalServerErrorException();
       }
     }

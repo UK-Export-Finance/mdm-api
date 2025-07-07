@@ -45,12 +45,12 @@ export class NumbersService {
       }
 
       return this.mapFieldsFromDbToApi(dbNumber[0]);
-    } catch (err) {
-      if (err instanceof NotFoundException || err instanceof BadRequestException) {
-        this.logger.warn(err);
-        throw err;
+    } catch (error) {
+      if (error instanceof NotFoundException || error instanceof BadRequestException) {
+        this.logger.warn(error);
+        throw error;
       } else {
-        this.logger.error(err);
+        this.logger.error(error);
         throw new InternalServerErrorException();
       }
     }

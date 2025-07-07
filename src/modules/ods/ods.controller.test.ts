@@ -81,14 +81,17 @@ describe('OdsController', () => {
   });
 
   describe('findBusinessCentreNonWorkingDays', () => {
-    it('should call odsService.getBusinessCentres', async () => {
-      // Act
-      await controller.findBusinessCentreNonWorkingDays({ code: BUSINESS_CENTRE.EXAMPLES.CODE });
+    it.each([{ value: BUSINESS_CENTRE.EXAMPLES.CODE }, { value: '' }, { value: 'invalid' }])(
+      `should call odsService.getBusinessCentres with $value`,
+      async ({ value }) => {
+        // Act
+        await controller.findBusinessCentreNonWorkingDays({ code: value });
 
-      // Assert
-      expect(odsServiceFindBusinessCentreNonWorkingDays).toHaveBeenCalledTimes(1);
-      expect(odsServiceFindBusinessCentreNonWorkingDays).toHaveBeenCalledWith(BUSINESS_CENTRE.EXAMPLES.CODE);
-    });
+        // Assert
+        expect(odsServiceFindBusinessCentreNonWorkingDays).toHaveBeenCalledTimes(1);
+        expect(odsServiceFindBusinessCentreNonWorkingDays).toHaveBeenCalledWith(value);
+      },
+    );
 
     it('should return non working days', async () => {
       // Arrange
@@ -129,15 +132,17 @@ describe('OdsController', () => {
   });
 
   describe('findCustomer', () => {
-    it('should call odsService.findCustomer', async () => {
-      // Act
-      await controller.findCustomer({ urn: CUSTOMERS.EXAMPLES.PARTYURN });
+    it.each([{ value: CUSTOMERS.EXAMPLES.PARTYURN }, { value: '' }, { value: 'invalid' }])(
+      `should call odsService.findCustomer with $value`,
+      async ({ value }) => {
+        // Act
+        await controller.findCustomer({ urn: value });
 
-      // Assert
-      expect(odsServiceFindCustomer).toHaveBeenCalledTimes(1);
-
-      expect(odsServiceFindCustomer).toHaveBeenCalledWith(CUSTOMERS.EXAMPLES.PARTYURN);
-    });
+        // Assert
+        expect(odsServiceFindCustomer).toHaveBeenCalledTimes(1);
+        expect(odsServiceFindCustomer).toHaveBeenCalledWith(value);
+      },
+    );
 
     it('should return a customer when a valid customer URN is provided', async () => {
       // Arrange
@@ -170,14 +175,13 @@ describe('OdsController', () => {
   });
 
   describe('findDeal', () => {
-    it('should call odsService.findDeal', async () => {
+    it.each([{ value: DEALS.EXAMPLES.ID }, { value: '' }, { value: 'invalid' }])(`should call odsService.findDeal with $value`, async ({ value }) => {
       // Act
-      await controller.findDeal({ id: DEALS.EXAMPLES.ID });
+      await controller.findDeal({ id: value });
 
       // Assert
       expect(odsServiceFindDeal).toHaveBeenCalledTimes(1);
-
-      expect(odsServiceFindDeal).toHaveBeenCalledWith(DEALS.EXAMPLES.ID);
+      expect(odsServiceFindDeal).toHaveBeenCalledWith(value);
     });
 
     it('should return a deal when a valid deal ID is provided', async () => {

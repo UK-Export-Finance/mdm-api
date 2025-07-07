@@ -70,13 +70,13 @@ export class OdsService {
         urn,
         name,
       };
-    } catch (err) {
-      if (err instanceof NotFoundException) {
-        this.logger.warn(err);
-        throw err;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        this.logger.warn(error);
+        throw error;
       }
 
-      this.logger.error(err);
+      this.logger.error(error);
       throw new InternalServerErrorException(`Error finding customer ${uniqueReferenceNumber}`);
     }
   }
@@ -120,13 +120,13 @@ export class OdsService {
         name,
         description,
       };
-    } catch (err) {
-      if (err instanceof NotFoundException) {
-        this.logger.warn(err);
-        throw err;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        this.logger.warn(error);
+        throw error;
       }
 
-      this.logger.error(err);
+      this.logger.error(error);
       throw new InternalServerErrorException(`Error finding deal ${id}`);
     }
   }
@@ -157,8 +157,8 @@ export class OdsService {
       const businessCentres = storedProcedureJson.results as GetOdsBusinessCentreResponse[];
 
       return mapBusinessCentres(businessCentres);
-    } catch (err) {
-      this.logger.error(err);
+    } catch (error) {
+      this.logger.error(error);
       throw new InternalServerErrorException('Error getting business centres');
     }
   }
@@ -195,13 +195,13 @@ export class OdsService {
       const nonWorkingDays = storedProcedureJson.results as GetOdsBusinessCentreNonWorkingDayResponse[];
 
       return mapBusinessCentreNonWorkingDays(nonWorkingDays);
-    } catch (err) {
-      if (err instanceof NotFoundException) {
-        this.logger.warn(err);
-        throw err;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        this.logger.warn(error);
+        throw error;
       }
 
-      this.logger.error(err);
+      this.logger.error(error);
       throw new InternalServerErrorException(`Error getting business centre ${centreCode} non working days`);
     }
   }
