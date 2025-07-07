@@ -14,8 +14,11 @@ describe('/ods/deal', () => {
 
   describe('/:id', () => {
     it(`should return ${HttpStatus.OK} when the deal ID is a valid format and belongs to an existing deal`, async () => {
+      // Arrange
+      const mockId = '0000000436';
+
       // Act
-      const { status, body } = await api.get('/api/v1/ods/deal/0000000436');
+      const { status, body } = await api.get(`/api/v1/ods/deal/${mockId}`);
 
       // Assert
       expect(status).toBe(HttpStatus.OK);
@@ -29,22 +32,28 @@ describe('/ods/deal', () => {
     });
 
     it(`should return ${HttpStatus.NOT_FOUND} when the deal ID is a valid format, but does not match an existing deal`, async () => {
+      // Arrange
+      const mockId = '0000000001';
+
       // Act
-      const { status, body } = await api.get('/api/v1/ods/deal/0000000001');
+      const { status, body } = await api.get(`/api/v1/ods/deal/${mockId}`);
 
       // Assert
       expect(status).toBe(HttpStatus.NOT_FOUND);
 
       expect(body).toEqual({
         statusCode: HttpStatus.NOT_FOUND,
-        message: 'No deal found',
+        message: `No deal found ${mockId}`,
         error: 'Not Found',
       });
     });
 
     it(`should return ${HttpStatus.BAD_REQUEST} when the deal ID is not the right length`, async () => {
+      // Arrange
+      const mockId = '1234567';
+
       // Act
-      const { status, body } = await api.get('/api/v1/ods/deal/1234567');
+      const { status, body } = await api.get(`/api/v1/ods/deal/${mockId}`);
 
       // Assert
       expect(status).toBe(HttpStatus.BAD_REQUEST);
@@ -57,8 +66,11 @@ describe('/ods/deal', () => {
     });
 
     it(`should return ${HttpStatus.BAD_REQUEST} when the deal ID does not match the regex`, async () => {
+      // Arrange
+      const mockId = 'abc';
+
       // Act
-      const { status, body } = await api.get('/api/v1/ods/deal/abc');
+      const { status, body } = await api.get(`/api/v1/ods/deal/${mockId}`);
 
       // Assert
       expect(status).toBe(HttpStatus.BAD_REQUEST);

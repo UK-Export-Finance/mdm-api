@@ -55,16 +55,16 @@ describe('/ods/business-centres', () => {
 
     it(`should return ${HttpStatus.NOT_FOUND} when the provided code param is a valid format, but does not match an existing business centre`, async () => {
       // Act
-      const INVALID_BUSINESS_CENTRE = 'InvalidBusinessCentre';
+      const mockCode = 'InvalidBusinessCentre';
 
-      const { status, body } = await api.get(`/api/v1/ods/business-centre/${INVALID_BUSINESS_CENTRE}/non-working-days`);
+      const { status, body } = await api.get(`/api/v1/ods/business-centre/${mockCode}/non-working-days`);
 
       // Assert
       expect(status).toBe(HttpStatus.NOT_FOUND);
 
       expect(body).toEqual({
         statusCode: HttpStatus.NOT_FOUND,
-        message: 'No business centre non working days found',
+        message: `No business centre ${mockCode} non working days found`,
         error: 'Not Found',
       });
     });
