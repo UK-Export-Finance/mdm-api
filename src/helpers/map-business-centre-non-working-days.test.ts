@@ -46,4 +46,14 @@ describe('mapBusinessCentreNonWorkingDays', () => {
 
     expect(result).toEqual(expected);
   });
+
+  describe('when an empty array is provided', () => {
+    it('should return an empty array', () => {
+      // Act
+      const result = mapBusinessCentreNonWorkingDays([]);
+
+      // Assert
+      expect(result).toEqual([]);
+    });
+  });
 });
