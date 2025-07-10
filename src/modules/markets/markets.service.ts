@@ -44,8 +44,8 @@ export class MarketsService {
       }));
 
       return mappedResults;
-    } catch (err) {
-      this.logger.error(err);
+    } catch (error) {
+      this.logger.error(error);
       throw new InternalServerErrorException();
     }
   }

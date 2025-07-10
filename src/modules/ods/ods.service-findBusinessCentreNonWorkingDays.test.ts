@@ -1,12 +1,13 @@
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { DEALS } from '@ukef/constants';
+import { BUSINESS_CENTRE } from '@ukef/constants';
+import { mapBusinessCentreNonWorkingDays } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
 import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { OdsService } from './ods.service';
 
-describe('OdsService - findDeal', () => {
+describe('OdsService - findBusinessCentreNonWorkingDays', () => {
   let service: OdsService;
   let mockQueryRunner: jest.Mocked<QueryRunner>;
   let mockDataSource: jest.Mocked<DataSource>;
@@ -26,18 +27,22 @@ describe('OdsService - findDeal', () => {
   });
 
   const mockStoredProcedureOutput = `{
-      "query_request_id": "Test ID",
-      "message": "SUCCESS",
-      "status": "SUCCESS",
-      "total_result_count": 1,
-      "results": [
-        {
-          "deal_code": "${DEALS.EXAMPLES.ID}",
-          "deal_name": "${DEALS.EXAMPLES.NAME}",
-          "deal_type_description": "${DEALS.EXAMPLES.DESCRIPTION}"
-        }
-      ]
-    }`;
+    "message": "SUCCESS",
+    "status": "SUCCESS",
+    "total_result_count": 2,
+    "results": [
+      {
+        "business_centre_code": "${BUSINESS_CENTRE.EXAMPLES.CODE}",
+        "non_working_day_name": "${BUSINESS_CENTRE.EXAMPLES.NON_WORKING_DAY.NAME}",
+        "non_working_day_date": "${BUSINESS_CENTRE.EXAMPLES.NON_WORKING_DAY.NAME}"
+      },
+      {
+        "business_centre_code": "${BUSINESS_CENTRE.EXAMPLES.CODE}",
+        "non_working_day_name": "${BUSINESS_CENTRE.EXAMPLES.NON_WORKING_DAY.NAME}",
+        "non_working_day_date": "${BUSINESS_CENTRE.EXAMPLES.NON_WORKING_DAY.NAME}"
+      }
+    ]
+  }`;
 
   beforeEach(() => {
     jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
@@ -45,29 +50,26 @@ describe('OdsService - findDeal', () => {
 
   it('should call service.callOdsStoredProcedure', async () => {
     // Act
-    await service.findDeal(DEALS.EXAMPLES.ID);
+    await service.findBusinessCentreNonWorkingDays(BUSINESS_CENTRE.EXAMPLES.CODE);
 
     // Assert
     const expectedStoredProcedureInput: OdsStoredProcedureInput = service.createOdsStoredProcedureInput({
-      entityToQuery: ODS_ENTITIES.DEAL,
-      queryPageSize: 1,
-      queryParameters: { deal_code: DEALS.EXAMPLES.ID },
+      entityToQuery: ODS_ENTITIES.BUSINESS_CENTRE_NON_WORKING_DAY,
+      queryParameters: {
+        business_centre_code: BUSINESS_CENTRE.EXAMPLES.CODE,
+      },
     });
 
     expect(service.callOdsStoredProcedure).toHaveBeenCalledTimes(1);
     expect(service.callOdsStoredProcedure).toHaveBeenCalledWith(expectedStoredProcedureInput);
   });
 
-  it('should return a deal', async () => {
+  it('should return mapped non working days', async () => {
     // Act
-    const result = await service.findDeal(DEALS.EXAMPLES.ID);
+    const result = await service.findBusinessCentreNonWorkingDays(BUSINESS_CENTRE.EXAMPLES.CODE);
 
     // Assert
-    const expected = {
-      dealId: DEALS.EXAMPLES.ID,
-      name: DEALS.EXAMPLES.NAME,
-      description: DEALS.EXAMPLES.DESCRIPTION,
-    };
+    const expected = mapBusinessCentreNonWorkingDays(JSON.parse(mockStoredProcedureOutput).results);
 
     expect(result).toEqual(expected);
   });
@@ -75,17 +77,16 @@ describe('OdsService - findDeal', () => {
   describe('when the response from ODS does not have status as SUCCESS', () => {
     it('should throw an error', async () => {
       // Arrange
-
       const mockStoredProcedureOutput = `{ "status": "NOT SUCCESS" }`;
 
       jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
 
       // Act & Assert
-      const promise = service.findDeal(DEALS.EXAMPLES.ID);
+      const promise = service.findBusinessCentreNonWorkingDays(BUSINESS_CENTRE.EXAMPLES.CODE);
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error(`Error finding deal ${DEALS.EXAMPLES.ID}`);
+      const expected = new Error(`Error getting business centre ${BUSINESS_CENTRE.EXAMPLES.CODE} non working days`);
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -93,16 +94,17 @@ describe('OdsService - findDeal', () => {
 
   describe('when the response from ODS has total_result_count as 0', () => {
     it('should throw an error', async () => {
+      // Arrange
       const mockStoredProcedureOutput = `{ "status": "SUCCESS", "total_result_count": 0 }`;
 
       jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
 
+      const expected = new Error(`No business centre ${BUSINESS_CENTRE.EXAMPLES.CODE} non working days found`);
+
       // Act & Assert
-      const promise = service.findDeal(DEALS.EXAMPLES.ID);
+      const promise = service.findBusinessCentreNonWorkingDays(BUSINESS_CENTRE.EXAMPLES.CODE);
 
       await expect(promise).rejects.toBeInstanceOf(NotFoundException);
-
-      const expected = new Error(`No deal found ${DEALS.EXAMPLES.ID}`);
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -110,16 +112,17 @@ describe('OdsService - findDeal', () => {
 
   describe('when the method goes into the catch handler', () => {
     it('should throw an error', async () => {
+      // Arrange
       const mockStoredProcedureOutput = `{ "status": "SUCCESS" }`;
 
       jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
 
       // Act & Assert
-      const promise = service.findDeal(DEALS.EXAMPLES.ID);
+      const promise = service.findBusinessCentreNonWorkingDays(BUSINESS_CENTRE.EXAMPLES.CODE);
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error(`Error finding deal ${DEALS.EXAMPLES.ID}`);
+      const expected = new Error(`Error getting business centre ${BUSINESS_CENTRE.EXAMPLES.CODE} non working days`);
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -127,14 +130,15 @@ describe('OdsService - findDeal', () => {
 
   describe('when callOdsStoredProcedure throws an error', () => {
     it('should throw an error', async () => {
+      // Arrange
       jest.spyOn(service, 'callOdsStoredProcedure').mockRejectedValue('Mock ODS error');
 
       // Act & Assert
-      const promise = service.findDeal(DEALS.EXAMPLES.ID);
+      const promise = service.findBusinessCentreNonWorkingDays(BUSINESS_CENTRE.EXAMPLES.CODE);
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error(`Error finding deal ${DEALS.EXAMPLES.ID}`);
+      const expected = new Error(`Error getting business centre ${BUSINESS_CENTRE.EXAMPLES.CODE} non working days`);
 
       await expect(promise).rejects.toThrow(expected);
     });

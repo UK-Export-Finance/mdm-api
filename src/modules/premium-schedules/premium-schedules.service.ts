@@ -27,12 +27,12 @@ export class PremiumSchedulesService {
         throw new NotFoundException('Premium Schedules are not found');
       }
       return results;
-    } catch (err) {
-      if (err instanceof NotFoundException) {
-        this.logger.warn(err);
-        throw err;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        this.logger.warn(error);
+        throw error;
       } else {
-        this.logger.error(err);
+        this.logger.error(error);
         throw new InternalServerErrorException();
       }
     }
@@ -88,8 +88,8 @@ export class PremiumSchedulesService {
       });
 
       return transformedResults;
-    } catch (err) {
-      this.logger.error(err);
+    } catch (error) {
+      this.logger.error(error);
       throw new InternalServerErrorException();
     }
   }

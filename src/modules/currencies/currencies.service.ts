@@ -24,8 +24,8 @@ export class CurrenciesService {
     try {
       const result = await this.currency.find({ order: { id: 'ASC' } });
       return result;
-    } catch (err) {
-      this.logger.error(err);
+    } catch (error) {
+      this.logger.error(error);
       throw new InternalServerErrorException();
     }
   }
@@ -41,12 +41,12 @@ export class CurrenciesService {
       }
 
       return results;
-    } catch (err) {
-      if (err instanceof NotFoundException) {
-        this.logger.warn(err);
-        throw err;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        this.logger.warn(error);
+        throw error;
       } else {
-        this.logger.error(err);
+        this.logger.error(error);
         throw new InternalServerErrorException();
       }
     }
@@ -64,12 +64,12 @@ export class CurrenciesService {
       const renamedResults = DbResponseHelper.renameDbResultFields(this.currencyExchangeRepository, fieldMap, results);
 
       return renamedResults;
-    } catch (err) {
-      if (err instanceof NotFoundException) {
-        this.logger.warn(err);
-        throw err;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        this.logger.warn(error);
+        throw error;
       } else {
-        this.logger.error(err);
+        this.logger.error(error);
         throw new InternalServerErrorException();
       }
     }

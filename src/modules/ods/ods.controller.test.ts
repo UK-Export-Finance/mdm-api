@@ -12,6 +12,7 @@ describe('OdsController', () => {
 
   const odsService = new OdsService(null, mockLogger);
   let odsServiceGetBusinessCentres: jest.Mock;
+  let odsServiceFindBusinessCentreNonWorkingDays: jest.Mock;
   let odsServiceFindCustomer: jest.Mock;
   let odsServiceFindDeal: jest.Mock;
 
@@ -20,6 +21,9 @@ describe('OdsController', () => {
   beforeEach(() => {
     odsServiceGetBusinessCentres = jest.fn();
     odsService.getBusinessCentres = odsServiceGetBusinessCentres;
+
+    odsServiceFindBusinessCentreNonWorkingDays = jest.fn();
+    odsService.findBusinessCentreNonWorkingDays = odsServiceFindBusinessCentreNonWorkingDays;
 
     odsServiceFindCustomer = jest.fn();
     odsService.findCustomer = odsServiceFindCustomer;
@@ -76,16 +80,69 @@ describe('OdsController', () => {
     });
   });
 
-  describe('findCustomer', () => {
-    it('should call odsService.findCustomer', async () => {
+  describe('findBusinessCentreNonWorkingDays', () => {
+    it.each([{ value: BUSINESS_CENTRE.EXAMPLES.CODE }, { value: '' }, { value: 'invalid' }])(
+      `should call odsService.getBusinessCentres with $value`,
+      async ({ value }) => {
+        // Act
+        await controller.findBusinessCentreNonWorkingDays({ code: value });
+
+        // Assert
+        expect(odsServiceFindBusinessCentreNonWorkingDays).toHaveBeenCalledTimes(1);
+        expect(odsServiceFindBusinessCentreNonWorkingDays).toHaveBeenCalledWith(value);
+      },
+    );
+
+    it('should return non working days', async () => {
+      // Arrange
+      const mockNonWorkingDays = [
+        {
+          code: BUSINESS_CENTRE.EXAMPLES.CODE,
+          name: BUSINESS_CENTRE.EXAMPLES.NON_WORKING_DAY.NAME,
+          date: BUSINESS_CENTRE.EXAMPLES.NON_WORKING_DAY.DATE,
+        },
+      ];
+
+      odsService.findBusinessCentreNonWorkingDays = jest.fn().mockResolvedValueOnce(mockNonWorkingDays);
+
+      controller = new OdsController(odsService);
+
       // Act
-      await controller.findCustomer({ urn: CUSTOMERS.EXAMPLES.PARTYURN });
+      const result = await controller.findBusinessCentreNonWorkingDays({ code: BUSINESS_CENTRE.EXAMPLES.CODE });
 
       // Assert
-      expect(odsServiceFindCustomer).toHaveBeenCalledTimes(1);
-
-      expect(odsServiceFindCustomer).toHaveBeenCalledWith(CUSTOMERS.EXAMPLES.PARTYURN);
+      expect(result).toEqual(mockNonWorkingDays);
     });
+
+    describe('when odsService.findBusinessCentreNonWorkingDays throws an error', () => {
+      it('should throw an error', async () => {
+        // Arrange
+        const odsService = new OdsService(null, mockLogger);
+
+        odsService.findBusinessCentreNonWorkingDays = jest.fn().mockRejectedValueOnce(mockError);
+
+        controller = new OdsController(odsService);
+
+        // Act & Assert
+        const promise = controller.findBusinessCentreNonWorkingDays({ code: BUSINESS_CENTRE.EXAMPLES.CODE });
+
+        await expect(promise).rejects.toThrow(mockError);
+      });
+    });
+  });
+
+  describe('findCustomer', () => {
+    it.each([{ value: CUSTOMERS.EXAMPLES.PARTYURN }, { value: '' }, { value: 'invalid' }])(
+      `should call odsService.findCustomer with $value`,
+      async ({ value }) => {
+        // Act
+        await controller.findCustomer({ urn: value });
+
+        // Assert
+        expect(odsServiceFindCustomer).toHaveBeenCalledTimes(1);
+        expect(odsServiceFindCustomer).toHaveBeenCalledWith(value);
+      },
+    );
 
     it('should return a customer when a valid customer URN is provided', async () => {
       // Arrange
@@ -118,14 +175,13 @@ describe('OdsController', () => {
   });
 
   describe('findDeal', () => {
-    it('should call odsService.findDeal', async () => {
+    it.each([{ value: DEALS.EXAMPLES.ID }, { value: '' }, { value: 'invalid' }])(`should call odsService.findDeal with $value`, async ({ value }) => {
       // Act
-      await controller.findDeal({ id: DEALS.EXAMPLES.ID });
+      await controller.findDeal({ id: value });
 
       // Assert
       expect(odsServiceFindDeal).toHaveBeenCalledTimes(1);
-
-      expect(odsServiceFindDeal).toHaveBeenCalledWith(DEALS.EXAMPLES.ID);
+      expect(odsServiceFindDeal).toHaveBeenCalledWith(value);
     });
 
     it('should return a deal when a valid deal ID is provided', async () => {

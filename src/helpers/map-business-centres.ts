@@ -1,7 +1,7 @@
 import { GetOdsBusinessCentreMappedResponse, GetOdsBusinessCentreResponse } from '@ukef/modules/ods/dto';
 
 /**
- * Map ODS business centres data into a nicer format.
+ * Map business centres data into a simpler format.
  * @param {GetOdsBusinessCentreResponse[]} Business centres
  * @returns {GetOdsBusinessCentreMappedResponse[]}
  */

@@ -1,12 +1,14 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DATABASE_NAME } from '@ukef/constants';
-import { mapBusinessCentres } from '@ukef/helpers';
+import { mapBusinessCentreNonWorkingDays, mapBusinessCentres } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource } from 'typeorm';
 
 import {
   GetOdsBusinessCentreMappedResponse,
+  GetOdsBusinessCentreNonWorkingDayMappedResponse,
+  GetOdsBusinessCentreNonWorkingDayResponse,
   GetOdsBusinessCentreResponse,
   GetOdsCustomerResponse,
   GetOdsDealResponse,
@@ -52,13 +54,13 @@ export class OdsService {
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
       if (storedProcedureJson?.status !== 'SUCCESS') {
-        this.logger.error('Error finding a customer from ODS stored procedure, output: %o', storedProcedureResult);
+        this.logger.error('Error finding customer %s from ODS stored procedure, output %o', uniqueReferenceNumber, storedProcedureResult);
 
-        throw new InternalServerErrorException('Error finding a customer from ODS stored procedure');
+        throw new InternalServerErrorException(`Error finding customer ${uniqueReferenceNumber} from ODS stored procedure`);
       }
 
       if (storedProcedureJson?.total_result_count === 0) {
-        throw new NotFoundException('No customer found');
+        throw new NotFoundException(`No customer found ${uniqueReferenceNumber}`);
       }
 
       const urn = storedProcedureJson.results[0]?.customer_party_unique_reference_number;
@@ -68,14 +70,14 @@ export class OdsService {
         urn,
         name,
       };
-    } catch (err) {
-      if (err instanceof NotFoundException) {
-        this.logger.warn(err);
-        throw err;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        this.logger.warn(error);
+        throw error;
       }
 
-      this.logger.error(err);
-      throw new InternalServerErrorException('Error finding a customer');
+      this.logger.error(error);
+      throw new InternalServerErrorException(`Error finding customer ${uniqueReferenceNumber}`);
     }
   }
 
@@ -100,13 +102,13 @@ export class OdsService {
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
       if (storedProcedureJson?.status !== 'SUCCESS') {
-        this.logger.error('Error finding a deal from ODS stored procedure, output: %o', storedProcedureResult);
+        this.logger.error('Error finding deal %s from ODS stored procedure, output %o', id, storedProcedureResult);
 
-        throw new InternalServerErrorException('Error finding a deal from ODS stored procedure');
+        throw new InternalServerErrorException(`Error finding deal ${id} from ODS stored procedure`);
       }
 
       if (storedProcedureJson?.total_result_count === 0) {
-        throw new NotFoundException('No deal found');
+        throw new NotFoundException(`No deal found ${id}`);
       }
 
       const dealId = storedProcedureJson.results[0]?.deal_code;
@@ -118,21 +120,21 @@ export class OdsService {
         name,
         description,
       };
-    } catch (err) {
-      if (err instanceof NotFoundException) {
-        this.logger.warn(err);
-        throw err;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        this.logger.warn(error);
+        throw error;
       }
 
-      this.logger.error(err);
-      throw new InternalServerErrorException('Error finding a deal');
+      this.logger.error(error);
+      throw new InternalServerErrorException(`Error finding deal ${id}`);
     }
   }
 
   /**
-   * Get and map business centres from ODS
-   * @returns {Promise<any>} Business centres
-   * @throws {InternalServerErrorException} If there is an error trying to get business centres
+   * Get and map "business centres" from ODS
+   * @returns {Promise<GetOdsBusinessCentreMappedResponse[]>} Business centres
+   * @throws {InternalServerErrorException} If there is an error getting "business centres"
    */
   async getBusinessCentres(): Promise<GetOdsBusinessCentreMappedResponse[]> {
     try {
@@ -143,7 +145,7 @@ export class OdsService {
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
       if (storedProcedureJson?.status !== 'SUCCESS') {
-        this.logger.error('Error getting business centres from ODS stored procedure, output: %o', storedProcedureResult);
+        this.logger.error('Error getting business centres from ODS stored procedure, output %o', storedProcedureResult);
 
         throw new InternalServerErrorException('Error getting business centres from ODS stored procedure');
       }
@@ -155,9 +157,52 @@ export class OdsService {
       const businessCentres = storedProcedureJson.results as GetOdsBusinessCentreResponse[];
 
       return mapBusinessCentres(businessCentres);
-    } catch (err) {
-      this.logger.error(err);
+    } catch (error) {
+      this.logger.error(error);
       throw new InternalServerErrorException('Error getting business centres');
+    }
+  }
+
+  /**
+   * Find and map a business centre's non working days from ODS
+   * @param {String} centreCode The business centre's code
+   * @returns {Promise<GetOdsBusinessCentreNonWorkingDayMappedResponse[]>} Business centres
+   * @throws {InternalServerErrorException} If there is an error finding a business centre's non working days
+   */
+  async findBusinessCentreNonWorkingDays(centreCode: string): Promise<GetOdsBusinessCentreNonWorkingDayMappedResponse[]> {
+    try {
+      const storedProcedureInput = this.createOdsStoredProcedureInput({
+        entityToQuery: ODS_ENTITIES.BUSINESS_CENTRE_NON_WORKING_DAY,
+        queryParameters: {
+          business_centre_code: centreCode,
+        },
+      });
+
+      const storedProcedureResult = await this.callOdsStoredProcedure(storedProcedureInput);
+
+      const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
+
+      if (storedProcedureJson?.status !== 'SUCCESS') {
+        this.logger.error('Error getting business centre %s non working days from ODS stored procedure, output %o', centreCode, storedProcedureResult);
+
+        throw new InternalServerErrorException(`Error getting business centre ${centreCode} non working days from ODS stored procedure`);
+      }
+
+      if (storedProcedureJson?.total_result_count === 0) {
+        throw new NotFoundException(`No business centre ${centreCode} non working days found`);
+      }
+
+      const nonWorkingDays = storedProcedureJson.results as GetOdsBusinessCentreNonWorkingDayResponse[];
+
+      return mapBusinessCentreNonWorkingDays(nonWorkingDays);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        this.logger.warn(error);
+        throw error;
+      }
+
+      this.logger.error(error);
+      throw new InternalServerErrorException(`Error getting business centre ${centreCode} non working days`);
     }
   }
 
