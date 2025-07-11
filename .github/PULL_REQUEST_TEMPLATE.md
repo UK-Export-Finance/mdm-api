@@ -18,6 +18,7 @@ List any additional fixes or improvements.
   ```json
    
   ```
+
 </details>
 
 ## Screenshot(s) :camera_flash:
