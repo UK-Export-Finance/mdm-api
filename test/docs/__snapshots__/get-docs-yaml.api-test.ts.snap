@@ -67,20 +67,20 @@ paths:
         - name: isoCode
           required: true
           in: path
-          description: ISO Code
+          description: ISO code
           schema:
             example: GBP
             type: string
       responses:
         '200':
-          description: Currency details based on ISO Code
+          description: Currency details from ISO code
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/CurrencyEntity'
-      summary: Get the currency details based on ISO Code
+      summary: Get a currency details from ISO code
       tags:
         - currencies
   /api/v1/customers:
@@ -321,7 +321,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ExposurePeriodDto'
-      summary: Calculate exposure period in months.
+      summary: Calculate exposure period in months
       tags:
         - exposure-period
   /api/v1/ready:
@@ -449,7 +449,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/InterestRatesEntity'
-      summary: Get all Interest rates
+      summary: Get all interest rates
       tags:
         - interest-rates
   /api/v1/markets:
@@ -484,7 +484,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MarketEntity'
-      summary: Get all markets (aka countries)
+      summary: Get all markets (AKA countries)
       tags:
         - markets
   /api/v1/ods/business-centres:
@@ -605,7 +605,7 @@ paths:
       responses:
         '201':
           description: ''
-      summary: Create Premium Schedule sequence (aka Income exposure)
+      summary: Create a premium schedule sequence (AKA Income exposure)
       tags:
         - premium-schedules
   /api/v1/premium/segments/{facilityId}:
@@ -629,7 +629,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/PremiumScheduleEntity'
       summary: >-
-        Return previously generated Premium Schedule sequence/segments (aka
+        Return previously generated premium schedule sequence/segments (AKA
         Income exposures)
       tags:
         - premium-schedules
@@ -660,7 +660,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/SectorIndustryEntity'
-      summary: Get UKEF Sectors/Industries Mapping To ACBS Sectors/Industries
+      summary: Get UKEF sectors/industries mapping To ACBS sectors/industries
       tags:
         - sector-industries
   /api/v1/yield-rates:
@@ -712,9 +712,7 @@ paths:
                   $ref: '#/components/schemas/GetAddressesResponseItem'
         '404':
           description: No addresses found
-      summary: >-
-        A search based on a property's postcode. Will accept a full valid
-        postcode. Returns addresses from Ordnance Survey Delivery Point Address
+      summary: Get addresses from Ordnance Survey Delivery Point Address (DPA) system by postcode. Will accept a full valid postcode
         (DPA) system.
       tags:
         - geospatial
@@ -751,7 +749,7 @@ paths:
             from companies based in the UK.
         '500':
           description: Internal server error.
-      summary: Get company by Companies House registration number.
+      summary: Get company by Companies House registration number
       tags:
         - companies
 info:

@@ -11,7 +11,7 @@ export class ExposurePeriodController {
   constructor(private readonly exposurePeriodService: ExposurePeriodService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Calculate exposure period in months.' })
+  @ApiOperation({ summary: 'Calculate exposure period in months' })
   @ApiResponse({
     status: 200,
     description: 'Calculated exposure period',
