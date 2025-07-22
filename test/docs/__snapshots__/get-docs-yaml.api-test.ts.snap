@@ -55,9 +55,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GetCurrencyExchangeDto'
-      summary: >-
-        Get the Active exchange rate based on source and target exchange rates.
-        Query parameters are mandatory for this endpoint.
+      summary: Get the active exchange rate based on source and target exchange rates
       tags:
         - currencies
   /api/v1/currencies/{isoCode}:
@@ -67,7 +65,7 @@ paths:
         - name: isoCode
           required: true
           in: path
-          description: ISO code
+          description: ISO Code
           schema:
             example: GBP
             type: string
@@ -489,7 +487,7 @@ paths:
         - markets
   /api/v2/ods/business-centres:
     get:
-      operationId: OdsController_getBusinessCentres_v1
+      operationId: OdsController_getBusinessCentres_v2
       parameters: []
       responses:
         '200':
@@ -509,7 +507,7 @@ paths:
         - ods
   /api/v2/ods/business-centre/{code}/non-working-days:
     get:
-      operationId: OdsController_findBusinessCentreNonWorkingDays_v1
+      operationId: OdsController_findBusinessCentreNonWorkingDays_v2
       parameters:
         - name: code
           required: true
@@ -536,7 +534,7 @@ paths:
         - ods
   /api/v2/ods/customers/{urn}:
     get:
-      operationId: OdsController_findCustomer_v1
+      operationId: OdsController_findCustomer_v2
       parameters:
         - name: urn
           required: true
@@ -564,7 +562,7 @@ paths:
         - ods
   /api/v2/ods/deal/{id}:
     get:
-      operationId: OdsController_findDeal_v1
+      operationId: OdsController_findDeal_v2
       parameters:
         - name: id
           required: true
@@ -712,8 +710,9 @@ paths:
                   $ref: '#/components/schemas/GetAddressesResponseItem'
         '404':
           description: No addresses found
-      summary: Get addresses from Ordnance Survey Delivery Point Address (DPA) system by postcode. Will accept a full valid postcode
-        (DPA) system.
+      summary: >-
+        Get addresses from Ordnance Survey Delivery Point Address (DPA) system
+        by postcode. Will accept a full valid postcode
       tags:
         - geospatial
   /api/v1/companies:
