@@ -4,6 +4,7 @@ import AppConfig from '@ukef/config/app.config';
 
 import {
   GetOdsBusinessCentreMappedResponse,
+  GetOdsBusinessCentreNonWorkingDayMappedResponse,
   GetOdsBusinessCentreNonWorkingDaysParamDto,
   GetOdsCustomerParamDto,
   GetOdsCustomerResponse,
@@ -48,7 +49,7 @@ export class OdsController {
   @ApiOkResponse({
     description: "Business centre's non working days",
     isArray: true,
-    type: GetOdsBusinessCentreMappedResponse,
+    type: GetOdsBusinessCentreNonWorkingDayMappedResponse,
   })
   @ApiBadRequestResponse({
     description: 'Bad request.',
@@ -56,7 +57,7 @@ export class OdsController {
   @ApiInternalServerErrorResponse({
     description: 'Internal server error.',
   })
-  findBusinessCentreNonWorkingDays(@Param() param: GetOdsBusinessCentreNonWorkingDaysParamDto): Promise<GetOdsBusinessCentreMappedResponse[]> {
+  findBusinessCentreNonWorkingDays(@Param() param: GetOdsBusinessCentreNonWorkingDaysParamDto): Promise<GetOdsBusinessCentreNonWorkingDayMappedResponse[]> {
     return this.odsService.findBusinessCentreNonWorkingDays(param.code);
   }
 
