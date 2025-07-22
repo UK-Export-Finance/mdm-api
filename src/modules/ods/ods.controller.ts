@@ -1,5 +1,6 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import AppConfig from '@ukef/config/app.config';
 
 import {
   GetOdsBusinessCentreMappedResponse,
@@ -11,8 +12,13 @@ import {
 } from './dto';
 import { OdsService } from './ods.service';
 
+const { odsVersioning } = AppConfig();
+
 @ApiTags('ods')
-@Controller('ods')
+@Controller({
+  path: 'ods',
+  version: odsVersioning.version,
+})
 export class OdsController {
   constructor(private readonly odsService: OdsService) {}
 
