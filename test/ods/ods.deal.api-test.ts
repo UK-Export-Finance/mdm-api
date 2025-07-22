@@ -1,7 +1,14 @@
 import { HttpStatus } from '@nestjs/common';
+import AppConfig from '@ukef/config/app.config';
 import { Api } from '@ukef-test/support/api';
 
-describe('/ods/deal', () => {
+const {
+  odsVersioning: { prefixAndVersion },
+} = AppConfig();
+
+describe('/ods/v2/deal', () => {
+  const url = `/api/${prefixAndVersion}/ods/deal`;
+
   let api: Api;
 
   beforeAll(async () => {
@@ -18,7 +25,7 @@ describe('/ods/deal', () => {
       const mockId = '0000000436';
 
       // Act
-      const { status, body } = await api.get(`/api/v1/ods/deal/${mockId}`);
+      const { status, body } = await api.get(`${url}/${mockId}`);
 
       // Assert
       expect(status).toBe(HttpStatus.OK);
@@ -36,7 +43,7 @@ describe('/ods/deal', () => {
       const mockId = '0000000001';
 
       // Act
-      const { status, body } = await api.get(`/api/v1/ods/deal/${mockId}`);
+      const { status, body } = await api.get(`${url}/${mockId}`);
 
       // Assert
       expect(status).toBe(HttpStatus.NOT_FOUND);
@@ -53,7 +60,7 @@ describe('/ods/deal', () => {
       const mockId = '1234567';
 
       // Act
-      const { status, body } = await api.get(`/api/v1/ods/deal/${mockId}`);
+      const { status, body } = await api.get(`${url}/${mockId}`);
 
       // Assert
       expect(status).toBe(HttpStatus.BAD_REQUEST);
@@ -70,7 +77,7 @@ describe('/ods/deal', () => {
       const mockId = 'abc';
 
       // Act
-      const { status, body } = await api.get(`/api/v1/ods/deal/${mockId}`);
+      const { status, body } = await api.get(`${url}/${mockId}`);
 
       // Assert
       expect(status).toBe(HttpStatus.BAD_REQUEST);

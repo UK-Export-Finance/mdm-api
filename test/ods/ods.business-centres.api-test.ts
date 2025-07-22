@@ -1,6 +1,11 @@
 import { HttpStatus } from '@nestjs/common';
+import AppConfig from '@ukef/config/app.config';
 import { BUSINESS_CENTRE } from '@ukef/constants';
 import { Api } from '@ukef-test/support/api';
+
+const {
+  odsVersioning: { prefixAndVersion },
+} = AppConfig();
 
 describe('/ods/business-centres', () => {
   let api: Api;
@@ -14,9 +19,11 @@ describe('/ods/business-centres', () => {
   });
 
   describe('/business-centres', () => {
+    const url = `/api/${prefixAndVersion}/ods/business-centres`;
+
     it(`should return ${HttpStatus.OK} with mapped business centres`, async () => {
       // Act
-      const { status, body } = await api.get('/api/v1/ods/business-centres');
+      const { status, body } = await api.get(url);
 
       // Assert
       expect(status).toBe(HttpStatus.OK);
@@ -35,9 +42,11 @@ describe('/ods/business-centres', () => {
   });
 
   describe('/business-center/:code/non-working-days', () => {
+    const baseUrl = `/api/${prefixAndVersion}/ods/business-centre`;
+
     it(`should return ${HttpStatus.OK} with mapped non working days`, async () => {
       // Act
-      const { status, body } = await api.get(`/api/v1/ods/business-centre/${BUSINESS_CENTRE.EXAMPLES.CODE}/non-working-days`);
+      const { status, body } = await api.get(`${baseUrl}/${BUSINESS_CENTRE.EXAMPLES.CODE}/non-working-days`);
 
       // Assert
       expect(status).toBe(HttpStatus.OK);
@@ -57,7 +66,7 @@ describe('/ods/business-centres', () => {
       // Act
       const mockCode = 'InvalidBusinessCentre';
 
-      const { status, body } = await api.get(`/api/v1/ods/business-centre/${mockCode}/non-working-days`);
+      const { status, body } = await api.get(`${baseUrl}/${mockCode}/non-working-days`);
 
       // Assert
       expect(status).toBe(HttpStatus.NOT_FOUND);

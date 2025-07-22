@@ -1,8 +1,10 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import AppConfig from '@ukef/config/app.config';
 
 import {
   GetOdsBusinessCentreMappedResponse,
+  GetOdsBusinessCentreNonWorkingDayMappedResponse,
   GetOdsBusinessCentreNonWorkingDaysParamDto,
   GetOdsCustomerParamDto,
   GetOdsCustomerResponse,
@@ -11,8 +13,13 @@ import {
 } from './dto';
 import { OdsService } from './ods.service';
 
+const { odsVersioning } = AppConfig();
+
 @ApiTags('ods')
-@Controller('ods')
+@Controller({
+  path: 'ods',
+  version: odsVersioning.version,
+})
 export class OdsController {
   constructor(private readonly odsService: OdsService) {}
 
@@ -42,7 +49,7 @@ export class OdsController {
   @ApiOkResponse({
     description: "Business centre's non working days",
     isArray: true,
-    type: GetOdsBusinessCentreMappedResponse,
+    type: GetOdsBusinessCentreNonWorkingDayMappedResponse,
   })
   @ApiBadRequestResponse({
     description: 'Bad request.',
@@ -50,7 +57,7 @@ export class OdsController {
   @ApiInternalServerErrorResponse({
     description: 'Internal server error.',
   })
-  findBusinessCentreNonWorkingDays(@Param() param: GetOdsBusinessCentreNonWorkingDaysParamDto): Promise<GetOdsBusinessCentreMappedResponse[]> {
+  findBusinessCentreNonWorkingDays(@Param() param: GetOdsBusinessCentreNonWorkingDaysParamDto): Promise<GetOdsBusinessCentreNonWorkingDayMappedResponse[]> {
     return this.odsService.findBusinessCentreNonWorkingDays(param.code);
   }
 
