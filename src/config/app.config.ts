@@ -59,7 +59,7 @@ export default registerAs('app', (): Record<string, any> => {
 
   return {
     apiKey: process.env.API_KEY,
-    env: NODE_ENV || 'development',
+    env: NODE_ENV,
     globalPrefix: '/api',
     logLevel: process.env.LOG_LEVEL || 'info',
     name: NAME,
