@@ -1,7 +1,14 @@
 import { HttpStatus } from '@nestjs/common';
+import AppConfig from '@ukef/config/app.config';
 import { Api } from '@ukef-test/support/api';
 
+const {
+  odsVersioning: { prefixAndVersion },
+} = AppConfig();
+
 describe('/ods/customers', () => {
+  const url = `/api/${prefixAndVersion}/ods/customers`;
+
   let api: Api;
 
   beforeAll(async () => {
@@ -14,8 +21,11 @@ describe('/ods/customers', () => {
 
   describe('/:urn', () => {
     it(`should return ${HttpStatus.OK} when the URN has a valid format and belongs to an existing customer`, async () => {
+      // Arrange
+      const mockUrn = '00325182';
+
       // Act
-      const { status, body } = await api.get('/api/v1/ods/customers/00325182');
+      const { status, body } = await api.get(`${url}/${mockUrn}`);
 
       // Assert
       expect(status).toBe(HttpStatus.OK);
@@ -33,7 +43,7 @@ describe('/ods/customers', () => {
       const mockUrn = '99999999';
 
       // Act
-      const { status, body } = await api.get(`/api/v1/ods/customers/${mockUrn}`);
+      const { status, body } = await api.get(`${url}/${mockUrn}`);
 
       // Assert
       expect(status).toBe(HttpStatus.NOT_FOUND);
@@ -50,7 +60,7 @@ describe('/ods/customers', () => {
       const mockUrn = '1234567';
 
       // Act
-      const { status, body } = await api.get(`/api/v1/ods/customers/${mockUrn}`);
+      const { status, body } = await api.get(`${url}/${mockUrn}`);
 
       // Assert
       expect(status).toBe(HttpStatus.BAD_REQUEST);
@@ -67,7 +77,7 @@ describe('/ods/customers', () => {
       const mockUrn = 'abc';
 
       // Act
-      const { status, body } = await api.get(`/api/v1/ods/customers/${mockUrn}`);
+      const { status, body } = await api.get(`${url}/${mockUrn}`);
 
       // Assert
       expect(status).toBe(HttpStatus.BAD_REQUEST);
