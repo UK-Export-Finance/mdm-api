@@ -1,0 +1,5 @@
+export const MOCK_PRODUCT_CONFIG = {
+  mockProduct: true,
+};
+
+export const MOCK_PRODUCT_CONFIGURATIONS = [MOCK_PRODUCT_CONFIG, MOCK_PRODUCT_CONFIG];

@@ -4,10 +4,10 @@ import { BUSINESS_CENTRE } from '@ukef/constants';
 import { Api } from '@ukef-test/support/api';
 
 const {
-  odsVersioning: { prefixAndVersion },
+  domOdsVersioning: { prefixAndVersion },
 } = AppConfig();
 
-describe('/ods/business-centres', () => {
+describe('/ods - business centres', () => {
   let api: Api;
 
   beforeAll(async () => {

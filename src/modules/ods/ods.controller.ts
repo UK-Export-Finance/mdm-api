@@ -13,12 +13,12 @@ import {
 } from './dto';
 import { OdsService } from './ods.service';
 
-const { odsVersioning } = AppConfig();
+const { domOdsVersioning } = AppConfig();
 
 @ApiTags('ods')
 @Controller({
   path: 'ods',
-  version: odsVersioning.version,
+  version: domOdsVersioning.version,
 })
 export class OdsController {
   constructor(private readonly odsService: OdsService) {}

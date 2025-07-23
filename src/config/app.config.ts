@@ -16,7 +16,7 @@ export interface AppConfig {
   name: string;
   globalPrefix: string;
   logLevel: string;
-  odsVersioning: {
+  domOdsVersioning: {
     enable: boolean;
     prefix: string;
     version: string;
@@ -39,6 +39,9 @@ export default registerAs('app', (): Record<string, any> => {
     throw new InvalidConfigException(`LOG_LEVEL must be one of ${validLogLevels} or not specified.`);
   }
 
+  /**
+   * APIM MDM versioning for MDM endpoints
+   */
   const mdmVersion = process.env.HTTP_VERSION || '1';
 
   const mdmVersioning = {
@@ -48,13 +51,16 @@ export default registerAs('app', (): Record<string, any> => {
     version: mdmVersion,
   };
 
-  const odsVersion = process.env.ODS_HTTP_VERSION;
+  /**
+   * APIM MDM versioning for DOM and ODS endpoints
+   */
+  const domOdsVersion = process.env.DOM_ODS_HTTP_VERSION;
 
-  const odsVersioning = {
+  const domOdsVersioning = {
     enable: process.env.HTTP_VERSIONING_ENABLE === 'true',
     prefix: VERSION_PREFIX,
-    prefixAndVersion: `${VERSION_PREFIX}${odsVersion}`,
-    version: odsVersion,
+    prefixAndVersion: `${VERSION_PREFIX}${domOdsVersion}`,
+    version: domOdsVersion,
   };
 
   return {
@@ -63,7 +69,7 @@ export default registerAs('app', (): Record<string, any> => {
     globalPrefix: '/api',
     logLevel: process.env.LOG_LEVEL || 'info',
     name: NAME,
-    odsVersioning,
+    domOdsVersioning,
     port: getIntConfig(process.env.HTTP_PORT, 3003),
     redactLogs: process.env.REDACT_LOGS !== 'false',
     singleLineLogFormat: process.env.SINGLE_LINE_LOG_FORMAT !== 'false',
