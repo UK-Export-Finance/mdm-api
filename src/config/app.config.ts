@@ -52,7 +52,7 @@ export default registerAs('app', (): Record<string, any> => {
   };
 
   /**
-   * APIM TFS versioning for DOM and ODS endpoints
+   * APIM MDM versioning for DOM and ODS endpoints
    */
   const domOdsVersion = process.env.DOM_ODS_HTTP_VERSION;
 
