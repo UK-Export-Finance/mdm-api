@@ -3,10 +3,10 @@ import AppConfig from '@ukef/config/app.config';
 import { Api } from '@ukef-test/support/api';
 
 const {
-  odsVersioning: { prefixAndVersion },
+  domOdsVersioning: { prefixAndVersion },
 } = AppConfig();
 
-describe('/ods/v2/deal', () => {
+describe('/ods - deal', () => {
   const url = `/api/${prefixAndVersion}/ods/deal`;
 
   let api: Api;
@@ -19,7 +19,7 @@ describe('/ods/v2/deal', () => {
     await api.destroy();
   });
 
-  describe('/:id', () => {
+  describe('/deal/:id', () => {
     it(`should return ${HttpStatus.OK} when the deal ID is a valid format and belongs to an existing deal`, async () => {
       // Arrange
       const mockId = '0000000436';

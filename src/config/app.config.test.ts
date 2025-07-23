@@ -149,12 +149,12 @@ describe('appConfig', () => {
     });
   });
 
-  describe('odsVersioning', () => {
+  describe('domOdsVersioning', () => {
     it('should return an object', () => {
       const mockHttpVersion = '100200';
 
       replaceEnvironmentVariables({
-        ODS_HTTP_VERSION: mockHttpVersion,
+        DOM_ODS_HTTP_VERSION: mockHttpVersion,
       });
 
       const config = appConfig();
@@ -166,7 +166,7 @@ describe('appConfig', () => {
         version: mockHttpVersion,
       };
 
-      expect(config.odsVersioning).toEqual(expected);
+      expect(config.domOdsVersioning).toEqual(expected);
     });
   });
 

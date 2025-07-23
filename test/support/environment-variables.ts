@@ -25,7 +25,7 @@ export const ENVIRONMENT_VARIABLES = Object.freeze({
   COMPANIES_HOUSE_MAX_REDIRECTS: 0,
   COMPANIES_HOUSE_TIMEOUT: 5000,
 
-  ODS_HTTP_VERSION: valueGenerator.string(),
+  DOM_ODS_HTTP_VERSION: valueGenerator.string(),
 
   ORDNANCE_SURVEY_URL: valueGenerator.httpsUrl(),
   ORDNANCE_SURVEY_KEY: valueGenerator.word(),

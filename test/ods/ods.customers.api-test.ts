@@ -3,10 +3,10 @@ import AppConfig from '@ukef/config/app.config';
 import { Api } from '@ukef-test/support/api';
 
 const {
-  odsVersioning: { prefixAndVersion },
+  domOdsVersioning: { prefixAndVersion },
 } = AppConfig();
 
-describe('/ods/customers', () => {
+describe('/ods - customers', () => {
   const url = `/api/${prefixAndVersion}/ods/customers`;
 
   let api: Api;
@@ -19,7 +19,7 @@ describe('/ods/customers', () => {
     await api.destroy();
   });
 
-  describe('/:urn', () => {
+  describe('/customers/:urn', () => {
     it(`should return ${HttpStatus.OK} when the URN has a valid format and belongs to an existing customer`, async () => {
       // Arrange
       const mockUrn = '00325182';
