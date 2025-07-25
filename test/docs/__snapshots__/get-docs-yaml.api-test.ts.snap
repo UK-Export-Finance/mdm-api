@@ -252,6 +252,46 @@ paths:
       summary: Get information about UKEF ID
       tags:
         - numbers
+  /api/v2/dom/business-centres:
+    get:
+      operationId: DomController_getBusinessCentres_v2
+      parameters: []
+      responses:
+        '200':
+          description: DOM Business centres
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetDomBusinessCentreMappedResponse'
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+      summary: Get business centres from DOM
+      tags:
+        - dom
+  /api/v2/dom/product-configurations:
+    get:
+      operationId: DomController_getProductConfigurations_v2
+      parameters: []
+      responses:
+        '200':
+          description: Product configurations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetDomProductConfigurationResponse'
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+      summary: Get all product configurations
+      tags:
+        - dom
   /api/v1/emails:
     post:
       operationId: EmailsController_postEmail_v1
@@ -485,26 +525,6 @@ paths:
       summary: Get all markets (AKA countries)
       tags:
         - markets
-  /api/v2/ods/business-centres:
-    get:
-      operationId: OdsController_getBusinessCentres_v2
-      parameters: []
-      responses:
-        '200':
-          description: Business centres
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/GetOdsBusinessCentreMappedResponse'
-        '400':
-          description: Bad request.
-        '500':
-          description: Internal server error.
-      summary: Get business centres from ODS
-      tags:
-        - ods
   /api/v2/ods/business-centre/{code}/non-working-days:
     get:
       operationId: OdsController_findBusinessCentreNonWorkingDays_v2
@@ -524,7 +544,8 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/GetOdsBusinessCentreMappedResponse'
+                  $ref: >-
+                    #/components/schemas/GetOdsBusinessCentreNonWorkingDayMappedResponse
         '400':
           description: Bad request.
         '500':
@@ -965,6 +986,29 @@ components:
         - createdBy
         - createdDatetime
         - requestingSystem
+    GetDomBusinessCentreMappedResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Business centre code
+          example: DbB
+        name:
+          type: string
+          description: Business centre name
+          example: Dubai bank holidays
+      required:
+        - code
+        - name
+    GetDomProductConfigurationResponse:
+      type: object
+      properties:
+        mockProduct:
+          type: boolean
+          description: Mock product configuration
+          example: true
+      required:
+        - mockProduct
     PostEmailsRequestDto:
       type: object
       properties:
@@ -1260,7 +1304,7 @@ components:
         - shortTermCoverAvailabilityDesc
         - NBIIssue
         - active
-    GetOdsBusinessCentreMappedResponse:
+    GetOdsBusinessCentreNonWorkingDayMappedResponse:
       type: object
       properties:
         code:
@@ -1269,11 +1313,16 @@ components:
           example: DbB
         name:
           type: string
-          description: Business centre name
-          example: Dubai bank holidays
+          description: Non working day name
+          example: Weekend
+        date:
+          type: string
+          description: Non working day date
+          example: '2025-07-05'
       required:
         - code
         - name
+        - date
     GetOdsCustomerResponse:
       type: object
       properties:

@@ -1,4 +1,3 @@
-export * from './get-ods-business-centre-mapped-response.dto';
 export * from './get-ods-business-centre-non-working-day-mapped-response.dto';
 export * from './get-ods-business-centre-non-working-day-response.dto';
 export * from './get-ods-business-centre-non-working-days-param.dto';
