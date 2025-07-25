@@ -1,12 +1,11 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DATABASE_NAME } from '@ukef/constants';
-import { mapBusinessCentreNonWorkingDays, mapBusinessCentres } from '@ukef/helpers';
+import { mapBusinessCentreNonWorkingDays } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource } from 'typeorm';
 
 import {
-  GetOdsBusinessCentreMappedResponse,
   GetOdsBusinessCentreNonWorkingDayMappedResponse,
   GetOdsBusinessCentreNonWorkingDayResponse,
   GetOdsBusinessCentreResponse,
@@ -133,11 +132,13 @@ export class OdsService {
 
   /**
    * Get and map "business centres" from ODS
-   * @returns {Promise<GetOdsBusinessCentreMappedResponse[]>} Business centres
+   * @returns {Promise<GetOdsBusinessCentreResponse[]>} ODS business centres
    * @throws {InternalServerErrorException} If there is an error getting "business centres"
    */
-  async getBusinessCentres(): Promise<GetOdsBusinessCentreMappedResponse[]> {
+  async getBusinessCentres(): Promise<GetOdsBusinessCentreResponse[]> {
     try {
+      this.logger.info('Getting ODS business centres');
+
       const storedProcedureInput = this.createOdsStoredProcedureInput({ entityToQuery: ODS_ENTITIES.BUSINESS_CENTRE });
 
       const storedProcedureResult = await this.callOdsStoredProcedure(storedProcedureInput);
@@ -145,21 +146,21 @@ export class OdsService {
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
       if (storedProcedureJson?.status !== 'SUCCESS') {
-        this.logger.error('Error getting business centres from ODS stored procedure, output %o', storedProcedureResult);
+        this.logger.error('Error getting ODS business centres from stored procedure, output %o', storedProcedureResult);
 
-        throw new InternalServerErrorException('Error getting business centres from ODS stored procedure');
+        throw new InternalServerErrorException('Error getting ODS business centres from stored procedure');
       }
 
       if (storedProcedureJson?.total_result_count === 0) {
-        throw new InternalServerErrorException('No business centres found');
+        throw new InternalServerErrorException('No ODS business centres found');
       }
 
       const businessCentres = storedProcedureJson.results as GetOdsBusinessCentreResponse[];
 
-      return mapBusinessCentres(businessCentres);
+      return businessCentres;
     } catch (error) {
       this.logger.error(error);
-      throw new InternalServerErrorException('Error getting business centres');
+      throw new InternalServerErrorException('Error getting ODS business centres');
     }
   }
 

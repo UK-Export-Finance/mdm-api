@@ -1,6 +1,5 @@
 import { InternalServerErrorException } from '@nestjs/common';
 import { BUSINESS_CENTRE } from '@ukef/constants';
-import { mapBusinessCentres } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
@@ -59,12 +58,12 @@ describe('OdsService - getBusinessCentres', () => {
     expect(service.callOdsStoredProcedure).toHaveBeenCalledWith(expectedStoredProcedureInput);
   });
 
-  it('should return mapped business centres', async () => {
+  it('should return business centres', async () => {
     // Act
     const result = await service.getBusinessCentres();
 
     // Assert
-    const expected = mapBusinessCentres(JSON.parse(mockStoredProcedureOutput).results);
+    const expected = JSON.parse(mockStoredProcedureOutput).results;
 
     expect(result).toEqual(expected);
   });
@@ -81,7 +80,7 @@ describe('OdsService - getBusinessCentres', () => {
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error('Error getting business centres');
+      const expected = new Error('Error getting ODS business centres');
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -94,7 +93,7 @@ describe('OdsService - getBusinessCentres', () => {
 
       jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
 
-      const expected = new Error('Error getting business centres');
+      const expected = new Error('Error getting ODS business centres');
 
       // Act & Assert
       const promise = service.getBusinessCentres();
@@ -117,7 +116,7 @@ describe('OdsService - getBusinessCentres', () => {
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error('Error getting business centres');
+      const expected = new Error('Error getting ODS business centres');
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -133,7 +132,7 @@ describe('OdsService - getBusinessCentres', () => {
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error('Error getting business centres');
+      const expected = new Error('Error getting ODS business centres');
 
       await expect(promise).rejects.toThrow(expected);
     });

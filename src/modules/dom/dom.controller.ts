@@ -3,7 +3,7 @@ import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiOkResponse, A
 import AppConfig from '@ukef/config/app.config';
 
 import { DomService } from './dom.service';
-import { GetDomProductConfigurationResponse } from './dto';
+import { GetDomBusinessCentreMappedResponse, GetDomProductConfigurationResponse } from './dto';
 
 const { domOdsVersioning } = AppConfig();
 
@@ -14,6 +14,25 @@ const { domOdsVersioning } = AppConfig();
 })
 export class DomController {
   constructor(private readonly domService: DomService) {}
+
+  @Get('business-centres')
+  @ApiOperation({
+    summary: 'Get business centres from DOM',
+  })
+  @ApiOkResponse({
+    description: 'DOM Business centres',
+    isArray: true,
+    type: GetDomBusinessCentreMappedResponse,
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad request',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  getBusinessCentres(): Promise<GetDomBusinessCentreMappedResponse[]> {
+    return this.domService.getBusinessCentres();
+  }
 
   @Get('product-configurations')
   @ApiOperation({
