@@ -1,4 +1,5 @@
-import { MOCK_ODS_BUSINESS_CENTRES, MOCK_PRODUCT_CONFIGURATIONS } from '@ukef/constants';
+import { NotFoundException } from '@nestjs/common';
+import { DOM_BUSINESS_CENTRES, EXAMPLES } from '@ukef/constants';
 import { mapBusinessCentres } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
@@ -23,7 +24,7 @@ describe('DomService', () => {
   let service: DomService;
 
   beforeEach(() => {
-    odsServiceGetBusinessCentres = jest.fn().mockResolvedValueOnce(MOCK_ODS_BUSINESS_CENTRES);
+    odsServiceGetBusinessCentres = jest.fn().mockResolvedValueOnce(EXAMPLES.ODS.BUSINESS_CENTRES);
 
     odsService.getBusinessCentres = odsServiceGetBusinessCentres;
 
@@ -32,6 +33,39 @@ describe('DomService', () => {
 
   afterAll(() => {
     jest.resetAllMocks();
+  });
+
+  describe('findBusinessCentre', () => {
+    describe('when a business centre is found', () => {
+      it('should return the business centre', async () => {
+        // Arrange
+        const mockCentreCode = DOM_BUSINESS_CENTRES.CM_YAO.CODE;
+
+        // Act
+        const response = await service.findBusinessCentre(mockCentreCode);
+
+        // Assert
+        const expected = DOM_BUSINESS_CENTRES.CM_YAO;
+
+        expect(response).toEqual(expected);
+      });
+    });
+
+    describe('when a business centre is NOT found', () => {
+      it('should throw a not found exception', async () => {
+        // Arrange
+        const mockCentreCode = 'INVALID CODE';
+
+        // Act & Assert
+        const promise = service.findBusinessCentre(mockCentreCode);
+
+        await expect(promise).rejects.toBeInstanceOf(NotFoundException);
+
+        const expected = new Error(`No business centre found ${mockCentreCode}`);
+
+        await expect(promise).rejects.toThrow(expected);
+      });
+    });
   });
 
   describe('getBusinessCentres', () => {
@@ -49,7 +83,7 @@ describe('DomService', () => {
         const response = await service.getBusinessCentres();
 
         // Assert
-        const expected = mapBusinessCentres(MOCK_ODS_BUSINESS_CENTRES);
+        const expected = mapBusinessCentres(EXAMPLES.ODS.BUSINESS_CENTRES);
 
         expect(response).toEqual(expected);
       });
@@ -77,15 +111,13 @@ describe('DomService', () => {
     });
   });
 
-  // TODO: getProductConfigurations
-
   describe('getProductConfigurations', () => {
     it('should return mock product configurations', () => {
       // Act
       const response = service.getProductConfigurations();
 
       // Assert
-      expect(response).toEqual(MOCK_PRODUCT_CONFIGURATIONS);
+      expect(response).toEqual(EXAMPLES.DOM.PRODUCT_CONFIGURATIONS);
     });
   });
 });

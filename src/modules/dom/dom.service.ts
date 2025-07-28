@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { EXAMPLES } from '@ukef/constants';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { DOM_BUSINESS_CENTRES, EXAMPLES } from '@ukef/constants';
 import { mapBusinessCentres } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 
 import { OdsService } from '../ods/ods.service';
-import { GetDomBusinessCentreMappedResponse, GetDomProductConfigurationResponse } from './dto';
+import { GetDomBusinessCentreResponse, GetDomProductConfigurationResponse } from './dto';
 
 /**
  * DOM service.
@@ -20,10 +20,38 @@ export class DomService {
   ) {}
 
   /**
-   * Get all business centres from ODS and map into DOM data.
-   * @returns {Promise<GetDomBusinessCentreMappedResponse[]>}
+   * Find a business centre from ODS.
+   * @returns {GetDomBusinessCentreResponse}
+   * @throws {NotFoundException} If no business centre is found
    */
-  async getBusinessCentres(): Promise<GetDomBusinessCentreMappedResponse[]> {
+  async findBusinessCentre(centreCode: string): Promise<GetDomBusinessCentreResponse> {
+    try {
+      this.logger.info('Finding DOM business centre %s', centreCode);
+
+      const centre = await DOM_BUSINESS_CENTRES[`${centreCode}`];
+
+      if (centre) {
+        return centre;
+      }
+
+      throw new NotFoundException(`No business centre found ${centreCode}`);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        this.logger.warn(error);
+        throw error;
+      }
+
+      this.logger.error('Error finding DOM business centre %s %o', centreCode, error);
+
+      throw new Error(`Error finding DOM business centre ${centreCode}`, error);
+    }
+  }
+
+  /**
+   * Get all business centres from ODS and map into DOM data.
+   * @returns {Promise<GetDomBusinessCentreResponse[]>}
+   */
+  async getBusinessCentres(): Promise<GetDomBusinessCentreResponse[]> {
     try {
       this.logger.info('Getting DOM business centres');
 

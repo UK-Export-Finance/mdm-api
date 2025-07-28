@@ -35,7 +35,7 @@ describe('OdsController', () => {
       `should call odsService.getBusinessCentres with $value`,
       async ({ value }) => {
         // Act
-        await controller.findBusinessCentreNonWorkingDays({ code: value });
+        await controller.findBusinessCentreNonWorkingDays({ centreCode: value });
 
         // Assert
         expect(odsServiceFindBusinessCentreNonWorkingDays).toHaveBeenCalledTimes(1);
@@ -58,7 +58,7 @@ describe('OdsController', () => {
       controller = new OdsController(odsService);
 
       // Act
-      const result = await controller.findBusinessCentreNonWorkingDays({ code: BUSINESS_CENTRE.EXAMPLES.CODE });
+      const result = await controller.findBusinessCentreNonWorkingDays({ centreCode: BUSINESS_CENTRE.EXAMPLES.CODE });
 
       // Assert
       expect(result).toEqual(mockNonWorkingDays);
@@ -74,7 +74,7 @@ describe('OdsController', () => {
         controller = new OdsController(odsService);
 
         // Act & Assert
-        const promise = controller.findBusinessCentreNonWorkingDays({ code: BUSINESS_CENTRE.EXAMPLES.CODE });
+        const promise = controller.findBusinessCentreNonWorkingDays({ centreCode: BUSINESS_CENTRE.EXAMPLES.CODE });
 
         await expect(promise).rejects.toThrow(mockError);
       });

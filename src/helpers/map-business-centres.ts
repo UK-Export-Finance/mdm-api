@@ -1,19 +1,19 @@
-import { DOM_BUSINESS_CENTRES } from '@ukef/constants';
+import { ODS_TO_DOM_BUSINESS_CENTRES_MAPPING } from '@ukef/constants';
 import { GetOdsBusinessCentreResponse } from '@ukef/modules/ods/dto';
 
-import { GetDomBusinessCentreMappedResponse } from '../modules/dom/dto';
+import { GetDomBusinessCentreResponse } from '../modules/dom/dto';
 
 /**
  * Map ODS business centres data, into DOM business centre codes.
  * Only return a business centre if a code and name has been mapped.
  * This is required until DOM is live and ready for consumption.
  * @param {GetOdsBusinessCentreResponse[]} ODS Business centres
- * @returns {GetDomBusinessCentreMappedResponse[]} DOM Business centres
+ * @returns {GetDomBusinessCentreResponse[]} DOM Business centres
  */
-export const mapBusinessCentres = (odsBusinessCentres: GetOdsBusinessCentreResponse[]): GetDomBusinessCentreMappedResponse[] =>
+export const mapBusinessCentres = (odsBusinessCentres: GetOdsBusinessCentreResponse[]): GetDomBusinessCentreResponse[] =>
   odsBusinessCentres
     .map((odsCentre: GetOdsBusinessCentreResponse) => ({
-      code: DOM_BUSINESS_CENTRES[`${odsCentre.business_centre_code}`]?.CODE,
-      name: DOM_BUSINESS_CENTRES[`${odsCentre.business_centre_code}`]?.NAME,
+      code: ODS_TO_DOM_BUSINESS_CENTRES_MAPPING[`${odsCentre.business_centre_code}`]?.CODE,
+      name: ODS_TO_DOM_BUSINESS_CENTRES_MAPPING[`${odsCentre.business_centre_code}`]?.NAME,
     }))
     .filter((odsCentre) => odsCentre.code && odsCentre.name);

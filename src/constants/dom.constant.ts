@@ -1,4 +1,7 @@
-import { ODS_BUSINESS_CENTRES } from './ods.constant';
+export interface DomBusinessCentre {
+  CODE: string;
+  NAME: string;
+}
 
 /**
  * List of business centre codes to map ODS and DOM.
@@ -7,155 +10,155 @@ import { ODS_BUSINESS_CENTRES } from './ods.constant';
  * In the future, this will be replaced entirely by calling DOM.
  */
 export const DOM_BUSINESS_CENTRES = {
-  [ODS_BUSINESS_CENTRES.AcB]: {
+  GH_ACC: {
     CODE: 'GH_ACC',
     NAME: 'Accra',
   },
-  [ODS_BUSINESS_CENTRES.IvB]: {
+  CI_ABJ: {
     CODE: 'CI_ABJ',
     NAME: 'Abidjan',
   },
-  [ODS_BUSINESS_CENTRES.AqB]: {
+  ET_ADD: {
     CODE: 'ET_ADD',
     NAME: 'Addis Ababa',
   },
-  [ODS_BUSINESS_CENTRES.AaB]: {
+  JO_AMM: {
     CODE: 'JO_AMM',
     NAME: 'Amman',
   },
-  [ODS_BUSINESS_CENTRES.AmB]: {
+  NL_AMS: {
     CODE: 'NL_AMS',
     NAME: 'Amsterdam',
   },
   // IrB: 'IQ_BGW',
-  [ODS_BUSINESS_CENTRES.CGG]: {
+  US_CHI: {
     CODE: 'US_CHI',
     NAME: 'Chicago',
   },
-  [ODS_BUSINESS_CENTRES.CmB]: {
+  LK_CMB: {
     CODE: 'LK_CMB',
     NAME: 'Colombo',
   },
-  [ODS_BUSINESS_CENTRES.DxB]: {
+  SN_DKR: {
     CODE: 'SN_DKR',
     NAME: 'Dakar',
   },
-  [ODS_BUSINESS_CENTRES.DoB]: {
+  QA_DOH: {
     CODE: 'QA_DOH',
     NAME: 'Doha',
   },
-  [ODS_BUSINESS_CENTRES.DbB]: {
+  AE_DXB: {
     CODE: 'AE_DXB',
     NAME: 'Dubai',
   },
   // IrB: 'IQ_EBL',
-  [ODS_BUSINESS_CENTRES.FrB]: {
+  DE_FRA: {
     CODE: 'DE_FRA',
     NAME: 'Frankfurt',
   },
-  [ODS_BUSINESS_CENTRES.IsB]: {
+  TR_IST: {
     CODE: 'TR_IST',
     NAME: 'Istanbul',
   },
-  [ODS_BUSINESS_CENTRES.JoB]: {
+  ZA_JNB: {
     CODE: 'ZA_JNB',
     NAME: 'Johannesburg',
   },
-  [ODS_BUSINESS_CENTRES.KpB]: {
+  UG_KLA: {
     CODE: 'UG_KLA',
     NAME: 'Kampala',
   },
-  [ODS_BUSINESS_CENTRES.KwB]: {
+  VC_KTN: {
     CODE: 'VC_KTN',
     NAME: 'Kingstown',
   },
-  [ODS_BUSINESS_CENTRES.LeB]: {
+  GA_LBV: {
     CODE: 'GA_LBV',
     NAME: 'Libreville',
   },
-  [ODS_BUSINESS_CENTRES.LoB]: {
+  TG_LFW: {
     CODE: 'TG_LFW',
     NAME: 'Lome',
   },
-  [ODS_BUSINESS_CENTRES.LnB]: {
+  GB_LON: {
     CODE: 'GB_LON',
     NAME: 'London',
   },
-  [ODS_BUSINESS_CENTRES.LdB]: {
+  AO_LAD: {
     CODE: 'AO_LAD',
     NAME: 'Luanda',
   },
-  [ODS_BUSINESS_CENTRES.LkB]: {
+  ZM_LUN: {
     CODE: 'ZM_LUN',
     NAME: 'Lusaka',
   },
-  [ODS_BUSINESS_CENTRES.MdB]: {
+  ES_MAD: {
     CODE: 'ES_MAD',
     NAME: 'Madrid',
   },
-  [ODS_BUSINESS_CENTRES.MpB]: {
+  MZ_MPM: {
     CODE: 'MZ_MPM',
     NAME: 'Maputo',
   },
   // MoB: 'CA_MTR',
-  [ODS_BUSINESS_CENTRES.MuB]: {
+  DE_MUC: {
     CODE: 'DE_MUC',
     NAME: 'Munich',
   },
-  [ODS_BUSINESS_CENTRES.McB]: {
+  OM_MCT: {
     CODE: 'OM_MCT',
     NAME: 'Muscat',
   },
-  [ODS_BUSINESS_CENTRES.NYB]: {
+  US_NYC: {
     CODE: 'US_NYC',
     NAME: 'New York',
   },
-  [ODS_BUSINESS_CENTRES.PaB]: {
+  FR_PAR: {
     CODE: 'FR_PAR',
     NAME: 'Paris',
   },
-  [ODS_BUSINESS_CENTRES.CzB]: {
+  BJ_PTN: {
     CODE: 'BJ_PTN',
     NAME: 'Porto-Novo',
   },
   // MoB: 'CA_REG',
-  [ODS_BUSINESS_CENTRES.SeB]: {
+  KR_SEL: {
     CODE: 'KR_SEL',
     NAME: 'Seoul',
   },
-  [ODS_BUSINESS_CENTRES.SiB]: {
+  SG_SIN: {
     CODE: 'SG_SIN',
     NAME: 'Singapore',
   },
-  [ODS_BUSINESS_CENTRES.StB]: {
+  SE_STO: {
     CODE: 'SE_STO',
     NAME: 'Stockholm',
   },
-  [ODS_BUSINESS_CENTRES.TpB]: {
+  TW_TPE: {
     CODE: 'TW_TPE',
     NAME: 'Taipei',
   },
-  [ODS_BUSINESS_CENTRES.Tgt]: {
+  TARGET: {
     CODE: 'TARGET',
     NAME: 'Target',
   },
-  [ODS_BUSINESS_CENTRES.TkB]: {
+  JP_TYO: {
     CODE: 'JP_TYO',
     NAME: 'Tokyo',
   },
-  [ODS_BUSINESS_CENTRES.VaB]: {
+  CA_VAN: {
     CODE: 'CA_VAN',
     NAME: 'Vancouver',
   },
-  [ODS_BUSINESS_CENTRES.ViB]: {
+  AT_VIE: {
     CODE: 'AT_VIE',
     NAME: 'Vienna',
   },
-  [ODS_BUSINESS_CENTRES.WaB]: {
+  PL_WAW: {
     CODE: 'PL_WAW',
     NAME: 'Warsaw',
   },
-  [ODS_BUSINESS_CENTRES.YnB]: {
+  CM_YAO: {
     CODE: 'CM_YAO',
     NAME: 'Yaounde',
   },

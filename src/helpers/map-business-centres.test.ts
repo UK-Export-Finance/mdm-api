@@ -1,34 +1,34 @@
-import { DOM_BUSINESS_CENTRES, MOCK_ODS_BUSINESS_CENTRES, ODS_BUSINESS_CENTRES } from '@ukef/constants';
+import { DOM_BUSINESS_CENTRES, EXAMPLES, ODS_BUSINESS_CENTRES } from '@ukef/constants';
 import { GetOdsBusinessCentreResponse } from '@ukef/modules/ods/dto';
 
-import { GetDomBusinessCentreMappedResponse } from '../modules/dom/dto';
+import { GetDomBusinessCentreResponse } from '../modules/dom/dto';
 import { mapBusinessCentres } from './map-business-centres';
 
 describe('mapBusinessCentres', () => {
-  it('should return an array of mapped ODS business centres', () => {
+  it('should return an array of mapped DOM business centres', () => {
     // Act
-    const result = mapBusinessCentres(MOCK_ODS_BUSINESS_CENTRES);
+    const result = mapBusinessCentres(EXAMPLES.ODS.BUSINESS_CENTRES);
 
     // Assert
-    const expected: GetDomBusinessCentreMappedResponse[] = [
+    const expected: GetDomBusinessCentreResponse[] = [
       {
-        code: DOM_BUSINESS_CENTRES.AaB.CODE,
-        name: DOM_BUSINESS_CENTRES.AaB.NAME,
+        code: DOM_BUSINESS_CENTRES.JO_AMM.CODE,
+        name: DOM_BUSINESS_CENTRES.JO_AMM.NAME,
       },
       {
-        code: DOM_BUSINESS_CENTRES.JoB.CODE,
-        name: DOM_BUSINESS_CENTRES.JoB.NAME,
+        code: DOM_BUSINESS_CENTRES.ZA_JNB.CODE,
+        name: DOM_BUSINESS_CENTRES.ZA_JNB.NAME,
       },
       {
-        code: DOM_BUSINESS_CENTRES.StB.CODE,
-        name: DOM_BUSINESS_CENTRES.StB.NAME,
+        code: DOM_BUSINESS_CENTRES.SE_STO.CODE,
+        name: DOM_BUSINESS_CENTRES.SE_STO.NAME,
       },
     ];
 
     expect(result).toEqual(expected);
   });
 
-  describe('when provided business centres are not found in DOM_BUSINESS_CENTRES', () => {
+  describe('when the provided business centres are not found in DOM_BUSINESS_CENTRES', () => {
     it('should return an array with only the business centres that have been found/mapped by code', () => {
       // Arrange
       const mockOdsBusinessCentres: GetOdsBusinessCentreResponse[] = [
@@ -52,8 +52,8 @@ describe('mapBusinessCentres', () => {
       // Assert
       const expected = [
         {
-          code: DOM_BUSINESS_CENTRES.AaB.CODE,
-          name: DOM_BUSINESS_CENTRES.AaB.NAME,
+          code: DOM_BUSINESS_CENTRES.JO_AMM.CODE,
+          name: DOM_BUSINESS_CENTRES.JO_AMM.NAME,
         },
       ];
 

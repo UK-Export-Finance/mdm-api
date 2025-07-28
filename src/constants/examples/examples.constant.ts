@@ -5,16 +5,16 @@ export const EXAMPLES = {
   DOM: {
     BUSINESS_CENTRES: [
       {
-        code: DOM_BUSINESS_CENTRES.AaB.CODE,
-        name: DOM_BUSINESS_CENTRES.AaB.NAME,
+        code: DOM_BUSINESS_CENTRES.AE_DXB.CODE,
+        name: DOM_BUSINESS_CENTRES.AE_DXB.NAME,
       },
       {
-        code: DOM_BUSINESS_CENTRES.JoB.CODE,
-        name: DOM_BUSINESS_CENTRES.JoB.NAME,
+        code: DOM_BUSINESS_CENTRES.JO_AMM.CODE,
+        name: DOM_BUSINESS_CENTRES.JO_AMM.NAME,
       },
       {
-        code: DOM_BUSINESS_CENTRES.StB.CODE,
-        name: DOM_BUSINESS_CENTRES.StB.NAME,
+        code: DOM_BUSINESS_CENTRES.SE_STO.CODE,
+        name: DOM_BUSINESS_CENTRES.SE_STO.NAME,
       },
     ],
     PRODUCT_CONFIG: {
@@ -26,15 +26,15 @@ export const EXAMPLES = {
     BUSINESS_CENTRES: [
       {
         business_centre_code: ODS_BUSINESS_CENTRES.AaB,
-        business_centre_name: 'Mock name A',
+        business_centre_name: 'Mock name AaB',
       },
       {
         business_centre_code: ODS_BUSINESS_CENTRES.JoB,
-        business_centre_name: 'Mock name B',
+        business_centre_name: 'Mock name JoB',
       },
       {
         business_centre_code: ODS_BUSINESS_CENTRES.StB,
-        business_centre_name: 'Mock name C',
+        business_centre_name: 'Mock name StB',
       },
     ],
   },

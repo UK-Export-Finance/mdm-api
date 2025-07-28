@@ -110,7 +110,7 @@ describe('OdsService - findDeal', () => {
 
   describe('when the method goes into the catch handler', () => {
     it('should throw an error', async () => {
-      const mockStoredProcedureOutput = `{ "status": "SUCCESS" }`;
+      const mockStoredProcedureOutput = `{ "status": "NO SUCCESS" }`;
 
       jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
 

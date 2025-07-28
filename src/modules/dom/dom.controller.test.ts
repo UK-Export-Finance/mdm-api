@@ -1,4 +1,4 @@
-import { MOCK_DOM_BUSINESS_CENTRES, MOCK_PRODUCT_CONFIGURATIONS } from '@ukef/constants';
+import { DOM_BUSINESS_CENTRES, EXAMPLES } from '@ukef/constants';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
@@ -19,19 +19,62 @@ describe('DomController', () => {
   const odsService = new OdsService(mockDataSource, mockLogger);
   const domService = new DomService(odsService, mockLogger);
 
-  let domServiceGetProductConfigurations: jest.Mock;
+  let domServiceFindBusinessCentre: jest.Mock;
   let domServiceGetBusinessCentres: jest.Mock;
+  let domServiceGetProductConfigurations: jest.Mock;
 
   let controller: DomController;
 
   beforeEach(() => {
-    domServiceGetProductConfigurations = jest.fn();
-    domService.getProductConfigurations = domServiceGetProductConfigurations;
+    domServiceFindBusinessCentre = jest.fn().mockResolvedValueOnce(DOM_BUSINESS_CENTRES.AE_DXB);
+    domService.findBusinessCentre = domServiceFindBusinessCentre;
 
     domServiceGetBusinessCentres = jest.fn();
     domService.getBusinessCentres = domServiceGetBusinessCentres;
 
+    domServiceGetProductConfigurations = jest.fn();
+    domService.getProductConfigurations = domServiceGetProductConfigurations;
+
     controller = new DomController(domService);
+  });
+
+  describe('findBusinessCentre', () => {
+    it('should call domService.findBusinessCentre', async () => {
+      // Act
+      await controller.findBusinessCentre({ centreCode: DOM_BUSINESS_CENTRES.CM_YAO.CODE });
+
+      // Assert
+      expect(domServiceFindBusinessCentre).toHaveBeenCalledTimes(1);
+    });
+
+    it('should return the result of domService.findBusinessCentre', async () => {
+      // Arrange
+      domService.findBusinessCentre = jest.fn().mockResolvedValueOnce(DOM_BUSINESS_CENTRES.AE_DXB);
+
+      controller = new DomController(domService);
+
+      // Act
+      const result = await controller.findBusinessCentre({ centreCode: DOM_BUSINESS_CENTRES.CM_YAO.CODE });
+
+      // Assert
+      expect(result).toEqual(DOM_BUSINESS_CENTRES.AE_DXB);
+    });
+
+    describe('when domService.findBusinessCentre throws an error', () => {
+      it('should throw an error', async () => {
+        // Arrange
+        const domService = new DomService(odsService, mockLogger);
+
+        domService.findBusinessCentre = jest.fn().mockRejectedValueOnce(mockError);
+
+        controller = new DomController(domService);
+
+        // Act & Assert
+        const promise = controller.findBusinessCentre({ centreCode: DOM_BUSINESS_CENTRES.CM_YAO.CODE });
+
+        await expect(promise).rejects.toThrow(mockError);
+      });
+    });
   });
 
   describe('getBusinessCentres', () => {
@@ -45,7 +88,7 @@ describe('DomController', () => {
 
     it('should return product configurations', async () => {
       // Arrange
-      domService.getBusinessCentres = jest.fn().mockResolvedValueOnce(MOCK_DOM_BUSINESS_CENTRES);
+      domService.getBusinessCentres = jest.fn().mockResolvedValueOnce(EXAMPLES.DOM.BUSINESS_CENTRES);
 
       controller = new DomController(domService);
 
@@ -53,7 +96,7 @@ describe('DomController', () => {
       const result = await controller.getBusinessCentres();
 
       // Assert
-      expect(result).toEqual(MOCK_DOM_BUSINESS_CENTRES);
+      expect(result).toEqual(EXAMPLES.DOM.BUSINESS_CENTRES);
     });
 
     describe('when domService.getBusinessCentres throws an error', () => {
@@ -84,7 +127,7 @@ describe('DomController', () => {
 
     it('should return product configurations', async () => {
       // Arrange
-      domService.getProductConfigurations = jest.fn().mockResolvedValueOnce(MOCK_PRODUCT_CONFIGURATIONS);
+      domService.getProductConfigurations = jest.fn().mockResolvedValueOnce(EXAMPLES.DOM.PRODUCT_CONFIGURATIONS);
 
       controller = new DomController(domService);
 
@@ -92,7 +135,7 @@ describe('DomController', () => {
       const result = await controller.getProductConfigurations();
 
       // Assert
-      expect(result).toEqual(MOCK_PRODUCT_CONFIGURATIONS);
+      expect(result).toEqual(EXAMPLES.DOM.PRODUCT_CONFIGURATIONS);
     });
 
     describe('when domService.getProductConfigurations throws an error', () => {
