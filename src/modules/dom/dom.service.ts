@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { MOCK_PRODUCT_CONFIGURATIONS } from '@ukef/constants';
+import { EXAMPLES } from '@ukef/constants';
 import { mapBusinessCentres } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 
@@ -44,6 +44,6 @@ export class DomService {
   getProductConfigurations(): GetDomProductConfigurationResponse[] {
     this.logger.info('Getting product configurations');
 
-    return MOCK_PRODUCT_CONFIGURATIONS;
+    return EXAMPLES.DOM.PRODUCT_CONFIGURATIONS;
   }
 }
