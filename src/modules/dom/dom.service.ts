@@ -49,20 +49,14 @@ export class DomService {
 
   /**
    * Get all business centres from ODS and map into DOM data.
-   * @returns {Promise<GetDomBusinessCentreResponse[]>}
+   * @returns {GetDomBusinessCentreResponse[]}
    */
-  async getBusinessCentres(): Promise<GetDomBusinessCentreResponse[]> {
-    try {
-      this.logger.info('Getting DOM business centres');
+  getBusinessCentres(): GetDomBusinessCentreResponse[] {
+    this.logger.info('Getting DOM business centres');
 
-      const odsBusinessCentres = await this.odsService.getBusinessCentres();
+    const odsBusinessCentres = Object.values(DOM_BUSINESS_CENTRES);
 
-      return mapBusinessCentres(odsBusinessCentres);
-    } catch (error) {
-      this.logger.error('Error getting DOM business centres %o', error);
-
-      throw new Error('Error getting DOM business centres', error);
-    }
+    return mapBusinessCentres(odsBusinessCentres);
   }
 
   /**

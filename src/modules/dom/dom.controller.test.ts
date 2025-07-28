@@ -59,60 +59,28 @@ describe('DomController', () => {
       // Assert
       expect(result).toEqual(DOM_BUSINESS_CENTRES.AE_DXB);
     });
-
-    describe('when domService.findBusinessCentre throws an error', () => {
-      it('should throw an error', async () => {
-        // Arrange
-        const domService = new DomService(odsService, mockLogger);
-
-        domService.findBusinessCentre = jest.fn().mockRejectedValueOnce(mockError);
-
-        controller = new DomController(domService);
-
-        // Act & Assert
-        const promise = controller.findBusinessCentre({ centreCode: DOM_BUSINESS_CENTRES.CM_YAO.CODE });
-
-        await expect(promise).rejects.toThrow(mockError);
-      });
-    });
   });
 
   describe('getBusinessCentres', () => {
-    it('should call domService.getBusinessCentres', async () => {
+    it('should call domService.getBusinessCentres', () => {
       // Act
-      await controller.getBusinessCentres();
+      controller.getBusinessCentres();
 
       // Assert
       expect(domServiceGetBusinessCentres).toHaveBeenCalledTimes(1);
     });
 
-    it('should return product configurations', async () => {
+    it('should return product configurations', () => {
       // Arrange
       domService.getBusinessCentres = jest.fn().mockResolvedValueOnce(EXAMPLES.DOM.BUSINESS_CENTRES);
 
       controller = new DomController(domService);
 
       // Act
-      const result = await controller.getBusinessCentres();
+      const result = controller.getBusinessCentres();
 
       // Assert
       expect(result).toEqual(EXAMPLES.DOM.BUSINESS_CENTRES);
-    });
-
-    describe('when domService.getBusinessCentres throws an error', () => {
-      it('should throw an error', async () => {
-        // Arrange
-        const domService = new DomService(odsService, mockLogger);
-
-        domService.getBusinessCentres = jest.fn().mockRejectedValueOnce(mockError);
-
-        controller = new DomController(domService);
-
-        // Act & Assert
-        const promise = controller.getBusinessCentres();
-
-        await expect(promise).rejects.toThrow(mockError);
-      });
     });
   });
 

@@ -64,16 +64,12 @@ describe('/dom - business centres', () => {
       // Assert
       expect(status).toBe(HttpStatus.OK);
 
-      const expected = expect.arrayContaining([
-        expect.objectContaining({
-          code: expect.any(String),
-          name: expect.any(String),
-        }),
-      ]);
+      const expected = Object.values(DOM_BUSINESS_CENTRES).map((centre) => ({
+        code: centre.CODE,
+        name: centre.NAME,
+      }));
 
       expect(body).toEqual(expected);
     });
-
-    // TODO: APIM-613 - create a mock request to mimic receiving a 500 error from ODS.
   });
 });

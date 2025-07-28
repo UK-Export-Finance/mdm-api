@@ -51,7 +51,7 @@ export class DomController {
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
   })
-  getBusinessCentres(): Promise<GetDomBusinessCentreResponse[]> {
+  getBusinessCentres(): GetDomBusinessCentreResponse[] {
     return this.domService.getBusinessCentres();
   }
 

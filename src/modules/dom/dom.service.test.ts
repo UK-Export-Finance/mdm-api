@@ -7,8 +7,6 @@ import { DataSource, QueryRunner } from 'typeorm';
 import { OdsService } from '../ods/ods.service';
 import { DomService } from './dom.service';
 
-const mockError = new Error('An error occurred');
-
 describe('DomService', () => {
   let mockQueryRunner: jest.Mocked<QueryRunner>;
   const mockLogger = new PinoLogger({});
@@ -69,45 +67,22 @@ describe('DomService', () => {
   });
 
   describe('getBusinessCentres', () => {
-    it('should call odsService.getBusinessCentres', async () => {
+    it('should call odsService.getBusinessCentres', () => {
       // Act
-      await service.getBusinessCentres();
+      service.getBusinessCentres();
 
       // Assert
       expect(odsServiceGetBusinessCentres).toHaveBeenCalledTimes(1);
     });
 
-    describe('when odsService.getBusinessCentres is successful', () => {
-      it('should return mapped business centres', async () => {
-        // Act
-        const response = await service.getBusinessCentres();
+    it('should return mapped business centres', () => {
+      // Act
+      const response = service.getBusinessCentres();
 
-        // Assert
-        const expected = mapBusinessCentres(EXAMPLES.ODS.BUSINESS_CENTRES);
+      // Assert
+      const expected = mapBusinessCentres(Object.values(DOM_BUSINESS_CENTRES));
 
-        expect(response).toEqual(expected);
-      });
-    });
-
-    describe('when odsService.getBusinessCentres returns an error', () => {
-      beforeEach(() => {
-        // Arrange
-        odsServiceGetBusinessCentres = jest.fn().mockRejectedValueOnce(mockError);
-
-        odsService.getBusinessCentres = odsServiceGetBusinessCentres;
-
-        service = new DomService(odsService, mockLogger);
-      });
-
-      it('should thrown an error', async () => {
-        // Act
-        const promise = service.getBusinessCentres();
-
-        // Assert
-        const expected = new Error('Error getting DOM business centres');
-
-        await expect(promise).rejects.toThrow(expected);
-      });
+      expect(response).toEqual(expected);
     });
   });
 
