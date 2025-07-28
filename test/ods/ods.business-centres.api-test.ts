@@ -18,7 +18,8 @@ describe('/ods - business centres', () => {
     await api.destroy();
   });
 
-  describe('/business-center/:code/non-working-days', () => {
+  describe('/business-center/:centerCode/non-working-days', () => {
+    // Arrange
     const baseUrl = `/api/${prefixAndVersion}/ods/business-centre`;
 
     it(`should return ${HttpStatus.OK} with mapped non working days`, async () => {
@@ -40,17 +41,18 @@ describe('/ods - business centres', () => {
     });
 
     it(`should return ${HttpStatus.NOT_FOUND} when the provided code param is a valid format, but does not match an existing business centre`, async () => {
-      // Act
-      const mockCode = 'InvalidBusinessCentre';
+      // Arrange
+      const mockCentreCode = 'INVALID CODE';
 
-      const { status, body } = await api.get(`${baseUrl}/${mockCode}/non-working-days`);
+      // Act
+      const { status, body } = await api.get(`${baseUrl}/${mockCentreCode}/non-working-days`);
 
       // Assert
       expect(status).toBe(HttpStatus.NOT_FOUND);
 
       expect(body).toEqual({
         statusCode: HttpStatus.NOT_FOUND,
-        message: `No business centre ${mockCode} non working days found`,
+        message: `No business centre ${mockCentreCode} non working days found`,
         error: 'Not Found',
       });
     });

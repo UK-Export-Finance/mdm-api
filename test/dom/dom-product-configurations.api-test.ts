@@ -1,6 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
 import AppConfig from '@ukef/config/app.config';
-import { MOCK_PRODUCT_CONFIGURATIONS } from '@ukef/constants';
+import { EXAMPLES } from '@ukef/constants';
 import { Api } from '@ukef-test/support/api';
 
 const {
@@ -28,7 +28,9 @@ describe('/ods - product-configuration', () => {
       // Assert
       expect(status).toBe(HttpStatus.OK);
 
-      expect(body).toEqual(MOCK_PRODUCT_CONFIGURATIONS);
+      const expected = EXAMPLES.DOM.PRODUCT_CONFIGURATIONS;
+
+      expect(body).toEqual(expected);
     });
   });
 });

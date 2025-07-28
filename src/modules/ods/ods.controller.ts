@@ -22,7 +22,7 @@ const { domOdsVersioning } = AppConfig();
 export class OdsController {
   constructor(private readonly odsService: OdsService) {}
 
-  @Get('business-centre/:code/non-working-days')
+  @Get('business-centre/:centreCode/non-working-days')
   @ApiOperation({
     summary: "Get a business centre's non working days from ODS",
   })
