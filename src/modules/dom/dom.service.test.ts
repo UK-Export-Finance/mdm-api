@@ -17,15 +17,9 @@ describe('DomService', () => {
 
   const odsService = new OdsService(mockDataSource, mockLogger);
 
-  let odsServiceGetBusinessCentres: jest.Mock;
-
   let service: DomService;
 
   beforeEach(() => {
-    odsServiceGetBusinessCentres = jest.fn().mockResolvedValueOnce(EXAMPLES.ODS.BUSINESS_CENTRES);
-
-    odsService.getBusinessCentres = odsServiceGetBusinessCentres;
-
     service = new DomService(odsService, mockLogger);
   });
 
@@ -67,14 +61,6 @@ describe('DomService', () => {
   });
 
   describe('getBusinessCentres', () => {
-    it('should call odsService.getBusinessCentres', () => {
-      // Act
-      service.getBusinessCentres();
-
-      // Assert
-      expect(odsServiceGetBusinessCentres).toHaveBeenCalledTimes(1);
-    });
-
     it('should return mapped business centres', () => {
       // Act
       const response = service.getBusinessCentres();

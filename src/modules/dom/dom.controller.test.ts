@@ -72,7 +72,8 @@ describe('DomController', () => {
 
     it('should return product configurations', () => {
       // Arrange
-      domService.getBusinessCentres = jest.fn().mockResolvedValueOnce(EXAMPLES.DOM.BUSINESS_CENTRES);
+      // domService.getBusinessCentres = jest.fn().mockResolvedValueOnce(EXAMPLES.DOM.BUSINESS_CENTRES);
+      domService.getBusinessCentres = jest.fn().mockReturnValueOnce(EXAMPLES.DOM.BUSINESS_CENTRES);
 
       controller = new DomController(domService);
 
