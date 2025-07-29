@@ -30,7 +30,10 @@ export const DOM_BUSINESS_CENTRES = {
     CODE: 'NL_AMS',
     NAME: 'Amsterdam',
   },
-  // IrB: 'IQ_BGW',
+  IQ_BGW: {
+    CODE: 'IQ_BGW',
+    NAME: 'Baghdad',
+  },
   US_CHI: {
     CODE: 'US_CHI',
     NAME: 'Chicago',
@@ -51,7 +54,10 @@ export const DOM_BUSINESS_CENTRES = {
     CODE: 'AE_DXB',
     NAME: 'Dubai',
   },
-  // IrB: 'IQ_EBL',
+  IQ_EBL: {
+    CODE: 'IQ_EBL',
+    NAME: 'Erbil',
+  },
   DE_FRA: {
     CODE: 'DE_FRA',
     NAME: 'Frankfurt',
@@ -100,7 +106,10 @@ export const DOM_BUSINESS_CENTRES = {
     CODE: 'MZ_MPM',
     NAME: 'Maputo',
   },
-  // MoB: 'CA_MTR',
+  CA_MTR: {
+    CODE: 'CA_MTR',
+    NAME: 'Montreal',
+  },
   DE_MUC: {
     CODE: 'DE_MUC',
     NAME: 'Munich',
@@ -121,7 +130,10 @@ export const DOM_BUSINESS_CENTRES = {
     CODE: 'BJ_PTN',
     NAME: 'Porto-Novo',
   },
-  // MoB: 'CA_REG',
+  CA_REG: {
+    CODE: 'CA_REG',
+    NAME: 'Regina',
+  },
   KR_SEL: {
     CODE: 'KR_SEL',
     NAME: 'Seoul',
