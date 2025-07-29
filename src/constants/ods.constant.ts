@@ -1,10 +1,5 @@
 import { DOM_BUSINESS_CENTRES, DomBusinessCentre } from './dom.constant';
 
-// TODO:
-// IQ_EBL	    Erbil             IrB   (Baghdad)
-// BJ_PTN	    Porto-Novo        CzB (Cotonou)
-// CA_REG	    Regina            MoB (Montreal)
-
 const ODS_BUSINESS_CENTRE_CODES = [
   'AcB',
   'IvB',
