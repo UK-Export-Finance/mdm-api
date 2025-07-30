@@ -1,42 +1,20 @@
-import { GetOdsBusinessCentreResponse } from '@ukef/modules/ods/dto';
+import { DOM_BUSINESS_CENTRES } from '@ukef/constants';
 
 import { mapBusinessCentres } from './map-business-centres';
 
-const mockBusinessCentres: GetOdsBusinessCentreResponse[] = [
-  {
-    business_centre_code: 'A',
-    business_centre_name: 'Business centre A',
-  },
-  {
-    business_centre_code: 'B',
-    business_centre_name: 'Business centre B',
-  },
-  {
-    business_centre_code: 'C',
-    business_centre_name: 'Business centre C',
-  },
-];
-
 describe('mapBusinessCentres', () => {
-  it('should return an array of mapped business centres', () => {
+  it('should return an array of mapped DOM business centres', () => {
+    // Arrange
+    const businessCentres = Object.values(DOM_BUSINESS_CENTRES);
+
     // Act
-    const result = mapBusinessCentres(mockBusinessCentres);
+    const result = mapBusinessCentres(businessCentres);
 
     // Assert
-    const expected = [
-      {
-        code: mockBusinessCentres[0].business_centre_code,
-        name: mockBusinessCentres[0].business_centre_name,
-      },
-      {
-        code: mockBusinessCentres[1].business_centre_code,
-        name: mockBusinessCentres[1].business_centre_name,
-      },
-      {
-        code: mockBusinessCentres[2].business_centre_code,
-        name: mockBusinessCentres[2].business_centre_name,
-      },
-    ];
+    const expected = businessCentres.map((centre) => ({
+      code: centre.CODE,
+      name: centre.NAME,
+    }));
 
     expect(result).toEqual(expected);
   });

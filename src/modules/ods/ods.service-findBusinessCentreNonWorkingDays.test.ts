@@ -113,7 +113,7 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
   describe('when the method goes into the catch handler', () => {
     it('should throw an error', async () => {
       // Arrange
-      const mockStoredProcedureOutput = `{ "status": "SUCCESS" }`;
+      const mockStoredProcedureOutput = `{ "status": "NO SUCCESS" }`;
 
       jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
 

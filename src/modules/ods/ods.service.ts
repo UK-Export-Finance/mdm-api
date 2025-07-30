@@ -1,15 +1,13 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DATABASE_NAME } from '@ukef/constants';
-import { mapBusinessCentreNonWorkingDays, mapBusinessCentres } from '@ukef/helpers';
+import { mapBusinessCentreNonWorkingDays } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource } from 'typeorm';
 
 import {
-  GetOdsBusinessCentreMappedResponse,
   GetOdsBusinessCentreNonWorkingDayMappedResponse,
   GetOdsBusinessCentreNonWorkingDayResponse,
-  GetOdsBusinessCentreResponse,
   GetOdsCustomerResponse,
   GetOdsDealResponse,
   ODS_ENTITIES,
@@ -128,38 +126,6 @@ export class OdsService {
 
       this.logger.error(error);
       throw new InternalServerErrorException(`Error finding deal ${id}`);
-    }
-  }
-
-  /**
-   * Get and map "business centres" from ODS
-   * @returns {Promise<GetOdsBusinessCentreMappedResponse[]>} Business centres
-   * @throws {InternalServerErrorException} If there is an error getting "business centres"
-   */
-  async getBusinessCentres(): Promise<GetOdsBusinessCentreMappedResponse[]> {
-    try {
-      const storedProcedureInput = this.createOdsStoredProcedureInput({ entityToQuery: ODS_ENTITIES.BUSINESS_CENTRE });
-
-      const storedProcedureResult = await this.callOdsStoredProcedure(storedProcedureInput);
-
-      const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
-
-      if (storedProcedureJson?.status !== 'SUCCESS') {
-        this.logger.error('Error getting business centres from ODS stored procedure, output %o', storedProcedureResult);
-
-        throw new InternalServerErrorException('Error getting business centres from ODS stored procedure');
-      }
-
-      if (storedProcedureJson?.total_result_count === 0) {
-        throw new InternalServerErrorException('No business centres found');
-      }
-
-      const businessCentres = storedProcedureJson.results as GetOdsBusinessCentreResponse[];
-
-      return mapBusinessCentres(businessCentres);
-    } catch (error) {
-      this.logger.error(error);
-      throw new InternalServerErrorException('Error getting business centres');
     }
   }
 

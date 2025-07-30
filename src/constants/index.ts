@@ -13,12 +13,15 @@
  * 9) Deals
  * 10) DOM
  * 11) Dun and Bradstreet
- * 12) GOV.UK Notify
- * 13) Geospatial
- * 14) Products
- * 15) Strings to redact
- * 16) Strings paths to redact
- * 17) UKEF ID
+ * 12) Enums
+ * 13) Examples
+ * 14) GOV.UK Notify
+ * 15) Geospatial
+ * 16) ODS
+ * 17) Products
+ * 18) Strings to redact
+ * 19) Strings paths to redact
+ * 20) UKEF ID
  */
 
 export * from './application.constant';
@@ -33,8 +36,10 @@ export * from './deals.constant';
 export * from './dom.constant';
 export * from './dun-and-bradstreet.constant';
 export * from './enums';
+export * from './examples/examples.constant';
 export * from './geospatial.constant';
 export * from './govuk-notify.constant';
+export * from './ods.constant';
 export * from './products.constant';
 export * from './redact-strings.constant';
 export * from './redact-strings-paths.constant';

@@ -3,7 +3,6 @@ import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiNotFoundRespo
 import AppConfig from '@ukef/config/app.config';
 
 import {
-  GetOdsBusinessCentreMappedResponse,
   GetOdsBusinessCentreNonWorkingDayMappedResponse,
   GetOdsBusinessCentreNonWorkingDaysParamDto,
   GetOdsCustomerParamDto,
@@ -23,26 +22,7 @@ const { domOdsVersioning } = AppConfig();
 export class OdsController {
   constructor(private readonly odsService: OdsService) {}
 
-  @Get('business-centres')
-  @ApiOperation({
-    summary: 'Get business centres from ODS',
-  })
-  @ApiOkResponse({
-    description: 'Business centres',
-    isArray: true,
-    type: GetOdsBusinessCentreMappedResponse,
-  })
-  @ApiBadRequestResponse({
-    description: 'Bad request.',
-  })
-  @ApiInternalServerErrorResponse({
-    description: 'Internal server error.',
-  })
-  getBusinessCentres(): Promise<GetOdsBusinessCentreMappedResponse[]> {
-    return this.odsService.getBusinessCentres();
-  }
-
-  @Get('business-centre/:code/non-working-days')
+  @Get('business-centre/:centreCode/non-working-days')
   @ApiOperation({
     summary: "Get a business centre's non working days from ODS",
   })
@@ -52,13 +32,13 @@ export class OdsController {
     type: GetOdsBusinessCentreNonWorkingDayMappedResponse,
   })
   @ApiBadRequestResponse({
-    description: 'Bad request.',
+    description: 'Bad request',
   })
   @ApiInternalServerErrorResponse({
-    description: 'Internal server error.',
+    description: 'Internal server error',
   })
   findBusinessCentreNonWorkingDays(@Param() param: GetOdsBusinessCentreNonWorkingDaysParamDto): Promise<GetOdsBusinessCentreNonWorkingDayMappedResponse[]> {
-    return this.odsService.findBusinessCentreNonWorkingDays(param.code);
+    return this.odsService.findBusinessCentreNonWorkingDays(param.centreCode);
   }
 
   @Get('customers/:urn')
@@ -70,13 +50,13 @@ export class OdsController {
     type: GetOdsCustomerResponse,
   })
   @ApiNotFoundResponse({
-    description: 'Customer not found.',
+    description: 'Customer not found',
   })
   @ApiBadRequestResponse({
-    description: 'Invalid search parameters provided.',
+    description: 'Invalid search parameters provided',
   })
   @ApiInternalServerErrorResponse({
-    description: 'Internal server error.',
+    description: 'Internal server error',
   })
   findCustomer(@Param() param: GetOdsCustomerParamDto): Promise<GetOdsCustomerResponse> {
     return this.odsService.findCustomer(param.urn);
@@ -91,13 +71,13 @@ export class OdsController {
     type: GetOdsDealResponse,
   })
   @ApiNotFoundResponse({
-    description: 'Deal not found.',
+    description: 'Deal not found',
   })
   @ApiBadRequestResponse({
-    description: 'Invalid search parameters provided.',
+    description: 'Invalid search parameters provided',
   })
   @ApiInternalServerErrorResponse({
-    description: 'Internal server error.',
+    description: 'Internal server error',
   })
   findDeal(@Param() param: GetOdsDealParamDto): Promise<GetOdsDealResponse> {
     return this.odsService.findDeal(param.id);

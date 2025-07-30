@@ -30,13 +30,13 @@ describe('logAxiosRequest', () => {
     data,
   };
 
-  let logger: PinoLogger;
+  let mockLogger: PinoLogger;
   let logAxiosRequest: AxiosRequestInterceptor;
 
   beforeEach(() => {
-    logger = new PinoLogger({});
-    logger.debug = jest.fn();
-    logAxiosRequest = logAxiosRequestWith(logger);
+    mockLogger = new PinoLogger({});
+    mockLogger.debug = jest.fn();
+    logAxiosRequest = logAxiosRequestWith(mockLogger);
 
     (filterAxiosRequestForLogging as jest.Mock).mockReset();
     when(filterAxiosRequestForLogging).calledWith(request).mockReturnValueOnce(filteredRequest);
@@ -45,7 +45,7 @@ describe('logAxiosRequest', () => {
   it('logs the filtered request at debug level using key OUTGOING_REQUEST_LOG_KEY', () => {
     logAxiosRequest(request);
 
-    expect(logger.debug).toHaveBeenCalledWith({ [OUTGOING_REQUEST_LOG_KEY]: filteredRequest }, 'Sending the following HTTP request.');
+    expect(mockLogger.debug).toHaveBeenCalledWith({ [OUTGOING_REQUEST_LOG_KEY]: filteredRequest }, 'Sending the following HTTP request.');
   });
 
   it('returns the original request', () => {

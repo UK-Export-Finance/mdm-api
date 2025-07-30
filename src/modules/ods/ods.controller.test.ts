@@ -11,7 +11,6 @@ describe('OdsController', () => {
   const mockLogger = new PinoLogger({});
 
   const odsService = new OdsService(null, mockLogger);
-  let odsServiceGetBusinessCentres: jest.Mock;
   let odsServiceFindBusinessCentreNonWorkingDays: jest.Mock;
   let odsServiceFindCustomer: jest.Mock;
   let odsServiceFindDeal: jest.Mock;
@@ -19,9 +18,6 @@ describe('OdsController', () => {
   let controller: OdsController;
 
   beforeEach(() => {
-    odsServiceGetBusinessCentres = jest.fn();
-    odsService.getBusinessCentres = odsServiceGetBusinessCentres;
-
     odsServiceFindBusinessCentreNonWorkingDays = jest.fn();
     odsService.findBusinessCentreNonWorkingDays = odsServiceFindBusinessCentreNonWorkingDays;
 
@@ -34,58 +30,12 @@ describe('OdsController', () => {
     controller = new OdsController(odsService);
   });
 
-  describe('getBusinessCentres', () => {
-    it('should call odsService.getBusinessCentres', async () => {
-      // Act
-      await controller.getBusinessCentres();
-
-      // Assert
-      expect(odsServiceGetBusinessCentres).toHaveBeenCalledTimes(1);
-    });
-
-    it('should return business centres', async () => {
-      // Arrange
-      const mockBusinessCentres = [
-        {
-          code: BUSINESS_CENTRE.EXAMPLES.CODE,
-          name: BUSINESS_CENTRE.EXAMPLES.NAME,
-        },
-      ];
-
-      odsService.getBusinessCentres = jest.fn().mockResolvedValueOnce(mockBusinessCentres);
-
-      controller = new OdsController(odsService);
-
-      // Act
-      const result = await controller.getBusinessCentres();
-
-      // Assert
-      expect(result).toEqual(mockBusinessCentres);
-    });
-
-    describe('when odsService.getBusinessCentres throws an error', () => {
-      it('should throw an error', async () => {
-        // Arrange
-        const odsService = new OdsService(null, mockLogger);
-
-        odsService.getBusinessCentres = jest.fn().mockRejectedValueOnce(mockError);
-
-        controller = new OdsController(odsService);
-
-        // Act & Assert
-        const promise = controller.getBusinessCentres();
-
-        await expect(promise).rejects.toThrow(mockError);
-      });
-    });
-  });
-
   describe('findBusinessCentreNonWorkingDays', () => {
     it.each([{ value: BUSINESS_CENTRE.EXAMPLES.CODE }, { value: '' }, { value: 'invalid' }])(
       `should call odsService.getBusinessCentres with $value`,
       async ({ value }) => {
         // Act
-        await controller.findBusinessCentreNonWorkingDays({ code: value });
+        await controller.findBusinessCentreNonWorkingDays({ centreCode: value });
 
         // Assert
         expect(odsServiceFindBusinessCentreNonWorkingDays).toHaveBeenCalledTimes(1);
@@ -108,7 +58,7 @@ describe('OdsController', () => {
       controller = new OdsController(odsService);
 
       // Act
-      const result = await controller.findBusinessCentreNonWorkingDays({ code: BUSINESS_CENTRE.EXAMPLES.CODE });
+      const result = await controller.findBusinessCentreNonWorkingDays({ centreCode: BUSINESS_CENTRE.EXAMPLES.CODE });
 
       // Assert
       expect(result).toEqual(mockNonWorkingDays);
@@ -124,7 +74,7 @@ describe('OdsController', () => {
         controller = new OdsController(odsService);
 
         // Act & Assert
-        const promise = controller.findBusinessCentreNonWorkingDays({ code: BUSINESS_CENTRE.EXAMPLES.CODE });
+        const promise = controller.findBusinessCentreNonWorkingDays({ centreCode: BUSINESS_CENTRE.EXAMPLES.CODE });
 
         await expect(promise).rejects.toThrow(mockError);
       });
