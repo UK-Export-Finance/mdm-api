@@ -1,6 +1,6 @@
 import { NotFoundException } from '@nestjs/common';
 import { DOM_BUSINESS_CENTRES, EXAMPLES } from '@ukef/constants';
-import { mapBusinessCentres } from '@ukef/helpers';
+import { mapBusinessCentre, mapBusinessCentres } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
@@ -29,7 +29,7 @@ describe('DomService', () => {
 
   describe('findBusinessCentre', () => {
     describe('when a business centre is found', () => {
-      it('should return the business centre', () => {
+      it('should return a mapped business centre', () => {
         // Arrange
         const mockCentreCode = DOM_BUSINESS_CENTRES.CM_YAO.CODE;
 
@@ -37,7 +37,7 @@ describe('DomService', () => {
         const response = service.findBusinessCentre(mockCentreCode);
 
         // Assert
-        const expected = DOM_BUSINESS_CENTRES.CM_YAO;
+        const expected = mapBusinessCentre(DOM_BUSINESS_CENTRES.CM_YAO);
 
         expect(response).toEqual(expected);
       });
