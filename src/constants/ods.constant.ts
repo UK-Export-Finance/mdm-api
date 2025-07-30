@@ -60,7 +60,7 @@ export const ODS_BUSINESS_CENTRES = Object.fromEntries(ODS_BUSINESS_CENTRE_CODES
 
 /**
  * Generate a union type of ODS business centre codes, e.g
- * 'A' | 'B' | 'C'
+ * 'AcB' | 'IvB' | 'AqB'
  */
 type ODSBusinessCentreCode = (typeof ODS_BUSINESS_CENTRE_CODES)[number];
 

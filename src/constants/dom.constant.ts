@@ -3,13 +3,63 @@ export interface DomBusinessCentre {
   NAME: string;
 }
 
+export const DOM_BUSINESS_CENTRE_CODES = [
+  'GH_ACC',
+  'CI_ABJ',
+  'ET_ADD',
+  'JO_AMM',
+  'NL_AMS',
+  'IQ_BGW',
+  'US_CHI',
+  'LK_CMB',
+  'SN_DKR',
+  'QA_DOH',
+  'AE_DXB',
+  'IQ_EBL',
+  'DE_FRA',
+  'TR_IST',
+  'ZA_JNB',
+  'UG_KLA',
+  'VC_KTN',
+  'GA_LBV',
+  'TG_LFW',
+  'GB_LON',
+  'AO_LAD',
+  'ZM_LUN',
+  'ES_MAD',
+  'MZ_MPM',
+  'CA_MTR',
+  'DE_MUC',
+  'OM_MCT',
+  'US_NYC',
+  'FR_PAR',
+  'BJ_PTN',
+  'CA_REG',
+  'KR_SEL',
+  'SG_SIN',
+  'SE_STO',
+  'TW_TPE',
+  'TARGET',
+  'JP_TYO',
+  'CA_VAN',
+  'AT_VIE',
+  'PL_WAW',
+  'CM_YAO',
+] as const;
+
+/**
+ * Generate a union type of DOM business centre codes, e.g
+ * 'GH_ACC' | 'CI_ABJ' | 'ET_ADD'
+ */
+type DOMBusinessCentreCode = (typeof DOM_BUSINESS_CENTRE_CODES)[number];
+
 /**
  * List of business centre codes to map ODS and DOM.
  * This allows consumers to send a DOM business centre code,
  * and obtain business centre data from ODS.
  * In the future, this will be replaced entirely by calling DOM.
  */
-export const DOM_BUSINESS_CENTRES = {
+export const DOM_BUSINESS_CENTRES: Record<DOMBusinessCentreCode, DomBusinessCentre> = {
   GH_ACC: {
     CODE: 'GH_ACC',
     NAME: 'Accra',
