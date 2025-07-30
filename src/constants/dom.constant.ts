@@ -45,6 +45,8 @@ export const DOM_BUSINESS_CENTRE_CODES = [
   'AT_VIE',
   'PL_WAW',
   'CM_YAO',
+  'UKEF01',
+  'UKEF03',
 ] as const;
 
 /**
@@ -223,5 +225,13 @@ export const DOM_BUSINESS_CENTRES: Record<DOMBusinessCentreCode, DomBusinessCent
   CM_YAO: {
     CODE: 'CM_YAO',
     NAME: 'Yaounde',
+  },
+  UKEF01: {
+    CODE: 'UKEF01',
+    NAME: 'Friday 1',
+  },
+  UKEF03: {
+    CODE: 'UKEF03',
+    NAME: 'Friday 3',
   },
 };
