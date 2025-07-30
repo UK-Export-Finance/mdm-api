@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { DOM_BUSINESS_CENTRES, EXAMPLES } from '@ukef/constants';
-import { mapBusinessCentres } from '@ukef/helpers';
+import { mapBusinessCentre, mapBusinessCentres } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 
 import { OdsService } from '../ods/ods.service';
@@ -30,7 +30,7 @@ export class DomService {
     const centre = DOM_BUSINESS_CENTRES[`${centreCode}`];
 
     if (centre) {
-      return centre;
+      return mapBusinessCentre(centre);
     }
 
     throw new NotFoundException(`No business centre found ${centreCode}`);

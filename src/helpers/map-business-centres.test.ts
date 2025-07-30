@@ -1,5 +1,6 @@
 import { DOM_BUSINESS_CENTRES } from '@ukef/constants';
 
+import { mapBusinessCentre } from './map-business-centre';
 import { mapBusinessCentres } from './map-business-centres';
 
 describe('mapBusinessCentres', () => {
@@ -11,10 +12,7 @@ describe('mapBusinessCentres', () => {
     const result = mapBusinessCentres(businessCentres);
 
     // Assert
-    const expected = businessCentres.map((centre) => ({
-      code: centre.CODE,
-      name: centre.NAME,
-    }));
+    const expected = businessCentres.map((centre) => mapBusinessCentre(centre));
 
     expect(result).toEqual(expected);
   });

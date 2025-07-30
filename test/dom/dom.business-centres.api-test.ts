@@ -32,7 +32,10 @@ describe('/dom - business centres', () => {
         // Assert
         expect(status).toBe(HttpStatus.OK);
 
-        const expected = DOM_BUSINESS_CENTRES.AE_DXB;
+        const expected = {
+          code: DOM_BUSINESS_CENTRES.AE_DXB.CODE,
+          name: DOM_BUSINESS_CENTRES.AE_DXB.NAME,
+        };
 
         expect(body).toEqual(expected);
       });
