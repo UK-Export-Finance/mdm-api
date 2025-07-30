@@ -29,12 +29,12 @@ describe('DomService', () => {
 
   describe('findBusinessCentre', () => {
     describe('when a business centre is found', () => {
-      it('should return the business centre', async () => {
+      it('should return the business centre', () => {
         // Arrange
         const mockCentreCode = DOM_BUSINESS_CENTRES.CM_YAO.CODE;
 
         // Act
-        const response = await service.findBusinessCentre(mockCentreCode);
+        const response = service.findBusinessCentre(mockCentreCode);
 
         // Assert
         const expected = DOM_BUSINESS_CENTRES.CM_YAO;
@@ -48,14 +48,17 @@ describe('DomService', () => {
         // Arrange
         const mockCentreCode = 'INVALID CODE';
 
-        // Act & Assert
-        const promise = service.findBusinessCentre(mockCentreCode);
+        // Act
+        const response = new Promise((resolve) => {
+          return resolve(service.findBusinessCentre(mockCentreCode));
+        });
 
-        await expect(promise).rejects.toBeInstanceOf(NotFoundException);
+        // Assert
+        await expect(response).rejects.toBeInstanceOf(NotFoundException);
 
-        const expected = new Error(`No business centre found ${mockCentreCode}`);
+        const expected = new NotFoundException(`No business centre found ${mockCentreCode}`);
 
-        await expect(promise).rejects.toThrow(expected);
+        await expect(response).rejects.toStrictEqual(expected);
       });
     });
   });

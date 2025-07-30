@@ -26,7 +26,7 @@ describe('DomController', () => {
   let controller: DomController;
 
   beforeEach(() => {
-    domServiceFindBusinessCentre = jest.fn().mockResolvedValueOnce(DOM_BUSINESS_CENTRES.AE_DXB);
+    domServiceFindBusinessCentre = jest.fn().mockReturnValueOnce(DOM_BUSINESS_CENTRES.AE_DXB);
     domService.findBusinessCentre = domServiceFindBusinessCentre;
 
     domServiceGetBusinessCentres = jest.fn();
@@ -39,22 +39,22 @@ describe('DomController', () => {
   });
 
   describe('findBusinessCentre', () => {
-    it('should call domService.findBusinessCentre', async () => {
+    it('should call domService.findBusinessCentre', () => {
       // Act
-      await controller.findBusinessCentre({ centreCode: DOM_BUSINESS_CENTRES.CM_YAO.CODE });
+      controller.findBusinessCentre({ centreCode: DOM_BUSINESS_CENTRES.CM_YAO.CODE });
 
       // Assert
       expect(domServiceFindBusinessCentre).toHaveBeenCalledTimes(1);
     });
 
-    it('should return the result of domService.findBusinessCentre', async () => {
+    it('should return the result of domService.findBusinessCentre', () => {
       // Arrange
-      domService.findBusinessCentre = jest.fn().mockResolvedValueOnce(DOM_BUSINESS_CENTRES.AE_DXB);
+      domService.findBusinessCentre = jest.fn().mockReturnValueOnce(DOM_BUSINESS_CENTRES.AE_DXB);
 
       controller = new DomController(domService);
 
       // Act
-      const result = await controller.findBusinessCentre({ centreCode: DOM_BUSINESS_CENTRES.CM_YAO.CODE });
+      const result = controller.findBusinessCentre({ centreCode: DOM_BUSINESS_CENTRES.CM_YAO.CODE });
 
       // Assert
       expect(result).toEqual(DOM_BUSINESS_CENTRES.AE_DXB);

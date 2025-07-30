@@ -24,27 +24,16 @@ export class DomService {
    * @returns {GetDomBusinessCentreResponse}
    * @throws {NotFoundException} If no business centre is found
    */
-  async findBusinessCentre(centreCode: string): Promise<GetDomBusinessCentreResponse> {
-    try {
-      this.logger.info('Finding DOM business centre %s', centreCode);
+  findBusinessCentre(centreCode: string): GetDomBusinessCentreResponse {
+    this.logger.info('Finding DOM business centre %s', centreCode);
 
-      const centre = await DOM_BUSINESS_CENTRES[`${centreCode}`];
+    const centre = DOM_BUSINESS_CENTRES[`${centreCode}`];
 
-      if (centre) {
-        return centre;
-      }
-
-      throw new NotFoundException(`No business centre found ${centreCode}`);
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        this.logger.warn(error);
-        throw error;
-      }
-
-      this.logger.error('Error finding DOM business centre %s %o', centreCode, error);
-
-      throw new Error(`Error finding DOM business centre ${centreCode}`, error);
+    if (centre) {
+      return centre;
     }
+
+    throw new NotFoundException(`No business centre found ${centreCode}`);
   }
 
   /**

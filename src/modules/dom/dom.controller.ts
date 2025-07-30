@@ -32,8 +32,8 @@ export class DomController {
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
   })
-  async findBusinessCentre(@Param() param: GetDomBusinessCentreParamDto): Promise<GetDomBusinessCentreResponse> {
-    return await this.domService.findBusinessCentre(param.centreCode);
+  findBusinessCentre(@Param() param: GetDomBusinessCentreParamDto): GetDomBusinessCentreResponse {
+    return this.domService.findBusinessCentre(param.centreCode);
   }
 
   @Get('business-centres')
