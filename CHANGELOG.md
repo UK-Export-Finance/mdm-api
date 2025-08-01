@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.27.1](https://github.com/UK-Export-Finance/mdm-api/compare/v1.27.0...v1.27.1) (2025-08-01)
+
+
+### Bug Fixes
+
+* **deps:** update dependency dotenv to v17 ([#1471](https://github.com/UK-Export-Finance/mdm-api/issues/1471)) ([d82564f](https://github.com/UK-Export-Finance/mdm-api/commit/d82564fbbdbc4889958ab2404bc74beffbb10486))
+
 ## [1.27.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.26.2...v1.27.0) (2025-05-12)
 
 
