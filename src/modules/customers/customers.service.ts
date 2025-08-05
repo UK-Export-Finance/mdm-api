@@ -211,6 +211,11 @@ export class CustomersService {
       CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
       CCM_Loss_Given_Default__c: CUSTOMERS.EXAMPLES.LOSS_GIVEN_DEFAULT,
       CCM_Probability_of_Default__c: DTFSCustomerDto.probabilityOfDefault,
+      CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity,
+      CCM_Industry__c: DTFSCustomerDto.ukefIndustryId,
+      CCM_Primary_Industry__c: DTFSCustomerDto.ukefIndustryId,
+      CCM_Industry_Group__c: DTFSCustomerDto.ukefSectorId,
+      CCM_Primary_Industry_Group__c: DTFSCustomerDto.ukefSectorId,
     };
 
     const salesforceCreateCustomerResponse: CreateCustomerSalesforceResponseDto = await this.salesforceService.createCustomer(createCustomerDto);
@@ -221,6 +226,10 @@ export class CustomersService {
         name: DTFSCustomerDto.companyName,
         sfId: salesforceCreateCustomerResponse?.success ? salesforceCreateCustomerResponse.id : null,
         companyRegNo: DTFSCustomerDto.companyRegistrationNumber,
+        probabilityOfDefault: DTFSCustomerDto.probabilityOfDefault,
+        ukEntity: DTFSCustomerDto.ukEntity,
+        ukefIndustryId: DTFSCustomerDto.ukefIndustryId,
+        ukefSectorId: DTFSCustomerDto.ukefSectorId,
         type: null,
         subtype: null,
         isLegacyRecord: isLegacyRecord,

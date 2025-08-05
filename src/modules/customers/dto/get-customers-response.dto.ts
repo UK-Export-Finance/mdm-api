@@ -26,6 +26,26 @@ export class GetCustomersResponseItem {
   readonly companyRegNo: string | null;
 
   @ApiProperty({
+    description: 'Probability of default of the company',
+  })
+  readonly probabilityOfDefault: number;
+
+  @ApiProperty({
+    description: 'Whether the company is UK based or not',
+  })
+  readonly ukEntity: string;
+
+  @ApiProperty({
+    description: 'UKEF industry identifier code',
+  })
+  readonly ukefIndustryId: string;
+
+  @ApiProperty({
+    description: 'UKEF industry sector identifier code',
+  })
+  readonly ukefSectorId: string;
+
+  @ApiProperty({
     description: 'Customer company type',
     enum: CustomerTypesEnum,
   })
