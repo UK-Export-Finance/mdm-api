@@ -5,6 +5,8 @@ import { DataSource, QueryRunner } from 'typeorm';
 import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { OdsService } from './ods.service';
 
+const mockError = new Error('An error occurred');
+
 describe('OdsService', () => {
   let service: OdsService;
   let mockQueryRunner: jest.Mocked<QueryRunner>;
@@ -91,12 +93,12 @@ describe('OdsService', () => {
         queryParameters: { customer_party_unique_reference_number: CUSTOMERS.EXAMPLES.PARTYURN },
       });
 
-      mockQueryRunner.query.mockRejectedValue(new Error('Test Error'));
+      mockQueryRunner.query.mockRejectedValue(mockError);
 
       // Act & Assert
       const promise = service.callOdsStoredProcedure(mockInput);
 
-      await expect(promise).rejects.toThrow('Test Error');
+      await expect(promise).rejects.toThrow(mockError);
 
       expect(mockDataSource.createQueryRunner).toHaveBeenCalledTimes(1);
       expect(mockQueryRunner.release).toHaveBeenCalledTimes(1);

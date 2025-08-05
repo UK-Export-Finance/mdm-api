@@ -20,25 +20,27 @@ const mockNonWorkingDays: GetOdsBusinessCentreNonWorkingDayResponse[] = [
   },
 ];
 
+const mockCentreCode = 'MOCK CODE';
+
 describe('mapBusinessCentreNonWorkingDays', () => {
   it('should return an array of mapped non working days', () => {
     // Act
-    const result = mapBusinessCentreNonWorkingDays(mockNonWorkingDays);
+    const result = mapBusinessCentreNonWorkingDays(mockNonWorkingDays, mockCentreCode);
 
     // Assert
     const expected = [
       {
-        code: mockNonWorkingDays[0].business_centre_code,
+        code: mockCentreCode,
         name: mockNonWorkingDays[0].non_working_day_name,
         date: mockNonWorkingDays[0].non_working_day_date,
       },
       {
-        code: mockNonWorkingDays[1].business_centre_code,
+        code: mockCentreCode,
         name: mockNonWorkingDays[1].non_working_day_name,
         date: mockNonWorkingDays[1].non_working_day_date,
       },
       {
-        code: mockNonWorkingDays[2].business_centre_code,
+        code: mockCentreCode,
         name: mockNonWorkingDays[2].non_working_day_name,
         date: mockNonWorkingDays[2].non_working_day_date,
       },
@@ -47,10 +49,20 @@ describe('mapBusinessCentreNonWorkingDays', () => {
     expect(result).toEqual(expected);
   });
 
-  describe('when an empty array is provided', () => {
+  describe('when an empty array of non working days is provided', () => {
     it('should return an empty array', () => {
       // Act
-      const result = mapBusinessCentreNonWorkingDays([]);
+      const result = mapBusinessCentreNonWorkingDays([], mockCentreCode);
+
+      // Assert
+      expect(result).toEqual([]);
+    });
+  });
+
+  describe('when an empty centre code is provided', () => {
+    it('should return an empty array', () => {
+      // Act
+      const result = mapBusinessCentreNonWorkingDays(mockNonWorkingDays, '');
 
       // Assert
       expect(result).toEqual([]);

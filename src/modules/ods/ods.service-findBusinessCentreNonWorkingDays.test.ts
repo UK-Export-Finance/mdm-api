@@ -1,6 +1,5 @@
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { BUSINESS_CENTRE } from '@ukef/constants';
-import { mapBusinessCentreNonWorkingDays } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
@@ -69,7 +68,7 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
     const result = await service.findBusinessCentreNonWorkingDays(BUSINESS_CENTRE.EXAMPLES.CODE);
 
     // Assert
-    const expected = mapBusinessCentreNonWorkingDays(JSON.parse(mockStoredProcedureOutput).results);
+    const expected = JSON.parse(mockStoredProcedureOutput).results;
 
     expect(result).toEqual(expected);
   });

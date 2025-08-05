@@ -1,12 +1,10 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DATABASE_NAME } from '@ukef/constants';
-import { mapBusinessCentreNonWorkingDays } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource } from 'typeorm';
 
 import {
-  GetOdsBusinessCentreNonWorkingDayMappedResponse,
   GetOdsBusinessCentreNonWorkingDayResponse,
   GetOdsCustomerResponse,
   GetOdsDealResponse,
@@ -132,10 +130,10 @@ export class OdsService {
   /**
    * Find and map a business centre's non working days from ODS
    * @param {String} centreCode The business centre's code
-   * @returns {Promise<GetOdsBusinessCentreNonWorkingDayMappedResponse[]>} Business centres
+   * @returns {Promise<GetOdsBusinessCentreNonWorkingDayResponse[]>} Business centres
    * @throws {InternalServerErrorException} If there is an error finding a business centre's non working days
    */
-  async findBusinessCentreNonWorkingDays(centreCode: string): Promise<GetOdsBusinessCentreNonWorkingDayMappedResponse[]> {
+  async findBusinessCentreNonWorkingDays(centreCode: string): Promise<GetOdsBusinessCentreNonWorkingDayResponse[]> {
     try {
       const storedProcedureInput = this.createOdsStoredProcedureInput({
         entityToQuery: ODS_ENTITIES.BUSINESS_CENTRE_NON_WORKING_DAY,
@@ -160,7 +158,7 @@ export class OdsService {
 
       const nonWorkingDays = storedProcedureJson.results as GetOdsBusinessCentreNonWorkingDayResponse[];
 
-      return mapBusinessCentreNonWorkingDays(nonWorkingDays);
+      return nonWorkingDays;
     } catch (error) {
       if (error instanceof NotFoundException) {
         this.logger.warn(error);

@@ -1,15 +1,23 @@
-import { GetOdsBusinessCentreNonWorkingDayMappedResponse, GetOdsBusinessCentreNonWorkingDayResponse } from '@ukef/modules/ods/dto';
+import { GetDomBusinessCentreNonWorkingDayMappedResponse } from '@ukef/modules/dom/dto';
+import { GetOdsBusinessCentreNonWorkingDayResponse } from '@ukef/modules/ods/dto';
 
 /**
  * Map a business centre's non working days data into a simpler format.
- * @param {GetOdsBusinessCentreNonWorkingDayResponse[]} Business centre - non working days
- * @returns {GetOdsBusinessCentreNonWorkingDayMappedResponse[]}
+ * @param {GetDomBusinessCentreNonWorkingDayResponse[]} Business centre - non working days
+ * @param {String} Business centre code
+ * @returns {GetDomBusinessCentreNonWorkingDayMappedResponse[]}
  */
 export const mapBusinessCentreNonWorkingDays = (
   nonWorkingDays: GetOdsBusinessCentreNonWorkingDayResponse[],
-): GetOdsBusinessCentreNonWorkingDayMappedResponse[] =>
-  nonWorkingDays.map((nonWorkingDay: GetOdsBusinessCentreNonWorkingDayResponse) => ({
-    code: nonWorkingDay.business_centre_code,
+  centreCode: string,
+): GetDomBusinessCentreNonWorkingDayMappedResponse[] => {
+  if (!centreCode) {
+    return [];
+  }
+
+  return nonWorkingDays.map((nonWorkingDay: GetOdsBusinessCentreNonWorkingDayResponse) => ({
+    code: centreCode,
     name: nonWorkingDay.non_working_day_name,
     date: nonWorkingDay.non_working_day_date,
   }));
+};
