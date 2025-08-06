@@ -57,6 +57,52 @@ describe('/dom - business centres', () => {
     });
   });
 
+  describe('/business-center/:centerCode/non-working-days', () => {
+    // Arrange
+    const baseUrl = `/api/${prefixAndVersion}/dom/business-centre`;
+
+    it(`should return ${HttpStatus.OK} with mapped non working days`, async () => {
+      // Arrange
+      const mockCentreCode = DOM_BUSINESS_CENTRES.AE_DXB.CODE;
+
+      // Act
+      const { status, body } = await api.get(`${baseUrl}/${mockCentreCode}/non-working-days`);
+
+      // Assert
+      expect(status).toBe(HttpStatus.OK);
+
+      const expected = expect.arrayContaining([
+        expect.objectContaining({
+          code: mockCentreCode,
+          name: expect.any(String),
+          date: expect.any(String),
+        }),
+      ]);
+
+      expect(body).toEqual(expected);
+    });
+
+    it(`should return ${HttpStatus.NOT_FOUND} when the provided code param is a valid format, but does not match an existing business centre`, async () => {
+      // Arrange
+      const mockCentreCode = 'INVALID CODE';
+
+      // Act
+      const { status, body } = await api.get(`${baseUrl}/${mockCentreCode}/non-working-days`);
+
+      // Assert
+      expect(status).toBe(HttpStatus.NOT_FOUND);
+
+      expect(body).toEqual({
+        statusCode: HttpStatus.NOT_FOUND,
+        message: `No DOM to ODS business centre code found ${mockCentreCode}`,
+        error: 'Not Found',
+      });
+    });
+
+    // TODO: APIM-613 - create a mock request to mimic receiving a 404 error from ODS non working days endpoint
+    // TODO: APIM-613 - create a mock request to mimic receiving a 500 error from ODS.
+  });
+
   describe('/business-centres', () => {
     const url = `/api/${prefixAndVersion}/dom/business-centres`;
 
