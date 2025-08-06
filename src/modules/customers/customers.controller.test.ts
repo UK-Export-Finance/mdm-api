@@ -1,5 +1,5 @@
 import { BadRequestException } from '@nestjs/common';
-import { CUSTOMERS, ENUMS } from '@ukef/constants';
+import { ENUMS, EXAMPLES } from '@ukef/constants';
 import { GetCustomersGenerator } from '@ukef-test/support/generator/get-customers-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { validate } from 'class-validator';
@@ -41,40 +41,40 @@ describe('CustomersController', () => {
   describe('getCustomers', () => {
     it.each([
       {
-        query: { name: CUSTOMERS.EXAMPLES.NAME, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES },
+        query: { name: EXAMPLES.CUSTOMER.NAME, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES },
       },
       {
-        query: { companyReg: CUSTOMERS.EXAMPLES.COMPANYREG, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES },
+        query: { companyReg: EXAMPLES.CUSTOMER.COMPANYREG, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES },
       },
       {
-        query: { partyUrn: CUSTOMERS.EXAMPLES.PARTYURN, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES },
+        query: { partyUrn: EXAMPLES.CUSTOMER.PARTYURN, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES },
       },
       {
-        query: { name: CUSTOMERS.EXAMPLES.NAME, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.NO },
+        query: { name: EXAMPLES.CUSTOMER.NAME, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.NO },
       },
       {
-        query: { companyReg: CUSTOMERS.EXAMPLES.COMPANYREG, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.NO },
+        query: { companyReg: EXAMPLES.CUSTOMER.COMPANYREG, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.NO },
       },
       {
-        query: { partyUrn: CUSTOMERS.EXAMPLES.PARTYURN, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.NO },
+        query: { partyUrn: EXAMPLES.CUSTOMER.PARTYURN, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.NO },
       },
       {
-        query: { name: CUSTOMERS.EXAMPLES.NAME, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.LEGACY_ONLY },
+        query: { name: EXAMPLES.CUSTOMER.NAME, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.LEGACY_ONLY },
       },
       {
-        query: { companyReg: CUSTOMERS.EXAMPLES.COMPANYREG, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.LEGACY_ONLY },
+        query: { companyReg: EXAMPLES.CUSTOMER.COMPANYREG, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.LEGACY_ONLY },
       },
       {
-        query: { partyUrn: CUSTOMERS.EXAMPLES.PARTYURN, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.LEGACY_ONLY },
+        query: { partyUrn: EXAMPLES.CUSTOMER.PARTYURN, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.LEGACY_ONLY },
       },
       {
-        query: { name: CUSTOMERS.EXAMPLES.NAME },
+        query: { name: EXAMPLES.CUSTOMER.NAME },
       },
       {
-        query: { companyReg: CUSTOMERS.EXAMPLES.COMPANYREG },
+        query: { companyReg: EXAMPLES.CUSTOMER.COMPANYREG },
       },
       {
-        query: { partyUrn: CUSTOMERS.EXAMPLES.PARTYURN },
+        query: { partyUrn: EXAMPLES.CUSTOMER.PARTYURN },
       },
     ])('get customers with query $query', async ({ query }) => {
       const { request, informaticaRequest, getCustomersResponse } = new GetCustomersGenerator(valueGenerator).generate({ numberToGenerate: 1, query });
@@ -94,19 +94,19 @@ describe('CustomersController', () => {
         query: { fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES },
       },
       {
-        query: { incorrectField: CUSTOMERS.EXAMPLES.NAME },
+        query: { incorrectField: EXAMPLES.CUSTOMER.NAME },
       },
       {
-        query: { name: CUSTOMERS.EXAMPLES.NAME, companyReg: CUSTOMERS.EXAMPLES.COMPANYREG },
+        query: { name: EXAMPLES.CUSTOMER.NAME, companyReg: EXAMPLES.CUSTOMER.COMPANYREG },
       },
       {
-        query: { name: CUSTOMERS.EXAMPLES.NAME, partyUrn: CUSTOMERS.EXAMPLES.PARTYURN },
+        query: { name: EXAMPLES.CUSTOMER.NAME, partyUrn: EXAMPLES.CUSTOMER.PARTYURN },
       },
       {
-        query: { companyReg: CUSTOMERS.EXAMPLES.COMPANYREG, partyUrn: CUSTOMERS.EXAMPLES.PARTYURN },
+        query: { companyReg: EXAMPLES.CUSTOMER.COMPANYREG, partyUrn: EXAMPLES.CUSTOMER.PARTYURN },
       },
       {
-        query: { name: CUSTOMERS.EXAMPLES.NAME, companyReg: CUSTOMERS.EXAMPLES.COMPANYREG, partyUrn: CUSTOMERS.EXAMPLES.PARTYURN },
+        query: { name: EXAMPLES.CUSTOMER.NAME, companyReg: EXAMPLES.CUSTOMER.COMPANYREG, partyUrn: EXAMPLES.CUSTOMER.PARTYURN },
       },
     ])('throws BadRequestException if there is more than 1 search parameter (name, companyReg, partyUrn)', ({ query }) => {
       const getCustomers = (query) => () => controller.getCustomers(query);
@@ -118,19 +118,19 @@ describe('CustomersController', () => {
 
   describe('getOrCreateCustomer', () => {
     const DTFSCustomerDtoWithProbabilityOfDefault: DTFSCustomerDto = {
-      companyRegistrationNumber: CUSTOMERS.EXAMPLES.COMPANYREG,
+      companyRegistrationNumber: EXAMPLES.CUSTOMER.COMPANYREG,
       companyName: 'TEST NAME',
       probabilityOfDefault: 3,
     };
 
     const DTFSCustomerDtoWithFalsyProbabilityOfDefault: DTFSCustomerDto = {
-      companyRegistrationNumber: CUSTOMERS.EXAMPLES.COMPANYREG,
+      companyRegistrationNumber: EXAMPLES.CUSTOMER.COMPANYREG,
       companyName: 'TEST NAME',
       probabilityOfDefault: undefined,
     };
 
     const DTFSCustomerDtoWithoutProbabilityOfDefault: DTFSCustomerDto = {
-      companyRegistrationNumber: CUSTOMERS.EXAMPLES.COMPANYREG,
+      companyRegistrationNumber: EXAMPLES.CUSTOMER.COMPANYREG,
       companyName: 'TEST NAME',
     };
 

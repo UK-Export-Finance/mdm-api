@@ -1,16 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BUSINESS_CENTRE } from '@ukef/constants';
+import { EXAMPLES } from '@ukef/constants';
 
 export class GetOdsBusinessCentreResponse {
   @ApiProperty({
     description: 'Business centre code',
-    example: BUSINESS_CENTRE.EXAMPLES.CODE,
+    example: EXAMPLES.BUSINESS_CENTRE.CODE,
   })
   readonly business_centre_code: string;
 
   @ApiProperty({
     description: 'Business centre name',
-    example: BUSINESS_CENTRE.EXAMPLES.NAME,
+    example: EXAMPLES.BUSINESS_CENTRE.NAME,
   })
   readonly business_centre_name: string;
 }

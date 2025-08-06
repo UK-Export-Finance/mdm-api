@@ -1,4 +1,4 @@
-import { CUSTOMERS } from '@ukef/constants';
+import { EXAMPLES } from '@ukef/constants';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
@@ -30,7 +30,7 @@ describe('OdsService', () => {
     it('should map the inputs to the stored procedure input format', () => {
       // Arrange
       const exampleCustomerQueryParameters = {
-        customer_party_unique_reference_number: CUSTOMERS.EXAMPLES.PARTYURN,
+        customer_party_unique_reference_number: EXAMPLES.CUSTOMER.PARTYURN,
       };
 
       // Act
@@ -59,7 +59,7 @@ describe('OdsService', () => {
       const mockInput: OdsStoredProcedureInput = service.createOdsStoredProcedureInput({
         entityToQuery: ODS_ENTITIES.CUSTOMER,
         queryPageSize: 100,
-        queryParameters: { customer_party_unique_reference_number: CUSTOMERS.EXAMPLES.PARTYURN },
+        queryParameters: { customer_party_unique_reference_number: EXAMPLES.CUSTOMER.PARTYURN },
       });
 
       const mockOutputBody = JSON.stringify({ id: '123', name: 'Test Customer' });
@@ -90,7 +90,7 @@ describe('OdsService', () => {
       // Arrange
       const mockInput: OdsStoredProcedureInput = service.createOdsStoredProcedureInput({
         entityToQuery: ODS_ENTITIES.CUSTOMER,
-        queryParameters: { customer_party_unique_reference_number: CUSTOMERS.EXAMPLES.PARTYURN },
+        queryParameters: { customer_party_unique_reference_number: EXAMPLES.CUSTOMER.PARTYURN },
       });
 
       mockQueryRunner.query.mockRejectedValue(mockError);

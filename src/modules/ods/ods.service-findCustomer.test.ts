@@ -1,5 +1,5 @@
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { CUSTOMERS } from '@ukef/constants';
+import { EXAMPLES } from '@ukef/constants';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
@@ -25,7 +25,7 @@ describe('OdsService - findCustomer', () => {
     service = new OdsService(mockDataSource, mockLogger);
   });
 
-  const mockCustomer = { urn: CUSTOMERS.EXAMPLES.PARTYURN, name: 'Test Customer' };
+  const mockCustomer = { urn: EXAMPLES.CUSTOMER.PARTYURN, name: 'Mock Customer' };
 
   const mockStoredProcedureOutput = `{
     "query_request_id": "Test ID",

@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { CUSTOMERS, UKEFID } from '@ukef/constants';
+import { EXAMPLES, UKEFID } from '@ukef/constants';
 import { regexToString } from '@ukef/helpers/regex.helper';
 import { Matches } from 'class-validator';
 
 export class GetOdsCustomerParamDto {
   @ApiProperty({
     required: true,
-    example: CUSTOMERS.EXAMPLES.PARTYURN,
+    example: EXAMPLES.CUSTOMER.PARTYURN,
     description: 'Unique UKEF customer ID',
     pattern: regexToString(UKEFID.PARTY_ID.REGEX),
   })
