@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { DOM_BUSINESS_CENTRES, EXAMPLES } from '@ukef/constants';
-import { mapBusinessCentre, mapBusinessCentres } from '@ukef/helpers';
+import { DOM_BUSINESS_CENTRES, DOM_TO_ODS_BUSINESS_CENTRES_MAPPING, EXAMPLES } from '@ukef/constants';
+import { mapBusinessCentre, mapBusinessCentreNonWorkingDays, mapBusinessCentres } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 
 import { OdsService } from '../ods/ods.service';
-import { GetDomBusinessCentreResponse, GetDomProductConfigurationResponse } from './dto';
+import { GetDomBusinessCentreNonWorkingDayMappedResponse, GetDomBusinessCentreResponse, GetDomProductConfigurationResponse } from './dto';
 
 /**
  * DOM service.
@@ -20,7 +20,7 @@ export class DomService {
   ) {}
 
   /**
-   * Find a business centre from ODS.
+   * Find a business centre in DOM
    * @returns {GetDomBusinessCentreResponse}
    * @throws {NotFoundException} If no business centre is found
    */
@@ -37,7 +37,40 @@ export class DomService {
   }
 
   /**
-   * Get all business centres from ODS and map into DOM data.
+   * Find a business centre's non working days in DOM
+   * @param {string} domCentreCode: DOM business centre code
+   * @returns {GetDomBusinessCentreNonWorkingDayMappedResponse[]}
+   * @throws {NotFoundException} If no business centre is found
+   */
+  async findBusinessCentreNonWorkingDays(domCentreCode: string): Promise<GetDomBusinessCentreNonWorkingDayMappedResponse[]> {
+    try {
+      this.logger.info('Getting DOM business centre %s non working days', domCentreCode);
+
+      // get the business centre's in ODS code
+      const odsCentreCode = DOM_TO_ODS_BUSINESS_CENTRES_MAPPING[`${domCentreCode}`];
+
+      if (!odsCentreCode) {
+        throw new NotFoundException(`No DOM to ODS business centre code found ${domCentreCode}`);
+      }
+
+      // get the non working days from ODS
+      const nonWorkingDays = await this.odsService.findBusinessCentreNonWorkingDays(odsCentreCode);
+
+      return mapBusinessCentreNonWorkingDays(nonWorkingDays, domCentreCode);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        this.logger.warn(error);
+        throw error;
+      }
+
+      this.logger.error('Error finding DOM business centre %s non working days %o', domCentreCode, error);
+
+      throw new Error(`Error finding DOM business centre ${domCentreCode} non working days`, error);
+    }
+  }
+
+  /**
+   * Get all business centres
    * @returns {GetDomBusinessCentreResponse[]}
    */
   getBusinessCentres(): GetDomBusinessCentreResponse[] {

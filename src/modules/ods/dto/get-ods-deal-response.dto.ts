@@ -1,22 +1,22 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { DEALS } from '@ukef/constants';
+import { EXAMPLES } from '@ukef/constants';
 
 export class GetOdsDealResponse {
   @ApiProperty({
     description: 'Unique UKEF deal ID',
-    example: DEALS.EXAMPLES.ID,
+    example: EXAMPLES.DEAL.ID,
   })
   readonly dealId: string;
 
   @ApiProperty({
     description: 'Deal name',
-    example: DEALS.EXAMPLES.NAME,
+    example: EXAMPLES.DEAL.NAME,
   })
   readonly name: string;
 
   @ApiProperty({
     description: 'Deal description',
-    example: DEALS.EXAMPLES.DESCRIPTION,
+    example: EXAMPLES.DEAL.DESCRIPTION,
   })
   readonly description: string;
 }

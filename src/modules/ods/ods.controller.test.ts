@@ -1,4 +1,4 @@
-import { BUSINESS_CENTRE, CUSTOMERS, DEALS } from '@ukef/constants';
+import { EXAMPLES } from '@ukef/constants';
 import { when } from 'jest-when';
 import { PinoLogger } from 'nestjs-pino';
 
@@ -30,59 +30,8 @@ describe('OdsController', () => {
     controller = new OdsController(odsService);
   });
 
-  describe('findBusinessCentreNonWorkingDays', () => {
-    it.each([{ value: BUSINESS_CENTRE.EXAMPLES.CODE }, { value: '' }, { value: 'invalid' }])(
-      `should call odsService.getBusinessCentres with $value`,
-      async ({ value }) => {
-        // Act
-        await controller.findBusinessCentreNonWorkingDays({ centreCode: value });
-
-        // Assert
-        expect(odsServiceFindBusinessCentreNonWorkingDays).toHaveBeenCalledTimes(1);
-        expect(odsServiceFindBusinessCentreNonWorkingDays).toHaveBeenCalledWith(value);
-      },
-    );
-
-    it('should return non working days', async () => {
-      // Arrange
-      const mockNonWorkingDays = [
-        {
-          code: BUSINESS_CENTRE.EXAMPLES.CODE,
-          name: BUSINESS_CENTRE.EXAMPLES.NON_WORKING_DAY.NAME,
-          date: BUSINESS_CENTRE.EXAMPLES.NON_WORKING_DAY.DATE,
-        },
-      ];
-
-      odsService.findBusinessCentreNonWorkingDays = jest.fn().mockResolvedValueOnce(mockNonWorkingDays);
-
-      controller = new OdsController(odsService);
-
-      // Act
-      const result = await controller.findBusinessCentreNonWorkingDays({ centreCode: BUSINESS_CENTRE.EXAMPLES.CODE });
-
-      // Assert
-      expect(result).toEqual(mockNonWorkingDays);
-    });
-
-    describe('when odsService.findBusinessCentreNonWorkingDays throws an error', () => {
-      it('should throw an error', async () => {
-        // Arrange
-        const odsService = new OdsService(null, mockLogger);
-
-        odsService.findBusinessCentreNonWorkingDays = jest.fn().mockRejectedValueOnce(mockError);
-
-        controller = new OdsController(odsService);
-
-        // Act & Assert
-        const promise = controller.findBusinessCentreNonWorkingDays({ centreCode: BUSINESS_CENTRE.EXAMPLES.CODE });
-
-        await expect(promise).rejects.toThrow(mockError);
-      });
-    });
-  });
-
   describe('findCustomer', () => {
-    it.each([{ value: CUSTOMERS.EXAMPLES.PARTYURN }, { value: '' }, { value: 'invalid' }])(
+    it.each([{ value: EXAMPLES.CUSTOMER.PARTYURN }, { value: '' }, { value: 'invalid' }])(
       `should call odsService.findCustomer with $value`,
       async ({ value }) => {
         // Act
@@ -96,12 +45,12 @@ describe('OdsController', () => {
 
     it('should return a customer when a valid customer URN is provided', async () => {
       // Arrange
-      const mockCustomerDetails = { urn: CUSTOMERS.EXAMPLES.PARTYURN, name: 'Test customer name' };
+      const mockCustomerDetails = { urn: EXAMPLES.CUSTOMER.PARTYURN, name: 'Test customer name' };
 
-      when(odsServiceFindCustomer).calledWith(CUSTOMERS.EXAMPLES.PARTYURN).mockResolvedValueOnce(mockCustomerDetails);
+      when(odsServiceFindCustomer).calledWith(EXAMPLES.CUSTOMER.PARTYURN).mockResolvedValueOnce(mockCustomerDetails);
 
       // Act
-      const result = await controller.findCustomer({ urn: CUSTOMERS.EXAMPLES.PARTYURN });
+      const result = await controller.findCustomer({ urn: EXAMPLES.CUSTOMER.PARTYURN });
 
       // Assert
       expect(result).toEqual(mockCustomerDetails);
@@ -117,7 +66,7 @@ describe('OdsController', () => {
         controller = new OdsController(odsService);
 
         // Act & Assert
-        const promise = controller.findCustomer({ urn: CUSTOMERS.EXAMPLES.PARTYURN });
+        const promise = controller.findCustomer({ urn: EXAMPLES.CUSTOMER.PARTYURN });
 
         await expect(promise).rejects.toThrow(mockError);
       });
@@ -125,7 +74,7 @@ describe('OdsController', () => {
   });
 
   describe('findDeal', () => {
-    it.each([{ value: DEALS.EXAMPLES.ID }, { value: '' }, { value: 'invalid' }])(`should call odsService.findDeal with $value`, async ({ value }) => {
+    it.each([{ value: EXAMPLES.DEAL.ID }, { value: '' }, { value: 'invalid' }])(`should call odsService.findDeal with $value`, async ({ value }) => {
       // Act
       await controller.findDeal({ id: value });
 
@@ -136,12 +85,12 @@ describe('OdsController', () => {
 
     it('should return a deal when a valid deal ID is provided', async () => {
       // Arrange
-      const mockDeal = { id: DEALS.EXAMPLES.ID, name: 'Test deal name' };
+      const mockDeal = { id: EXAMPLES.DEAL.ID, name: 'Test deal name' };
 
-      when(odsServiceFindDeal).calledWith(DEALS.EXAMPLES.ID).mockResolvedValueOnce(mockDeal);
+      when(odsServiceFindDeal).calledWith(EXAMPLES.DEAL.ID).mockResolvedValueOnce(mockDeal);
 
       // Act
-      const result = await controller.findDeal({ id: DEALS.EXAMPLES.ID });
+      const result = await controller.findDeal({ id: EXAMPLES.DEAL.ID });
 
       // Assert
       expect(result).toEqual(mockDeal);
@@ -157,7 +106,7 @@ describe('OdsController', () => {
         controller = new OdsController(odsService);
 
         // Act & Assert
-        const promise = controller.findDeal({ id: DEALS.EXAMPLES.ID });
+        const promise = controller.findDeal({ id: EXAMPLES.DEAL.ID });
 
         await expect(promise).rejects.toThrow(mockError);
       });

@@ -1,9 +1,11 @@
-import { CUSTOMERS } from '@ukef/constants';
+import { EXAMPLES } from '@ukef/constants';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
 import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { OdsService } from './ods.service';
+
+const mockError = new Error('An error occurred');
 
 describe('OdsService', () => {
   let service: OdsService;
@@ -28,7 +30,7 @@ describe('OdsService', () => {
     it('should map the inputs to the stored procedure input format', () => {
       // Arrange
       const exampleCustomerQueryParameters = {
-        customer_party_unique_reference_number: CUSTOMERS.EXAMPLES.PARTYURN,
+        customer_party_unique_reference_number: EXAMPLES.CUSTOMER.PARTYURN,
       };
 
       // Act
@@ -57,7 +59,7 @@ describe('OdsService', () => {
       const mockInput: OdsStoredProcedureInput = service.createOdsStoredProcedureInput({
         entityToQuery: ODS_ENTITIES.CUSTOMER,
         queryPageSize: 100,
-        queryParameters: { customer_party_unique_reference_number: CUSTOMERS.EXAMPLES.PARTYURN },
+        queryParameters: { customer_party_unique_reference_number: EXAMPLES.CUSTOMER.PARTYURN },
       });
 
       const mockOutputBody = JSON.stringify({ id: '123', name: 'Test Customer' });
@@ -88,15 +90,15 @@ describe('OdsService', () => {
       // Arrange
       const mockInput: OdsStoredProcedureInput = service.createOdsStoredProcedureInput({
         entityToQuery: ODS_ENTITIES.CUSTOMER,
-        queryParameters: { customer_party_unique_reference_number: CUSTOMERS.EXAMPLES.PARTYURN },
+        queryParameters: { customer_party_unique_reference_number: EXAMPLES.CUSTOMER.PARTYURN },
       });
 
-      mockQueryRunner.query.mockRejectedValue(new Error('Test Error'));
+      mockQueryRunner.query.mockRejectedValue(mockError);
 
       // Act & Assert
       const promise = service.callOdsStoredProcedure(mockInput);
 
-      await expect(promise).rejects.toThrow('Test Error');
+      await expect(promise).rejects.toThrow(mockError);
 
       expect(mockDataSource.createQueryRunner).toHaveBeenCalledTimes(1);
       expect(mockQueryRunner.release).toHaveBeenCalledTimes(1);

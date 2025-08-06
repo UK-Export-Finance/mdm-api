@@ -5,8 +5,22 @@ import { DataSource, QueryRunner } from 'typeorm';
 import { OdsService } from '../ods/ods.service';
 import { DomController } from './dom.controller';
 import { DomService } from './dom.service';
+import { GetDomBusinessCentreNonWorkingDayMappedResponse } from './dto';
 
 const mockError = new Error('An error occurred');
+
+const mockBusinessCentreNonWorkingDays: GetDomBusinessCentreNonWorkingDayMappedResponse[] = [
+  {
+    code: EXAMPLES.BUSINESS_CENTRE.CODE,
+    date: EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.DATE,
+    name: EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME,
+  },
+  {
+    code: EXAMPLES.BUSINESS_CENTRE.CODE,
+    date: EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.DATE,
+    name: EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME,
+  },
+];
 
 describe('DomController', () => {
   let mockQueryRunner: jest.Mocked<QueryRunner>;
@@ -20,6 +34,7 @@ describe('DomController', () => {
   const domService = new DomService(odsService, mockLogger);
 
   let domServiceFindBusinessCentre: jest.Mock;
+  let domServiceFindBusinessCentreNonWorkingDays: jest.Mock;
   let domServiceGetBusinessCentres: jest.Mock;
   let domServiceGetProductConfigurations: jest.Mock;
 
@@ -29,10 +44,13 @@ describe('DomController', () => {
     domServiceFindBusinessCentre = jest.fn().mockReturnValueOnce(DOM_BUSINESS_CENTRES.AE_DXB);
     domService.findBusinessCentre = domServiceFindBusinessCentre;
 
-    domServiceGetBusinessCentres = jest.fn();
+    domServiceFindBusinessCentreNonWorkingDays = jest.fn().mockResolvedValueOnce(mockBusinessCentreNonWorkingDays);
+    domService.findBusinessCentreNonWorkingDays = domServiceFindBusinessCentreNonWorkingDays;
+
+    domServiceGetBusinessCentres = jest.fn().mockReturnValueOnce(EXAMPLES.DOM.BUSINESS_CENTRES);
     domService.getBusinessCentres = domServiceGetBusinessCentres;
 
-    domServiceGetProductConfigurations = jest.fn();
+    domServiceGetProductConfigurations = jest.fn().mockResolvedValueOnce(EXAMPLES.DOM.PRODUCT_CONFIGURATIONS);
     domService.getProductConfigurations = domServiceGetProductConfigurations;
 
     controller = new DomController(domService);
@@ -48,16 +66,45 @@ describe('DomController', () => {
     });
 
     it('should return the result of domService.findBusinessCentre', () => {
-      // Arrange
-      domService.findBusinessCentre = jest.fn().mockReturnValueOnce(DOM_BUSINESS_CENTRES.AE_DXB);
-
-      controller = new DomController(domService);
-
       // Act
       const result = controller.findBusinessCentre({ centreCode: DOM_BUSINESS_CENTRES.CM_YAO.CODE });
 
       // Assert
       expect(result).toEqual(DOM_BUSINESS_CENTRES.AE_DXB);
+    });
+  });
+
+  describe('findBusinessCentreNonWorkingDays', () => {
+    it('should call domService.findBusinessCentreNonWorkingDays', async () => {
+      // Act
+      await controller.findBusinessCentreNonWorkingDays({ centreCode: DOM_BUSINESS_CENTRES.CM_YAO.CODE });
+
+      // Assert
+      expect(domServiceFindBusinessCentreNonWorkingDays).toHaveBeenCalledTimes(1);
+    });
+
+    it('should return the result of domService.findBusinessCentreNonWorkingDays', async () => {
+      // Act
+      const result = await controller.findBusinessCentreNonWorkingDays({ centreCode: DOM_BUSINESS_CENTRES.CM_YAO.CODE });
+
+      // Assert
+      expect(result).toEqual(mockBusinessCentreNonWorkingDays);
+    });
+
+    describe('when domService.findBusinessCentreNonWorkingDays throws an error', () => {
+      it('should throw an error', async () => {
+        // Arrange
+        const domService = new DomService(odsService, mockLogger);
+
+        domService.findBusinessCentreNonWorkingDays = jest.fn().mockRejectedValueOnce(mockError);
+
+        controller = new DomController(domService);
+
+        // Act & Assert
+        const promise = controller.findBusinessCentreNonWorkingDays({ centreCode: DOM_BUSINESS_CENTRES.CM_YAO.CODE });
+
+        await expect(promise).rejects.toThrow(mockError);
+      });
     });
   });
 
@@ -71,11 +118,6 @@ describe('DomController', () => {
     });
 
     it('should return product configurations', () => {
-      // Arrange
-      domService.getBusinessCentres = jest.fn().mockReturnValueOnce(EXAMPLES.DOM.BUSINESS_CENTRES);
-
-      controller = new DomController(domService);
-
       // Act
       const result = controller.getBusinessCentres();
 
@@ -94,11 +136,6 @@ describe('DomController', () => {
     });
 
     it('should return product configurations', async () => {
-      // Arrange
-      domService.getProductConfigurations = jest.fn().mockResolvedValueOnce(EXAMPLES.DOM.PRODUCT_CONFIGURATIONS);
-
-      controller = new DomController(domService);
-
       // Act
       const result = await controller.getProductConfigurations();
 

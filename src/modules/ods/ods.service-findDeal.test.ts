@@ -1,5 +1,5 @@
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { DEALS } from '@ukef/constants';
+import { EXAMPLES } from '@ukef/constants';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
@@ -32,9 +32,9 @@ describe('OdsService - findDeal', () => {
       "total_result_count": 1,
       "results": [
         {
-          "deal_code": "${DEALS.EXAMPLES.ID}",
-          "deal_name": "${DEALS.EXAMPLES.NAME}",
-          "deal_type_description": "${DEALS.EXAMPLES.DESCRIPTION}"
+          "deal_code": "${EXAMPLES.DEAL.ID}",
+          "deal_name": "${EXAMPLES.DEAL.NAME}",
+          "deal_type_description": "${EXAMPLES.DEAL.DESCRIPTION}"
         }
       ]
     }`;
@@ -45,13 +45,13 @@ describe('OdsService - findDeal', () => {
 
   it('should call service.callOdsStoredProcedure', async () => {
     // Act
-    await service.findDeal(DEALS.EXAMPLES.ID);
+    await service.findDeal(EXAMPLES.DEAL.ID);
 
     // Assert
     const expectedStoredProcedureInput: OdsStoredProcedureInput = service.createOdsStoredProcedureInput({
       entityToQuery: ODS_ENTITIES.DEAL,
       queryPageSize: 1,
-      queryParameters: { deal_code: DEALS.EXAMPLES.ID },
+      queryParameters: { deal_code: EXAMPLES.DEAL.ID },
     });
 
     expect(service.callOdsStoredProcedure).toHaveBeenCalledTimes(1);
@@ -60,13 +60,13 @@ describe('OdsService - findDeal', () => {
 
   it('should return a deal', async () => {
     // Act
-    const result = await service.findDeal(DEALS.EXAMPLES.ID);
+    const result = await service.findDeal(EXAMPLES.DEAL.ID);
 
     // Assert
     const expected = {
-      dealId: DEALS.EXAMPLES.ID,
-      name: DEALS.EXAMPLES.NAME,
-      description: DEALS.EXAMPLES.DESCRIPTION,
+      dealId: EXAMPLES.DEAL.ID,
+      name: EXAMPLES.DEAL.NAME,
+      description: EXAMPLES.DEAL.DESCRIPTION,
     };
 
     expect(result).toEqual(expected);
@@ -81,11 +81,11 @@ describe('OdsService - findDeal', () => {
       jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
 
       // Act & Assert
-      const promise = service.findDeal(DEALS.EXAMPLES.ID);
+      const promise = service.findDeal(EXAMPLES.DEAL.ID);
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error(`Error finding deal ${DEALS.EXAMPLES.ID}`);
+      const expected = new Error(`Error finding deal ${EXAMPLES.DEAL.ID}`);
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -98,11 +98,11 @@ describe('OdsService - findDeal', () => {
       jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
 
       // Act & Assert
-      const promise = service.findDeal(DEALS.EXAMPLES.ID);
+      const promise = service.findDeal(EXAMPLES.DEAL.ID);
 
       await expect(promise).rejects.toBeInstanceOf(NotFoundException);
 
-      const expected = new Error(`No deal found ${DEALS.EXAMPLES.ID}`);
+      const expected = new Error(`No deal found ${EXAMPLES.DEAL.ID}`);
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -115,11 +115,11 @@ describe('OdsService - findDeal', () => {
       jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
 
       // Act & Assert
-      const promise = service.findDeal(DEALS.EXAMPLES.ID);
+      const promise = service.findDeal(EXAMPLES.DEAL.ID);
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error(`Error finding deal ${DEALS.EXAMPLES.ID}`);
+      const expected = new Error(`Error finding deal ${EXAMPLES.DEAL.ID}`);
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -130,11 +130,11 @@ describe('OdsService - findDeal', () => {
       jest.spyOn(service, 'callOdsStoredProcedure').mockRejectedValue('Mock ODS error');
 
       // Act & Assert
-      const promise = service.findDeal(DEALS.EXAMPLES.ID);
+      const promise = service.findDeal(EXAMPLES.DEAL.ID);
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error(`Error finding deal ${DEALS.EXAMPLES.ID}`);
+      const expected = new Error(`Error finding deal ${EXAMPLES.DEAL.ID}`);
 
       await expect(promise).rejects.toThrow(expected);
     });
