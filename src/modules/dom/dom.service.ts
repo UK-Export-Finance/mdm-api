@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { DOM_BUSINESS_CENTRES, EXAMPLES } from '@ukef/constants';
+import { DOM_BUSINESS_CENTRES, DOM_TO_ODS_BUSINESS_CENTRES_MAPPING, EXAMPLES } from '@ukef/constants';
 import { mapBusinessCentre, mapBusinessCentreNonWorkingDays, mapBusinessCentres } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 
@@ -38,6 +38,7 @@ export class DomService {
 
   /**
    * Find a business centre's non working days in DOM
+   * @param {String} domCentreCode: DOM business centre code
    * @returns {GetDomBusinessCentreNonWorkingDayMappedResponse[]}
    * @throws {NotFoundException} If no business centre is found
    */
@@ -45,11 +46,15 @@ export class DomService {
     try {
       this.logger.info('Getting DOM business centre %s non working days', domCentreCode);
 
-      // get the business centre in ODS
-      const odsCentre = this.findBusinessCentre(domCentreCode);
+      // get the business centre's in ODS code
+      const odsCentreCode = DOM_TO_ODS_BUSINESS_CENTRES_MAPPING[`${domCentreCode}`];
+
+      if (!odsCentreCode) {
+        throw new NotFoundException(`No DOM to ODS business centre code found ${domCentreCode}`);
+      }
 
       // get the non working days from ODS
-      const nonWorkingDays = await this.odsService.findBusinessCentreNonWorkingDays(odsCentre.code);
+      const nonWorkingDays = await this.odsService.findBusinessCentreNonWorkingDays(odsCentreCode);
 
       return mapBusinessCentreNonWorkingDays(nonWorkingDays, domCentreCode);
     } catch (error) {

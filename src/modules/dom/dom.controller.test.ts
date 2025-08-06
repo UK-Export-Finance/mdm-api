@@ -8,7 +8,6 @@ import { DomService } from './dom.service';
 
 const mockError = new Error('An error occurred');
 
-// TODO: DRY
 const mockBusinessCentreNonWorkingDays = [
   {
     centre: BUSINESS_CENTRE.EXAMPLES.CODE,
