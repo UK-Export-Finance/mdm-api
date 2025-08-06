@@ -219,7 +219,7 @@ export class CustomersService {
       CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
       CCM_Loss_Given_Default__c: CUSTOMERS.EXAMPLES.LOSS_GIVEN_DEFAULT,
       CCM_Probability_of_Default__c: DTFSCustomerDto.probabilityOfDefault,
-      CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity.toString(),
+      CCM_Citizenship_Class__c: String(DTFSCustomerDto.ukEntity),
       CCM_Industry__c: DTFSCustomerDto.ukefIndustryId,
       CCM_Primary_Industry__c: DTFSCustomerDto.ukefIndustryId,
       CCM_Industry_Group__c: DTFSCustomerDto.ukefSectorId,
