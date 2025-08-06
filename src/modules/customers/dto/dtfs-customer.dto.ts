@@ -23,11 +23,13 @@ export class DTFSCustomerDto {
   probabilityOfDefault?: number;
 
   @ApiProperty({ description: 'UK entity' })
-  @IsString()
+  @IsNumber()
   @IsNotEmpty()
+  @Min(0)
+  @Max(1)
   @MinLength(1)
   @MaxLength(1)
-  ukEntity?: string;
+  ukEntity?: number;
 
   @ApiProperty({ description: 'UKEF industry identifier code' })
   @IsString()

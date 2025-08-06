@@ -105,13 +105,49 @@ describe('CustomerService', () => {
     const createUkefIdResponse: UkefId[] = [{ maskedId: 'TEST PARTY_URN', type: null, createdBy: null, createdDatetime: null, requestingSystem: null }];
     const dunAndBradstreetGetDunsNumberResponse: string = 'TEST DUNS_NUMBER';
     const createCustomerResponse: GetCustomersInformaticaResponseItem[] = [
-      { companyRegNo: '12345678', name: 'TEST NAME', partyUrn: 'TEST PARTY_URN', sfId: 'customer-id', type: null, subtype: null, isLegacyRecord: false },
+      {
+        partyUrn: 'TEST PARTY_URN',
+        name: 'TEST NAME',
+        sfId: 'customer-id',
+        companyRegNo: '12345678',
+        probabilityOfDefault: 1,
+        ukEntity: 1,
+        ukefIndustryId: '01234',
+        ukefSectorId: '1',
+        type: null,
+        subtype: null,
+        isLegacyRecord: false,
+      },
     ];
     const createCustomerResponseWithNoPartyUrn: GetCustomersInformaticaResponseItem[] = [
-      { companyRegNo: '12345678', name: 'TEST NAME', partyUrn: null, sfId: 'customer-id', type: null, subtype: null, isLegacyRecord: false },
+      {
+        partyUrn: null,
+        name: 'TEST NAME',
+        sfId: 'customer-id',
+        companyRegNo: '12345678',
+        probabilityOfDefault: 1,
+        ukEntity: 1,
+        ukefIndustryId: '01234',
+        ukefSectorId: '1',
+        type: null,
+        subtype: null,
+        isLegacyRecord: false,
+      },
     ];
     const createCustomerResponseWithLegacyUrn: GetCustomersInformaticaResponseItem[] = [
-      { companyRegNo: '12345678', name: 'TEST NAME', partyUrn: 'SOME_LEGACY_URN', sfId: 'customer-id', type: null, subtype: null, isLegacyRecord: true },
+      {
+        partyUrn: 'SOME_LEGACY_URN',
+        name: 'TEST NAME',
+        sfId: 'customer-id',
+        companyRegNo: '12345678',
+        probabilityOfDefault: 1,
+        ukEntity: 1,
+        ukefIndustryId: '01234',
+        ukefSectorId: '1',
+        type: null,
+        subtype: null,
+        isLegacyRecord: true,
+      },
     ];
 
     describe('when the customer does exist', () => {

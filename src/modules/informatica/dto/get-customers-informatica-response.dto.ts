@@ -5,6 +5,10 @@ export interface GetCustomersInformaticaResponseItem {
   name: string;
   sfId: string;
   companyRegNo: string;
+  probabilityOfDefault: number;
+  ukEntity: number;
+  ukefIndustryId: string;
+  ukefSectorId: string;
   type: string;
   subtype: string;
   isLegacyRecord: boolean;
