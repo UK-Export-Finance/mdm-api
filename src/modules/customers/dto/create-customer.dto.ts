@@ -56,34 +56,20 @@ export class CreateCustomerDto {
   @IsString()
   @IsNotEmpty()
   @MinLength(1)
-  @MaxLength(1)
+  @MaxLength(3)
   CCM_Citizenship_Class__c?: string;
 
   @ApiProperty({ description: 'UKEF industry identifier' })
   @IsString()
   @IsNotEmpty()
   @MinLength(1)
-  @MaxLength(3)
-  CCM_Industry__c?: string;
-
-  @ApiProperty({ description: 'UKEF industry identifier' })
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(1)
-  @MaxLength(4)
+  @MaxLength(200)
   CCM_Primary_Industry__c?: string;
 
   @ApiProperty({ description: 'UKEF industry sector identifier' })
   @IsString()
   @IsNotEmpty()
   @MinLength(1)
-  @MaxLength(4)
-  CCM_Industry_Group__c?: string;
-
-  @ApiProperty({ description: 'UKEF industry sector identifier' })
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(1)
-  @MaxLength(3)
+  @MaxLength(200)
   CCM_Primary_Industry_Group__c?: string;
 }

@@ -33,17 +33,17 @@ export class GetCustomersResponseItem {
   @ApiProperty({
     description: 'Whether the company is UK based or not',
   })
-  readonly ukEntity: number;
+  readonly ukEntity: string;
 
   @ApiProperty({
     description: 'UKEF industry identifier code',
   })
-  readonly ukefIndustryId: string;
+  readonly ukefIndustryName: string;
 
   @ApiProperty({
     description: 'UKEF industry sector identifier code',
   })
-  readonly ukefSectorId: string;
+  readonly ukefSectorName: string;
 
   @ApiProperty({
     description: 'Customer company type',

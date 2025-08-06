@@ -41,7 +41,7 @@ export class SalesforceService {
   async createCustomer(createCustomerDto: CreateCustomerDto): Promise<CreateCustomerSalesforceResponseDto> {
     const path = '/sobjects/Account';
     const access_token = await this.getAccessToken();
-    const { data } = await this.httpClient.post<CreateCustomerDto, CreateCustomerSalesforceResponseDto>({
+    const response = await this.httpClient.post<CreateCustomerDto, CreateCustomerSalesforceResponseDto>({
       path,
       body: createCustomerDto,
       headers: {
@@ -52,7 +52,8 @@ export class SalesforceService {
         knownErrors: [customerAlreadyExistsSalesforceError()],
       }),
     });
-    return data;
+
+    return response.data;
   }
 
   /**
