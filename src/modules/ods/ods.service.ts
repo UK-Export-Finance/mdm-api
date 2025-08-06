@@ -129,7 +129,7 @@ export class OdsService {
 
   /**
    * Find and map a business centre's non working days from ODS
-   * @param {String} centreCode The business centre's code
+   * @param {string} centreCode The business centre's code
    * @returns {Promise<GetOdsBusinessCentreNonWorkingDayResponse[]>} Business centres
    * @throws {InternalServerErrorException} If there is an error finding a business centre's non working days
    */
@@ -173,7 +173,7 @@ export class OdsService {
   /**
    * Creates the input parameter for the stored procedure
    * @param {OdsEntity} entityToQuery The entity you want to query in ODS
-   * @param {Number} queryPageSize The page size to query in ODS
+   * @param {number} queryPageSize The page size to query in ODS
    * @param {OdsStoredProcedureQueryParams} queryParameters The query parameters and filters to apply to the query
    *
    * @returns {OdsStoredProcedureInput} The ODS stored procedure input in object format

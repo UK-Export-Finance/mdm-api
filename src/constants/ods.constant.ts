@@ -44,7 +44,7 @@ const ODS_BUSINESS_CENTRE_CODES = [
 
 /**
  * Generate a dynamic object of ODS business centres.
- * @returns {Object}
+ * @returns {object}
  * @example
  * ```ts
  * {

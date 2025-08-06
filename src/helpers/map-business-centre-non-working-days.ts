@@ -4,7 +4,7 @@ import { GetOdsBusinessCentreNonWorkingDayResponse } from '@ukef/modules/ods/dto
 /**
  * Map a business centre's non working days data into a simpler format.
  * @param {GetDomBusinessCentreNonWorkingDayResponse[]} Business centre - non working days
- * @param {String} Business centre code
+ * @param {string} Business centre code
  * @returns {GetDomBusinessCentreNonWorkingDayMappedResponse[]}
  */
 export const mapBusinessCentreNonWorkingDays = (

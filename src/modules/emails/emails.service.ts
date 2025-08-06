@@ -9,7 +9,7 @@ export class EmailsService {
 
   /**
    * Send email to one recipient using GOV.UK template id
-   * @param {String} govUkNotifyKey
+   * @param {string} govUkNotifyKey
    * @param {PostEmailsRequestDto} postEmailsRequest
    *
    * @returns {Promise.<PostEmailsResponseDto>} GOV.UK Notify response

@@ -38,7 +38,7 @@ export class DomService {
 
   /**
    * Find a business centre's non working days in DOM
-   * @param {String} domCentreCode: DOM business centre code
+   * @param {string} domCentreCode: DOM business centre code
    * @returns {GetDomBusinessCentreNonWorkingDayMappedResponse[]}
    * @throws {NotFoundException} If no business centre is found
    */
