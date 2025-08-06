@@ -1,4 +1,4 @@
-import { BUSINESS_CENTRE, DOM_BUSINESS_CENTRES, EXAMPLES } from '@ukef/constants';
+import { DOM_BUSINESS_CENTRES, EXAMPLES } from '@ukef/constants';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
@@ -10,14 +10,14 @@ const mockError = new Error('An error occurred');
 
 const mockBusinessCentreNonWorkingDays = [
   {
-    centre: BUSINESS_CENTRE.EXAMPLES.CODE,
-    date: BUSINESS_CENTRE.EXAMPLES.NON_WORKING_DAY.DATE,
-    name: BUSINESS_CENTRE.EXAMPLES.NON_WORKING_DAY.NAME,
+    centre: EXAMPLES.BUSINESS_CENTRE.CODE,
+    date: EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.DATE,
+    name: EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME,
   },
   {
-    centre: BUSINESS_CENTRE.EXAMPLES.CODE,
-    date: BUSINESS_CENTRE.EXAMPLES.NON_WORKING_DAY.DATE,
-    name: BUSINESS_CENTRE.EXAMPLES.NON_WORKING_DAY.NAME,
+    centre: EXAMPLES.BUSINESS_CENTRE.CODE,
+    date: EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.DATE,
+    name: EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME,
   },
 ];
 

@@ -1,5 +1,5 @@
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { BUSINESS_CENTRE } from '@ukef/constants';
+import { EXAMPLES } from '@ukef/constants';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
@@ -31,14 +31,14 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
     "total_result_count": 2,
     "results": [
       {
-        "business_centre_code": "${BUSINESS_CENTRE.EXAMPLES.CODE}",
-        "non_working_day_name": "${BUSINESS_CENTRE.EXAMPLES.NON_WORKING_DAY.NAME}",
-        "non_working_day_date": "${BUSINESS_CENTRE.EXAMPLES.NON_WORKING_DAY.NAME}"
+        "business_centre_code": "${EXAMPLES.BUSINESS_CENTRE.CODE}",
+        "non_working_day_name": "${EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME}",
+        "non_working_day_date": "${EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME}"
       },
       {
-        "business_centre_code": "${BUSINESS_CENTRE.EXAMPLES.CODE}",
-        "non_working_day_name": "${BUSINESS_CENTRE.EXAMPLES.NON_WORKING_DAY.NAME}",
-        "non_working_day_date": "${BUSINESS_CENTRE.EXAMPLES.NON_WORKING_DAY.NAME}"
+        "business_centre_code": "${EXAMPLES.BUSINESS_CENTRE.CODE}",
+        "non_working_day_name": "${EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME}",
+        "non_working_day_date": "${EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME}"
       }
     ]
   }`;
@@ -49,13 +49,13 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
 
   it('should call service.callOdsStoredProcedure', async () => {
     // Act
-    await service.findBusinessCentreNonWorkingDays(BUSINESS_CENTRE.EXAMPLES.CODE);
+    await service.findBusinessCentreNonWorkingDays(EXAMPLES.BUSINESS_CENTRE.CODE);
 
     // Assert
     const expectedStoredProcedureInput: OdsStoredProcedureInput = service.createOdsStoredProcedureInput({
       entityToQuery: ODS_ENTITIES.BUSINESS_CENTRE_NON_WORKING_DAY,
       queryParameters: {
-        business_centre_code: BUSINESS_CENTRE.EXAMPLES.CODE,
+        business_centre_code: EXAMPLES.BUSINESS_CENTRE.CODE,
       },
     });
 
@@ -65,7 +65,7 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
 
   it('should return mapped non working days', async () => {
     // Act
-    const result = await service.findBusinessCentreNonWorkingDays(BUSINESS_CENTRE.EXAMPLES.CODE);
+    const result = await service.findBusinessCentreNonWorkingDays(EXAMPLES.BUSINESS_CENTRE.CODE);
 
     // Assert
     const expected = JSON.parse(mockStoredProcedureOutput).results;
@@ -81,11 +81,11 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
       jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
 
       // Act & Assert
-      const promise = service.findBusinessCentreNonWorkingDays(BUSINESS_CENTRE.EXAMPLES.CODE);
+      const promise = service.findBusinessCentreNonWorkingDays(EXAMPLES.BUSINESS_CENTRE.CODE);
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error(`Error getting business centre ${BUSINESS_CENTRE.EXAMPLES.CODE} non working days`);
+      const expected = new Error(`Error getting business centre ${EXAMPLES.BUSINESS_CENTRE.CODE} non working days`);
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -98,10 +98,10 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
 
       jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
 
-      const expected = new Error(`No business centre ${BUSINESS_CENTRE.EXAMPLES.CODE} non working days found`);
+      const expected = new Error(`No business centre ${EXAMPLES.BUSINESS_CENTRE.CODE} non working days found`);
 
       // Act & Assert
-      const promise = service.findBusinessCentreNonWorkingDays(BUSINESS_CENTRE.EXAMPLES.CODE);
+      const promise = service.findBusinessCentreNonWorkingDays(EXAMPLES.BUSINESS_CENTRE.CODE);
 
       await expect(promise).rejects.toBeInstanceOf(NotFoundException);
 
@@ -117,11 +117,11 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
       jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
 
       // Act & Assert
-      const promise = service.findBusinessCentreNonWorkingDays(BUSINESS_CENTRE.EXAMPLES.CODE);
+      const promise = service.findBusinessCentreNonWorkingDays(EXAMPLES.BUSINESS_CENTRE.CODE);
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error(`Error getting business centre ${BUSINESS_CENTRE.EXAMPLES.CODE} non working days`);
+      const expected = new Error(`Error getting business centre ${EXAMPLES.BUSINESS_CENTRE.CODE} non working days`);
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -133,11 +133,11 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
       jest.spyOn(service, 'callOdsStoredProcedure').mockRejectedValue('Mock ODS error');
 
       // Act & Assert
-      const promise = service.findBusinessCentreNonWorkingDays(BUSINESS_CENTRE.EXAMPLES.CODE);
+      const promise = service.findBusinessCentreNonWorkingDays(EXAMPLES.BUSINESS_CENTRE.CODE);
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error(`Error getting business centre ${BUSINESS_CENTRE.EXAMPLES.CODE} non working days`);
+      const expected = new Error(`Error getting business centre ${EXAMPLES.BUSINESS_CENTRE.CODE} non working days`);
 
       await expect(promise).rejects.toThrow(expected);
     });

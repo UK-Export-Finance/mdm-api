@@ -1,5 +1,5 @@
 import { NotFoundException } from '@nestjs/common';
-import { BUSINESS_CENTRE, DOM_BUSINESS_CENTRES, DOM_TO_ODS_BUSINESS_CENTRES_MAPPING, EXAMPLES } from '@ukef/constants';
+import { DOM_BUSINESS_CENTRES, DOM_TO_ODS_BUSINESS_CENTRES_MAPPING, EXAMPLES } from '@ukef/constants';
 import { mapBusinessCentre, mapBusinessCentreNonWorkingDays, mapBusinessCentres } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
@@ -11,14 +11,14 @@ const mockError = new Error('An error occurred');
 
 const mockBusinessCentreNonWorkingDays = [
   {
-    business_centre_code: BUSINESS_CENTRE.EXAMPLES.CODE,
-    non_working_day_date: BUSINESS_CENTRE.EXAMPLES.NON_WORKING_DAY.DATE,
-    non_working_day_name: BUSINESS_CENTRE.EXAMPLES.NON_WORKING_DAY.NAME,
+    business_centre_code: EXAMPLES.BUSINESS_CENTRE.CODE,
+    non_working_day_date: EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.DATE,
+    non_working_day_name: EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME,
   },
   {
-    business_centre_code: BUSINESS_CENTRE.EXAMPLES.CODE,
-    non_working_day_date: BUSINESS_CENTRE.EXAMPLES.NON_WORKING_DAY.DATE,
-    non_working_day_name: BUSINESS_CENTRE.EXAMPLES.NON_WORKING_DAY.NAME,
+    business_centre_code: EXAMPLES.BUSINESS_CENTRE.CODE,
+    non_working_day_date: EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.DATE,
+    non_working_day_name: EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME,
   },
 ];
 
