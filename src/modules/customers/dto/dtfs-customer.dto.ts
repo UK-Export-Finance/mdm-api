@@ -29,14 +29,14 @@ export class DTFSCustomerDto {
   @MaxLength(1)
   ukEntity?: string;
 
-  @ApiProperty({ description: 'UKEF industry identifier' })
+  @ApiProperty({ description: 'UKEF industry identifier code' })
   @IsString()
   @IsNotEmpty()
   @MinLength(1)
   @MaxLength(4)
   ukefIndustryId?: string;
 
-  @ApiProperty({ description: 'UKEF industry sector identifier' })
+  @ApiProperty({ description: 'UKEF industry sector identifier code' })
   @IsString()
   @IsNotEmpty()
   @MinLength(1)
