@@ -1,4 +1,4 @@
-import { BUSINESS_CENTRE, CUSTOMERS, DEALS } from '@ukef/constants';
+import { CUSTOMERS, DEALS } from '@ukef/constants';
 import { when } from 'jest-when';
 import { PinoLogger } from 'nestjs-pino';
 
@@ -28,57 +28,6 @@ describe('OdsController', () => {
     odsService.findDeal = odsServiceFindDeal;
 
     controller = new OdsController(odsService);
-  });
-
-  describe('findBusinessCentreNonWorkingDays', () => {
-    it.each([{ value: BUSINESS_CENTRE.EXAMPLES.CODE }, { value: '' }, { value: 'invalid' }])(
-      `should call odsService.getBusinessCentres with $value`,
-      async ({ value }) => {
-        // Act
-        await controller.findBusinessCentreNonWorkingDays({ centreCode: value });
-
-        // Assert
-        expect(odsServiceFindBusinessCentreNonWorkingDays).toHaveBeenCalledTimes(1);
-        expect(odsServiceFindBusinessCentreNonWorkingDays).toHaveBeenCalledWith(value);
-      },
-    );
-
-    it('should return non working days', async () => {
-      // Arrange
-      const mockNonWorkingDays = [
-        {
-          code: BUSINESS_CENTRE.EXAMPLES.CODE,
-          name: BUSINESS_CENTRE.EXAMPLES.NON_WORKING_DAY.NAME,
-          date: BUSINESS_CENTRE.EXAMPLES.NON_WORKING_DAY.DATE,
-        },
-      ];
-
-      odsService.findBusinessCentreNonWorkingDays = jest.fn().mockResolvedValueOnce(mockNonWorkingDays);
-
-      controller = new OdsController(odsService);
-
-      // Act
-      const result = await controller.findBusinessCentreNonWorkingDays({ centreCode: BUSINESS_CENTRE.EXAMPLES.CODE });
-
-      // Assert
-      expect(result).toEqual(mockNonWorkingDays);
-    });
-
-    describe('when odsService.findBusinessCentreNonWorkingDays throws an error', () => {
-      it('should throw an error', async () => {
-        // Arrange
-        const odsService = new OdsService(null, mockLogger);
-
-        odsService.findBusinessCentreNonWorkingDays = jest.fn().mockRejectedValueOnce(mockError);
-
-        controller = new OdsController(odsService);
-
-        // Act & Assert
-        const promise = controller.findBusinessCentreNonWorkingDays({ centreCode: BUSINESS_CENTRE.EXAMPLES.CODE });
-
-        await expect(promise).rejects.toThrow(mockError);
-      });
-    });
   });
 
   describe('findCustomer', () => {
