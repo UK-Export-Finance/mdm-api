@@ -4,12 +4,13 @@ import { mapBusinessCentre, mapBusinessCentreNonWorkingDays, mapBusinessCentres 
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
+import { GetOdsBusinessCentreNonWorkingDayResponse } from '../ods/dto';
 import { OdsService } from '../ods/ods.service';
 import { DomService } from './dom.service';
 
 const mockError = new Error('An error occurred');
 
-const mockBusinessCentreNonWorkingDays = [
+const mockOdsBusinessCentreNonWorkingDays: GetOdsBusinessCentreNonWorkingDayResponse[] = [
   {
     business_centre_code: EXAMPLES.BUSINESS_CENTRE.CODE,
     non_working_day_date: EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.DATE,
@@ -37,7 +38,7 @@ describe('DomService', () => {
   let service: DomService;
 
   beforeEach(() => {
-    odsServiceFindBusinessCentreNonWorkingDays = jest.fn().mockResolvedValueOnce(mockBusinessCentreNonWorkingDays);
+    odsServiceFindBusinessCentreNonWorkingDays = jest.fn().mockResolvedValueOnce(mockOdsBusinessCentreNonWorkingDays);
     odsService.findBusinessCentreNonWorkingDays = odsServiceFindBusinessCentreNonWorkingDays;
 
     service = new DomService(odsService, mockLogger);
@@ -105,7 +106,7 @@ describe('DomService', () => {
         const response = await service.findBusinessCentreNonWorkingDays(mockCentreCode);
 
         // Assert
-        const expected = mapBusinessCentreNonWorkingDays(mockBusinessCentreNonWorkingDays, mockCentreCode);
+        const expected = mapBusinessCentreNonWorkingDays(mockOdsBusinessCentreNonWorkingDays, mockCentreCode);
 
         expect(response).toEqual(expected);
       });

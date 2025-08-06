@@ -5,17 +5,18 @@ import { DataSource, QueryRunner } from 'typeorm';
 import { OdsService } from '../ods/ods.service';
 import { DomController } from './dom.controller';
 import { DomService } from './dom.service';
+import { GetDomBusinessCentreNonWorkingDayMappedResponse } from './dto';
 
 const mockError = new Error('An error occurred');
 
-const mockBusinessCentreNonWorkingDays = [
+const mockBusinessCentreNonWorkingDays: GetDomBusinessCentreNonWorkingDayMappedResponse[] = [
   {
-    centre: EXAMPLES.BUSINESS_CENTRE.CODE,
+    code: EXAMPLES.BUSINESS_CENTRE.CODE,
     date: EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.DATE,
     name: EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME,
   },
   {
-    centre: EXAMPLES.BUSINESS_CENTRE.CODE,
+    code: EXAMPLES.BUSINESS_CENTRE.CODE,
     date: EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.DATE,
     name: EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME,
   },
