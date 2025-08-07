@@ -103,7 +103,7 @@ export class CustomersService {
    */
   private async handleInformaticaResponse(res, DTFSCustomerDto, existingCustomersInInformatica): Promise<GetCustomersResponse> {
     if (existingCustomersInInformatica[0]?.isLegacyRecord === false) {
-      // If the customer exists as a non-legacy record in Informatica
+      // If the customer exists as a non-legacy record in Salesforce (via Informatica)
       res.status(HttpStatusCode.Ok).json(
         existingCustomersInInformatica.map(
           (customerInInformatica): GetCustomersResponseItem => ({
@@ -114,6 +114,8 @@ export class CustomersService {
             type: customerInInformatica?.type,
             subtype: customerInInformatica?.subtype,
             isLegacyRecord: customerInInformatica?.isLegacyRecord,
+
+            // TODO [APIM-616]: Return below from Informatica
             // probabilityOfDefault: DTFSCustomerDto?.probabilityOfDefault,
             // ukEntity: DTFSCustomerDto?.ukEntity,
             // ukefIndustryName: DTFSCustomerDto?.ukefIndustryName,
@@ -124,10 +126,10 @@ export class CustomersService {
       return;
     } else if (existingCustomersInInformatica[0]?.isLegacyRecord === true) {
       if (existingCustomersInInformatica[0]?.partyUrn) {
-        // If the customer only exists as a legacy record in Informatica and has a URN
+        // If the customer only exists as a legacy record in Salesforce (via Informatica) and has a URN
         await this.createCustomerWithLegacyURN(res, DTFSCustomerDto, existingCustomersInInformatica);
       } else {
-        // If the customer only exists as a legacy record in Informatica but has no URN
+        // If the customer only exists as a legacy record in Salesforce (via Informatica) but has no URN
         await this.createCustomerByURN(res, DTFSCustomerDto);
       }
     }
@@ -233,13 +235,13 @@ export class CustomersService {
         name: DTFSCustomerDto.companyName,
         sfId: salesforceCreateCustomerResponse?.success ? salesforceCreateCustomerResponse.id : null,
         companyRegNo: DTFSCustomerDto.companyRegistrationNumber,
+        type: null,
+        subtype: null,
+        isLegacyRecord: isLegacyRecord,
         probabilityOfDefault: DTFSCustomerDto.probabilityOfDefault,
         ukEntity: DTFSCustomerDto.ukEntity,
         ukefIndustryName: DTFSCustomerDto.ukefIndustryName,
         ukefSectorName: DTFSCustomerDto.ukefSectorName,
-        type: null,
-        subtype: null,
-        isLegacyRecord: isLegacyRecord,
       },
     ];
   }
