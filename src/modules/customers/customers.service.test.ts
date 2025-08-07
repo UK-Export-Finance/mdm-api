@@ -429,7 +429,7 @@ describe('CustomerService', () => {
     });
 
     describe('when the customer does not exists in salesforce', () => {
-      describe('creates a new customer with party URN', () => {
+      describe('creates a new customer with a party URN', () => {
         it.each([
           {
             DTFSCustomerDto: {
@@ -486,6 +486,83 @@ describe('CustomerService', () => {
               Name: DTFSCustomerDto.companyName,
               D_B_Number__c: 'TEST DUNS_NUMBER',
               Party_URN__c: 'TEST PARTY_URN',
+              Company_Registration_Number__c: DTFSCustomerDto.companyRegistrationNumber,
+              CCM_Credit_Risk_Rating__c: CUSTOMERS.EXAMPLES.CREDIT_RISK_RATING,
+              CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
+              CCM_Loss_Given_Default__c: CUSTOMERS.EXAMPLES.LOSS_GIVEN_DEFAULT,
+              CCM_Probability_of_Default__c: DTFSCustomerDto.probabilityOfDefault,
+              CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity,
+              CCM_Primary_Industry__c: DTFSCustomerDto.ukefIndustryName,
+              CCM_Primary_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
+            }),
+          );
+
+          expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(1);
+          expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(1);
+          expect(numbersServiceCreate).toHaveBeenCalledTimes(1);
+        });
+      });
+
+      describe('creates a new customer without a party URN', () => {
+        it.each([
+          {
+            DTFSCustomerDto: {
+              ...customerWithPod,
+            },
+            response: [
+              {
+                ...createLegacyCustomerWithNoUrn[0],
+                partyUrn: null,
+              },
+            ],
+          },
+          {
+            DTFSCustomerDto: {
+              ...customerWithoutPod,
+            },
+            response: [
+              {
+                ...createLegacyCustomerWithNoUrn[0],
+                probabilityOfDefault: undefined,
+                partyUrn: null,
+              },
+            ],
+          },
+          {
+            DTFSCustomerDto: {
+              ...customerWithFullPayload,
+            },
+            response: [
+              {
+                ...createNewCustomerWithUrn[0],
+                partyUrn: null,
+              },
+            ],
+          },
+        ])('should creates a new customer returns the response if there are no errors', async ({ DTFSCustomerDto, response }) => {
+          // Arrange
+          when(salesforceServiceCreateCustomer).calledWith(expect.any(Object)).mockResolvedValueOnce(salesforceCreateCustomerResponse);
+          when(numbersServiceCreate).calledWith(expect.any(Object)).mockRejectedValueOnce(new InternalServerErrorException());
+          when(dunAndBradstreetServiceGetDunsNumber).calledWith(expect.any(String)).mockResolvedValueOnce(dunAndBradstreetGetDunsNumberResponse);
+          when(informaticaServiceGetCustomers)
+            .calledWith({
+              companyreg: DTFSCustomerDto.companyRegistrationNumber,
+            })
+            .mockRejectedValueOnce(new NotFoundException('Customer not found.'));
+
+          // Act
+          await service.getOrCreateCustomer(mockResponseObject, DTFSCustomerDto);
+
+          // Assert
+          expect(mockResponseObject.json).toHaveBeenCalledTimes(1);
+          expect(mockResponseObject.json).toHaveBeenCalledWith(response);
+          expect(mockResponseObject.status).toHaveBeenCalledWith(HttpStatusCode.Created);
+
+          expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(
+            expect.objectContaining({
+              Name: DTFSCustomerDto.companyName,
+              D_B_Number__c: 'TEST DUNS_NUMBER',
+              Party_URN__c: null,
               Company_Registration_Number__c: DTFSCustomerDto.companyRegistrationNumber,
               CCM_Credit_Risk_Rating__c: CUSTOMERS.EXAMPLES.CREDIT_RISK_RATING,
               CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
