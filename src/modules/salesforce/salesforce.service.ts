@@ -41,7 +41,7 @@ export class SalesforceService {
   async createCustomer(createCustomerDto: CreateCustomerDto): Promise<CreateCustomerSalesforceResponseDto> {
     const path = '/sobjects/Account';
     const access_token = await this.getAccessToken();
-    const response = await this.httpClient.post<CreateCustomerDto, CreateCustomerSalesforceResponseDto>({
+    const { data } = await this.httpClient.post<CreateCustomerDto, CreateCustomerSalesforceResponseDto>({
       path,
       body: createCustomerDto,
       headers: {
@@ -53,7 +53,7 @@ export class SalesforceService {
       }),
     });
 
-    return response.data;
+    return data;
   }
 
   /**
