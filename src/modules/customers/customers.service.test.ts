@@ -102,8 +102,10 @@ describe('CustomerService', () => {
       errors: null,
       success: true,
     };
+
     const createUkefIdResponse: UkefId[] = [{ maskedId: 'TEST PARTY_URN', type: null, createdBy: null, createdDatetime: null, requestingSystem: null }];
     const dunAndBradstreetGetDunsNumberResponse: string = 'TEST DUNS_NUMBER';
+
     const createCustomerResponse: GetCustomersInformaticaResponseItem[] = [
       {
         partyUrn: 'TEST PARTY_URN',
@@ -152,7 +154,7 @@ describe('CustomerService', () => {
 
     describe('when the customer does exist', () => {
       describe('when the customer is non-legacy', () => {
-        const getCustomersResponse = [
+        const getInformaticaCustomersResponse = [
           [
             {
               partyUrn: '00312345',
@@ -162,6 +164,10 @@ describe('CustomerService', () => {
               type: null,
               subtype: null,
               isLegacyRecord: false,
+              probabilityOfDefault: undefined,
+              ukEntity: undefined,
+              ukefIndustryName: undefined,
+              ukefSectorName: undefined,
             },
           ],
         ];
@@ -169,22 +175,28 @@ describe('CustomerService', () => {
         it.each([
           {
             DTFSCustomerDto: DTFSCustomerDtoWithProbabilityOfDefault,
+            pod: DTFSCustomerDtoWithProbabilityOfDefault.probabilityOfDefault,
           },
           {
             DTFSCustomerDto: DTFSCustomerDtoWithoutProbabilityOfDefault,
+            pod: DTFSCustomerDtoWithoutProbabilityOfDefault.probabilityOfDefault,
           },
-        ])('returns the existing customer both with and without probability of default', async ({ DTFSCustomerDto }) => {
+        ])('should get the existing customer from Informatica when PoD is `$pod`', async ({ DTFSCustomerDto }) => {
+          // Arrange
           when(informaticaServiceGetCustomers)
             .calledWith({
               companyreg: DTFSCustomerDto.companyRegistrationNumber,
             })
-            .mockResolvedValueOnce(getCustomersResponse[0]);
+            .mockResolvedValueOnce(getInformaticaCustomersResponse[0]);
 
+          // Act
           await service.getOrCreateCustomer(mockResponseObject, DTFSCustomerDto);
 
+          // Assert
           expect(mockResponseObject.json).toHaveBeenCalledTimes(1);
-          expect(mockResponseObject.json).toHaveBeenCalledWith(getCustomersResponse[0]);
+          expect(mockResponseObject.json).toHaveBeenCalledWith(getInformaticaCustomersResponse[0]);
           expect(mockResponseObject.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
+
           expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(0);
           expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(0);
           expect(numbersServiceCreate).toHaveBeenCalledTimes(0);
@@ -192,7 +204,7 @@ describe('CustomerService', () => {
       });
 
       describe('when the customer is legacy', () => {
-        describe('when the customer has a URN', () => {
+        describe.only('when the customer has a URN', () => {
           const getCustomersResponse = [
             [
               {
@@ -203,6 +215,10 @@ describe('CustomerService', () => {
                 type: null,
                 subtype: null,
                 isLegacyRecord: true,
+                probabilityOfDefault: undefined,
+                ukEntity: 'Yes',
+                ukefIndustryName: 'AGRICULTURE, HORTICULTURE & FISHERIES',
+                ukefSectorName: 'CIVIL: AGRICULTURE, HORTICULTURE & FISHERIES',
               },
             ],
           ];
@@ -210,13 +226,16 @@ describe('CustomerService', () => {
           it.each([
             {
               DTFSCustomerDto: DTFSCustomerDtoWithProbabilityOfDefault,
+              pod: DTFSCustomerDtoWithProbabilityOfDefault.probabilityOfDefault,
             },
             {
               DTFSCustomerDto: DTFSCustomerDtoWithoutProbabilityOfDefault,
+              pod: DTFSCustomerDtoWithoutProbabilityOfDefault.probabilityOfDefault,
             },
           ])(
-            'creates a new customer using the legacy URN and returns the response if there are no errors both with and without probability of default',
+            'should creates a new customer using the legacy URN and returns the response if there are no errors when when PoD is `$pod`',
             async ({ DTFSCustomerDto }) => {
+              // Arrange
               when(salesforceServiceCreateCustomer).calledWith(expect.any(Object)).mockResolvedValueOnce(salesforceCreateCustomerResponse);
               when(numbersServiceCreate).calledWith(expect.any(Object)).mockResolvedValueOnce(createUkefIdResponse);
               when(dunAndBradstreetServiceGetDunsNumber).calledWith(expect.any(String)).mockResolvedValueOnce(dunAndBradstreetGetDunsNumberResponse);
@@ -226,8 +245,10 @@ describe('CustomerService', () => {
                 })
                 .mockResolvedValueOnce(getCustomersResponse[0]);
 
+              // Act
               await service.getOrCreateCustomer(mockResponseObject, DTFSCustomerDto);
 
+              // Assert
               expect(mockResponseObject.json).toHaveBeenCalledTimes(1);
               expect(mockResponseObject.json).toHaveBeenCalledWith(createCustomerResponseWithLegacyUrn);
               expect(mockResponseObject.status).toHaveBeenCalledWith(HttpStatusCode.Created);

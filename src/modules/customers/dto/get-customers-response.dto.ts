@@ -26,26 +26,6 @@ export class GetCustomersResponseItem {
   readonly companyRegNo: string | null;
 
   @ApiProperty({
-    description: 'Probability of default of the company',
-  })
-  readonly probabilityOfDefault: number;
-
-  @ApiProperty({
-    description: 'Whether the company is UK based or not',
-  })
-  readonly ukEntity: string;
-
-  @ApiProperty({
-    description: 'UKEF industry identifier code',
-  })
-  readonly ukefIndustryName: string;
-
-  @ApiProperty({
-    description: 'UKEF industry sector identifier code',
-  })
-  readonly ukefSectorName: string;
-
-  @ApiProperty({
     description: 'Customer company type',
     enum: CustomerTypesEnum,
   })
@@ -61,4 +41,24 @@ export class GetCustomersResponseItem {
     description: 'False for Salesforce account record, True for legacy Party DB record',
   })
   readonly isLegacyRecord: boolean;
+
+  @ApiProperty({
+    description: 'Probability of default of the company',
+  })
+  readonly probabilityOfDefault?: number;
+
+  @ApiProperty({
+    description: 'Whether the company is UK based or not',
+  })
+  readonly ukEntity?: string;
+
+  @ApiProperty({
+    description: 'UKEF industry identifier code',
+  })
+  readonly ukefIndustryName?: string;
+
+  @ApiProperty({
+    description: 'UKEF industry sector identifier code',
+  })
+  readonly ukefSectorName?: string;
 }

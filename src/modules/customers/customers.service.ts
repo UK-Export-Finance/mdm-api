@@ -76,6 +76,7 @@ export class CustomersService {
 
     try {
       const existingCustomersInInformatica = await this.informaticaService.getCustomers(backendQuery);
+
       // If the customer does exist in Informatica
       if (existingCustomersInInformatica?.[0]) {
         return await this.handleInformaticaResponse(res, DTFSCustomerDto, existingCustomersInInformatica);
@@ -110,13 +111,13 @@ export class CustomersService {
             name: customerInInformatica?.name,
             sfId: customerInInformatica?.sfId,
             companyRegNo: customerInInformatica?.companyRegNo,
-            probabilityOfDefault: DTFSCustomerDto.probabilityOfDefault,
-            ukEntity: DTFSCustomerDto.ukEntity,
-            ukefIndustryName: DTFSCustomerDto.ukefIndustryName,
-            ukefSectorName: DTFSCustomerDto.ukefSectorName,
             type: customerInInformatica?.type,
             subtype: customerInInformatica?.subtype,
             isLegacyRecord: customerInInformatica?.isLegacyRecord,
+            // probabilityOfDefault: DTFSCustomerDto?.probabilityOfDefault,
+            // ukEntity: DTFSCustomerDto?.ukEntity,
+            // ukefIndustryName: DTFSCustomerDto?.ukefIndustryName,
+            // ukefSectorName: DTFSCustomerDto?.ukefSectorName,
           }),
         ),
       );
