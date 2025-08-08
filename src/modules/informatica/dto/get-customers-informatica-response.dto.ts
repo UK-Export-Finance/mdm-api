@@ -8,4 +8,8 @@ export interface GetCustomersInformaticaResponseItem {
   type: string;
   subtype: string;
   isLegacyRecord: boolean;
+  probabilityOfDefault?: number;
+  ukEntity?: string;
+  ukefIndustryName?: string;
+  ukefSectorName?: string;
 }

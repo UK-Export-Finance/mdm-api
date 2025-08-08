@@ -17,6 +17,10 @@ export class GetCustomersGenerator extends AbstractGenerator<CustomerValues, Gen
       name: this.valueGenerator.word(),
       sfId: this.valueGenerator.word(),
       companyRegNo: '0' + this.valueGenerator.stringOfNumericCharacters({ length: 7 }),
+      probabilityOfDefault: this.valueGenerator.integer({ min: 1, max: 14 }),
+      ukEntity: this.valueGenerator.stringOfNumericCharacters({ length: 3 }),
+      ukefIndustryName: this.valueGenerator.stringOfNumericCharacters({ length: 100 }),
+      ukefSectorName: this.valueGenerator.stringOfNumericCharacters({ length: 100 }),
       type: null,
       subtype: null,
       isLegacyRecord: this.valueGenerator.boolean(),
@@ -59,6 +63,10 @@ export class GetCustomersGenerator extends AbstractGenerator<CustomerValues, Gen
         name: v.name,
         sfId: v.sfId,
         companyRegNo: v.companyRegNo,
+        probabilityOfDefault: v.probabilityOfDefault,
+        ukEntity: v.ukEntity,
+        ukefIndustryName: v.ukefIndustryName,
+        ukefSectorName: v.ukefSectorName,
         type: v.type,
         subtype: v.subtype,
         isLegacyRecord: v.isLegacyRecord,
@@ -80,6 +88,10 @@ interface CustomerValues {
   name: string;
   sfId: string;
   companyRegNo: string;
+  probabilityOfDefault: number;
+  ukEntity: string;
+  ukefIndustryName: string;
+  ukefSectorName: string;
   type: string;
   subtype: string;
   isLegacyRecord: boolean;
