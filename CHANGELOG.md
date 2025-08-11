@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.28.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.27.1...v1.28.0) (2025-08-11)
+
+
+### Features
+
+* **DTFS2-8059:** salesforce customer creation with additional fields ([#1482](https://github.com/UK-Export-Finance/mdm-api/issues/1482)) ([03d4ca0](https://github.com/UK-Export-Finance/mdm-api/commit/03d4ca0b56b42d85159ae003e709cd1cf1dd1a2a))
+
 ## [1.27.1](https://github.com/UK-Export-Finance/mdm-api/compare/v1.27.0...v1.27.1) (2025-08-01)
 
 
