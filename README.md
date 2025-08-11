@@ -71,7 +71,7 @@ $ DEBUG=nock.* npm run api-test
 
 ### Snapshot
 
-If you have made any changes to a request or response DTO, then please update the snapshot.
+If you have made any changes to a request or response DTO, please update the snapshot.
 OpenAPI swagger snapshot update is a manual action, please run the following command to update.
 
 ```sh
