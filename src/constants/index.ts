@@ -1,28 +1,18 @@
 /**
- * MDM centralised constants, referred as `@ukef/constants`.
- * Following constants are served:
+ * Re-exports all constants from the examples constant module.
+ * This allows other modules to import these constants directly from this index file.
  *
- * 1. Date
- * 2. Database name
- * 3. Auth strategy
- * 4. Products
- * 5. Customers
- * 6. Strings to redact
- * 7. Strings locations to redact
- * 8. Module geospatial
- * 9. GOV.UK notify email constants
- * 10. Companies module
- * 11. Companies House helper module
+ * @see ./enums/examples/examples.constant
  */
 
 export * from './auth.constant';
 export * from './companies.constant';
 export * from './companies-house.constant';
-export * from './customers.constant';
 export * from './database-name.constant';
 export * from './date.constant';
 export * from './dun-and-bradstreet.constant';
 export * from './enums';
+export * from './examples/examples.constant';
 export * from './geospatial.constant';
 export * from './govuk-notify.constant';
 export * from './products.constant';

@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`GET /openapi/yaml matches the snapshot 1`] = `
 "openapi: 3.0.0
@@ -734,18 +734,23 @@ components:
         partyUrn:
           type: string
           description: The unique UKEF ID of the customer
+          example: '00302069'
         name:
           type: string
           description: Customer company name
+          example: Testing Systems Ltd
         sfId:
           type: string
           description: The unique Salesforce ID
+          example: 000A000000a1BBbCDE
         companyRegNo:
           type: string
           description: The Companies House registration number
+          example: '06012345'
         type:
           type: string
           description: Customer company type
+          example: Association
           enum:
             - Association
             - Corporate Overseas
@@ -762,6 +767,7 @@ components:
         subtype:
           type: string
           description: Customer company sub-type
+          example: Alternative Finance Provider
           enum:
             - Alternative Finance Provider
             - Bank
@@ -789,6 +795,23 @@ components:
         isLegacyRecord:
           type: boolean
           description: False for Salesforce account record, True for legacy Party DB record
+          example: false
+        probabilityOfDefault:
+          type: number
+          description: Probability of default of the company
+          example: 14.1
+        ukEntity:
+          type: string
+          description: Whether the company is UK based or not
+          example: 'Yes'
+        ukefIndustryName:
+          type: string
+          description: UKEF industry identifier code
+          example: AGRICULTURE, HORTICULTURE & FISHERIES
+        ukefSectorName:
+          type: string
+          description: UKEF industry sector identifier code
+          example: 'CIVIL: AGRICULTURE, HORTICULTURE & FISHERIES'
       required:
         - partyUrn
         - name
@@ -797,24 +820,44 @@ components:
         - type
         - subtype
         - isLegacyRecord
+        - probabilityOfDefault
+        - ukEntity
+        - ukefIndustryName
+        - ukefSectorName
     DTFSCustomerDto:
       type: object
       properties:
         companyRegistrationNumber:
           type: string
-          description: Company Registration Number
-          minLength: 8
-          maxLength: 10
+          description: Company registration number
+          example: '06012345'
         companyName:
           type: string
-          description: Company Name
+          description: Company name
+          example: Testing Systems Ltd
         probabilityOfDefault:
           type: number
-          description: Probability of Default
+          description: Probability of default
+          example: 14.1
+        ukEntity:
+          type: string
+          description: UK entity
+          example: 'Yes'
+        ukefIndustryName:
+          type: string
+          description: UKEF industry identifier code
+          example: AGRICULTURE, HORTICULTURE & FISHERIES
+        ukefSectorName:
+          type: string
+          description: UKEF industry sector identifier code
+          example: 'CIVIL: AGRICULTURE, HORTICULTURE & FISHERIES'
       required:
         - companyRegistrationNumber
         - companyName
         - probabilityOfDefault
+        - ukEntity
+        - ukefIndustryName
+        - ukefSectorName
     CreateUkefIdDto:
       type: object
       properties:
