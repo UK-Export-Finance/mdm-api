@@ -305,6 +305,7 @@ describe('CustomerService', () => {
         );
 
         it('throws an error if Salesforce service fails to create a customer', async () => {
+          // Arrange
           when(salesforceServiceCreateCustomer).calledWith(expect.any(Object)).mockRejectedValueOnce(new Error('Service Error'));
           when(numbersServiceCreate).calledWith(expect.any(Object)).mockResolvedValueOnce(createUkefIdResponse);
           when(dunAndBradstreetServiceGetDunsNumber).calledWith(expect.any(String)).mockResolvedValueOnce(dunAndBradstreetGetDunsNumberResponse);
@@ -314,13 +315,17 @@ describe('CustomerService', () => {
             })
             .mockRejectedValueOnce(new NotFoundException('Customer not found.'));
 
+          // Act
           await expect(service.getOrCreateCustomer(mockResponseObject, customerWithPod)).rejects.toThrow('Service Error');
+
+          // Assert
           expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(1);
           expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(1);
           expect(numbersServiceCreate).toHaveBeenCalledTimes(1);
         });
 
         it('throws an error if Dun and Bradstreet service fails to return a DUNS number and does not call further services', async () => {
+          // Arrange
           when(salesforceServiceCreateCustomer).calledWith(expect.any(Object)).mockResolvedValueOnce(salesforceCreateCustomerResponse);
           when(numbersServiceCreate).calledWith(expect.any(Object)).mockResolvedValueOnce(createUkefIdResponse);
           when(dunAndBradstreetServiceGetDunsNumber).calledWith(expect.any(String)).mockRejectedValueOnce(new InternalServerErrorException());
@@ -330,7 +335,10 @@ describe('CustomerService', () => {
             })
             .mockRejectedValueOnce(new NotFoundException('Customer not found.'));
 
+          // Act
           await expect(service.getOrCreateCustomer(mockResponseObject, customerWithPod)).rejects.toThrow('Internal Server Error');
+
+          // Assert
           expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(1);
           expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(0);
           expect(numbersServiceCreate).toHaveBeenCalledTimes(0);
