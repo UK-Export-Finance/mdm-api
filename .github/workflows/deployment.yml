@@ -71,7 +71,7 @@ jobs:
     runs-on: [self-hosted, APIM, deployment]
     steps:
       - name: Repository 🗃️
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Azure 🔐
         uses: azure/login@v2

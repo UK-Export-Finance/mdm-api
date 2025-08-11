@@ -1,6 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
-import { CUSTOMERS } from '@ukef/constants';
+import { EXAMPLES } from '@ukef/constants';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { AxiosError, HttpStatusCode } from 'axios';
 import { when } from 'jest-when';
@@ -61,8 +61,8 @@ describe('SalesforceService', () => {
       D_B_Number__c: '12341234',
       Company_Registration_Number__c: companyRegNo,
       CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
-      CCM_Credit_Risk_Rating__c: CUSTOMERS.EXAMPLES.CREDIT_RISK_RATING,
-      CCM_Loss_Given_Default__c: CUSTOMERS.EXAMPLES.LOSS_GIVEN_DEFAULT,
+      CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
+      CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
       CCM_Probability_of_Default__c: 3,
     };
     const baseExpectedHttpServicePostArgs: [string, body: CreateCustomerDto, object] = [
@@ -79,8 +79,8 @@ describe('SalesforceService', () => {
         D_B_Number__c: '12341234',
         Company_Registration_Number__c: companyRegNo,
         CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
-        CCM_Credit_Risk_Rating__c: CUSTOMERS.EXAMPLES.CREDIT_RISK_RATING,
-        CCM_Loss_Given_Default__c: CUSTOMERS.EXAMPLES.LOSS_GIVEN_DEFAULT,
+        CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
+        CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
         CCM_Probability_of_Default__c: 0.0,
       },
       {
@@ -89,8 +89,8 @@ describe('SalesforceService', () => {
         D_B_Number__c: '12341234',
         Company_Registration_Number__c: companyRegNo,
         CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
-        CCM_Credit_Risk_Rating__c: CUSTOMERS.EXAMPLES.CREDIT_RISK_RATING,
-        CCM_Loss_Given_Default__c: CUSTOMERS.EXAMPLES.LOSS_GIVEN_DEFAULT,
+        CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
+        CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
         CCM_Probability_of_Default__c: undefined,
       },
       {
@@ -99,8 +99,8 @@ describe('SalesforceService', () => {
         D_B_Number__c: '12341234',
         Company_Registration_Number__c: companyRegNo,
         CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
-        CCM_Credit_Risk_Rating__c: CUSTOMERS.EXAMPLES.CREDIT_RISK_RATING,
-        CCM_Loss_Given_Default__c: CUSTOMERS.EXAMPLES.LOSS_GIVEN_DEFAULT,
+        CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
+        CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
       },
       {
         Name: companyRegNo,
@@ -108,8 +108,8 @@ describe('SalesforceService', () => {
         D_B_Number__c: '12341234',
         Company_Registration_Number__c: companyRegNo,
         CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
-        CCM_Credit_Risk_Rating__c: CUSTOMERS.EXAMPLES.CREDIT_RISK_RATING,
-        CCM_Loss_Given_Default__c: CUSTOMERS.EXAMPLES.LOSS_GIVEN_DEFAULT,
+        CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
+        CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
         CCM_Probability_of_Default__c: 100.0,
       },
       {
@@ -167,7 +167,7 @@ describe('SalesforceService', () => {
         Company_Registration_Number__c: '12341234',
         CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
         CCM_Credit_Risk_Rating__c: null,
-        CCM_Loss_Given_Default__c: CUSTOMERS.EXAMPLES.LOSS_GIVEN_DEFAULT,
+        CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
         CCM_Probability_of_Default__c: null,
       },
       {
@@ -176,8 +176,8 @@ describe('SalesforceService', () => {
         D_B_Number__c: null,
         Company_Registration_Number__c: '12341234',
         CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
-        CCM_Credit_Risk_Rating__c: CUSTOMERS.EXAMPLES.CREDIT_RISK_RATING,
-        CCM_Loss_Given_Default__c: CUSTOMERS.EXAMPLES.LOSS_GIVEN_DEFAULT,
+        CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
+        CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
         CCM_Probability_of_Default__c: 101,
       },
       {
@@ -186,8 +186,8 @@ describe('SalesforceService', () => {
         D_B_Number__c: null,
         Company_Registration_Number__c: '12341234',
         CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
-        CCM_Credit_Risk_Rating__c: CUSTOMERS.EXAMPLES.CREDIT_RISK_RATING,
-        CCM_Loss_Given_Default__c: CUSTOMERS.EXAMPLES.LOSS_GIVEN_DEFAULT,
+        CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
+        CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
         CCM_Probability_of_Default__c: -1,
       },
     ])('throws a TypeError if the request is malformed', async (malformedQuery) => {

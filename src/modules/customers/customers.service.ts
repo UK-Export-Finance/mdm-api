@@ -1,5 +1,5 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { CUSTOMERS } from '@ukef/constants';
+import { EXAMPLES } from '@ukef/constants';
 import { DunAndBradstreetService } from '@ukef/helper-modules/dun-and-bradstreet/dun-and-bradstreet.service';
 import { salesforceFormattedCurrentDate } from '@ukef/helpers/date-formatter.helper';
 import { GetCustomersInformaticaQueryDto } from '@ukef/modules/informatica/dto/get-customers-informatica-query.dto';
@@ -39,6 +39,10 @@ export class CustomersService {
         name: customerInInformatica.name,
         sfId: customerInInformatica.sfId,
         companyRegNo: customerInInformatica.companyRegNo,
+        probabilityOfDefault: customerInInformatica.probabilityOfDefault,
+        ukEntity: customerInInformatica.ukEntity,
+        ukefIndustryName: customerInInformatica.ukefIndustryName,
+        ukefSectorName: customerInInformatica.ukefSectorName,
         type: customerInInformatica.type,
         subtype: customerInInformatica.subtype,
         isLegacyRecord: customerInInformatica.isLegacyRecord,
@@ -72,6 +76,7 @@ export class CustomersService {
 
     try {
       const existingCustomersInInformatica = await this.informaticaService.getCustomers(backendQuery);
+
       // If the customer does exist in Informatica
       if (existingCustomersInInformatica?.[0]) {
         return await this.handleInformaticaResponse(res, DTFSCustomerDto, existingCustomersInInformatica);
@@ -98,7 +103,7 @@ export class CustomersService {
    */
   private async handleInformaticaResponse(res, DTFSCustomerDto, existingCustomersInInformatica): Promise<GetCustomersResponse> {
     if (existingCustomersInInformatica[0]?.isLegacyRecord === false) {
-      // If the customer exists as a non-legacy record in Informatica
+      // If the customer exists as a non-legacy record in Salesforce (via Informatica)
       res.status(HttpStatusCode.Ok).json(
         existingCustomersInInformatica.map(
           (customerInInformatica): GetCustomersResponseItem => ({
@@ -109,16 +114,22 @@ export class CustomersService {
             type: customerInInformatica?.type,
             subtype: customerInInformatica?.subtype,
             isLegacyRecord: customerInInformatica?.isLegacyRecord,
+
+            // TODO [APIM-616]: Return below from Informatica
+            // probabilityOfDefault: DTFSCustomerDto?.probabilityOfDefault,
+            // ukEntity: DTFSCustomerDto?.ukEntity,
+            // ukefIndustryName: DTFSCustomerDto?.ukefIndustryName,
+            // ukefSectorName: DTFSCustomerDto?.ukefSectorName,
           }),
         ),
       );
       return;
     } else if (existingCustomersInInformatica[0]?.isLegacyRecord === true) {
       if (existingCustomersInInformatica[0]?.partyUrn) {
-        // If the customer only exists as a legacy record in Informatica and has a URN
+        // If the customer only exists as a legacy record in Salesforce (via Informatica) and has a URN
         await this.createCustomerWithLegacyURN(res, DTFSCustomerDto, existingCustomersInInformatica);
       } else {
-        // If the customer only exists as a legacy record in Informatica but has no URN
+        // If the customer only exists as a legacy record in Salesforce (via Informatica) but has no URN
         await this.createCustomerByURN(res, DTFSCustomerDto);
       }
     }
@@ -207,10 +218,13 @@ export class CustomersService {
       Party_URN__c: partyUrn,
       D_B_Number__c: dunsNumber,
       Company_Registration_Number__c: DTFSCustomerDto.companyRegistrationNumber,
-      CCM_Credit_Risk_Rating__c: CUSTOMERS.EXAMPLES.CREDIT_RISK_RATING,
+      CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
       CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
-      CCM_Loss_Given_Default__c: CUSTOMERS.EXAMPLES.LOSS_GIVEN_DEFAULT,
+      CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
       CCM_Probability_of_Default__c: DTFSCustomerDto.probabilityOfDefault,
+      CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity,
+      CCM_Primary_Industry__c: DTFSCustomerDto.ukefIndustryName,
+      CCM_Primary_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
     };
 
     const salesforceCreateCustomerResponse: CreateCustomerSalesforceResponseDto = await this.salesforceService.createCustomer(createCustomerDto);
@@ -224,6 +238,10 @@ export class CustomersService {
         type: null,
         subtype: null,
         isLegacyRecord: isLegacyRecord,
+        probabilityOfDefault: DTFSCustomerDto.probabilityOfDefault,
+        ukEntity: DTFSCustomerDto.ukEntity,
+        ukefIndustryName: DTFSCustomerDto.ukefIndustryName,
+        ukefSectorName: DTFSCustomerDto.ukefSectorName,
       },
     ];
   }
