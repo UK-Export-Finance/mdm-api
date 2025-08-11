@@ -192,7 +192,7 @@ jobs:
 
       - name: Dependencies
         working-directory: ./
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
       - name: Validate
         working-directory: ./
