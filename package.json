@@ -14,6 +14,7 @@
     "lint:fix": "eslint . --ext .js,.ts --fix",
     "prettier": "prettier --no-error-on-unmatched-pattern --check **/*.{ts,js}",
     "prettier:fix": "prettier --write **/*.{ts,js}",
+    "snapshot:update": "npm run unit-test -- -u && npm run api-test -- -u",
     "spellcheck": "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color '**/*'",
     "start": "nest start",
     "start:debug": "nest start --debug --watch",
