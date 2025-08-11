@@ -1,6 +1,6 @@
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { CUSTOMERS } from '@ukef/constants';
+import { EXAMPLES } from '@ukef/constants';
 import { DunAndBradstreetService } from '@ukef/helper-modules/dun-and-bradstreet/dun-and-bradstreet.service';
 import { salesforceFormattedCurrentDate } from '@ukef/helpers/date-formatter.helper';
 import { InformaticaService } from '@ukef/modules/informatica/informatica.service';
@@ -48,9 +48,9 @@ const customerWithoutPod: DTFSCustomerDto = {
 const customerWithFullPayload: DTFSCustomerDto = {
   ...baseCustomerPayload,
   probabilityOfDefault,
-  ukEntity: 'Yes',
-  ukefIndustryName: 'AGRICULTURE, HORTICULTURE & FISHERIES',
-  ukefSectorName: 'CIVIL: AGRICULTURE, HORTICULTURE & FISHERIES',
+  ukEntity: EXAMPLES.CUSTOMER.UK_ENTITY,
+  ukefIndustryName: EXAMPLES.CUSTOMER.UK_INDUSTRY_NAME,
+  ukefSectorName: EXAMPLES.CUSTOMER.UK_INDUSTRY_SECTOR_NAME,
 };
 
 // Responses
@@ -288,9 +288,9 @@ describe('CustomerService', () => {
                 D_B_Number__c: 'TEST DUNS_NUMBER',
                 Party_URN__c: 'SOME_LEGACY_URN',
                 Company_Registration_Number__c: DTFSCustomerDto.companyRegistrationNumber,
-                CCM_Credit_Risk_Rating__c: CUSTOMERS.EXAMPLES.CREDIT_RISK_RATING,
+                CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
                 CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
-                CCM_Loss_Given_Default__c: CUSTOMERS.EXAMPLES.LOSS_GIVEN_DEFAULT,
+                CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
                 CCM_Probability_of_Default__c: DTFSCustomerDto.probabilityOfDefault,
                 CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity,
                 CCM_Primary_Industry__c: DTFSCustomerDto.ukefIndustryName,
@@ -406,9 +406,9 @@ describe('CustomerService', () => {
                 D_B_Number__c: 'TEST DUNS_NUMBER',
                 Party_URN__c: 'TEST PARTY_URN',
                 Company_Registration_Number__c: DTFSCustomerDto.companyRegistrationNumber,
-                CCM_Credit_Risk_Rating__c: CUSTOMERS.EXAMPLES.CREDIT_RISK_RATING,
+                CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
                 CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
-                CCM_Loss_Given_Default__c: CUSTOMERS.EXAMPLES.LOSS_GIVEN_DEFAULT,
+                CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
                 CCM_Probability_of_Default__c: DTFSCustomerDto.probabilityOfDefault,
                 CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity,
                 CCM_Primary_Industry__c: DTFSCustomerDto.ukefIndustryName,
@@ -495,9 +495,9 @@ describe('CustomerService', () => {
               D_B_Number__c: 'TEST DUNS_NUMBER',
               Party_URN__c: 'TEST PARTY_URN',
               Company_Registration_Number__c: DTFSCustomerDto.companyRegistrationNumber,
-              CCM_Credit_Risk_Rating__c: CUSTOMERS.EXAMPLES.CREDIT_RISK_RATING,
+              CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
               CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
-              CCM_Loss_Given_Default__c: CUSTOMERS.EXAMPLES.LOSS_GIVEN_DEFAULT,
+              CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
               CCM_Probability_of_Default__c: DTFSCustomerDto.probabilityOfDefault,
               CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity,
               CCM_Primary_Industry__c: DTFSCustomerDto.ukefIndustryName,
@@ -572,9 +572,9 @@ describe('CustomerService', () => {
               D_B_Number__c: 'TEST DUNS_NUMBER',
               Party_URN__c: null,
               Company_Registration_Number__c: DTFSCustomerDto.companyRegistrationNumber,
-              CCM_Credit_Risk_Rating__c: CUSTOMERS.EXAMPLES.CREDIT_RISK_RATING,
+              CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
               CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
-              CCM_Loss_Given_Default__c: CUSTOMERS.EXAMPLES.LOSS_GIVEN_DEFAULT,
+              CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
               CCM_Probability_of_Default__c: DTFSCustomerDto.probabilityOfDefault,
               CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity,
               CCM_Primary_Industry__c: DTFSCustomerDto.ukefIndustryName,

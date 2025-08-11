@@ -1,4 +1,4 @@
-import { CUSTOMERS, ENUMS } from '@ukef/constants';
+import { ENUMS, EXAMPLES } from '@ukef/constants';
 import { IncorrectAuthArg, withClientAuthenticationTests } from '@ukef-test/common-tests/client-authentication-api-tests';
 import { Api } from '@ukef-test/support/api';
 import { ENVIRONMENT_VARIABLES } from '@ukef-test/support/environment-variables';
@@ -51,40 +51,40 @@ describe('GET /customers', () => {
 
   it.each([
     {
-      query: { name: CUSTOMERS.EXAMPLES.NAME, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES },
+      query: { name: EXAMPLES.CUSTOMER.NAME, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES },
     },
     {
-      query: { companyReg: CUSTOMERS.EXAMPLES.COMPANYREG, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES },
+      query: { companyReg: EXAMPLES.CUSTOMER.COMPANYREG, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES },
     },
     {
-      query: { partyUrn: CUSTOMERS.EXAMPLES.PARTYURN, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES },
+      query: { partyUrn: EXAMPLES.CUSTOMER.PARTYURN, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES },
     },
     {
-      query: { name: CUSTOMERS.EXAMPLES.NAME, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.NO },
+      query: { name: EXAMPLES.CUSTOMER.NAME, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.NO },
     },
     {
-      query: { companyReg: CUSTOMERS.EXAMPLES.COMPANYREG, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.NO },
+      query: { companyReg: EXAMPLES.CUSTOMER.COMPANYREG, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.NO },
     },
     {
-      query: { partyUrn: CUSTOMERS.EXAMPLES.PARTYURN, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.NO },
+      query: { partyUrn: EXAMPLES.CUSTOMER.PARTYURN, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.NO },
     },
     {
-      query: { name: CUSTOMERS.EXAMPLES.NAME, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.LEGACY_ONLY },
+      query: { name: EXAMPLES.CUSTOMER.NAME, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.LEGACY_ONLY },
     },
     {
-      query: { companyReg: CUSTOMERS.EXAMPLES.COMPANYREG, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.LEGACY_ONLY },
+      query: { companyReg: EXAMPLES.CUSTOMER.COMPANYREG, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.LEGACY_ONLY },
     },
     {
-      query: { partyUrn: CUSTOMERS.EXAMPLES.PARTYURN, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.LEGACY_ONLY },
+      query: { partyUrn: EXAMPLES.CUSTOMER.PARTYURN, fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.LEGACY_ONLY },
     },
     {
-      query: { name: CUSTOMERS.EXAMPLES.NAME },
+      query: { name: EXAMPLES.CUSTOMER.NAME },
     },
     {
-      query: { companyReg: CUSTOMERS.EXAMPLES.COMPANYREG },
+      query: { companyReg: EXAMPLES.CUSTOMER.COMPANYREG },
     },
     {
-      query: { partyUrn: CUSTOMERS.EXAMPLES.PARTYURN },
+      query: { partyUrn: EXAMPLES.CUSTOMER.PARTYURN },
     },
   ])('returns a 200 response with the customers if query is "$query"', async ({ query }) => {
     // Arrange
