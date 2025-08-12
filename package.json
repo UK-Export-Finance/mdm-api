@@ -23,7 +23,8 @@
     "type-check": "tsc --noEmit --pretty",
     "unit-test": "jest --selectProjects=Unit",
     "unit-test-dev": "jest --verbose --config=jest.config.ts",
-    "validate:all": "npm run lint:fix && npm run prettier:fix && npm run type-check && npm run validate:yml",
+    "validate:all": "npm run lint:fix && npm run prettier:fix && npm run type-check && npm run validate:yml && npm run validate:md",
+    "validate:md": "npx markdownlint-cli --config .markdownlint.json '**/*.md'",
     "validate:yml": "npx yaml-lint **/*.yml --ignore=**/node_modules"
   },
   "lint-staged": {
@@ -33,7 +34,8 @@
       "npm run prettier:fix"
     ],
     "**/*.md": [
-      "prettier --write"
+      "prettier --write",
+      "npm run validate:md"
     ],
     "**/*.yml": [
       "npm run validate:yml"
@@ -116,6 +118,7 @@
     "jest": "30.0.5",
     "jest-when": "^3.7.0",
     "lint-staged": "^16.1.5",
+    "markdownlint-cli": "^0.45.0",
     "nock": "^14.0.9",
     "prettier": "^3.6.2",
     "sort-package-json": "^3.4.0",
