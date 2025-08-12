@@ -34,7 +34,8 @@
       "npm run prettier:fix"
     ],
     "**/*.md": [
-      "prettier --write"
+      "prettier --write",
+      "npm run validate:md"
     ],
     "**/*.yml": [
       "npm run validate:yml"
