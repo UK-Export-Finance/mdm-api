@@ -88,7 +88,7 @@ export class CreateCustomerDto {
   CCM_Citizenship_Class__c?: string;
 
   @ApiProperty({
-    description: 'UKEF industry identifier',
+    description: 'UKEF primary industry identifier',
     example: EXAMPLES.CUSTOMER.UK_INDUSTRY_NAME,
   })
   @IsString()
@@ -98,7 +98,7 @@ export class CreateCustomerDto {
   CCM_Primary_Industry__c?: string;
 
   @ApiProperty({
-    description: 'UKEF industry sector identifier',
+    description: 'UKEF primary industry sector identifier',
     example: EXAMPLES.CUSTOMER.UK_INDUSTRY_SECTOR_NAME,
   })
   @IsString()
@@ -106,4 +106,24 @@ export class CreateCustomerDto {
   @MinLength(1)
   @MaxLength(200)
   CCM_Primary_Industry_Group__c?: string;
+
+  @ApiProperty({
+    description: 'UKEF industry identifier',
+    example: EXAMPLES.CUSTOMER.UK_INDUSTRY_NAME,
+  })
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(1)
+  @MaxLength(200)
+  CCM_Industry__c?: string;
+
+  @ApiProperty({
+    description: 'UKEF industry sector identifier',
+    example: EXAMPLES.CUSTOMER.UK_INDUSTRY_SECTOR_NAME,
+  })
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(1)
+  @MaxLength(200)
+  CCM_Industry_Group__c?: string;
 }

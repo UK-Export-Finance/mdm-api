@@ -295,6 +295,8 @@ describe('CustomerService', () => {
                 CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity,
                 CCM_Primary_Industry__c: DTFSCustomerDto.ukefIndustryName,
                 CCM_Primary_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
+                CCM_Industry__c: DTFSCustomerDto.ukefIndustryName,
+                CCM_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
               }),
             );
 
@@ -413,6 +415,8 @@ describe('CustomerService', () => {
                 CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity,
                 CCM_Primary_Industry__c: DTFSCustomerDto.ukefIndustryName,
                 CCM_Primary_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
+                CCM_Industry__c: DTFSCustomerDto.ukefIndustryName,
+                CCM_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
               }),
             );
 
@@ -502,6 +506,8 @@ describe('CustomerService', () => {
               CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity,
               CCM_Primary_Industry__c: DTFSCustomerDto.ukefIndustryName,
               CCM_Primary_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
+              CCM_Industry__c: DTFSCustomerDto.ukefIndustryName,
+              CCM_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
             }),
           );
 
@@ -579,6 +585,8 @@ describe('CustomerService', () => {
               CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity,
               CCM_Primary_Industry__c: DTFSCustomerDto.ukefIndustryName,
               CCM_Primary_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
+              CCM_Industry__c: DTFSCustomerDto.ukefIndustryName,
+              CCM_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
             }),
           );
 
