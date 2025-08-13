@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.29.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.28.0...v1.29.0) (2025-08-13)
+
+
+### Features
+
+* **DTFS2-8059:** industry fields for salesforce customer ([#1503](https://github.com/UK-Export-Finance/mdm-api/issues/1503)) ([d634e81](https://github.com/UK-Export-Finance/mdm-api/commit/d634e813efb11a5a09d41f78fa50d3ffa3161716))
+
 ## [1.28.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.27.1...v1.28.0) (2025-08-11)
 
 
