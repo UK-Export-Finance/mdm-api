@@ -104,7 +104,7 @@ export class CustomersService {
   private async handleInformaticaResponse(res, DTFSCustomerDto, existingCustomersInInformatica): Promise<GetCustomersResponse> {
     if (existingCustomersInInformatica[0]?.isLegacyRecord === false) {
       // If the customer exists as a non-legacy record in Salesforce (via Informatica)
-      res.status(HttpStatusCode.Ok).json(
+      return res.status(HttpStatusCode.Ok).json(
         existingCustomersInInformatica.map(
           (customerInInformatica): GetCustomersResponseItem => ({
             partyUrn: customerInInformatica?.partyUrn,
@@ -123,7 +123,6 @@ export class CustomersService {
           }),
         ),
       );
-      return;
     } else if (existingCustomersInInformatica[0]?.isLegacyRecord === true) {
       if (existingCustomersInInformatica[0]?.partyUrn) {
         // If the customer only exists as a legacy record in Salesforce (via Informatica) and has a URN
@@ -194,8 +193,7 @@ export class CustomersService {
     }
 
     const createdCustomer = await this.createCustomerByURNAndDUNS(DTFSCustomerDto, partyUrn, dunsNumber, isLegacyRecord);
-    res.status(HttpStatusCode.Created).json(createdCustomer);
-    return;
+    return res.status(HttpStatusCode.Created).json(createdCustomer);
   }
 
   /**
@@ -225,6 +223,8 @@ export class CustomersService {
       CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity,
       CCM_Primary_Industry__c: DTFSCustomerDto.ukefIndustryName,
       CCM_Primary_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
+      CCM_Industry__c: DTFSCustomerDto.ukefIndustryName,
+      CCM_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
     };
 
     const salesforceCreateCustomerResponse: CreateCustomerSalesforceResponseDto = await this.salesforceService.createCustomer(createCustomerDto);

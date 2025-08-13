@@ -150,7 +150,7 @@ describe('POST /customers', () => {
   });
 
   // Good request test case
-  it(`should return ${HttpStatusCode.Ok} for a correct payload`, async () => {
+  it(`should return ${HttpStatusCode.Ok} for a correct payload, when creating an existing customer`, async () => {
     // Arrange
     const payload = {
       companyRegistrationNumber: EXAMPLES.CUSTOMER.COMPANYREG,
@@ -165,6 +165,7 @@ describe('POST /customers', () => {
     const { status, body } = await api.post(url, payload);
 
     // Assert
+    // Following response is sent when the customer exist
     expect(status).toBe(HttpStatusCode.Ok);
     expect(body).toHaveLength(1);
     expect(body[0].companyRegNo).toBeDefined();
