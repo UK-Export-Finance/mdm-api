@@ -25,11 +25,11 @@ MDM micro-service provides endpoints for internal UKEF applications ranging from
 npm install --legacy-peer-deps
 ```
 
+When commiting changes - If the pre-commit hook does not run, execute the following:
+
 ```bash
 npx husky
 ```
-
-When commiting changes - If the pre-commit hook does not run, execute the following:
 
 ## Environment Variables 👨🏼‍💻
 
