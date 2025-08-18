@@ -26,6 +26,7 @@ on:
       - dev
       - staging
       - production
+      - fix/deployment
 
     paths:
       - 'src/**'
@@ -47,7 +48,7 @@ jobs:
   # 1. Setup deployment variables
   setup:
     name: Setup 🔧
-    runs-on: [self-hosted, APIM, deployment]
+    runs-on: [ubuntu-latest]
     outputs:
       product: ${{ env.PRODUCT }}
       environment: ${{ env.ENVIRONMENT }}
@@ -68,7 +69,7 @@ jobs:
       NAME: mdm
       NAME_UPPERCASE: MDM
       ENVIRONMENT: ${{ needs.setup.outputs.environment }}
-    runs-on: [self-hosted, APIM, deployment]
+    runs-on: [ubuntu-latest]
     steps:
       - name: Repository 🗃️
         uses: actions/checkout@v5
