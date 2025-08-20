@@ -24,7 +24,7 @@
     "unit-test": "jest --selectProjects=Unit",
     "unit-test-dev": "jest --verbose --config=jest.config.ts",
     "validate:all": "npm run lint:fix && npm run prettier:fix && npm run type-check && npm run validate:yml && npm run validate:md",
-    "validate:md": "npx markdownlint-cli --config .markdownlint.json '**/*.md'",
+    "validate:md": "npx markdownlint-cli --config .markdownlint.json \"**/*.md\"",
     "validate:yml": "npx yaml-lint **/*.yml --ignore=**/node_modules"
   },
   "lint-staged": {
@@ -35,10 +35,10 @@
     ],
     "**/*.md": [
       "prettier --write",
-      "npm run validate:md"
+      "npx markdownlint-cli --config .markdownlint.json"
     ],
     "**/*.yml": [
-      "npm run validate:yml"
+      "npx yaml-lint --ignore=**/node_modules"
     ],
     "**/*": [
       "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color"
