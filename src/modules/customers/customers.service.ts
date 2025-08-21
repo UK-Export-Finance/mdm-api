@@ -1,5 +1,5 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { EXAMPLES } from '@ukef/constants';
+import { CREDIT_CLASSIFICATION_STATUS, EXAMPLES, RISK_ENTITY } from '@ukef/constants';
 import { DunAndBradstreetService } from '@ukef/helper-modules/dun-and-bradstreet/dun-and-bradstreet.service';
 import { salesforceFormattedCurrentDate } from '@ukef/helpers/date-formatter.helper';
 import { GetCustomersInformaticaQueryDto } from '@ukef/modules/informatica/dto/get-customers-informatica-query.dto';
@@ -120,6 +120,9 @@ export class CustomersService {
             // ukEntity: DTFSCustomerDto?.ukEntity,
             // ukefIndustryName: DTFSCustomerDto?.ukefIndustryName,
             // ukefSectorName: DTFSCustomerDto?.ukefSectorName,
+            // riskEntity: DTFSCustomerDto?.riskEntity,
+            // classificationStatus: DTFSCustomerDto?.classificationStatus,
+            // classificationStatusDate: DTFSCustomerDto?.classificationStatusDate,
           }),
         ),
       );
@@ -225,6 +228,9 @@ export class CustomersService {
       CCM_Primary_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
       CCM_Industry__c: DTFSCustomerDto.ukefIndustryName,
       CCM_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
+      CCM_Assigned_Rating__c: RISK_ENTITY.CORPORATE,
+      CCM_Watch_List__c: CREDIT_CLASSIFICATION_STATUS.GOOD,
+      CCM_Watch_List_Date__c: salesforceFormattedCurrentDate(),
     };
 
     const salesforceCreateCustomerResponse: CreateCustomerSalesforceResponseDto = await this.salesforceService.createCustomer(createCustomerDto);
@@ -242,6 +248,9 @@ export class CustomersService {
         ukEntity: DTFSCustomerDto.ukEntity,
         ukefIndustryName: DTFSCustomerDto.ukefIndustryName,
         ukefSectorName: DTFSCustomerDto.ukefSectorName,
+        riskEntity: DTFSCustomerDto.riskEntity,
+        creditClassificationStatus: DTFSCustomerDto.creditClassificationStatus,
+        creditClassificationDate: DTFSCustomerDto.creditClassificationDate,
       },
     ];
   }
