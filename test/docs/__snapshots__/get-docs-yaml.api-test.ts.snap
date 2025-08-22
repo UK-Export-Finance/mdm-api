@@ -812,6 +812,20 @@ components:
           type: string
           description: UKEF industry sector identifier code
           example: 'CIVIL: AGRICULTURE, HORTICULTURE & FISHERIES'
+        riskEntity:
+          type: string
+          description: Risk entity
+          example:
+            CORPORATE: Corporate
+        creditClassificationStatus:
+          type: string
+          description: Credit classification status
+          example:
+            GOOD: Good
+        creditClassificationDate:
+          type: string
+          description: Credit Classification Status Date (dd/mm/yyyy)
+          example: 01/01/1970
       required:
         - partyUrn
         - name
@@ -824,6 +838,9 @@ components:
         - ukEntity
         - ukefIndustryName
         - ukefSectorName
+        - riskEntity
+        - creditClassificationStatus
+        - creditClassificationDate
     DTFSCustomerDto:
       type: object
       properties:

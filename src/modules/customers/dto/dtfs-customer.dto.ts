@@ -2,6 +2,9 @@ import { ApiProperty } from '@nestjs/swagger';
 import { EXAMPLES } from '@ukef/constants';
 import { IsNotEmpty, IsNumber, IsOptional, IsString, Max, MaxLength, Min, MinLength } from 'class-validator';
 
+/**
+ * Salesforce customer creation payload properties
+ */
 export class DTFSCustomerDto {
   @ApiProperty({
     description: 'Company registration number',
@@ -64,34 +67,4 @@ export class DTFSCustomerDto {
   @MinLength(1)
   @MaxLength(200)
   ukefSectorName?: string;
-
-  @ApiProperty({
-    description: 'Risk entity',
-    example: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
-  })
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(1)
-  @MaxLength(20)
-  riskEntity?: string;
-
-  @ApiProperty({
-    description: 'Credit classification status',
-    example: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
-  })
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(1)
-  @MaxLength(20)
-  creditClassificationStatus?: string;
-
-  @ApiProperty({
-    description: 'Credit Classification Status Date (dd/mm/yyyy)',
-    example: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_DATE,
-  })
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(1)
-  @MaxLength(200)
-  creditClassificationDate?: string;
 }
