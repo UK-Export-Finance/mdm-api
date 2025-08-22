@@ -8,6 +8,7 @@
 export * from './auth.constant';
 export * from './companies.constant';
 export * from './companies-house.constant';
+export * from './customers.constant';
 export * from './database-name.constant';
 export * from './date.constant';
 export * from './dun-and-bradstreet.constant';

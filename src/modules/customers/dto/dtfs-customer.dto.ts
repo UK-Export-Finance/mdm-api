@@ -2,6 +2,9 @@ import { ApiProperty } from '@nestjs/swagger';
 import { EXAMPLES } from '@ukef/constants';
 import { IsNotEmpty, IsNumber, IsOptional, IsString, Max, MaxLength, Min, MinLength } from 'class-validator';
 
+/**
+ * Salesforce customer creation payload properties
+ */
 export class DTFSCustomerDto {
   @ApiProperty({
     description: 'Company registration number',

@@ -1,5 +1,5 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { EXAMPLES } from '@ukef/constants';
+import { CREDIT_CLASSIFICATION_STATUS, EXAMPLES, RISK_ENTITY } from '@ukef/constants';
 import { DunAndBradstreetService } from '@ukef/helper-modules/dun-and-bradstreet/dun-and-bradstreet.service';
 import { salesforceFormattedCurrentDate } from '@ukef/helpers/date-formatter.helper';
 import { GetCustomersInformaticaQueryDto } from '@ukef/modules/informatica/dto/get-customers-informatica-query.dto';
@@ -46,6 +46,9 @@ export class CustomersService {
         type: customerInInformatica.type,
         subtype: customerInInformatica.subtype,
         isLegacyRecord: customerInInformatica.isLegacyRecord,
+        riskEntity: customerInInformatica.riskEntity,
+        creditClassificationStatus: customerInInformatica.creditClassificationStatus,
+        creditClassificationDate: customerInInformatica.creditClassificationDate,
       }),
     );
   }
@@ -120,15 +123,18 @@ export class CustomersService {
             // ukEntity: DTFSCustomerDto?.ukEntity,
             // ukefIndustryName: DTFSCustomerDto?.ukefIndustryName,
             // ukefSectorName: DTFSCustomerDto?.ukefSectorName,
+            // riskEntity: DTFSCustomerDto?.riskEntity,
+            // classificationStatus: DTFSCustomerDto?.classificationStatus,
+            // classificationStatusDate: DTFSCustomerDto?.classificationStatusDate,
           }),
         ),
       );
     } else if (existingCustomersInInformatica[0]?.isLegacyRecord === true) {
       if (existingCustomersInInformatica[0]?.partyUrn) {
-        // If the customer only exists as a legacy record in Salesforce (via Informatica) and has a URN
+        // If the customer only exists as a legacy record in Salesforce (fetched via Informatica) and has a URN
         await this.createCustomerWithLegacyURN(res, DTFSCustomerDto, existingCustomersInInformatica);
       } else {
-        // If the customer only exists as a legacy record in Salesforce (via Informatica) but has no URN
+        // If the customer only exists as a legacy record in Salesforce (fetched via Informatica) but has no URN
         await this.createCustomerByURN(res, DTFSCustomerDto);
       }
     }
@@ -211,13 +217,15 @@ export class CustomersService {
     dunsNumber: string,
     isLegacyRecord: boolean,
   ): Promise<GetCustomersResponse> {
+    const salesForceDate = salesforceFormattedCurrentDate();
+
     const createCustomerDto: CreateCustomerDto = {
       Name: DTFSCustomerDto.companyName,
       Party_URN__c: partyUrn,
       D_B_Number__c: dunsNumber,
       Company_Registration_Number__c: DTFSCustomerDto.companyRegistrationNumber,
       CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
-      CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
+      CCM_Credit_Risk_Rating_Date__c: salesForceDate,
       CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
       CCM_Probability_of_Default__c: DTFSCustomerDto.probabilityOfDefault,
       CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity,
@@ -225,6 +233,9 @@ export class CustomersService {
       CCM_Primary_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
       CCM_Industry__c: DTFSCustomerDto.ukefIndustryName,
       CCM_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
+      CCM_Assigned_Rating__c: RISK_ENTITY.CORPORATE,
+      CCM_Watch_List__c: CREDIT_CLASSIFICATION_STATUS.GOOD,
+      CCM_Watch_List_Date__c: salesForceDate,
     };
 
     const salesforceCreateCustomerResponse: CreateCustomerSalesforceResponseDto = await this.salesforceService.createCustomer(createCustomerDto);
@@ -242,6 +253,9 @@ export class CustomersService {
         ukEntity: DTFSCustomerDto.ukEntity,
         ukefIndustryName: DTFSCustomerDto.ukefIndustryName,
         ukefSectorName: DTFSCustomerDto.ukefSectorName,
+        riskEntity: RISK_ENTITY.CORPORATE,
+        creditClassificationStatus: CREDIT_CLASSIFICATION_STATUS.GOOD,
+        creditClassificationDate: salesForceDate,
       },
     ];
   }

@@ -126,4 +126,34 @@ export class CreateCustomerDto {
   @MinLength(1)
   @MaxLength(200)
   CCM_Industry_Group__c?: string;
+
+  @ApiProperty({
+    description: 'Risk entity',
+    example: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
+  })
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(1)
+  @MaxLength(20)
+  CCM_Assigned_Rating__c?: string;
+
+  @ApiProperty({
+    description: 'Credit classification status',
+    example: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
+  })
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(1)
+  @MaxLength(20)
+  CCM_Watch_List__c?: string;
+
+  @ApiProperty({
+    description: 'Credit Classification Status Date (dd/mm/yyyy)',
+    example: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_DATE,
+  })
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(1)
+  @MaxLength(200)
+  CCM_Watch_List_Date__c?: string;
 }

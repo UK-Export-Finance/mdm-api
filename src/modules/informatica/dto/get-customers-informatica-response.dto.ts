@@ -12,4 +12,7 @@ export interface GetCustomersInformaticaResponseItem {
   ukEntity?: string;
   ukefIndustryName?: string;
   ukefSectorName?: string;
+  riskEntity?: string;
+  creditClassificationStatus?: string;
+  creditClassificationDate?: string;
 }

@@ -73,4 +73,22 @@ export class GetCustomersResponseItem {
     example: EXAMPLES.CUSTOMER.UK_INDUSTRY_SECTOR_NAME,
   })
   readonly ukefSectorName?: string;
+
+  @ApiProperty({
+    description: 'Risk entity',
+    example: EXAMPLES.CUSTOMER.RISK_ENTITY,
+  })
+  readonly riskEntity?: string;
+
+  @ApiProperty({
+    description: 'Credit classification status',
+    example: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS,
+  })
+  readonly creditClassificationStatus?: string;
+
+  @ApiProperty({
+    description: 'Credit Classification Status Date (dd/mm/yyyy)',
+    example: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_DATE,
+  })
+  readonly creditClassificationDate?: string;
 }

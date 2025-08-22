@@ -1,4 +1,5 @@
-import { ENUMS } from '@ukef/constants';
+import { CREDIT_CLASSIFICATION_STATUS, ENUMS, RISK_ENTITY } from '@ukef/constants';
+import { salesforceFormattedCurrentDate } from '@ukef/helpers/date-formatter.helper';
 import { GetCustomersQueryDto } from '@ukef/modules/customers/dto/get-customers-query.dto';
 import { GetCustomersResponse } from '@ukef/modules/customers/dto/get-customers-response.dto';
 import { GetCustomersInformaticaQueryDto } from '@ukef/modules/informatica/dto/get-customers-informatica-query.dto';
@@ -24,6 +25,9 @@ export class GetCustomersGenerator extends AbstractGenerator<CustomerValues, Gen
       type: null,
       subtype: null,
       isLegacyRecord: this.valueGenerator.boolean(),
+      riskEntity: RISK_ENTITY.CORPORATE,
+      creditClassificationStatus: CREDIT_CLASSIFICATION_STATUS.GOOD,
+      creditClassificationDate: salesforceFormattedCurrentDate(),
     };
   }
 
@@ -70,6 +74,9 @@ export class GetCustomersGenerator extends AbstractGenerator<CustomerValues, Gen
         type: v.type,
         subtype: v.subtype,
         isLegacyRecord: v.isLegacyRecord,
+        riskEntity: RISK_ENTITY.CORPORATE,
+        creditClassificationStatus: CREDIT_CLASSIFICATION_STATUS.GOOD,
+        creditClassificationDate: v.creditClassificationDate,
       },
     ]);
 
@@ -95,6 +102,9 @@ interface CustomerValues {
   type: string;
   subtype: string;
   isLegacyRecord: boolean;
+  riskEntity: string;
+  creditClassificationStatus: string;
+  creditClassificationDate: string;
 }
 
 interface GenerateOptions {
