@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.30.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.29.0...v1.30.0) (2025-08-22)
+
+
+### Features
+
+* **DTFS2-8069:** add risk entity and classification for customers ([#1514](https://github.com/UK-Export-Finance/mdm-api/issues/1514)) ([c91cf32](https://github.com/UK-Export-Finance/mdm-api/commit/c91cf3291cd709746d48d84f2488aefd123c1f4e))
+
 ## [1.29.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.28.0...v1.29.0) (2025-08-13)
 
 
