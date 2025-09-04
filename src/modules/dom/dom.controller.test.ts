@@ -5,28 +5,15 @@ import { DataSource, QueryRunner } from 'typeorm';
 import { OdsService } from '../ods/ods.service';
 import { DomController } from './dom.controller';
 import { DomService } from './dom.service';
-import { FindMultipleDomBusinessCentresNonWorkingDaysResponse, GetDomBusinessCentreNonWorkingDayMappedResponse } from './dto';
+import { FindMultipleDomBusinessCentresNonWorkingDaysResponse } from './dto';
 
 const mockError = new Error('An error occurred');
-
-const mockBusinessCentreNonWorkingDays: GetDomBusinessCentreNonWorkingDayMappedResponse[] = [
-  {
-    code: EXAMPLES.BUSINESS_CENTRE.CODE,
-    date: EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.DATE,
-    name: EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME,
-  },
-  {
-    code: EXAMPLES.BUSINESS_CENTRE.CODE,
-    date: EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.DATE,
-    name: EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME,
-  },
-];
 
 const mockCentreCodesString = `${DOM_BUSINESS_CENTRES.AE_DXB.CODE},${DOM_BUSINESS_CENTRES.CM_YAO.CODE}`;
 
 const mockMultipleBusinessCentreNonWorkingDays: FindMultipleDomBusinessCentresNonWorkingDaysResponse = {
-  [DOM_BUSINESS_CENTRES.AE_DXB.CODE]: mockBusinessCentreNonWorkingDays,
-  [DOM_BUSINESS_CENTRES.CM_YAO.CODE]: mockBusinessCentreNonWorkingDays,
+  [DOM_BUSINESS_CENTRES.AE_DXB.CODE]: EXAMPLES.DOM.BUSINESS_CENTRES_NON_WORKING_DAYS,
+  [DOM_BUSINESS_CENTRES.CM_YAO.CODE]: EXAMPLES.DOM.BUSINESS_CENTRES_NON_WORKING_DAYS,
 };
 
 describe('DomController', () => {
@@ -52,7 +39,7 @@ describe('DomController', () => {
     domServiceFindBusinessCentre = jest.fn().mockReturnValueOnce(DOM_BUSINESS_CENTRES.AE_DXB);
     domService.findBusinessCentre = domServiceFindBusinessCentre;
 
-    domServiceFindBusinessCentreNonWorkingDays = jest.fn().mockResolvedValueOnce(mockBusinessCentreNonWorkingDays);
+    domServiceFindBusinessCentreNonWorkingDays = jest.fn().mockResolvedValueOnce(EXAMPLES.DOM.BUSINESS_CENTRES_NON_WORKING_DAYS);
     domService.findBusinessCentreNonWorkingDays = domServiceFindBusinessCentreNonWorkingDays;
 
     domServiceGetBusinessCentres = jest.fn().mockReturnValueOnce(EXAMPLES.DOM.BUSINESS_CENTRES);
@@ -100,7 +87,7 @@ describe('DomController', () => {
       const result = await controller.findBusinessCentreNonWorkingDays({ centreCode: DOM_BUSINESS_CENTRES.CM_YAO.CODE });
 
       // Assert
-      expect(result).toEqual(mockBusinessCentreNonWorkingDays);
+      expect(result).toEqual(EXAMPLES.DOM.BUSINESS_CENTRES_NON_WORKING_DAYS);
     });
 
     describe('when domService.findBusinessCentreNonWorkingDays throws an error', () => {
