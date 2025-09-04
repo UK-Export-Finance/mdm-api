@@ -377,7 +377,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/GetDomProductConfigurationResponse'
+                  $ref: '#/components/schemas/GetDomProductConfigResponse'
         '400':
           description: Bad request
         '500':
@@ -1091,7 +1091,7 @@ components:
       required:
         - code
         - name
-    GetDomProductConfigurationResponse:
+    GetDomProductConfigResponse:
       type: object
       properties:
         mockProduct:
