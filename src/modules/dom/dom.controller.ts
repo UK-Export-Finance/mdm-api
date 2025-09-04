@@ -1,13 +1,15 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import AppConfig from '@ukef/config/app.config';
 
 import { DomService } from './dom.service';
 import {
+  FindMultipleDomBusinessCentresNonWorkingDaysResponse,
   GetDomBusinessCentreNonWorkingDayMappedResponse,
   GetDomBusinessCentreNonWorkingDaysParamDto,
   GetDomBusinessCentreParamDto,
   GetDomBusinessCentreResponse,
+  GetDomBusinessCentresNonWorkingDaysParamDto,
   GetDomProductConfigurationResponse,
 } from './dto';
 
@@ -26,7 +28,7 @@ export class DomController {
     summary: 'Get a business centre from DOM',
   })
   @ApiOkResponse({
-    description: 'A DOM Business centre',
+    description: 'A DOM business centre',
     type: GetDomBusinessCentreResponse,
   })
   @ApiNotFoundResponse({
@@ -47,9 +49,12 @@ export class DomController {
     summary: "Get a business centre's non working days from DOM",
   })
   @ApiOkResponse({
-    description: "A DOM Business centre's non working days",
+    description: "A DOM business centre's non working days",
     isArray: true,
     type: GetDomBusinessCentreNonWorkingDayMappedResponse,
+  })
+  @ApiNotFoundResponse({
+    description: 'Business centre not found',
   })
   @ApiBadRequestResponse({
     description: 'Bad request',
@@ -66,7 +71,7 @@ export class DomController {
     summary: 'Get business centres from DOM',
   })
   @ApiOkResponse({
-    description: 'DOM Business centres',
+    description: 'DOM business centres',
     isArray: true,
     type: GetDomBusinessCentreResponse,
   })
@@ -78,6 +83,29 @@ export class DomController {
   })
   getBusinessCentres(): GetDomBusinessCentreResponse[] {
     return this.domService.getBusinessCentres();
+  }
+
+  @Get('business-centres/non-working-days')
+  @ApiOperation({
+    summary: "Get multiple business centre's non working days from DOM",
+  })
+  @ApiOkResponse({
+    description: "Multiple DOM business centre's non working days",
+    type: FindMultipleDomBusinessCentresNonWorkingDaysResponse,
+  })
+  @ApiNotFoundResponse({
+    description: 'Business centre not found',
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad request',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  findMultipleBusinessCentresNonWorkingDays(
+    @Query() query: GetDomBusinessCentresNonWorkingDaysParamDto,
+  ): Promise<FindMultipleDomBusinessCentresNonWorkingDaysResponse> {
+    return this.domService.findMultipleBusinessCentresNonWorkingDays(query.centreCodes);
   }
 
   @Get('product-configurations')

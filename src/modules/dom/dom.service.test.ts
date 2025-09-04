@@ -7,8 +7,23 @@ import { DataSource, QueryRunner } from 'typeorm';
 import { GetOdsBusinessCentreNonWorkingDayResponse } from '../ods/dto';
 import { OdsService } from '../ods/ods.service';
 import { DomService } from './dom.service';
+import { GetDomBusinessCentreNonWorkingDayMappedResponse } from './dto';
 
 const mockError = new Error('An error occurred');
+
+// TODO: DRY, see dom controller test
+const mockBusinessCentreNonWorkingDays: GetDomBusinessCentreNonWorkingDayMappedResponse[] = [
+  {
+    code: DOM_BUSINESS_CENTRES.AE_DXB.CODE,
+    date: EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.DATE,
+    name: DOM_BUSINESS_CENTRES.AE_DXB.NAME,
+  },
+  {
+    code: DOM_BUSINESS_CENTRES.JO_AMM.CODE,
+    date: EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.DATE,
+    name: DOM_BUSINESS_CENTRES.JO_AMM.NAME,
+  },
+];
 
 const mockOdsBusinessCentreNonWorkingDays: GetOdsBusinessCentreNonWorkingDayResponse[] = [
   {
@@ -34,6 +49,7 @@ describe('DomService', () => {
   const odsService = new OdsService(mockDataSource, mockLogger);
 
   let odsServiceFindBusinessCentreNonWorkingDays: jest.Mock;
+  let mockFindBusinessCentreNonWorkingDays: jest.Mock;
 
   let service: DomService;
 
@@ -52,13 +68,13 @@ describe('DomService', () => {
     describe('when a business centre is found', () => {
       it('should return a mapped business centre', () => {
         // Arrange
-        const mockCentreCode = DOM_BUSINESS_CENTRES.CM_YAO.CODE;
+        const mockCentreCode = DOM_BUSINESS_CENTRES.JO_AMM.CODE;
 
         // Act
         const response = service.findBusinessCentre(mockCentreCode);
 
         // Assert
-        const expected = mapBusinessCentre(DOM_BUSINESS_CENTRES.CM_YAO);
+        const expected = mapBusinessCentre(DOM_BUSINESS_CENTRES.JO_AMM);
 
         expect(response).toEqual(expected);
       });
@@ -87,7 +103,7 @@ describe('DomService', () => {
   describe('findBusinessCentreNonWorkingDays', () => {
     describe('when a business centre and non working days are found', () => {
       // Arrange
-      const mockCentreCode = DOM_BUSINESS_CENTRES.CM_YAO.CODE;
+      const mockCentreCode = DOM_BUSINESS_CENTRES.JO_AMM.CODE;
 
       it('should call odsService.findBusinessCentreNonWorkingDays', async () => {
         // Act
@@ -140,7 +156,7 @@ describe('DomService', () => {
     describe('when a business centre is found, but non working days throws an error', () => {
       it('should throw a not found exception', async () => {
         // Arrange
-        const mockCentreCode = DOM_BUSINESS_CENTRES.CM_YAO.CODE;
+        const mockCentreCode = DOM_BUSINESS_CENTRES.JO_AMM.CODE;
 
         odsServiceFindBusinessCentreNonWorkingDays = jest.fn().mockRejectedValueOnce(mockError);
         odsService.findBusinessCentreNonWorkingDays = odsServiceFindBusinessCentreNonWorkingDays;
@@ -166,6 +182,111 @@ describe('DomService', () => {
       const expected = mapBusinessCentres(Object.values(DOM_BUSINESS_CENTRES));
 
       expect(response).toEqual(expected);
+    });
+  });
+
+  describe('findMultipleBusinessCentresNonWorkingDays', () => {
+    beforeEach(() => {
+      // Arrange
+      mockFindBusinessCentreNonWorkingDays = jest
+        .fn()
+        .mockResolvedValueOnce(mockBusinessCentreNonWorkingDays)
+        .mockResolvedValueOnce(mockBusinessCentreNonWorkingDays);
+
+      service = new DomService(odsService, mockLogger);
+
+      service.findBusinessCentreNonWorkingDays = mockFindBusinessCentreNonWorkingDays;
+    });
+
+    describe('when business centres are found', () => {
+      it('should call service.findBusinessCentreNonWorkingDays', async () => {
+        // Arrange
+        const mockCentreCodes = `${DOM_BUSINESS_CENTRES.AE_DXB.CODE},${DOM_BUSINESS_CENTRES.JO_AMM.CODE}`;
+
+        // Act
+        await service.findMultipleBusinessCentresNonWorkingDays(mockCentreCodes);
+
+        // Assert
+        expect(mockFindBusinessCentreNonWorkingDays).toHaveBeenCalledTimes(2);
+        expect(mockFindBusinessCentreNonWorkingDays).toHaveBeenCalledWith(EXAMPLES.DOM.BUSINESS_CENTRES[0].code);
+        expect(mockFindBusinessCentreNonWorkingDays).toHaveBeenCalledWith(EXAMPLES.DOM.BUSINESS_CENTRES[1].code);
+      });
+
+      it('should return mapped business centres', async () => {
+        // Arrange
+        const mockCentreCodes = `${DOM_BUSINESS_CENTRES.AE_DXB.CODE},${DOM_BUSINESS_CENTRES.JO_AMM.CODE}`;
+
+        // Act
+        const response = await service.findMultipleBusinessCentresNonWorkingDays(mockCentreCodes);
+
+        // Assert
+        const expected = {
+          [EXAMPLES.DOM.BUSINESS_CENTRES[0].code]: mockBusinessCentreNonWorkingDays,
+          [EXAMPLES.DOM.BUSINESS_CENTRES[1].code]: mockBusinessCentreNonWorkingDays,
+        };
+
+        expect(response).toEqual(expected);
+      });
+    });
+
+    describe('when a business centres non working days are NOT found', () => {
+      it('should throw a not found exception', async () => {
+        // Arrange
+        const mockCentreCodes = `${DOM_BUSINESS_CENTRES.AE_DXB.CODE},INVALID CODE`;
+
+        mockFindBusinessCentreNonWorkingDays = jest
+          .fn()
+          .mockResolvedValueOnce(mockBusinessCentreNonWorkingDays)
+          .mockRejectedValueOnce(new NotFoundException('Mock error'));
+
+        service = new DomService(odsService, mockLogger);
+
+        service.findBusinessCentreNonWorkingDays = mockFindBusinessCentreNonWorkingDays;
+
+        // Act
+        const promise = service.findMultipleBusinessCentresNonWorkingDays(mockCentreCodes);
+
+        // Assert
+        const expected = new Error(`Error finding multiple DOM business centre ${mockCentreCodes} non working days`);
+
+        await expect(promise).rejects.toThrow(expected);
+
+        await expect(promise).rejects.toBeInstanceOf(NotFoundException);
+      });
+    });
+
+    describe('when all business centres non working days are NOT found', () => {
+      it('should throw a not found exception', async () => {
+        // Arrange
+        const mockCentreCodes = `INVALID CODE,INVALID CODE`;
+
+        const mockError = new NotFoundException('Mock error');
+
+        mockFindBusinessCentreNonWorkingDays = jest.fn().mockResolvedValueOnce(mockError).mockRejectedValueOnce(mockError);
+
+        service = new DomService(odsService, mockLogger);
+
+        service.findBusinessCentreNonWorkingDays = mockFindBusinessCentreNonWorkingDays;
+
+        // Act
+        const promise = service.findMultipleBusinessCentresNonWorkingDays(mockCentreCodes);
+
+        // Assert
+        const expected = new Error(`Error finding multiple DOM business centre ${mockCentreCodes} non working days`);
+
+        await expect(promise).rejects.toThrow(expected);
+
+        await expect(promise).rejects.toBeInstanceOf(NotFoundException);
+      });
+    });
+
+    describe('when an empty string is provided', () => {
+      it('should return mapped business centres', async () => {
+        // Act
+        const response = await service.findMultipleBusinessCentresNonWorkingDays('');
+
+        expect(response).toEqual({});
+      });
     });
   });
 
