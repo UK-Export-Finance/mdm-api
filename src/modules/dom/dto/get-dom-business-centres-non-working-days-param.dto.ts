@@ -7,9 +7,6 @@ export class GetDomBusinessCentresNonWorkingDaysParamDto {
     required: true,
     example: `${EXAMPLES.DOM.BUSINESS_CENTRES[0].code},${EXAMPLES.DOM.BUSINESS_CENTRES[1].code}`,
     description: 'Unique business centre codes - separated by commas',
-    // type: [String],
-    // isArray: true,
-    // type: String,
   })
   @IsString()
   public centreCodes: string;
