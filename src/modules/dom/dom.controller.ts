@@ -94,7 +94,7 @@ export class DomController {
     type: FindMultipleDomBusinessCentresNonWorkingDaysResponse,
   })
   @ApiNotFoundResponse({
-    description: 'Business centre not found',
+    description: 'Business centres non working days not found',
   })
   @ApiBadRequestResponse({
     description: 'Bad request',

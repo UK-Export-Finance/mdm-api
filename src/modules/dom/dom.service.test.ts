@@ -229,7 +229,7 @@ describe('DomService', () => {
       });
     });
 
-    describe('when a business centres non working days are NOT found', () => {
+    describe("when a business centre's non working days are NOT found", () => {
       it('should throw a not found exception', async () => {
         // Arrange
         const mockCentreCodes = `${DOM_BUSINESS_CENTRES.AE_DXB.CODE},INVALID CODE`;
@@ -255,7 +255,7 @@ describe('DomService', () => {
       });
     });
 
-    describe('when all business centres non working days are NOT found', () => {
+    describe("when all business centre's non working days are NOT found", () => {
       it('should throw a not found exception', async () => {
         // Arrange
         const mockCentreCodes = `INVALID CODE,INVALID CODE`;
