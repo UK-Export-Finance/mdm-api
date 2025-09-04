@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`GET /openapi/yaml matches the snapshot 1`] = `
 "openapi: 3.0.0
@@ -327,11 +327,11 @@ paths:
           in: path
           description: Unique business centre code
           schema:
-            example: DbB
+            example: GH_ACC
             type: string
       responses:
         '200':
-          description: 'A DOM Business centre '
+          description: A DOM business centre
           content:
             application/json:
               schema:
@@ -345,13 +345,43 @@ paths:
       summary: Get a business centre from DOM
       tags:
         - dom
+  /api/v2/dom/business-centre/{centreCode}/non-working-days:
+    get:
+      operationId: DomController_findBusinessCentreNonWorkingDays_v2
+      parameters:
+        - name: centreCode
+          required: true
+          in: path
+          description: Unique business centre code
+          schema:
+            example: GH_ACC
+            type: string
+      responses:
+        '200':
+          description: A DOM business centre's non working days
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: >-
+                    #/components/schemas/FindDomBusinessCentreNonWorkingDayMappedResponse
+        '400':
+          description: Bad request
+        '404':
+          description: Business centre not found
+        '500':
+          description: Internal server error
+      summary: Get a business centre's non working days from DOM
+      tags:
+        - dom
   /api/v2/dom/business-centres:
     get:
       operationId: DomController_getBusinessCentres_v2
       parameters: []
       responses:
         '200':
-          description: DOM Business centres
+          description: DOM business centres
           content:
             application/json:
               schema:
@@ -363,6 +393,34 @@ paths:
         '500':
           description: Internal server error
       summary: Get business centres from DOM
+      tags:
+        - dom
+  /api/v2/dom/business-centres/non-working-days:
+    get:
+      operationId: DomController_findMultipleBusinessCentresNonWorkingDays_v2
+      parameters:
+        - name: centreCodes
+          required: true
+          in: query
+          description: Unique business centre codes - COMMAS
+          schema:
+            example: GH_ACC
+            type: string
+      responses:
+        '200':
+          description: Multiple DOM business centre's non working days
+          content:
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/FindMultipleDomBusinessCentresNonWorkingDaysResponse
+        '400':
+          description: Bad request
+        '404':
+          description: Business centres non working days not found
+        '500':
+          description: Internal server error
+      summary: Get multiple business centre's non working days from DOM
       tags:
         - dom
   /api/v2/dom/product-configurations:
@@ -649,34 +707,6 @@ paths:
       summary: Get all markets (AKA countries)
       tags:
         - markets
-  /api/v2/ods/business-centre/{centreCode}/non-working-days:
-    get:
-      operationId: OdsController_findBusinessCentreNonWorkingDays_v2
-      parameters:
-        - name: centreCode
-          required: true
-          in: path
-          description: Unique business centre code
-          schema:
-            example: DbB
-            type: string
-      responses:
-        '200':
-          description: Business centre's non working days
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: >-
-                    #/components/schemas/GetOdsBusinessCentreNonWorkingDayMappedResponse
-        '400':
-          description: Bad request
-        '500':
-          description: Internal server error
-      summary: Get a business centre's non working days from ODS
-      tags:
-        - ods
   /api/v2/ods/customers/{urn}:
     get:
       operationId: OdsController_findCustomer_v2
@@ -1083,14 +1113,42 @@ components:
         code:
           type: string
           description: Business centre code
-          example: DbB
+          example: GH_ACC
         name:
           type: string
           description: Non working day name
-          example: Dubai bank holidays
+          example: Accra
       required:
         - code
         - name
+    FindDomBusinessCentreNonWorkingDayMappedResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Business centre code
+          example: GH_ACC
+        name:
+          type: string
+          description: Non working day name
+          example: Weekend
+        date:
+          type: string
+          description: Non working day date
+          example: '2025-07-05'
+      required:
+        - code
+        - name
+        - date
+    FindMultipleDomBusinessCentresNonWorkingDaysResponse:
+      type: object
+      properties:
+        rawDefinition:
+          type: object
+          description: Business centre code
+          example: GH_ACC
+      required:
+        - rawDefinition
     GetDomProductConfigurationResponse:
       type: object
       properties:
@@ -1445,25 +1503,6 @@ components:
         - shortTermCoverAvailabilityDesc
         - NBIIssue
         - active
-    GetOdsBusinessCentreNonWorkingDayMappedResponse:
-      type: object
-      properties:
-        code:
-          type: string
-          description: Business centre code
-          example: DbB
-        name:
-          type: string
-          description: Non working day name
-          example: Weekend
-        date:
-          type: string
-          description: Non working day date
-          example: '2025-07-05'
-      required:
-        - code
-        - name
-        - date
     GetOdsCustomerResponse:
       type: object
       properties:
