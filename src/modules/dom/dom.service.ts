@@ -5,9 +5,9 @@ import { PinoLogger } from 'nestjs-pino';
 
 import { OdsService } from '../ods/ods.service';
 import {
+  FindDomBusinessCentreNonWorkingDayMappedResponse,
+  FindDomBusinessCentreResponse,
   FindMultipleDomBusinessCentresNonWorkingDaysResponse,
-  GetDomBusinessCentreNonWorkingDayMappedResponse,
-  GetDomBusinessCentreResponse,
   GetDomProductConfigurationResponse,
 } from './dto';
 
@@ -24,13 +24,12 @@ export class DomService {
     private readonly logger: PinoLogger,
   ) {}
 
-  // TODO: rename DTOS to find instead of get
   /**
    * Find a business centre in DOM
-   * @returns {GetDomBusinessCentreResponse}
+   * @returns {FindDomBusinessCentreResponse}
    * @throws {NotFoundException} If no business centre is found
    */
-  findBusinessCentre(centreCode: string): GetDomBusinessCentreResponse {
+  findBusinessCentre(centreCode: string): FindDomBusinessCentreResponse {
     this.logger.info('Finding DOM business centre %s', centreCode);
 
     const centre = DOM_BUSINESS_CENTRES[`${centreCode}`];
@@ -45,10 +44,10 @@ export class DomService {
   /**
    * Find a business centre's non working days in DOM
    * @param {string} domCentreCode: DOM business centre code
-   * @returns {Promise<GetDomBusinessCentreNonWorkingDayMappedResponse[]>}
+   * @returns {Promise<FindDomBusinessCentreNonWorkingDayMappedResponse[]>}
    * @throws {NotFoundException} If no business centre is found
    */
-  async findBusinessCentreNonWorkingDays(domCentreCode: string): Promise<GetDomBusinessCentreNonWorkingDayMappedResponse[]> {
+  async findBusinessCentreNonWorkingDays(domCentreCode: string): Promise<FindDomBusinessCentreNonWorkingDayMappedResponse[]> {
     try {
       this.logger.info('Finding DOM business centre %s non working days', domCentreCode);
 
@@ -77,9 +76,9 @@ export class DomService {
 
   /**
    * Get all business centres
-   * @returns {GetDomBusinessCentreResponse[]}
+   * @returns {FindDomBusinessCentreResponse[]}
    */
-  getBusinessCentres(): GetDomBusinessCentreResponse[] {
+  getBusinessCentres(): FindDomBusinessCentreResponse[] {
     this.logger.info('Getting DOM business centres');
 
     const odsBusinessCentres = Object.values(DOM_BUSINESS_CENTRES);

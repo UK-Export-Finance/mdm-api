@@ -4,11 +4,11 @@ import AppConfig from '@ukef/config/app.config';
 
 import { DomService } from './dom.service';
 import {
+  FindDomBusinessCentreNonWorkingDayMappedResponse,
+  FindDomBusinessCentreResponse,
   FindMultipleDomBusinessCentresNonWorkingDaysResponse,
-  GetDomBusinessCentreNonWorkingDayMappedResponse,
   GetDomBusinessCentreNonWorkingDaysParamDto,
   GetDomBusinessCentreParamDto,
-  GetDomBusinessCentreResponse,
   GetDomBusinessCentresNonWorkingDaysParamDto,
   GetDomProductConfigurationResponse,
 } from './dto';
@@ -29,7 +29,7 @@ export class DomController {
   })
   @ApiOkResponse({
     description: 'A DOM business centre',
-    type: GetDomBusinessCentreResponse,
+    type: FindDomBusinessCentreResponse,
   })
   @ApiNotFoundResponse({
     description: 'Business centre not found',
@@ -40,7 +40,7 @@ export class DomController {
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
   })
-  findBusinessCentre(@Param() param: GetDomBusinessCentreParamDto): GetDomBusinessCentreResponse {
+  findBusinessCentre(@Param() param: GetDomBusinessCentreParamDto): FindDomBusinessCentreResponse {
     return this.domService.findBusinessCentre(param.centreCode);
   }
 
@@ -51,7 +51,7 @@ export class DomController {
   @ApiOkResponse({
     description: "A DOM business centre's non working days",
     isArray: true,
-    type: GetDomBusinessCentreNonWorkingDayMappedResponse,
+    type: FindDomBusinessCentreNonWorkingDayMappedResponse,
   })
   @ApiNotFoundResponse({
     description: 'Business centre not found',
@@ -62,7 +62,7 @@ export class DomController {
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
   })
-  findBusinessCentreNonWorkingDays(@Param() param: GetDomBusinessCentreNonWorkingDaysParamDto): Promise<GetDomBusinessCentreNonWorkingDayMappedResponse[]> {
+  findBusinessCentreNonWorkingDays(@Param() param: GetDomBusinessCentreNonWorkingDaysParamDto): Promise<FindDomBusinessCentreNonWorkingDayMappedResponse[]> {
     return this.domService.findBusinessCentreNonWorkingDays(param.centreCode);
   }
 
@@ -73,7 +73,7 @@ export class DomController {
   @ApiOkResponse({
     description: 'DOM business centres',
     isArray: true,
-    type: GetDomBusinessCentreResponse,
+    type: FindDomBusinessCentreResponse,
   })
   @ApiBadRequestResponse({
     description: 'Bad request',
@@ -81,7 +81,7 @@ export class DomController {
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
   })
-  getBusinessCentres(): GetDomBusinessCentreResponse[] {
+  getBusinessCentres(): FindDomBusinessCentreResponse[] {
     return this.domService.getBusinessCentres();
   }
 

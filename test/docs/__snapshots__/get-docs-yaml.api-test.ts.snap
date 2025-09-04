@@ -335,7 +335,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetDomBusinessCentreResponse'
+                $ref: '#/components/schemas/FindDomBusinessCentreResponse'
         '400':
           description: Bad request
         '404':
@@ -357,7 +357,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/GetDomBusinessCentreResponse'
+                  $ref: '#/components/schemas/FindDomBusinessCentreResponse'
         '400':
           description: Bad request
         '500':
@@ -1077,7 +1077,7 @@ components:
         - createdBy
         - createdDatetime
         - requestingSystem
-    GetDomBusinessCentreResponse:
+    FindDomBusinessCentreResponse:
       type: object
       properties:
         code:
