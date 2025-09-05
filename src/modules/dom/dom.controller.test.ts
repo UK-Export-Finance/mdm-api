@@ -1,4 +1,5 @@
 import { DOM_BUSINESS_CENTRES, EXAMPLES } from '@ukef/constants';
+import PRODUCT_CONFIG from '@ukef/helper-modules/dom/dom-product-config.json';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
@@ -46,10 +47,9 @@ describe('DomController', () => {
     domService.getBusinessCentres = domServiceGetBusinessCentres;
 
     domServiceFindMultipleBusinessCentresNonWorkingDays = jest.fn().mockResolvedValueOnce(mockMultipleBusinessCentreNonWorkingDays);
-
     domService.findMultipleBusinessCentresNonWorkingDays = domServiceFindMultipleBusinessCentresNonWorkingDays;
 
-    domServiceGetProductConfigurations = jest.fn().mockResolvedValueOnce(EXAMPLES.DOM.PRODUCT_CONFIGURATIONS);
+    domServiceGetProductConfigurations = jest.fn().mockResolvedValueOnce(PRODUCT_CONFIG);
     domService.getProductConfigurations = domServiceGetProductConfigurations;
 
     controller = new DomController(domService);
@@ -145,36 +145,20 @@ describe('DomController', () => {
   });
 
   describe('getProductConfigurations', () => {
-    it('should call domService.getProductConfigurations', async () => {
+    it('should call domService.getProductConfigurations', () => {
       // Act
-      await controller.getProductConfigurations();
+      controller.getProductConfigurations();
 
       // Assert
       expect(domServiceGetProductConfigurations).toHaveBeenCalledTimes(1);
     });
 
-    it('should return product configurations', async () => {
+    it('should return product configurations', () => {
       // Act
-      const result = await controller.getProductConfigurations();
+      const result = controller.getProductConfigurations();
 
       // Assert
-      expect(result).toEqual(EXAMPLES.DOM.PRODUCT_CONFIGURATIONS);
-    });
-
-    describe('when domService.getProductConfigurations throws an error', () => {
-      it('should throw an error', async () => {
-        // Arrange
-        const domService = new DomService(odsService, mockLogger);
-
-        domService.getProductConfigurations = jest.fn().mockRejectedValueOnce(mockError);
-
-        controller = new DomController(domService);
-
-        // Act & Assert
-        const promise = controller.getProductConfigurations();
-
-        await expect(promise).rejects.toThrow(mockError);
-      });
+      expect(result).toStrictEqual(PRODUCT_CONFIG);
     });
   });
 });

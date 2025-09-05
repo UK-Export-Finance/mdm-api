@@ -10,7 +10,7 @@ import {
   GetDomBusinessCentreNonWorkingDaysParamDto,
   GetDomBusinessCentreParamDto,
   GetDomBusinessCentresNonWorkingDaysParamDto,
-  GetDomProductConfigurationResponse,
+  GetDomProductConfigResponse,
 } from './dto';
 
 const { domOdsVersioning } = AppConfig();
@@ -110,20 +110,17 @@ export class DomController {
 
   @Get('product-configurations')
   @ApiOperation({
-    summary: 'Get all product configurations',
+    summary: 'Get all product configurations from DOM',
   })
   @ApiOkResponse({
-    description: 'Product configurations',
+    description: 'DOM product configurations',
     isArray: true,
-    type: GetDomProductConfigurationResponse,
-  })
-  @ApiBadRequestResponse({
-    description: 'Bad request',
+    type: GetDomProductConfigResponse,
   })
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
   })
-  getProductConfigurations(): GetDomProductConfigurationResponse[] {
+  getProductConfigurations(): GetDomProductConfigResponse[] {
     return this.domService.getProductConfigurations();
   }
 }

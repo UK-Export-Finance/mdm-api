@@ -9,6 +9,17 @@ const BUSINESS_CENTRE = {
   },
 };
 
+const COUNTERPARTY_SUBTYPES = {
+  BROKER: 'BROKER',
+  GUARANTOR: 'GUARANTOR',
+};
+
+const PRODUCT_CONFIG_REQUIREMENT = {
+  NOT_APPLICABLE: 'NOT_APPLICABLE',
+  OPTIONAL: 'OPTIONAL',
+  REQUIRED: 'REQUIRED',
+};
+
 export const EXAMPLES = {
   BUSINESS_CENTRE,
   COMPANIES_HOUSE_REGISTRATION_NUMBER: '00000001',
@@ -52,9 +63,32 @@ export const EXAMPLES = {
       },
     ],
     PRODUCT_CONFIG: {
-      mockProduct: true,
+      productType: 'EXIP',
+      configuration: {
+        commitmentDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
+        issuedDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
+        effectiveDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
+        availabilityEndDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
+        expiryDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
+        creditType: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
+        participations: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
+        scheduledRepayments: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
+        nonCashObligations: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
+        cashObligations: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
+        accrualSchedule: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
+        pimOwner: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
+        riskRating: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
+        preCreditPeriod: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
+        creditPeriod: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
+        lossGivenDefault: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
+        provisionRate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
+        forecastYear: PRODUCT_CONFIG_REQUIREMENT.NOT_APPLICABLE,
+        bankRate: PRODUCT_CONFIG_REQUIREMENT.OPTIONAL,
+      },
+      counterpartySubtypes: [COUNTERPARTY_SUBTYPES.BROKER, COUNTERPARTY_SUBTYPES.GUARANTOR],
+      productSubtypes: [],
+      account: ['1', '2', '3'],
     },
-    PRODUCT_CONFIGURATIONS: [{ mockProduct: true }, { mockProduct: true }],
   },
   GEOSPATIAL: {
     ENGLISH_POSTCODE: 'SW1A 2AQ',

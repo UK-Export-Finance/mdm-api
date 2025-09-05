@@ -1,5 +1,6 @@
 import { NotFoundException } from '@nestjs/common';
 import { DOM_BUSINESS_CENTRES, DOM_TO_ODS_BUSINESS_CENTRES_MAPPING, EXAMPLES } from '@ukef/constants';
+import PRODUCT_CONFIG from '@ukef/helper-modules/dom/dom-product-config.json';
 import { mapBusinessCentre, mapBusinessCentreNonWorkingDays, mapBusinessCentres } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
@@ -276,12 +277,12 @@ describe('DomService', () => {
   });
 
   describe('getProductConfigurations', () => {
-    it('should return mock product configurations', () => {
+    it('should return product configurations', () => {
       // Act
       const response = service.getProductConfigurations();
 
       // Assert
-      expect(response).toEqual(EXAMPLES.DOM.PRODUCT_CONFIGURATIONS);
+      expect(response).toEqual(PRODUCT_CONFIG);
     });
   });
 });

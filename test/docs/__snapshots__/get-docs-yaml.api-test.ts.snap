@@ -429,18 +429,16 @@ paths:
       parameters: []
       responses:
         '200':
-          description: Product configurations
+          description: DOM product configurations
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/GetDomProductConfigurationResponse'
-        '400':
-          description: Bad request
+                  $ref: '#/components/schemas/GetDomProductConfigResponse'
         '500':
           description: Internal server error
-      summary: Get all product configurations
+      summary: Get all product configurations from DOM
       tags:
         - dom
   /api/v1/emails:
@@ -1150,15 +1148,165 @@ components:
                 #/components/schemas/FindDomBusinessCentreNonWorkingDayMappedResponse
       required:
         - rawDefinition
-    GetDomProductConfigurationResponse:
+    GetDomProductConfigConfig:
       type: object
       properties:
-        mockProduct:
-          type: boolean
-          description: Mock product configuration
-          example: true
+        commitmentDate:
+          type: string
+          description: The product's 'commitment date' requirement
+          example: REQUIRED
+        issuedDate:
+          type: string
+          description: The product's 'issued date' requirement
+          example: REQUIRED
+        effectiveDate:
+          type: string
+          description: The product's 'effective date' requirement
+          example: REQUIRED
+        availabilityEndDate:
+          type: string
+          description: The product's 'availability end date' requirement
+          example: REQUIRED
+        expiryDate:
+          type: string
+          description: The product's 'expiry date' requirement
+          example: REQUIRED
+        creditType:
+          type: string
+          description: The product's 'credit type' requirement
+          example: REQUIRED
+        participations:
+          type: string
+          description: The product's 'participations' requirement
+          example: REQUIRED
+        scheduledRepayments:
+          type: string
+          description: The product's 'scheduled repayments' requirement
+          example: REQUIRED
+        nonCashObligations:
+          type: string
+          description: The product's 'non cash obligations' requirement
+          example: REQUIRED
+        cashObligations:
+          type: string
+          description: The product's 'cash obligations' requirement
+          example: REQUIRED
+        accrualSchedule:
+          type: string
+          description: The product's 'accural schedule' requirement
+          example: REQUIRED
+        pimOwner:
+          type: string
+          description: The product's 'PIM owner' requirement
+          example: REQUIRED
+        riskRating:
+          type: string
+          description: The product's 'risk rating' requirement
+          example: REQUIRED
+        preCreditPeriod:
+          type: string
+          description: The product's 'pre credit period' requirement
+          example: REQUIRED
+        creditPeriod:
+          type: string
+          description: The product's 'credit period' requirement
+          example: REQUIRED
+        lossGivenDefault:
+          type: string
+          description: The product's 'loss given default' requirement
+          example: REQUIRED
+        provisionRate:
+          type: string
+          description: The product's 'provision rate' requirement
+          example: REQUIRED
+        forecastYear:
+          type: string
+          description: The product's 'forecast year' requirement
+          example: NOT_APPLICABLE
+        bankRate:
+          type: string
+          description: The product's 'bank rate' requirement
+          example: OPTIONAL
       required:
-        - mockProduct
+        - commitmentDate
+        - issuedDate
+        - effectiveDate
+        - availabilityEndDate
+        - expiryDate
+        - creditType
+        - participations
+        - scheduledRepayments
+        - nonCashObligations
+        - cashObligations
+        - accrualSchedule
+        - pimOwner
+        - riskRating
+        - preCreditPeriod
+        - creditPeriod
+        - lossGivenDefault
+        - provisionRate
+        - forecastYear
+        - bankRate
+    GetDomProductConfigResponse:
+      type: object
+      properties:
+        productType:
+          type: string
+          description: The product type
+          example: EXIP
+        configuration:
+          description: The product's configuration
+          example:
+            commitmentDate: REQUIRED
+            issuedDate: REQUIRED
+            effectiveDate: REQUIRED
+            availabilityEndDate: REQUIRED
+            expiryDate: REQUIRED
+            creditType: REQUIRED
+            participations: REQUIRED
+            scheduledRepayments: REQUIRED
+            nonCashObligations: REQUIRED
+            cashObligations: REQUIRED
+            accrualSchedule: REQUIRED
+            pimOwner: REQUIRED
+            riskRating: REQUIRED
+            preCreditPeriod: REQUIRED
+            creditPeriod: REQUIRED
+            lossGivenDefault: REQUIRED
+            provisionRate: REQUIRED
+            forecastYear: NOT_APPLICABLE
+            bankRate: OPTIONAL
+          allOf:
+            - $ref: '#/components/schemas/GetDomProductConfigConfig'
+        counterpartySubtypes:
+          description: The product's counterparty subtypes
+          example:
+            - BROKER
+            - GUARANTOR
+          type: array
+          items:
+            type: string
+        productSubtypes:
+          description: The product's subtypes
+          example: []
+          type: array
+          items:
+            type: string
+        account:
+          description: The UKEF accounts that the product is in
+          example:
+            - '1'
+            - '2'
+            - '3'
+          type: array
+          items:
+            type: string
+      required:
+        - productType
+        - configuration
+        - counterpartySubtypes
+        - productSubtypes
+        - account
     PostEmailsRequestDto:
       type: object
       properties:

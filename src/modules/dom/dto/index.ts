@@ -4,4 +4,4 @@ export * from './find-multiple-dom-business-centres-non-working-days-response.dt
 export * from './get-dom-business-centre-non-working-days-param.dto';
 export * from './get-dom-business-centre-param.dto';
 export * from './get-dom-business-centres-non-working-days-param.dto';
-export * from './get-dom-product-configuration-response.dto';
+export * from './get-dom-product-config-response.dto';

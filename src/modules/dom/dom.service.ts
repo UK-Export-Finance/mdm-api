@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { DOM_BUSINESS_CENTRES, DOM_TO_ODS_BUSINESS_CENTRES_MAPPING, EXAMPLES } from '@ukef/constants';
+import { DOM_BUSINESS_CENTRES, DOM_TO_ODS_BUSINESS_CENTRES_MAPPING } from '@ukef/constants';
+import PRODUCT_CONFIG from '@ukef/helper-modules/dom/dom-product-config.json';
 import { mapBusinessCentre, mapBusinessCentreNonWorkingDays, mapBusinessCentres } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 
@@ -8,7 +9,7 @@ import {
   FindDomBusinessCentreNonWorkingDayMappedResponse,
   FindDomBusinessCentreResponse,
   FindMultipleDomBusinessCentresNonWorkingDaysResponse,
-  GetDomProductConfigurationResponse,
+  GetDomProductConfigResponse,
 } from './dto';
 
 /**
@@ -122,11 +123,11 @@ export class DomService {
 
   /**
    * Get all product configurations
-   * @returns {GetDomProductConfigurationResponse[]}
+   * @returns {GetDomProductConfigResponse[]}
    */
-  getProductConfigurations(): GetDomProductConfigurationResponse[] {
+  getProductConfigurations(): GetDomProductConfigResponse[] {
     this.logger.info('Getting product configurations');
 
-    return EXAMPLES.DOM.PRODUCT_CONFIGURATIONS;
+    return PRODUCT_CONFIG;
   }
 }
