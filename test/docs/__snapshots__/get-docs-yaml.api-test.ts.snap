@@ -402,9 +402,9 @@ paths:
         - name: centreCodes
           required: true
           in: query
-          description: Unique business centre codes - COMMAS
+          description: Unique business centre codes - separated by commas
           schema:
-            example: GH_ACC
+            example: AE_DXB,CM_YAO
             type: string
       responses:
         '200':
@@ -1144,9 +1144,10 @@ components:
       type: object
       properties:
         rawDefinition:
-          type: object
-          description: Business centre code
-          example: GH_ACC
+          description: Multiple business centre's non working days
+          allOf:
+            - $ref: >-
+                #/components/schemas/FindDomBusinessCentreNonWorkingDayMappedResponse
       required:
         - rawDefinition
     GetDomProductConfigurationResponse:

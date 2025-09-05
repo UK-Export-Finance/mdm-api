@@ -188,7 +188,26 @@ describe('/dom - business centres', () => {
       });
     });
 
-    describe('when an empty string param is provided', () => {
+    describe('when no query params are provided', () => {
+      it(`should return ${HttpStatus.BAD_REQUEST} with mapped business centres`, async () => {
+        // Arrange
+        const url = `/api/${prefixAndVersion}/dom/business-centres/non-working-days`;
+
+        // Act
+        const { status, body } = await api.get(url);
+
+        // Assert
+        expect(status).toBe(HttpStatus.BAD_REQUEST);
+
+        expect(body).toEqual({
+          message: ['centreCodes must be a string'],
+          error: 'Bad Request',
+          statusCode: HttpStatus.BAD_REQUEST,
+        });
+      });
+    });
+
+    describe('when an empty query string param is provided', () => {
       it(`should return ${HttpStatus.NOT_FOUND} with mapped business centres`, async () => {
         // Arrange
         const url = `/api/${prefixAndVersion}/dom/business-centres/non-working-days?centreCodes=''`;
