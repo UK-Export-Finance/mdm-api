@@ -83,6 +83,23 @@ export class DomService {
   }
 
   /**
+   * Find a product configuration
+   * @param {string} productType: Product type
+   * @returns {GetDomProductConfigResponse}
+   */
+  findProductConfiguration(productType: string): GetDomProductConfigResponse {
+    this.logger.info('Finding DOM product configuration %s', productType);
+
+    const productConfig = PRODUCT_CONFIG.find((config: GetDomProductConfigResponse) => config.productType === productType);
+
+    if (productConfig) {
+      return productConfig;
+    }
+
+    throw new NotFoundException(`No DOM product configuration found ${productType}`);
+  }
+
+  /**
    * Get all product configurations
    * @returns {GetDomProductConfigResponse[]}
    */

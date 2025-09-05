@@ -12,6 +12,11 @@ const PRODUCT_CONFIG_REQUIREMENT = {
   REQUIRED: 'REQUIRED',
 };
 
+const PRODUCT_TYPES = {
+  EXIP: 'EXIP',
+  BIP: 'BIP',
+};
+
 export const EXAMPLES = {
   BUSINESS_CENTRE: {
     ...DOM_BUSINESS_CENTRES.GH_ACC,
@@ -49,7 +54,7 @@ export const EXAMPLES = {
       },
     ],
     PRODUCT_CONFIG: {
-      productType: 'EXIP',
+      productType: PRODUCT_TYPES.EXIP,
       configuration: {
         commitmentDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
         issuedDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
@@ -115,4 +120,5 @@ export const EXAMPLES = {
       },
     ],
   },
+  PRODUCT_TYPES,
 };

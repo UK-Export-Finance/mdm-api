@@ -4,6 +4,7 @@ import AppConfig from '@ukef/config/app.config';
 
 import { DomService } from './dom.service';
 import {
+  FindDomProductConfigParamDto,
   GetDomBusinessCentreNonWorkingDayMappedResponse,
   GetDomBusinessCentreNonWorkingDaysParamDto,
   GetDomBusinessCentreParamDto,
@@ -78,6 +79,24 @@ export class DomController {
   })
   getBusinessCentres(): GetDomBusinessCentreResponse[] {
     return this.domService.getBusinessCentres();
+  }
+
+  @Get('product-configuration/:productType')
+  @ApiOperation({
+    summary: 'Get a product configurations from DOM',
+  })
+  @ApiOkResponse({
+    description: 'DOM product configuration',
+    type: GetDomProductConfigResponse,
+  })
+  @ApiNotFoundResponse({
+    description: 'Product configuration not found',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  findProductConfigurations(@Param() param: FindDomProductConfigParamDto): GetDomProductConfigResponse {
+    return this.domService.findProductConfiguration(param.productType);
   }
 
   @Get('product-configurations')
