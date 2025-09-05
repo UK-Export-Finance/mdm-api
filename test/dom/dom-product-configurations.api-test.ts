@@ -37,6 +37,51 @@ describe('/ods - product-configuration', () => {
       expect(body.productType).toEqual(EXAMPLES.PRODUCT_TYPES.BIP);
     });
 
+    it(`should return ${HttpStatus.OK} with product configuration - ${EXAMPLES.PRODUCT_TYPES.EDG}`, async () => {
+      // Arrange
+      const url = `${baseUrl}/${EXAMPLES.PRODUCT_TYPES.EDG}`;
+
+      // Act
+      const { status, body } = await api.get(url);
+
+      // Assert
+      expect(status).toBe(HttpStatus.OK);
+
+      expect(body).toEqual(PRODUCT_CONFIG[1]);
+
+      expect(body.productType).toEqual(EXAMPLES.PRODUCT_TYPES.EDG);
+    });
+
+    it(`should return ${HttpStatus.OK} with product configuration - ${EXAMPLES.PRODUCT_TYPES.EXAMPLE_ALL_OPTIONAL}`, async () => {
+      // Arrange
+      const url = `${baseUrl}/${EXAMPLES.PRODUCT_TYPES.EXAMPLE_ALL_OPTIONAL}`;
+
+      // Act
+      const { status, body } = await api.get(url);
+
+      // Assert
+      expect(status).toBe(HttpStatus.OK);
+
+      expect(body).toEqual(PRODUCT_CONFIG[2]);
+
+      expect(body.productType).toEqual(EXAMPLES.PRODUCT_TYPES.EXAMPLE_ALL_OPTIONAL);
+    });
+
+    it(`should return ${HttpStatus.OK} with product configuration - ${EXAMPLES.PRODUCT_TYPES.EXAMPLE_ALL_REQUIRED}`, async () => {
+      // Arrange
+      const url = `${baseUrl}/${EXAMPLES.PRODUCT_TYPES.EXAMPLE_ALL_REQUIRED}`;
+
+      // Act
+      const { status, body } = await api.get(url);
+
+      // Assert
+      expect(status).toBe(HttpStatus.OK);
+
+      expect(body).toEqual(PRODUCT_CONFIG[3]);
+
+      expect(body.productType).toEqual(EXAMPLES.PRODUCT_TYPES.EXAMPLE_ALL_REQUIRED);
+    });
+
     it(`should return ${HttpStatus.OK} with product configuration - ${EXAMPLES.PRODUCT_TYPES.EXIP}`, async () => {
       // Arrange
       const url = `${baseUrl}/${EXAMPLES.PRODUCT_TYPES.EXIP}`;
@@ -47,7 +92,7 @@ describe('/ods - product-configuration', () => {
       // Assert
       expect(status).toBe(HttpStatus.OK);
 
-      expect(body).toEqual(PRODUCT_CONFIG[1]);
+      expect(body).toEqual(PRODUCT_CONFIG[4]);
 
       expect(body.productType).toEqual(EXAMPLES.PRODUCT_TYPES.EXIP);
     });
