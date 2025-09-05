@@ -1,3 +1,4 @@
+export * from './find-dom-product-config-param.dto';
 export * from './get-dom-business-centre-non-working-day-mapped-response.dto';
 export * from './get-dom-business-centre-non-working-days-param.dto';
 export * from './get-dom-business-centre-param.dto';

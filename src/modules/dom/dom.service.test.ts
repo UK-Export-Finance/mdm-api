@@ -139,7 +139,7 @@ describe('DomService', () => {
     });
 
     describe('when a business centre is found, but non working days throws an error', () => {
-      it('should throw a not found exception', async () => {
+      it('should throw an error', async () => {
         // Arrange
         const mockCentreCode = DOM_BUSINESS_CENTRES.CM_YAO.CODE;
 
@@ -150,6 +150,8 @@ describe('DomService', () => {
 
         // Act & Assert
         const promise = service.findBusinessCentreNonWorkingDays(mockCentreCode);
+
+        await expect(promise).rejects.toBeInstanceOf(Error);
 
         const expected = `Error finding DOM business centre ${mockCentreCode} non working days`;
 
@@ -167,6 +169,71 @@ describe('DomService', () => {
       const expected = mapBusinessCentres(Object.values(DOM_BUSINESS_CENTRES));
 
       expect(response).toEqual(expected);
+    });
+  });
+
+  describe('findProductConfiguration', () => {
+    it(`should return a product configuration - ${EXAMPLES.PRODUCT_TYPES.BIP}`, () => {
+      // Act
+      const response = service.findProductConfiguration(EXAMPLES.PRODUCT_TYPES.BIP);
+
+      // Assert
+      expect(response).toEqual(PRODUCT_CONFIG[0]);
+      expect(response.productType).toEqual(EXAMPLES.PRODUCT_TYPES.BIP);
+    });
+
+    it(`should return a product configuration - ${EXAMPLES.PRODUCT_TYPES.EDG}`, () => {
+      // Act
+      const response = service.findProductConfiguration(EXAMPLES.PRODUCT_TYPES.EDG);
+
+      // Assert
+      expect(response).toEqual(PRODUCT_CONFIG[1]);
+      expect(response.productType).toEqual(EXAMPLES.PRODUCT_TYPES.EDG);
+    });
+
+    it(`should return a product configuration - ${EXAMPLES.PRODUCT_TYPES.EXAMPLE_ALL_OPTIONAL}`, () => {
+      // Act
+      const response = service.findProductConfiguration(EXAMPLES.PRODUCT_TYPES.EXAMPLE_ALL_OPTIONAL);
+
+      // Assert
+      expect(response).toEqual(PRODUCT_CONFIG[2]);
+      expect(response.productType).toEqual(EXAMPLES.PRODUCT_TYPES.EXAMPLE_ALL_OPTIONAL);
+    });
+
+    it(`should return a product configuration - ${EXAMPLES.PRODUCT_TYPES.EXAMPLE_ALL_REQUIRED}`, () => {
+      // Act
+      const response = service.findProductConfiguration(EXAMPLES.PRODUCT_TYPES.EXAMPLE_ALL_REQUIRED);
+
+      // Assert
+      expect(response).toEqual(PRODUCT_CONFIG[3]);
+      expect(response.productType).toEqual(EXAMPLES.PRODUCT_TYPES.EXAMPLE_ALL_REQUIRED);
+    });
+
+    it(`should return a product configuration - ${EXAMPLES.PRODUCT_TYPES.EXIP}`, () => {
+      // Act
+      const response = service.findProductConfiguration(EXAMPLES.PRODUCT_TYPES.EXIP);
+
+      // Assert
+      expect(response).toEqual(PRODUCT_CONFIG[4]);
+      expect(response.productType).toEqual(EXAMPLES.PRODUCT_TYPES.EXIP);
+    });
+
+    describe('when a configuration is NOT found', () => {
+      it('should throw a not found exception', async () => {
+        // Arrange
+        const mockProductType = 'INVALID PRODUCT TYPE';
+
+        const response = new Promise((resolve) => {
+          return resolve(service.findProductConfiguration(mockProductType));
+        });
+
+        // Assert
+        await expect(response).rejects.toBeInstanceOf(NotFoundException);
+
+        const expected = new NotFoundException(`No DOM product configuration found ${mockProductType}`);
+
+        await expect(response).rejects.toStrictEqual(expected);
+      });
     });
   });
 
