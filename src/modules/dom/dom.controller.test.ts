@@ -49,7 +49,7 @@ describe('DomController', () => {
     domServiceFindMultipleBusinessCentresNonWorkingDays = jest.fn().mockResolvedValueOnce(mockMultipleBusinessCentreNonWorkingDays);
     domService.findMultipleBusinessCentresNonWorkingDays = domServiceFindMultipleBusinessCentresNonWorkingDays;
 
-    domServiceGetProductConfigurations = jest.fn().mockResolvedValueOnce(PRODUCT_CONFIG);
+    domServiceGetProductConfigurations = jest.fn().mockReturnValueOnce(PRODUCT_CONFIG);
     domService.getProductConfigurations = domServiceGetProductConfigurations;
 
     controller = new DomController(domService);
