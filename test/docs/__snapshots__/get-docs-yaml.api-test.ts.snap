@@ -331,7 +331,11 @@ paths:
             type: string
       responses:
         '200':
+<<<<<<< HEAD
           description: A DOM business centre
+=======
+          description: A DOM Business centre
+>>>>>>> feat/FN-3543/integrate-with-ods
           content:
             application/json:
               schema:
@@ -358,18 +362,28 @@ paths:
             type: string
       responses:
         '200':
+<<<<<<< HEAD
           description: A DOM business centre's non working days
+=======
+          description: A DOM Business centre's non working days
+>>>>>>> feat/FN-3543/integrate-with-ods
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: >-
+<<<<<<< HEAD
                     #/components/schemas/FindDomBusinessCentreNonWorkingDayMappedResponse
         '400':
           description: Bad request
         '404':
           description: Business centre not found
+=======
+                    #/components/schemas/GetDomBusinessCentreNonWorkingDayMappedResponse
+        '400':
+          description: Bad request
+>>>>>>> feat/FN-3543/integrate-with-ods
         '500':
           description: Internal server error
       summary: Get a business centre's non working days from DOM
@@ -395,6 +409,7 @@ paths:
       summary: Get business centres from DOM
       tags:
         - dom
+<<<<<<< HEAD
   /api/v2/dom/business-centres/non-working-days:
     get:
       operationId: DomController_findMultipleBusinessCentresNonWorkingDays_v2
@@ -421,6 +436,31 @@ paths:
         '500':
           description: Internal server error
       summary: Get multiple business centre's non working days from DOM
+=======
+  /api/v2/dom/product-configuration/{productType}:
+    get:
+      operationId: DomController_findProductConfigurations_v2
+      parameters:
+        - name: productType
+          required: true
+          in: path
+          description: Unique product type
+          schema:
+            example: EXIP
+            type: string
+      responses:
+        '200':
+          description: DOM product configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDomProductConfigResponse'
+        '404':
+          description: Product configuration not found
+        '500':
+          description: Internal server error
+      summary: Get a product configurations from DOM
+>>>>>>> feat/FN-3543/integrate-with-ods
       tags:
         - dom
   /api/v2/dom/product-configurations:
@@ -1119,7 +1159,11 @@ components:
       required:
         - code
         - name
+<<<<<<< HEAD
     FindDomBusinessCentreNonWorkingDayMappedResponse:
+=======
+    GetDomBusinessCentreNonWorkingDayMappedResponse:
+>>>>>>> feat/FN-3543/integrate-with-ods
       type: object
       properties:
         code:
@@ -1138,6 +1182,7 @@ components:
         - code
         - name
         - date
+<<<<<<< HEAD
     FindMultipleDomBusinessCentresNonWorkingDaysResponse:
       type: object
       properties:
@@ -1148,6 +1193,8 @@ components:
                 #/components/schemas/FindDomBusinessCentreNonWorkingDayMappedResponse
       required:
         - rawDefinition
+=======
+>>>>>>> feat/FN-3543/integrate-with-ods
     GetDomProductConfigConfig:
       type: object
       properties:

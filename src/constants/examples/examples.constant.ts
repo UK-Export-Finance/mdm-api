@@ -20,6 +20,14 @@ const PRODUCT_CONFIG_REQUIREMENT = {
   REQUIRED: 'REQUIRED',
 };
 
+const PRODUCT_TYPES = {
+  BIP: 'BIP',
+  EDG: 'EDG',
+  EXAMPLE_ALL_REQUIRED: 'EXAMPLE_ALL_REQUIRED',
+  EXAMPLE_ALL_OPTIONAL: 'EXAMPLE_ALL_OPTIONAL',
+  EXIP: 'EXIP',
+};
+
 export const EXAMPLES = {
   BUSINESS_CENTRE,
   COMPANIES_HOUSE_REGISTRATION_NUMBER: '00000001',
@@ -63,7 +71,7 @@ export const EXAMPLES = {
       },
     ],
     PRODUCT_CONFIG: {
-      productType: 'EXIP',
+      productType: PRODUCT_TYPES.EXIP,
       configuration: {
         commitmentDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
         issuedDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
@@ -129,4 +137,5 @@ export const EXAMPLES = {
       },
     ],
   },
+  PRODUCT_TYPES,
 };

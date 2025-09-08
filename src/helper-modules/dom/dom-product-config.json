@@ -35,6 +35,87 @@
     "account": ["2", "3"]
   },
   {
+    "productType": "EDG",
+    "configuration": {
+      "commitmentDate": "NOT_APPLICABLE",
+      "issuedDate": "REQUIRED",
+      "effectiveDate": "REQUIRED",
+      "availabilityEndDate": "REQUIRED",
+      "expiryDate": "REQUIRED",
+      "creditType": "TERM",
+      "participations": "OPTIONAL",
+      "scheduledRepayments": "REQUIRED",
+      "nonCashObligations": "OPTIONAL",
+      "cashObligations": "NOT_APPLICABLE",
+      "accrualSchedule": "REQUIRED",
+      "pimOwner": "REQUIRED",
+      "riskRating": "REQUIRED",
+      "preCreditPeriod": "REQUIRED",
+      "creditPeriod": "REQUIRED",
+      "lossGivenDefault": "REQUIRED",
+      "provisionRate": "REQUIRED",
+      "forecastYear": "REQUIRED",
+      "bankRate": "NOT_APPLICABLE"
+    },
+    "counterpartySubtypes": [],
+    "productSubtypes": [],
+    "account": ["2", "6"]
+  },
+  {
+    "productType": "EXAMPLE_ALL_OPTIONAL",
+    "configuration": {
+      "commitmentDate": "OPTIONAL",
+      "issuedDate": "OPTIONAL",
+      "effectiveDate": "OPTIONAL",
+      "availabilityEndDate": "OPTIONAL",
+      "expiryDate": "OPTIONAL",
+      "creditType": "OPTIONAL",
+      "participations": "OPTIONAL",
+      "scheduledRepayments": "OPTIONAL",
+      "nonCashObligations": "OPTIONAL",
+      "cashObligations": "OPTIONAL",
+      "accrualSchedule": "OPTIONAL",
+      "pimOwner": "OPTIONAL",
+      "riskRating": "OPTIONAL",
+      "preCreditPeriod": "OPTIONAL",
+      "creditPeriod": "OPTIONAL",
+      "lossGivenDefault": "OPTIONAL",
+      "provisionRate": "OPTIONAL",
+      "forecastYear": "OPTIONAL",
+      "bankRate": "OPTIONAL"
+    },
+    "counterpartySubtypes": [],
+    "productSubtypes": [],
+    "account": ["1", "1"]
+  },
+  {
+    "productType": "EXAMPLE_ALL_REQUIRED",
+    "configuration": {
+      "commitmentDate": "REQUIRED",
+      "issuedDate": "REQUIRED",
+      "effectiveDate": "REQUIRED",
+      "availabilityEndDate": "REQUIRED",
+      "expiryDate": "REQUIRED",
+      "creditType": "REQUIRED",
+      "participations": "REQUIRED",
+      "scheduledRepayments": "REQUIRED",
+      "nonCashObligations": "REQUIRED",
+      "cashObligations": "REQUIRED",
+      "accrualSchedule": "REQUIRED",
+      "pimOwner": "REQUIRED",
+      "riskRating": "REQUIRED",
+      "preCreditPeriod": "REQUIRED",
+      "creditPeriod": "REQUIRED",
+      "lossGivenDefault": "REQUIRED",
+      "provisionRate": "REQUIRED",
+      "forecastYear": "REQUIRED",
+      "bankRate": "REQUIRED"
+    },
+    "counterpartySubtypes": [],
+    "productSubtypes": [],
+    "account": ["1", "1"]
+  },
+  {
     "productType": "EXIP",
     "configuration": {
       "commitmentDate": "NOT_APPLICABLE",
@@ -68,32 +149,5 @@
     ],
     "productSubtypes": [],
     "account": ["1", "2", "3"]
-  },
-  {
-    "productType": "EDG",
-    "configuration": {
-      "commitmentDate": "NOT_APPLICABLE",
-      "issuedDate": "REQUIRED",
-      "effectiveDate": "REQUIRED",
-      "availabilityEndDate": "REQUIRED",
-      "expiryDate": "REQUIRED",
-      "creditType": "TERM",
-      "participations": "OPTIONAL",
-      "scheduledRepayments": "REQUIRED",
-      "nonCashObligations": "OPTIONAL",
-      "cashObligations": "NOT_APPLICABLE",
-      "accrualSchedule": "REQUIRED",
-      "pimOwner": "REQUIRED",
-      "riskRating": "REQUIRED",
-      "preCreditPeriod": "REQUIRED",
-      "creditPeriod": "REQUIRED",
-      "lossGivenDefault": "REQUIRED",
-      "provisionRate": "REQUIRED",
-      "forecastYear": "REQUIRED",
-      "bankRate": "NOT_APPLICABLE"
-    },
-    "counterpartySubtypes": [],
-    "productSubtypes": [],
-    "account": ["2", "6"]
   }
 ]

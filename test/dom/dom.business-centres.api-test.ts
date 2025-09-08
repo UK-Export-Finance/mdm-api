@@ -57,7 +57,7 @@ describe('/dom - business centres', () => {
     });
   });
 
-  describe('/business-center/:centerCode/non-working-days', () => {
+  describe('/business-center/:centreCode/non-working-days', () => {
     // Arrange
     const baseUrl = `/api/${prefixAndVersion}/dom/business-centre`;
 

@@ -5,10 +5,11 @@ import AppConfig from '@ukef/config/app.config';
 import { DomService } from './dom.service';
 import {
   FindDomBusinessCentreNonWorkingDayMappedResponse,
+  FindDomBusinessCentreParamDto,
   FindDomBusinessCentreResponse,
+  FindDomProductConfigParamDto,
   FindMultipleDomBusinessCentresNonWorkingDaysResponse,
   GetDomBusinessCentreNonWorkingDaysParamDto,
-  GetDomBusinessCentreParamDto,
   GetDomBusinessCentresNonWorkingDaysParamDto,
   GetDomProductConfigResponse,
 } from './dto';
@@ -40,7 +41,7 @@ export class DomController {
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
   })
-  findBusinessCentre(@Param() param: GetDomBusinessCentreParamDto): FindDomBusinessCentreResponse {
+  findBusinessCentre(@Param() param: FindDomBusinessCentreParamDto): FindDomBusinessCentreResponse {
     return this.domService.findBusinessCentre(param.centreCode);
   }
 
@@ -122,5 +123,23 @@ export class DomController {
   })
   getProductConfigurations(): GetDomProductConfigResponse[] {
     return this.domService.getProductConfigurations();
+  }
+
+  @Get('product-configuration/:productType')
+  @ApiOperation({
+    summary: 'Get a product configurations from DOM',
+  })
+  @ApiOkResponse({
+    description: 'DOM product configuration',
+    type: GetDomProductConfigResponse,
+  })
+  @ApiNotFoundResponse({
+    description: 'Product configuration not found',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  findProductConfigurations(@Param() param: FindDomProductConfigParamDto): GetDomProductConfigResponse {
+    return this.domService.findProductConfiguration(param.productType);
   }
 }
