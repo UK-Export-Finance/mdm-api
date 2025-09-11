@@ -121,4 +121,103 @@ describe('/dom - business centres', () => {
       expect(body).toEqual(expected);
     });
   });
+
+  describe('/business-centres/non-working-days', () => {
+    it(`should return ${HttpStatus.OK} with mapped business centres`, async () => {
+      // Arrange
+      const mockCentreCodes = `${DOM_BUSINESS_CENTRES.AE_DXB.CODE},${DOM_BUSINESS_CENTRES.JO_AMM.CODE}`;
+
+      const url = `/api/${prefixAndVersion}/dom/business-centres/non-working-days?centreCodes=${mockCentreCodes}`;
+
+      // Act
+      const { status, body } = await api.get(url);
+
+      // Assert
+      expect(status).toBe(HttpStatus.OK);
+
+      expect(Object.keys(body)).toHaveLength(2);
+
+      expect(body[DOM_BUSINESS_CENTRES.AE_DXB.CODE]).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            code: DOM_BUSINESS_CENTRES.AE_DXB.CODE,
+            name: expect.any(String),
+            date: expect.any(String),
+          }),
+        ]),
+      );
+
+      expect(body[DOM_BUSINESS_CENTRES.JO_AMM.CODE]).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            code: DOM_BUSINESS_CENTRES.JO_AMM.CODE,
+            name: expect.any(String),
+            date: expect.any(String),
+          }),
+        ]),
+      );
+    });
+
+    describe('when a business centres non working days are NOT found', () => {
+      it(`should return ${HttpStatus.NOT_FOUND} with mapped business centres`, async () => {
+        // Arrange
+        const mockCentreCodes = `${DOM_BUSINESS_CENTRES.AE_DXB.CODE},INVALID CODE`;
+
+        const url = `/api/${prefixAndVersion}/dom/business-centres/non-working-days?centreCodes=${mockCentreCodes}`;
+
+        // Act
+        const { status } = await api.get(url);
+
+        // Assert
+        expect(status).toBe(HttpStatus.NOT_FOUND);
+      });
+    });
+
+    describe('when all business centres non working days are NOT found', () => {
+      it(`should return ${HttpStatus.NOT_FOUND} with mapped business centres`, async () => {
+        // Arrange
+        const mockCentreCodes = `INVALID CODE,INVALID CODE`;
+
+        const url = `/api/${prefixAndVersion}/dom/business-centres/non-working-days?centreCodes=${mockCentreCodes}`;
+
+        // Act
+        const { status } = await api.get(url);
+
+        // Assert
+        expect(status).toBe(HttpStatus.NOT_FOUND);
+      });
+    });
+
+    describe('when no query params are provided', () => {
+      it(`should return ${HttpStatus.BAD_REQUEST} with mapped business centres`, async () => {
+        // Arrange
+        const url = `/api/${prefixAndVersion}/dom/business-centres/non-working-days`;
+
+        // Act
+        const { status, body } = await api.get(url);
+
+        // Assert
+        expect(status).toBe(HttpStatus.BAD_REQUEST);
+
+        expect(body).toEqual({
+          message: ['centreCodes must be a string'],
+          error: 'Bad Request',
+          statusCode: HttpStatus.BAD_REQUEST,
+        });
+      });
+    });
+
+    describe('when an empty query string param is provided', () => {
+      it(`should return ${HttpStatus.NOT_FOUND} with mapped business centres`, async () => {
+        // Arrange
+        const url = `/api/${prefixAndVersion}/dom/business-centres/non-working-days?centreCodes=''`;
+
+        // Act
+        const { status } = await api.get(url);
+
+        // Assert
+        expect(status).toBe(HttpStatus.NOT_FOUND);
+      });
+    });
+  });
 });

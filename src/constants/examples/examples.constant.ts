@@ -1,6 +1,14 @@
 import { DOM_BUSINESS_CENTRES } from '../dom.constant';
 import { ODS_BUSINESS_CENTRES } from '../ods.constant';
 
+const BUSINESS_CENTRE = {
+  ...DOM_BUSINESS_CENTRES.GH_ACC,
+  NON_WORKING_DAY: {
+    NAME: 'Weekend',
+    DATE: '2025-07-05',
+  },
+};
+
 const COUNTERPARTY_SUBTYPES = {
   BROKER: 'BROKER',
   GUARANTOR: 'GUARANTOR',
@@ -21,13 +29,7 @@ const PRODUCT_TYPES = {
 };
 
 export const EXAMPLES = {
-  BUSINESS_CENTRE: {
-    ...DOM_BUSINESS_CENTRES.GH_ACC,
-    NON_WORKING_DAY: {
-      NAME: 'Weekend',
-      DATE: '2025-07-05',
-    },
-  },
+  BUSINESS_CENTRE,
   COMPANIES_HOUSE_REGISTRATION_NUMBER: '00000001',
   CUSTOMER: {
     COMPANYREG: '06012345',
@@ -48,12 +50,24 @@ export const EXAMPLES = {
         name: DOM_BUSINESS_CENTRES.AE_DXB.NAME,
       },
       {
+        code: DOM_BUSINESS_CENTRES.CM_YAO.CODE,
+        name: DOM_BUSINESS_CENTRES.CM_YAO.NAME,
+      },
+      {
         code: DOM_BUSINESS_CENTRES.JO_AMM.CODE,
         name: DOM_BUSINESS_CENTRES.JO_AMM.NAME,
       },
+    ],
+    BUSINESS_CENTRES_NON_WORKING_DAYS: [
       {
-        code: DOM_BUSINESS_CENTRES.SE_STO.CODE,
-        name: DOM_BUSINESS_CENTRES.SE_STO.NAME,
+        code: DOM_BUSINESS_CENTRES.AE_DXB.CODE,
+        date: BUSINESS_CENTRE.NON_WORKING_DAY.DATE,
+        name: DOM_BUSINESS_CENTRES.AE_DXB.NAME,
+      },
+      {
+        code: DOM_BUSINESS_CENTRES.CM_YAO.CODE,
+        date: BUSINESS_CENTRE.NON_WORKING_DAY.DATE,
+        name: DOM_BUSINESS_CENTRES.CM_YAO.NAME,
       },
     ],
     PRODUCT_CONFIG: {

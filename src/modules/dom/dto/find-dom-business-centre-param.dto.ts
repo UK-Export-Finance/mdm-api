@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { EXAMPLES } from '@ukef/constants';
 import { IsString } from 'class-validator';
 
-export class GetDomBusinessCentreParamDto {
+export class FindDomBusinessCentreParamDto {
   @ApiProperty({
     required: true,
     example: EXAMPLES.BUSINESS_CENTRE.CODE,

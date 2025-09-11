@@ -331,11 +331,15 @@ paths:
             type: string
       responses:
         '200':
+<<<<<<< HEAD
+          description: A DOM business centre
+=======
           description: A DOM Business centre
+>>>>>>> feat/FN-3543/integrate-with-ods
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetDomBusinessCentreResponse'
+                $ref: '#/components/schemas/FindDomBusinessCentreResponse'
         '400':
           description: Bad request
         '404':
@@ -358,16 +362,28 @@ paths:
             type: string
       responses:
         '200':
+<<<<<<< HEAD
+          description: A DOM business centre's non working days
+=======
           description: A DOM Business centre's non working days
+>>>>>>> feat/FN-3543/integrate-with-ods
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: >-
+<<<<<<< HEAD
+                    #/components/schemas/FindDomBusinessCentreNonWorkingDayMappedResponse
+        '400':
+          description: Bad request
+        '404':
+          description: Business centre not found
+=======
                     #/components/schemas/GetDomBusinessCentreNonWorkingDayMappedResponse
         '400':
           description: Bad request
+>>>>>>> feat/FN-3543/integrate-with-ods
         '500':
           description: Internal server error
       summary: Get a business centre's non working days from DOM
@@ -379,13 +395,13 @@ paths:
       parameters: []
       responses:
         '200':
-          description: DOM Business centres
+          description: DOM business centres
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/GetDomBusinessCentreResponse'
+                  $ref: '#/components/schemas/FindDomBusinessCentreResponse'
         '400':
           description: Bad request
         '500':
@@ -393,6 +409,34 @@ paths:
       summary: Get business centres from DOM
       tags:
         - dom
+<<<<<<< HEAD
+  /api/v2/dom/business-centres/non-working-days:
+    get:
+      operationId: DomController_findMultipleBusinessCentresNonWorkingDays_v2
+      parameters:
+        - name: centreCodes
+          required: true
+          in: query
+          description: Unique business centre codes - separated by commas
+          schema:
+            example: AE_DXB,CM_YAO
+            type: string
+      responses:
+        '200':
+          description: Multiple DOM business centre's non working days
+          content:
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/FindMultipleDomBusinessCentresNonWorkingDaysResponse
+        '400':
+          description: Bad request
+        '404':
+          description: Business centres non working days not found
+        '500':
+          description: Internal server error
+      summary: Get multiple business centre's non working days from DOM
+=======
   /api/v2/dom/product-configuration/{productType}:
     get:
       operationId: DomController_findProductConfigurations_v2
@@ -416,6 +460,7 @@ paths:
         '500':
           description: Internal server error
       summary: Get a product configurations from DOM
+>>>>>>> feat/FN-3543/integrate-with-ods
       tags:
         - dom
   /api/v2/dom/product-configurations:
@@ -1100,7 +1145,7 @@ components:
         - createdBy
         - createdDatetime
         - requestingSystem
-    GetDomBusinessCentreResponse:
+    FindDomBusinessCentreResponse:
       type: object
       properties:
         code:
@@ -1114,7 +1159,11 @@ components:
       required:
         - code
         - name
+<<<<<<< HEAD
+    FindDomBusinessCentreNonWorkingDayMappedResponse:
+=======
     GetDomBusinessCentreNonWorkingDayMappedResponse:
+>>>>>>> feat/FN-3543/integrate-with-ods
       type: object
       properties:
         code:
@@ -1133,6 +1182,19 @@ components:
         - code
         - name
         - date
+<<<<<<< HEAD
+    FindMultipleDomBusinessCentresNonWorkingDaysResponse:
+      type: object
+      properties:
+        rawDefinition:
+          description: Multiple business centre's non working days
+          allOf:
+            - $ref: >-
+                #/components/schemas/FindDomBusinessCentreNonWorkingDayMappedResponse
+      required:
+        - rawDefinition
+=======
+>>>>>>> feat/FN-3543/integrate-with-ods
     GetDomProductConfigConfig:
       type: object
       properties:
