@@ -127,7 +127,7 @@ export class DomController {
 
   @Get('product-configuration/:productType')
   @ApiOperation({
-    summary: 'Get a product configurations from DOM',
+    summary: 'Get a product configuration from DOM',
   })
   @ApiOkResponse({
     description: 'DOM product configuration',
