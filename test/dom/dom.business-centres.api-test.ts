@@ -189,7 +189,7 @@ describe('/dom - business centres', () => {
     });
 
     describe('when no query params are provided', () => {
-      it(`should return ${HttpStatus.BAD_REQUEST} with mapped business centres`, async () => {
+      it(`should return ${HttpStatus.BAD_REQUEST} with validation errors`, async () => {
         // Arrange
         const url = `/api/${prefixAndVersion}/dom/business-centres/non-working-days`;
 
@@ -208,28 +208,40 @@ describe('/dom - business centres', () => {
     });
 
     describe('when an empty query param is provided', () => {
-      it(`should return ${HttpStatus.BAD_REQUEST} with mapped business centres`, async () => {
+      it(`should return ${HttpStatus.BAD_REQUEST} with validation errors`, async () => {
         // Arrange
         const url = `/api/${prefixAndVersion}/dom/business-centres/non-working-days?centreCodes=`;
 
         // Act
-        const { status } = await api.get(url);
+        const { body, status } = await api.get(url);
 
         // Assert
         expect(status).toBe(HttpStatus.BAD_REQUEST);
+
+        expect(body).toEqual({
+          message: ['centreCodes must be longer than or equal to 3 characters'],
+          error: 'Bad Request',
+          statusCode: HttpStatus.BAD_REQUEST,
+        });
       });
     });
 
     describe('when a query param with an empty string is provided', () => {
-      it(`should return ${HttpStatus.BAD_REQUEST} with mapped business centres`, async () => {
+      it(`should return ${HttpStatus.BAD_REQUEST} with validation errors`, async () => {
         // Arrange
         const url = `/api/${prefixAndVersion}/dom/business-centres/non-working-days?centreCodes=''`;
 
         // Act
-        const { status } = await api.get(url);
+        const { body, status } = await api.get(url);
 
         // Assert
         expect(status).toBe(HttpStatus.BAD_REQUEST);
+
+        expect(body).toEqual({
+          message: ['centreCodes must be longer than or equal to 3 characters'],
+          error: 'Bad Request',
+          statusCode: HttpStatus.BAD_REQUEST,
+        });
       });
     });
   });
