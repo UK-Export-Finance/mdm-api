@@ -158,8 +158,8 @@ describe('/dom - business centres', () => {
       );
     });
 
-    describe('when a business centres non working days are NOT found', () => {
-      it(`should return ${HttpStatus.NOT_FOUND} with mapped business centres`, async () => {
+    describe("when a single business centre's non working days are NOT found", () => {
+      it(`should return ${HttpStatus.NOT_FOUND}`, async () => {
         // Arrange
         const mockCentreCodes = `${DOM_BUSINESS_CENTRES.AE_DXB.CODE},INVALID CODE`;
 
@@ -174,7 +174,7 @@ describe('/dom - business centres', () => {
     });
 
     describe('when all business centres non working days are NOT found', () => {
-      it(`should return ${HttpStatus.NOT_FOUND} with mapped business centres`, async () => {
+      it(`should return ${HttpStatus.NOT_FOUND}`, async () => {
         // Arrange
         const mockCentreCodes = `INVALID CODE,INVALID CODE`;
 
