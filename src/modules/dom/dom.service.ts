@@ -105,8 +105,6 @@ export class DomService {
         for (const domCentreCode of centreCodesArray) {
           mappedCentres[`${domCentreCode}`] = await this.findBusinessCentreNonWorkingDays(domCentreCode);
         }
-
-        return mappedCentres;
       }
 
       return mappedCentres;

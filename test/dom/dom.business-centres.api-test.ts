@@ -200,15 +200,28 @@ describe('/dom - business centres', () => {
         expect(status).toBe(HttpStatus.BAD_REQUEST);
 
         expect(body).toEqual({
-          message: ['centreCodes must be a string'],
+          message: ['centreCodes must be longer than or equal to 3 characters', 'centreCodes must be a string'],
           error: 'Bad Request',
           statusCode: HttpStatus.BAD_REQUEST,
         });
       });
     });
 
-    describe('when an empty query string param is provided', () => {
-      it(`should return ${HttpStatus.NOT_FOUND} with mapped business centres`, async () => {
+    describe('when an empty query param is provided', () => {
+      it(`should return ${HttpStatus.BAD_REQUEST} with mapped business centres`, async () => {
+        // Arrange
+        const url = `/api/${prefixAndVersion}/dom/business-centres/non-working-days?centreCodes=`;
+
+        // Act
+        const { status } = await api.get(url);
+
+        // Assert
+        expect(status).toBe(HttpStatus.BAD_REQUEST);
+      });
+    });
+
+    describe('when a query param with an empty string is provided', () => {
+      it(`should return ${HttpStatus.BAD_REQUEST} with mapped business centres`, async () => {
         // Arrange
         const url = `/api/${prefixAndVersion}/dom/business-centres/non-working-days?centreCodes=''`;
 
@@ -216,7 +229,7 @@ describe('/dom - business centres', () => {
         const { status } = await api.get(url);
 
         // Assert
-        expect(status).toBe(HttpStatus.NOT_FOUND);
+        expect(status).toBe(HttpStatus.BAD_REQUEST);
       });
     });
   });
