@@ -5,13 +5,13 @@ import AppConfig from '@ukef/config/app.config';
 import { DomService } from './dom.service';
 import {
   FindDomBusinessCentreNonWorkingDayMappedResponse,
+  FindDomBusinessCentreNonWorkingDaysParamDto,
   FindDomBusinessCentreParamDto,
   FindDomBusinessCentreResponse,
   FindDomProductConfigParamDto,
   FindDomProductConfigsParam,
   FindMultipleDomBusinessCentresNonWorkingDaysResponse,
   FindMultipleProductConfigsResponse,
-  GetDomBusinessCentreNonWorkingDaysParamDto,
   GetDomBusinessCentresNonWorkingDaysParamDto,
   GetDomProductConfigResponse,
 } from './dto';
@@ -65,7 +65,7 @@ export class DomController {
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
   })
-  findBusinessCentreNonWorkingDays(@Param() param: GetDomBusinessCentreNonWorkingDaysParamDto): Promise<FindDomBusinessCentreNonWorkingDayMappedResponse[]> {
+  findBusinessCentreNonWorkingDays(@Param() param: FindDomBusinessCentreNonWorkingDaysParamDto): Promise<FindDomBusinessCentreNonWorkingDayMappedResponse[]> {
     return this.domService.findBusinessCentreNonWorkingDays(param.centreCode);
   }
 
