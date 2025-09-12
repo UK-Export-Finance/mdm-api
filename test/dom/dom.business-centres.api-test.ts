@@ -158,8 +158,8 @@ describe('/dom - business centres', () => {
       );
     });
 
-    describe('when a business centres non working days are NOT found', () => {
-      it(`should return ${HttpStatus.NOT_FOUND} with mapped business centres`, async () => {
+    describe("when a single business centre's non working days are NOT found", () => {
+      it(`should return ${HttpStatus.NOT_FOUND}`, async () => {
         // Arrange
         const mockCentreCodes = `${DOM_BUSINESS_CENTRES.AE_DXB.CODE},INVALID CODE`;
 
@@ -174,7 +174,7 @@ describe('/dom - business centres', () => {
     });
 
     describe('when all business centres non working days are NOT found', () => {
-      it(`should return ${HttpStatus.NOT_FOUND} with mapped business centres`, async () => {
+      it(`should return ${HttpStatus.NOT_FOUND}`, async () => {
         // Arrange
         const mockCentreCodes = `INVALID CODE,INVALID CODE`;
 
@@ -188,8 +188,50 @@ describe('/dom - business centres', () => {
       });
     });
 
+    describe('when a query param with a string below the minimum is provided', () => {
+      it(`should return ${HttpStatus.BAD_REQUEST} with validation errors`, async () => {
+        // Arrange
+        const mockParam = 'ab';
+
+        const url = `/api/${prefixAndVersion}/dom/business-centres/non-working-days?centreCodes=${mockParam}`;
+
+        // Act
+        const { body, status } = await api.get(url);
+
+        // Assert
+        expect(status).toBe(HttpStatus.BAD_REQUEST);
+
+        expect(body).toEqual({
+          message: ['centreCodes must be longer than or equal to 3 characters'],
+          error: 'Bad Request',
+          statusCode: HttpStatus.BAD_REQUEST,
+        });
+      });
+    });
+
+    describe('when a query param with a string above the maximum is provided', () => {
+      it(`should return ${HttpStatus.BAD_REQUEST} with validation errors`, async () => {
+        // Arrange
+        const mockParam = 'a'.repeat(31);
+
+        const url = `/api/${prefixAndVersion}/dom/business-centres/non-working-days?centreCodes=${mockParam}`;
+
+        // Act
+        const { body, status } = await api.get(url);
+
+        // Assert
+        expect(status).toBe(HttpStatus.BAD_REQUEST);
+
+        expect(body).toEqual({
+          message: ['centreCodes must be shorter than or equal to 30 characters'],
+          error: 'Bad Request',
+          statusCode: HttpStatus.BAD_REQUEST,
+        });
+      });
+    });
+
     describe('when no query params are provided', () => {
-      it(`should return ${HttpStatus.BAD_REQUEST} with mapped business centres`, async () => {
+      it(`should return ${HttpStatus.BAD_REQUEST} with validation errors`, async () => {
         // Arrange
         const url = `/api/${prefixAndVersion}/dom/business-centres/non-working-days`;
 
@@ -200,23 +242,52 @@ describe('/dom - business centres', () => {
         expect(status).toBe(HttpStatus.BAD_REQUEST);
 
         expect(body).toEqual({
-          message: ['centreCodes must be a string'],
+          message: [
+            'centreCodes must be shorter than or equal to 30 characters',
+            'centreCodes must be longer than or equal to 3 characters',
+            'centreCodes must be a string',
+          ],
           error: 'Bad Request',
           statusCode: HttpStatus.BAD_REQUEST,
         });
       });
     });
 
-    describe('when an empty query string param is provided', () => {
-      it(`should return ${HttpStatus.NOT_FOUND} with mapped business centres`, async () => {
+    describe('when an empty query param is provided', () => {
+      it(`should return ${HttpStatus.BAD_REQUEST} with validation errors`, async () => {
+        // Arrange
+        const url = `/api/${prefixAndVersion}/dom/business-centres/non-working-days?centreCodes=`;
+
+        // Act
+        const { body, status } = await api.get(url);
+
+        // Assert
+        expect(status).toBe(HttpStatus.BAD_REQUEST);
+
+        expect(body).toEqual({
+          message: ['centreCodes must be longer than or equal to 3 characters'],
+          error: 'Bad Request',
+          statusCode: HttpStatus.BAD_REQUEST,
+        });
+      });
+    });
+
+    describe('when a query param with an empty string is provided', () => {
+      it(`should return ${HttpStatus.BAD_REQUEST} with validation errors`, async () => {
         // Arrange
         const url = `/api/${prefixAndVersion}/dom/business-centres/non-working-days?centreCodes=''`;
 
         // Act
-        const { status } = await api.get(url);
+        const { body, status } = await api.get(url);
 
         // Assert
-        expect(status).toBe(HttpStatus.NOT_FOUND);
+        expect(status).toBe(HttpStatus.BAD_REQUEST);
+
+        expect(body).toEqual({
+          message: ['centreCodes must be longer than or equal to 3 characters'],
+          error: 'Bad Request',
+          statusCode: HttpStatus.BAD_REQUEST,
+        });
       });
     });
   });
