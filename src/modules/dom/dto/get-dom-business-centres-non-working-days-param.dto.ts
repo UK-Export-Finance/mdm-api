@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { EXAMPLES } from '@ukef/constants';
-import { IsString, MinLength } from 'class-validator';
+import { IsString, MaxLength, MinLength } from 'class-validator';
 
 export class GetDomBusinessCentresNonWorkingDaysParamDto {
   @ApiProperty({
@@ -10,5 +10,6 @@ export class GetDomBusinessCentresNonWorkingDaysParamDto {
   })
   @IsString()
   @MinLength(3)
+  @MaxLength(30)
   public centreCodes: string;
 }

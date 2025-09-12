@@ -188,6 +188,48 @@ describe('/dom - business centres', () => {
       });
     });
 
+    describe('when a query param with a string below the minimum is provided', () => {
+      it(`should return ${HttpStatus.BAD_REQUEST} with validation errors`, async () => {
+        // Arrange
+        const mockParam = 'ab';
+
+        const url = `/api/${prefixAndVersion}/dom/business-centres/non-working-days?centreCodes=${mockParam}`;
+
+        // Act
+        const { body, status } = await api.get(url);
+
+        // Assert
+        expect(status).toBe(HttpStatus.BAD_REQUEST);
+
+        expect(body).toEqual({
+          message: ['centreCodes must be longer than or equal to 3 characters'],
+          error: 'Bad Request',
+          statusCode: HttpStatus.BAD_REQUEST,
+        });
+      });
+    });
+
+    describe('when a query param with a string above the maximum is provided', () => {
+      it(`should return ${HttpStatus.BAD_REQUEST} with validation errors`, async () => {
+        // Arrange
+        const mockParam = 'a'.repeat(31);
+
+        const url = `/api/${prefixAndVersion}/dom/business-centres/non-working-days?centreCodes=${mockParam}`;
+
+        // Act
+        const { body, status } = await api.get(url);
+
+        // Assert
+        expect(status).toBe(HttpStatus.BAD_REQUEST);
+
+        expect(body).toEqual({
+          message: ['centreCodes must be shorter than or equal to 30 characters'],
+          error: 'Bad Request',
+          statusCode: HttpStatus.BAD_REQUEST,
+        });
+      });
+    });
+
     describe('when no query params are provided', () => {
       it(`should return ${HttpStatus.BAD_REQUEST} with validation errors`, async () => {
         // Arrange
@@ -200,7 +242,11 @@ describe('/dom - business centres', () => {
         expect(status).toBe(HttpStatus.BAD_REQUEST);
 
         expect(body).toEqual({
-          message: ['centreCodes must be longer than or equal to 3 characters', 'centreCodes must be a string'],
+          message: [
+            'centreCodes must be shorter than or equal to 30 characters',
+            'centreCodes must be longer than or equal to 3 characters',
+            'centreCodes must be a string',
+          ],
           error: 'Bad Request',
           statusCode: HttpStatus.BAD_REQUEST,
         });
