@@ -5,7 +5,7 @@ import { IsString } from 'class-validator';
 export class FindDomProductConfigParamDto {
   @ApiProperty({
     required: true,
-    example: EXAMPLES.DOM.PRODUCT_CONFIG.productType,
+    example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.productType,
     description: 'Unique product type',
   })
   @IsString()

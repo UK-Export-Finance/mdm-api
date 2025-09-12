@@ -230,6 +230,8 @@ describe('/dom - business centres', () => {
       });
     });
 
+    // TODO: baseUrl
+
     describe('when no query params are provided', () => {
       it(`should return ${HttpStatus.BAD_REQUEST} with validation errors`, async () => {
         // Arrange
