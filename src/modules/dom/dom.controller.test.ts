@@ -185,8 +185,8 @@ describe('DomController', () => {
       controller.findMultipleProductConfigurations({ productTypes: mockProductTypesString });
 
       // Assert
-      expect(domServiceGetProductConfigurations).toHaveBeenCalledTimes(1);
-      expect(domServiceGetProductConfigurations).toHaveBeenCalledWith(mockProductTypesString);
+      expect(domServiceFindMultipleProductConfigurations).toHaveBeenCalledTimes(1);
+      expect(domServiceFindMultipleProductConfigurations).toHaveBeenCalledWith(mockProductTypesString);
     });
 
     it('should return product configurations', () => {
