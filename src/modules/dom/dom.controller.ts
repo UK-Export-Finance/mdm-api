@@ -5,11 +5,13 @@ import AppConfig from '@ukef/config/app.config';
 import { DomService } from './dom.service';
 import {
   FindDomBusinessCentreNonWorkingDayMappedResponse,
+  FindDomBusinessCentreNonWorkingDaysParamDto,
   FindDomBusinessCentreParamDto,
   FindDomBusinessCentreResponse,
   FindDomProductConfigParamDto,
+  FindDomProductConfigsParam,
   FindMultipleDomBusinessCentresNonWorkingDaysResponse,
-  GetDomBusinessCentreNonWorkingDaysParamDto,
+  FindMultipleProductConfigsResponse,
   GetDomBusinessCentresNonWorkingDaysParamDto,
   GetDomProductConfigResponse,
 } from './dto';
@@ -63,7 +65,7 @@ export class DomController {
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
   })
-  findBusinessCentreNonWorkingDays(@Param() param: GetDomBusinessCentreNonWorkingDaysParamDto): Promise<FindDomBusinessCentreNonWorkingDayMappedResponse[]> {
+  findBusinessCentreNonWorkingDays(@Param() param: FindDomBusinessCentreNonWorkingDaysParamDto): Promise<FindDomBusinessCentreNonWorkingDayMappedResponse[]> {
     return this.domService.findBusinessCentreNonWorkingDays(param.centreCode);
   }
 
@@ -109,6 +111,24 @@ export class DomController {
     return this.domService.findMultipleBusinessCentresNonWorkingDays(query.centreCodes);
   }
 
+  @Get('product-configuration/:productType')
+  @ApiOperation({
+    summary: 'Get a product configuration from DOM',
+  })
+  @ApiOkResponse({
+    description: 'DOM product configuration',
+    type: GetDomProductConfigResponse,
+  })
+  @ApiNotFoundResponse({
+    description: 'Product configuration not found',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  findProductConfiguration(@Param() param: FindDomProductConfigParamDto): GetDomProductConfigResponse {
+    return this.domService.findProductConfiguration(param.productType);
+  }
+
   @Get('product-configurations')
   @ApiOperation({
     summary: 'Get all product configurations from DOM',
@@ -125,21 +145,24 @@ export class DomController {
     return this.domService.getProductConfigurations();
   }
 
-  @Get('product-configuration/:productType')
+  @Get('product-configurations-by-type')
   @ApiOperation({
-    summary: 'Get a product configuration from DOM',
+    summary: 'Get multiple product configurations from DOM',
   })
   @ApiOkResponse({
-    description: 'DOM product configuration',
-    type: GetDomProductConfigResponse,
+    description: 'Multiple DOM product configurations',
+    type: FindMultipleProductConfigsResponse,
   })
   @ApiNotFoundResponse({
-    description: 'Product configuration not found',
+    description: 'Product configurations not found',
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad request',
   })
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
   })
-  findProductConfigurations(@Param() param: FindDomProductConfigParamDto): GetDomProductConfigResponse {
-    return this.domService.findProductConfiguration(param.productType);
+  findMultipleProductConfigurations(@Query() query: FindDomProductConfigsParam): Promise<FindMultipleProductConfigsResponse> {
+    return this.domService.findMultipleProductConfigurations(query.productTypes);
   }
 }

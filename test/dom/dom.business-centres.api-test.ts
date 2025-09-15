@@ -123,11 +123,13 @@ describe('/dom - business centres', () => {
   });
 
   describe('/business-centres/non-working-days', () => {
+    const baseUrl = `/api/${prefixAndVersion}/dom/business-centres/non-working-days`;
+
     it(`should return ${HttpStatus.OK} with mapped business centres`, async () => {
       // Arrange
       const mockCentreCodes = `${DOM_BUSINESS_CENTRES.AE_DXB.CODE},${DOM_BUSINESS_CENTRES.JO_AMM.CODE}`;
 
-      const url = `/api/${prefixAndVersion}/dom/business-centres/non-working-days?centreCodes=${mockCentreCodes}`;
+      const url = `${baseUrl}?centreCodes=${mockCentreCodes}`;
 
       // Act
       const { status, body } = await api.get(url);
@@ -163,7 +165,7 @@ describe('/dom - business centres', () => {
         // Arrange
         const mockCentreCodes = `${DOM_BUSINESS_CENTRES.AE_DXB.CODE},INVALID CODE`;
 
-        const url = `/api/${prefixAndVersion}/dom/business-centres/non-working-days?centreCodes=${mockCentreCodes}`;
+        const url = `${baseUrl}?centreCodes=${mockCentreCodes}`;
 
         // Act
         const { status } = await api.get(url);
@@ -178,7 +180,7 @@ describe('/dom - business centres', () => {
         // Arrange
         const mockCentreCodes = `INVALID CODE,INVALID CODE`;
 
-        const url = `/api/${prefixAndVersion}/dom/business-centres/non-working-days?centreCodes=${mockCentreCodes}`;
+        const url = `${baseUrl}?centreCodes=${mockCentreCodes}`;
 
         // Act
         const { status } = await api.get(url);
@@ -193,7 +195,7 @@ describe('/dom - business centres', () => {
         // Arrange
         const mockParam = 'ab';
 
-        const url = `/api/${prefixAndVersion}/dom/business-centres/non-working-days?centreCodes=${mockParam}`;
+        const url = `${baseUrl}?centreCodes=${mockParam}`;
 
         // Act
         const { body, status } = await api.get(url);
@@ -214,7 +216,7 @@ describe('/dom - business centres', () => {
         // Arrange
         const mockParam = 'a'.repeat(31);
 
-        const url = `/api/${prefixAndVersion}/dom/business-centres/non-working-days?centreCodes=${mockParam}`;
+        const url = `${baseUrl}?centreCodes=${mockParam}`;
 
         // Act
         const { body, status } = await api.get(url);
@@ -233,7 +235,7 @@ describe('/dom - business centres', () => {
     describe('when no query params are provided', () => {
       it(`should return ${HttpStatus.BAD_REQUEST} with validation errors`, async () => {
         // Arrange
-        const url = `/api/${prefixAndVersion}/dom/business-centres/non-working-days`;
+        const url = `${baseUrl}`;
 
         // Act
         const { status, body } = await api.get(url);
@@ -256,7 +258,7 @@ describe('/dom - business centres', () => {
     describe('when an empty query param is provided', () => {
       it(`should return ${HttpStatus.BAD_REQUEST} with validation errors`, async () => {
         // Arrange
-        const url = `/api/${prefixAndVersion}/dom/business-centres/non-working-days?centreCodes=`;
+        const url = `${baseUrl}?centreCodes=`;
 
         // Act
         const { body, status } = await api.get(url);
@@ -275,7 +277,7 @@ describe('/dom - business centres', () => {
     describe('when a query param with an empty string is provided', () => {
       it(`should return ${HttpStatus.BAD_REQUEST} with validation errors`, async () => {
         // Arrange
-        const url = `/api/${prefixAndVersion}/dom/business-centres/non-working-days?centreCodes=''`;
+        const url = `${baseUrl}?centreCodes=''`;
 
         // Act
         const { body, status } = await api.get(url);

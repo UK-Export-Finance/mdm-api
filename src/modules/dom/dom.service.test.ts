@@ -36,6 +36,7 @@ describe('DomService', () => {
 
   let odsServiceFindBusinessCentreNonWorkingDays: jest.Mock;
   let mockFindBusinessCentreNonWorkingDays: jest.Mock;
+  let mockFindProductConfiguration: jest.Mock;
 
   let service: DomService;
 
@@ -339,6 +340,95 @@ describe('DomService', () => {
         const expected = new NotFoundException(`No DOM product configuration found ${mockProductType}`);
 
         await expect(response).rejects.toStrictEqual(expected);
+      });
+    });
+  });
+
+  describe('findMultipleProductConfigurations', () => {
+    beforeEach(() => {
+      // Arrange
+      mockFindProductConfiguration = jest.fn().mockReturnValueOnce(EXAMPLES.DOM.PRODUCT_CONFIG.BIP).mockReturnValueOnce(EXAMPLES.DOM.PRODUCT_CONFIG.EXIP);
+
+      service = new DomService(odsService, mockLogger);
+
+      service.findProductConfiguration = mockFindProductConfiguration;
+    });
+
+    describe('when product configurations are found', () => {
+      it('should return multiple product configurations', async () => {
+        // Arrange
+        const mockProductTypes = `${EXAMPLES.PRODUCT_TYPES.BIP},${EXAMPLES.PRODUCT_TYPES.EXIP}`;
+
+        // Act
+        const response = await service.findMultipleProductConfigurations(mockProductTypes);
+
+        // Assert
+        const expected = {
+          [EXAMPLES.PRODUCT_TYPES.BIP]: EXAMPLES.DOM.PRODUCT_CONFIG.BIP,
+          [EXAMPLES.PRODUCT_TYPES.EXIP]: EXAMPLES.DOM.PRODUCT_CONFIG.EXIP,
+        };
+
+        expect(response).toEqual(expected);
+      });
+    });
+
+    describe('when a product configuration is NOT found', () => {
+      it('should throw a not found exception', async () => {
+        // Arrange
+        const mockProductTypes = `${EXAMPLES.PRODUCT_TYPES.BIP},INVALID CODE`;
+
+        mockFindProductConfiguration = jest
+          .fn()
+          .mockResolvedValueOnce(EXAMPLES.DOM.PRODUCT_CONFIG.BIP)
+          .mockRejectedValueOnce(new NotFoundException('Mock error'));
+
+        service = new DomService(odsService, mockLogger);
+
+        service.findProductConfiguration = mockFindProductConfiguration;
+
+        // Act
+        const promise = service.findMultipleProductConfigurations(mockProductTypes);
+
+        // Assert
+        const expected = new Error(`Error finding multiple DOM product configurations ${mockProductTypes}`);
+
+        await expect(promise).rejects.toThrow(expected);
+
+        await expect(promise).rejects.toBeInstanceOf(NotFoundException);
+      });
+    });
+
+    describe('when all product configurations are NOT found', () => {
+      it('should throw a not found exception', async () => {
+        // Arrange
+        const mockProductTypes = 'INVALID CODE,INVALID CODE';
+
+        const mockError = new NotFoundException('Mock error');
+
+        mockFindProductConfiguration = jest.fn().mockResolvedValueOnce(mockError).mockRejectedValueOnce(mockError);
+
+        service = new DomService(odsService, mockLogger);
+
+        service.findProductConfiguration = mockFindProductConfiguration;
+
+        // Act
+        const promise = service.findMultipleProductConfigurations(mockProductTypes);
+
+        // Assert
+        const expected = new Error(`Error finding multiple DOM product configurations ${mockProductTypes}`);
+
+        await expect(promise).rejects.toThrow(expected);
+
+        await expect(promise).rejects.toBeInstanceOf(NotFoundException);
+      });
+    });
+
+    describe('when an empty string is provided', () => {
+      it('should return product configurations', async () => {
+        // Act
+        const response = await service.findMultipleProductConfigurations('');
+
+        expect(response).toEqual({});
       });
     });
   });

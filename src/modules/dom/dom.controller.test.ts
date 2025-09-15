@@ -6,16 +6,23 @@ import { DataSource, QueryRunner } from 'typeorm';
 import { OdsService } from '../ods/ods.service';
 import { DomController } from './dom.controller';
 import { DomService } from './dom.service';
-import { FindMultipleDomBusinessCentresNonWorkingDaysResponse } from './dto';
+import { FindMultipleDomBusinessCentresNonWorkingDaysResponse, FindMultipleProductConfigsResponse } from './dto';
 
 const mockError = new Error('An error occurred');
-
-const mockCentreCodesString = `${DOM_BUSINESS_CENTRES.AE_DXB.CODE},${DOM_BUSINESS_CENTRES.CM_YAO.CODE}`;
 
 const mockMultipleBusinessCentreNonWorkingDays: FindMultipleDomBusinessCentresNonWorkingDaysResponse = {
   [DOM_BUSINESS_CENTRES.AE_DXB.CODE]: EXAMPLES.DOM.BUSINESS_CENTRES_NON_WORKING_DAYS,
   [DOM_BUSINESS_CENTRES.CM_YAO.CODE]: EXAMPLES.DOM.BUSINESS_CENTRES_NON_WORKING_DAYS,
 };
+
+const [mockFindProductConfiguration] = PRODUCT_CONFIG;
+
+const mockMultipleProductConfigurations: FindMultipleProductConfigsResponse = {
+  [PRODUCT_CONFIG[1].productType]: PRODUCT_CONFIG[1],
+  [PRODUCT_CONFIG[2].productType]: PRODUCT_CONFIG[2],
+};
+
+const mockProductTypesString = `${EXAMPLES.PRODUCT_TYPES.BIP},${EXAMPLES.PRODUCT_TYPES.EXIP}`;
 
 describe('DomController', () => {
   let mockQueryRunner: jest.Mocked<QueryRunner>;
@@ -31,8 +38,10 @@ describe('DomController', () => {
   let domServiceFindBusinessCentre: jest.Mock;
   let domServiceFindBusinessCentreNonWorkingDays: jest.Mock;
   let domServiceGetBusinessCentres: jest.Mock;
+  let domServiceFindProductConfiguration: jest.Mock;
   let domServiceFindMultipleBusinessCentresNonWorkingDays: jest.Mock;
   let domServiceGetProductConfigurations: jest.Mock;
+  let domServiceFindMultipleProductConfigurations: jest.Mock;
 
   let controller: DomController;
 
@@ -49,8 +58,14 @@ describe('DomController', () => {
     domServiceFindMultipleBusinessCentresNonWorkingDays = jest.fn().mockResolvedValueOnce(mockMultipleBusinessCentreNonWorkingDays);
     domService.findMultipleBusinessCentresNonWorkingDays = domServiceFindMultipleBusinessCentresNonWorkingDays;
 
+    domServiceFindProductConfiguration = jest.fn().mockReturnValueOnce(mockFindProductConfiguration);
+    domService.findProductConfiguration = domServiceFindProductConfiguration;
+
     domServiceGetProductConfigurations = jest.fn().mockReturnValueOnce(PRODUCT_CONFIG);
     domService.getProductConfigurations = domServiceGetProductConfigurations;
+
+    domServiceFindMultipleProductConfigurations = jest.fn().mockReturnValueOnce(mockMultipleProductConfigurations);
+    domService.findMultipleProductConfigurations = domServiceFindMultipleProductConfigurations;
 
     controller = new DomController(domService);
   });
@@ -125,22 +140,24 @@ describe('DomController', () => {
     });
   });
 
-  describe('findMultipleBusinessCentresNonWorkingDays', () => {
-    it('should call domService.findMultipleBusinessCentresNonWorkingDays', () => {
+  describe('findProductConfiguration', () => {
+    const mockProductType = EXAMPLES.PRODUCT_TYPES.BIP;
+
+    it('should call domService.findProductConfiguration', () => {
       // Act
-      controller.findMultipleBusinessCentresNonWorkingDays({ centreCodes: mockCentreCodesString });
+      controller.findProductConfiguration({ productType: mockProductType });
 
       // Assert
-      expect(domServiceFindMultipleBusinessCentresNonWorkingDays).toHaveBeenCalledTimes(1);
-      expect(domServiceFindMultipleBusinessCentresNonWorkingDays).toHaveBeenCalledWith(mockCentreCodesString);
+      expect(domServiceFindProductConfiguration).toHaveBeenCalledTimes(1);
+      expect(domServiceFindProductConfiguration).toHaveBeenCalledWith(mockProductType);
     });
 
-    it('should return the result of domService.findMultipleBusinessCentresNonWorkingDays', async () => {
+    it('should return the result of domService.findProductConfiguration', () => {
       // Act
-      const result = await controller.findMultipleBusinessCentresNonWorkingDays({ centreCodes: mockCentreCodesString });
+      const result = controller.findProductConfiguration({ productType: mockProductType });
 
       // Assert
-      expect(result).toEqual(mockMultipleBusinessCentreNonWorkingDays);
+      expect(result).toEqual(mockFindProductConfiguration);
     });
   });
 
@@ -159,6 +176,25 @@ describe('DomController', () => {
 
       // Assert
       expect(result).toStrictEqual(PRODUCT_CONFIG);
+    });
+  });
+
+  describe('findMultipleProductConfigurations', () => {
+    it('should call domService.findMultipleProductConfigurations', () => {
+      // Act
+      controller.findMultipleProductConfigurations({ productTypes: mockProductTypesString });
+
+      // Assert
+      expect(domServiceFindMultipleProductConfigurations).toHaveBeenCalledTimes(1);
+      expect(domServiceFindMultipleProductConfigurations).toHaveBeenCalledWith(mockProductTypesString);
+    });
+
+    it('should return product configurations', () => {
+      // Act
+      const result = controller.findMultipleProductConfigurations({ productTypes: mockProductTypesString });
+
+      // Assert
+      expect(result).toStrictEqual(mockMultipleProductConfigurations);
     });
   });
 });

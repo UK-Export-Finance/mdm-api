@@ -9,6 +9,7 @@ import {
   FindDomBusinessCentreNonWorkingDayMappedResponse,
   FindDomBusinessCentreResponse,
   FindMultipleDomBusinessCentresNonWorkingDaysResponse,
+  FindMultipleProductConfigsResponse,
   GetDomProductConfigResponse,
 } from './dto';
 
@@ -137,11 +138,43 @@ export class DomService {
   }
 
   /**
+   * Find multiple product configurations in DOM
+   * @param {string} productTypes: DOM product types, comma separated
+   * @returns {Promise<FindMultipleProductConfigsResponse>}
+   * @throws {NotFoundException} If no business centre is found
+   */
+  async findMultipleProductConfigurations(productTypes: string): Promise<FindMultipleProductConfigsResponse> {
+    try {
+      this.logger.info(`Finding multiple DOM product configurations %s`, productTypes);
+
+      const mappedConfigs = {};
+
+      if (productTypes.length) {
+        const productTypesArray = productTypes.split(',');
+
+        for (const productType of productTypesArray) {
+          mappedConfigs[`${productType}`] = await this.findProductConfiguration(productType);
+        }
+      }
+
+      return mappedConfigs;
+    } catch (error) {
+      this.logger.error('Error finding multiple DOM product configurations %s %o', productTypes, error);
+
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException(`Error finding multiple DOM product configurations ${productTypes}`, error);
+      }
+
+      throw new Error(`Error finding multiple DOM product configurations ${productTypes}`, error);
+    }
+  }
+
+  /**
    * Get all product configurations
    * @returns {GetDomProductConfigResponse[]}
    */
-  getProductConfigurations(): GetDomProductConfigResponse[] {
-    this.logger.info('Getting product configurations');
+  getProductConfigurations(productTypes?: string): GetDomProductConfigResponse[] {
+    this.logger.info('Getting product configurations %s', productTypes);
 
     return PRODUCT_CONFIG;
   }
