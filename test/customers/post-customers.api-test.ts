@@ -120,7 +120,7 @@ describe('POST /customers', () => {
     query: { companyReg: EXAMPLES.CUSTOMER.COMPANYREG },
   });
 
-  requestToGetCustomers(`/account?companyreg=${EXAMPLES.CUSTOMER.COMPANYREG}`).reply(HttpStatusCode.Ok, getCustomersResponse[0]);
+  requestToGetCustomers(`/v1/p-sa-impl-get-account-or-legacy?companyreg=${EXAMPLES.CUSTOMER.COMPANYREG}`).reply(HttpStatusCode.Ok, getCustomersResponse[0]);
 
   beforeAll(async () => {
     api = await Api.create();
