@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.31.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.30.0...v1.31.0) (2025-09-18)
+
+
+### Features
+
+* **APIM-619:** updated Informatica API centre URL ([#1548](https://github.com/UK-Export-Finance/mdm-api/issues/1548)) ([8edd69f](https://github.com/UK-Export-Finance/mdm-api/commit/8edd69f94c21001f7647cdc62e24ee9ddfe9a382))
+
 ## [1.30.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.29.0...v1.30.0) (2025-08-22)
 
 
