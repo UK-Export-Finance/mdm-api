@@ -57,7 +57,7 @@ export class GetCustomersGenerator extends AbstractGenerator<CustomerValues, Gen
       ...{ includeLegacyData: v.fallbackToLegacyData },
     }));
 
-    const informaticaPath: string = '/account?' + new URLSearchParams(informaticaRequest[0] as URLSearchParams).toString();
+    const informaticaPath: string = '/v1/p-sa-impl-get-account-or-legacy?' + new URLSearchParams(informaticaRequest[0] as URLSearchParams).toString();
 
     const mdmPath: string = '/api/v1/customers?' + new URLSearchParams(request[0] as URLSearchParams).toString();
 
