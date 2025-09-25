@@ -78,8 +78,8 @@
     "typescript": "^5.9.2"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.8.1",
-    "@commitlint/config-conventional": "^19.8.1",
+    "@commitlint/cli": "^20.0.0",
+    "@commitlint/config-conventional": "^20.0.0",
     "@nestjs/cli": "^11.0.10",
     "@nestjs/schematics": "^11.0.7",
     "@nestjs/testing": "^11.1.6",
