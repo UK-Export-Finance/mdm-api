@@ -1,5 +1,5 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { EXAMPLES } from '@ukef/constants';
+import { CREDIT_CLASSIFICATION_STATUS, EXAMPLES, RISK_ENTITY } from '@ukef/constants';
 import { DunAndBradstreetService } from '@ukef/helper-modules/dun-and-bradstreet/dun-and-bradstreet.service';
 import { salesforceFormattedCurrentDate } from '@ukef/helpers/date-formatter.helper';
 import { GetCustomersInformaticaQueryDto } from '@ukef/modules/informatica/dto/get-customers-informatica-query.dto';
@@ -39,9 +39,16 @@ export class CustomersService {
         name: customerInInformatica.name,
         sfId: customerInInformatica.sfId,
         companyRegNo: customerInInformatica.companyRegNo,
+        probabilityOfDefault: customerInInformatica.probabilityOfDefault,
+        ukEntity: customerInInformatica.ukEntity,
+        ukefIndustryName: customerInInformatica.ukefIndustryName,
+        ukefSectorName: customerInInformatica.ukefSectorName,
         type: customerInInformatica.type,
         subtype: customerInInformatica.subtype,
         isLegacyRecord: customerInInformatica.isLegacyRecord,
+        riskEntity: customerInInformatica.riskEntity,
+        creditClassificationStatus: customerInInformatica.creditClassificationStatus,
+        creditClassificationDate: customerInInformatica.creditClassificationDate,
       }),
     );
   }
@@ -72,6 +79,7 @@ export class CustomersService {
 
     try {
       const existingCustomersInInformatica = await this.informaticaService.getCustomers(backendQuery);
+
       // If the customer does exist in Informatica
       if (existingCustomersInInformatica?.[0]) {
         return await this.handleInformaticaResponse(res, DTFSCustomerDto, existingCustomersInInformatica);
@@ -98,8 +106,8 @@ export class CustomersService {
    */
   private async handleInformaticaResponse(res, DTFSCustomerDto, existingCustomersInInformatica): Promise<GetCustomersResponse> {
     if (existingCustomersInInformatica[0]?.isLegacyRecord === false) {
-      // If the customer exists as a non-legacy record in Informatica
-      res.status(HttpStatusCode.Ok).json(
+      // If the customer exists as a non-legacy record in Salesforce (via Informatica)
+      return res.status(HttpStatusCode.Ok).json(
         existingCustomersInInformatica.map(
           (customerInInformatica): GetCustomersResponseItem => ({
             partyUrn: customerInInformatica?.partyUrn,
@@ -109,16 +117,24 @@ export class CustomersService {
             type: customerInInformatica?.type,
             subtype: customerInInformatica?.subtype,
             isLegacyRecord: customerInInformatica?.isLegacyRecord,
+
+            // TODO [APIM-616]: Return below from Informatica
+            // probabilityOfDefault: DTFSCustomerDto?.probabilityOfDefault,
+            // ukEntity: DTFSCustomerDto?.ukEntity,
+            // ukefIndustryName: DTFSCustomerDto?.ukefIndustryName,
+            // ukefSectorName: DTFSCustomerDto?.ukefSectorName,
+            // riskEntity: DTFSCustomerDto?.riskEntity,
+            // classificationStatus: DTFSCustomerDto?.classificationStatus,
+            // classificationStatusDate: DTFSCustomerDto?.classificationStatusDate,
           }),
         ),
       );
-      return;
     } else if (existingCustomersInInformatica[0]?.isLegacyRecord === true) {
       if (existingCustomersInInformatica[0]?.partyUrn) {
-        // If the customer only exists as a legacy record in Informatica and has a URN
+        // If the customer only exists as a legacy record in Salesforce (fetched via Informatica) and has a URN
         await this.createCustomerWithLegacyURN(res, DTFSCustomerDto, existingCustomersInInformatica);
       } else {
-        // If the customer only exists as a legacy record in Informatica but has no URN
+        // If the customer only exists as a legacy record in Salesforce (fetched via Informatica) but has no URN
         await this.createCustomerByURN(res, DTFSCustomerDto);
       }
     }
@@ -183,8 +199,7 @@ export class CustomersService {
     }
 
     const createdCustomer = await this.createCustomerByURNAndDUNS(DTFSCustomerDto, partyUrn, dunsNumber, isLegacyRecord);
-    res.status(HttpStatusCode.Created).json(createdCustomer);
-    return;
+    return res.status(HttpStatusCode.Created).json(createdCustomer);
   }
 
   /**
@@ -202,15 +217,25 @@ export class CustomersService {
     dunsNumber: string,
     isLegacyRecord: boolean,
   ): Promise<GetCustomersResponse> {
+    const salesForceDate = salesforceFormattedCurrentDate();
+
     const createCustomerDto: CreateCustomerDto = {
       Name: DTFSCustomerDto.companyName,
       Party_URN__c: partyUrn,
       D_B_Number__c: dunsNumber,
       Company_Registration_Number__c: DTFSCustomerDto.companyRegistrationNumber,
       CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
-      CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
+      CCM_Credit_Risk_Rating_Date__c: salesForceDate,
       CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
       CCM_Probability_of_Default__c: DTFSCustomerDto.probabilityOfDefault,
+      CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity,
+      CCM_Primary_Industry__c: DTFSCustomerDto.ukefIndustryName,
+      CCM_Primary_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
+      CCM_Industry__c: DTFSCustomerDto.ukefIndustryName,
+      CCM_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
+      CCM_Assigned_Rating__c: RISK_ENTITY.CORPORATE,
+      CCM_Watch_List__c: CREDIT_CLASSIFICATION_STATUS.GOOD,
+      CCM_Watch_List_Date__c: salesForceDate,
     };
 
     const salesforceCreateCustomerResponse: CreateCustomerSalesforceResponseDto = await this.salesforceService.createCustomer(createCustomerDto);
@@ -224,6 +249,13 @@ export class CustomersService {
         type: null,
         subtype: null,
         isLegacyRecord: isLegacyRecord,
+        probabilityOfDefault: DTFSCustomerDto.probabilityOfDefault,
+        ukEntity: DTFSCustomerDto.ukEntity,
+        ukefIndustryName: DTFSCustomerDto.ukefIndustryName,
+        ukefSectorName: DTFSCustomerDto.ukefSectorName,
+        riskEntity: RISK_ENTITY.CORPORATE,
+        creditClassificationStatus: CREDIT_CLASSIFICATION_STATUS.GOOD,
+        creditClassificationDate: salesForceDate,
       },
     ];
   }

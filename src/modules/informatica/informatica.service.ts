@@ -16,7 +16,7 @@ export class InformaticaService {
   }
 
   async getCustomers(query: GetCustomersInformaticaQueryDto): Promise<GetCustomersInformaticaResponse> {
-    const path = '/account?' + new URLSearchParams(query as URLSearchParams).toString();
+    const path = '/v1/p-sa-impl-get-account-or-legacy?' + new URLSearchParams(query as URLSearchParams).toString();
 
     const { data } = await this.httpClient.get<GetCustomersInformaticaResponse>({
       path,

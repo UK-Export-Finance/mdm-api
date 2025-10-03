@@ -1,6 +1,6 @@
 /**
- * MDM centralised constants, referred as `@ukef/constants`.
- * Following constants are served:
+ * Re-exports all constants from the examples constant module.
+ * This allows other modules to import these constants directly from this index file.
  *
  * 1) Application
  * 2) Auth strategy
