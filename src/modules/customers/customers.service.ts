@@ -1,5 +1,5 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { CREDIT_CLASSIFICATION_STATUS, EXAMPLES, RISK_ENTITY } from '@ukef/constants';
+import { EXAMPLES } from '@ukef/constants';
 import { DunAndBradstreetService } from '@ukef/helper-modules/dun-and-bradstreet/dun-and-bradstreet.service';
 import { salesforceFormattedCurrentDate } from '@ukef/helpers/date-formatter.helper';
 import { GetCustomersInformaticaQueryDto } from '@ukef/modules/informatica/dto/get-customers-informatica-query.dto';
@@ -233,8 +233,8 @@ export class CustomersService {
       CCM_Primary_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
       CCM_Industry__c: DTFSCustomerDto.ukefIndustryName,
       CCM_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
-      CCM_Assigned_Rating__c: RISK_ENTITY.CORPORATE,
-      CCM_Watch_List__c: CREDIT_CLASSIFICATION_STATUS.GOOD,
+      CCM_Assigned_Rating__c: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
+      CCM_Watch_List__c: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
       CCM_Watch_List_Date__c: salesForceDate,
     };
 
@@ -253,8 +253,8 @@ export class CustomersService {
         ukEntity: DTFSCustomerDto.ukEntity,
         ukefIndustryName: DTFSCustomerDto.ukefIndustryName,
         ukefSectorName: DTFSCustomerDto.ukefSectorName,
-        riskEntity: RISK_ENTITY.CORPORATE,
-        creditClassificationStatus: CREDIT_CLASSIFICATION_STATUS.GOOD,
+        riskEntity: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
+        creditClassificationStatus: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
         creditClassificationDate: salesForceDate,
       },
     ];
