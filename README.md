@@ -31,6 +31,44 @@ When commiting changes - If the pre-commit hook does not run, execute the follow
 npx husky
 ```
 
+## Environment Variables 👨🏼‍💻
+
+On first setup you will need to create a `.env` file in the route of the project, refer to `.env.sample` for the required variables. A member of the team should
+send an encrypted copy of the `.env` file.
+
+## Compilation / Build ⚙️
+
+### TypeScript Configuration
+
+This file configures how TypeScript compiles your code:
+
+tsconfig.build.json
+
+### Extends 🔱
+
+The `extends` property specifies the path to the base configuration file which is set to `./tsconfig.json`.
+
+## Compiler Options 🔧
+
+The `compilerOptions` property specifies the compiler options.
+
+- `types` specifies the types that should be included in the compilation, `node` in this case.
+
+## Include 📂
+
+The `include` property specifies the files that should be included in the compilation.
+
+## Exclude 🚫
+
+The `exclude` property specifies the files that should be excluded from the compilation.
+
+- `node_modules` excludes the `node_modules` directory.
+- `test` excludes the `test` directory and all files that end with `.test.ts`.
+- `dist` excludes the `dist` directory.
+- `docker-compose*.yml` excludes all files that start with `docker-compose` and end with `.yml`.
+- `Dockerfile` excludes the `Dockerfile` file.
+- `logs` excludes the `logs` directory.
+
 ## Run 💡
 
 How to run `mdm` on local environment as `dev` runtime mode.
@@ -69,6 +107,15 @@ $ npm run api-test
 $ DEBUG=nock.* npm run api-test
 ```
 
+### Snapshot
+
+If you have made any changes to a request or response DTO, then you must update the snapshot please.
+OpenAPI swagger snapshot update is a manual action, please run the following command to update:
+
+```sh
+npm run snapshot:update
+```
+
 ## Docker 📦
 
 ### 1. Dockerfile
@@ -77,21 +124,26 @@ Dockerfile is used to build and run a Node.js application in a containerized env
 
 #### Stage 1: `Build`
 
-It specifies the base image as `node:19.9-alpine3.16`, which is a minimalistic image of Node.js 19.9 running on Alpine Linux 3.16. The RUN command installs bash and curl packages, then deletes the cache to reduce the image size.
+It specifies the base image as `node:19.9-alpine3.16`, which is a minimalistic image of Node.js 19.9 running on Alpine Linux 3.16. The RUN command installs bash
+and curl packages, then deletes the cache to reduce the image size.
 
-The `WORKDIR` command sets the working directory to `/app`. The `COPY` command copies package.json and package-lock.json to the /app directory, followed by the npm ci command, which installs the dependencies listed in package.json while ensuring compatibility with peer dependencies.
+The `WORKDIR` command sets the working directory to `/app`. The `COPY` command copies package.json and package-lock.json to the /app directory, followed by the
+npm ci command, which installs the dependencies listed in package.json while ensuring compatibility with peer dependencies.
 The COPY command copies the rest of the files in the current directory to the /app directory. The `npm run build` command builds the application.
 Finally, the npm ci command installs **only** the dependencies listed in `package.json`, ignoring the `devDependencies`, thus reducing the final build image size.
 
 #### Stage 2: `Production`
 
-This section sets up the production stage of the Dockerfile. It specifies the same base image as the build stage. The `WORKDIR` command sets the working directory to `/app`.
+This section sets up the production stage of the Dockerfile. It specifies the same base image as the build stage. The `WORKDIR` command sets the working
+directory to `/app`.
 The `COPY` command copies package.json, package-lock.json, node_modules/, and dist/ directories only from the build stage to the /app directory (production stage).
-Finally, the `USER` command switches the user to the node user, and the CMD command runs the npm `run start:prod` command to start the application in production mode.
+Finally, the `USER` command switches the user to the node user, and the CMD command runs the npm `run start:prod` command to start the application in production
+mode.
 
 #### Conclusion
 
-Overall, the Dockerfile sets up a secure build and deployment environment for the Node.js application, with a non-root user and a lean production image containing only the necessary dependencies and files.
+Overall, the Dockerfile sets up a secure build and deployment environment for the Node.js application, with a non-root user and a lean production image
+containing only the necessary dependencies and files.
 
 ### 2. docker-compose.yml
 
@@ -101,18 +153,24 @@ The first section defines the version of the Compose file syntax being used (ver
 
 Under the api **service**, the following options are specified:
 
-- `build`: specifies the build context for the Docker image. In this case, it is set to the current directory (.), which means that Docker will look for a Dockerfile in the current directory to build the image.
+- `build`: specifies the build context for the Docker image. In this case, it is set to the current directory (.), which means that Docker will look for a
+  Dockerfile in the current directory to build the image.
 - `image`: specifies the name of the Docker image that will be built.
 - `container_name`: specifies the name of the Docker container that will be created from the image.
 - `restart`: specifies that the container should always be restarted if it stops running.
 - `command`: specifies the command that should be run when the container starts. In this case, it is set to `npm run start:prod`.
-- `ports`: specifies the ports that should be exposed by the container. In this case, it is set to ${PORT}:${PORT}, which means that the value of the PORT environment variable will be used for both the host and container ports.
-- `volumes`: specifies any directories or files that should be mounted as volumes inside the container. In this case, it is set to `./:/app/src:rw`, which means that the current directory on the host machine will be mounted as a **read-write** volume at `/app/src` inside the container.
-- `environment`: specifies any environment variables that should be set inside the container. In this case, a list of environment variables is provided, but their values are not specified in the file since they will be referred from local `.env` file. (Please refer to `.env.sample` for getting started).
+- `ports`: specifies the ports that should be exposed by the container. In this case, it is set to ${PORT}:${PORT}, which means that the value of the PORT
+  environment variable will be used for both the host and container ports.
+- `volumes`: specifies any directories or files that should be mounted as volumes inside the container. In this case, it is set to `./:/app/src:rw`, which means
+  that the current directory on the host machine will be mounted as a **read-write** volume at `/app/src` inside the container.
+- `environment`: specifies any environment variables that should be set inside the container. In this case, a list of environment variables is provided, but
+  their values are not specified in the file since they will be referred from local `.env` file. (Please refer to `.env.sample` for getting started).
 
 The next section defines a **healthcheck** for the container, which will periodically check if the container is running correctly. The options specified are:
 
-- `test`: specifies the command that should be run to test the health of the container. In this case, it is set to `['CMD', 'curl', '-f', 'http://localhost:${PORT}']`, which means that the healthcheck will run the curl command to make a request to the container's web server and check if it receives a response.
+- `test`: specifies the command that should be run to test the health of the container. In this case, it is set to
+  `['CMD', 'curl', '-f', 'http://localhost:${PORT}']`, which means that the healthcheck will run the curl command to make a
+  request to the container's web server and check if it receives a response.
 - `retries`: specifies the number of times that the healthcheck should be retried before considering the container as unhealthy.
 - `interval`: specifies the interval at which the healthcheck should be run.
 - `timeout`: specifies the maximum amount of time that the healthcheck command can run before being considered as failed.

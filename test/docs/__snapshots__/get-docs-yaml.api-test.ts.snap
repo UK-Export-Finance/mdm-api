@@ -331,11 +331,7 @@ paths:
             type: string
       responses:
         '200':
-<<<<<<< HEAD
-          description: A DOM business centre
-=======
           description: A DOM Business centre
->>>>>>> feat/FN-3543/integrate-with-ods
           content:
             application/json:
               schema:
@@ -362,28 +358,16 @@ paths:
             type: string
       responses:
         '200':
-<<<<<<< HEAD
-          description: A DOM business centre's non working days
-=======
           description: A DOM Business centre's non working days
->>>>>>> feat/FN-3543/integrate-with-ods
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: >-
-<<<<<<< HEAD
-                    #/components/schemas/FindDomBusinessCentreNonWorkingDayMappedResponse
-        '400':
-          description: Bad request
-        '404':
-          description: Business centre not found
-=======
                     #/components/schemas/GetDomBusinessCentreNonWorkingDayMappedResponse
         '400':
           description: Bad request
->>>>>>> feat/FN-3543/integrate-with-ods
         '500':
           description: Internal server error
       summary: Get a business centre's non working days from DOM
@@ -409,34 +393,6 @@ paths:
       summary: Get business centres from DOM
       tags:
         - dom
-<<<<<<< HEAD
-  /api/v2/dom/business-centres/non-working-days:
-    get:
-      operationId: DomController_findMultipleBusinessCentresNonWorkingDays_v2
-      parameters:
-        - name: centreCodes
-          required: true
-          in: query
-          description: Unique business centre codes - separated by commas
-          schema:
-            example: AE_DXB,CM_YAO
-            type: string
-      responses:
-        '200':
-          description: Multiple DOM business centre's non working days
-          content:
-            application/json:
-              schema:
-                $ref: >-
-                  #/components/schemas/FindMultipleDomBusinessCentresNonWorkingDaysResponse
-        '400':
-          description: Bad request
-        '404':
-          description: Business centres non working days not found
-        '500':
-          description: Internal server error
-      summary: Get multiple business centre's non working days from DOM
-=======
   /api/v2/dom/product-configuration/{productType}:
     get:
       operationId: DomController_findProductConfigurations_v2
@@ -460,7 +416,6 @@ paths:
         '500':
           description: Internal server error
       summary: Get a product configurations from DOM
->>>>>>> feat/FN-3543/integrate-with-ods
       tags:
         - dom
   /api/v2/dom/product-configurations:
@@ -742,7 +697,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MarketEntity'
-      summary: Get all markets (AKA countries)
+      summary: Get all markets (aka countries)
       tags:
         - markets
   /api/v2/ods/customers/{urn}:
@@ -816,7 +771,7 @@ paths:
       responses:
         '201':
           description: ''
-      summary: Create a premium schedule sequence (AKA Income exposure)
+      summary: Create Premium Schedule sequence (aka Income exposure)
       tags:
         - premium-schedules
   /api/v1/premium/segments/{facilityId}:
@@ -840,10 +795,40 @@ paths:
                 items:
                   $ref: '#/components/schemas/PremiumScheduleEntity'
       summary: >-
-        Return previously generated premium schedule sequence/segments (AKA
+        Return previously generated Premium Schedule sequence/segments (aka
         Income exposures)
       tags:
         - premium-schedules
+  /api/v1/sector-industries:
+    get:
+      operationId: SectorIndustriesController_find_v1
+      parameters:
+        - name: ukefSectorId
+          required: false
+          in: query
+          description: Search by UKEF Sector id, returns multiple Industries
+          schema:
+            example: '1010'
+            type: string
+        - name: ukefIndustryId
+          required: false
+          in: query
+          description: Search by UKEF Industry id, most likely returns 1 result
+          schema:
+            example: '02400'
+            type: string
+      responses:
+        '200':
+          description: UKEF sectors/industries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SectorIndustryEntity'
+      summary: Get UKEF Sectors/Industries Mapping To ACBS Sectors/Industries
+      tags:
+        - sector-industries
   /api/v1/yield-rates:
     get:
       operationId: YieldRatesController_find_v1
@@ -1014,18 +999,23 @@ components:
         partyUrn:
           type: string
           description: The unique UKEF ID of the customer
+          example: '00302069'
         name:
           type: string
           description: Customer company name
+          example: Testing Systems Ltd
         sfId:
           type: string
           description: The unique Salesforce ID
+          example: 000A000000a1BBbCDE
         companyRegNo:
           type: string
           description: The Companies House registration number
+          example: '06012345'
         type:
           type: string
           description: Customer company type
+          example: Association
           enum:
             - Association
             - Corporate Overseas
@@ -1042,6 +1032,7 @@ components:
         subtype:
           type: string
           description: Customer company sub-type
+          example: Alternative Finance Provider
           enum:
             - Alternative Finance Provider
             - Bank
@@ -1069,6 +1060,37 @@ components:
         isLegacyRecord:
           type: boolean
           description: False for Salesforce account record, True for legacy Party DB record
+          example: false
+        probabilityOfDefault:
+          type: number
+          description: Probability of default of the company
+          example: 14.1
+        ukEntity:
+          type: string
+          description: Whether the company is UK based or not
+          example: 'Yes'
+        ukefIndustryName:
+          type: string
+          description: UKEF industry identifier code
+          example: AGRICULTURE, HORTICULTURE & FISHERIES
+        ukefSectorName:
+          type: string
+          description: UKEF industry sector identifier code
+          example: 'CIVIL: AGRICULTURE, HORTICULTURE & FISHERIES'
+        riskEntity:
+          type: string
+          description: Risk entity
+          example:
+            CORPORATE: Corporate
+        creditClassificationStatus:
+          type: string
+          description: Credit classification status
+          example:
+            GOOD: Good
+        creditClassificationDate:
+          type: string
+          description: Credit Classification Status Date (dd/mm/yyyy)
+          example: 01/01/1970
       required:
         - partyUrn
         - name
@@ -1077,24 +1099,47 @@ components:
         - type
         - subtype
         - isLegacyRecord
+        - probabilityOfDefault
+        - ukEntity
+        - ukefIndustryName
+        - ukefSectorName
+        - riskEntity
+        - creditClassificationStatus
+        - creditClassificationDate
     DTFSCustomerDto:
       type: object
       properties:
         companyRegistrationNumber:
           type: string
-          description: Company Registration Number
-          minLength: 8
-          maxLength: 10
+          description: Company registration number
+          example: '06012345'
         companyName:
           type: string
-          description: Company Name
+          description: Company name
+          example: Testing Systems Ltd
         probabilityOfDefault:
           type: number
-          description: Probability of Default
+          description: Probability of default
+          example: 14.1
+        ukEntity:
+          type: string
+          description: UK entity
+          example: 'Yes'
+        ukefIndustryName:
+          type: string
+          description: UKEF industry identifier code
+          example: AGRICULTURE, HORTICULTURE & FISHERIES
+        ukefSectorName:
+          type: string
+          description: UKEF industry sector identifier code
+          example: 'CIVIL: AGRICULTURE, HORTICULTURE & FISHERIES'
       required:
         - companyRegistrationNumber
         - companyName
         - probabilityOfDefault
+        - ukEntity
+        - ukefIndustryName
+        - ukefSectorName
     CreateUkefIdDto:
       type: object
       properties:
@@ -1159,11 +1204,7 @@ components:
       required:
         - code
         - name
-<<<<<<< HEAD
-    FindDomBusinessCentreNonWorkingDayMappedResponse:
-=======
     GetDomBusinessCentreNonWorkingDayMappedResponse:
->>>>>>> feat/FN-3543/integrate-with-ods
       type: object
       properties:
         code:
@@ -1182,19 +1223,6 @@ components:
         - code
         - name
         - date
-<<<<<<< HEAD
-    FindMultipleDomBusinessCentresNonWorkingDaysResponse:
-      type: object
-      properties:
-        rawDefinition:
-          description: Multiple business centre's non working days
-          allOf:
-            - $ref: >-
-                #/components/schemas/FindDomBusinessCentreNonWorkingDayMappedResponse
-      required:
-        - rawDefinition
-=======
->>>>>>> feat/FN-3543/integrate-with-ods
     GetDomProductConfigConfig:
       type: object
       properties:

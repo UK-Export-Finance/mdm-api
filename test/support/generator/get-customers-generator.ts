@@ -1,4 +1,5 @@
-import { ENUMS } from '@ukef/constants';
+import { ENUMS, EXAMPLES } from '@ukef/constants';
+import { salesforceFormattedCurrentDate } from '@ukef/helpers/date-formatter.helper';
 import { GetCustomersQueryDto } from '@ukef/modules/customers/dto/get-customers-query.dto';
 import { GetCustomersResponse } from '@ukef/modules/customers/dto/get-customers-response.dto';
 import { GetCustomersInformaticaQueryDto } from '@ukef/modules/informatica/dto/get-customers-informatica-query.dto';
@@ -17,9 +18,16 @@ export class GetCustomersGenerator extends AbstractGenerator<CustomerValues, Gen
       name: this.valueGenerator.word(),
       sfId: this.valueGenerator.word(),
       companyRegNo: '0' + this.valueGenerator.stringOfNumericCharacters({ length: 7 }),
+      probabilityOfDefault: this.valueGenerator.integer({ min: 1, max: 14 }),
+      ukEntity: this.valueGenerator.stringOfNumericCharacters({ length: 3 }),
+      ukefIndustryName: this.valueGenerator.stringOfNumericCharacters({ length: 100 }),
+      ukefSectorName: this.valueGenerator.stringOfNumericCharacters({ length: 100 }),
       type: null,
       subtype: null,
       isLegacyRecord: this.valueGenerator.boolean(),
+      riskEntity: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
+      creditClassificationStatus: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
+      creditClassificationDate: salesforceFormattedCurrentDate(),
     };
   }
 
@@ -48,7 +56,7 @@ export class GetCustomersGenerator extends AbstractGenerator<CustomerValues, Gen
       ...{ includeLegacyData: v.fallbackToLegacyData },
     }));
 
-    const informaticaPath: string = '/account?' + new URLSearchParams(informaticaRequest[0] as URLSearchParams).toString();
+    const informaticaPath: string = '/v1/p-sa-impl-get-account-or-legacy?' + new URLSearchParams(informaticaRequest[0] as URLSearchParams).toString();
 
     const mdmPath: string = '/api/v1/customers?' + new URLSearchParams(request[0] as URLSearchParams).toString();
 
@@ -58,9 +66,16 @@ export class GetCustomersGenerator extends AbstractGenerator<CustomerValues, Gen
         name: v.name,
         sfId: v.sfId,
         companyRegNo: v.companyRegNo,
+        probabilityOfDefault: v.probabilityOfDefault,
+        ukEntity: v.ukEntity,
+        ukefIndustryName: v.ukefIndustryName,
+        ukefSectorName: v.ukefSectorName,
         type: v.type,
         subtype: v.subtype,
         isLegacyRecord: v.isLegacyRecord,
+        riskEntity: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
+        creditClassificationStatus: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
+        creditClassificationDate: v.creditClassificationDate,
       },
     ]);
 
@@ -79,9 +94,16 @@ interface CustomerValues {
   name: string;
   sfId: string;
   companyRegNo: string;
+  probabilityOfDefault: number;
+  ukEntity: string;
+  ukefIndustryName: string;
+  ukefSectorName: string;
   type: string;
   subtype: string;
   isLegacyRecord: boolean;
+  riskEntity: string;
+  creditClassificationStatus: string;
+  creditClassificationDate: string;
 }
 
 interface GenerateOptions {
