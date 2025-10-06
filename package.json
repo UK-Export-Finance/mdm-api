@@ -59,7 +59,7 @@
     "class-validator": "^0.14.2",
     "compression": "^1.8.1",
     "date-fns": "^4.1.0",
-    "dotenv": "^17.2.2",
+    "dotenv": "^17.2.3",
     "express-basic-auth": "^1.2.1",
     "lodash": "^4.17.21",
     "mssql": "^11.0.1",
