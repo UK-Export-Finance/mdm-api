@@ -3,6 +3,72 @@
 exports[`GET /openapi/yaml matches the snapshot 1`] = `
 "openapi: 3.0.0
 paths:
+  /api/v1/companies:
+    get:
+      operationId: CompaniesController_getCompanyByRegistrationNumber_v1
+      parameters:
+        - name: registrationNumber
+          required: true
+          in: query
+          description: The Companies House registration number of the company to find.
+          schema:
+            minLength: 8
+            maxLength: 8
+            pattern: ^(([A-Z]{2}|[A-Z]\\d|\\d{2})(\\d{6}|\\d{5}[A-Z]))$
+            example: '00000001'
+            type: string
+      responses:
+        '200':
+          description: >-
+            Returns the company matching the Companies House registration
+            number.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCompanyResponse'
+        '400':
+          description: Invalid Companies House registration number.
+        '404':
+          description: Company not found.
+        '422':
+          description: >-
+            Company is an overseas company. UKEF can only process applications
+            from companies based in the UK.
+        '500':
+          description: Internal server error.
+      summary: Get company by Companies House registration number
+      tags:
+        - companies
+  /api/v1/sector-industries:
+    get:
+      operationId: SectorIndustriesController_find_v1
+      parameters:
+        - name: ukefSectorId
+          required: false
+          in: query
+          description: Search by UKEF Sector id, returns multiple Industries
+          schema:
+            example: '1010'
+            type: string
+        - name: ukefIndustryId
+          required: false
+          in: query
+          description: Search by UKEF Industry id, most likely returns 1 result
+          schema:
+            example: '02400'
+            type: string
+      responses:
+        '200':
+          description: UKEF sectors/industries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SectorIndustryEntity'
+      summary: Get UKEF sectors/industries mapping To ACBS sectors/industries
+      tags:
+        - sector-industries
   /api/v1/currencies:
     get:
       operationId: CurrenciesController_findAll_v1
@@ -55,9 +121,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GetCurrencyExchangeDto'
-      summary: >-
-        Get the Active exchange rate based on source and target exchange rates.
-        Query parameters are mandatory for this endpoint.
+      summary: Get the active exchange rate based on source and target exchange rates
       tags:
         - currencies
   /api/v1/currencies/{isoCode}:
@@ -73,14 +137,14 @@ paths:
             type: string
       responses:
         '200':
-          description: Currency details based on ISO Code
+          description: Currency details from ISO code
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/CurrencyEntity'
-      summary: Get the currency details based on ISO Code
+      summary: Get a currency details from ISO code
       tags:
         - currencies
   /api/v1/customers:
@@ -254,6 +318,124 @@ paths:
       summary: Get information about UKEF ID
       tags:
         - numbers
+  /api/v2/dom/business-centre/{centreCode}:
+    get:
+      operationId: DomController_findBusinessCentre_v2
+      parameters:
+        - name: centreCode
+          required: true
+          in: path
+          description: Unique business centre code
+          schema:
+            example: GH_ACC
+            type: string
+      responses:
+        '200':
+          description: A DOM Business centre
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FindDomBusinessCentreResponse'
+        '400':
+          description: Bad request
+        '404':
+          description: Business centre not found
+        '500':
+          description: Internal server error
+      summary: Get a business centre from DOM
+      tags:
+        - dom
+  /api/v2/dom/business-centre/{centreCode}/non-working-days:
+    get:
+      operationId: DomController_findBusinessCentreNonWorkingDays_v2
+      parameters:
+        - name: centreCode
+          required: true
+          in: path
+          description: Unique business centre code
+          schema:
+            example: GH_ACC
+            type: string
+      responses:
+        '200':
+          description: A DOM Business centre's non working days
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: >-
+                    #/components/schemas/GetDomBusinessCentreNonWorkingDayMappedResponse
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+      summary: Get a business centre's non working days from DOM
+      tags:
+        - dom
+  /api/v2/dom/business-centres:
+    get:
+      operationId: DomController_getBusinessCentres_v2
+      parameters: []
+      responses:
+        '200':
+          description: DOM business centres
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FindDomBusinessCentreResponse'
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+      summary: Get business centres from DOM
+      tags:
+        - dom
+  /api/v2/dom/product-configuration/{productType}:
+    get:
+      operationId: DomController_findProductConfigurations_v2
+      parameters:
+        - name: productType
+          required: true
+          in: path
+          description: Unique product type
+          schema:
+            example: EXIP
+            type: string
+      responses:
+        '200':
+          description: DOM product configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDomProductConfigResponse'
+        '404':
+          description: Product configuration not found
+        '500':
+          description: Internal server error
+      summary: Get a product configurations from DOM
+      tags:
+        - dom
+  /api/v2/dom/product-configurations:
+    get:
+      operationId: DomController_getProductConfigurations_v2
+      parameters: []
+      responses:
+        '200':
+          description: DOM product configurations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetDomProductConfigResponse'
+        '500':
+          description: Internal server error
+      summary: Get all product configurations from DOM
+      tags:
+        - dom
   /api/v1/emails:
     post:
       operationId: EmailsController_postEmail_v1
@@ -321,9 +503,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ExposurePeriodDto'
-      summary: Calculate exposure period in months.
+      summary: Calculate exposure period in months
       tags:
         - exposure-period
+  /api/v1/geospatial/addresses/postcode:
+    get:
+      operationId: GeospatialController_getAddressesByPostcode_v1
+      parameters:
+        - name: postcode
+          required: true
+          in: query
+          description: Postcode to search for
+          schema:
+            minLength: 5
+            maxLength: 8
+            pattern: >-
+              ^[A-Za-z]{1,2}[\\dRr][\\dA-Za-z]?\\s?\\d[ABD-HJLNP-UW-Zabd-hjlnp-uw-z]{2}$
+            example: SW1A 2AQ
+            type: string
+      responses:
+        '200':
+          description: Returns simplified addresses that are ready to show to users.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetAddressesResponseItem'
+        '404':
+          description: No addresses found
+      summary: >-
+        Get addresses from Ordnance Survey Delivery Point Address (DPA) system
+        by postcode. Will accept a full valid postcode
+      tags:
+        - geospatial
   /api/v1/ready:
     get:
       operationId: HealthcheckController_check_v1
@@ -449,7 +662,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/InterestRatesEntity'
-      summary: Get all Interest rates
+      summary: Get all interest rates
       tags:
         - interest-rates
   /api/v1/markets:
@@ -487,6 +700,62 @@ paths:
       summary: Get all markets (aka countries)
       tags:
         - markets
+  /api/v2/ods/customers/{urn}:
+    get:
+      operationId: OdsController_findCustomer_v2
+      parameters:
+        - name: urn
+          required: true
+          in: path
+          description: Unique UKEF customer ID
+          schema:
+            pattern: ^\\d{8}$
+            example: '00302069'
+            type: string
+      responses:
+        '200':
+          description: A customer matching the provided URN
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetOdsCustomerResponse'
+        '400':
+          description: Invalid search parameters provided
+        '404':
+          description: Customer not found
+        '500':
+          description: Internal server error
+      summary: Get a customer from ODS
+      tags:
+        - ods
+  /api/v2/ods/deal/{id}:
+    get:
+      operationId: OdsController_findDeal_v2
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: Unique UKEF deal ID
+          schema:
+            pattern: ^00\\d{8}$
+            example: '0030000321'
+            type: string
+      responses:
+        '200':
+          description: A deal matching the provided deal ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetOdsDealResponse'
+        '400':
+          description: Invalid search parameters provided
+        '404':
+          description: Deal not found
+        '500':
+          description: Internal server error
+      summary: Get a deal from ODS
+      tags:
+        - ods
   /api/v1/premium/schedule:
     post:
       operationId: PremiumSchedulesController_create_v1
@@ -583,74 +852,6 @@ paths:
       summary: Get Yield rates. These are updated daily from bloomberg
       tags:
         - yield-rates
-  /api/v1/geospatial/addresses/postcode:
-    get:
-      operationId: GeospatialController_getAddressesByPostcode_v1
-      parameters:
-        - name: postcode
-          required: true
-          in: query
-          description: Postcode to search for
-          schema:
-            minLength: 5
-            maxLength: 8
-            pattern: >-
-              ^[A-Za-z]{1,2}[\\dRr][\\dA-Za-z]?\\s?\\d[ABD-HJLNP-UW-Zabd-hjlnp-uw-z]{2}$
-            example: SW1A 2AQ
-            type: string
-      responses:
-        '200':
-          description: Returns simplified addresses that are ready to show to users.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/GetAddressesResponseItem'
-        '404':
-          description: No addresses found
-      summary: >-
-        A search based on a property's postcode. Will accept a full valid
-        postcode. Returns addresses from Ordnance Survey Delivery Point Address
-        (DPA) system.
-      tags:
-        - geospatial
-  /api/v1/companies:
-    get:
-      operationId: CompaniesController_getCompanyByRegistrationNumber_v1
-      parameters:
-        - name: registrationNumber
-          required: true
-          in: query
-          description: The Companies House registration number of the company to find.
-          schema:
-            minLength: 8
-            maxLength: 8
-            pattern: ^(([A-Z]{2}|[A-Z]\\d|\\d{2})(\\d{6}|\\d{5}[A-Z]))$
-            example: '00000001'
-            type: string
-      responses:
-        '200':
-          description: >-
-            Returns the company matching the Companies House registration
-            number.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GetCompanyResponse'
-        '400':
-          description: Invalid Companies House registration number.
-        '404':
-          description: Company not found.
-        '422':
-          description: >-
-            Company is an overseas company. UKEF can only process applications
-            from companies based in the UK.
-        '500':
-          description: Internal server error.
-      summary: Get company by Companies House registration number.
-      tags:
-        - companies
 info:
   title: MDM API Specification
   description: MDM API documentation
@@ -665,6 +866,70 @@ components:
       in: header
       name: x-api-key
   schemas:
+    GetCompanyResponse:
+      type: object
+      properties: {}
+    SectorIndustryEntity:
+      type: object
+      properties:
+        ukefSectorId:
+          type: number
+          example: 1001
+        ukefSectorName:
+          type: string
+          example: Agriculture, Forestry and Fishing
+        internalNo:
+          type: number
+          example: null
+          description: Currently all values are null
+        ukefIndustryId:
+          type: string
+          example: '01140'
+        ukefIndustryName:
+          type: string
+          example: Growing of rice
+        acbsSectorId:
+          type: string
+          example: '03'
+        acbsSectorName:
+          type: string
+          example: 'CIVIL: AGRICULTURE, HORTICULTURE & FISHERIES'
+        acbsIndustryId:
+          type: string
+          example: '0301'
+        acbsIndustryName:
+          type: string
+          example: AGRICULTURE, HORTICULTURE & FISHERIES
+        created:
+          format: date-time
+          type: string
+          example: '2010-03-15T16:20:16.870Z'
+        updated:
+          format: date-time
+          type: string
+          example: '2010-03-15T16:20:16.867Z'
+        effectiveFrom:
+          format: date-time
+          type: string
+          example: '2010-03-15T16:20:16.870Z'
+        effectiveTo:
+          format: date-time
+          type: string
+          example: '9999-12-31T00:00:00.000Z'
+      required:
+        - ukefSectorId
+        - ukefSectorName
+        - internalNo
+        - ukefIndustryId
+        - ukefIndustryName
+        - acbsSectorId
+        - acbsSectorName
+        - acbsIndustryId
+        - acbsIndustryName
+        - created
+        - updated
+        - effectiveFrom
+        - effectiveTo
     CurrencyEntity:
       type: object
       properties:
@@ -925,6 +1190,198 @@ components:
         - createdBy
         - createdDatetime
         - requestingSystem
+    FindDomBusinessCentreResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Business centre code
+          example: GH_ACC
+        name:
+          type: string
+          description: Non working day name
+          example: Accra
+      required:
+        - code
+        - name
+    GetDomBusinessCentreNonWorkingDayMappedResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Business centre code
+          example: GH_ACC
+        name:
+          type: string
+          description: Non working day name
+          example: Weekend
+        date:
+          type: string
+          description: Non working day date
+          example: '2025-07-05'
+      required:
+        - code
+        - name
+        - date
+    GetDomProductConfigConfig:
+      type: object
+      properties:
+        commitmentDate:
+          type: string
+          description: The product's 'commitment date' requirement
+          example: REQUIRED
+        issuedDate:
+          type: string
+          description: The product's 'issued date' requirement
+          example: REQUIRED
+        effectiveDate:
+          type: string
+          description: The product's 'effective date' requirement
+          example: REQUIRED
+        availabilityEndDate:
+          type: string
+          description: The product's 'availability end date' requirement
+          example: REQUIRED
+        expiryDate:
+          type: string
+          description: The product's 'expiry date' requirement
+          example: REQUIRED
+        creditType:
+          type: string
+          description: The product's 'credit type' requirement
+          example: REQUIRED
+        participations:
+          type: string
+          description: The product's 'participations' requirement
+          example: REQUIRED
+        scheduledRepayments:
+          type: string
+          description: The product's 'scheduled repayments' requirement
+          example: REQUIRED
+        nonCashObligations:
+          type: string
+          description: The product's 'non cash obligations' requirement
+          example: REQUIRED
+        cashObligations:
+          type: string
+          description: The product's 'cash obligations' requirement
+          example: REQUIRED
+        accrualSchedule:
+          type: string
+          description: The product's 'accural schedule' requirement
+          example: REQUIRED
+        pimOwner:
+          type: string
+          description: The product's 'PIM owner' requirement
+          example: REQUIRED
+        riskRating:
+          type: string
+          description: The product's 'risk rating' requirement
+          example: REQUIRED
+        preCreditPeriod:
+          type: string
+          description: The product's 'pre credit period' requirement
+          example: REQUIRED
+        creditPeriod:
+          type: string
+          description: The product's 'credit period' requirement
+          example: REQUIRED
+        lossGivenDefault:
+          type: string
+          description: The product's 'loss given default' requirement
+          example: REQUIRED
+        provisionRate:
+          type: string
+          description: The product's 'provision rate' requirement
+          example: REQUIRED
+        forecastYear:
+          type: string
+          description: The product's 'forecast year' requirement
+          example: NOT_APPLICABLE
+        bankRate:
+          type: string
+          description: The product's 'bank rate' requirement
+          example: OPTIONAL
+      required:
+        - commitmentDate
+        - issuedDate
+        - effectiveDate
+        - availabilityEndDate
+        - expiryDate
+        - creditType
+        - participations
+        - scheduledRepayments
+        - nonCashObligations
+        - cashObligations
+        - accrualSchedule
+        - pimOwner
+        - riskRating
+        - preCreditPeriod
+        - creditPeriod
+        - lossGivenDefault
+        - provisionRate
+        - forecastYear
+        - bankRate
+    GetDomProductConfigResponse:
+      type: object
+      properties:
+        productType:
+          type: string
+          description: The product type
+          example: EXIP
+        configuration:
+          description: The product's configuration
+          example:
+            commitmentDate: REQUIRED
+            issuedDate: REQUIRED
+            effectiveDate: REQUIRED
+            availabilityEndDate: REQUIRED
+            expiryDate: REQUIRED
+            creditType: REQUIRED
+            participations: REQUIRED
+            scheduledRepayments: REQUIRED
+            nonCashObligations: REQUIRED
+            cashObligations: REQUIRED
+            accrualSchedule: REQUIRED
+            pimOwner: REQUIRED
+            riskRating: REQUIRED
+            preCreditPeriod: REQUIRED
+            creditPeriod: REQUIRED
+            lossGivenDefault: REQUIRED
+            provisionRate: REQUIRED
+            forecastYear: NOT_APPLICABLE
+            bankRate: OPTIONAL
+          allOf:
+            - $ref: '#/components/schemas/GetDomProductConfigConfig'
+        counterpartySubtypes:
+          description: The product's counterparty subtypes
+          example:
+            - BROKER
+            - GUARANTOR
+          type: array
+          items:
+            type: string
+        productSubtypes:
+          description: The product's subtypes
+          example: []
+          type: array
+          items:
+            type: string
+        account:
+          description: The UKEF accounts that the product is in
+          example:
+            - '1'
+            - '2'
+            - '3'
+          type: array
+          items:
+            type: string
+      required:
+        - productType
+        - configuration
+        - counterpartySubtypes
+        - productSubtypes
+        - account
     PostEmailsRequestDto:
       type: object
       properties:
@@ -1062,6 +1519,56 @@ components:
           description: Exposure in months
       required:
         - exposurePeriod
+    GetAddressesResponseItem:
+      type: object
+      properties:
+        organisationName:
+          type: string
+          description: Organisation name, if available
+          example: CHURCHILL MUSEUM & CABINET WAR ROOMS
+          nullable: true
+        addressLine1:
+          type: string
+          description: Address line 1
+          example: CLIVE STEPS KING CHARLES STREET
+        addressLine2:
+          type: string
+          description: Address line 2
+          example: null
+          nullable: true
+        addressLine3:
+          type: string
+          description: Address line 3
+          example: null
+          nullable: true
+        locality:
+          type: string
+          description: Locality or town
+          example: LONDON
+          nullable: true
+        postalCode:
+          type: string
+          description: Postcode
+          example: SW1A 2AQ
+          nullable: true
+        country:
+          type: string
+          description: Country of address record
+          example: England
+          enum:
+            - England
+            - Northern Ireland
+            - Scotland
+            - Wales
+          nullable: true
+      required:
+        - organisationName
+        - addressLine1
+        - addressLine2
+        - addressLine3
+        - locality
+        - postalCode
+        - country
     InterestRatesEntity:
       type: object
       properties:
@@ -1220,6 +1727,39 @@ components:
         - shortTermCoverAvailabilityDesc
         - NBIIssue
         - active
+    GetOdsCustomerResponse:
+      type: object
+      properties:
+        urn:
+          type: string
+          description: Unique UKEF customer ID
+          example: '00312345'
+        name:
+          type: string
+          description: Customer name
+          example: Test Company name
+      required:
+        - urn
+        - name
+    GetOdsDealResponse:
+      type: object
+      properties:
+        dealId:
+          type: string
+          description: Unique UKEF deal ID
+          example: '0030000321'
+        name:
+          type: string
+          description: Deal name
+          example: ABC PARIS CLUB 01
+        description:
+          type: string
+          description: Deal description
+          example: Paris Club agreement
+      required:
+        - dealId
+        - name
+        - description
     CreatePremiumScheduleDto:
       type: object
       properties:
@@ -1359,67 +1899,6 @@ components:
         - created
         - updated
         - isActive
-    SectorIndustryEntity:
-      type: object
-      properties:
-        ukefSectorId:
-          type: number
-          example: 1001
-        ukefSectorName:
-          type: string
-          example: Agriculture, Forestry and Fishing
-        internalNo:
-          type: number
-          example: null
-          description: Currently all values are null
-        ukefIndustryId:
-          type: string
-          example: '01140'
-        ukefIndustryName:
-          type: string
-          example: Growing of rice
-        acbsSectorId:
-          type: string
-          example: '03'
-        acbsSectorName:
-          type: string
-          example: 'CIVIL: AGRICULTURE, HORTICULTURE & FISHERIES'
-        acbsIndustryId:
-          type: string
-          example: '0301'
-        acbsIndustryName:
-          type: string
-          example: AGRICULTURE, HORTICULTURE & FISHERIES
-        created:
-          format: date-time
-          type: string
-          example: '2010-03-15T16:20:16.870Z'
-        updated:
-          format: date-time
-          type: string
-          example: '2010-03-15T16:20:16.867Z'
-        effectiveFrom:
-          format: date-time
-          type: string
-          example: '2010-03-15T16:20:16.870Z'
-        effectiveTo:
-          format: date-time
-          type: string
-          example: '9999-12-31T00:00:00.000Z'
-      required:
-        - ukefSectorId
-        - ukefSectorName
-        - internalNo
-        - ukefIndustryId
-        - ukefIndustryName
-        - acbsSectorId
-        - acbsSectorName
-        - acbsIndustryId
-        - acbsIndustryName
-        - created
-        - updated
-        - effectiveFrom
-        - effectiveTo
     YieldRateEntity:
       type: object
       properties:
@@ -1480,59 +1959,6 @@ components:
         - updated
         - effectiveTo
         - effectiveFrom
-    GetAddressesResponseItem:
-      type: object
-      properties:
-        organisationName:
-          type: string
-          description: Organisation name, if available
-          example: CHURCHILL MUSEUM & CABINET WAR ROOMS
-          nullable: true
-        addressLine1:
-          type: string
-          description: Address line 1
-          example: CLIVE STEPS KING CHARLES STREET
-        addressLine2:
-          type: string
-          description: Address line 2
-          example: null
-          nullable: true
-        addressLine3:
-          type: string
-          description: Address line 3
-          example: null
-          nullable: true
-        locality:
-          type: string
-          description: Locality or town
-          example: LONDON
-          nullable: true
-        postalCode:
-          type: string
-          description: Postcode
-          example: SW1A 2AQ
-          nullable: true
-        country:
-          type: string
-          description: Country of address record
-          example: England
-          enum:
-            - England
-            - Northern Ireland
-            - Scotland
-            - Wales
-          nullable: true
-      required:
-        - organisationName
-        - addressLine1
-        - addressLine2
-        - addressLine3
-        - locality
-        - postalCode
-        - country
-    GetCompanyResponse:
-      type: object
-      properties: {}
 security:
   - ApiKeyHeader: []
 "

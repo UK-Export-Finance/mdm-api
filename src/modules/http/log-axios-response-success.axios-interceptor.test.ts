@@ -36,13 +36,13 @@ describe('logAxiosResponseSuccess', () => {
     statusText,
   };
 
-  let logger: PinoLogger;
+  let mockLogger: PinoLogger;
   let logAxiosResponseSuccess: AxiosResponseSuccessInterceptor;
 
   beforeEach(() => {
-    logger = new PinoLogger({});
-    logger.debug = jest.fn();
-    logAxiosResponseSuccess = logAxiosResponseSuccessWith(logger);
+    mockLogger = new PinoLogger({});
+    mockLogger.debug = jest.fn();
+    logAxiosResponseSuccess = logAxiosResponseSuccessWith(mockLogger);
 
     (filterAxiosResponseForLogging as jest.Mock).mockReset();
     when(filterAxiosResponseForLogging).calledWith(response).mockReturnValueOnce(filteredResponse);
@@ -51,7 +51,7 @@ describe('logAxiosResponseSuccess', () => {
   it('logs the filtered response at debug level using key INCOMING_RESPONSE_LOG_KEY', () => {
     logAxiosResponseSuccess(response);
 
-    expect(logger.debug).toHaveBeenCalledWith({ [INCOMING_RESPONSE_LOG_KEY]: filteredResponse }, 'Received successful HTTP response.');
+    expect(mockLogger.debug).toHaveBeenCalledWith({ [INCOMING_RESPONSE_LOG_KEY]: filteredResponse }, 'Received successful HTTP response.');
   });
 
   it('returns the original response', () => {

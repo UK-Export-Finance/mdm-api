@@ -3,7 +3,11 @@
   "compilerOptions": {
     "types": ["node"]
   },
-  "include": ["src", "jest.config.ts"],
+  "include": [
+    "src",
+    "src/helper-modules/dom/*.json",
+    "jest.config.ts",
+  ],
   "exclude": [
     // NPM
     "node_modules",

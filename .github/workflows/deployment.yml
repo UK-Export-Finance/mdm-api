@@ -84,7 +84,7 @@ jobs:
           inlineScript: |
             # Basic
             az configure --defaults location=${{ vars.REGION }}
-            az configure --defaults group=rg-${{ env.PRODUCT }}-${{ github.ref_name }}-${{ vars.VERSION }}
+            az configure --defaults group=rg-${{ env.PRODUCT }}-${{ env.ENVIRONMENT }}-${{ vars.VERSION }}
 
       - name: CLI 📝
         run: |
@@ -135,6 +135,12 @@ jobs:
             "DATABASE_NUMBER_GENERATOR_NAME=${{ secrets.DATABASE_NUMBER_GENERATOR_NAME }}" \
             "DATABASE_CEDAR_NAME=${{ secrets.DATABASE_CEDAR_NAME }}" \
             "DATABASE_CIS_NAME=${{ secrets.DATABASE_CIS_NAME }}" \
+            "DATABASE_ODS_HOST=${{ secrets.DATABASE_ODS_HOST }}" \
+            "DATABASE_ODS_PORT=${{ secrets.DATABASE_ODS_PORT }}" \
+            "DATABASE_ODS_CLIENT_ID=${{ secrets.DATABASE_ODS_CLIENT_ID }}" \
+            "DATABASE_ODS_TENANT_ID=${{ secrets.DATABASE_ODS_TENANT_ID }}" \
+            "DATABASE_ODS_CLIENT_SECRET=${{ secrets.DATABASE_ODS_CLIENT_SECRET }}" \
+            "DATABASE_ODS_NAME=${{ secrets.DATABASE_ODS_NAME }}" \
             "APIM_INFORMATICA_URL=${{ secrets.APIM_INFORMATICA_URL }}" \
             "APIM_INFORMATICA_USERNAME=${{ secrets.APIM_INFORMATICA_USERNAME }}" \
             "APIM_INFORMATICA_PASSWORD=${{ secrets.APIM_INFORMATICA_PASSWORD }}" \
@@ -160,7 +166,8 @@ jobs:
             "SALESFORCE_USERNAME=${{ secrets.SALESFORCE_USERNAME }}" \
             "SALESFORCE_PASSWORD=${{ secrets.SALESFORCE_PASSWORD }}" \
             "SALESFORCE_MAX_REDIRECTS=${{ secrets.SALESFORCE_MAX_REDIRECTS }}" \
-            "SALESFORCE_TIMEOUT=${{ secrets.SALESFORCE_TIMEOUT }}"
+            "SALESFORCE_TIMEOUT=${{ secrets.SALESFORCE_TIMEOUT }}" \
+            "DOM_ODS_HTTP_VERSION=${{ vars.DOM_ODS_HTTP_VERSION }}"
 
       - name: Import ⬇️
         if: ${{ '' != env.API_ID }}

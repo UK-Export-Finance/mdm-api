@@ -11,7 +11,7 @@ export class InterestRatesController {
 
   @Get()
   @ApiOperation({
-    summary: 'Get all Interest rates',
+    summary: 'Get all interest rates',
   })
   @ApiResponse({
     status: 200,

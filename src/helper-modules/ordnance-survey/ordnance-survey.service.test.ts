@@ -1,6 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
-import { GEOSPATIAL } from '@ukef/constants';
+import { EXAMPLES } from '@ukef/constants';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { AxiosError } from 'axios';
 import { when } from 'jest-when';
@@ -18,7 +18,7 @@ describe('OrdnanceSurveyService', () => {
   let configServiceGet: jest.Mock;
   let service: OrdnanceSurveyService;
 
-  const testPostcode = GEOSPATIAL.EXAMPLES.ENGLISH_POSTCODE;
+  const testPostcode = EXAMPLES.GEOSPATIAL.ENGLISH_POSTCODE;
   const testKey = valueGenerator.string({ length: 10 });
   const basePath = '/search/places/v1/postcode';
 

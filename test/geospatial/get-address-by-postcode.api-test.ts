@@ -1,4 +1,4 @@
-import { GEOSPATIAL } from '@ukef/constants';
+import { EXAMPLES, GEOSPATIAL } from '@ukef/constants';
 import { IncorrectAuthArg, withClientAuthenticationTests } from '@ukef-test/common-tests/client-authentication-api-tests';
 import { Api } from '@ukef-test/support/api';
 import { ENVIRONMENT_VARIABLES } from '@ukef-test/support/environment-variables';
@@ -22,7 +22,7 @@ describe('GET /geospatial/addresses/postcode?postcode=', () => {
     getAddressesOrdnanceSurveyMultipleMatchingAddressesResponse,
     ordnanceSurveyAuthErrorResponse,
   } = new GetGeospatialAddressesGenerator(valueGenerator).generate({
-    postcode: GEOSPATIAL.EXAMPLES.ENGLISH_POSTCODE,
+    postcode: EXAMPLES.GEOSPATIAL.ENGLISH_POSTCODE,
     key: ENVIRONMENT_VARIABLES.ORDNANCE_SURVEY_KEY,
     numberToGenerate: 1,
   });
@@ -53,19 +53,19 @@ describe('GET /geospatial/addresses/postcode?postcode=', () => {
 
   it.each([
     {
-      postcode: GEOSPATIAL.EXAMPLES.ENGLISH_POSTCODE,
+      postcode: EXAMPLES.GEOSPATIAL.ENGLISH_POSTCODE,
       description: 'for English postcode',
     },
     {
-      postcode: GEOSPATIAL.EXAMPLES.NORTHERN_IRELAND_POSTCODE,
+      postcode: EXAMPLES.GEOSPATIAL.NORTHERN_IRELAND_POSTCODE,
       description: 'for Northern Ireland postcode',
     },
     {
-      postcode: GEOSPATIAL.EXAMPLES.SCOTLAND_POSTCODE,
+      postcode: EXAMPLES.GEOSPATIAL.SCOTLAND_POSTCODE,
       description: 'for Scottish postcode',
     },
     {
-      postcode: GEOSPATIAL.EXAMPLES.WALES_POSTCODE,
+      postcode: EXAMPLES.GEOSPATIAL.WALES_POSTCODE,
       description: 'for Wales postcode',
     },
   ])('returns a 200 response $description', async ({ postcode }) => {
