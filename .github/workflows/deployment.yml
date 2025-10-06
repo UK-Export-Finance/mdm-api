@@ -50,7 +50,6 @@ jobs:
     runs-on: [self-hosted, APIM, deployment]
     outputs:
       product: ${{ env.PRODUCT }}
-      # TODO: Remove the branch name before merging to dev
       environment: ${{ env.ENVIRONMENT }}
       timezone: ${{ env.TIMEZONE }}
     steps:
