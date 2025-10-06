@@ -1,5 +1,5 @@
 import { BadRequestException } from '@nestjs/common';
-import { CREDIT_CLASSIFICATION_STATUS, ENUMS, EXAMPLES, RISK_ENTITY } from '@ukef/constants';
+import { ENUMS, EXAMPLES } from '@ukef/constants';
 import { salesforceFormattedCurrentDate } from '@ukef/helpers/date-formatter.helper';
 import { GetCustomersGenerator } from '@ukef-test/support/generator/get-customers-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
@@ -148,8 +148,8 @@ describe('CustomersController', () => {
         type: EXAMPLES.CUSTOMER.SALESFORCE_TYPE,
         subtype: EXAMPLES.CUSTOMER.SALESFORCE_SUBTYPE,
         isLegacyRecord: true,
-        riskEntity: RISK_ENTITY.CORPORATE,
-        creditClassificationStatus: CREDIT_CLASSIFICATION_STATUS.GOOD,
+        riskEntity: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
+        creditClassificationStatus: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
         creditClassificationDate: salesforceFormattedCurrentDate(),
       },
     ];

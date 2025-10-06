@@ -1,5 +1,5 @@
 import { NotFoundException } from '@nestjs/common';
-import { GEOSPATIAL } from '@ukef/constants';
+import { EXAMPLES } from '@ukef/constants';
 import { GetGeospatialAddressesGenerator } from '@ukef-test/support/generator/get-geospatial-addresses-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { resetAllWhenMocks, when } from 'jest-when';
@@ -31,7 +31,7 @@ describe('GeospatialController', () => {
   });
 
   describe('getAddressesByPostcode()', () => {
-    const postcode = GEOSPATIAL.EXAMPLES.ENGLISH_POSTCODE;
+    const postcode = EXAMPLES.GEOSPATIAL.ENGLISH_POSTCODE;
 
     it('returns a single address for the postcode when the service returns a single address', async () => {
       when(geospatialServiceGetAddressesByPostcode).calledWith(postcode).mockResolvedValueOnce(getAddressesByPostcodeResponse[0]);

@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DATABASE } from '@ukef/constants';
+import { DATABASE_NAME } from '@ukef/constants';
 import { DbResponseHelper } from '@ukef/helpers/db-response.helper';
 import { Response } from 'express';
 import { PinoLogger } from 'nestjs-pino';
@@ -12,7 +12,7 @@ import { PremiumScheduleEntity } from './entities/premium-schedule.entity';
 @Injectable()
 export class PremiumSchedulesService {
   constructor(
-    @InjectRepository(PremiumScheduleEntity, DATABASE.MDM)
+    @InjectRepository(PremiumScheduleEntity, DATABASE_NAME.MDM)
     private readonly premiumSchedulesRepository: Repository<PremiumScheduleEntity>,
     private readonly logger: PinoLogger,
   ) {}
@@ -27,12 +27,12 @@ export class PremiumSchedulesService {
         throw new NotFoundException('Premium Schedules are not found');
       }
       return results;
-    } catch (err) {
-      if (err instanceof NotFoundException) {
-        this.logger.warn(err);
-        throw err;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        this.logger.warn(error);
+        throw error;
       } else {
-        this.logger.error(err);
+        this.logger.error(error);
         throw new InternalServerErrorException();
       }
     }
@@ -88,8 +88,8 @@ export class PremiumSchedulesService {
       });
 
       return transformedResults;
-    } catch (err) {
-      this.logger.error(err);
+    } catch (error) {
+      this.logger.error(error);
       throw new InternalServerErrorException();
     }
   }

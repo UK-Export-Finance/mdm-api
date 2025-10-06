@@ -11,6 +11,7 @@
 export const convertStringToBuffer = (data: string): Buffer => {
   // Remove buffer string characters
   const hexString = data.replace('<Buffer ', '').replace('>', '').replace(/\s+/g, '');
+
   // Convert string to Buffer
   return Buffer.from(hexString, 'hex');
 };

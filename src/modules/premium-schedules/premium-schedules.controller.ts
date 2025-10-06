@@ -13,7 +13,7 @@ export class PremiumSchedulesController {
   constructor(private readonly premiumSchedulesService: PremiumSchedulesService) {}
 
   @Post('premium/schedule')
-  @ApiOperation({ summary: 'Create Premium Schedule sequence (aka Income exposure)' })
+  @ApiOperation({ summary: 'Create a premium schedule sequence (AKA Income exposure)' })
   @ApiBody({ type: [CreatePremiumScheduleDto] })
   create(
     @Res({ passthrough: true }) res: Response,
@@ -27,7 +27,7 @@ export class PremiumSchedulesController {
   }
 
   @Get('premium/segments/:facilityId')
-  @ApiOperation({ summary: 'Return previously generated Premium Schedule sequence/segments (aka Income exposures)' })
+  @ApiOperation({ summary: 'Return previously generated premium schedule sequence/segments (AKA Income exposures)' })
   @ApiResponse({
     status: 200,
     type: [PremiumScheduleEntity],

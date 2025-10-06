@@ -11,7 +11,7 @@ export class SectorIndustriesController {
   constructor(private readonly sectorIndustriesService: SectorIndustriesService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get UKEF Sectors/Industries Mapping To ACBS Sectors/Industries' })
+  @ApiOperation({ summary: 'Get UKEF sectors/industries mapping To ACBS sectors/industries' })
   @ApiResponse({
     status: 200,
     type: [SectorIndustryEntity],
