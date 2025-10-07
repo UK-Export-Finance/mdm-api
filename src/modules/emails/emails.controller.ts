@@ -46,7 +46,7 @@ export class EmailsController {
   })
   /**
    * Verify request and send email
-   * @param {string} govUkNotifyKey
+   * @param {String} govUkNotifyKey
    * @param {PostEmailsRequestDto} body
    *
    * @returns {Promise.<PostEmailsResponseDto>} GOV.UK Notify response

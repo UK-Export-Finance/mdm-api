@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DATABASE_NAME, DATE } from '@ukef/constants';
+import { DATABASE, DATE } from '@ukef/constants';
 import { DbResponseHelper } from '@ukef/helpers/db-response.helper';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, Equal, Repository } from 'typeorm';
@@ -11,11 +11,11 @@ import { CurrencyExchangeEntity } from './entities/currency-exchange.entity';
 @Injectable()
 export class CurrenciesService {
   constructor(
-    @InjectRepository(CurrencyEntity, DATABASE_NAME.MDM)
+    @InjectRepository(CurrencyEntity, DATABASE.MDM)
     private readonly currency: Repository<CurrencyEntity>,
-    @InjectRepository(CurrencyExchangeEntity, DATABASE_NAME.CEDAR)
+    @InjectRepository(CurrencyExchangeEntity, DATABASE.CEDAR)
     private readonly currencyExchange: DataSource,
-    @InjectRepository(CurrencyExchangeEntity, DATABASE_NAME.CEDAR)
+    @InjectRepository(CurrencyExchangeEntity, DATABASE.CEDAR)
     private readonly currencyExchangeRepository: Repository<CurrencyExchangeEntity>,
     private readonly logger: PinoLogger,
   ) {}
@@ -24,8 +24,8 @@ export class CurrenciesService {
     try {
       const result = await this.currency.find({ order: { id: 'ASC' } });
       return result;
-    } catch (error) {
-      this.logger.error(error);
+    } catch (err) {
+      this.logger.error(err);
       throw new InternalServerErrorException();
     }
   }
@@ -41,12 +41,12 @@ export class CurrenciesService {
       }
 
       return results;
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        this.logger.warn(error);
-        throw error;
+    } catch (err) {
+      if (err instanceof NotFoundException) {
+        this.logger.warn(err);
+        throw err;
       } else {
-        this.logger.error(error);
+        this.logger.error(err);
         throw new InternalServerErrorException();
       }
     }
@@ -64,12 +64,12 @@ export class CurrenciesService {
       const renamedResults = DbResponseHelper.renameDbResultFields(this.currencyExchangeRepository, fieldMap, results);
 
       return renamedResults;
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        this.logger.warn(error);
-        throw error;
+    } catch (err) {
+      if (err instanceof NotFoundException) {
+        this.logger.warn(err);
+        throw err;
       } else {
-        this.logger.error(error);
+        this.logger.error(err);
         throw new InternalServerErrorException();
       }
     }

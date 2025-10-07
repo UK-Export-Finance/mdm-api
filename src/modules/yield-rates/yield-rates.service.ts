@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DATABASE_NAME, DATE } from '@ukef/constants';
+import { DATABASE, DATE } from '@ukef/constants';
 import { PinoLogger } from 'nestjs-pino';
 import { Equal, LessThanOrEqual, MoreThan, Repository } from 'typeorm';
 
@@ -9,7 +9,7 @@ import { YieldRateEntity } from './entities/yield-rate.entity';
 @Injectable()
 export class YieldRatesService {
   constructor(
-    @InjectRepository(YieldRateEntity, DATABASE_NAME.CEDAR)
+    @InjectRepository(YieldRateEntity, DATABASE.CEDAR)
     private readonly yieldRateRepository: Repository<YieldRateEntity>,
     private readonly logger: PinoLogger,
   ) {}
@@ -28,12 +28,12 @@ export class YieldRatesService {
         throw new NotFoundException('No Yield rates found');
       }
       return results;
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        this.logger.warn(error);
-        throw error;
+    } catch (err) {
+      if (err instanceof NotFoundException) {
+        this.logger.warn(err);
+        throw err;
       } else {
-        this.logger.error(error);
+        this.logger.error(err);
         throw new InternalServerErrorException();
       }
     }

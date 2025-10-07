@@ -19,7 +19,7 @@ export class GovukNotifyService {
 
   /**
    * Send email to one recipient using GOV.UK template id
-   * @param {string} govUkNotifyKey
+   * @param {String} govUkNotifyKey
    * @param {PostEmailsRequestDto} postEmailsRequest
    *
    * @returns {Promise.<PostEmailsResponseDto>} GOV.UK Notify response

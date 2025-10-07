@@ -15,9 +15,9 @@ List any additional fixes or improvements.
 <details>
   <summary>Show/hide</summary>
 
-  ```json
-   
-  ```
+```json
+
+```
 
 </details>
 
@@ -26,5 +26,6 @@ List any additional fixes or improvements.
 <details>
   <summary>Show/hide</summary>
 
-  Add screenshots here.
+Add screenshots here.
+
 </details>

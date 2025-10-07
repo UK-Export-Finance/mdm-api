@@ -1,22 +1,22 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DATABASE_NAME, DATABASE_TYPE } from '@ukef/constants';
+import { DATABASE } from '@ukef/constants';
 
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
-      name: DATABASE_NAME.NUMBER_GENERATOR,
+      name: DATABASE.NUMBER_GENERATOR,
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        name: DATABASE_NAME.NUMBER_GENERATOR,
+        name: DATABASE.NUMBER_GENERATOR,
         host: configService.get<string>('database.mssql_number_generator.host'),
         port: configService.get<number>('database.mssql_number_generator.port'),
         username: configService.get<string>('database.mssql_number_generator.username'),
         password: configService.get<string>('database.mssql_number_generator.password'),
         database: configService.get<string>('database.mssql_number_generator.name'),
-        type: DATABASE_TYPE.MSSQL,
+        type: 'mssql',
         extra: {
           options: {
             encrypt: true,

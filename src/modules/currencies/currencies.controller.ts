@@ -26,7 +26,7 @@ export class CurrenciesController {
 
   @Get('exchange')
   @ApiOperation({
-    summary: 'Get the active exchange rate based on source and target exchange rates',
+    summary: 'Get the Active exchange rate based on source and target exchange rates. Query parameters are mandatory for this endpoint.',
   })
   @ApiResponse({
     status: 200,
@@ -39,11 +39,11 @@ export class CurrenciesController {
 
   @Get(':isoCode')
   @ApiOperation({
-    summary: 'Get a currency details from ISO code',
+    summary: 'Get the currency details based on ISO Code',
   })
   @ApiResponse({
     status: 200,
-    description: 'Currency details from ISO code',
+    description: 'Currency details based on ISO Code',
     type: [CurrencyEntity],
   })
   findOne(@Param() param: CurrencyDto): Promise<CurrencyEntity[]> {

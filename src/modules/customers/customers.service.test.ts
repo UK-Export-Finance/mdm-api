@@ -1,6 +1,6 @@
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { EXAMPLES } from '@ukef/constants';
+import { CREDIT_CLASSIFICATION_STATUS, EXAMPLES, RISK_ENTITY } from '@ukef/constants';
 import { DunAndBradstreetService } from '@ukef/helper-modules/dun-and-bradstreet/dun-and-bradstreet.service';
 import { salesforceFormattedCurrentDate } from '@ukef/helpers/date-formatter.helper';
 import { InformaticaService } from '@ukef/modules/informatica/informatica.service';
@@ -79,8 +79,8 @@ const createLegacyCustomerWithUrn: GetCustomersInformaticaResponseItem[] = [
     ukEntity: undefined,
     ukefIndustryName: undefined,
     ukefSectorName: undefined,
-    riskEntity: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
-    creditClassificationStatus: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
+    riskEntity: RISK_ENTITY.CORPORATE,
+    creditClassificationStatus: CREDIT_CLASSIFICATION_STATUS.GOOD,
     creditClassificationDate: salesForceDate,
   },
 ];
@@ -99,8 +99,8 @@ const createLegacyCustomerWithNoUrn: GetCustomersInformaticaResponseItem[] = [
     ukEntity: undefined,
     ukefIndustryName: undefined,
     ukefSectorName: undefined,
-    riskEntity: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
-    creditClassificationStatus: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
+    riskEntity: RISK_ENTITY.CORPORATE,
+    creditClassificationStatus: CREDIT_CLASSIFICATION_STATUS.GOOD,
     creditClassificationDate: salesForceDate,
   },
 ];
@@ -119,8 +119,8 @@ const createNewCustomerWithUrn: GetCustomersInformaticaResponseItem[] = [
     ukEntity: 'Yes',
     ukefIndustryName: 'AGRICULTURE, HORTICULTURE & FISHERIES',
     ukefSectorName: 'CIVIL: AGRICULTURE, HORTICULTURE & FISHERIES',
-    riskEntity: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
-    creditClassificationStatus: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
+    riskEntity: RISK_ENTITY.CORPORATE,
+    creditClassificationStatus: CREDIT_CLASSIFICATION_STATUS.GOOD,
     creditClassificationDate: salesForceDate,
   },
 ];
@@ -308,8 +308,8 @@ describe('CustomerService', () => {
                 CCM_Primary_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
                 CCM_Industry__c: DTFSCustomerDto.ukefIndustryName,
                 CCM_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
-                CCM_Assigned_Rating__c: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
-                CCM_Watch_List__c: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
+                CCM_Assigned_Rating__c: RISK_ENTITY.CORPORATE,
+                CCM_Watch_List__c: CREDIT_CLASSIFICATION_STATUS.GOOD,
                 CCM_Watch_List_Date__c: salesForceDate,
               }),
             );
@@ -431,8 +431,8 @@ describe('CustomerService', () => {
                 CCM_Primary_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
                 CCM_Industry__c: DTFSCustomerDto.ukefIndustryName,
                 CCM_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
-                CCM_Assigned_Rating__c: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
-                CCM_Watch_List__c: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
+                CCM_Assigned_Rating__c: RISK_ENTITY.CORPORATE,
+                CCM_Watch_List__c: CREDIT_CLASSIFICATION_STATUS.GOOD,
                 CCM_Watch_List_Date__c: salesForceDate,
               }),
             );
@@ -525,8 +525,8 @@ describe('CustomerService', () => {
               CCM_Primary_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
               CCM_Industry__c: DTFSCustomerDto.ukefIndustryName,
               CCM_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
-              CCM_Assigned_Rating__c: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
-              CCM_Watch_List__c: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
+              CCM_Assigned_Rating__c: RISK_ENTITY.CORPORATE,
+              CCM_Watch_List__c: CREDIT_CLASSIFICATION_STATUS.GOOD,
               CCM_Watch_List_Date__c: salesForceDate,
             }),
           );
@@ -607,8 +607,8 @@ describe('CustomerService', () => {
               CCM_Primary_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
               CCM_Industry__c: DTFSCustomerDto.ukefIndustryName,
               CCM_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
-              CCM_Assigned_Rating__c: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
-              CCM_Watch_List__c: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
+              CCM_Assigned_Rating__c: RISK_ENTITY.CORPORATE,
+              CCM_Watch_List__c: CREDIT_CLASSIFICATION_STATUS.GOOD,
               CCM_Watch_List_Date__c: salesForceDate,
             }),
           );

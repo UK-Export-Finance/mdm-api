@@ -1,4 +1,4 @@
-import { ENUMS, EXAMPLES } from '@ukef/constants';
+import { CREDIT_CLASSIFICATION_STATUS, ENUMS, RISK_ENTITY } from '@ukef/constants';
 import { salesforceFormattedCurrentDate } from '@ukef/helpers/date-formatter.helper';
 import { GetCustomersQueryDto } from '@ukef/modules/customers/dto/get-customers-query.dto';
 import { GetCustomersResponse } from '@ukef/modules/customers/dto/get-customers-response.dto';
@@ -25,8 +25,8 @@ export class GetCustomersGenerator extends AbstractGenerator<CustomerValues, Gen
       type: null,
       subtype: null,
       isLegacyRecord: this.valueGenerator.boolean(),
-      riskEntity: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
-      creditClassificationStatus: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
+      riskEntity: RISK_ENTITY.CORPORATE,
+      creditClassificationStatus: CREDIT_CLASSIFICATION_STATUS.GOOD,
       creditClassificationDate: salesforceFormattedCurrentDate(),
     };
   }
@@ -41,11 +41,12 @@ export class GetCustomersGenerator extends AbstractGenerator<CustomerValues, Gen
         ...(query.name ? { name: query.name } : {}),
         ...(query.partyUrn ? { partyUrn: query.partyUrn } : {}),
       };
-
       if (Object.keys(searchParam).length === 0) {
         searchParam = { name: v.name };
       }
-
+      if (Object.keys(searchParam).length === 0) {
+        searchParam = { name: v.name };
+      }
       return { ...searchParam, ...{ fallbackToLegacyData: query.fallbackToLegacyData ? query.fallbackToLegacyData : ENUMS.FALLBACK_TO_LEGACY_DATA.YES } };
     });
 
@@ -73,8 +74,8 @@ export class GetCustomersGenerator extends AbstractGenerator<CustomerValues, Gen
         type: v.type,
         subtype: v.subtype,
         isLegacyRecord: v.isLegacyRecord,
-        riskEntity: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
-        creditClassificationStatus: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
+        riskEntity: RISK_ENTITY.CORPORATE,
+        creditClassificationStatus: CREDIT_CLASSIFICATION_STATUS.GOOD,
         creditClassificationDate: v.creditClassificationDate,
       },
     ]);

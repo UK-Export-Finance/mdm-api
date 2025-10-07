@@ -3,21 +3,18 @@ import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-
 
 import { redactStringsInLogArgs } from './redact-strings-in-log-args.helper';
 
-describe('redactStringsInLogArgs', () => {
+describe('Redact errors helper', () => {
   const valueGenerator = new RandomValueGenerator();
 
   describe('redactStringsInLogArgs', () => {
     const domain = valueGenerator.httpsUrl();
     const otherSensitiveField = valueGenerator.word();
-
     const message = `ConnectionError: Failed to connect to ${domain}, ${otherSensitiveField}`;
     const redactedMessage = `ConnectionError: Failed to connect to [RedactedDomain], [Redacted]`;
-
     const redactStrings = [
       { searchValue: domain, replaceValue: '[RedactedDomain]' },
       { searchValue: otherSensitiveField, replaceValue: '[Redacted]' },
     ];
-
     const args = [
       {
         message: message,
@@ -38,7 +35,6 @@ describe('redactStringsInLogArgs', () => {
         },
       },
     ];
-
     const expectedResult = [
       {
         message: redactedMessage,
@@ -61,29 +57,22 @@ describe('redactStringsInLogArgs', () => {
     ];
 
     it('replaces sensitive data in input object', () => {
-      // Act
-      const result = redactStringsInLogArgs(true, REDACT_STRING_PATHS, redactStrings, args);
+      const redacted = redactStringsInLogArgs(true, REDACT_STRING_PATHS, redactStrings, args);
 
-      // Assert
-      expect(result).toStrictEqual(expectedResult);
+      expect(redacted).toStrictEqual(expectedResult);
     });
 
     it('returns original input if redactLogs is set to false', () => {
-      // Act
-      const result = redactStringsInLogArgs(false, REDACT_STRING_PATHS, redactStrings, args);
+      const redacted = redactStringsInLogArgs(false, REDACT_STRING_PATHS, redactStrings, args);
 
-      // Assert
-      expect(result).toStrictEqual(args);
+      expect(redacted).toStrictEqual(args);
     });
 
     it('replaces sensitive data in input object using regex', () => {
-      // Arrange
       const redactStrings = [{ searchValue: /(Login failed for user ').*(')/g, replaceValue: '$1[Redacted]$2' }];
       const otherSensitiveValue = valueGenerator.word();
-
       const messageforRegex = `Connection error: Login failed for user '${otherSensitiveValue}'`;
       const redactedMessage = `Connection error: Login failed for user '[Redacted]'`;
-
       const args = [
         {
           message: messageforRegex,
@@ -93,11 +82,6 @@ describe('redactStringsInLogArgs', () => {
           },
         },
       ];
-
-      // Act
-      const result = redactStringsInLogArgs(true, REDACT_STRING_PATHS, redactStrings, args);
-
-      // Assert
       const expectedResult = [
         {
           message: redactedMessage,
@@ -108,11 +92,12 @@ describe('redactStringsInLogArgs', () => {
         },
       ];
 
-      expect(result).toStrictEqual(expectedResult);
+      const redacted = redactStringsInLogArgs(true, REDACT_STRING_PATHS, redactStrings, args);
+
+      expect(redacted).toStrictEqual(expectedResult);
     });
 
     it('replaces sensitive data in different input object', () => {
-      // Arrange
       const args = [
         {
           field1: message,
@@ -122,14 +107,7 @@ describe('redactStringsInLogArgs', () => {
           },
         },
       ];
-
-      const redactPaths = ['field1', 'field2.field3'];
-
-      // Act
-      const result = redactStringsInLogArgs(true, redactPaths, redactStrings, args);
-
-      // Assert
-      const expected = [
+      const expectedResult = [
         {
           field1: redactedMessage,
           field2: {
@@ -138,8 +116,10 @@ describe('redactStringsInLogArgs', () => {
           },
         },
       ];
+      const redactPaths = ['field1', 'field2.field3'];
+      const redacted = redactStringsInLogArgs(true, redactPaths, redactStrings, args);
 
-      expect(result).toStrictEqual(expected);
+      expect(redacted).toStrictEqual(expectedResult);
     });
   });
 });

@@ -4,12 +4,12 @@ import { InvalidConfigException } from '@ukef/config/invalid-config.exception';
 export const getIntConfig = (environmentVariable: string, defaultValue?: number): number => {
   if (typeof environmentVariable === 'undefined') {
     if (typeof defaultValue === 'undefined') {
-      throw new InvalidConfigException(`Environment variable is missing and does not have default value.`);
+      throw new InvalidConfigException(`Environment variable is missing and doesn't have default value.`);
     }
     return defaultValue;
   }
   if (typeof environmentVariable !== 'string') {
-    throw new InvalidConfigException(`Input environment variable type for ${environmentVariable} should be a string.`);
+    throw new InvalidConfigException(`Input environment variable type for ${environmentVariable} should be string.`);
   }
 
   const integer = parseInt(environmentVariable, 10);

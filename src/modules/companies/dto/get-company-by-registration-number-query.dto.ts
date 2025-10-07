@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { COMPANIES, EXAMPLES } from '@ukef/constants';
+import { COMPANIES } from '@ukef/constants';
 import { Matches, MaxLength, MinLength } from 'class-validator';
 
 export class GetCompanyByRegistrationNumberQuery {
   @ApiProperty({
     description: 'The Companies House registration number of the company to find.',
-    example: EXAMPLES.COMPANIES_HOUSE_REGISTRATION_NUMBER,
+    example: COMPANIES.EXAMPLES.COMPANIES_HOUSE_REGISTRATION_NUMBER,
     minLength: 8,
     maxLength: 8,
     pattern: COMPANIES.REGEX.COMPANIES_HOUSE_REGISTRATION_NUMBER.source,
