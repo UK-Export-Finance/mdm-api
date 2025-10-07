@@ -32,13 +32,5 @@ export default registerAs(
       password: process.env.DATABASE_PASSWORD,
       name: process.env.DATABASE_CIS_NAME,
     },
-    mssql_ods: {
-      host: process.env.DATABASE_ODS_HOST,
-      port: +process.env.DATABASE_ODS_PORT,
-      client_id: process.env.DATABASE_ODS_CLIENT_ID,
-      tenant_id: process.env.DATABASE_ODS_TENANT_ID,
-      client_secret: process.env.DATABASE_ODS_CLIENT_SECRET,
-      name: process.env.DATABASE_ODS_NAME,
-    },
   }),
 );

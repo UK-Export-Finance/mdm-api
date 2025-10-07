@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { EXAMPLES, GOVUK_NOTIFY } from '@ukef/constants';
+import { GOVUK_NOTIFY } from '@ukef/constants';
 import { IsEmail, IsNotEmpty, IsObject, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 
 export class PostEmailsRequestDto {
@@ -8,7 +8,7 @@ export class PostEmailsRequestDto {
   @MinLength(GOVUK_NOTIFY.FIELD_LENGTHS.TEMPLATE_ID)
   @MaxLength(GOVUK_NOTIFY.FIELD_LENGTHS.TEMPLATE_ID)
   @ApiProperty({
-    example: EXAMPLES.GOVUK_NOTIFY.TEMPLATE_ID,
+    example: GOVUK_NOTIFY.EXAMPLES.TEMPLATE_ID,
     description: 'The GOV.UK Notify ID corresponding to the email template',
     required: true,
     nullable: false,
@@ -20,7 +20,7 @@ export class PostEmailsRequestDto {
   @IsEmail()
   @IsNotEmpty()
   @ApiProperty({
-    example: EXAMPLES.GOVUK_NOTIFY.EMAIL,
+    example: GOVUK_NOTIFY.EXAMPLES.EMAIL,
     description: 'Email address to send this email',
     required: true,
     nullable: false,
@@ -30,7 +30,7 @@ export class PostEmailsRequestDto {
   @IsObject()
   @IsOptional()
   @ApiProperty({
-    example: { firstName: EXAMPLES.GOVUK_NOTIFY.FIRST_NAME },
+    example: { firstName: GOVUK_NOTIFY.EXAMPLES.FIRST_NAME },
     description: 'All variables for email template',
     required: false,
     nullable: true,
@@ -42,7 +42,7 @@ export class PostEmailsRequestDto {
   @MinLength(1)
   @MaxLength(400)
   @ApiProperty({
-    example: EXAMPLES.GOVUK_NOTIFY.REFERENCE,
+    example: GOVUK_NOTIFY.EXAMPLES.REFERENCE,
     description: 'Reference for the email sent',
     required: false,
     nullable: true,
@@ -55,7 +55,7 @@ export class PostEmailsRequestDto {
   @IsOptional()
   @MinLength(1)
   @ApiProperty({
-    example: EXAMPLES.GOVUK_NOTIFY.FILE,
+    example: GOVUK_NOTIFY.EXAMPLES.FILE,
     description: `File for GovNotify to consume and generate a link to download with supported file types. The file size must be smaller than ${GOVUK_NOTIFY.FILE.SIZE.MAX}`,
     required: false,
     nullable: true,

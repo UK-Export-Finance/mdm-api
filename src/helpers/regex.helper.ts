@@ -1,8 +1,4 @@
-/**
- * Convert a a regex pattern into a string
- * @param {RegExp} Regular expression
- * @returns {string}
- */
+// This helper function is used to convert the regex pattern to a string so that it can be used in the swagger documentation.
 export const regexToString = (regex: RegExp): string => {
   return regex.source;
 };

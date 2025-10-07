@@ -1,132 +1,39 @@
-import { DOM_BUSINESS_CENTRES } from '../dom.constant';
-import { ODS_BUSINESS_CENTRES } from '../ods.constant';
-
-const BUSINESS_CENTRE = {
-  ...DOM_BUSINESS_CENTRES.GH_ACC,
-  NON_WORKING_DAY: {
-    NAME: 'Weekend',
-    DATE: '2025-07-05',
-  },
-};
-
-const COUNTERPARTY_SUBTYPES = {
-  BROKER: 'BROKER',
-  GUARANTOR: 'GUARANTOR',
-};
-
-const PRODUCT_CONFIG_REQUIREMENT = {
-  NOT_APPLICABLE: 'NOT_APPLICABLE',
-  OPTIONAL: 'OPTIONAL',
-  REQUIRED: 'REQUIRED',
-};
-
-const PRODUCT_TYPES = {
-  BIP: 'BIP',
-  EDG: 'EDG',
-  EXAMPLE_ALL_REQUIRED: 'EXAMPLE_ALL_REQUIRED',
-  EXAMPLE_ALL_OPTIONAL: 'EXAMPLE_ALL_OPTIONAL',
-  EXIP: 'EXIP',
-};
-
 export const EXAMPLES = {
-  BUSINESS_CENTRE,
+  BUSINESS_CENTRE: {
+    NON_WORKING_DAY: {
+      NAME: 'Weekend',
+      DATE: '2025-07-05',
+    },
+  },
   COMPANIES_HOUSE_REGISTRATION_NUMBER: '00000001',
   CUSTOMER: {
     COMPANYREG: '06012345',
+    PARTYURN: '00302069',
+    DNB_NUMBER: '12341234',
+    SALESFORCE_ID: '000A000000a1BBbCDE',
+    SALESFORCE_TYPE: 'Association',
+    SALESFORCE_SUBTYPE: 'Alternative Finance Provider',
+    SALESFORCE_IS_LEGACY: false,
+    NAME: 'Testing Systems Ltd',
+    CREDIT_RISK_RATING: 'B+',
+    CREDIT_RISK_RATING_DATE: '1989-09-20',
+    LOSS_GIVEN_DEFAULT: 50,
+    PROBABILITY_OF_DEFAULT: 14.1,
+    UK_ENTITY: 'Yes',
+    UK_INDUSTRY_NAME: 'AGRICULTURE, HORTICULTURE & FISHERIES',
+    UK_INDUSTRY_SECTOR_NAME: 'CIVIL: AGRICULTURE, HORTICULTURE & FISHERIES',
+    RISK_ENTITY: {
+      CORPORATE: 'Corporate',
+    },
     CREDIT_CLASSIFICATION_STATUS: {
       GOOD: 'Good',
     },
     CREDIT_CLASSIFICATION_DATE: '01/01/1970',
-    CREDIT_RISK_RATING: 'B+',
-    CREDIT_RISK_RATING_DATE: '1989-09-20',
-    DNB_NUMBER: '12341234',
-    NAME: 'Testing Systems Ltd',
-    PARTYURN: '00302069',
-    PROBABILITY_OF_DEFAULT: 14.1,
-    RISK_ENTITY: {
-      CORPORATE: 'Corporate',
-    },
-    LOSS_GIVEN_DEFAULT: 50,
-    SALESFORCE_ID: '000A000000a1BBbCDE',
-    SALESFORCE_IS_LEGACY: false,
-    SALESFORCE_SUBTYPE: 'Alternative Finance Provider',
-    SALESFORCE_TYPE: 'Association',
-    UK_ENTITY: 'Yes',
-    UK_INDUSTRY_NAME: 'AGRICULTURE, HORTICULTURE & FISHERIES',
-    UK_INDUSTRY_SECTOR_NAME: 'CIVIL: AGRICULTURE, HORTICULTURE & FISHERIES',
   },
   DEAL: {
     ID: '0030000321',
     NAME: 'ABC PARIS CLUB 01',
     DESCRIPTION: 'Paris Club agreement',
-  },
-  DOM: {
-    BUSINESS_CENTRES: [
-      {
-        code: DOM_BUSINESS_CENTRES.AE_DXB.CODE,
-        name: DOM_BUSINESS_CENTRES.AE_DXB.NAME,
-      },
-      {
-        code: DOM_BUSINESS_CENTRES.CM_YAO.CODE,
-        name: DOM_BUSINESS_CENTRES.CM_YAO.NAME,
-      },
-      {
-        code: DOM_BUSINESS_CENTRES.JO_AMM.CODE,
-        name: DOM_BUSINESS_CENTRES.JO_AMM.NAME,
-      },
-    ],
-    BUSINESS_CENTRES_NON_WORKING_DAYS: [
-      {
-        code: DOM_BUSINESS_CENTRES.AE_DXB.CODE,
-        date: BUSINESS_CENTRE.NON_WORKING_DAY.DATE,
-        name: DOM_BUSINESS_CENTRES.AE_DXB.NAME,
-      },
-      {
-        code: DOM_BUSINESS_CENTRES.CM_YAO.CODE,
-        date: BUSINESS_CENTRE.NON_WORKING_DAY.DATE,
-        name: DOM_BUSINESS_CENTRES.CM_YAO.NAME,
-      },
-    ],
-    PRODUCT_CONFIG: {
-      BIP: {
-        productType: PRODUCT_TYPES.BIP,
-        configuration: {
-          commitmentDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          issuedDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          effectiveDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          availabilityEndDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          expiryDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          creditType: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          participations: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          scheduledRepayments: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          nonCashObligations: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          cashObligations: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          accrualSchedule: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          pimOwner: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          riskRating: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          preCreditPeriod: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          creditPeriod: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          lossGivenDefault: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          provisionRate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          forecastYear: PRODUCT_CONFIG_REQUIREMENT.NOT_APPLICABLE,
-          bankRate: PRODUCT_CONFIG_REQUIREMENT.OPTIONAL,
-        },
-        counterpartySubtypes: [COUNTERPARTY_SUBTYPES.BROKER],
-        productSubtypes: [],
-        account: ['1', '2', '3'],
-      },
-      EXIP: {
-        productType: PRODUCT_TYPES.EXIP,
-        configuration: {
-          commitmentDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          issuedDate: PRODUCT_CONFIG_REQUIREMENT.NOT_APPLICABLE,
-          effectiveDate: PRODUCT_CONFIG_REQUIREMENT.OPTIONAL,
-        },
-        counterpartySubtypes: [COUNTERPARTY_SUBTYPES.BROKER, COUNTERPARTY_SUBTYPES.GUARANTOR],
-        productSubtypes: [],
-        account: ['1', '2', '3'],
-      },
-    },
   },
   GEOSPATIAL: {
     ENGLISH_POSTCODE: 'SW1A 2AQ',
@@ -151,21 +58,4 @@ export const EXAMPLES = {
     TEMPLATE_URI: 'https://api.notifications.service.gov.uk/services/abc12345-a123-4567-8901-123456789012/templates/tmpl1234-1234-5678-9012-abcd12345678',
     FILE: '<Buffer 43 31 2c 43 32 2c 43 33 0a 41 2c 42 2c 43 0a 44 2c 45 2c 46 0a 31 2c 32 2c 33 0a 34 2c 35 2c 36 0a>',
   },
-  ODS: {
-    BUSINESS_CENTRES: [
-      {
-        business_centre_code: ODS_BUSINESS_CENTRES.AaB,
-        business_centre_name: 'Mock name AaB',
-      },
-      {
-        business_centre_code: ODS_BUSINESS_CENTRES.JoB,
-        business_centre_name: 'Mock name JoB',
-      },
-      {
-        business_centre_code: ODS_BUSINESS_CENTRES.StB,
-        business_centre_name: 'Mock name StB',
-      },
-    ],
-  },
-  PRODUCT_TYPES,
 };

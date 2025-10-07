@@ -20,7 +20,7 @@ export class CompaniesController {
 
   @Get()
   @ApiOperation({
-    summary: 'Get company by Companies House registration number',
+    summary: 'Get company by Companies House registration number.',
   })
   @ApiResponse({
     status: 200,

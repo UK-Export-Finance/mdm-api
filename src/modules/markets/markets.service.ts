@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DATABASE_NAME } from '@ukef/constants';
+import { DATABASE } from '@ukef/constants';
 import { DbResponseHelper } from '@ukef/helpers/db-response.helper';
 import { PinoLogger } from 'nestjs-pino';
 import { Repository } from 'typeorm';
@@ -10,7 +10,7 @@ import { MarketEntity } from './entities/market.entity';
 @Injectable()
 export class MarketsService {
   constructor(
-    @InjectRepository(MarketEntity, DATABASE_NAME.CIS)
+    @InjectRepository(MarketEntity, DATABASE.CIS)
     private readonly marketsRepository: Repository<MarketEntity>,
     private readonly logger: PinoLogger,
   ) {}
@@ -44,8 +44,8 @@ export class MarketsService {
       }));
 
       return mappedResults;
-    } catch (error) {
-      this.logger.error(error);
+    } catch (err) {
+      this.logger.error(err);
       throw new InternalServerErrorException();
     }
   }

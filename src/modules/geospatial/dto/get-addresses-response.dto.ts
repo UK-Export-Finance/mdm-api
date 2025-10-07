@@ -1,19 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ENUMS, EXAMPLES } from '@ukef/constants';
+import { ENUMS, GEOSPATIAL } from '@ukef/constants';
 
 export type GetAddressesResponse = GetAddressesResponseItem[];
 
 export class GetAddressesResponseItem {
   @ApiProperty({
     description: 'Organisation name, if available',
-    example: EXAMPLES.GEOSPATIAL.ORGANISATION_NAME,
+    example: GEOSPATIAL.EXAMPLES.ORGANISATION_NAME,
     nullable: true,
   })
   readonly organisationName: string | null;
 
   @ApiProperty({
     description: 'Address line 1',
-    example: EXAMPLES.GEOSPATIAL.ADDRESS_LINE_1,
+    example: GEOSPATIAL.EXAMPLES.ADDRESS_LINE_1,
   })
   readonly addressLine1: string;
 
@@ -33,14 +33,14 @@ export class GetAddressesResponseItem {
 
   @ApiProperty({
     description: 'Locality or town',
-    example: EXAMPLES.GEOSPATIAL.LOCALITY,
+    example: GEOSPATIAL.EXAMPLES.LOCALITY,
     nullable: true,
   })
   readonly locality: string | null;
 
   @ApiProperty({
     description: 'Postcode',
-    example: EXAMPLES.GEOSPATIAL.ENGLISH_POSTCODE,
+    example: GEOSPATIAL.EXAMPLES.ENGLISH_POSTCODE,
     nullable: true,
   })
   readonly postalCode: string | null;

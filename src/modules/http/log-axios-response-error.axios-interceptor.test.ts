@@ -40,13 +40,13 @@ describe('logAxiosResponseError', () => {
 
   const errorWithResponse = new AxiosError('error with response', undefined, undefined, undefined, response);
 
-  let mockLogger: PinoLogger;
+  let logger: PinoLogger;
   let logAxiosResponseError: AxiosResponseErrorInterceptor;
 
   beforeEach(() => {
-    mockLogger = new PinoLogger({});
-    mockLogger.warn = jest.fn();
-    logAxiosResponseError = logAxiosResponseErrorWith(mockLogger);
+    logger = new PinoLogger({});
+    logger.warn = jest.fn();
+    logAxiosResponseError = logAxiosResponseErrorWith(logger);
 
     (filterAxiosResponseForLogging as jest.Mock).mockReset();
     when(filterAxiosResponseForLogging).calledWith(response).mockReturnValueOnce(filteredResponse);
@@ -56,7 +56,7 @@ describe('logAxiosResponseError', () => {
     it('logs the full error at warn level', async () => {
       await logAxiosResponseError(errorWithoutResponse).catch(() => {});
 
-      expect(mockLogger.warn).toHaveBeenCalledWith(errorWithoutResponse, 'A HTTP server failed to respond to our request.');
+      expect(logger.warn).toHaveBeenCalledWith(errorWithoutResponse, 'A HTTP server failed to respond to our request.');
     });
 
     it('rejects with the original error', async () => {
@@ -70,7 +70,7 @@ describe('logAxiosResponseError', () => {
     it('logs the filtered response at warn level using key INCOMING_RESPONSE_LOG_KEY', async () => {
       await logAxiosResponseError(errorWithResponse).catch(() => {});
 
-      expect(mockLogger.warn).toHaveBeenCalledWith(
+      expect(logger.warn).toHaveBeenCalledWith(
         { [INCOMING_RESPONSE_LOG_KEY]: filteredResponse },
         'A HTTP server responded to our request with an error response.',
       );

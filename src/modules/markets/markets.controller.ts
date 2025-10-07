@@ -12,7 +12,7 @@ export class MarketsController {
 
   @Get()
   @ApiOperation({
-    summary: 'Get all markets (AKA countries)',
+    summary: 'Get all markets (aka countries)',
   })
   @ApiResponse({
     status: 200,

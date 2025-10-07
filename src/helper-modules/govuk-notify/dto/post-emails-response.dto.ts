@@ -1,21 +1,21 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { EXAMPLES } from '@ukef/constants';
+import { GOVUK_NOTIFY } from '@ukef/constants';
 
 export class PostEmailsResponseDataContent {
   @ApiProperty({
-    example: EXAMPLES.GOVUK_NOTIFY.EMAIL_BODY,
+    example: GOVUK_NOTIFY.EXAMPLES.EMAIL_BODY,
     description: 'Email body',
   })
   public body: string;
 
   @ApiProperty({
-    example: EXAMPLES.GOVUK_NOTIFY.FROM_EMAIL,
+    example: GOVUK_NOTIFY.EXAMPLES.FROM_EMAIL,
     description: "Sender's email address",
   })
   public from_email: string;
 
   @ApiProperty({
-    example: EXAMPLES.GOVUK_NOTIFY.EMAIL_SUBJECT,
+    example: GOVUK_NOTIFY.EXAMPLES.EMAIL_SUBJECT,
     description: 'Email subject line',
   })
   public subject: string;
@@ -31,13 +31,13 @@ export class PostEmailsResponseDataContent {
 
 export class PostEmailsResponseDataTemplate {
   @ApiProperty({
-    example: EXAMPLES.GOVUK_NOTIFY.TEMPLATE_ID,
+    example: GOVUK_NOTIFY.EXAMPLES.TEMPLATE_ID,
     description: "Notify's template id",
   })
   public id: string;
 
   @ApiProperty({
-    example: EXAMPLES.GOVUK_NOTIFY.TEMPLATE_URI,
+    example: GOVUK_NOTIFY.EXAMPLES.TEMPLATE_URI,
     description: "Notify's URL to get more information about template",
   })
   public uri: string;
@@ -54,13 +54,13 @@ export class PostEmailsResponseData {
   public content: PostEmailsResponseDataContent;
 
   @ApiProperty({
-    example: EXAMPLES.GOVUK_NOTIFY.RESPONSE_ID,
+    example: GOVUK_NOTIFY.EXAMPLES.RESPONSE_ID,
     description: "Notify's transaction id",
   })
   public id: string;
 
   @ApiProperty({
-    example: EXAMPLES.GOVUK_NOTIFY.REFERENCE,
+    example: GOVUK_NOTIFY.EXAMPLES.REFERENCE,
     description: 'Reference that was sent to GOV.UK Notify',
   })
   public reference: string;
@@ -77,7 +77,7 @@ export class PostEmailsResponseData {
   public template: PostEmailsResponseDataTemplate;
 
   @ApiProperty({
-    example: EXAMPLES.GOVUK_NOTIFY.RESPONSE_URI,
+    example: GOVUK_NOTIFY.EXAMPLES.RESPONSE_URI,
     description: "Notify's URL to get more information about this transaction",
   })
   public uri: string;
