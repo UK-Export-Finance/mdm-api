@@ -26,8 +26,6 @@ on:
       - dev
       - staging
       - production
-      # TODO: Remove the branch name before merging to dev
-      - feat/FN-3543/integrate-with-ods
 
     paths:
       - 'src/**'
@@ -52,8 +50,7 @@ jobs:
     runs-on: [self-hosted, APIM, deployment]
     outputs:
       product: ${{ env.PRODUCT }}
-      # TODO: Remove the branch name before merging to dev
-      environment: ${{ github.ref_name == 'feat/FN-3543/integrate-with-ods' && 'dev' || env.ENVIRONMENT }}
+      environment: ${{ env.ENVIRONMENT }}
       timezone: ${{ env.TIMEZONE }}
     steps:
       - name: Environment 🧪
