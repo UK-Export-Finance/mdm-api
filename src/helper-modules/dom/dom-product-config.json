@@ -20,7 +20,12 @@
       "lossGivenDefault": "REQUIRED",
       "provisionRate": "REQUIRED",
       "forecastYear": "REQUIRED",
-      "bankRate": "NOT_APPLICABLE"
+      "bankRate": "NOT_APPLICABLE",
+      "leadDays": {
+        "repayments": 5,
+        "interestAccruals": 5,
+        "accruingFees": 5
+      }
     },
     "counterpartySubtypes": [
       "BOND BENEFICIARY",
@@ -55,7 +60,12 @@
       "lossGivenDefault": "REQUIRED",
       "provisionRate": "REQUIRED",
       "forecastYear": "REQUIRED",
-      "bankRate": "NOT_APPLICABLE"
+      "bankRate": "NOT_APPLICABLE",
+      "leadDays": {
+        "repayments": 5,
+        "interestAccruals": 5,
+        "accruingFees": 5
+      }
     },
     "counterpartySubtypes": [],
     "productSubtypes": [],
@@ -82,7 +92,12 @@
       "lossGivenDefault": "OPTIONAL",
       "provisionRate": "OPTIONAL",
       "forecastYear": "OPTIONAL",
-      "bankRate": "OPTIONAL"
+      "bankRate": "OPTIONAL",
+      "leadDays": {
+        "repayments": 5,
+        "interestAccruals": 5,
+        "accruingFees": 5
+      }
     },
     "counterpartySubtypes": [],
     "productSubtypes": [],
@@ -109,7 +124,12 @@
       "lossGivenDefault": "REQUIRED",
       "provisionRate": "REQUIRED",
       "forecastYear": "REQUIRED",
-      "bankRate": "REQUIRED"
+      "bankRate": "REQUIRED",
+      "leadDays": {
+        "repayments": 5,
+        "interestAccruals": 5,
+        "accruingFees": 5
+      }
     },
     "counterpartySubtypes": [],
     "productSubtypes": [],
@@ -136,7 +156,12 @@
       "lossGivenDefault": "REQUIRED",
       "provisionRate": "REQUIRED",
       "forecastYear": "REQUIRED",
-      "bankRate": "NOT_APPLICABLE"
+      "bankRate": "NOT_APPLICABLE",
+      "leadDays": {
+        "repayments": 5,
+        "interestAccruals": 5,
+        "accruingFees": 5
+      }
     },
     "counterpartySubtypes": [
       "BROKER",

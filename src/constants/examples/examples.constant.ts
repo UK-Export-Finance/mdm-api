@@ -110,6 +110,11 @@ export const EXAMPLES = {
           provisionRate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
           forecastYear: PRODUCT_CONFIG_REQUIREMENT.NOT_APPLICABLE,
           bankRate: PRODUCT_CONFIG_REQUIREMENT.OPTIONAL,
+          leadDays: {
+            repayments: 1,
+            interestAccruals: 2,
+            accruingFees: 3,
+          },
         },
         counterpartySubtypes: [COUNTERPARTY_SUBTYPES.BROKER],
         productSubtypes: [],
