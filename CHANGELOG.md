@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.32.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.31.0...v1.32.0) (2025-10-06)
+
+
+### Features
+
+* **GIFT-3543:** ods, dom integration ([#1583](https://github.com/UK-Export-Finance/mdm-api/issues/1583)) ([43a85eb](https://github.com/UK-Export-Finance/mdm-api/commit/43a85eb941b01b4b6126a24c153f94b1e31f98f1))
+* **GIFT-3543:** simplify yml files ([e0d3063](https://github.com/UK-Export-Finance/mdm-api/commit/e0d3063dc27efba975b02823c5675c5762c90748))
+* **GIFT-3543:** simplify yml files ([8bfcdf7](https://github.com/UK-Export-Finance/mdm-api/commit/8bfcdf735c405e72bbddd359d7fdf1b8c270281e))
+
 ## [1.31.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.30.0...v1.31.0) (2025-09-18)
 
 ### Features
