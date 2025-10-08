@@ -194,7 +194,6 @@ this.logger.error({ id: 'your message here' }, 'context-name');
 
 # log
 this.logger.log({ id: 'your message here' }, 'context-name');
-
 ```
 
 ### Authentication
