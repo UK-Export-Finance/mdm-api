@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.33.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.32.0...v1.33.0) (2025-10-07)
+
+
+### Features
+
+* **GIFT-14047:** product configuration - lead days support ([#1589](https://github.com/UK-Export-Finance/mdm-api/issues/1589)) ([610b8e6](https://github.com/UK-Export-Finance/mdm-api/commit/610b8e6506f566692a4006758f5ee0d18b61151b))
+
 ## [1.32.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.31.0...v1.32.0) (2025-10-06)
 
 
