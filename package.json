@@ -81,7 +81,7 @@
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
     "@nestjs/cli": "^11.0.10",
-    "@nestjs/schematics": "^11.0.8",
+    "@nestjs/schematics": "^11.0.9",
     "@nestjs/testing": "^11.1.6",
     "@tsconfig/node21": "^21.0.5",
     "@types/chance": "^1.1.7",
