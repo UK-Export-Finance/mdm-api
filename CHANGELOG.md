@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.34.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.33.0...v1.34.0) (2025-12-05)
+
+
+### Features
+
+* **18410:** product configuration - update accounts ([#1663](https://github.com/UK-Export-Finance/mdm-api/issues/1663)) ([badb4c7](https://github.com/UK-Export-Finance/mdm-api/commit/badb4c7143772d2cd443bc305eef5467cb39cdbd))
+
 ## [1.33.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.32.0...v1.33.0) (2025-10-07)
 
 
