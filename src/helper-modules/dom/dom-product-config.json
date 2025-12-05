@@ -37,7 +37,7 @@
       "BOND: SUPPLEMENTAL TO CASH",
       "BOND: SUPPLEMENTAL TO CREDIT"
     ],
-    "account": ["2", "3"]
+    "account": ["2", "3", "7"]
   },
   {
     "productType": "EDG",
@@ -69,7 +69,7 @@
     },
     "counterpartySubtypes": [],
     "productSubtypes": [],
-    "account": ["2", "6"]
+    "account": ["2", "6", "7"]
   },
   {
     "productType": "EXAMPLE_ALL_OPTIONAL",
@@ -173,6 +173,6 @@
       "SUB-CONTRACTOR"
     ],
     "productSubtypes": [],
-    "account": ["1", "2", "3"]
+    "account": ["1", "2", "3", "7"]
   }
 ]
