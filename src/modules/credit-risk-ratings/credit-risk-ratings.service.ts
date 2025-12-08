@@ -22,9 +22,11 @@ export class CreditRiskRatingsService {
   async findAll(): Promise<CreditRiskRatingEntity[]> {
     try {
       const result = await this.creditRiskRating.find({ order: { id: 'ASC' } });
+
       return result;
     } catch (error) {
       this.logger.error(error);
+
       throw new InternalServerErrorException();
     }
   }
