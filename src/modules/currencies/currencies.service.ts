@@ -20,6 +20,11 @@ export class CurrenciesService {
     private readonly logger: PinoLogger,
   ) {}
 
+  /**
+   * Find all currencies
+   *
+   * @returns {Promise<CurrencyEntity[]>}
+   */
   async findAll(): Promise<CurrencyEntity[]> {
     try {
       const result = await this.currency.find({ order: { id: 'ASC' } });
@@ -29,6 +34,13 @@ export class CurrenciesService {
       throw new InternalServerErrorException();
     }
   }
+
+  /**
+   * Find a single currency
+   *
+   * @param {string} isoCode - The currency ISO code
+   * @returns {Promise<CurrencyEntity>}
+   */
   async findOne(isoCode: string): Promise<CurrencyEntity[]> {
     try {
       const results = await this.currency.find({
@@ -52,6 +64,14 @@ export class CurrenciesService {
     }
   }
 
+  /**
+   * Find an exchange rate
+   *
+   * @param {string} source - The exchange rate source
+   * @param {string} target - The exchange rate target
+   * @param {string} exchangeRateDate - Optional exchange rate date
+   * @returns {Promise<CurrencyEntity>}
+   */
   async findExchangeRate(source: string, target: string, exchangeRateDate?: string): Promise<CurrencyExchangeEntity[]> {
     try {
       const results = await this.currencyExchange.query('USP_READ_CURRENCY_EXCHANGE_RATE @0, @1, @2', [source, target, exchangeRateDate]);

@@ -51,7 +51,7 @@ describe('InterestRatesController', () => {
     it('should return all interest rates', async () => {
       await interestRatesController.findAll();
 
-      expect(interestRatesService.findAll).toHaveBeenCalled();
+      expect(interestRatesService.findAll).toHaveBeenCalledTimes(1);
     });
   });
 });
