@@ -62,15 +62,18 @@ describe('PremiumSchedulesController', () => {
       const createSchedules = new CreatePremiumScheduleDto();
       await premiumSchedulesController.create(mockResponseObject, [createSchedules]);
 
-      expect(premiumSchedulesService.create).toHaveBeenCalled();
+      expect(premiumSchedulesService.create).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('find()', () => {
     it('should find premium schedules for Facility id', async () => {
-      await premiumSchedulesController.find({ facilityId: chance.natural({ min: 10000000, max: 99999999 }).toString() });
+      const mockFacilityId = chance.natural({ min: 10000000, max: 99999999 }).toString();
 
-      expect(premiumSchedulesService.find).toHaveBeenCalled();
+      await premiumSchedulesController.find({ facilityId: mockFacilityId });
+
+      expect(premiumSchedulesService.find).toHaveBeenCalledTimes(1);
+      expect(premiumSchedulesService.find).toHaveBeenCalledWith(mockFacilityId);
     });
   });
 });

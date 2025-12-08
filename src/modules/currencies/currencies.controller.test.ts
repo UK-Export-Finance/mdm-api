@@ -38,7 +38,7 @@ describe('CurrenciesController', () => {
     it('should return all currencies', async () => {
       await currencyController.findAll();
 
-      expect(currencyService.findAll).toHaveBeenCalled();
+      expect(currencyService.findAll).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -46,7 +46,8 @@ describe('CurrenciesController', () => {
     it('should return one currency', async () => {
       await currencyController.findOne({ isoCode: 'GBP' });
 
-      expect(currencyService.findOne).toHaveBeenCalled();
+      expect(currencyService.findOne).toHaveBeenCalledTimes(1);
+      expect(currencyService.findOne).toHaveBeenCalledWith('GBP');
     });
   });
 
@@ -55,7 +56,8 @@ describe('CurrenciesController', () => {
       const query = new GetCurrencyExchangeDto();
       await currencyController.findExchangeRate(query);
 
-      expect(currencyService.findExchangeRate).toHaveBeenCalled();
+      expect(currencyService.findExchangeRate).toHaveBeenCalledTimes(1);
+      expect(currencyService.findExchangeRate).toHaveBeenCalledWith(query.source, query.target, query.exchangeRateDate);
     });
   });
 });

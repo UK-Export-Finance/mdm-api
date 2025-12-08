@@ -55,7 +55,8 @@ describe('SectorIndustriesController', () => {
       const query = new GetSectorIndustriesQueryDto();
       await sectorIndustriesController.find(query);
 
-      expect(sectorIndustriesService.find).toHaveBeenCalled();
+      expect(sectorIndustriesService.find).toHaveBeenCalledTimes(1);
+      expect(sectorIndustriesService.find).toHaveBeenCalledWith(query.ukefSectorId, query.ukefIndustryId);
     });
   });
 });

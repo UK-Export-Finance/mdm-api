@@ -51,9 +51,12 @@ describe('YieldRatesController', () => {
 
   describe('find()', () => {
     it('should call service find function', async () => {
-      await yieldRatesController.find({ searchDate: '2023-03-02' });
+      const mockSearchDate = '2023-03-02';
 
-      expect(yieldRatesService.find).toHaveBeenCalled();
+      await yieldRatesController.find({ searchDate: mockSearchDate });
+
+      expect(yieldRatesService.find).toHaveBeenCalledTimes(1);
+      expect(yieldRatesService.find).toHaveBeenCalledWith(mockSearchDate);
     });
   });
 });

@@ -42,7 +42,8 @@ describe('ConstantsController', () => {
       const query = new GetExposurePeriodQueryDto();
       await exposurePeriodController.find(query);
 
-      expect(exposurePeriodService.calculate).toHaveBeenCalled();
+      expect(exposurePeriodService.calculate).toHaveBeenCalledTimes(1);
+      expect(exposurePeriodService.calculate).toHaveBeenCalledWith(query.startdate, query.enddate, query.productgroup);
     });
   });
 });

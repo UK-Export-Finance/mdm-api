@@ -83,7 +83,7 @@ describe('OdsService', () => {
 
       expect(result).toEqual(mockOutputBody);
 
-      expect(mockQueryRunner.release).toHaveBeenCalled();
+      expect(mockQueryRunner.release).toHaveBeenCalledTimes(1);
     });
 
     it('throws an error if calling the stored procedure fails', async () => {
