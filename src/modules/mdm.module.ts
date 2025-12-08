@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { AuthModule } from '@ukef/auth/auth.module';
 import { DatabaseModule } from '@ukef/database/database.module';
 import { CompaniesModule } from '@ukef/modules/companies/companies.module';
+import { CreditRiskRatingsModule } from '@ukef/modules/credit-risk-ratings/credit-risk-ratings.module';
 import { CurrenciesModule } from '@ukef/modules/currencies/currencies.module';
 import { CustomersModule } from '@ukef/modules/customers/customers.module';
 import { DomModule } from '@ukef/modules/dom/dom.module';
@@ -21,6 +22,7 @@ import { YieldRatesModule } from '@ukef/modules/yield-rates/yield-rates.module';
   imports: [
     AuthModule,
     CompaniesModule,
+    CreditRiskRatingsModule,
     CurrenciesModule,
     CustomersModule,
     DatabaseModule,
@@ -40,6 +42,7 @@ import { YieldRatesModule } from '@ukef/modules/yield-rates/yield-rates.module';
   exports: [
     AuthModule,
     CompaniesModule,
+    CreditRiskRatingsModule,
     CurrenciesModule,
     CustomersModule,
     DatabaseModule,
