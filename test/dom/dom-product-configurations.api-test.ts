@@ -8,7 +8,7 @@ const {
   domOdsVersioning: { prefixAndVersion },
 } = AppConfig();
 
-describe('/ods - product-configuration', () => {
+describe('/dom - product-configuration', () => {
   let api: Api;
 
   beforeAll(async () => {

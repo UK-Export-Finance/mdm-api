@@ -1,3 +1,4 @@
+export * from './find-credit-risk-rating.dto';
 export * from './find-dom-business-centre-non-working-day-mapped-response.dto';
 export * from './find-dom-business-centre-non-working-days-param.dto';
 export * from './find-dom-business-centre-param.dto';

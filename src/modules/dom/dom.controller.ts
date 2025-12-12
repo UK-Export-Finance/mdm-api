@@ -2,8 +2,10 @@ import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import AppConfig from '@ukef/config/app.config';
 
+import { CreditRiskRatingsService } from './credit-risk-ratings/credit-risk-ratings.service';
 import { DomService } from './dom.service';
 import {
+  FindCreditRiskRatingDto,
   FindDomBusinessCentreNonWorkingDayMappedResponse,
   FindDomBusinessCentreNonWorkingDaysParamDto,
   FindDomBusinessCentreParamDto,
@@ -15,6 +17,7 @@ import {
   GetDomBusinessCentresNonWorkingDaysParamDto,
   GetDomProductConfigResponse,
 } from './dto';
+import { CreditRiskRatingEntity } from './entities';
 
 const { domOdsVersioning } = AppConfig();
 
@@ -24,7 +27,10 @@ const { domOdsVersioning } = AppConfig();
   version: domOdsVersioning.version,
 })
 export class DomController {
-  constructor(private readonly domService: DomService) {}
+  constructor(
+    private readonly domService: DomService,
+    private readonly creditRiskRatingsService: CreditRiskRatingsService,
+  ) {}
 
   @Get('business-centre/:centreCode')
   @ApiOperation({
@@ -109,6 +115,21 @@ export class DomController {
     @Query() query: GetDomBusinessCentresNonWorkingDaysParamDto,
   ): Promise<FindMultipleDomBusinessCentresNonWorkingDaysResponse> {
     return this.domService.findMultipleBusinessCentresNonWorkingDays(query.centreCodes);
+  }
+
+  @Get('credit-risk-ratings')
+  @ApiOperation({
+    summary: 'Get all credit risk ratings',
+  })
+  @ApiOkResponse({
+    description: 'All credit risk ratings',
+    type: [FindCreditRiskRatingDto],
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  getCreditRiskRatings(): Promise<CreditRiskRatingEntity[]> {
+    return this.creditRiskRatingsService.getAll();
   }
 
   @Get('product-configuration/:productType')
