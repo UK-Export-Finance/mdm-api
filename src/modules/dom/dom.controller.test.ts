@@ -4,6 +4,7 @@ import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
 import { OdsService } from '../ods/ods.service';
+import { CreditRiskRatingsService } from './credit-risk-ratings/credit-risk-ratings.service';
 import { DomController } from './dom.controller';
 import { DomService } from './dom.service';
 import { FindMultipleDomBusinessCentresNonWorkingDaysResponse, FindMultipleProductConfigsResponse } from './dto';
@@ -32,9 +33,11 @@ describe('DomController', () => {
     createQueryRunner: jest.fn().mockReturnValue(mockQueryRunner),
   } as unknown as jest.Mocked<DataSource>;
 
+  const creditRiskRatingsService = new CreditRiskRatingsService(null, mockLogger);
   const odsService = new OdsService(mockDataSource, mockLogger);
   const domService = new DomService(odsService, mockLogger);
 
+  let creditRiskRatingsServiceGetAll: jest.Mock;
   let domServiceFindBusinessCentre: jest.Mock;
   let domServiceFindBusinessCentreNonWorkingDays: jest.Mock;
   let domServiceGetBusinessCentres: jest.Mock;
@@ -46,6 +49,9 @@ describe('DomController', () => {
   let controller: DomController;
 
   beforeEach(() => {
+    creditRiskRatingsServiceGetAll = jest.fn().mockReturnValueOnce(EXAMPLES.CREDIT_RISK_RATINGS);
+    creditRiskRatingsService.getAll = creditRiskRatingsServiceGetAll;
+
     domServiceFindBusinessCentre = jest.fn().mockReturnValueOnce(DOM_BUSINESS_CENTRES.AE_DXB);
     domService.findBusinessCentre = domServiceFindBusinessCentre;
 
@@ -67,7 +73,7 @@ describe('DomController', () => {
     domServiceFindMultipleProductConfigurations = jest.fn().mockReturnValueOnce(mockMultipleProductConfigurations);
     domService.findMultipleProductConfigurations = domServiceFindMultipleProductConfigurations;
 
-    controller = new DomController(domService);
+    controller = new DomController(domService, creditRiskRatingsService);
   });
 
   describe('findBusinessCentre', () => {
@@ -112,10 +118,44 @@ describe('DomController', () => {
 
         domService.findBusinessCentreNonWorkingDays = jest.fn().mockRejectedValueOnce(mockError);
 
-        controller = new DomController(domService);
+        controller = new DomController(domService, creditRiskRatingsService);
 
         // Act & Assert
         const promise = controller.findBusinessCentreNonWorkingDays({ centreCode: DOM_BUSINESS_CENTRES.CM_YAO.CODE });
+
+        await expect(promise).rejects.toThrow(mockError);
+      });
+    });
+  });
+
+  describe('getCreditRiskRatings', () => {
+    it('should call creditRiskRatingsService.getAll', async () => {
+      // Act
+      await controller.getCreditRiskRatings();
+
+      // Assert
+      expect(creditRiskRatingsServiceGetAll).toHaveBeenCalledTimes(1);
+    });
+
+    it('should return the result of creditRiskRatingsService.getAll', async () => {
+      // Act
+      const result = await controller.getCreditRiskRatings();
+
+      // Assert
+      expect(result).toEqual(EXAMPLES.CREDIT_RISK_RATINGS);
+    });
+
+    describe('when creditRiskRatingsService.getAll throws an error', () => {
+      it('should throw an error', async () => {
+        // Arrange
+        const domService = new DomService(odsService, mockLogger);
+
+        creditRiskRatingsService.getAll = jest.fn().mockRejectedValueOnce(mockError);
+
+        controller = new DomController(domService, creditRiskRatingsService);
+
+        // Act & Assert
+        const promise = controller.getCreditRiskRatings();
 
         await expect(promise).rejects.toThrow(mockError);
       });

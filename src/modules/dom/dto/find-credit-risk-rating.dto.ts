@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDateString, IsString } from 'class-validator';
 
-export class CreditRiskRatingDto {
+export class FindCreditRiskRatingDto {
   @ApiProperty({
     example: 'A++',
     description: 'Credit risk rating ID',

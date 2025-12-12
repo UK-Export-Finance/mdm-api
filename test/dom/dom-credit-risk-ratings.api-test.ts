@@ -3,12 +3,10 @@ import AppConfig from '@ukef/config/app.config';
 import { Api } from '@ukef-test/support/api';
 
 const {
-  versioning: { prefixAndVersion },
+  domOdsVersioning: { prefixAndVersion },
 } = AppConfig();
 
-describe('/credit-risk-ratings', () => {
-  const url = `/api/${prefixAndVersion}/credit-risk-ratings`;
-
+describe('/dom - credit risk ratings', () => {
   let api: Api;
 
   beforeAll(async () => {
@@ -20,6 +18,9 @@ describe('/credit-risk-ratings', () => {
   });
 
   it(`should return ${HttpStatus.OK}`, async () => {
+    // Arrange
+    const url = `/api/${prefixAndVersion}/dom/credit-risk-ratings`;
+
     // Act
     const { status, body } = await api.get(url);
 

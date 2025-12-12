@@ -138,7 +138,7 @@ export const EXAMPLES = {
         },
         counterpartySubtypes: [COUNTERPARTY_SUBTYPES.BROKER],
         productSubtypes: [],
-        account: ['1', '2', '3'],
+        account: [1, 2, 3],
       },
       EXIP: {
         productType: PRODUCT_TYPES.EXIP,
@@ -149,7 +149,7 @@ export const EXAMPLES = {
         },
         counterpartySubtypes: [COUNTERPARTY_SUBTYPES.BROKER, COUNTERPARTY_SUBTYPES.GUARANTOR],
         productSubtypes: [],
-        account: ['1', '2', '3'],
+        account: [1, 2, 3],
       },
     },
   },
