@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.35.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.34.0...v1.35.0) (2025-12-12)
+
+
+### Features
+
+* **18724:** move credit-risk-ratings to /v2/dom, update product config ([#1667](https://github.com/UK-Export-Finance/mdm-api/issues/1667)) ([c54d491](https://github.com/UK-Export-Finance/mdm-api/commit/c54d4916a4472a4d5e5cdc245bc9ba2e0399214f))
+* **GIFT-17018:** credit risk ratings - find all ([#1665](https://github.com/UK-Export-Finance/mdm-api/issues/1665)) ([9fa495b](https://github.com/UK-Export-Finance/mdm-api/commit/9fa495b068f70f0e14aff0783c33a009bd74578d))
+
 ## [1.34.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.33.0...v1.34.0) (2025-12-05)
 
 
