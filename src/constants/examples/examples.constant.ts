@@ -14,6 +14,15 @@ const COUNTERPARTY_SUBTYPES = {
   GUARANTOR: 'GUARANTOR',
 };
 
+const INDUSTRY = {
+  ID: 'UKEF_0101',
+  CODE: '0101',
+  DESCRIPTION: 'AIRPORTS',
+  GROUP_CODE: '01',
+  GROUP_DESCRIPTION: 'CIVIL: CONSTRUCTION',
+  CATEGORY: 'UKEF',
+};
+
 const PRODUCT_CONFIG_REQUIREMENT = {
   NOT_APPLICABLE: 'NOT_APPLICABLE',
   OPTIONAL: 'OPTIONAL',
@@ -80,6 +89,7 @@ export const EXAMPLES = {
     NAME: 'ABC PARIS CLUB 01',
     DESCRIPTION: 'Paris Club agreement',
   },
+  INDUSTRY,
   DOM: {
     BUSINESS_CENTRES: [
       {
@@ -191,6 +201,14 @@ export const EXAMPLES = {
         business_centre_name: 'Mock name StB',
       },
     ],
+    INDUSTRY: {
+      industry_id: INDUSTRY.ID,
+      industry_code: INDUSTRY.CODE,
+      industry_description: INDUSTRY.DESCRIPTION,
+      industry_group_code: INDUSTRY.GROUP_CODE,
+      industry_group_description: INDUSTRY.GROUP_DESCRIPTION,
+      industry_category: INDUSTRY.CATEGORY,
+    },
   },
   PRODUCT_TYPES,
 };

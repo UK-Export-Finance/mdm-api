@@ -141,7 +141,7 @@ export class DomService {
    * Find multiple product configurations in DOM
    * @param {string} productTypes: DOM product types, comma separated
    * @returns {Promise<FindMultipleProductConfigsResponse>}
-   * @throws {NotFoundException} If no business centre is found
+   * @throws {NotFoundException} If no product configuration is found
    */
   async findMultipleProductConfigurations(productTypes: string): Promise<FindMultipleProductConfigsResponse> {
     try {

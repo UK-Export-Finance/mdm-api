@@ -2,7 +2,7 @@ import { Controller, Get, Param } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import AppConfig from '@ukef/config/app.config';
 
-import { GetOdsCustomerParamDto, GetOdsCustomerResponse, GetOdsDealParamDto, GetOdsDealResponse } from './dto';
+import { GetOdsCustomerParamDto, GetOdsCustomerResponse, GetOdsDealParamDto, GetOdsDealResponse, GetOdsIndustryOdsResponse } from './dto';
 import { OdsService } from './ods.service';
 
 const { domOdsVersioning } = AppConfig();
@@ -55,5 +55,21 @@ export class OdsController {
   })
   findDeal(@Param() param: GetOdsDealParamDto): Promise<GetOdsDealResponse> {
     return this.odsService.findDeal(param.id);
+  }
+
+  @Get('ukef-industry-codes')
+  @ApiOperation({
+    summary: 'Get UKEF industry codes from ODS',
+  })
+  @ApiOkResponse({
+    description: 'Mapped UKEF industry codes from ODS',
+    isArray: true,
+    type: GetOdsIndustryOdsResponse,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  getUkefIndustryCodes(): Promise<GetOdsDealResponse[]> {
+    return this.odsService.getUkefIndustryCodes();
   }
 }

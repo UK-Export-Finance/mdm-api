@@ -7,6 +7,8 @@ import { OdsService } from './ods.service';
 
 const mockError = new Error('An error occurred');
 
+const mockUkefIndustryCodes = [EXAMPLES.ODS.INDUSTRY, EXAMPLES.ODS.INDUSTRY];
+
 describe('OdsController', () => {
   const mockLogger = new PinoLogger({});
 
@@ -14,6 +16,7 @@ describe('OdsController', () => {
   let odsServiceFindBusinessCentreNonWorkingDays: jest.Mock;
   let odsServiceFindCustomer: jest.Mock;
   let odsServiceFindDeal: jest.Mock;
+  let odsServiceGetUkefIndustryCodes: jest.Mock;
 
   let controller: OdsController;
 
@@ -26,6 +29,9 @@ describe('OdsController', () => {
 
     odsServiceFindDeal = jest.fn();
     odsService.findDeal = odsServiceFindDeal;
+
+    odsServiceGetUkefIndustryCodes = jest.fn().mockReturnValueOnce(mockUkefIndustryCodes);
+    odsService.getUkefIndustryCodes = odsServiceGetUkefIndustryCodes;
 
     controller = new OdsController(odsService);
   });
@@ -110,6 +116,24 @@ describe('OdsController', () => {
 
         await expect(promise).rejects.toThrow(mockError);
       });
+    });
+  });
+
+  describe('getUkefIndustryCodes', () => {
+    it('should call odsService.getUkefIndustryCodes', () => {
+      // Act
+      controller.getUkefIndustryCodes();
+
+      // Assert
+      expect(odsServiceGetUkefIndustryCodes).toHaveBeenCalledTimes(1);
+    });
+
+    it('should return product configurations', () => {
+      // Act
+      const result = controller.getUkefIndustryCodes();
+
+      // Assert
+      expect(result).toStrictEqual(mockUkefIndustryCodes);
     });
   });
 });

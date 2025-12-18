@@ -1,6 +1,7 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DATABASE_NAME } from '@ukef/constants';
+import { mapIndustries } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource } from 'typeorm';
 
@@ -8,6 +9,7 @@ import {
   GetOdsBusinessCentreNonWorkingDayResponse,
   GetOdsCustomerResponse,
   GetOdsDealResponse,
+  GetOdsIndustryOdsResponse,
   ODS_ENTITIES,
   OdsEntity,
   OdsStoredProcedureInput,
@@ -167,6 +169,40 @@ export class OdsService {
 
       this.logger.error(error);
       throw new InternalServerErrorException(`Error getting business centre ${centreCode} non working days`);
+    }
+  }
+
+  async getUkefIndustryCodes(): Promise<any> {
+    // TODO: info log for all methods in this service
+    try {
+      const storedProcedureInput = this.createOdsStoredProcedureInput({
+        entityToQuery: ODS_ENTITIES.INDUSTRY,
+        queryParameters: { industry_category: 'UKEF' },
+      });
+
+      const storedProcedureResult = await this.callOdsStoredProcedure(storedProcedureInput);
+
+      const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
+
+      if (storedProcedureJson?.status !== 'SUCCESS') {
+        this.logger.error('Error getting UKEF industry codes from ODS stored procedure, output %o', storedProcedureResult);
+
+        throw new InternalServerErrorException('Error getting UKEF industry codes from ODS stored procedure');
+      }
+
+      const industries = storedProcedureJson.results as GetOdsIndustryOdsResponse[];
+
+      const mappedIndustries = mapIndustries(industries);
+
+      return mappedIndustries;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        this.logger.warn(error);
+        throw error;
+      }
+
+      this.logger.error(error);
+      throw new InternalServerErrorException('Error getting UKEF industry codes');
     }
   }
 
