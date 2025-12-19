@@ -11,6 +11,7 @@ export type OdsStoredProcedureQueryParams = {
   customer_party_unique_reference_number?: string;
   deal_code?: string;
   industry_category?: string;
+  industry_code?: string;
 };
 
 /**

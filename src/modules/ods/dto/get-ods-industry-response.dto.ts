@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { EXAMPLES } from '@ukef/constants';
 
-export class GetOdsIndustryOdsResponse {
+export class GetOdsIndustryOdsResponseDto {
   @ApiProperty({
     description: 'Industry ID',
     example: EXAMPLES.INDUSTRY.CODE,

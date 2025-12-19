@@ -1,4 +1,5 @@
 import { EXAMPLES } from '@ukef/constants';
+import { mapIndustry } from '@ukef/helpers';
 import { when } from 'jest-when';
 import { PinoLogger } from 'nestjs-pino';
 
@@ -9,6 +10,8 @@ const mockError = new Error('An error occurred');
 
 const mockUkefIndustryCodes = [EXAMPLES.ODS.INDUSTRY, EXAMPLES.ODS.INDUSTRY];
 
+const mockMappedIndustry = mapIndustry(EXAMPLES.ODS.INDUSTRY);
+
 describe('OdsController', () => {
   const mockLogger = new PinoLogger({});
 
@@ -17,6 +20,7 @@ describe('OdsController', () => {
   let odsServiceFindCustomer: jest.Mock;
   let odsServiceFindDeal: jest.Mock;
   let odsServiceGetUkefIndustryCodes: jest.Mock;
+  let odsFindUkefIndustryCode: jest.Mock;
 
   let controller: OdsController;
 
@@ -32,6 +36,9 @@ describe('OdsController', () => {
 
     odsServiceGetUkefIndustryCodes = jest.fn().mockReturnValueOnce(mockUkefIndustryCodes);
     odsService.getUkefIndustryCodes = odsServiceGetUkefIndustryCodes;
+
+    odsFindUkefIndustryCode = jest.fn().mockReturnValueOnce(mockMappedIndustry);
+    odsService.findUkefIndustryCode = odsFindUkefIndustryCode;
 
     controller = new OdsController(odsService);
   });
@@ -134,6 +141,44 @@ describe('OdsController', () => {
 
       // Assert
       expect(result).toStrictEqual(mockUkefIndustryCodes);
+    });
+  });
+
+  describe('findUkefIndustryCode', () => {
+    it.each([{ value: EXAMPLES.INDUSTRY.CODE }, { value: '' }, { value: 'invalid' }])(
+      `should call odsService.findUkefIndustryCode with $value`,
+      async ({ value }) => {
+        // Act
+        await controller.findUkefIndustryCode({ industryCode: value });
+
+        // Assert
+        expect(odsFindUkefIndustryCode).toHaveBeenCalledTimes(1);
+        expect(odsFindUkefIndustryCode).toHaveBeenCalledWith(value);
+      },
+    );
+
+    it('should return an industry when a valid industry code is provided', async () => {
+      // Act
+      const result = await controller.findUkefIndustryCode({ industryCode: EXAMPLES.INDUSTRY.CODE });
+
+      // Assert
+      expect(result).toEqual(mockMappedIndustry);
+    });
+
+    describe('when odsService.findUkefIndustryCode throws an error', () => {
+      it('should throw an error', async () => {
+        // Arrange
+        const odsService = new OdsService(null, mockLogger);
+
+        odsService.findUkefIndustryCode = jest.fn().mockRejectedValueOnce(mockError);
+
+        controller = new OdsController(odsService);
+
+        // Act & Assert
+        const promise = controller.findUkefIndustryCode({ industryCode: EXAMPLES.INDUSTRY.CODE });
+
+        await expect(promise).rejects.toThrow(mockError);
+      });
     });
   });
 });
