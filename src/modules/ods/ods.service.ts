@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DATABASE_NAME } from '@ukef/constants';
-import { mapIndustries, mapIndustry } from '@ukef/helpers';
+import { mapIndustries, mapIndustry, mapIndustryCodes } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource } from 'typeorm';
 
@@ -186,7 +186,47 @@ export class OdsService {
    * @returns {Promise<GetOdsIndustryResponseDto[]>} Mapped UKEF industries
    * @throws {InternalServerErrorException} If there is an error getting UKEF industries
    */
-  async getUkefIndustries(): Promise<any> {
+  async getUkefIndustries(): Promise<GetOdsIndustryResponseDto[]> {
+    try {
+      this.logger.info('Getting UKEF industries');
+
+      const storedProcedureInput = this.createOdsStoredProcedureInput({
+        entityToQuery: ODS_ENTITIES.INDUSTRY,
+        queryParameters: { industry_category: 'UKEF' },
+      });
+
+      const storedProcedureResult = await this.callOdsStoredProcedure(storedProcedureInput);
+
+      const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
+
+      if (storedProcedureJson?.status !== 'SUCCESS') {
+        this.logger.error('Error getting UKEF industries from ODS stored procedure, output %o', storedProcedureResult);
+
+        throw new InternalServerErrorException('Error getting UKEF industries from ODS stored procedure');
+      }
+
+      const industries = storedProcedureJson.results as GetOdsIndustryOdsResponseDto[];
+
+      const mappedIndustries = mapIndustries(industries);
+
+      return mappedIndustries;
+    } catch (error) {
+      this.logger.error('Error getting UKEF industries %o', error);
+
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException('Error getting UKEF industries');
+    }
+  }
+
+  /**
+   * Get all UKEF industries codes from ODS
+   * @returns {Promise<string[]>} UKEF industry codes
+   * @throws {InternalServerErrorException} If there is an error getting UKEF industries
+   */
+  async getUkefIndustryCodes(): Promise<string[]> {
     try {
       this.logger.info('Getting UKEF industry codes');
 
@@ -207,9 +247,9 @@ export class OdsService {
 
       const industries = storedProcedureJson.results as GetOdsIndustryOdsResponseDto[];
 
-      const mappedIndustries = mapIndustries(industries);
+      const industryCodes = mapIndustryCodes(industries);
 
-      return mappedIndustries;
+      return industryCodes;
     } catch (error) {
       this.logger.error('Error getting UKEF industry codes %o', error);
 

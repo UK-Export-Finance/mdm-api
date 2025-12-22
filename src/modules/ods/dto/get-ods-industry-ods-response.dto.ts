@@ -1,40 +1,40 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { EXAMPLES } from '@ukef/constants';
 
-export class GetOdsIndustryResponseDto {
+export class GetOdsIndustryOdsResponseDto {
   @ApiProperty({
     description: 'Industry ID',
-    example: EXAMPLES.INDUSTRY.ID,
+    example: EXAMPLES.INDUSTRY.CODE,
   })
-  readonly id: string;
+  readonly industry_id: string;
 
   @ApiProperty({
     description: 'Industry code',
     example: EXAMPLES.INDUSTRY.CODE,
   })
-  readonly code: string;
+  readonly industry_code: string;
 
   @ApiProperty({
     description: 'Industry description',
     example: EXAMPLES.INDUSTRY.DESCRIPTION,
   })
-  readonly description: string;
+  readonly industry_description: string;
 
   @ApiProperty({
     description: 'Industry group code',
     example: EXAMPLES.INDUSTRY.GROUP_CODE,
   })
-  readonly groupCode: string;
+  readonly industry_group_code: string;
 
   @ApiProperty({
     description: 'Industry group description',
     example: EXAMPLES.INDUSTRY.GROUP_DESCRIPTION,
   })
-  readonly groupDescription: string;
+  readonly industry_group_description: string;
 
   @ApiProperty({
     description: 'Industry category',
     example: EXAMPLES.INDUSTRY.CATEGORY,
   })
-  readonly category: string;
+  readonly industry_category: string;
 }

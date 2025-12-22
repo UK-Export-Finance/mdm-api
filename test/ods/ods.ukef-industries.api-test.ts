@@ -44,6 +44,23 @@ describe('/ods - UKEF industries', () => {
     });
   });
 
+  describe('/ukef-industry-codes', () => {
+    it(`should return ${HttpStatus.OK} with UKEF industry codes`, async () => {
+      // Arrange
+      const url = `/api/${prefixAndVersion}/ods/ukef-industry-codes`;
+
+      // Act
+      const { status, body } = await api.get(url);
+
+      // Assert
+      expect(status).toBe(HttpStatus.OK);
+
+      const expected = expect.arrayContaining([expect.any(String)]);
+
+      expect(body).toEqual(expected);
+    });
+  });
+
   describe('/ukef-industry/:industryCode', () => {
     it(`should return ${HttpStatus.OK} with a mapped UKEF industry`, async () => {
       // Arrange

@@ -81,20 +81,20 @@ export class OdsController {
     return this.odsService.getUkefIndustries();
   }
 
-  @Get('ukef-industries')
+  @Get('ukef-industry-codes')
   @ApiOperation({
-    summary: 'Get UKEF industries from ODS',
+    summary: 'Get UKEF industry codes from ODS',
   })
   @ApiOkResponse({
-    description: 'Mapped UKEF industries from ODS',
+    description: 'UKEF industry codes from ODS',
     isArray: true,
-    type: GetOdsIndustryResponseDto,
+    type: String,
   })
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
   })
-  getUkefIndustries(): Promise<GetOdsIndustryResponseDto[]> {
-    return this.odsService.getUkefIndustries();
+  getUkefIndustryCodes(): Promise<string[]> {
+    return this.odsService.getUkefIndustryCodes();
   }
 
   @Get('ukef-industry/:industryCode')

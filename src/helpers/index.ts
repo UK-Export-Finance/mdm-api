@@ -4,6 +4,7 @@ export * from './map-business-centre-non-working-days';
 export * from './map-business-centres';
 export * from './map-industries';
 export * from './map-industry';
+export * from './map-industry-codes';
 export * from './regex.helper';
 export * from './response-status.helper';
 export * from './transform-interceptor.helper';
