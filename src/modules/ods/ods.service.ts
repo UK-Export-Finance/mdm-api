@@ -234,7 +234,7 @@ export class OdsService {
         queryPageSize: 1,
         queryParameters: {
           industry_category: 'UKEF',
-          industry_code: '0101',
+          industry_code: industryCode,
         },
       });
 
