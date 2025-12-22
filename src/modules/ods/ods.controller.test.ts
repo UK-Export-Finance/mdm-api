@@ -8,7 +8,8 @@ import { OdsService } from './ods.service';
 
 const mockError = new Error('An error occurred');
 
-const mockUkefIndustryCodes = [EXAMPLES.ODS.INDUSTRY, EXAMPLES.ODS.INDUSTRY];
+const mockUkefIndustries = [EXAMPLES.ODS.INDUSTRY, EXAMPLES.ODS.INDUSTRY];
+const mockUkefIndustryCodes = [EXAMPLES.ODS.INDUSTRY.industry_code, EXAMPLES.ODS.INDUSTRY.industry_code];
 
 const mockMappedIndustry = mapIndustry(EXAMPLES.ODS.INDUSTRY);
 
@@ -19,8 +20,9 @@ describe('OdsController', () => {
   let odsServiceFindBusinessCentreNonWorkingDays: jest.Mock;
   let odsServiceFindCustomer: jest.Mock;
   let odsServiceFindDeal: jest.Mock;
+  let odsServiceGetUkefIndustries: jest.Mock;
   let odsServiceGetUkefIndustryCodes: jest.Mock;
-  let odsFindUkefIndustryCode: jest.Mock;
+  let findUkefIndustry: jest.Mock;
 
   let controller: OdsController;
 
@@ -34,11 +36,14 @@ describe('OdsController', () => {
     odsServiceFindDeal = jest.fn();
     odsService.findDeal = odsServiceFindDeal;
 
+    odsServiceGetUkefIndustries = jest.fn().mockReturnValueOnce(mockUkefIndustries);
+    odsService.getUkefIndustries = odsServiceGetUkefIndustries;
+
     odsServiceGetUkefIndustryCodes = jest.fn().mockReturnValueOnce(mockUkefIndustryCodes);
     odsService.getUkefIndustryCodes = odsServiceGetUkefIndustryCodes;
 
-    odsFindUkefIndustryCode = jest.fn().mockReturnValueOnce(mockMappedIndustry);
-    odsService.findUkefIndustryCode = odsFindUkefIndustryCode;
+    findUkefIndustry = jest.fn().mockReturnValueOnce(mockMappedIndustry);
+    odsService.findUkefIndustry = findUkefIndustry;
 
     controller = new OdsController(odsService);
   });
@@ -126,6 +131,24 @@ describe('OdsController', () => {
     });
   });
 
+  describe('getUkefIndustries', () => {
+    it('should call odsService.getUkefIndustries', () => {
+      // Act
+      controller.getUkefIndustries();
+
+      // Assert
+      expect(odsServiceGetUkefIndustries).toHaveBeenCalledTimes(1);
+    });
+
+    it('should return UKEF industries', () => {
+      // Act
+      const result = controller.getUkefIndustries();
+
+      // Assert
+      expect(result).toStrictEqual(mockUkefIndustries);
+    });
+  });
+
   describe('getUkefIndustryCodes', () => {
     it('should call odsService.getUkefIndustryCodes', () => {
       // Act
@@ -135,7 +158,7 @@ describe('OdsController', () => {
       expect(odsServiceGetUkefIndustryCodes).toHaveBeenCalledTimes(1);
     });
 
-    it('should return product configurations', () => {
+    it('should return UKEF industry codes', () => {
       // Act
       const result = controller.getUkefIndustryCodes();
 
@@ -144,38 +167,38 @@ describe('OdsController', () => {
     });
   });
 
-  describe('findUkefIndustryCode', () => {
+  describe('findUkefIndustry', () => {
     it.each([{ value: EXAMPLES.INDUSTRY.CODE }, { value: '' }, { value: 'invalid' }])(
-      `should call odsService.findUkefIndustryCode with $value`,
+      `should call odsService.findUkefIndustry with $value`,
       async ({ value }) => {
         // Act
-        await controller.findUkefIndustryCode({ industryCode: value });
+        await controller.findUkefIndustry({ industryCode: value });
 
         // Assert
-        expect(odsFindUkefIndustryCode).toHaveBeenCalledTimes(1);
-        expect(odsFindUkefIndustryCode).toHaveBeenCalledWith(value);
+        expect(findUkefIndustry).toHaveBeenCalledTimes(1);
+        expect(findUkefIndustry).toHaveBeenCalledWith(value);
       },
     );
 
     it('should return an industry when a valid industry code is provided', async () => {
       // Act
-      const result = await controller.findUkefIndustryCode({ industryCode: EXAMPLES.INDUSTRY.CODE });
+      const result = await controller.findUkefIndustry({ industryCode: EXAMPLES.INDUSTRY.CODE });
 
       // Assert
       expect(result).toEqual(mockMappedIndustry);
     });
 
-    describe('when odsService.findUkefIndustryCode throws an error', () => {
+    describe('when odsService.findUkefIndustry throws an error', () => {
       it('should throw an error', async () => {
         // Arrange
         const odsService = new OdsService(null, mockLogger);
 
-        odsService.findUkefIndustryCode = jest.fn().mockRejectedValueOnce(mockError);
+        odsService.findUkefIndustry = jest.fn().mockRejectedValueOnce(mockError);
 
         controller = new OdsController(odsService);
 
         // Act & Assert
-        const promise = controller.findUkefIndustryCode({ industryCode: EXAMPLES.INDUSTRY.CODE });
+        const promise = controller.findUkefIndustry({ industryCode: EXAMPLES.INDUSTRY.CODE });
 
         await expect(promise).rejects.toThrow(mockError);
       });
