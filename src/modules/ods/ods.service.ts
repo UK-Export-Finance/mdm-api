@@ -183,12 +183,12 @@ export class OdsService {
 
   /**
    * Get all UKEF industries from ODS
-   * @returns {Promise<GetOdsIndustryResponseDto[]>} Mapped UKEF industry codes
-   * @throws {InternalServerErrorException} If there is an error getting UKEF industry codes
+   * @returns {Promise<GetOdsIndustryResponseDto[]>} Mapped UKEF industries
+   * @throws {InternalServerErrorException} If there is an error getting UKEF industries
    */
-  async getUkefIndustryCodes(): Promise<any> {
+  async getUkefIndustries(): Promise<any> {
     try {
-      this.logger.info('Getting ODS UKEF industry codes');
+      this.logger.info('Getting UKEF industry codes');
 
       const storedProcedureInput = this.createOdsStoredProcedureInput({
         entityToQuery: ODS_ENTITIES.INDUSTRY,
@@ -211,27 +211,25 @@ export class OdsService {
 
       return mappedIndustries;
     } catch (error) {
-      this.logger.error('Error getting ODS UKEF industry codes %o', error);
+      this.logger.error('Error getting UKEF industry codes %o', error);
 
       if (error instanceof NotFoundException) {
         throw error;
       }
 
-      throw new InternalServerErrorException('Error getting ODS UKEF industry codes');
+      throw new InternalServerErrorException('Error getting UKEF industry codes');
     }
   }
 
-  // TODO: industry code or just "industry"?
-
   /**
-   * Find a UKEF industry code
-   * @param {string} industryCode: ODS UKEF industry code
+   * Find a UKEF industry by industry code
+   * @param {string} industryCode: UKEF industry code
    * @returns {Promise<GetOdsIndustryResponseDto[]>}
-   * @throws {NotFoundException} If no UKEF industry code is found
+   * @throws {NotFoundException} If no UKEF industry is found
    */
-  async findUkefIndustryCode(industryCode: string): Promise<GetOdsIndustryResponseDto> {
+  async findUkefIndustry(industryCode: string): Promise<GetOdsIndustryResponseDto> {
     try {
-      this.logger.info('Finding ODS UKEF industry code %s', industryCode);
+      this.logger.info('Finding UKEF industry %s', industryCode);
 
       const storedProcedureInput = this.createOdsStoredProcedureInput({
         entityToQuery: ODS_ENTITIES.INDUSTRY,
@@ -247,26 +245,26 @@ export class OdsService {
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
       if (storedProcedureJson?.status !== 'SUCCESS') {
-        this.logger.error('Error finding ODS UKEF industry code %s from ODS stored procedure, output %o', industryCode, storedProcedureResult);
+        this.logger.error('Error finding UKEF industry %s from ODS stored procedure, output %o', industryCode, storedProcedureResult);
 
-        throw new InternalServerErrorException(`Error finding ODS UKEF industry code ${industryCode} from ODS stored procedure`);
+        throw new InternalServerErrorException(`Error finding UKEF industry ${industryCode} from ODS stored procedure`);
       }
 
       if (storedProcedureJson?.total_result_count === 0) {
-        throw new NotFoundException(`No ODS UKEF industry code ${industryCode} found`);
+        throw new NotFoundException(`No UKEF industry ${industryCode} found`);
       }
 
       const industry = storedProcedureJson.results[0] as GetOdsIndustryOdsResponseDto;
 
       return mapIndustry(industry);
     } catch (error) {
-      this.logger.error('Error finding ODS UKEF industry code %s %o', industryCode, error);
+      this.logger.error('Error finding UKEF industry %s %o', industryCode, error);
 
       if (error instanceof NotFoundException) {
         throw error;
       }
 
-      throw new Error(`Error finding ODS UKEF industry code ${industryCode}`, error);
+      throw new Error(`Error finding UKEF industry ${industryCode}`, error);
     }
   }
 

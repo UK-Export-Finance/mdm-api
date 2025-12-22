@@ -7,10 +7,8 @@ const {
   domOdsVersioning: { prefixAndVersion },
 } = AppConfig();
 
-describe('/ods - UKEF industry codes', () => {
+describe('/ods - UKEF industries', () => {
   let api: Api;
-
-  const baseUrl = `/api/${prefixAndVersion}/ods/ukef-industry-codes`;
 
   beforeAll(async () => {
     api = await Api.create();
@@ -20,10 +18,13 @@ describe('/ods - UKEF industry codes', () => {
     await api.destroy();
   });
 
-  describe('/ukef-industry-codes', () => {
+  describe('/ukef-industries', () => {
     it(`should return ${HttpStatus.OK} with mapped UKEF industries`, async () => {
+      // Arrange
+      const url = `/api/${prefixAndVersion}/ods/ukef-industries`;
+
       // Act
-      const { status, body } = await api.get(baseUrl);
+      const { status, body } = await api.get(url);
 
       // Assert
       expect(status).toBe(HttpStatus.OK);
@@ -43,10 +44,10 @@ describe('/ods - UKEF industry codes', () => {
     });
   });
 
-  describe('/ukef-industry-codes/:industryCode', () => {
+  describe('/ukef-industry/:industryCode', () => {
     it(`should return ${HttpStatus.OK} with a mapped UKEF industry`, async () => {
       // Arrange
-      const url = `${baseUrl}/${EXAMPLES.INDUSTRY.CODE}`;
+      const url = `/api/${prefixAndVersion}/ods/ukef-industry/${EXAMPLES.INDUSTRY.CODE}`;
 
       // Act
       const { status, body } = await api.get(url);
@@ -69,7 +70,7 @@ describe('/ods - UKEF industry codes', () => {
     describe('when a single UKEF industry is NOT found', () => {
       it(`should return ${HttpStatus.NOT_FOUND}`, async () => {
         // Arrange
-        const url = `${baseUrl}/INVALID_ID`;
+        const url = `/api/${prefixAndVersion}/ods/ukef-industries/INVALID_ID`;
 
         // Act
         const { status } = await api.get(url);

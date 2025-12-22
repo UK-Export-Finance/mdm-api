@@ -65,25 +65,41 @@ export class OdsController {
     return this.odsService.findDeal(param.id);
   }
 
-  @Get('ukef-industry-codes')
+  @Get('ukef-industries')
   @ApiOperation({
-    summary: 'Get UKEF industry codes from ODS',
+    summary: 'Get UKEF industries from ODS',
   })
   @ApiOkResponse({
-    description: 'Mapped UKEF industry codes from ODS',
+    description: 'Mapped UKEF industries from ODS',
     isArray: true,
     type: GetOdsIndustryResponseDto,
   })
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
   })
-  getUkefIndustryCodes(): Promise<GetOdsIndustryResponseDto[]> {
-    return this.odsService.getUkefIndustryCodes();
+  getUkefIndustries(): Promise<GetOdsIndustryResponseDto[]> {
+    return this.odsService.getUkefIndustries();
   }
 
-  @Get('ukef-industry-codes/:industryCode')
+  @Get('ukef-industries')
   @ApiOperation({
-    summary: 'Get a UKEF industry code from ODS',
+    summary: 'Get UKEF industries from ODS',
+  })
+  @ApiOkResponse({
+    description: 'Mapped UKEF industries from ODS',
+    isArray: true,
+    type: GetOdsIndustryResponseDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  getUkefIndustries(): Promise<GetOdsIndustryResponseDto[]> {
+    return this.odsService.getUkefIndustries();
+  }
+
+  @Get('ukef-industry/:industryCode')
+  @ApiOperation({
+    summary: 'Get a UKEF industry from ODS',
   })
   @ApiOkResponse({
     description: 'Mapped UKEF industry code from ODS',
@@ -99,7 +115,7 @@ export class OdsController {
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
   })
-  findUkefIndustryCode(@Param() param: FindOdsIndustryParamDto): Promise<GetOdsIndustryResponseDto> {
-    return this.odsService.findUkefIndustryCode(param.industryCode);
+  findUkefIndustry(@Param() param: FindOdsIndustryParamDto): Promise<GetOdsIndustryResponseDto> {
+    return this.odsService.findUkefIndustry(param.industryCode);
   }
 }
