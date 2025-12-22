@@ -42,6 +42,8 @@ export class OdsService {
    */
   async findCustomer(uniqueReferenceNumber: string): Promise<GetOdsCustomerResponse> {
     try {
+      this.logger.info('Finding customer %s', uniqueReferenceNumber);
+
       const storedProcedureInput = this.createOdsStoredProcedureInput({
         entityToQuery: ODS_ENTITIES.CUSTOMER,
         queryPageSize: 1,
@@ -70,12 +72,12 @@ export class OdsService {
         name,
       };
     } catch (error) {
+      this.logger.error('Error finding customer %s %o', uniqueReferenceNumber, error);
+
       if (error instanceof NotFoundException) {
-        this.logger.warn(error);
         throw error;
       }
 
-      this.logger.error(error);
       throw new InternalServerErrorException(`Error finding customer ${uniqueReferenceNumber}`);
     }
   }
@@ -90,6 +92,8 @@ export class OdsService {
    */
   async findDeal(id: string): Promise<GetOdsDealResponse> {
     try {
+      this.logger.info('Finding deal %s', id);
+
       const storedProcedureInput = this.createOdsStoredProcedureInput({
         entityToQuery: ODS_ENTITIES.DEAL,
         queryPageSize: 1,
@@ -120,8 +124,9 @@ export class OdsService {
         description,
       };
     } catch (error) {
+      this.logger.error('Error finding deal %s %o', id, error);
+
       if (error instanceof NotFoundException) {
-        this.logger.warn(error);
         throw error;
       }
 
@@ -138,6 +143,8 @@ export class OdsService {
    */
   async findBusinessCentreNonWorkingDays(centreCode: string): Promise<GetOdsBusinessCentreNonWorkingDayResponse[]> {
     try {
+      this.logger.info('Getting business centre non working days %s', centreCode);
+
       const storedProcedureInput = this.createOdsStoredProcedureInput({
         entityToQuery: ODS_ENTITIES.BUSINESS_CENTRE_NON_WORKING_DAY,
         queryParameters: {
@@ -163,8 +170,9 @@ export class OdsService {
 
       return nonWorkingDays;
     } catch (error) {
+      this.logger.error(`Getting business centre ${centreCode} non working days %o`, error);
+
       if (error instanceof NotFoundException) {
-        this.logger.warn(error);
         throw error;
       }
 
@@ -173,8 +181,6 @@ export class OdsService {
     }
   }
 
-  // TODO: info log for all methods in this service
-
   /**
    * Get all UKEF industries from ODS
    * @returns {Promise<GetOdsIndustryResponseDto[]>} Mapped UKEF industry codes
@@ -182,7 +188,7 @@ export class OdsService {
    */
   async getUkefIndustryCodes(): Promise<any> {
     try {
-      this.logger.info('Finding ODS UKEF industry codes');
+      this.logger.info('Getting ODS UKEF industry codes');
 
       const storedProcedureInput = this.createOdsStoredProcedureInput({
         entityToQuery: ODS_ENTITIES.INDUSTRY,
@@ -205,13 +211,11 @@ export class OdsService {
 
       return mappedIndustries;
     } catch (error) {
+      this.logger.error('Error getting ODS UKEF industry codes %o', error);
+
       if (error instanceof NotFoundException) {
-        this.logger.warn(error);
         throw error;
       }
-
-      this.logger.error(error);
-      this.logger.error('Error getting ODS UKEF industry codes %o', error);
 
       throw new InternalServerErrorException('Error getting ODS UKEF industry codes');
     }
@@ -256,12 +260,11 @@ export class OdsService {
 
       return mapIndustry(industry);
     } catch (error) {
+      this.logger.error('Error finding ODS UKEF industry code %s %o', industryCode, error);
+
       if (error instanceof NotFoundException) {
-        this.logger.warn(error);
         throw error;
       }
-
-      this.logger.error('Error finding ODS UKEF industry code %s %o', industryCode, error);
 
       throw new Error(`Error finding ODS UKEF industry code ${industryCode}`, error);
     }
