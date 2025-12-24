@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
-import { DATABASE_NAME } from '@ukef/constants';
+import { DATABASE_NAME, STORED_PROCEDURE } from '@ukef/constants';
 import { mapIndustries, mapIndustry, mapIndustryCodes } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource } from 'typeorm';
@@ -54,7 +54,7 @@ export class OdsService {
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
-      if (storedProcedureJson?.status !== 'SUCCESS') {
+      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
         this.logger.error('Error finding customer %s from ODS stored procedure, output %o', uniqueReferenceNumber, storedProcedureResult);
 
         throw new InternalServerErrorException(`Error finding customer ${uniqueReferenceNumber} from ODS stored procedure`);
@@ -104,7 +104,7 @@ export class OdsService {
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
-      if (storedProcedureJson?.status !== 'SUCCESS') {
+      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
         this.logger.error('Error finding deal %s from ODS stored procedure, output %o', id, storedProcedureResult);
 
         throw new InternalServerErrorException(`Error finding deal ${id} from ODS stored procedure`);
@@ -156,7 +156,7 @@ export class OdsService {
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
-      if (storedProcedureJson?.status !== 'SUCCESS') {
+      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
         this.logger.error('Error getting business centre %s non working days from ODS stored procedure, output %o', centreCode, storedProcedureResult);
 
         throw new InternalServerErrorException(`Error getting business centre ${centreCode} non working days from ODS stored procedure`);
@@ -199,7 +199,7 @@ export class OdsService {
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
-      if (storedProcedureJson?.status !== 'SUCCESS') {
+      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
         this.logger.error('Error getting UKEF industries from ODS stored procedure, output %o', storedProcedureResult);
 
         throw new InternalServerErrorException('Error getting UKEF industries from ODS stored procedure');
@@ -239,7 +239,7 @@ export class OdsService {
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
-      if (storedProcedureJson?.status !== 'SUCCESS') {
+      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
         this.logger.error('Error getting UKEF industry codes from ODS stored procedure, output %o', storedProcedureResult);
 
         throw new InternalServerErrorException('Error getting UKEF industry codes from ODS stored procedure');
@@ -284,7 +284,7 @@ export class OdsService {
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
-      if (storedProcedureJson?.status !== 'SUCCESS') {
+      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
         this.logger.error('Error finding UKEF industry %s from ODS stored procedure, output %o', industryCode, storedProcedureResult);
 
         throw new InternalServerErrorException(`Error finding UKEF industry ${industryCode} from ODS stored procedure`);

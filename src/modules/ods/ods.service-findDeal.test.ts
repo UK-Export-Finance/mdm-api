@@ -1,5 +1,5 @@
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { EXAMPLES } from '@ukef/constants';
+import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
@@ -26,18 +26,18 @@ describe('OdsService - findDeal', () => {
   });
 
   const mockStoredProcedureOutput = `{
-      "query_request_id": "Test ID",
-      "message": "SUCCESS",
-      "status": "SUCCESS",
-      "total_result_count": 1,
-      "results": [
-        {
-          "deal_code": "${EXAMPLES.DEAL.ID}",
-          "deal_name": "${EXAMPLES.DEAL.NAME}",
-          "deal_type_description": "${EXAMPLES.DEAL.DESCRIPTION}"
-        }
-      ]
-    }`;
+    "query_request_id": "Test ID",
+    "message": "${STORED_PROCEDURE.SUCCESS}",
+    "status": "${STORED_PROCEDURE.SUCCESS}",
+    "total_result_count": 1,
+    "results": [
+      {
+        "deal_code": "${EXAMPLES.DEAL.ID}",
+        "deal_name": "${EXAMPLES.DEAL.NAME}",
+        "deal_type_description": "${EXAMPLES.DEAL.DESCRIPTION}"
+      }
+    ]
+  }`;
 
   beforeEach(() => {
     jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
@@ -72,12 +72,11 @@ describe('OdsService - findDeal', () => {
     expect(result).toEqual(expected);
   });
 
-  describe('when the response from ODS does not have status as SUCCESS', () => {
+  describe(`when the response from ODS does not have status as ${STORED_PROCEDURE.SUCCESS}`, () => {
     it('should throw an error', async () => {
       // Arrange
 
-      const mockStoredProcedureOutput = `{ "status": "NOT SUCCESS" }`;
-
+      const mockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
       jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
 
       // Act & Assert
@@ -93,7 +92,7 @@ describe('OdsService - findDeal', () => {
 
   describe('when the response from ODS has total_result_count as 0', () => {
     it('should throw an error', async () => {
-      const mockStoredProcedureOutput = `{ "status": "SUCCESS", "total_result_count": 0 }`;
+      const mockStoredProcedureOutput = `{ "status": "${STORED_PROCEDURE.SUCCESS}", "total_result_count": 0 }`;
 
       jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
 
@@ -110,7 +109,7 @@ describe('OdsService - findDeal', () => {
 
   describe('when the method goes into the catch handler', () => {
     it('should throw an error', async () => {
-      const mockStoredProcedureOutput = `{ "status": "NO SUCCESS" }`;
+      const mockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
 
       jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
 
