@@ -6,11 +6,11 @@ import { PinoLogger } from 'nestjs-pino';
 import { DataSource } from 'typeorm';
 
 import {
+  GetIndustryOdsResponseDto,
+  GetIndustryResponseDto,
   GetOdsBusinessCentreNonWorkingDayResponse,
   GetOdsCustomerResponse,
   GetOdsDealResponse,
-  GetOdsIndustryOdsResponseDto,
-  GetOdsIndustryResponseDto,
   ODS_ENTITIES,
   OdsEntity,
   OdsStoredProcedureInput,
@@ -183,10 +183,10 @@ export class OdsService {
 
   /**
    * Get all UKEF industries from ODS
-   * @returns {Promise<GetOdsIndustryResponseDto[]>} Mapped UKEF industries
+   * @returns {Promise<GetIndustryResponseDto[]>} Mapped UKEF industries
    * @throws {InternalServerErrorException} If there is an error getting UKEF industries
    */
-  async getUkefIndustries(): Promise<GetOdsIndustryResponseDto[]> {
+  async getUkefIndustries(): Promise<GetIndustryResponseDto[]> {
     try {
       this.logger.info('Getting UKEF industries');
 
@@ -205,7 +205,7 @@ export class OdsService {
         throw new InternalServerErrorException('Error getting UKEF industries from ODS stored procedure');
       }
 
-      const industries = storedProcedureJson.results as GetOdsIndustryOdsResponseDto[];
+      const industries = storedProcedureJson.results as GetIndustryOdsResponseDto[];
 
       const mappedIndustries = mapIndustries(industries);
 
@@ -245,7 +245,7 @@ export class OdsService {
         throw new InternalServerErrorException('Error getting UKEF industry codes from ODS stored procedure');
       }
 
-      const industries = storedProcedureJson.results as GetOdsIndustryOdsResponseDto[];
+      const industries = storedProcedureJson.results as GetIndustryOdsResponseDto[];
 
       const industryCodes = mapIndustryCodes(industries);
 
@@ -264,10 +264,10 @@ export class OdsService {
   /**
    * Find a UKEF industry by industry code
    * @param {string} industryCode: UKEF industry code
-   * @returns {Promise<GetOdsIndustryResponseDto[]>}
+   * @returns {Promise<GetIndustryResponseDto[]>}
    * @throws {NotFoundException} If no UKEF industry is found
    */
-  async findUkefIndustry(industryCode: string): Promise<GetOdsIndustryResponseDto> {
+  async findUkefIndustry(industryCode: string): Promise<GetIndustryResponseDto> {
     try {
       this.logger.info('Finding UKEF industry %s', industryCode);
 
@@ -294,7 +294,7 @@ export class OdsService {
         throw new NotFoundException(`No UKEF industry ${industryCode} found`);
       }
 
-      const industry = storedProcedureJson.results[0] as GetOdsIndustryOdsResponseDto;
+      const industry = storedProcedureJson.results[0] as GetIndustryOdsResponseDto;
 
       return mapIndustry(industry);
     } catch (error) {

@@ -4,12 +4,12 @@ import AppConfig from '@ukef/config/app.config';
 
 import {
   FindOdsIndustryParamDto,
+  GetIndustryOdsResponseDto,
+  GetIndustryResponseDto,
   GetOdsCustomerParamDto,
   GetOdsCustomerResponse,
   GetOdsDealParamDto,
   GetOdsDealResponse,
-  GetOdsIndustryOdsResponseDto,
-  GetOdsIndustryResponseDto,
 } from './dto';
 import { OdsService } from './ods.service';
 
@@ -72,12 +72,12 @@ export class OdsController {
   @ApiOkResponse({
     description: 'Mapped UKEF industries from ODS',
     isArray: true,
-    type: GetOdsIndustryResponseDto,
+    type: GetIndustryResponseDto,
   })
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
   })
-  getUkefIndustries(): Promise<GetOdsIndustryResponseDto[]> {
+  getUkefIndustries(): Promise<GetIndustryResponseDto[]> {
     return this.odsService.getUkefIndustries();
   }
 
@@ -104,7 +104,7 @@ export class OdsController {
   @ApiOkResponse({
     description: 'Mapped UKEF industry code from ODS',
     isArray: true,
-    type: GetOdsIndustryOdsResponseDto,
+    type: GetIndustryOdsResponseDto,
   })
   @ApiNotFoundResponse({
     description: 'Industry not found',
@@ -115,7 +115,7 @@ export class OdsController {
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
   })
-  findUkefIndustry(@Param() param: FindOdsIndustryParamDto): Promise<GetOdsIndustryResponseDto> {
+  findUkefIndustry(@Param() param: FindOdsIndustryParamDto): Promise<GetIndustryResponseDto> {
     return this.odsService.findUkefIndustry(param.industryCode);
   }
 }

@@ -1,10 +1,10 @@
-import { GetOdsIndustryOdsResponseDto, GetOdsIndustryResponseDto } from '@ukef/modules/ods/dto';
+import { GetIndustryOdsResponseDto, GetIndustryResponseDto } from '@ukef/modules/ods/dto';
 
 import { mapIndustry } from './map-industry';
 
 /**
  * Map ODS industries, into a more suitable format for consumers.
- * @param {GetOdsIndustryOdsResponseDto[]} ODS industries
- * @returns {GetOdsIndustryResponseDto[]} Mapped industries
+ * @param {GetIndustryOdsResponseDto[]} ODS industries
+ * @returns {GetIndustryResponseDto[]} Mapped industries
  */
-export const mapIndustries = (industries: GetOdsIndustryOdsResponseDto[]): GetOdsIndustryResponseDto[] => industries.map((industry) => mapIndustry(industry));
+export const mapIndustries = (industries: GetIndustryOdsResponseDto[]): GetIndustryResponseDto[] => industries.map((industry) => mapIndustry(industry));
