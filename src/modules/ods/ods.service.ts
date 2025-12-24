@@ -213,10 +213,6 @@ export class OdsService {
     } catch (error) {
       this.logger.error('Error getting UKEF industries %o', error);
 
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-
       throw new InternalServerErrorException('Error getting UKEF industries');
     }
   }
@@ -224,7 +220,7 @@ export class OdsService {
   /**
    * Get all UKEF industries codes from ODS
    * @returns {Promise<string[]>} UKEF industry codes
-   * @throws {InternalServerErrorException} If there is an error getting UKEF industries
+   * @throws {InternalServerErrorException} If there is an error getting UKEF industry codes
    */
   async getUkefIndustryCodes(): Promise<string[]> {
     try {
@@ -252,10 +248,6 @@ export class OdsService {
       return industryCodes;
     } catch (error) {
       this.logger.error('Error getting UKEF industry codes %o', error);
-
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
 
       throw new InternalServerErrorException('Error getting UKEF industry codes');
     }
