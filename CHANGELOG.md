@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.36.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.35.0...v1.36.0) (2025-12-30)
+
+
+### Features
+
+* **17011:** get ukef industry, industries, industry codes ([#1668](https://github.com/UK-Export-Finance/mdm-api/issues/1668)) ([ccddb5f](https://github.com/UK-Export-Finance/mdm-api/commit/ccddb5fd7a7ccf9c81e99f00772696a85cd7bfdd))
+
 ## [1.35.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.34.0...v1.35.0) (2025-12-12)
 
 
