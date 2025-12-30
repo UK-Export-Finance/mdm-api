@@ -1,3 +1,6 @@
+export * from './find-ods-industry-param.dto';
+export * from './get-industry-ods-response.dto';
+export * from './get-industry-response.dto';
 export * from './get-ods-business-centre-non-working-day-response.dto';
 export * from './get-ods-customer-param.dto';
 export * from './get-ods-customer-response.dto';

@@ -1,12 +1,13 @@
-import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { InternalServerErrorException } from '@nestjs/common';
 import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
+import { mapIndustryCodes } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
 import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { OdsService } from './ods.service';
 
-describe('OdsService - findBusinessCentreNonWorkingDays', () => {
+describe('OdsService - getUkefIndustryCodes', () => {
   let service: OdsService;
   let mockQueryRunner: jest.Mocked<QueryRunner>;
   let mockDataSource: jest.Mocked<DataSource>;
@@ -31,14 +32,20 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
     "total_result_count": 2,
     "results": [
       {
-        "business_centre_code": "${EXAMPLES.BUSINESS_CENTRE.CODE}",
-        "non_working_day_name": "${EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME}",
-        "non_working_day_date": "${EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME}"
+        "industry_id": "${EXAMPLES.INDUSTRY.ID}",
+        "industry_code": "${EXAMPLES.INDUSTRY.CODE}",
+        "industry_description": "${EXAMPLES.INDUSTRY.DESCRIPTION}",
+        "industry_group_code": "${EXAMPLES.INDUSTRY.GROUP_CODE}",
+        "industry_group_description": "${EXAMPLES.INDUSTRY.GROUP_DESCRIPTION}",
+        "industry_category": "${EXAMPLES.INDUSTRY.CATEGORY}"
       },
       {
-        "business_centre_code": "${EXAMPLES.BUSINESS_CENTRE.CODE}",
-        "non_working_day_name": "${EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME}",
-        "non_working_day_date": "${EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME}"
+        "industry_id": "${EXAMPLES.INDUSTRY.ID}",
+        "industry_code": "${EXAMPLES.INDUSTRY.CODE}",
+        "industry_description": "${EXAMPLES.INDUSTRY.DESCRIPTION}",
+        "industry_group_code": "${EXAMPLES.INDUSTRY.GROUP_CODE}",
+        "industry_group_description": "${EXAMPLES.INDUSTRY.GROUP_DESCRIPTION}",
+        "industry_category": "${EXAMPLES.INDUSTRY.CATEGORY}"
       }
     ]
   }`;
@@ -49,26 +56,26 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
 
   it('should call service.callOdsStoredProcedure', async () => {
     // Act
-    await service.findBusinessCentreNonWorkingDays(EXAMPLES.BUSINESS_CENTRE.CODE);
+    await service.getUkefIndustryCodes();
 
     // Assert
     const expectedStoredProcedureInput: OdsStoredProcedureInput = service.createOdsStoredProcedureInput({
-      entityToQuery: ODS_ENTITIES.BUSINESS_CENTRE_NON_WORKING_DAY,
-      queryParameters: {
-        business_centre_code: EXAMPLES.BUSINESS_CENTRE.CODE,
-      },
+      entityToQuery: ODS_ENTITIES.INDUSTRY,
+      queryParameters: { industry_category: 'UKEF' },
     });
 
     expect(service.callOdsStoredProcedure).toHaveBeenCalledTimes(1);
     expect(service.callOdsStoredProcedure).toHaveBeenCalledWith(expectedStoredProcedureInput);
   });
 
-  it('should return mapped non working days', async () => {
+  it('should return mapped industry codes', async () => {
     // Act
-    const result = await service.findBusinessCentreNonWorkingDays(EXAMPLES.BUSINESS_CENTRE.CODE);
+    const result = await service.getUkefIndustryCodes();
 
     // Assert
-    const expected = JSON.parse(mockStoredProcedureOutput).results;
+    const jsonResults = JSON.parse(mockStoredProcedureOutput).results;
+
+    const expected = mapIndustryCodes(jsonResults);
 
     expect(result).toEqual(expected);
   });
@@ -81,29 +88,11 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
       jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
 
       // Act & Assert
-      const promise = service.findBusinessCentreNonWorkingDays(EXAMPLES.BUSINESS_CENTRE.CODE);
+      const promise = service.getUkefIndustryCodes();
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error(`Error getting business centre ${EXAMPLES.BUSINESS_CENTRE.CODE} non working days`);
-
-      await expect(promise).rejects.toThrow(expected);
-    });
-  });
-
-  describe('when the response from ODS has total_result_count as 0', () => {
-    it('should throw an error', async () => {
-      // Arrange
-      const mockStoredProcedureOutput = `{ "status": "${STORED_PROCEDURE.SUCCESS}", "total_result_count": 0 }`;
-
-      jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
-
-      const expected = new Error(`No business centre ${EXAMPLES.BUSINESS_CENTRE.CODE} non working days found`);
-
-      // Act & Assert
-      const promise = service.findBusinessCentreNonWorkingDays(EXAMPLES.BUSINESS_CENTRE.CODE);
-
-      await expect(promise).rejects.toBeInstanceOf(NotFoundException);
+      const expected = new Error(`Error getting UKEF industry codes`);
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -117,11 +106,11 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
       jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
 
       // Act & Assert
-      const promise = service.findBusinessCentreNonWorkingDays(EXAMPLES.BUSINESS_CENTRE.CODE);
+      const promise = service.getUkefIndustryCodes();
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error(`Error getting business centre ${EXAMPLES.BUSINESS_CENTRE.CODE} non working days`);
+      const expected = new Error('Error getting UKEF industry codes');
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -133,11 +122,11 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
       jest.spyOn(service, 'callOdsStoredProcedure').mockRejectedValue('Mock ODS error');
 
       // Act & Assert
-      const promise = service.findBusinessCentreNonWorkingDays(EXAMPLES.BUSINESS_CENTRE.CODE);
+      const promise = service.getUkefIndustryCodes();
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error(`Error getting business centre ${EXAMPLES.BUSINESS_CENTRE.CODE} non working days`);
+      const expected = new Error('Error getting UKEF industry codes');
 
       await expect(promise).rejects.toThrow(expected);
     });

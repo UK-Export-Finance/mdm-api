@@ -29,7 +29,7 @@ export class CreditRiskRatingsService {
     } catch (error) {
       this.logger.error('Error getting credit risk ratings %o', error);
 
-      throw new Error(`Error getting credit risk ratings`, error);
+      throw new Error(`Error getting credit risk ratings`, { cause: error });
     }
   }
 }

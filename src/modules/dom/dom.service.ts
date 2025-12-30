@@ -72,7 +72,7 @@ export class DomService {
 
       this.logger.error('Error finding DOM business centre %s non working days %o', domCentreCode, error);
 
-      throw new Error(`Error finding DOM business centre ${domCentreCode} non working days`, error);
+      throw new Error(`Error finding DOM business centre ${domCentreCode} non working days`, { cause: error });
     }
   }
 
@@ -116,7 +116,7 @@ export class DomService {
         throw new NotFoundException(`Error finding multiple DOM business centre ${centreCodes} non working days`, error);
       }
 
-      throw new Error(`Error finding multiple DOM business centre ${centreCodes} non working days`, error);
+      throw new Error(`Error finding multiple DOM business centre ${centreCodes} non working days`, { cause: error });
     }
   }
 
@@ -141,7 +141,7 @@ export class DomService {
    * Find multiple product configurations in DOM
    * @param {string} productTypes: DOM product types, comma separated
    * @returns {Promise<FindMultipleProductConfigsResponse>}
-   * @throws {NotFoundException} If no business centre is found
+   * @throws {NotFoundException} If no product configuration is found
    */
   async findMultipleProductConfigurations(productTypes: string): Promise<FindMultipleProductConfigsResponse> {
     try {
@@ -165,7 +165,7 @@ export class DomService {
         throw new NotFoundException(`Error finding multiple DOM product configurations ${productTypes}`, error);
       }
 
-      throw new Error(`Error finding multiple DOM product configurations ${productTypes}`, error);
+      throw new Error(`Error finding multiple DOM product configurations ${productTypes}`, { cause: error });
     }
   }
 

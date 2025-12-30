@@ -20,7 +20,8 @@
  * 16) Products
  * 17) Strings to redact
  * 18) Strings paths to redact
- * 19) UKEF ID
+ * 19) Stored procedures
+ * 20) UKEF ID
  */
 
 export * from './application.constant';
@@ -39,4 +40,5 @@ export * from './ods.constant';
 export * from './products.constant';
 export * from './redact-strings.constant';
 export * from './redact-strings-paths.constant';
+export * from './stored-procedure.constant';
 export * from './ukef-id.constant';

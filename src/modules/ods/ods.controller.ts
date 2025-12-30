@@ -2,7 +2,15 @@ import { Controller, Get, Param } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import AppConfig from '@ukef/config/app.config';
 
-import { GetOdsCustomerParamDto, GetOdsCustomerResponse, GetOdsDealParamDto, GetOdsDealResponse } from './dto';
+import {
+  FindOdsIndustryParamDto,
+  GetIndustryOdsResponseDto,
+  GetIndustryResponseDto,
+  GetOdsCustomerParamDto,
+  GetOdsCustomerResponse,
+  GetOdsDealParamDto,
+  GetOdsDealResponse,
+} from './dto';
 import { OdsService } from './ods.service';
 
 const { domOdsVersioning } = AppConfig();
@@ -27,7 +35,7 @@ export class OdsController {
     description: 'Customer not found',
   })
   @ApiBadRequestResponse({
-    description: 'Invalid search parameters provided',
+    description: 'Invalid parameters provided',
   })
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
@@ -48,12 +56,65 @@ export class OdsController {
     description: 'Deal not found',
   })
   @ApiBadRequestResponse({
-    description: 'Invalid search parameters provided',
+    description: 'Invalid parameters provided',
   })
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
   })
   findDeal(@Param() param: GetOdsDealParamDto): Promise<GetOdsDealResponse> {
     return this.odsService.findDeal(param.id);
+  }
+
+  @Get('ukef-industries')
+  @ApiOperation({
+    summary: 'Get UKEF industries from ODS',
+  })
+  @ApiOkResponse({
+    description: 'Mapped UKEF industries from ODS',
+    isArray: true,
+    type: GetIndustryResponseDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  getUkefIndustries(): Promise<GetIndustryResponseDto[]> {
+    return this.odsService.getUkefIndustries();
+  }
+
+  @Get('ukef-industry-codes')
+  @ApiOperation({
+    summary: 'Get UKEF industry codes from ODS',
+  })
+  @ApiOkResponse({
+    description: 'UKEF industry codes from ODS',
+    isArray: true,
+    type: String,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  getUkefIndustryCodes(): Promise<string[]> {
+    return this.odsService.getUkefIndustryCodes();
+  }
+
+  @Get('ukef-industry/:industryCode')
+  @ApiOperation({
+    summary: 'Get a UKEF industry from ODS',
+  })
+  @ApiOkResponse({
+    description: 'Mapped UKEF industry code from ODS',
+    type: GetIndustryOdsResponseDto,
+  })
+  @ApiNotFoundResponse({
+    description: 'Industry not found',
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid parameters provided',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  findUkefIndustry(@Param() param: FindOdsIndustryParamDto): Promise<GetIndustryResponseDto> {
+    return this.odsService.findUkefIndustry(param.industryCode);
   }
 }
