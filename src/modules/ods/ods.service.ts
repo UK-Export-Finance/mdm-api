@@ -279,7 +279,7 @@ export class OdsService {
       if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
         this.logger.error('Error finding UKEF industry %s from ODS stored procedure, output %o', industryCode, storedProcedureResult);
 
-        throw new InternalServerErrorException(`Error finding UKEF industry ${industryCode} from ODS stored procedure`);
+        throw new Error(`Error finding UKEF industry ${industryCode} from ODS stored procedure`);
       }
 
       if (storedProcedureJson?.total_result_count === 0) {
@@ -296,7 +296,7 @@ export class OdsService {
         throw error;
       }
 
-      throw new Error(`Error finding UKEF industry ${industryCode}`, error);
+      throw new Error(`Error finding UKEF industry ${industryCode}`, { cause: error });
     }
   }
 

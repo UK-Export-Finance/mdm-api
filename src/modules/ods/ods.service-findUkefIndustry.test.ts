@@ -110,7 +110,11 @@ describe('OdsService - findUkefIndustry', () => {
       // Act & Assert
       const promise = service.findUkefIndustry(EXAMPLES.INDUSTRY.CODE);
 
-      const expected = new Error(`Error finding UKEF industry ${EXAMPLES.INDUSTRY.CODE}`);
+      const expected = new Error(`Error finding UKEF industry ${EXAMPLES.INDUSTRY.CODE}`, {
+        cause: {
+          message: `Error finding UKEF industry ${EXAMPLES.INDUSTRY.CODE} from ODS stored procedure`,
+        },
+      });
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -121,12 +125,12 @@ describe('OdsService - findUkefIndustry', () => {
       // Arrange
       const mockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
 
-      jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
+      jest.spyOn(service, 'callOdsStoredProcedure').mockRejectedValue(mockStoredProcedureOutput);
 
       // Act & Assert
       const promise = service.findUkefIndustry(EXAMPLES.INDUSTRY.CODE);
 
-      const expected = new Error(`Error finding UKEF industry ${EXAMPLES.INDUSTRY.CODE}`);
+      const expected = new Error(`Error finding UKEF industry ${EXAMPLES.INDUSTRY.CODE}`, { cause: mockStoredProcedureOutput });
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -135,12 +139,14 @@ describe('OdsService - findUkefIndustry', () => {
   describe('when callOdsStoredProcedure throws an error', () => {
     it('should throw an error', async () => {
       // Arrange
-      jest.spyOn(service, 'callOdsStoredProcedure').mockRejectedValue('Mock ODS error');
+      const mockError = 'Mock ODS error';
+
+      jest.spyOn(service, 'callOdsStoredProcedure').mockRejectedValue(mockError);
 
       // Act & Assert
       const promise = service.findUkefIndustry(EXAMPLES.INDUSTRY.CODE);
 
-      const expected = new Error(`Error finding UKEF industry ${EXAMPLES.INDUSTRY.CODE}`);
+      const expected = new Error(`Error finding UKEF industry ${EXAMPLES.INDUSTRY.CODE}`, { cause: mockError });
 
       await expect(promise).rejects.toThrow(expected);
     });

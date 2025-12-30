@@ -103,7 +103,6 @@ export class OdsController {
   })
   @ApiOkResponse({
     description: 'Mapped UKEF industry code from ODS',
-    isArray: true,
     type: GetIndustryOdsResponseDto,
   })
   @ApiNotFoundResponse({

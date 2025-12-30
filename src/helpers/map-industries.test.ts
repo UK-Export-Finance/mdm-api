@@ -4,7 +4,7 @@ import { mapIndustries } from './map-industries';
 import { mapIndustry } from './map-industry';
 
 describe('mapIndustries', () => {
-  it('should return an array of mapped DOM business centres', () => {
+  it('should return an array of mapped industries', () => {
     // Arrange
     const mockIndustries = [EXAMPLES.ODS.INDUSTRY, EXAMPLES.ODS.INDUSTRY];
 

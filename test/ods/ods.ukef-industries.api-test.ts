@@ -87,7 +87,7 @@ describe('/ods - UKEF industries', () => {
     describe('when a single UKEF industry is NOT found', () => {
       it(`should return ${HttpStatus.NOT_FOUND}`, async () => {
         // Arrange
-        const url = `/api/${prefixAndVersion}/ods/ukef-industries/INVALID_ID`;
+        const url = `/api/${prefixAndVersion}/ods/ukef-industry/INVALID_ID`;
 
         // Act
         const { status } = await api.get(url);
