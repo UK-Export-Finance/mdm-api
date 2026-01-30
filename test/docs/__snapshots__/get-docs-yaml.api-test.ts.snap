@@ -1353,7 +1353,7 @@ components:
             bankRate: OPTIONAL
           allOf:
             - $ref: '#/components/schemas/GetDomProductConfigConfig'
-        counterpartySubtypes:
+        counterpartyRoleTypes:
           description: The product's counterparty subtypes
           example:
             - BROKER
@@ -1361,7 +1361,7 @@ components:
           type: array
           items:
             type: string
-        productSubtypes:
+        facilityCategoryTypes:
           description: The product's subtypes
           example: []
           type: array
@@ -1379,8 +1379,8 @@ components:
       required:
         - productType
         - configuration
-        - counterpartySubtypes
-        - productSubtypes
+        - counterpartyRoleTypes
+        - facilityCategoryTypes
         - account
     PostEmailsRequestDto:
       type: object

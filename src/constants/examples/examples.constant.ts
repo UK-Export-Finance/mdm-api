@@ -9,7 +9,7 @@ const BUSINESS_CENTRE = {
   },
 };
 
-const COUNTERPARTY_SUBTYPES = {
+const COUNTERPARTY_ROLE_TYPES = {
   BROKER: 'BROKER',
   GUARANTOR: 'GUARANTOR',
 };
@@ -120,6 +120,8 @@ export const EXAMPLES = {
     PRODUCT_CONFIG: {
       BIP: {
         productType: PRODUCT_TYPES.BIP,
+        name: 'Bond Insurance Product (BIP)',
+        shortName: 'BIP',
         configuration: {
           commitmentDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
           issuedDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
@@ -146,19 +148,23 @@ export const EXAMPLES = {
             accruingFees: 3,
           },
         },
-        counterpartySubtypes: [COUNTERPARTY_SUBTYPES.BROKER],
-        productSubtypes: [],
+        counterpartyRoleTypes: [COUNTERPARTY_ROLE_TYPES.BROKER],
+        facilityCategoryTypes: ['FCT001', 'FCT002'],
+        obligationSubtypes: ['OST001', 'OST002', 'OST003'],
         account: [1, 2, 3],
       },
       EXIP: {
         productType: PRODUCT_TYPES.EXIP,
+        name: 'Export Insurance Product (EXIP)',
+        shortName: 'EXIP',
         configuration: {
           commitmentDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
           issuedDate: PRODUCT_CONFIG_REQUIREMENT.NOT_APPLICABLE,
           effectiveDate: PRODUCT_CONFIG_REQUIREMENT.OPTIONAL,
         },
-        counterpartySubtypes: [COUNTERPARTY_SUBTYPES.BROKER, COUNTERPARTY_SUBTYPES.GUARANTOR],
-        productSubtypes: [],
+        counterpartyRoleTypes: [COUNTERPARTY_ROLE_TYPES.BROKER, COUNTERPARTY_ROLE_TYPES.GUARANTOR],
+        facilityCategoryTypes: ['FCT001', 'FCT002'],
+        obligationSubtypes: ['OST001', 'OST002', 'OST003'],
         account: [1, 2, 3],
       },
     },
