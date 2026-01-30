@@ -289,13 +289,13 @@ describe('DomService', () => {
       expect(response.productType).toEqual(EXAMPLES.PRODUCT_TYPES.BIP);
     });
 
-    it(`should return a product configuration - ${EXAMPLES.PRODUCT_TYPES.EDG}`, () => {
+    it(`should return a product configuration - ${EXAMPLES.PRODUCT_TYPES.EXIP}`, () => {
       // Act
-      const response = service.findProductConfiguration(EXAMPLES.PRODUCT_TYPES.EDG);
+      const response = service.findProductConfiguration(EXAMPLES.PRODUCT_TYPES.EXIP);
 
       // Assert
       expect(response).toEqual(PRODUCT_CONFIG[1]);
-      expect(response.productType).toEqual(EXAMPLES.PRODUCT_TYPES.EDG);
+      expect(response.productType).toEqual(EXAMPLES.PRODUCT_TYPES.EXIP);
     });
 
     it(`should return a product configuration - ${EXAMPLES.PRODUCT_TYPES.EXAMPLE_ALL_OPTIONAL}`, () => {
@@ -314,15 +314,6 @@ describe('DomService', () => {
       // Assert
       expect(response).toEqual(PRODUCT_CONFIG[3]);
       expect(response.productType).toEqual(EXAMPLES.PRODUCT_TYPES.EXAMPLE_ALL_REQUIRED);
-    });
-
-    it(`should return a product configuration - ${EXAMPLES.PRODUCT_TYPES.EXIP}`, () => {
-      // Act
-      const response = service.findProductConfiguration(EXAMPLES.PRODUCT_TYPES.EXIP);
-
-      // Assert
-      expect(response).toEqual(PRODUCT_CONFIG[4]);
-      expect(response.productType).toEqual(EXAMPLES.PRODUCT_TYPES.EXIP);
     });
 
     describe('when a configuration is NOT found', () => {
