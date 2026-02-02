@@ -51,7 +51,7 @@
       "OST007",
       "OST008"
     ],
-    "account": [2, 3, 7]
+    "account": ["2", "3", "7"]
   },
   {
     "productType": "PRT002",
@@ -98,7 +98,7 @@
       "OST011"
 
     ],
-    "account": [1, 2, 3, 7]
+    "account": ["1", "2", "3", "7"]
   },
   {
     "productType": "EXAMPLE_ALL_OPTIONAL",
@@ -133,7 +133,7 @@
     "counterpartyRoleTypes": [],
     "facilityCategoryTypes": [],
     "obligationSubtypes": [],
-    "account": [1, 2]
+    "account": ["1", "2"]
   },
   {
     "productType": "EXAMPLE_ALL_REQUIRED",
@@ -168,6 +168,6 @@
     "counterpartyRoleTypes": [],
     "facilityCategoryTypes": [],
     "obligationSubtypes": [],
-    "account": [1, 2]
+    "account": ["1", "2"]
   }
 ]

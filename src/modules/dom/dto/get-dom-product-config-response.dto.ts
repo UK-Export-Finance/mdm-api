@@ -50,5 +50,5 @@ export class GetDomProductConfigResponse {
     description: 'The UKEF accounts that the product is in',
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.account,
   })
-  readonly account: number[];
+  readonly account: string[];
 }
