@@ -1,6 +1,8 @@
 [
   {
-    "productType": "BIP",
+    "productType": "PRT001",
+    "name": "Bond Insurance Policy (BIP)",
+    "shortName": "BIP",
     "configuration": {
       "commitmentDate": "NOT_APPLICABLE",
       "issuedDate": "NOT_APPLICABLE",
@@ -27,32 +29,46 @@
         "accruingFees": 5
       }
     },
-    "counterpartySubtypes": [
-      "BOND BENEFICIARY",
-      "BOND GIVER",
-      "GUARANTOR"
+    "counterpartyRoleTypes": [
+      "CRT001",
+      "CRT004",
+      "CRT005",
+      "CRT013",
+      "CRT042"
     ],
-    "productSubtypes": [
-      "BOND: STAND ALONE",
-      "BOND: SUPPLEMENTAL TO CASH",
-      "BOND: SUPPLEMENTAL TO CREDIT"
+    "facilityCategoryTypes": [
+      "FCT001",
+      "FCT002",
+      "FCT003"
     ],
-    "account": [2, 3, 7]
+    "obligationSubtypes": [
+      "OST001",
+      "OST002",
+      "OST003",
+      "OST004",
+      "OST005",
+      "OST006",
+      "OST007",
+      "OST008"
+    ],
+    "account": ["2", "3", "7"]
   },
   {
-    "productType": "EDG",
+    "productType": "PRT002",
+    "name": "Export Insurance Policy (EXIP)",
+    "shortName": "EXIP",
     "configuration": {
       "commitmentDate": "NOT_APPLICABLE",
-      "issuedDate": "REQUIRED",
+      "issuedDate": "NOT_APPLICABLE",
       "effectiveDate": "REQUIRED",
-      "availabilityEndDate": "REQUIRED",
+      "availabilityEndDate": "NOT_APPLICABLE",
       "expiryDate": "REQUIRED",
       "creditType": "TERM",
       "participations": "OPTIONAL",
       "scheduledRepayments": "REQUIRED",
-      "nonCashObligations": "OPTIONAL",
+      "nonCashObligations": "REQUIRED",
       "cashObligations": "NOT_APPLICABLE",
-      "accrualSchedule": "REQUIRED",
+      "accrualSchedule": "NOT_APPLICABLE",
       "pimOwner": "REQUIRED",
       "riskRating": "REQUIRED",
       "preCreditPeriod": "REQUIRED",
@@ -67,12 +83,27 @@
         "accruingFees": 5
       }
     },
-    "counterpartySubtypes": [],
-    "productSubtypes": [],
-    "account": [2, 6, 7]
+    "counterpartyRoleTypes": [
+      "CRT001",
+      "CRT002",
+      "CRT013",
+      "CRT018",
+      "CRT036",
+      "CRT042"
+    ],
+    "facilityCategoryTypes": [],
+    "obligationSubtypes": [
+      "OST009",
+      "OST010",
+      "OST011"
+
+    ],
+    "account": ["1", "2", "3", "7"]
   },
   {
     "productType": "EXAMPLE_ALL_OPTIONAL",
+    "name": "Example - all optional",
+    "shortName": "E.G ALL OPTIONAL",
     "configuration": {
       "commitmentDate": "OPTIONAL",
       "issuedDate": "OPTIONAL",
@@ -99,12 +130,15 @@
         "accruingFees": 5
       }
     },
-    "counterpartySubtypes": [],
-    "productSubtypes": [],
-    "account": [1, 2]
+    "counterpartyRoleTypes": [],
+    "facilityCategoryTypes": [],
+    "obligationSubtypes": [],
+    "account": ["1", "2"]
   },
   {
     "productType": "EXAMPLE_ALL_REQUIRED",
+    "name": "Example - all required",
+    "shortName": "E.G ALL REQUIRED",
     "configuration": {
       "commitmentDate": "REQUIRED",
       "issuedDate": "REQUIRED",
@@ -131,48 +165,9 @@
         "accruingFees": 5
       }
     },
-    "counterpartySubtypes": [],
-    "productSubtypes": [],
-    "account": [1, 2]
-  },
-  {
-    "productType": "EXIP",
-    "configuration": {
-      "commitmentDate": "NOT_APPLICABLE",
-      "issuedDate": "NOT_APPLICABLE",
-      "effectiveDate": "REQUIRED",
-      "availabilityEndDate": "NOT_APPLICABLE",
-      "expiryDate": "REQUIRED",
-      "creditType": "TERM",
-      "participations": "OPTIONAL",
-      "scheduledRepayments": "REQUIRED",
-      "nonCashObligations": "REQUIRED",
-      "cashObligations": "NOT_APPLICABLE",
-      "accrualSchedule": "NOT_APPLICABLE",
-      "pimOwner": "REQUIRED",
-      "riskRating": "REQUIRED",
-      "preCreditPeriod": "REQUIRED",
-      "creditPeriod": "REQUIRED",
-      "lossGivenDefault": "REQUIRED",
-      "provisionRate": "REQUIRED",
-      "forecastYear": "REQUIRED",
-      "bankRate": "NOT_APPLICABLE",
-      "leadDays": {
-        "repayments": 5,
-        "interestAccruals": 5,
-        "accruingFees": 5
-      }
-    },
-    "counterpartySubtypes": [
-      "BROKER",
-      "BUYER (FOR BC, SCF & LOC)",
-      "GOODS",
-      "GUARANTOR",
-      "LEAD ECA",
-      "MAIN CONTRACTOR",
-      "SUB-CONTRACTOR"
-    ],
-    "productSubtypes": [],
-    "account": [1, 2, 3, 7]
+    "counterpartyRoleTypes": [],
+    "facilityCategoryTypes": [],
+    "obligationSubtypes": [],
+    "account": ["1", "2"]
   }
 ]
