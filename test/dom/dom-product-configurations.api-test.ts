@@ -47,9 +47,39 @@ describe('/dom - product-configuration', () => {
       // Assert
       expect(status).toBe(HttpStatus.OK);
 
-      expect(body).toEqual(PRODUCT_CONFIG[4]);
+      expect(body).toEqual(PRODUCT_CONFIG[1]);
 
       expect(body.productType).toEqual(EXAMPLES.PRODUCT_TYPES.EXIP);
+    });
+
+    it(`should return ${HttpStatus.OK} with product configuration - ${EXAMPLES.PRODUCT_TYPES.BSS}`, async () => {
+      // Arrange
+      const url = `${baseUrl}/${EXAMPLES.PRODUCT_TYPES.BSS}`;
+
+      // Act
+      const { status, body } = await api.get(url);
+
+      // Assert
+      expect(status).toBe(HttpStatus.OK);
+
+      expect(body).toEqual(PRODUCT_CONFIG[2]);
+
+      expect(body.productType).toEqual(EXAMPLES.PRODUCT_TYPES.BSS);
+    });
+
+    it(`should return ${HttpStatus.OK} with product configuration - ${EXAMPLES.PRODUCT_TYPES.GEF}`, async () => {
+      // Arrange
+      const url = `${baseUrl}/${EXAMPLES.PRODUCT_TYPES.GEF}`;
+
+      // Act
+      const { status, body } = await api.get(url);
+
+      // Assert
+      expect(status).toBe(HttpStatus.OK);
+
+      expect(body).toEqual(PRODUCT_CONFIG[3]);
+
+      expect(body.productType).toEqual(EXAMPLES.PRODUCT_TYPES.GEF);
     });
 
     it(`should return ${HttpStatus.OK} with product configuration - ${EXAMPLES.PRODUCT_TYPES.EXAMPLE_ALL_OPTIONAL}`, async () => {
@@ -62,7 +92,7 @@ describe('/dom - product-configuration', () => {
       // Assert
       expect(status).toBe(HttpStatus.OK);
 
-      expect(body).toEqual(PRODUCT_CONFIG[2]);
+      expect(body).toEqual(PRODUCT_CONFIG[4]);
 
       expect(body.productType).toEqual(EXAMPLES.PRODUCT_TYPES.EXAMPLE_ALL_OPTIONAL);
     });
@@ -77,7 +107,7 @@ describe('/dom - product-configuration', () => {
       // Assert
       expect(status).toBe(HttpStatus.OK);
 
-      expect(body).toEqual(PRODUCT_CONFIG[3]);
+      expect(body).toEqual(PRODUCT_CONFIG[5]);
 
       expect(body.productType).toEqual(EXAMPLES.PRODUCT_TYPES.EXAMPLE_ALL_REQUIRED);
     });
@@ -130,7 +160,7 @@ describe('/dom - product-configuration', () => {
 
     it(`should return ${HttpStatus.OK} with product configurations`, async () => {
       // Arrange
-      const url = `${baseUrl}?productTypes=${EXAMPLES.PRODUCT_TYPES.BIP},${EXAMPLES.PRODUCT_TYPES.EXIP}`;
+      const url = `${baseUrl}?productTypes=${EXAMPLES.PRODUCT_TYPES.BIP},${EXAMPLES.PRODUCT_TYPES.GEF}`;
 
       // Act
       const { status, body } = await api.get(url);
@@ -140,7 +170,7 @@ describe('/dom - product-configuration', () => {
 
       const expected = {
         [EXAMPLES.PRODUCT_TYPES.BIP]: PRODUCT_CONFIG[0],
-        [EXAMPLES.PRODUCT_TYPES.EXIP]: PRODUCT_CONFIG[4],
+        [EXAMPLES.PRODUCT_TYPES.GEF]: PRODUCT_CONFIG[3],
       };
 
       expect(body).toEqual(expected);
