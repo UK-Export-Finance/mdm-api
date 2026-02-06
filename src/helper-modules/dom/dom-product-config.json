@@ -248,6 +248,12 @@
         "accruingFees": 5
       }
     },
+    "creation": {
+      "fees": "OPTIONAL"
+    },
+    "inLife": {
+      "fees": "OPTIONAL"
+    },
     "counterpartyRoleTypes": [],
     "facilityCategoryTypes": [],
     "obligationSubtypes": [],
@@ -282,6 +288,12 @@
         "interestAccruals": 5,
         "accruingFees": 5
       }
+    },
+    "creation": {
+      "fees": "REQUIRED"
+    },
+    "inLife": {
+      "fees": "REQUIRED"
     },
     "counterpartyRoleTypes": [],
     "facilityCategoryTypes": [],
