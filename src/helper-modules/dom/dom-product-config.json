@@ -217,7 +217,7 @@
     ],
     "obligationSubtypes": [],
     "account": ["2"]
-  }
+  },
   {
     "productType": "EXAMPLE_ALL_OPTIONAL",
     "name": "Example - all optional",
