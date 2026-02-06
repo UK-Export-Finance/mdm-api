@@ -23,6 +23,10 @@
       "provisionRate": "REQUIRED",
       "forecastYear": "REQUIRED",
       "bankRate": "NOT_APPLICABLE",
+      "fees": {
+        "creation": "REQUIRED",
+        "inLife": "OPTIONAL"
+      },
       "leadDays": {
         "repayments": 5,
         "interestAccruals": 5,
@@ -77,6 +81,10 @@
       "provisionRate": "REQUIRED",
       "forecastYear": "REQUIRED",
       "bankRate": "NOT_APPLICABLE",
+      "fees": {
+        "creation": "REQUIRED",
+        "inLife": "OPTIONAL"
+      },
       "leadDays": {
         "repayments": 5,
         "interestAccruals": 5,
@@ -96,9 +104,111 @@
       "OST009",
       "OST010",
       "OST011"
-
     ],
     "account": ["1", "2", "3", "7"]
+  },
+  {
+    "productType": "PRT003",
+    "name": "Bond Support Scheme (BSS)",
+    "shortName": "BSS",
+    "configuration": {
+      "commitmentDate": "REQUIRED",
+      "issuedDate": "NOT_APPLICABLE",
+      "effectiveDate": "REQUIRED",
+      "availabilityEndDate": "NOT_APPLICABLE",
+      "expiryDate": "REQUIRED",
+      "creditType": "TERM",
+      "participations": "NOT_APPLICABLE",
+      "scheduledRepayments": "NOT_APPLICABLE",
+      "nonCashObligations": "NOT_APPLICABLE",
+      "cashObligations": "NOT_APPLICABLE",
+      "accrualSchedule": "REQUIRED",
+      "pimOwner": "REQUIRED",
+      "riskRating": "REQUIRED",
+      "preCreditPeriod": "NOT_APPLICABLE",
+      "creditPeriod": "NOT_APPLICABLE",
+      "lossGivenDefault": "REQUIRED",
+      "provisionRate": "NOT_APPLICABLE",
+      "forecastYear": "NOT_APPLICABLE",
+      "bankRate": "NOT_APPLICABLE",
+      "fees": {
+        "creation": "NOT_APPLICABLE",
+        "inLife": "OPTIONAL"
+      },
+      "leadDays": {
+        "repayments": 5,
+        "interestAccruals": 5,
+        "accruingFees": 1
+      }
+    },
+    "counterpartyRoleTypes": [
+      "CRT004",
+      "CRT005",
+      "CRT040"
+    ],
+    "facilityCategoryTypes": [
+      "FCT001",
+      "FCT002",
+      "FCT003"
+    ],
+    "obligationSubtypes": [
+      "OST012",
+      "OST013",
+      "OST014",
+      "OST015",
+      "OST016",
+      "OST017",
+      "OST018",
+      "OST019",
+      "OST020",
+      "OST021",
+      "OST022"
+    ],
+    "account": ["2"]
+  },
+  {
+    "productType": "PRT004",
+    "name": "General Export Facility (GEF)",
+    "shortName": "GEF",
+    "configuration": {
+      "commitmentDate": "REQUIRED",
+      "issuedDate": "NOT_APPLICABLE",
+      "effectiveDate": "REQUIRED",
+      "availabilityEndDate": "NOT_APPLICABLE",
+      "expiryDate": "REQUIRED",
+      "creditType": "REVOLVER",
+      "participations": "NOT_APPLICABLE",
+      "scheduledRepayments": "NOT_APPLICABLE",
+      "nonCashObligations": "NOT_APPLICABLE",
+      "cashObligations": "NOT_APPLICABLE",
+      "accrualSchedule": "REQUIRED",
+      "pimOwner": "REQUIRED",
+      "riskRating": "REQUIRED",
+      "preCreditPeriod": "NOT_APPLICABLE",
+      "creditPeriod": "NOT_APPLICABLE",
+      "lossGivenDefault": "REQUIRED",
+      "provisionRate": "NOT_APPLICABLE",
+      "forecastYear": "NOT_APPLICABLE",
+      "bankRate": "NOT_APPLICABLE",
+      "fees": {
+        "creation": "NOT_APPLICABLE",
+        "inLife": "OPTIONAL"
+      },
+      "leadDays": {
+        "repayments": 5,
+        "interestAccruals": 5,
+        "accruingFees": 1
+      }
+    },
+    "counterpartyRoleTypes": [
+      "CRT043"
+    ],
+    "facilityCategoryTypes": [
+      "FCT006",
+      "FCT007"
+    ],
+    "obligationSubtypes": [],
+    "account": ["2"]
   },
   {
     "productType": "EXAMPLE_ALL_OPTIONAL",
@@ -129,6 +239,12 @@
         "interestAccruals": 5,
         "accruingFees": 5
       }
+    },
+    "creation": {
+      "fees": "OPTIONAL"
+    },
+    "inLife": {
+      "fees": "OPTIONAL"
     },
     "counterpartyRoleTypes": [],
     "facilityCategoryTypes": [],
@@ -164,6 +280,12 @@
         "interestAccruals": 5,
         "accruingFees": 5
       }
+    },
+    "creation": {
+      "fees": "REQUIRED"
+    },
+    "inLife": {
+      "fees": "REQUIRED"
     },
     "counterpartyRoleTypes": [],
     "facilityCategoryTypes": [],

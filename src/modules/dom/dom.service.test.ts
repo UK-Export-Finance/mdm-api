@@ -298,12 +298,30 @@ describe('DomService', () => {
       expect(response.productType).toEqual(EXAMPLES.PRODUCT_TYPES.EXIP);
     });
 
+    it(`should return a product configuration - ${EXAMPLES.PRODUCT_TYPES.BSS}`, () => {
+      // Act
+      const response = service.findProductConfiguration(EXAMPLES.PRODUCT_TYPES.BSS);
+
+      // Assert
+      expect(response).toEqual(PRODUCT_CONFIG[2]);
+      expect(response.productType).toEqual(EXAMPLES.PRODUCT_TYPES.BSS);
+    });
+
+    it(`should return a product configuration - ${EXAMPLES.PRODUCT_TYPES.GEF}`, () => {
+      // Act
+      const response = service.findProductConfiguration(EXAMPLES.PRODUCT_TYPES.GEF);
+
+      // Assert
+      expect(response).toEqual(PRODUCT_CONFIG[3]);
+      expect(response.productType).toEqual(EXAMPLES.PRODUCT_TYPES.GEF);
+    });
+
     it(`should return a product configuration - ${EXAMPLES.PRODUCT_TYPES.EXAMPLE_ALL_OPTIONAL}`, () => {
       // Act
       const response = service.findProductConfiguration(EXAMPLES.PRODUCT_TYPES.EXAMPLE_ALL_OPTIONAL);
 
       // Assert
-      expect(response).toEqual(PRODUCT_CONFIG[2]);
+      expect(response).toEqual(PRODUCT_CONFIG[4]);
       expect(response.productType).toEqual(EXAMPLES.PRODUCT_TYPES.EXAMPLE_ALL_OPTIONAL);
     });
 
@@ -312,7 +330,7 @@ describe('DomService', () => {
       const response = service.findProductConfiguration(EXAMPLES.PRODUCT_TYPES.EXAMPLE_ALL_REQUIRED);
 
       // Assert
-      expect(response).toEqual(PRODUCT_CONFIG[3]);
+      expect(response).toEqual(PRODUCT_CONFIG[5]);
       expect(response.productType).toEqual(EXAMPLES.PRODUCT_TYPES.EXAMPLE_ALL_REQUIRED);
     });
 
