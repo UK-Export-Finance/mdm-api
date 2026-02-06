@@ -23,17 +23,15 @@
       "provisionRate": "REQUIRED",
       "forecastYear": "REQUIRED",
       "bankRate": "NOT_APPLICABLE",
+      "fees": {
+        "creation": "REQUIRED",
+        "inLife": "OPTIONAL"
+      },
       "leadDays": {
         "repayments": 5,
         "interestAccruals": 5,
         "accruingFees": 5
       }
-    },
-    "creation": {
-      "fees": "REQUIRED"
-    },
-    "inLife": {
-      "fees": "OPTIONAL"
     },
     "counterpartyRoleTypes": [
       "CRT001",
@@ -83,17 +81,15 @@
       "provisionRate": "REQUIRED",
       "forecastYear": "REQUIRED",
       "bankRate": "NOT_APPLICABLE",
+      "fees": {
+        "creation": "REQUIRED",
+        "inLife": "OPTIONAL"
+      },
       "leadDays": {
         "repayments": 5,
         "interestAccruals": 5,
         "accruingFees": 5
       }
-    },
-    "creation": {
-      "fees": "REQUIRED"
-    },
-    "inLife": {
-      "fees": "OPTIONAL"
     },
     "counterpartyRoleTypes": [
       "CRT001",
@@ -135,17 +131,15 @@
       "provisionRate": "NOT_APPLICABLE",
       "forecastYear": "NOT_APPLICABLE",
       "bankRate": "NOT_APPLICABLE",
+      "fees": {
+        "creation": "NOT_APPLICABLE",
+        "inLife": "OPTIONAL"
+      },
       "leadDays": {
         "repayments": 5,
         "interestAccruals": 5,
         "accruingFees": 1
       }
-    },
-    "creation": {
-      "fees": "NOT_APPLICABLE"
-    },
-    "inLife": {
-      "fees": "NOT_APPLICABLE"
     },
     "counterpartyRoleTypes": [
       "CRT004",
@@ -196,17 +190,15 @@
       "provisionRate": "NOT_APPLICABLE",
       "forecastYear": "NOT_APPLICABLE",
       "bankRate": "NOT_APPLICABLE",
+      "fees": {
+        "creation": "NOT_APPLICABLE",
+        "inLife": "OPTIONAL"
+      },
       "leadDays": {
         "repayments": 5,
         "interestAccruals": 5,
         "accruingFees": 1
       }
-    },
-    "creation": {
-      "fees": "NOT_APPLICABLE"
-    },
-    "inLife": {
-      "fees": "NOT_APPLICABLE"
     },
     "counterpartyRoleTypes": [
       "CRT043"
