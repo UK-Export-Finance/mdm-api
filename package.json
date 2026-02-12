@@ -83,7 +83,7 @@
     "@nestjs/cli": "^11.0.14",
     "@nestjs/schematics": "^11.0.9",
     "@nestjs/testing": "^11.1.10",
-    "@tsconfig/node21": "^21.0.7",
+    "@tsconfig/node22": "^22.0.0",
     "@types/chance": "^1.1.7",
     "@types/compression": "^1.8.1",
     "@types/express": "^5.0.6",
