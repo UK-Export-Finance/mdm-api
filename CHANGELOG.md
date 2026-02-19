@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.37.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.36.0...v1.37.0) (2026-02-19)
+
+
+### Features
+
+* **19747-19751-19752:** update product configuration ([#1683](https://github.com/UK-Export-Finance/mdm-api/issues/1683)) ([2895dba](https://github.com/UK-Export-Finance/mdm-api/commit/2895dba5952aebf09fe7e38b36445d95918b506c))
+* **GIFT-19744:** product configuration - accrual schedules ([#1701](https://github.com/UK-Export-Finance/mdm-api/issues/1701)) ([37228b8](https://github.com/UK-Export-Finance/mdm-api/commit/37228b87e47d561399804e5613601fe46fdfaa6a))
+* **GIFT-19781:** product configuration - update json, schema ([#1682](https://github.com/UK-Export-Finance/mdm-api/issues/1682)) ([e6cdd81](https://github.com/UK-Export-Finance/mdm-api/commit/e6cdd81a55335db3f70ce41b57a5e7947e30019b))
+
+
+### Bug Fixes
+
+* **releaseNotes:** update publish.yml ([#1705](https://github.com/UK-Export-Finance/mdm-api/issues/1705)) ([20c45e7](https://github.com/UK-Export-Finance/mdm-api/commit/20c45e7c4134f9ed9e4574ca337af32b9afae082))
+
 ## [1.36.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.35.0...v1.36.0) (2025-12-30)
 
 
