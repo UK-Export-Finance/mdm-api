@@ -153,12 +153,14 @@ export const EXAMPLES = {
             accruingFees: 3,
           },
         },
+        additionalRates: ['ARTOTH'],
         accrualSchedules: [
           {
             code: 'PAC01',
             cashIndicator: true,
           },
         ],
+        baseRates: ['BRTOTH'],
         counterpartyRoleTypes: [COUNTERPARTY_ROLE_TYPES.BROKER],
         facilityCategoryTypes: ['FCT001', 'FCT002'],
         obligationSubtypes: ['OST001', 'OST002', 'OST003'],

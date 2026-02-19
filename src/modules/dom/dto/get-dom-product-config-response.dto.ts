@@ -30,12 +30,26 @@ export class GetDomProductConfigResponse {
   readonly configuration: GetDomProductConfigConfig;
 
   @ApiProperty({
+    description: "The product's additional rates",
+    example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.additionalRates,
+    isArray: true,
+  })
+  readonly additionalRates: string[];
+
+  @ApiProperty({
     description: "The product's accrual schedule",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.accrualSchedules,
     type: () => GetDomProductConfigAccrualSchedule,
     isArray: true,
   })
   readonly accrualSchedules: GetDomProductConfigAccrualSchedule[];
+
+  @ApiProperty({
+    description: "The product's base rates",
+    example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.baseRates,
+    isArray: true,
+  })
+  readonly baseRates: string[];
 
   @ApiProperty({
     description: "The product's counterparty role types",
