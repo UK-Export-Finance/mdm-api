@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { EXAMPLES } from '@ukef/constants';
 
+import { GetDomProductConfigAccrualSchedule } from './get-dom-product-config-accrual-schedule.dto';
 import { GetDomProductConfigConfig } from './get-dom-product-config-config.dto';
 
 export class GetDomProductConfigResponse {
@@ -27,6 +28,14 @@ export class GetDomProductConfigResponse {
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration,
   })
   readonly configuration: GetDomProductConfigConfig;
+
+  @ApiProperty({
+    description: "The product's 'accural schedule' requirement",
+    example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.accrualSchedules,
+    type: () => GetDomProductConfigAccrualSchedule,
+    isArray: true,
+  })
+  readonly accrualSchedules: GetDomProductConfigAccrualSchedule[];
 
   @ApiProperty({
     description: "The product's counterparty role types",

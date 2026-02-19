@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { EXAMPLES } from '@ukef/constants';
 
-import { GetDomProductConfigConfigAccrualSchedule } from './get-dom-product-config-config-accrual-schedule.dto';
 import { GetDomProductConfigConfigFees } from './get-dom-product-config-config-fees.dto';
 import { GetDomProductConfigConfigLeadDays } from './get-dom-product-config-config-lead-days.dto';
 
@@ -67,14 +66,6 @@ export class GetDomProductConfigConfig {
   readonly cashObligations: string;
 
   @ApiProperty({
-    description: "The product's 'accural schedule' requirement",
-    example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.accrualSchedule,
-    type: () => GetDomProductConfigConfigAccrualSchedule,
-    isArray: true,
-  })
-  readonly accrualSchedule: string;
-
-  @ApiProperty({
     description: "The product's 'PIM owner' requirement",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.pimOwner,
   })
@@ -121,12 +112,6 @@ export class GetDomProductConfigConfig {
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.bankRate,
   })
   readonly bankRate: string;
-
-  @ApiProperty({
-    description: "The product's 'accrual schedules'",
-    example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.accrualSchedules,
-  })
-  readonly accrualSchedules: GetDomProductConfigConfigAccrualSchedule[];
 
   @ApiProperty({
     description: "The product's 'fees'",
