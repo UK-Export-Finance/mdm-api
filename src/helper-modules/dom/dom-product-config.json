@@ -299,12 +299,6 @@
         "accruingFees": 5
       }
     },
-    "creation": {
-      "fees": "REQUIRED"
-    },
-    "inLife": {
-      "fees": "REQUIRED"
-    },
     "counterpartyRoleTypes": [],
     "facilityCategoryTypes": [],
     "obligationSubtypes": [],
