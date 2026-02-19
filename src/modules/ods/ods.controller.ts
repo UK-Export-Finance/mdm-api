@@ -4,6 +4,7 @@ import AppConfig from '@ukef/config/app.config';
 
 import { FindOdsIndustryParamDto, GetIndustryResponseDto, GetOdsCustomerParamDto, GetOdsCustomerResponse, GetOdsDealParamDto, GetOdsDealResponse } from './dto';
 import { OdsService } from './ods.service';
+import { OdsAccrualsService } from './ods-accruals.service';
 
 const { domOdsVersioning } = AppConfig();
 
@@ -13,7 +14,32 @@ const { domOdsVersioning } = AppConfig();
   version: domOdsVersioning.version,
 })
 export class OdsController {
-  constructor(private readonly odsService: OdsService) {}
+  constructor(
+    private readonly odsService: OdsService,
+    private readonly odsAccrualsService: OdsAccrualsService,
+  ) {}
+
+  @Get('accrual-schedules')
+  @ApiOperation({
+    summary: 'Get accrual schedules from ODS',
+  })
+  @ApiOkResponse({
+    description: 'ODS accrual schedules',
+    isArray: true,
+    // type: FindOdsAccrualScheduleResponse,
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad request',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  // getAccrualSchedules(): FindOdsAccrualScheduleResponse[] {
+  //   return this.odsService.getAccrualSchedules();
+  // }
+  getAccrualSchedules(): any {
+    return this.odsAccrualsService.getSchedules();
+  }
 
   @Get('customers/:urn')
   @ApiOperation({
