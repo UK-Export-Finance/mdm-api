@@ -70,7 +70,7 @@ export class CurrenciesService {
    * @param {string} source - The exchange rate source
    * @param {string} target - The exchange rate target
    * @param {string} exchangeRateDate - Optional exchange rate date
-   * @returns {Promise<CurrencyEntity>}
+   * @returns {Promise<CurrencyExchangeEntity[]>}
    */
   async findExchangeRate(source: string, target: string, exchangeRateDate?: string): Promise<CurrencyExchangeEntity[]> {
     try {

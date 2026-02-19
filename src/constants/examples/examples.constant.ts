@@ -143,12 +143,22 @@ export const EXAMPLES = {
           provisionRate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
           forecastYear: PRODUCT_CONFIG_REQUIREMENT.NOT_APPLICABLE,
           bankRate: PRODUCT_CONFIG_REQUIREMENT.OPTIONAL,
+          fees: {
+            creation: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
+            inLife: PRODUCT_CONFIG_REQUIREMENT.OPTIONAL,
+          },
           leadDays: {
             repayments: 1,
             interestAccruals: 2,
             accruingFees: 3,
           },
         },
+        accrualSchedules: [
+          {
+            code: 'PAC01',
+            cashIndicator: true,
+          },
+        ],
         counterpartyRoleTypes: [COUNTERPARTY_ROLE_TYPES.BROKER],
         facilityCategoryTypes: ['FCT001', 'FCT002'],
         obligationSubtypes: ['OST001', 'OST002', 'OST003'],

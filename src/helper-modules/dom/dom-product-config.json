@@ -33,6 +33,7 @@
         "accruingFees": 5
       }
     },
+    "accrualSchedules": [],
     "counterpartyRoleTypes": [
       "CRT001",
       "CRT004",
@@ -91,6 +92,7 @@
         "accruingFees": 5
       }
     },
+    "accrualSchedules": [],
     "counterpartyRoleTypes": [
       "CRT001",
       "CRT002",
@@ -141,6 +143,12 @@
         "accruingFees": 1
       }
     },
+    "accrualSchedules": [
+      {
+        "code": "PAC01",
+        "cashIndicator": true
+      }
+    ],
     "counterpartyRoleTypes": [
       "CRT004",
       "CRT005",
@@ -200,6 +208,12 @@
         "accruingFees": 1
       }
     },
+    "accrualSchedules": [
+      {
+        "code": "PAC01",
+        "cashIndicator": true
+      }
+    ],
     "counterpartyRoleTypes": [
       "CRT043"
     ],
@@ -234,18 +248,17 @@
       "provisionRate": "OPTIONAL",
       "forecastYear": "OPTIONAL",
       "bankRate": "OPTIONAL",
+      "fees": {
+        "creation": "OPTIONAL",
+        "inLife": "OPTIONAL"
+      },
       "leadDays": {
         "repayments": 5,
         "interestAccruals": 5,
         "accruingFees": 5
       }
     },
-    "creation": {
-      "fees": "OPTIONAL"
-    },
-    "inLife": {
-      "fees": "OPTIONAL"
-    },
+    "accrualSchedules": [],
     "counterpartyRoleTypes": [],
     "facilityCategoryTypes": [],
     "obligationSubtypes": [],
@@ -275,18 +288,17 @@
       "provisionRate": "REQUIRED",
       "forecastYear": "REQUIRED",
       "bankRate": "REQUIRED",
+      "fees": {
+        "creation": "REQUIRED",
+        "inLife": "REQUIRED"
+      },
       "leadDays": {
         "repayments": 5,
         "interestAccruals": 5,
         "accruingFees": 5
       }
     },
-    "creation": {
-      "fees": "REQUIRED"
-    },
-    "inLife": {
-      "fees": "REQUIRED"
-    },
+    "accrualSchedules": [],
     "counterpartyRoleTypes": [],
     "facilityCategoryTypes": [],
     "obligationSubtypes": [],
