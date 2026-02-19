@@ -9,7 +9,7 @@ run-name: 🔬 Pull request inspection on ${{ github.event.number }}
 
 on:
   pull_request:
-    branches: [main, main-*]
+    branches: [main, main-*, "release-*"]
 
 env:
   environment: 'qa'
