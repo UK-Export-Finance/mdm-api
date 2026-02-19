@@ -66,6 +66,12 @@ export class GetDomProductConfigConfig {
   readonly cashObligations: string;
 
   @ApiProperty({
+    description: "The product's 'accrual schedule' requirement",
+    example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.accrualSchedule,
+  })
+  readonly accrualSchedule: string;
+
+  @ApiProperty({
     description: "The product's 'PIM owner' requirement",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.pimOwner,
   })

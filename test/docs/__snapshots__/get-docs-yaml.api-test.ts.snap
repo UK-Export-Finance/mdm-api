@@ -1268,7 +1268,7 @@ components:
           example: REQUIRED
         accrualSchedule:
           type: string
-          description: The product's 'accural schedule' requirement
+          description: The product's 'accrual schedule' requirement
           example: REQUIRED
         pimOwner:
           type: string

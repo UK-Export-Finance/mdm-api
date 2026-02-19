@@ -30,7 +30,7 @@ export class GetDomProductConfigResponse {
   readonly configuration: GetDomProductConfigConfig;
 
   @ApiProperty({
-    description: "The product's 'accural schedule' requirement",
+    description: "The product's accrual schedule",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.accrualSchedules,
     type: () => GetDomProductConfigAccrualSchedule,
     isArray: true,
