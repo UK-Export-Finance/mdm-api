@@ -143,6 +143,16 @@ export const EXAMPLES = {
           provisionRate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
           forecastYear: PRODUCT_CONFIG_REQUIREMENT.NOT_APPLICABLE,
           bankRate: PRODUCT_CONFIG_REQUIREMENT.OPTIONAL,
+          accrualSchedules: [
+            {
+              code: 'PAC01',
+              cashIndicator: true,
+            },
+          ],
+          fees: {
+            creation: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
+            inLife: PRODUCT_CONFIG_REQUIREMENT.OPTIONAL,
+          },
           leadDays: {
             repayments: 1,
             interestAccruals: 2,

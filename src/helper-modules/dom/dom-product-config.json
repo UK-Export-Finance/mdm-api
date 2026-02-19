@@ -23,6 +23,7 @@
       "provisionRate": "REQUIRED",
       "forecastYear": "REQUIRED",
       "bankRate": "NOT_APPLICABLE",
+      "accrualSchedules": [],
       "fees": {
         "creation": "REQUIRED",
         "inLife": "OPTIONAL"
@@ -81,6 +82,7 @@
       "provisionRate": "REQUIRED",
       "forecastYear": "REQUIRED",
       "bankRate": "NOT_APPLICABLE",
+      "accrualSchedules": [],
       "fees": {
         "creation": "REQUIRED",
         "inLife": "OPTIONAL"
@@ -131,6 +133,12 @@
       "provisionRate": "NOT_APPLICABLE",
       "forecastYear": "NOT_APPLICABLE",
       "bankRate": "NOT_APPLICABLE",
+      "accrualSchedules": [
+        {
+          "code": "PAC01",
+          "cashIndicator": true
+        }
+      ],
       "fees": {
         "creation": "NOT_APPLICABLE",
         "inLife": "OPTIONAL"
@@ -190,6 +198,12 @@
       "provisionRate": "NOT_APPLICABLE",
       "forecastYear": "NOT_APPLICABLE",
       "bankRate": "NOT_APPLICABLE",
+      "accrualSchedules": [
+        {
+          "code": "PAC01",
+          "cashIndicator": true
+        }
+      ],
       "fees": {
         "creation": "NOT_APPLICABLE",
         "inLife": "OPTIONAL"
@@ -234,17 +248,16 @@
       "provisionRate": "OPTIONAL",
       "forecastYear": "OPTIONAL",
       "bankRate": "OPTIONAL",
+      "accrualSchedules": [],
+      "fees": {
+        "creation": "OPTIONAL",
+        "inLife": "OPTIONAL"
+      },
       "leadDays": {
         "repayments": 5,
         "interestAccruals": 5,
         "accruingFees": 5
       }
-    },
-    "creation": {
-      "fees": "OPTIONAL"
-    },
-    "inLife": {
-      "fees": "OPTIONAL"
     },
     "counterpartyRoleTypes": [],
     "facilityCategoryTypes": [],
@@ -275,6 +288,11 @@
       "provisionRate": "REQUIRED",
       "forecastYear": "REQUIRED",
       "bankRate": "REQUIRED",
+      "accrualSchedules": [],
+      "fees": {
+        "creation": "REQUIRED",
+        "inLife": "REQUIRED"
+      },
       "leadDays": {
         "repayments": 5,
         "interestAccruals": 5,
