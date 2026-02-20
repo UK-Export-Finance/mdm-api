@@ -1,11 +1,7 @@
 import { ClassSerializerInterceptor, UseInterceptors } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
+import { EXAMPLES } from '@ukef/constants';
 import { Column, Entity, PrimaryColumn } from 'typeorm';
-
-// TODO
-// TODO
-// TODO
-// TODO - CHECK NAMES ie industry sector / companies house.
 
 @Entity({
   name: 'MAP_INDUSTRY_SECTOR',
@@ -18,7 +14,7 @@ export class UkefIndustryEntity {
 
   @Column({ name: 'Code', length: 4 })
   @ApiProperty({
-    example: '1406',
+    example: EXAMPLES.UKEF_INDUSTRY_CODE,
     description: 'UKEF industry code',
   })
   code: string;
@@ -36,7 +32,7 @@ export class UkefIndustryEntity {
 
   @Column({ name: 'Code1', type: 'char', length: 255 })
   @ApiProperty({
-    // example: '49200',
+    example: '49200',
     description: 'Companies House Industry sector code',
   })
   code1: string;
@@ -64,8 +60,8 @@ export class UkefIndustryEntity {
 
   @Column({ name: 'INDUSTRY_ID' })
   @ApiProperty({
-    example: 1007,
-    description: 'Industry ID',
+    example: Number(EXAMPLES.COMPANIES_HOUSE_INDUSTRY_CODE),
+    description: 'Companies House Industry ID',
   })
   industryId: number;
 

@@ -117,7 +117,5 @@ describe('/ukef-industry-code/by-companies-house-industry-code', () => {
         });
       });
     });
-
-    // TODO: APIM-613 - create a mock request to mimic receiving a 500 error from ODS.
   });
 });
