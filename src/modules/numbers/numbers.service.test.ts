@@ -177,13 +177,13 @@ describe('NumbersService', () => {
   });
 
   describe('Helper sortGroupedByTypeIds()', () => {
-    it('sorts UKEF ids and return same structure', () => {
+    it('sorts UKEF IDs and return same structure', () => {
       expect(service.sortGroupedByTypeIds(groupedIds)).toEqual(groupedAndSortedIds);
     });
   });
 
   describe('Helper sortIds()', () => {
-    it('sorts UKEF ids in full ukefId entity objects', () => {
+    it('sorts UKEF IDs in full ukefId entity objects', () => {
       expect(service.sortIds(unSortedUkefIds)).toEqual(sortedUkefIds);
     });
   });
