@@ -3,7 +3,7 @@ import { registerDecorator, ValidationArguments, ValidationOptions } from 'class
 /**
  * Custom decorator for exact length validation
  * @param {number} length - The exact length the value must be
- * @param options - Validation options
+ * @param {ValidationOptions} options - Validation options
  * @returns A property decorator function
  * @throws {Error} If the value is not a string or does not have the exact length
  */

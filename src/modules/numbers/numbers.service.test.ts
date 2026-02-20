@@ -170,20 +170,20 @@ describe('NumbersService', () => {
   });
 
   describe('Helper groupIdsByType()', () => {
-    it('group array items', () => {
-      // Ids are not sorted in the output!
+    it('should group array items', () => {
+      // IDs are not sorted in the output!
       expect(service.groupIdsByType(unSortedUkefIds)).toEqual(groupedIds);
     });
   });
 
   describe('Helper sortGroupedByTypeIds()', () => {
-    it('sorts UKEF IDs and return same structure', () => {
+    it('should sort UKEF IDs and return same structure', () => {
       expect(service.sortGroupedByTypeIds(groupedIds)).toEqual(groupedAndSortedIds);
     });
   });
 
   describe('Helper sortIds()', () => {
-    it('sorts UKEF IDs in full ukefId entity objects', () => {
+    it('should sort UKEF IDs in full ukefId entity objects', () => {
       expect(service.sortIds(unSortedUkefIds)).toEqual(sortedUkefIds);
     });
   });

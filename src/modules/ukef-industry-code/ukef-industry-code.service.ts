@@ -30,7 +30,7 @@ export class UkefIndustryCodeService {
         where: { industryId: Equal(industryCode) },
       });
 
-      if (!results.length) {
+      if (!results?.length) {
         this.logger.error('No UKEF industry code found for Companies House industry code %s', industryCode);
 
         throw new NotFoundException(`No UKEF industry code found for Companies House industry code ${industryCode}`);
