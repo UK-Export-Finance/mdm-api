@@ -1,12 +1,14 @@
 import { EXAMPLES } from '@ukef/constants';
 import { mapIndustry } from '@ukef/helpers';
-import { when } from 'jest-when';
 import { PinoLogger } from 'nestjs-pino';
 
 import { OdsController } from './ods.controller';
 import { OdsService } from './ods.service';
 
 const mockError = new Error('An error occurred');
+
+const mockCustomerDetails = { urn: EXAMPLES.CUSTOMER.PARTYURN, name: 'Mock customer name' };
+const mockDeal = { id: EXAMPLES.DEAL.ID, name: 'Mock deal name' };
 
 const mockUkefIndustries = [EXAMPLES.ODS.INDUSTRY, EXAMPLES.ODS.INDUSTRY];
 const mockUkefIndustryCodes = [EXAMPLES.ODS.INDUSTRY.industry_code, EXAMPLES.ODS.INDUSTRY.industry_code];
@@ -30,10 +32,10 @@ describe('OdsController', () => {
     odsServiceFindBusinessCentreNonWorkingDays = jest.fn();
     odsService.findBusinessCentreNonWorkingDays = odsServiceFindBusinessCentreNonWorkingDays;
 
-    odsServiceFindCustomer = jest.fn();
+    odsServiceFindCustomer = jest.fn().mockResolvedValueOnce(mockCustomerDetails);
     odsService.findCustomer = odsServiceFindCustomer;
 
-    odsServiceFindDeal = jest.fn();
+    odsServiceFindDeal = jest.fn().mockResolvedValueOnce(mockDeal);
     odsService.findDeal = odsServiceFindDeal;
 
     odsServiceGetUkefIndustries = jest.fn().mockReturnValueOnce(mockUkefIndustries);
@@ -62,11 +64,6 @@ describe('OdsController', () => {
     );
 
     it('should return a customer when a valid customer URN is provided', async () => {
-      // Arrange
-      const mockCustomerDetails = { urn: EXAMPLES.CUSTOMER.PARTYURN, name: 'Test customer name' };
-
-      when(odsServiceFindCustomer).calledWith(EXAMPLES.CUSTOMER.PARTYURN).mockResolvedValueOnce(mockCustomerDetails);
-
       // Act
       const result = await controller.findCustomer({ urn: EXAMPLES.CUSTOMER.PARTYURN });
 
@@ -102,11 +99,6 @@ describe('OdsController', () => {
     });
 
     it('should return a deal when a valid deal ID is provided', async () => {
-      // Arrange
-      const mockDeal = { id: EXAMPLES.DEAL.ID, name: 'Test deal name' };
-
-      when(odsServiceFindDeal).calledWith(EXAMPLES.DEAL.ID).mockResolvedValueOnce(mockDeal);
-
       // Act
       const result = await controller.findDeal({ id: EXAMPLES.DEAL.ID });
 

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { EXAMPLES, UKEFID } from '@ukef/constants';
+import { EXAMPLES, UKEF_ID } from '@ukef/constants';
 import { regexToString } from '@ukef/helpers/regex.helper';
 import { Matches } from 'class-validator';
 
@@ -8,8 +8,8 @@ export class GetOdsCustomerParamDto {
     required: true,
     example: EXAMPLES.CUSTOMER.PARTYURN,
     description: 'Unique UKEF customer ID',
-    pattern: regexToString(UKEFID.PARTY_ID.REGEX),
+    pattern: regexToString(UKEF_ID.PARTY_ID.REGEX),
   })
-  @Matches(UKEFID.PARTY_ID.REGEX)
+  @Matches(UKEF_ID.PARTY_ID.REGEX)
   public urn: string;
 }

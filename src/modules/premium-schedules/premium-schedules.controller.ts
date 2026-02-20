@@ -8,7 +8,7 @@ import { PremiumScheduleEntity } from './entities/premium-schedule.entity';
 import { PremiumSchedulesService } from './premium-schedules.service';
 
 @ApiTags('premium-schedules')
-@Controller('')
+@Controller('premium-schedules')
 export class PremiumSchedulesController {
   constructor(private readonly premiumSchedulesService: PremiumSchedulesService) {}
 

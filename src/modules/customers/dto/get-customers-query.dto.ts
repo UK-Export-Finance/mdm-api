@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { EXAMPLES, UKEFID } from '@ukef/constants';
+import { EXAMPLES, UKEF_ID } from '@ukef/constants';
 import { ENUMS } from '@ukef/constants/enums';
 import { FallbackToLegacyDataEnum } from '@ukef/constants/enums/fallbackToLegacyData';
 import { regexToString } from '@ukef/helpers/regex.helper';
@@ -19,11 +19,11 @@ export class GetCustomersQueryDto {
   @ApiProperty({
     required: false,
     example: EXAMPLES.CUSTOMER.PARTYURN,
-    description: 'The unique UKEF id of the customer to search for.',
-    pattern: regexToString(UKEFID.PARTY_ID.REGEX),
+    description: 'The unique UKEF ID of the customer to search for.',
+    pattern: regexToString(UKEF_ID.PARTY_ID.REGEX),
   })
   @Length(8)
-  @Matches(UKEFID.PARTY_ID.REGEX)
+  @Matches(UKEF_ID.PARTY_ID.REGEX)
   public partyUrn?: string;
 
   @IsOptional()

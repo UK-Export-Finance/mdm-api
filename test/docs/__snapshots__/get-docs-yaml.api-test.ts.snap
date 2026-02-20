@@ -163,7 +163,7 @@ paths:
         - name: partyUrn
           required: false
           in: query
-          description: The unique UKEF id of the customer to search for.
+          description: The unique UKEF ID of the customer to search for.
           schema:
             pattern: ^\\d{8}$
             example: '00302069'
@@ -781,7 +781,7 @@ paths:
         - name: facilityId
           required: true
           in: path
-          description: UKEF id for Facility, but without 00 at beginning
+          description: UKEF ID for Facility, but without 00 at beginning
           schema:
             example: '30000425'
             type: string
@@ -1767,7 +1767,7 @@ components:
           type: number
           example: 30000425
           description: >-
-            UKEF id for Facility, but without 00 at beginning. Usually UKEF id
+            UKEF ID for Facility, but without 00 at beginning. Usually UKEF ID
             is string, but in this endpoint it is number
         productGroup:
           type: string
@@ -1845,7 +1845,7 @@ components:
         facilityURN:
           type: string
           example: '30000425'
-          description: UKEF id for Facility, but without 00 at beginning
+          description: UKEF ID for Facility, but without 00 at beginning
         calculationDate:
           format: date-time
           type: string
