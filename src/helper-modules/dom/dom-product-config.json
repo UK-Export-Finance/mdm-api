@@ -33,7 +33,9 @@
         "accruingFees": 5
       }
     },
+    "additionalRates": [],
     "accrualSchedules": [],
+    "baseRates": [],
     "counterpartyRoleTypes": [
       "CRT001",
       "CRT004",
@@ -92,7 +94,9 @@
         "accruingFees": 5
       }
     },
+    "additionalRates": [],
     "accrualSchedules": [],
+    "baseRates": [],
     "counterpartyRoleTypes": [
       "CRT001",
       "CRT002",
@@ -143,12 +147,14 @@
         "accruingFees": 1
       }
     },
+    "additionalRates": ["ARTOTH"],
     "accrualSchedules": [
       {
         "code": "PAC01",
         "cashIndicator": true
       }
     ],
+    "baseRates": ["BRTOTH"],
     "counterpartyRoleTypes": [
       "CRT004",
       "CRT005",
@@ -208,12 +214,14 @@
         "accruingFees": 1
       }
     },
+    "additionalRates": ["ARTOTH"],
     "accrualSchedules": [
       {
         "code": "PAC01",
         "cashIndicator": true
       }
     ],
+    "baseRates": ["BRTOTH"],
     "counterpartyRoleTypes": [
       "CRT043"
     ],
@@ -258,7 +266,9 @@
         "accruingFees": 5
       }
     },
+    "additionalRates": [],
     "accrualSchedules": [],
+    "baseRates": [],
     "counterpartyRoleTypes": [],
     "facilityCategoryTypes": [],
     "obligationSubtypes": [],
@@ -298,7 +308,9 @@
         "accruingFees": 5
       }
     },
+    "additionalRates": [],
     "accrualSchedules": [],
+    "baseRates": [],
     "counterpartyRoleTypes": [],
     "facilityCategoryTypes": [],
     "obligationSubtypes": [],

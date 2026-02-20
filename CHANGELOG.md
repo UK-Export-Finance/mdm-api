@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.38.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.37.0...v1.38.0) (2026-02-20)
+
+
+### Features
+
+* **GIFT-20250:** product configuration - base rates, additional rates ([#1711](https://github.com/UK-Export-Finance/mdm-api/issues/1711)) ([45bff22](https://github.com/UK-Export-Finance/mdm-api/commit/45bff22437914e4597a30536f033eac4115ee436))
+
 ## [1.37.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.36.0...v1.37.0) (2026-02-19)
 
 
