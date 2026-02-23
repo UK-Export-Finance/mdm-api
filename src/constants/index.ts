@@ -15,13 +15,14 @@
  * 11) Enums
  * 12) Examples
  * 13) GOV.UK Notify
- * 14) Geospatial
- * 15) ODS
- * 16) Products
- * 17) Strings to redact
- * 18) Strings paths to redact
- * 19) Stored procedures
- * 20) UKEF ID
+ * 14) Industry code
+ * 15) Geospatial
+ * 16) ODS
+ * 17) Products
+ * 18) Strings to redact
+ * 19) Strings paths to redact
+ * 20) Stored procedures
+ * 21) UKEF ID
  */
 
 export * from './application.constant';
@@ -36,6 +37,7 @@ export * from './enums';
 export * from './examples/examples.constant';
 export * from './geospatial.constant';
 export * from './govuk-notify.constant';
+export * from './industry-code.constant';
 export * from './ods.constant';
 export * from './products.constant';
 export * from './redact-strings.constant';

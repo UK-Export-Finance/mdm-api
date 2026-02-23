@@ -7,7 +7,7 @@ export class CreatePremiumScheduleDto {
   @IsNotEmpty()
   @ApiProperty({
     example: 30000425,
-    description: 'UKEF id for Facility, but without 00 at beginning. Usually UKEF id is string, but in this endpoint it is number',
+    description: 'UKEF ID for Facility, but without 00 at beginning. Usually UKEF ID is string, but in this endpoint it is number',
   })
   readonly facilityURN: number;
 
