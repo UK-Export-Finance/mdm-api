@@ -90,7 +90,7 @@
     "@types/jest": "^30.0.0",
     "@types/lodash": "^4.17.23",
     "@types/node": "^25.2.3",
-    "@types/supertest": "^6.0.3",
+    "@types/supertest": "^7.0.0",
     "@typescript-eslint/eslint-plugin": "^8.46.4",
     "@typescript-eslint/parser": "^8.46.4",
     "chance": "^1.1.13",
