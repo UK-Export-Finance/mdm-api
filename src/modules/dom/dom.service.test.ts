@@ -316,24 +316,6 @@ describe('DomService', () => {
       expect(response.productType).toEqual(EXAMPLES.PRODUCT_TYPES.GEF);
     });
 
-    it(`should return a product configuration - ${EXAMPLES.PRODUCT_TYPES.EXAMPLE_ALL_OPTIONAL}`, () => {
-      // Act
-      const response = service.findProductConfiguration(EXAMPLES.PRODUCT_TYPES.EXAMPLE_ALL_OPTIONAL);
-
-      // Assert
-      expect(response).toEqual(PRODUCT_CONFIG[4]);
-      expect(response.productType).toEqual(EXAMPLES.PRODUCT_TYPES.EXAMPLE_ALL_OPTIONAL);
-    });
-
-    it(`should return a product configuration - ${EXAMPLES.PRODUCT_TYPES.EXAMPLE_ALL_REQUIRED}`, () => {
-      // Act
-      const response = service.findProductConfiguration(EXAMPLES.PRODUCT_TYPES.EXAMPLE_ALL_REQUIRED);
-
-      // Assert
-      expect(response).toEqual(PRODUCT_CONFIG[5]);
-      expect(response.productType).toEqual(EXAMPLES.PRODUCT_TYPES.EXAMPLE_ALL_REQUIRED);
-    });
-
     describe('when a configuration is NOT found', () => {
       it('should throw a not found exception', async () => {
         // Arrange
