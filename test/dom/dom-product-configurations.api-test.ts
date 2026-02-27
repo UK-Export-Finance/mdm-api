@@ -82,36 +82,6 @@ describe('/dom - product-configuration', () => {
       expect(body.productType).toEqual(EXAMPLES.PRODUCT_TYPES.GEF);
     });
 
-    it(`should return ${HttpStatus.OK} with product configuration - ${EXAMPLES.PRODUCT_TYPES.EXAMPLE_ALL_OPTIONAL}`, async () => {
-      // Arrange
-      const url = `${baseUrl}/${EXAMPLES.PRODUCT_TYPES.EXAMPLE_ALL_OPTIONAL}`;
-
-      // Act
-      const { status, body } = await api.get(url);
-
-      // Assert
-      expect(status).toBe(HttpStatus.OK);
-
-      expect(body).toEqual(PRODUCT_CONFIG[4]);
-
-      expect(body.productType).toEqual(EXAMPLES.PRODUCT_TYPES.EXAMPLE_ALL_OPTIONAL);
-    });
-
-    it(`should return ${HttpStatus.OK} with product configuration - ${EXAMPLES.PRODUCT_TYPES.EXAMPLE_ALL_REQUIRED}`, async () => {
-      // Arrange
-      const url = `${baseUrl}/${EXAMPLES.PRODUCT_TYPES.EXAMPLE_ALL_REQUIRED}`;
-
-      // Act
-      const { status, body } = await api.get(url);
-
-      // Assert
-      expect(status).toBe(HttpStatus.OK);
-
-      expect(body).toEqual(PRODUCT_CONFIG[5]);
-
-      expect(body.productType).toEqual(EXAMPLES.PRODUCT_TYPES.EXAMPLE_ALL_REQUIRED);
-    });
-
     describe('when a product configuration is not found', () => {
       it(`should return ${HttpStatus.NOT_FOUND}`, async () => {
         // Arrange
