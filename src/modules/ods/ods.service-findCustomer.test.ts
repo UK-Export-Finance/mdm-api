@@ -89,7 +89,7 @@ describe('OdsService - findCustomer', () => {
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error(`Error finding customer ${mockCustomer.urn}`);
+      const expected = new Error(`Error finding customer ${mockCustomer.urn} in ODS`);
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -107,7 +107,7 @@ describe('OdsService - findCustomer', () => {
 
       await expect(promise).rejects.toBeInstanceOf(NotFoundException);
 
-      const expected = new Error(`No customer found ${mockCustomer.urn}`);
+      const expected = new Error(`No customer found ${mockCustomer.urn} in ODS`);
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -125,7 +125,7 @@ describe('OdsService - findCustomer', () => {
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error(`Error finding customer ${mockCustomer.urn}`);
+      const expected = new Error(`Error finding customer ${mockCustomer.urn} in ODS`);
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -141,7 +141,7 @@ describe('OdsService - findCustomer', () => {
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error(`Error finding customer ${mockCustomer.urn}`);
+      const expected = new Error(`Error finding customer ${mockCustomer.urn} in ODS`);
 
       await expect(promise).rejects.toThrow(expected);
     });

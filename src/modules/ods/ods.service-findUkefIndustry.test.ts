@@ -94,7 +94,7 @@ describe('OdsService - findUkefIndustry', () => {
 
       await expect(promise).rejects.toBeInstanceOf(NotFoundException);
 
-      const expected = new Error(`No UKEF industry ${EXAMPLES.INDUSTRY.CODE} found`);
+      const expected = new Error(`No UKEF industry ${EXAMPLES.INDUSTRY.CODE} found in ODS`);
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -110,7 +110,7 @@ describe('OdsService - findUkefIndustry', () => {
       // Act & Assert
       const promise = service.findUkefIndustry(EXAMPLES.INDUSTRY.CODE);
 
-      const expected = new Error(`Error finding UKEF industry ${EXAMPLES.INDUSTRY.CODE}`, {
+      const expected = new Error(`Error finding UKEF industry ${EXAMPLES.INDUSTRY.CODE} in ODS`, {
         cause: {
           message: `Error finding UKEF industry ${EXAMPLES.INDUSTRY.CODE} from ODS stored procedure`,
         },
@@ -130,7 +130,7 @@ describe('OdsService - findUkefIndustry', () => {
       // Act & Assert
       const promise = service.findUkefIndustry(EXAMPLES.INDUSTRY.CODE);
 
-      const expected = new Error(`Error finding UKEF industry ${EXAMPLES.INDUSTRY.CODE}`, { cause: mockStoredProcedureOutput });
+      const expected = new Error(`Error finding UKEF industry ${EXAMPLES.INDUSTRY.CODE} in ODS`, { cause: mockStoredProcedureOutput });
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -146,7 +146,7 @@ describe('OdsService - findUkefIndustry', () => {
       // Act & Assert
       const promise = service.findUkefIndustry(EXAMPLES.INDUSTRY.CODE);
 
-      const expected = new Error(`Error finding UKEF industry ${EXAMPLES.INDUSTRY.CODE}`, { cause: mockError });
+      const expected = new Error(`Error finding UKEF industry ${EXAMPLES.INDUSTRY.CODE} in ODS`, { cause: mockError });
 
       await expect(promise).rejects.toThrow(expected);
     });

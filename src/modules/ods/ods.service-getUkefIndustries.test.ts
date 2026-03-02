@@ -92,7 +92,7 @@ describe('OdsService - getUkefIndustries', () => {
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error(`Error getting UKEF industries`);
+      const expected = new Error(`Error getting UKEF industries from ODS`);
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -110,7 +110,7 @@ describe('OdsService - getUkefIndustries', () => {
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error('Error getting UKEF industries');
+      const expected = new Error('Error getting UKEF industries from ODS');
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -126,7 +126,7 @@ describe('OdsService - getUkefIndustries', () => {
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error('Error getting UKEF industries');
+      const expected = new Error('Error getting UKEF industries from ODS');
 
       await expect(promise).rejects.toThrow(expected);
     });

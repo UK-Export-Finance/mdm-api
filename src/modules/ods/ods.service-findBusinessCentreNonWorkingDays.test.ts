@@ -85,7 +85,7 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error(`Error getting business centre ${EXAMPLES.BUSINESS_CENTRE.CODE} non working days`);
+      const expected = new Error(`Error finding business centre ${EXAMPLES.BUSINESS_CENTRE.CODE} non working days in ODS`);
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -98,7 +98,7 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
 
       jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
 
-      const expected = new Error(`No business centre ${EXAMPLES.BUSINESS_CENTRE.CODE} non working days found`);
+      const expected = new Error(`No business centre ${EXAMPLES.BUSINESS_CENTRE.CODE} non working days found in ODS`);
 
       // Act & Assert
       const promise = service.findBusinessCentreNonWorkingDays(EXAMPLES.BUSINESS_CENTRE.CODE);
@@ -121,7 +121,7 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error(`Error getting business centre ${EXAMPLES.BUSINESS_CENTRE.CODE} non working days`);
+      const expected = new Error(`Error finding business centre ${EXAMPLES.BUSINESS_CENTRE.CODE} non working days in ODS`);
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -137,7 +137,7 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error(`Error getting business centre ${EXAMPLES.BUSINESS_CENTRE.CODE} non working days`);
+      const expected = new Error(`Error finding business centre ${EXAMPLES.BUSINESS_CENTRE.CODE} non working days in ODS`);
 
       await expect(promise).rejects.toThrow(expected);
     });

@@ -84,7 +84,7 @@ describe('OdsService - findDeal', () => {
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error(`Error finding deal ${EXAMPLES.DEAL.ID}`);
+      const expected = new Error(`Error finding deal ${EXAMPLES.DEAL.ID} in ODS`);
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -101,7 +101,7 @@ describe('OdsService - findDeal', () => {
 
       await expect(promise).rejects.toBeInstanceOf(NotFoundException);
 
-      const expected = new Error(`No deal found ${EXAMPLES.DEAL.ID}`);
+      const expected = new Error(`No deal found ${EXAMPLES.DEAL.ID} in ODS`);
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -118,7 +118,7 @@ describe('OdsService - findDeal', () => {
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error(`Error finding deal ${EXAMPLES.DEAL.ID}`);
+      const expected = new Error(`Error finding deal ${EXAMPLES.DEAL.ID} in ODS`);
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -133,7 +133,7 @@ describe('OdsService - findDeal', () => {
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error(`Error finding deal ${EXAMPLES.DEAL.ID}`);
+      const expected = new Error(`Error finding deal ${EXAMPLES.DEAL.ID} in ODS`);
 
       await expect(promise).rejects.toThrow(expected);
     });

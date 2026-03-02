@@ -10,7 +10,6 @@
 export type OdsStoredProcedureQueryParams = {
   business_centre_code?: string;
   classification_type_code?: string;
-  // classification_code?: string;
   customer_party_unique_reference_number?: string;
   deal_code?: string;
   industry_category?: string;
@@ -43,7 +42,6 @@ export type OdsStoredProcedureOutputBody = {
 
 export const ODS_ENTITIES = {
   ACCRUAL_SCHEDULE: 'accrual_schedule_classification',
-  // ACCRUAL_SCHEDULE: 'accrual_schedule',
   CUSTOMER: 'customer',
   DEAL: 'deal',
   BUSINESS_CENTRE: 'business_centre',
