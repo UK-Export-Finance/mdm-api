@@ -1,6 +1,5 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { InjectDataSource } from '@nestjs/typeorm';
-import { DATABASE_NAME, STORED_PROCEDURE } from '@ukef/constants';
+import { STORED_PROCEDURE } from '@ukef/constants';
 import { mapIndustries, mapIndustry, mapIndustryCodes } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 
@@ -18,7 +17,6 @@ import { OdsStoredProcedureService } from './ods-stored-procedure.service';
 @Injectable()
 export class OdsService {
   constructor(
-    @InjectDataSource(DATABASE_NAME.ODS)
     private readonly odsStoredProcedureService: OdsStoredProcedureService,
     private readonly logger: PinoLogger,
   ) {}

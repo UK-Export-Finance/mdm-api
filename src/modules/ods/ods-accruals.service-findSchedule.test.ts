@@ -58,7 +58,7 @@ describe('OdsAccrualsService - findSchedule', () => {
       entityToQuery: ODS_ENTITIES.ACCRUAL_SCHEDULE,
       queryPageSize: 1,
       queryParameters: {
-        classification_type_code: EXAMPLES.ACCRUAL_SCHEDULE.TYPE_CODE,
+        classification_code: EXAMPLES.ACCRUAL_SCHEDULE.CODE,
       },
     });
 

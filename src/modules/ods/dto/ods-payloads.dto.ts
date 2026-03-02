@@ -9,7 +9,7 @@
  */
 export type OdsStoredProcedureQueryParams = {
   business_centre_code?: string;
-  classification_type_code?: string;
+  classification_code?: string;
   customer_party_unique_reference_number?: string;
   deal_code?: string;
   industry_category?: string;

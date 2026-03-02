@@ -1,6 +1,5 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { InjectDataSource } from '@nestjs/typeorm';
-import { DATABASE_NAME, STORED_PROCEDURE } from '@ukef/constants';
+import { STORED_PROCEDURE } from '@ukef/constants';
 import { mapAccrualSchedule, mapAccrualSchedules } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 
@@ -10,7 +9,6 @@ import { OdsStoredProcedureService } from './ods-stored-procedure.service';
 @Injectable()
 export class OdsAccrualsService {
   constructor(
-    @InjectDataSource(DATABASE_NAME.ODS)
     private readonly odsStoredProcedureService: OdsStoredProcedureService,
     private readonly logger: PinoLogger,
   ) {}
@@ -29,7 +27,7 @@ export class OdsAccrualsService {
         entityToQuery: ODS_ENTITIES.ACCRUAL_SCHEDULE,
         queryPageSize: 1,
         queryParameters: {
-          classification_type_code: scheduleCode,
+          classification_code: scheduleCode,
         },
       });
 
