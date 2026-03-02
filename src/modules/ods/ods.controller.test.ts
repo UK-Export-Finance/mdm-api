@@ -16,8 +16,7 @@ const mockUkefIndustryCodes = [EXAMPLES.ODS.INDUSTRY.industry_code, EXAMPLES.ODS
 
 const mockMappedIndustry = mapIndustry(EXAMPLES.ODS.INDUSTRY);
 
-// TODO
-const mockAccrualSchedules = [];
+const mockAccrualSchedules = [EXAMPLES.ACCRUAL_SCHEDULE, EXAMPLES.ACCRUAL_SCHEDULE];
 
 describe('OdsController', () => {
   const mockLogger = new PinoLogger({});
