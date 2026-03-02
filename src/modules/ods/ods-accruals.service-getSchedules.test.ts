@@ -7,7 +7,7 @@ import { DataSource, QueryRunner } from 'typeorm';
 import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { OdsAccrualsService } from './ods-accruals.service';
 
-describe('OdsAccrualsService', () => {
+describe('OdsAccrualsService - getSchedules', () => {
   let service: OdsAccrualsService;
   let mockQueryRunner: jest.Mocked<QueryRunner>;
   let mockDataSource: jest.Mocked<DataSource>;

@@ -38,10 +38,10 @@ const PRODUCT_TYPES = {
 
 export const EXAMPLES = {
   ACCRUAL_SCHEDULE: {
-    TYPE: 'Additional Rate Type',
-    TYPE_CODE: 'additionalRateType',
-    CODE: 'ARTRAC',
-    DESCRIPTION: 'RAC/MLA - Reserve Asset Costs',
+    TYPE: 'Day Basis',
+    TYPE_CODE: 'dayBasis',
+    CODE: 'ACTUAL_365',
+    DESCRIPTION: 'Actual/365  (Actual number of days in each month divisible by 365)',
     NUMERIC_VALUE: 1,
     IS_ACTIVE: true,
   },
@@ -214,10 +214,10 @@ export const EXAMPLES = {
   },
   ODS: {
     ACCRUAL_SCHEDULE: {
-      classification_type: 'Additional Rate Type',
-      classification_type_code: 'additionalRateType',
-      classification_code: 'ARTRAC',
-      classification_description: 'RAC/MLA - Reserve Asset Costs',
+      classification_type: 'Day Basis',
+      classification_type_code: 'dayBasis',
+      classification_code: 'ACTUAL_365',
+      classification_description: 'Actual/365  (Actual number of days in each month divisible by 365)',
       classification_numeric_value: 1,
       classification_active_flag: true,
     },

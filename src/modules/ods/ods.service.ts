@@ -177,7 +177,7 @@ export class OdsService {
   /**
    * Find a UKEF industry by industry code
    * @param {string} industryCode: UKEF industry code
-   * @returns {Promise<GetIndustryResponseDto[]>}
+   * @returns {Promise<GetIndustryResponseDto>}
    * @throws {NotFoundException} If no UKEF industry is found
    */
   async findUkefIndustry(industryCode: string): Promise<GetIndustryResponseDto> {

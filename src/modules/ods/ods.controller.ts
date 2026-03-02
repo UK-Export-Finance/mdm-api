@@ -6,6 +6,7 @@ import {
   FindOdsIndustryParamDto,
   GetAccrualScheduleResponseDto,
   GetIndustryResponseDto,
+  GetOdsAccrualScheduleParamDto,
   GetOdsCustomerParamDto,
   GetOdsCustomerResponse,
   GetOdsDealParamDto,
@@ -44,6 +45,27 @@ export class OdsController {
   })
   getAccrualSchedules(): Promise<GetAccrualScheduleResponseDto[]> {
     return this.odsAccrualsService.getSchedules();
+  }
+
+  @Get('accrual-schedule/:scheduleTypeCode')
+  @ApiOperation({
+    summary: 'Get an accrual schedule from ODS',
+  })
+  @ApiOkResponse({
+    description: 'ODS accrual schedule',
+    type: GetAccrualScheduleResponseDto,
+  })
+  @ApiNotFoundResponse({
+    description: 'Accrual schedule not found',
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad request',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  findAccrualSchedule(@Param() param: GetOdsAccrualScheduleParamDto): Promise<GetAccrualScheduleResponseDto> {
+    return this.odsAccrualsService.findSchedule(param.scheduleTypeCode);
   }
 
   @Get('customers/:urn')
