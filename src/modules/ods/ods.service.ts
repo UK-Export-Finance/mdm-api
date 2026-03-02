@@ -2,9 +2,7 @@ import { Injectable, InternalServerErrorException, NotFoundException } from '@ne
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DATABASE_NAME, STORED_PROCEDURE } from '@ukef/constants';
 import { mapIndustries, mapIndustry, mapIndustryCodes } from '@ukef/helpers';
-import { CreateOdsStoredProcedureInputParams } from '@ukef/typings';
 import { PinoLogger } from 'nestjs-pino';
-import { DataSource } from 'typeorm';
 
 import {
   GetIndustryOdsResponseDto,
@@ -13,15 +11,15 @@ import {
   GetOdsCustomerResponse,
   GetOdsDealResponse,
   ODS_ENTITIES,
-  OdsStoredProcedureInput,
   OdsStoredProcedureOutputBody,
 } from './dto';
+import { OdsStoredProcedureService } from './ods-stored-procedure.service';
 
 @Injectable()
 export class OdsService {
   constructor(
     @InjectDataSource(DATABASE_NAME.ODS)
-    private readonly odsDataSource: DataSource,
+    private readonly odsStoredProcedureService: OdsStoredProcedureService,
     private readonly logger: PinoLogger,
   ) {}
 
@@ -37,13 +35,13 @@ export class OdsService {
     try {
       this.logger.info('Finding customer %s in ODS', uniqueReferenceNumber);
 
-      const storedProcedureInput = this.createOdsStoredProcedureInput({
+      const storedProcedureInput = this.odsStoredProcedureService.createInput({
         entityToQuery: ODS_ENTITIES.CUSTOMER,
         queryPageSize: 1,
         queryParameters: { customer_party_unique_reference_number: uniqueReferenceNumber },
       });
 
-      const storedProcedureResult = await this.callOdsStoredProcedure(storedProcedureInput);
+      const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
@@ -87,13 +85,13 @@ export class OdsService {
     try {
       this.logger.info('Finding deal %s in ODS', id);
 
-      const storedProcedureInput = this.createOdsStoredProcedureInput({
+      const storedProcedureInput = this.odsStoredProcedureService.createInput({
         entityToQuery: ODS_ENTITIES.DEAL,
         queryPageSize: 1,
         queryParameters: { deal_code: id },
       });
 
-      const storedProcedureResult = await this.callOdsStoredProcedure(storedProcedureInput);
+      const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
@@ -138,14 +136,14 @@ export class OdsService {
     try {
       this.logger.info('Finding business centre %s non working days in ODS', centreCode);
 
-      const storedProcedureInput = this.createOdsStoredProcedureInput({
+      const storedProcedureInput = this.odsStoredProcedureService.createInput({
         entityToQuery: ODS_ENTITIES.BUSINESS_CENTRE_NON_WORKING_DAY,
         queryParameters: {
           business_centre_code: centreCode,
         },
       });
 
-      const storedProcedureResult = await this.callOdsStoredProcedure(storedProcedureInput);
+      const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
@@ -184,7 +182,7 @@ export class OdsService {
     try {
       this.logger.info('Finding UKEF industry in ODS %s', industryCode);
 
-      const storedProcedureInput = this.createOdsStoredProcedureInput({
+      const storedProcedureInput = this.odsStoredProcedureService.createInput({
         entityToQuery: ODS_ENTITIES.INDUSTRY,
         queryPageSize: 1,
         queryParameters: {
@@ -193,7 +191,7 @@ export class OdsService {
         },
       });
 
-      const storedProcedureResult = await this.callOdsStoredProcedure(storedProcedureInput);
+      const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
@@ -230,12 +228,12 @@ export class OdsService {
     try {
       this.logger.info('Getting UKEF industries from ODS');
 
-      const storedProcedureInput = this.createOdsStoredProcedureInput({
+      const storedProcedureInput = this.odsStoredProcedureService.createInput({
         entityToQuery: ODS_ENTITIES.INDUSTRY,
         queryParameters: { industry_category: 'UKEF' },
       });
 
-      const storedProcedureResult = await this.callOdsStoredProcedure(storedProcedureInput);
+      const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
@@ -266,12 +264,12 @@ export class OdsService {
     try {
       this.logger.info('Getting UKEF industry codes from ODS');
 
-      const storedProcedureInput = this.createOdsStoredProcedureInput({
+      const storedProcedureInput = this.odsStoredProcedureService.createInput({
         entityToQuery: ODS_ENTITIES.INDUSTRY,
         queryParameters: { industry_category: 'UKEF' },
       });
 
-      const storedProcedureResult = await this.callOdsStoredProcedure(storedProcedureInput);
+      const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
@@ -290,52 +288,6 @@ export class OdsService {
       this.logger.error('Error getting UKEF industry codes from ODS %o', error);
 
       throw new InternalServerErrorException('Error getting UKEF industry codes from ODS');
-    }
-  }
-
-  /**
-   * Creates the input parameter for the stored procedure
-   * @param {OdsEntity} entityToQuery The entity you want to query in ODS
-   * @param {number} queryPageSize The page size to query in ODS
-   * @param {OdsStoredProcedureQueryParams} queryParameters The query parameters and filters to apply to the query
-   *
-   * @returns {OdsStoredProcedureInput} The ODS stored procedure input in object format
-   */
-  createOdsStoredProcedureInput({ entityToQuery, queryPageSize, queryParameters }: CreateOdsStoredProcedureInputParams): OdsStoredProcedureInput {
-    return {
-      query_method: 'get',
-      query_object: entityToQuery,
-      query_page_size: queryPageSize,
-      query_page_index: 1,
-      query_parameters: queryParameters,
-    };
-  }
-
-  /**
-   * Calls the ODS stored procedure with the input provided and returns the output of it
-   * @param {OdsStoredProcedureInput} storedProcedureInput The input parameter of the stored procedure
-   *
-   * @returns {Promise<OdsStoredProcedureOutput>} The result of the stored procedure
-   */
-  async callOdsStoredProcedure(storedProcedureInput: OdsStoredProcedureInput): Promise<string> {
-    const queryRunner = this.odsDataSource.createQueryRunner();
-
-    try {
-      // Use the query runner to call a stored procedure
-      const result = await queryRunner.query(
-        `
-        DECLARE @output_body NVARCHAR(MAX);
-        EXEC t_apim.sp_ODS_query @input_body=@0, @output_body=@output_body OUTPUT;
-        SELECT @output_body as output_body
-      `,
-        [JSON.stringify(storedProcedureInput)],
-      );
-
-      return result[0]?.output_body || null;
-    } catch (error) {
-      throw error;
-    } finally {
-      await queryRunner.release();
     }
   }
 }

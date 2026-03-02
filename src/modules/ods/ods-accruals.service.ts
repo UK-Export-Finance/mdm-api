@@ -2,17 +2,16 @@ import { Injectable, InternalServerErrorException, NotFoundException } from '@ne
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DATABASE_NAME, STORED_PROCEDURE } from '@ukef/constants';
 import { mapAccrualSchedule, mapAccrualSchedules } from '@ukef/helpers';
-import { CreateOdsStoredProcedureInputParams } from '@ukef/typings';
 import { PinoLogger } from 'nestjs-pino';
-import { DataSource } from 'typeorm';
 
-import { GetAccrualScheduleOdsResponseDto, GetAccrualScheduleResponseDto, ODS_ENTITIES, OdsStoredProcedureInput, OdsStoredProcedureOutputBody } from './dto';
+import { GetAccrualScheduleOdsResponseDto, GetAccrualScheduleResponseDto, ODS_ENTITIES, OdsStoredProcedureOutputBody } from './dto';
+import { OdsStoredProcedureService } from './ods-stored-procedure.service';
 
 @Injectable()
 export class OdsAccrualsService {
   constructor(
     @InjectDataSource(DATABASE_NAME.ODS)
-    private readonly odsDataSource: DataSource,
+    private readonly odsStoredProcedureService: OdsStoredProcedureService,
     private readonly logger: PinoLogger,
   ) {}
 
@@ -26,7 +25,7 @@ export class OdsAccrualsService {
     try {
       this.logger.info('Finding accrual schedule %s', scheduleCode);
 
-      const storedProcedureInput = this.createOdsStoredProcedureInput({
+      const storedProcedureInput = this.odsStoredProcedureService.createInput({
         entityToQuery: ODS_ENTITIES.ACCRUAL_SCHEDULE,
         queryPageSize: 1,
         queryParameters: {
@@ -34,7 +33,7 @@ export class OdsAccrualsService {
         },
       });
 
-      const storedProcedureResult = await this.callOdsStoredProcedure(storedProcedureInput);
+      const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
@@ -71,11 +70,11 @@ export class OdsAccrualsService {
     try {
       this.logger.info('Getting Accrual schedules from ODS');
 
-      const storedProcedureInput = this.createOdsStoredProcedureInput({
+      const storedProcedureInput = this.odsStoredProcedureService.createInput({
         entityToQuery: ODS_ENTITIES.ACCRUAL_SCHEDULE,
       });
 
-      const storedProcedureResult = await this.callOdsStoredProcedure(storedProcedureInput);
+      const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
@@ -94,55 +93,6 @@ export class OdsAccrualsService {
       this.logger.error('Error getting Accrual schedules from ODS %o', error);
 
       throw new InternalServerErrorException('Error getting Accrual schedules from ODS');
-    }
-  }
-
-  // TODO: below, create stored procedure service
-  // DRY
-
-  /**
-   * Creates the input parameter for the stored procedure
-   * @param {OdsEntity} entityToQuery The entity you want to query in ODS
-   * @param {number} queryPageSize The page size to query in ODS
-   * @param {OdsStoredProcedureQueryParams} queryParameters The query parameters and filters to apply to the query
-   *
-   * @returns {OdsStoredProcedureInput} The ODS stored procedure input in object format
-   */
-  createOdsStoredProcedureInput({ entityToQuery, queryPageSize, queryParameters }: CreateOdsStoredProcedureInputParams): OdsStoredProcedureInput {
-    return {
-      query_method: 'get',
-      query_object: entityToQuery,
-      query_page_size: queryPageSize,
-      query_page_index: 1,
-      query_parameters: queryParameters,
-    };
-  }
-
-  /**
-   * Calls the ODS stored procedure with the input provided and returns the output of it
-   * @param {OdsStoredProcedureInput} storedProcedureInput The input parameter of the stored procedure
-   *
-   * @returns {Promise<OdsStoredProcedureOutput>} The result of the stored procedure
-   */
-  async callOdsStoredProcedure(storedProcedureInput: OdsStoredProcedureInput): Promise<string> {
-    const queryRunner = this.odsDataSource.createQueryRunner();
-
-    try {
-      // Use the query runner to call a stored procedure
-      const result = await queryRunner.query(
-        `
-        DECLARE @output_body NVARCHAR(MAX);
-        EXEC t_apim.sp_ODS_query @input_body=@0, @output_body=@output_body OUTPUT;
-        SELECT @output_body as output_body
-      `,
-        [JSON.stringify(storedProcedureInput)],
-      );
-
-      return result[0]?.output_body || null;
-    } catch (error) {
-      throw error;
-    } finally {
-      await queryRunner.release();
     }
   }
 }

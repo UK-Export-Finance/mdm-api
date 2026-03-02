@@ -5,9 +5,11 @@ import { DataSource, QueryRunner } from 'typeorm';
 
 import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { OdsService } from './ods.service';
+import { OdsStoredProcedureService } from './ods-stored-procedure.service';
 
 describe('OdsService - findCustomer', () => {
   let service: OdsService;
+  let odsStoredProcedureService: OdsStoredProcedureService;
   let mockQueryRunner: jest.Mocked<QueryRunner>;
   let mockDataSource: jest.Mocked<DataSource>;
   const mockLogger = new PinoLogger({});
@@ -22,7 +24,8 @@ describe('OdsService - findCustomer', () => {
       createQueryRunner: jest.fn().mockReturnValue(mockQueryRunner),
     } as unknown as jest.Mocked<DataSource>;
 
-    service = new OdsService(mockDataSource, mockLogger);
+    odsStoredProcedureService = new OdsStoredProcedureService(mockDataSource);
+    service = new OdsService(odsStoredProcedureService, mockLogger);
   });
 
   const mockCustomer = { urn: EXAMPLES.CUSTOMER.PARTYURN, name: 'Mock Customer' };
@@ -51,22 +54,22 @@ describe('OdsService - findCustomer', () => {
   }`;
 
   beforeEach(() => {
-    jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
+    jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
   });
 
-  it('should call service.callOdsStoredProcedure', async () => {
+  it('should call odsStoredProcedureService.call', async () => {
     // Act
     await service.findCustomer(mockCustomer.urn);
 
     // Assert
-    const expectedStoredProcedureInput: OdsStoredProcedureInput = service.createOdsStoredProcedureInput({
+    const expectedStoredProcedureInput: OdsStoredProcedureInput = odsStoredProcedureService.createInput({
       entityToQuery: ODS_ENTITIES.CUSTOMER,
       queryPageSize: 1,
       queryParameters: { customer_party_unique_reference_number: mockCustomer.urn },
     });
 
-    expect(service.callOdsStoredProcedure).toHaveBeenCalledTimes(1);
-    expect(service.callOdsStoredProcedure).toHaveBeenCalledWith(expectedStoredProcedureInput);
+    expect(odsStoredProcedureService.call).toHaveBeenCalledTimes(1);
+    expect(odsStoredProcedureService.call).toHaveBeenCalledWith(expectedStoredProcedureInput);
   });
 
   it('should return a customer', async () => {
@@ -82,7 +85,7 @@ describe('OdsService - findCustomer', () => {
       // Arrange
       const mockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
 
-      jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
+      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
 
       // Act & Assert
       const promise = service.findCustomer(mockCustomer.urn);
@@ -100,7 +103,7 @@ describe('OdsService - findCustomer', () => {
       // Arrange
       const mockStoredProcedureOutput = `{ "status": "${STORED_PROCEDURE.SUCCESS}", "total_result_count": 0 }`;
 
-      jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
+      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
 
       // Act & Assert
       const promise = service.findCustomer(mockCustomer.urn);
@@ -118,7 +121,7 @@ describe('OdsService - findCustomer', () => {
       // Arrange
       const mockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
 
-      jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
+      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
 
       // Act & Assert
       const promise = service.findCustomer(mockCustomer.urn);
@@ -131,10 +134,10 @@ describe('OdsService - findCustomer', () => {
     });
   });
 
-  describe('when callOdsStoredProcedure throws an error', () => {
+  describe('when call throws an error', () => {
     it('should throw an error', async () => {
       // Arrange
-      jest.spyOn(service, 'callOdsStoredProcedure').mockRejectedValue('Mock ODS error');
+      jest.spyOn(odsStoredProcedureService, 'call').mockRejectedValue('Mock ODS error');
 
       // Act & Assert
       const promise = service.findCustomer(mockCustomer.urn);

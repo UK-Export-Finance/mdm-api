@@ -6,9 +6,11 @@ import { DataSource, QueryRunner } from 'typeorm';
 
 import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { OdsAccrualsService } from './ods-accruals.service';
+import { OdsStoredProcedureService } from './ods-stored-procedure.service';
 
 describe('OdsAccrualsService - findSchedule', () => {
   let service: OdsAccrualsService;
+  let odsStoredProcedureService: OdsStoredProcedureService;
   let mockQueryRunner: jest.Mocked<QueryRunner>;
   let mockDataSource: jest.Mocked<DataSource>;
   const mockLogger = new PinoLogger({});
@@ -23,7 +25,8 @@ describe('OdsAccrualsService - findSchedule', () => {
       createQueryRunner: jest.fn().mockReturnValue(mockQueryRunner),
     } as unknown as jest.Mocked<DataSource>;
 
-    service = new OdsAccrualsService(mockDataSource, mockLogger);
+    odsStoredProcedureService = new OdsStoredProcedureService(mockDataSource);
+    service = new OdsAccrualsService(odsStoredProcedureService, mockLogger);
   });
 
   const mockStoredProcedureOutput = `{
@@ -43,15 +46,15 @@ describe('OdsAccrualsService - findSchedule', () => {
   }`;
 
   beforeEach(() => {
-    jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
+    jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
   });
 
-  it('should call service.callOdsStoredProcedure', async () => {
+  it('should call odsStoredProcedureService.call', async () => {
     // Act
     await service.findSchedule(EXAMPLES.ACCRUAL_SCHEDULE.TYPE_CODE);
 
     // Assert
-    const expectedStoredProcedureInput: OdsStoredProcedureInput = service.createOdsStoredProcedureInput({
+    const expectedStoredProcedureInput: OdsStoredProcedureInput = odsStoredProcedureService.createInput({
       entityToQuery: ODS_ENTITIES.ACCRUAL_SCHEDULE,
       queryPageSize: 1,
       queryParameters: {
@@ -59,8 +62,8 @@ describe('OdsAccrualsService - findSchedule', () => {
       },
     });
 
-    expect(service.callOdsStoredProcedure).toHaveBeenCalledTimes(1);
-    expect(service.callOdsStoredProcedure).toHaveBeenCalledWith(expectedStoredProcedureInput);
+    expect(odsStoredProcedureService.call).toHaveBeenCalledTimes(1);
+    expect(odsStoredProcedureService.call).toHaveBeenCalledWith(expectedStoredProcedureInput);
   });
 
   it('should return a mapped accrual schedule', async () => {
@@ -86,7 +89,7 @@ describe('OdsAccrualsService - findSchedule', () => {
         "results": []
       }`;
 
-      jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
+      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
 
       // Act & Assert
       const promise = service.findSchedule(EXAMPLES.ACCRUAL_SCHEDULE.TYPE_CODE);
@@ -104,7 +107,7 @@ describe('OdsAccrualsService - findSchedule', () => {
       // Arrange
       const mockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
 
-      jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
+      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
 
       // Act & Assert
       const promise = service.findSchedule(EXAMPLES.ACCRUAL_SCHEDULE.TYPE_CODE);
@@ -124,7 +127,7 @@ describe('OdsAccrualsService - findSchedule', () => {
       // Arrange
       const mockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
 
-      jest.spyOn(service, 'callOdsStoredProcedure').mockRejectedValue(mockStoredProcedureOutput);
+      jest.spyOn(odsStoredProcedureService, 'call').mockRejectedValue(mockStoredProcedureOutput);
 
       // Act & Assert
       const promise = service.findSchedule(EXAMPLES.ACCRUAL_SCHEDULE.TYPE_CODE);
@@ -135,12 +138,12 @@ describe('OdsAccrualsService - findSchedule', () => {
     });
   });
 
-  describe('when callOdsStoredProcedure throws an error', () => {
+  describe('when call throws an error', () => {
     it('should throw an error', async () => {
       // Arrange
       const mockError = 'Mock ODS error';
 
-      jest.spyOn(service, 'callOdsStoredProcedure').mockRejectedValue(mockError);
+      jest.spyOn(odsStoredProcedureService, 'call').mockRejectedValue(mockError);
 
       // Act & Assert
       const promise = service.findSchedule(EXAMPLES.ACCRUAL_SCHEDULE.TYPE_CODE);
