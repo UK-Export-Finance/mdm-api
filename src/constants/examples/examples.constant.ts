@@ -37,6 +37,14 @@ const PRODUCT_TYPES = {
 };
 
 export const EXAMPLES = {
+  ACCRUAL_SCHEDULE: {
+    TYPE: 'Additional Rate Type',
+    TYPE_CODE: 'additionalRateType',
+    CODE: 'ARTRAC',
+    DESCRIPTION: 'RAC/MLA - Reserve Asset Costs',
+    NUMERIC_VALUE: 1,
+    IS_ACTIVE: true,
+  },
   BUSINESS_CENTRE,
   COMPANIES_HOUSE_REGISTRATION_NUMBER: '00000001',
   COMPANIES_HOUSE_INDUSTRY_CODE: '1406',
@@ -205,6 +213,14 @@ export const EXAMPLES = {
     FILE: '<Buffer 43 31 2c 43 32 2c 43 33 0a 41 2c 42 2c 43 0a 44 2c 45 2c 46 0a 31 2c 32 2c 33 0a 34 2c 35 2c 36 0a>',
   },
   ODS: {
+    ACCRUAL_SCHEDULE: {
+      classification_type: 'Additional Rate Type',
+      classification_type_code: 'additionalRateType',
+      classification_code: 'ARTRAC',
+      classification_description: 'RAC/MLA - Reserve Asset Costs',
+      classification_numeric_value: 1,
+      classification_active_flag: true,
+    },
     BUSINESS_CENTRES: [
       {
         business_centre_code: ODS_BUSINESS_CENTRES.AaB,

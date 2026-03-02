@@ -4,6 +4,7 @@ import { PinoLogger } from 'nestjs-pino';
 
 import { OdsController } from './ods.controller';
 import { OdsService } from './ods.service';
+import { OdsAccrualsService } from './ods-accruals.service';
 
 const mockError = new Error('An error occurred');
 
@@ -15,15 +16,20 @@ const mockUkefIndustryCodes = [EXAMPLES.ODS.INDUSTRY.industry_code, EXAMPLES.ODS
 
 const mockMappedIndustry = mapIndustry(EXAMPLES.ODS.INDUSTRY);
 
+// TODO
+const mockAccrualSchedules = [];
+
 describe('OdsController', () => {
   const mockLogger = new PinoLogger({});
 
   const odsService = new OdsService(null, mockLogger);
+  const odsAccrualsService = new OdsAccrualsService(null, mockLogger);
   let odsServiceFindBusinessCentreNonWorkingDays: jest.Mock;
   let odsServiceFindCustomer: jest.Mock;
   let odsServiceFindDeal: jest.Mock;
   let odsServiceGetUkefIndustries: jest.Mock;
   let odsServiceGetUkefIndustryCodes: jest.Mock;
+  let odsAccrualsServiceGetSchedules: jest.Mock;
   let findUkefIndustry: jest.Mock;
 
   let controller: OdsController;
@@ -47,7 +53,28 @@ describe('OdsController', () => {
     findUkefIndustry = jest.fn().mockReturnValueOnce(mockMappedIndustry);
     odsService.findUkefIndustry = findUkefIndustry;
 
-    controller = new OdsController(odsService);
+    odsAccrualsServiceGetSchedules = jest.fn().mockReturnValueOnce(mockAccrualSchedules);
+    odsAccrualsService.getSchedules = odsAccrualsServiceGetSchedules;
+
+    controller = new OdsController(odsService, odsAccrualsService);
+  });
+
+  describe('getAccrualSchedules', () => {
+    it('should call odsAccrualsService.getSchedules', () => {
+      // Act
+      controller.getAccrualSchedules();
+
+      // Assert
+      expect(odsAccrualsServiceGetSchedules).toHaveBeenCalledTimes(1);
+    });
+
+    it('should return accrual schedules', () => {
+      // Act
+      const result = controller.getAccrualSchedules();
+
+      // Assert
+      expect(result).toStrictEqual(mockAccrualSchedules);
+    });
   });
 
   describe('findCustomer', () => {
@@ -78,7 +105,7 @@ describe('OdsController', () => {
 
         odsService.findCustomer = jest.fn().mockRejectedValueOnce(mockError);
 
-        controller = new OdsController(odsService);
+        controller = new OdsController(odsService, odsAccrualsService);
 
         // Act & Assert
         const promise = controller.findCustomer({ urn: EXAMPLES.CUSTOMER.PARTYURN });
@@ -113,7 +140,7 @@ describe('OdsController', () => {
 
         odsService.findDeal = jest.fn().mockRejectedValueOnce(mockError);
 
-        controller = new OdsController(odsService);
+        controller = new OdsController(odsService, odsAccrualsService);
 
         // Act & Assert
         const promise = controller.findDeal({ id: EXAMPLES.DEAL.ID });
@@ -187,7 +214,7 @@ describe('OdsController', () => {
 
         odsService.findUkefIndustry = jest.fn().mockRejectedValueOnce(mockError);
 
-        controller = new OdsController(odsService);
+        controller = new OdsController(odsService, odsAccrualsService);
 
         // Act & Assert
         const promise = controller.findUkefIndustry({ industryCode: EXAMPLES.INDUSTRY.CODE });
