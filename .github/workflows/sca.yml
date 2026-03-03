@@ -13,7 +13,10 @@ on:
   pull_request:
     branches:
       - main
-      - 'release-*'
+      - 'release-*'  
+  pull_request_target:
+    branches: [main, 'release-*']
+
 
 env:
   environment: 'qa'
