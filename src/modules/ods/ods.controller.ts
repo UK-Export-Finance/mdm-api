@@ -4,9 +4,9 @@ import AppConfig from '@ukef/config/app.config';
 
 import {
   FindOdsIndustryParamDto,
-  GetAccrualScheduleResponseDto,
+  GetAccrualScheduleClassificationResponseDto,
   GetIndustryResponseDto,
-  GetOdsAccrualScheduleParamDto,
+  GetOdsAccrualScheduleClassificationParamDto,
   GetOdsCustomerParamDto,
   GetOdsCustomerResponse,
   GetOdsDealParamDto,
@@ -28,14 +28,14 @@ export class OdsController {
     private readonly odsAccrualsService: OdsAccrualsService,
   ) {}
 
-  @Get('accrual-schedules')
+  @Get('accrual-schedule-classifications')
   @ApiOperation({
-    summary: 'Get accrual schedules from ODS',
+    summary: 'Get accrual schedule classifications from ODS',
   })
   @ApiOkResponse({
-    description: 'ODS accrual schedules',
+    description: 'ODS accrual schedule classifications',
     isArray: true,
-    type: GetAccrualScheduleResponseDto,
+    type: GetAccrualScheduleClassificationResponseDto,
   })
   @ApiBadRequestResponse({
     description: 'Bad request',
@@ -43,20 +43,20 @@ export class OdsController {
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
   })
-  getAccrualSchedules(): Promise<GetAccrualScheduleResponseDto[]> {
-    return this.odsAccrualsService.getSchedules();
+  getAccrualScheduleClassifications(): Promise<GetAccrualScheduleClassificationResponseDto[]> {
+    return this.odsAccrualsService.getScheduleClassifications();
   }
 
-  @Get('accrual-schedule/:scheduleTypeCode')
+  @Get('accrual-schedule-classification/:classificationCode')
   @ApiOperation({
-    summary: 'Get an accrual schedule from ODS',
+    summary: 'Get an accrual schedule classification from ODS',
   })
   @ApiOkResponse({
-    description: 'ODS accrual schedule',
-    type: GetAccrualScheduleResponseDto,
+    description: 'ODS accrual schedule classification',
+    type: GetAccrualScheduleClassificationResponseDto,
   })
   @ApiNotFoundResponse({
-    description: 'Accrual schedule not found',
+    description: 'Accrual schedule classification not found',
   })
   @ApiBadRequestResponse({
     description: 'Bad request',
@@ -64,8 +64,8 @@ export class OdsController {
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
   })
-  findAccrualSchedule(@Param() param: GetOdsAccrualScheduleParamDto): Promise<GetAccrualScheduleResponseDto> {
-    return this.odsAccrualsService.findSchedule(param.scheduleTypeCode);
+  findAccrualScheduleClassification(@Param() param: GetOdsAccrualScheduleClassificationParamDto): Promise<GetAccrualScheduleClassificationResponseDto> {
+    return this.odsAccrualsService.findScheduleClassification(param.classificationCode);
   }
 
   @Get('customers/:urn')

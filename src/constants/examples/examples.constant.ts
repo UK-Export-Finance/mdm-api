@@ -37,7 +37,7 @@ const PRODUCT_TYPES = {
 };
 
 export const EXAMPLES = {
-  ACCRUAL_SCHEDULE: {
+  ACCRUAL_SCHEDULE_CLASSIFICATION: {
     TYPE: 'Day Basis',
     TYPE_CODE: 'dayBasis',
     CODE: 'ACTUAL_365',
@@ -213,7 +213,7 @@ export const EXAMPLES = {
     FILE: '<Buffer 43 31 2c 43 32 2c 43 33 0a 41 2c 42 2c 43 0a 44 2c 45 2c 46 0a 31 2c 32 2c 33 0a 34 2c 35 2c 36 0a>',
   },
   ODS: {
-    ACCRUAL_SCHEDULE: {
+    ACCRUAL_SCHEDULE_CLASSIFICATION: {
       classification_type: 'Day Basis',
       classification_type_code: 'dayBasis',
       classification_code: 'ACTUAL_365',

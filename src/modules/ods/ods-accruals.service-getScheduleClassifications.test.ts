@@ -1,6 +1,6 @@
 import { InternalServerErrorException } from '@nestjs/common';
 import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
-import { mapAccrualSchedules } from '@ukef/helpers';
+import { mapAccrualScheduleClassifications } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
@@ -8,7 +8,7 @@ import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { OdsAccrualsService } from './ods-accruals.service';
 import { OdsStoredProcedureService } from './ods-stored-procedure.service';
 
-describe('OdsAccrualsService - getSchedules', () => {
+describe('OdsAccrualsService - getScheduleClassifications', () => {
   let service: OdsAccrualsService;
   let odsStoredProcedureService: OdsStoredProcedureService;
   let mockQueryRunner: jest.Mocked<QueryRunner>;
@@ -35,20 +35,20 @@ describe('OdsAccrualsService - getSchedules', () => {
     "total_result_count": 2,
     "results": [
       {
-        "classification_type": "${EXAMPLES.ACCRUAL_SCHEDULE.TYPE}",
-        "classification_type_code": "${EXAMPLES.ACCRUAL_SCHEDULE.TYPE_CODE}",
-        "classification_code": "${EXAMPLES.ACCRUAL_SCHEDULE.CODE}",
-        "classification_description": "${EXAMPLES.ACCRUAL_SCHEDULE.DESCRIPTION}",
-        "classification_numeric_value": "${EXAMPLES.ACCRUAL_SCHEDULE.NUMERIC_VALUE}",
-        "classification_active_flag": "${EXAMPLES.ACCRUAL_SCHEDULE.IS_ACTIVE}"
+        "classification_type": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.TYPE}",
+        "classification_type_code": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.TYPE_CODE}",
+        "classification_code": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.CODE}",
+        "classification_description": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.DESCRIPTION}",
+        "classification_numeric_value": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.NUMERIC_VALUE}",
+        "classification_active_flag": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.IS_ACTIVE}"
       },
       {
-        "classification_type": "${EXAMPLES.ACCRUAL_SCHEDULE.TYPE}",
-        "classification_type_code": "${EXAMPLES.ACCRUAL_SCHEDULE.TYPE_CODE}",
-        "classification_code": "${EXAMPLES.ACCRUAL_SCHEDULE.CODE}",
-        "classification_description": "${EXAMPLES.ACCRUAL_SCHEDULE.DESCRIPTION}",
-        "classification_numeric_value": "${EXAMPLES.ACCRUAL_SCHEDULE.NUMERIC_VALUE}",
-        "classification_active_flag": "${EXAMPLES.ACCRUAL_SCHEDULE.IS_ACTIVE}"
+        "classification_type": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.TYPE}",
+        "classification_type_code": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.TYPE_CODE}",
+        "classification_code": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.CODE}",
+        "classification_description": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.DESCRIPTION}",
+        "classification_numeric_value": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.NUMERIC_VALUE}",
+        "classification_active_flag": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.IS_ACTIVE}"
       }
     ]
   }`;
@@ -59,25 +59,25 @@ describe('OdsAccrualsService - getSchedules', () => {
 
   it('should call odsStoredProcedureService.call', async () => {
     // Act
-    await service.getSchedules();
+    await service.getScheduleClassifications();
 
     // Assert
     const expectedStoredProcedureInput: OdsStoredProcedureInput = odsStoredProcedureService.createInput({
-      entityToQuery: ODS_ENTITIES.ACCRUAL_SCHEDULE,
+      entityToQuery: ODS_ENTITIES.ACCRUAL_SCHEDULE_CLASSIFICATION,
     });
 
     expect(odsStoredProcedureService.call).toHaveBeenCalledTimes(1);
     expect(odsStoredProcedureService.call).toHaveBeenCalledWith(expectedStoredProcedureInput);
   });
 
-  it('should return mapped accrual schedules', async () => {
+  it('should return mapped accrual schedule classifications', async () => {
     // Act
-    const result = await service.getSchedules();
+    const result = await service.getScheduleClassifications();
 
     // Assert
     const jsonResults = JSON.parse(mockStoredProcedureOutput).results;
 
-    const expected = mapAccrualSchedules(jsonResults);
+    const expected = mapAccrualScheduleClassifications(jsonResults);
 
     expect(result).toEqual(expected);
   });
@@ -90,11 +90,11 @@ describe('OdsAccrualsService - getSchedules', () => {
       jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
 
       // Act & Assert
-      const promise = service.getSchedules();
+      const promise = service.getScheduleClassifications();
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error('Error getting Accrual schedules from ODS');
+      const expected = new Error('Error getting Accrual schedule classifications from ODS');
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -108,11 +108,11 @@ describe('OdsAccrualsService - getSchedules', () => {
       jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
 
       // Act & Assert
-      const promise = service.getSchedules();
+      const promise = service.getScheduleClassifications();
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error('Error getting Accrual schedules from ODS');
+      const expected = new Error('Error getting Accrual schedule classifications from ODS');
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -124,11 +124,11 @@ describe('OdsAccrualsService - getSchedules', () => {
       jest.spyOn(odsStoredProcedureService, 'call').mockRejectedValue('Mock ODS error');
 
       // Act & Assert
-      const promise = service.getSchedules();
+      const promise = service.getScheduleClassifications();
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error('Error getting Accrual schedules from ODS');
+      const expected = new Error('Error getting Accrual schedule classifications from ODS');
 
       await expect(promise).rejects.toThrow(expected);
     });

@@ -1,6 +1,6 @@
 import { NotFoundException } from '@nestjs/common';
 import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
-import { mapAccrualSchedule } from '@ukef/helpers';
+import { mapAccrualScheduleClassification } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
@@ -8,7 +8,7 @@ import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { OdsAccrualsService } from './ods-accruals.service';
 import { OdsStoredProcedureService } from './ods-stored-procedure.service';
 
-describe('OdsAccrualsService - findSchedule', () => {
+describe('OdsAccrualsService - findScheduleClassification', () => {
   let service: OdsAccrualsService;
   let odsStoredProcedureService: OdsStoredProcedureService;
   let mockQueryRunner: jest.Mocked<QueryRunner>;
@@ -35,12 +35,12 @@ describe('OdsAccrualsService - findSchedule', () => {
     "total_result_count": 1,
     "results": [
       {
-        "classification_type": "${EXAMPLES.ACCRUAL_SCHEDULE.TYPE}",
-        "classification_type_code": "${EXAMPLES.ACCRUAL_SCHEDULE.TYPE_CODE}",
-        "classification_code": "${EXAMPLES.ACCRUAL_SCHEDULE.CODE}",
-        "classification_description": "${EXAMPLES.ACCRUAL_SCHEDULE.DESCRIPTION}",
-        "classification_numeric_value": "${EXAMPLES.ACCRUAL_SCHEDULE.NUMERIC_VALUE}",
-        "classification_active_flag": "${EXAMPLES.ACCRUAL_SCHEDULE.IS_ACTIVE}"
+        "classification_type": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.TYPE}",
+        "classification_type_code": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.TYPE_CODE}",
+        "classification_code": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.CODE}",
+        "classification_description": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.DESCRIPTION}",
+        "classification_numeric_value": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.NUMERIC_VALUE}",
+        "classification_active_flag": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.IS_ACTIVE}"
       }
     ]
   }`;
@@ -51,14 +51,14 @@ describe('OdsAccrualsService - findSchedule', () => {
 
   it('should call odsStoredProcedureService.call', async () => {
     // Act
-    await service.findSchedule(EXAMPLES.ACCRUAL_SCHEDULE.TYPE_CODE);
+    await service.findScheduleClassification(EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.TYPE_CODE);
 
     // Assert
     const expectedStoredProcedureInput: OdsStoredProcedureInput = odsStoredProcedureService.createInput({
-      entityToQuery: ODS_ENTITIES.ACCRUAL_SCHEDULE,
+      entityToQuery: ODS_ENTITIES.ACCRUAL_SCHEDULE_CLASSIFICATION,
       queryPageSize: 1,
       queryParameters: {
-        classification_code: EXAMPLES.ACCRUAL_SCHEDULE.CODE,
+        classification_code: EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.TYPE_CODE,
       },
     });
 
@@ -66,20 +66,20 @@ describe('OdsAccrualsService - findSchedule', () => {
     expect(odsStoredProcedureService.call).toHaveBeenCalledWith(expectedStoredProcedureInput);
   });
 
-  it('should return a mapped accrual schedule', async () => {
+  it('should return a mapped accrual schedule classification', async () => {
     // Act
-    const result = await service.findSchedule(EXAMPLES.ACCRUAL_SCHEDULE.TYPE_CODE);
+    const result = await service.findScheduleClassification(EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.TYPE_CODE);
 
     // Assert
     const { results } = JSON.parse(mockStoredProcedureOutput);
     const [jsonResult] = results;
 
-    const expected = mapAccrualSchedule(jsonResult);
+    const expected = mapAccrualScheduleClassification(jsonResult);
 
     expect(result).toEqual(expected);
   });
 
-  describe('when an accrual schedule is not found', () => {
+  describe('when an accrual schedule classification is not found', () => {
     it('should throw an error', async () => {
       // Arrange
       const mockStoredProcedureOutput = `{
@@ -92,11 +92,11 @@ describe('OdsAccrualsService - findSchedule', () => {
       jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
 
       // Act & Assert
-      const promise = service.findSchedule(EXAMPLES.ACCRUAL_SCHEDULE.TYPE_CODE);
+      const promise = service.findScheduleClassification(EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.TYPE_CODE);
 
       await expect(promise).rejects.toBeInstanceOf(NotFoundException);
 
-      const expected = new Error(`No accrual schedule ${EXAMPLES.ACCRUAL_SCHEDULE.TYPE_CODE} found`);
+      const expected = new Error(`No accrual schedule classification ${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.TYPE_CODE} found`);
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -110,11 +110,11 @@ describe('OdsAccrualsService - findSchedule', () => {
       jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
 
       // Act & Assert
-      const promise = service.findSchedule(EXAMPLES.ACCRUAL_SCHEDULE.TYPE_CODE);
+      const promise = service.findScheduleClassification(EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.TYPE_CODE);
 
-      const expected = new Error(`Error finding accrual schedule ${EXAMPLES.ACCRUAL_SCHEDULE.TYPE_CODE}`, {
+      const expected = new Error(`Error finding accrual schedule classification ${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.TYPE_CODE}`, {
         cause: {
-          message: `Error finding accrual schedule ${EXAMPLES.ACCRUAL_SCHEDULE.TYPE_CODE} from ODS stored procedure`,
+          message: `Error finding accrual schedule classification ${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.TYPE_CODE} from ODS stored procedure`,
         },
       });
 
@@ -130,9 +130,11 @@ describe('OdsAccrualsService - findSchedule', () => {
       jest.spyOn(odsStoredProcedureService, 'call').mockRejectedValue(mockStoredProcedureOutput);
 
       // Act & Assert
-      const promise = service.findSchedule(EXAMPLES.ACCRUAL_SCHEDULE.TYPE_CODE);
+      const promise = service.findScheduleClassification(EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.TYPE_CODE);
 
-      const expected = new Error(`Error finding accrual schedule ${EXAMPLES.ACCRUAL_SCHEDULE.TYPE_CODE}`, { cause: mockStoredProcedureOutput });
+      const expected = new Error(`Error finding accrual schedule classification ${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.TYPE_CODE}`, {
+        cause: mockStoredProcedureOutput,
+      });
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -146,9 +148,9 @@ describe('OdsAccrualsService - findSchedule', () => {
       jest.spyOn(odsStoredProcedureService, 'call').mockRejectedValue(mockError);
 
       // Act & Assert
-      const promise = service.findSchedule(EXAMPLES.ACCRUAL_SCHEDULE.TYPE_CODE);
+      const promise = service.findScheduleClassification(EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.TYPE_CODE);
 
-      const expected = new Error(`Error finding accrual schedule ${EXAMPLES.ACCRUAL_SCHEDULE.TYPE_CODE}`, { cause: mockError });
+      const expected = new Error(`Error finding accrual schedule classification ${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.TYPE_CODE}`, { cause: mockError });
 
       await expect(promise).rejects.toThrow(expected);
     });

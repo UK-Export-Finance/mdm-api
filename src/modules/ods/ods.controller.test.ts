@@ -16,7 +16,8 @@ const mockUkefIndustryCodes = [EXAMPLES.ODS.INDUSTRY.industry_code, EXAMPLES.ODS
 
 const mockMappedIndustry = mapIndustry(EXAMPLES.ODS.INDUSTRY);
 
-const mockAccrualSchedules = [EXAMPLES.ACCRUAL_SCHEDULE, EXAMPLES.ACCRUAL_SCHEDULE];
+const mockAccrualScheduleClassification = EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION;
+const mockAccrualScheduleClassifications = [mockAccrualScheduleClassification, mockAccrualScheduleClassification];
 
 describe('OdsController', () => {
   const mockLogger = new PinoLogger({});
@@ -28,7 +29,8 @@ describe('OdsController', () => {
   let odsServiceFindDeal: jest.Mock;
   let odsServiceGetUkefIndustries: jest.Mock;
   let odsServiceGetUkefIndustryCodes: jest.Mock;
-  let odsAccrualsServiceGetSchedules: jest.Mock;
+  let odsAccrualsServiceGetScheduleClassifications: jest.Mock;
+  let odsAccrualsServiceFindScheduleClassification: jest.Mock;
   let findUkefIndustry: jest.Mock;
 
   let controller: OdsController;
@@ -52,27 +54,67 @@ describe('OdsController', () => {
     findUkefIndustry = jest.fn().mockReturnValueOnce(mockMappedIndustry);
     odsService.findUkefIndustry = findUkefIndustry;
 
-    odsAccrualsServiceGetSchedules = jest.fn().mockReturnValueOnce(mockAccrualSchedules);
-    odsAccrualsService.getSchedules = odsAccrualsServiceGetSchedules;
+    odsAccrualsServiceGetScheduleClassifications = jest.fn().mockReturnValueOnce(mockAccrualScheduleClassifications);
+    odsAccrualsService.getScheduleClassifications = odsAccrualsServiceGetScheduleClassifications;
+
+    odsAccrualsServiceFindScheduleClassification = jest.fn().mockReturnValueOnce(mockAccrualScheduleClassification);
+    odsAccrualsService.findScheduleClassification = odsAccrualsServiceFindScheduleClassification;
 
     controller = new OdsController(odsService, odsAccrualsService);
   });
 
   describe('getAccrualSchedules', () => {
-    it('should call odsAccrualsService.getSchedules', () => {
+    it('should call odsAccrualsService.getScheduleClassifications', async () => {
       // Act
-      controller.getAccrualSchedules();
+      await controller.getAccrualScheduleClassifications();
 
       // Assert
-      expect(odsAccrualsServiceGetSchedules).toHaveBeenCalledTimes(1);
+      expect(odsAccrualsServiceGetScheduleClassifications).toHaveBeenCalledTimes(1);
     });
 
-    it('should return accrual schedules', () => {
+    it('should return accrual schedule classifications', () => {
       // Act
-      const result = controller.getAccrualSchedules();
+      const result = controller.getAccrualScheduleClassifications();
 
       // Assert
-      expect(result).toStrictEqual(mockAccrualSchedules);
+      expect(result).toStrictEqual(mockAccrualScheduleClassifications);
+    });
+  });
+
+  describe('findAccrualScheduleClassification', () => {
+    const mockClassificationCode = EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.TYPE_CODE;
+
+    it('should call odsAccrualsService.findScheduleClassification', async () => {
+      // Act
+      await controller.findAccrualScheduleClassification({ classificationCode: mockClassificationCode });
+
+      // Assert
+      expect(odsAccrualsServiceFindScheduleClassification).toHaveBeenCalledTimes(1);
+      expect(odsAccrualsServiceFindScheduleClassification).toHaveBeenCalledWith(mockClassificationCode);
+    });
+
+    it('should return an accrual schedule classification', async () => {
+      // Act
+      const result = await controller.findAccrualScheduleClassification({ classificationCode: mockClassificationCode });
+
+      // Assert
+      expect(result).toStrictEqual(mockAccrualScheduleClassification);
+    });
+
+    describe('when odsAccrualsService.findScheduleClassification throws an error', () => {
+      it('should throw an error', async () => {
+        // Arrange
+        const odsService = new OdsService(null, mockLogger);
+
+        odsAccrualsService.findScheduleClassification = jest.fn().mockRejectedValueOnce(mockError);
+
+        controller = new OdsController(odsService, odsAccrualsService);
+
+        // Act & Assert
+        const promise = controller.findAccrualScheduleClassification({ classificationCode: mockClassificationCode });
+
+        await expect(promise).rejects.toThrow(mockError);
+      });
     });
   });
 
