@@ -1,9 +1,9 @@
 import { GetAccrualScheduleClassificationOdsResponseDto, GetAccrualScheduleClassificationResponseDto } from '@ukef/modules/ods/dto';
 
 /**
- * Map an ODS accrual schedule, into a more suitable format for consumers.
- * @param {GetAccrualScheduleClassificationOdsResponseDto} ODS accrual schedule
- * @returns {GetAccrualScheduleClassificationResponseDto} Mapped accrual schedule
+ * Map an ODS accrual schedule classification, into a more suitable format for consumers.
+ * @param {GetAccrualScheduleClassificationOdsResponseDto} ODS accrual schedule classification
+ * @returns {GetAccrualScheduleClassificationResponseDto} Mapped accrual schedule classification
  */
 export const mapAccrualScheduleClassification = (schedule: GetAccrualScheduleClassificationOdsResponseDto): GetAccrualScheduleClassificationResponseDto => ({
   type: schedule.classification_type,

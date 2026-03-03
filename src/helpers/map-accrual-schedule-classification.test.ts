@@ -3,7 +3,7 @@ import { EXAMPLES } from '@ukef/constants';
 import { mapAccrualScheduleClassification } from './map-accrual-schedule-classification';
 
 describe('mapAccrualScheduleClassification', () => {
-  it('should return a mapped ODS accrual schedule', () => {
+  it('should return a mapped ODS accrual schedule classification', () => {
     // Arrange
     const mockClassification = EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION;
 

@@ -4,7 +4,7 @@ import { mapAccrualScheduleClassification } from './map-accrual-schedule-classif
 import { mapAccrualScheduleClassifications } from './map-accrual-schedule-classifications';
 
 describe('mapAccrualScheduleClassifications', () => {
-  it('should return an array of mapped accrual schedules', () => {
+  it('should return an array of mapped accrual schedule classifications', () => {
     // Arrange
     const mockClassifications = [EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION, EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION];
 
