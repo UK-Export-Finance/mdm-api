@@ -159,7 +159,7 @@ export class OdsService {
 
       return nonWorkingDays;
     } catch (error) {
-      this.logger.error(`Finding business centre ${centreCode} non working days in ODS %o`, error);
+      this.logger.error('Finding business centre %s non working days in ODS %o', centreCode, error);
 
       if (error instanceof NotFoundException) {
         throw error;
