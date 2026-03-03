@@ -160,11 +160,7 @@
       "CRT005",
       "CRT040"
     ],
-    "facilityCategoryTypes": [
-      "FCT001",
-      "FCT002",
-      "FCT003"
-    ],
+    "facilityCategoryTypes": [],
     "obligationSubtypes": [
       "OST012",
       "OST013",
