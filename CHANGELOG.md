@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.39.1](https://github.com/UK-Export-Finance/mdm-api/compare/v1.39.0...v1.39.1) (2026-03-03)
+
+
+### Bug Fixes
+
+* **GIFT-20884:** product config - BSS facility category types ([#1733](https://github.com/UK-Export-Finance/mdm-api/issues/1733)) ([91454d0](https://github.com/UK-Export-Finance/mdm-api/commit/91454d0ba73f42270edb53432658c1eb923cc538))
+
 ## [1.39.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.38.0...v1.39.0) (2026-02-23)
 
 
