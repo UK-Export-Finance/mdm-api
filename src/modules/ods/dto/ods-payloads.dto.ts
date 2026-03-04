@@ -11,6 +11,7 @@
 export type OdsStoredProcedureQueryParams = {
   business_centre_code?: string;
   classification_code?: string;
+  classification_type_code?: string;
   customer_party_unique_reference_number?: string;
   deal_code?: string;
   industry_category?: string;
@@ -52,3 +53,10 @@ export const ODS_ENTITIES = {
 } as const;
 
 export type OdsEntity = (typeof ODS_ENTITIES)[keyof typeof ODS_ENTITIES];
+
+export const ODS_QUERY_PARAM_VALUES = {
+  FACILITY_CATEGORY: 'facilityCategory',
+  UKEF: 'UKEF',
+} as const;
+
+export type OdsQueryParamValues = (typeof ODS_QUERY_PARAM_VALUES)[keyof typeof ODS_QUERY_PARAM_VALUES];

@@ -27,12 +27,6 @@ export class GetFacilityCategoryOdsResponseDto {
   readonly classification_description: string;
 
   @ApiProperty({
-    description: 'Optional facility category numeric value',
-    example: EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_numeric_value,
-  })
-  readonly classification_numeric_value?: number;
-
-  @ApiProperty({
     description: 'Facility category active flag',
     example: EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_active_flag,
   })

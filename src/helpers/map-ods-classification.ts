@@ -19,6 +19,5 @@ export const mapOdsClassification = (classification: ClassificationOdsDto): Clas
   typeCode: classification.classification_type_code,
   code: classification.classification_code,
   description: classification.classification_description,
-  numericValue: classification.classification_numeric_value,
   isActive: classification.classification_active_flag,
 });

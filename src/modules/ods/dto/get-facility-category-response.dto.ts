@@ -27,12 +27,6 @@ export class GetFacilityCategoryResponseDto {
   readonly description: string;
 
   @ApiProperty({
-    description: 'Optional facility classification numeric value',
-    example: EXAMPLES.FACILITY_CATEGORY.NUMERIC_VALUE,
-  })
-  readonly numericValue?: number;
-
-  @ApiProperty({
     description: 'Facility classification active flag',
     example: EXAMPLES.FACILITY_CATEGORY.IS_ACTIVE,
   })

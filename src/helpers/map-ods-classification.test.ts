@@ -16,7 +16,6 @@ describe('mapOdsClassification', () => {
       typeCode: mockClassification.classification_type_code,
       code: mockClassification.classification_code,
       description: mockClassification.classification_description,
-      numericValue: mockClassification.classification_numeric_value,
       isActive: mockClassification.classification_active_flag,
     };
 

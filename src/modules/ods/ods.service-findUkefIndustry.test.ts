@@ -4,7 +4,7 @@ import { mapIndustry } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
-import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
+import { ODS_ENTITIES, ODS_QUERY_PARAM_VALUES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { OdsService } from './ods.service';
 import { OdsStoredProcedureService } from './ods-stored-procedure.service';
 
@@ -58,7 +58,7 @@ describe('OdsService - findUkefIndustry', () => {
       entityToQuery: ODS_ENTITIES.INDUSTRY,
       queryPageSize: 1,
       queryParameters: {
-        industry_category: 'UKEF',
+        industry_category: ODS_QUERY_PARAM_VALUES.UKEF,
         industry_code: EXAMPLES.INDUSTRY.CODE,
       },
     });

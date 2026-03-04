@@ -4,7 +4,7 @@ import { mapOdsClassifications } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
-import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
+import { ODS_ENTITIES, ODS_QUERY_PARAM_VALUES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { OdsFacilityCategoryService } from './ods-facility-category.service';
 import { OdsStoredProcedureService } from './ods-stored-procedure.service';
 
@@ -39,7 +39,6 @@ describe('OdsFacilityCategoryService - getAll', () => {
         "classification_type_code": "${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_type_code}",
         "classification_code": "${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_code}",
         "classification_description": "${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_description}",
-        "classification_numeric_value": ${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_numeric_value},
         "classification_active_flag": ${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_active_flag}
       },
       {
@@ -47,7 +46,6 @@ describe('OdsFacilityCategoryService - getAll', () => {
         "classification_type_code": "${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_type_code}",
         "classification_code": "${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_code}",
         "classification_description": "${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_description}",
-        "classification_numeric_value": ${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_numeric_value},
         "classification_active_flag": ${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_active_flag}
       }
     ]
@@ -64,6 +62,9 @@ describe('OdsFacilityCategoryService - getAll', () => {
     // Assert
     const expectedStoredProcedureInput: OdsStoredProcedureInput = odsStoredProcedureService.createInput({
       entityToQuery: ODS_ENTITIES.FACILITY_CLASSIFICATION,
+      queryParameters: {
+        classification_type_code: ODS_QUERY_PARAM_VALUES.FACILITY_CATEGORY,
+      },
     });
 
     expect(odsStoredProcedureService.call).toHaveBeenCalledTimes(1);

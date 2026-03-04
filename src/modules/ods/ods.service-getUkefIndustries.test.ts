@@ -4,7 +4,7 @@ import { mapIndustries } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
-import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
+import { ODS_ENTITIES, ODS_QUERY_PARAM_VALUES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { OdsService } from './ods.service';
 import { OdsStoredProcedureService } from './ods-stored-procedure.service';
 
@@ -64,7 +64,9 @@ describe('OdsService - getUkefIndustries', () => {
     // Assert
     const expectedStoredProcedureInput: OdsStoredProcedureInput = odsStoredProcedureService.createInput({
       entityToQuery: ODS_ENTITIES.INDUSTRY,
-      queryParameters: { industry_category: 'UKEF' },
+      queryParameters: {
+        industry_category: ODS_QUERY_PARAM_VALUES.UKEF,
+      },
     });
 
     expect(odsStoredProcedureService.call).toHaveBeenCalledTimes(1);

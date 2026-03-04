@@ -3,7 +3,7 @@ import { STORED_PROCEDURE } from '@ukef/constants';
 import { mapOdsClassification, mapOdsClassifications } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 
-import { GetFacilityCategoryOdsResponseDto, GetFacilityCategoryResponseDto, ODS_ENTITIES, OdsStoredProcedureOutputBody } from './dto';
+import { GetFacilityCategoryOdsResponseDto, GetFacilityCategoryResponseDto, ODS_ENTITIES, ODS_QUERY_PARAM_VALUES, OdsStoredProcedureOutputBody } from './dto';
 import { OdsStoredProcedureService } from './ods-stored-procedure.service';
 
 @Injectable()
@@ -27,6 +27,7 @@ export class OdsFacilityCategoryService {
         entityToQuery: ODS_ENTITIES.FACILITY_CLASSIFICATION,
         queryPageSize: 1,
         queryParameters: {
+          classification_type_code: ODS_QUERY_PARAM_VALUES.FACILITY_CATEGORY,
           classification_code: categoryCode,
         },
       });
@@ -70,6 +71,9 @@ export class OdsFacilityCategoryService {
 
       const storedProcedureInput = this.odsStoredProcedureService.createInput({
         entityToQuery: ODS_ENTITIES.FACILITY_CLASSIFICATION,
+        queryParameters: {
+          classification_type_code: ODS_QUERY_PARAM_VALUES.FACILITY_CATEGORY,
+        },
       });
 
       const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
