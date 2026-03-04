@@ -7,7 +7,7 @@ const {
   domOdsVersioning: { prefixAndVersion },
 } = AppConfig();
 
-describe('/ods - Obligation sub-types', () => {
+describe('/ods - Obligation subtypes', () => {
   let api: Api;
 
   beforeAll(async () => {
@@ -18,10 +18,10 @@ describe('/ods - Obligation sub-types', () => {
     await api.destroy();
   });
 
-  describe('/obligation-sub-types', () => {
-    it(`should return ${HttpStatus.OK} with mapped obligation sub-types`, async () => {
+  describe('/obligation-subtypes', () => {
+    it(`should return ${HttpStatus.OK} with mapped obligation subtypes`, async () => {
       // Arrange
-      const url = `/api/${prefixAndVersion}/ods/obligation-sub-types`;
+      const url = `/api/${prefixAndVersion}/ods/obligation-subtypes`;
 
       // Act
       const { status, body } = await api.get(url);
@@ -43,10 +43,10 @@ describe('/ods - Obligation sub-types', () => {
     });
   });
 
-  describe('/obligation-sub-type/:subTypeCode', () => {
-    it(`should return ${HttpStatus.OK} with a mapped obligation sub-type`, async () => {
+  describe('/obligation-subtype/:subtypeCode', () => {
+    it(`should return ${HttpStatus.OK} with a mapped obligation subtype`, async () => {
       // Arrange
-      const url = `/api/${prefixAndVersion}/ods/obligation-sub-type/${EXAMPLES.OBLIGATION_SUB_TYPE.CODE}`;
+      const url = `/api/${prefixAndVersion}/ods/obligation-subtype/${EXAMPLES.OBLIGATION_SUBTYPE.CODE}`;
 
       // Act
       const { status, body } = await api.get(url);
@@ -65,10 +65,10 @@ describe('/ods - Obligation sub-types', () => {
       expect(body).toEqual(expected);
     });
 
-    describe('when a single obligation sub-type is NOT found', () => {
+    describe('when a single obligation subtype is NOT found', () => {
       it(`should return ${HttpStatus.NOT_FOUND}`, async () => {
         // Arrange
-        const url = `/api/${prefixAndVersion}/ods/obligation-sub-type/INVALID_SUB_TYPE_CODE`;
+        const url = `/api/${prefixAndVersion}/ods/obligation-subtype/INVALID_SUBTYPE_CODE`;
 
         // Act
         const { status } = await api.get(url);

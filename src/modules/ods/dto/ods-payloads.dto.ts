@@ -56,7 +56,7 @@ export const ODS_ENTITIES = {
 export type OdsEntity = (typeof ODS_ENTITIES)[keyof typeof ODS_ENTITIES];
 
 export const ODS_QUERY_PARAM_VALUES = {
-  OBLIGATION_SUB_TYPE: 'obligationSubType',
+  OBLIGATION_SUBTYPE: 'obligationSubtype',
   FACILITY_CATEGORY: 'facilityCategory',
   UKEF: 'UKEF',
 } as const;

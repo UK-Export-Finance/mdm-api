@@ -219,7 +219,7 @@ export const EXAMPLES = {
     TEMPLATE_URI: 'https://api.notifications.service.gov.uk/services/abc12345-a123-4567-8901-123456789012/templates/tmpl1234-1234-5678-9012-abcd12345678',
     FILE: '<Buffer 43 31 2c 43 32 2c 43 33 0a 41 2c 42 2c 43 0a 44 2c 45 2c 46 0a 31 2c 32 2c 33 0a 34 2c 35 2c 36 0a>',
   },
-  OBLIGATION_SUB_TYPE: {
+  OBLIGATION_SUBTYPE: {
     TYPE: 'Obligation Sub-Type',
     TYPE_CODE: 'obligationSubtype',
     CODE: 'OST012',

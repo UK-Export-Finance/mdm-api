@@ -2,12 +2,12 @@ import { ApiProperty } from '@nestjs/swagger';
 import { EXAMPLES } from '@ukef/constants';
 import { IsString } from 'class-validator';
 
-export class GetOdsObligationSubTypeParamDto {
+export class GetOdsObligationSubtypeParamDto {
   @ApiProperty({
     required: true,
-    example: EXAMPLES.OBLIGATION_SUB_TYPE.CODE,
-    description: 'Unique obligation sub-type code',
+    example: EXAMPLES.OBLIGATION_SUBTYPE.CODE,
+    description: 'Unique obligation subtype code',
   })
   @IsString()
-  public subTypeCode: string;
+  public subtypeCode: string;
 }

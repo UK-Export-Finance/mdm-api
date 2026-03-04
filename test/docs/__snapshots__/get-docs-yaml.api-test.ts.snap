@@ -1031,7 +1031,7 @@ components:
             - UK Public Body
         subtype:
           type: string
-          description: Customer company sub-type
+          description: Customer company subtype
           example: Alternative Finance Provider
           enum:
             - Alternative Finance Provider

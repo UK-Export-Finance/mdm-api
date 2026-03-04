@@ -5,11 +5,11 @@ import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
 import { ODS_ENTITIES, ODS_QUERY_PARAM_VALUES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
-import { OdsObligationSubTypeService } from './ods-obligation-sub-type.service';
+import { OdsObligationSubtypeService } from './ods-obligation-subtype.service';
 import { OdsStoredProcedureService } from './ods-stored-procedure.service';
 
-describe('OdsObligationSubTypeService - getAll', () => {
-  let service: OdsObligationSubTypeService;
+describe('OdsObligationSubtypeService - getAll', () => {
+  let service: OdsObligationSubtypeService;
   let odsStoredProcedureService: OdsStoredProcedureService;
   let mockQueryRunner: jest.Mocked<QueryRunner>;
   let mockDataSource: jest.Mocked<DataSource>;
@@ -26,7 +26,7 @@ describe('OdsObligationSubTypeService - getAll', () => {
     } as unknown as jest.Mocked<DataSource>;
 
     odsStoredProcedureService = new OdsStoredProcedureService(mockDataSource);
-    service = new OdsObligationSubTypeService(odsStoredProcedureService, mockLogger);
+    service = new OdsObligationSubtypeService(odsStoredProcedureService, mockLogger);
   });
 
   const mockStoredProcedureOutput = `{
@@ -63,7 +63,7 @@ describe('OdsObligationSubTypeService - getAll', () => {
     const expectedStoredProcedureInput: OdsStoredProcedureInput = odsStoredProcedureService.createInput({
       entityToQuery: ODS_ENTITIES.OBLIGATION_CLASSIFICATION,
       queryParameters: {
-        classification_type_code: ODS_QUERY_PARAM_VALUES.OBLIGATION_SUB_TYPE,
+        classification_type_code: ODS_QUERY_PARAM_VALUES.OBLIGATION_SUBTYPE,
       },
     });
 
@@ -71,7 +71,7 @@ describe('OdsObligationSubTypeService - getAll', () => {
     expect(odsStoredProcedureService.call).toHaveBeenCalledWith(expectedStoredProcedureInput);
   });
 
-  it('should return mapped obligation sub-types', async () => {
+  it('should return mapped obligation subtypes', async () => {
     // Act
     const result = await service.getAll();
 
@@ -95,7 +95,7 @@ describe('OdsObligationSubTypeService - getAll', () => {
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error('Error getting obligation sub-types from ODS');
+      const expected = new Error('Error getting obligation subtypes from ODS');
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -113,7 +113,7 @@ describe('OdsObligationSubTypeService - getAll', () => {
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error('Error getting obligation sub-types from ODS');
+      const expected = new Error('Error getting obligation subtypes from ODS');
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -129,7 +129,7 @@ describe('OdsObligationSubTypeService - getAll', () => {
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error('Error getting obligation sub-types from ODS');
+      const expected = new Error('Error getting obligation subtypes from ODS');
 
       await expect(promise).rejects.toThrow(expected);
     });

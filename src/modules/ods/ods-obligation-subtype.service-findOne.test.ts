@@ -5,11 +5,11 @@ import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
 import { ODS_ENTITIES, ODS_QUERY_PARAM_VALUES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
-import { OdsObligationSubTypeService } from './ods-obligation-sub-type.service';
+import { OdsObligationSubtypeService } from './ods-obligation-subtype.service';
 import { OdsStoredProcedureService } from './ods-stored-procedure.service';
 
-describe('OdsObligationSubTypeService - findOne', () => {
-  let service: OdsObligationSubTypeService;
+describe('OdsObligationSubtypeService - findOne', () => {
+  let service: OdsObligationSubtypeService;
   let odsStoredProcedureService: OdsStoredProcedureService;
   let mockQueryRunner: jest.Mocked<QueryRunner>;
   let mockDataSource: jest.Mocked<DataSource>;
@@ -26,7 +26,7 @@ describe('OdsObligationSubTypeService - findOne', () => {
     } as unknown as jest.Mocked<DataSource>;
 
     odsStoredProcedureService = new OdsStoredProcedureService(mockDataSource);
-    service = new OdsObligationSubTypeService(odsStoredProcedureService, mockLogger);
+    service = new OdsObligationSubtypeService(odsStoredProcedureService, mockLogger);
   });
 
   const mockStoredProcedureOutput = `{
@@ -50,15 +50,15 @@ describe('OdsObligationSubTypeService - findOne', () => {
 
   it('should call odsStoredProcedureService.call', async () => {
     // Act
-    await service.findOne(EXAMPLES.OBLIGATION_SUB_TYPE.CODE);
+    await service.findOne(EXAMPLES.OBLIGATION_SUBTYPE.CODE);
 
     // Assert
     const expectedStoredProcedureInput: OdsStoredProcedureInput = odsStoredProcedureService.createInput({
       entityToQuery: ODS_ENTITIES.OBLIGATION_CLASSIFICATION,
       queryPageSize: 1,
       queryParameters: {
-        classification_type_code: ODS_QUERY_PARAM_VALUES.OBLIGATION_SUB_TYPE,
-        classification_code: EXAMPLES.OBLIGATION_SUB_TYPE.CODE,
+        classification_type_code: ODS_QUERY_PARAM_VALUES.OBLIGATION_SUBTYPE,
+        classification_code: EXAMPLES.OBLIGATION_SUBTYPE.CODE,
       },
     });
 
@@ -66,9 +66,9 @@ describe('OdsObligationSubTypeService - findOne', () => {
     expect(odsStoredProcedureService.call).toHaveBeenCalledWith(expectedStoredProcedureInput);
   });
 
-  it('should return a mapped obligation sub-type', async () => {
+  it('should return a mapped obligation subtype', async () => {
     // Act
-    const result = await service.findOne(EXAMPLES.OBLIGATION_SUB_TYPE.CODE);
+    const result = await service.findOne(EXAMPLES.OBLIGATION_SUBTYPE.CODE);
 
     // Assert
     const { results } = JSON.parse(mockStoredProcedureOutput);
@@ -79,7 +79,7 @@ describe('OdsObligationSubTypeService - findOne', () => {
     expect(result).toEqual(expected);
   });
 
-  describe('when an obligation sub-type is not found', () => {
+  describe('when an obligation subtype is not found', () => {
     it('should throw an error', async () => {
       // Arrange
       const mockStoredProcedureOutput = `{
@@ -92,11 +92,11 @@ describe('OdsObligationSubTypeService - findOne', () => {
       jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
 
       // Act & Assert
-      const promise = service.findOne(EXAMPLES.OBLIGATION_SUB_TYPE.CODE);
+      const promise = service.findOne(EXAMPLES.OBLIGATION_SUBTYPE.CODE);
 
       await expect(promise).rejects.toBeInstanceOf(NotFoundException);
 
-      const expected = new Error(`No obligation sub-type ${EXAMPLES.OBLIGATION_SUB_TYPE.CODE} found in ODS`);
+      const expected = new Error(`No obligation subtype ${EXAMPLES.OBLIGATION_SUBTYPE.CODE} found in ODS`);
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -110,15 +110,15 @@ describe('OdsObligationSubTypeService - findOne', () => {
       jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
 
       // Act
-      const promise = service.findOne(EXAMPLES.OBLIGATION_SUB_TYPE.CODE);
+      const promise = service.findOne(EXAMPLES.OBLIGATION_SUBTYPE.CODE);
 
       // Assert
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
       await expect(promise).rejects.toMatchObject({
-        message: `Error finding obligation sub-type ${EXAMPLES.OBLIGATION_SUB_TYPE.CODE} in ODS`,
+        message: `Error finding obligation subtype ${EXAMPLES.OBLIGATION_SUBTYPE.CODE} in ODS`,
         cause: {
-          message: `Error finding obligation sub-type ${EXAMPLES.OBLIGATION_SUB_TYPE.CODE} from ODS stored procedure`,
+          message: `Error finding obligation subtype ${EXAMPLES.OBLIGATION_SUBTYPE.CODE} from ODS stored procedure`,
         },
       });
     });
@@ -132,13 +132,13 @@ describe('OdsObligationSubTypeService - findOne', () => {
       jest.spyOn(odsStoredProcedureService, 'call').mockRejectedValue(mockStoredProcedureOutput);
 
       // Act
-      const promise = service.findOne(EXAMPLES.OBLIGATION_SUB_TYPE.CODE);
+      const promise = service.findOne(EXAMPLES.OBLIGATION_SUBTYPE.CODE);
 
       // Assert
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
       await expect(promise).rejects.toMatchObject({
-        message: `Error finding obligation sub-type ${EXAMPLES.OBLIGATION_SUB_TYPE.CODE} in ODS`,
+        message: `Error finding obligation subtype ${EXAMPLES.OBLIGATION_SUBTYPE.CODE} in ODS`,
         cause: mockStoredProcedureOutput,
       });
     });
@@ -152,12 +152,12 @@ describe('OdsObligationSubTypeService - findOne', () => {
       jest.spyOn(odsStoredProcedureService, 'call').mockRejectedValue(mockError);
 
       // Act
-      const promise = service.findOne(EXAMPLES.OBLIGATION_SUB_TYPE.CODE);
+      const promise = service.findOne(EXAMPLES.OBLIGATION_SUBTYPE.CODE);
 
       // Assert
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
       await expect(promise).rejects.toMatchObject({
-        message: `Error finding obligation sub-type ${EXAMPLES.OBLIGATION_SUB_TYPE.CODE} in ODS`,
+        message: `Error finding obligation subtype ${EXAMPLES.OBLIGATION_SUBTYPE.CODE} in ODS`,
         cause: mockError,
       });
     });
