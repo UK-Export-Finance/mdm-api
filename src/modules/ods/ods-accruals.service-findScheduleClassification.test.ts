@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
 import { mapAccrualScheduleClassification } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
@@ -39,8 +39,8 @@ describe('OdsAccrualsService - findScheduleClassification', () => {
         "classification_type_code": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.TYPE_CODE}",
         "classification_code": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.CODE}",
         "classification_description": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.DESCRIPTION}",
-        "classification_numeric_value": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.NUMERIC_VALUE}",
-        "classification_active_flag": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.IS_ACTIVE}"
+        "classification_numeric_value": ${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.NUMERIC_VALUE},
+        "classification_active_flag": ${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.IS_ACTIVE}
       }
     ]
   }`;
@@ -58,7 +58,7 @@ describe('OdsAccrualsService - findScheduleClassification', () => {
       entityToQuery: ODS_ENTITIES.ACCRUAL_SCHEDULE_CLASSIFICATION,
       queryPageSize: 1,
       queryParameters: {
-        classification_code: EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.TYPE_CODE,
+        classification_code: EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.CODE,
       },
     });
 
@@ -149,6 +149,8 @@ describe('OdsAccrualsService - findScheduleClassification', () => {
 
       // Act & Assert
       const promise = service.findScheduleClassification(EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.TYPE_CODE);
+
+      await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
       const expected = new Error(`Error finding accrual schedule classification ${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.TYPE_CODE}`, { cause: mockError });
 

@@ -27,7 +27,7 @@ export class OdsStoredProcedureService {
       query_object: entityToQuery,
       query_page_size: queryPageSize,
       query_page_index: 1,
-      query_parameters: queryParameters,
+      query_parameters: queryParameters ?? {},
     };
   }
 
@@ -37,7 +37,7 @@ export class OdsStoredProcedureService {
    *
    * @returns {Promise<OdsStoredProcedureOutput>} The result of the stored procedure
    */
-  async call(storedProcedureInput: OdsStoredProcedureInput): Promise<string> {
+  async call(storedProcedureInput: OdsStoredProcedureInput): Promise<string | null> {
     const queryRunner = this.odsDataSource.createQueryRunner();
 
     try {

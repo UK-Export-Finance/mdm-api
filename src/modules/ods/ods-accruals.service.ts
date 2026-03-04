@@ -15,13 +15,13 @@ export class OdsAccrualsService {
 
   /**
    * Find an accrual schedule classification by classification code
-   * @param {string} scheduleCode: Schedule code
+   * @param {string} classificationCode: Classification code
    * @returns {Promise<GetAccrualScheduleClassificationResponseDto>}
    * @throws {NotFoundException} If no accrual schedule classification is found
    */
   async findScheduleClassification(classificationCode: string): Promise<GetAccrualScheduleClassificationResponseDto> {
     try {
-      this.logger.info('Finding accrual schedule classification %s', classificationCode);
+      this.logger.info('Finding accrual schedule classification  in ODS %s', classificationCode);
 
       const storedProcedureInput = this.odsStoredProcedureService.createInput({
         entityToQuery: ODS_ENTITIES.ACCRUAL_SCHEDULE_CLASSIFICATION,
@@ -42,20 +42,20 @@ export class OdsAccrualsService {
       }
 
       if (storedProcedureJson?.total_result_count === 0) {
-        throw new NotFoundException(`No accrual schedule classification ${classificationCode} found`);
+        throw new NotFoundException(`No accrual schedule classification ${classificationCode} found in ODS`);
       }
 
       const classification = storedProcedureJson.results[0] as GetAccrualScheduleClassificationOdsResponseDto;
 
       return mapAccrualScheduleClassification(classification);
     } catch (error) {
-      this.logger.error('Error finding accrual schedule classification %s %o', classificationCode, error);
+      this.logger.error('Error finding accrual schedule classification in ODS %s %o', classificationCode, error);
 
       if (error instanceof NotFoundException) {
         throw error;
       }
 
-      throw new Error(`Error finding accrual schedule classification ${classificationCode}`, { cause: error });
+      throw new InternalServerErrorException(`Error finding accrual schedule classification ${classificationCode} in ODS`, { cause: error });
     }
   }
 

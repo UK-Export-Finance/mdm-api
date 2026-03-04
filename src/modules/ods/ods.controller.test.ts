@@ -82,7 +82,7 @@ describe('OdsController', () => {
   });
 
   describe('findAccrualScheduleClassification', () => {
-    const mockClassificationCode = EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.TYPE_CODE;
+    const mockClassificationCode = EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.CODE;
 
     it('should call odsAccrualsService.findScheduleClassification', async () => {
       // Act

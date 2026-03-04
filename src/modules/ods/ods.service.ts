@@ -213,7 +213,7 @@ export class OdsService {
         throw error;
       }
 
-      throw new Error(`Error finding UKEF industry ${industryCode} in ODS`, { cause: error });
+      throw new InternalServerErrorException(`Error finding UKEF industry ${industryCode} in ODS`, { cause: error });
     }
   }
 

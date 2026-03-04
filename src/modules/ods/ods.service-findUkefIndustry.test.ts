@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
 import { mapIndustry } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
@@ -148,6 +148,8 @@ describe('OdsService - findUkefIndustry', () => {
 
       // Act & Assert
       const promise = service.findUkefIndustry(EXAMPLES.INDUSTRY.CODE);
+
+      await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
       const expected = new Error(`Error finding UKEF industry ${EXAMPLES.INDUSTRY.CODE} in ODS`, { cause: mockError });
 

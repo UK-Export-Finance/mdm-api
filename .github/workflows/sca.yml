@@ -13,9 +13,7 @@ on:
   pull_request:
     branches:
       - main
-      - 'release-*'  
-  pull_request_target:
-    branches: [main, 'release-*']
+      - 'release-*'
 
 
 env:

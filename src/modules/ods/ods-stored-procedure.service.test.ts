@@ -27,7 +27,7 @@ describe('OdsStoredProcedureService', () => {
   describe('createInput', () => {
     it('should map the inputs to the stored procedure input format', () => {
       // Arrange
-      const exampleCustomerQueryParameters = {
+      const mockQueryParameters = {
         customer_party_unique_reference_number: EXAMPLES.CUSTOMER.PARTYURN,
       };
 
@@ -35,7 +35,7 @@ describe('OdsStoredProcedureService', () => {
       const result = service.createInput({
         entityToQuery: ODS_ENTITIES.CUSTOMER,
         queryPageSize: 100,
-        queryParameters: exampleCustomerQueryParameters,
+        queryParameters: mockQueryParameters,
       });
 
       // Assert
@@ -44,10 +44,23 @@ describe('OdsStoredProcedureService', () => {
         query_object: ODS_ENTITIES.CUSTOMER,
         query_page_size: 100,
         query_page_index: 1,
-        query_parameters: exampleCustomerQueryParameters,
+        query_parameters: mockQueryParameters,
       };
 
       expect(result).toEqual(expected);
+    });
+
+    describe('when queryParameters are NOT provided', () => {
+      it('should default query_parameters to an empty object', () => {
+        // Act
+        const result = service.createInput({
+          entityToQuery: ODS_ENTITIES.CUSTOMER,
+          queryPageSize: 100,
+        });
+
+        // Assert
+        expect(result.query_parameters).toEqual({});
+      });
     });
   });
 
