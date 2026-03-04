@@ -20,8 +20,8 @@ const mockMappedIndustry = mapIndustry(EXAMPLES.ODS.INDUSTRY);
 const mockAccrualScheduleClassification = EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION;
 const mockAccrualScheduleClassifications = [mockAccrualScheduleClassification, mockAccrualScheduleClassification];
 
-// TODO
-const mockFacilityCategories = [];
+const mockFacilityCategory = EXAMPLES.FACILITY_CATEGORY;
+const mockFacilityCategories = [mockFacilityCategory, mockFacilityCategory];
 
 describe('OdsController', () => {
   const mockLogger = new PinoLogger({});
@@ -38,6 +38,7 @@ describe('OdsController', () => {
   let odsAccrualsServiceGetScheduleClassifications: jest.Mock;
   let odsAccrualsServiceFindScheduleClassification: jest.Mock;
   let odsFacilityCategoryServiceGetAll: jest.Mock;
+  let odsFacilityCategoryServiceFindOne: jest.Mock;
   let findUkefIndustry: jest.Mock;
 
   let controller: OdsController;
@@ -69,6 +70,9 @@ describe('OdsController', () => {
 
     odsFacilityCategoryServiceGetAll = jest.fn().mockReturnValueOnce(mockFacilityCategories);
     odsFacilityCategoryService.getAll = odsFacilityCategoryServiceGetAll;
+
+    odsFacilityCategoryServiceFindOne = jest.fn().mockReturnValueOnce(mockFacilityCategory);
+    odsFacilityCategoryService.findOne = odsFacilityCategoryServiceFindOne;
 
     controller = new OdsController(odsService, odsAccrualsService, odsFacilityCategoryService);
   });
@@ -143,6 +147,43 @@ describe('OdsController', () => {
 
       // Assert
       expect(result).toStrictEqual(mockFacilityCategories);
+    });
+  });
+
+  describe('findFacilityCategory', () => {
+    const mockCategoryCode = EXAMPLES.FACILITY_CATEGORY.CODE;
+
+    it('should call odsFacilityCategoryService.findOne', async () => {
+      // Act
+      await controller.findFacilityCategory({ categoryCode: mockCategoryCode });
+
+      // Assert
+      expect(odsFacilityCategoryServiceFindOne).toHaveBeenCalledTimes(1);
+      expect(odsFacilityCategoryServiceFindOne).toHaveBeenCalledWith(mockCategoryCode);
+    });
+
+    it('should return a facility category', async () => {
+      // Act
+      const result = await controller.findFacilityCategory({ categoryCode: mockCategoryCode });
+
+      // Assert
+      expect(result).toStrictEqual(mockFacilityCategory);
+    });
+
+    describe('when odsFacilityCategoryService.findOne throws an error', () => {
+      it('should throw an error', async () => {
+        // Arrange
+        const odsService = new OdsService(null, mockLogger);
+
+        odsFacilityCategoryService.findOne = jest.fn().mockRejectedValueOnce(mockError);
+
+        controller = new OdsController(odsService, odsAccrualsService, odsFacilityCategoryService);
+
+        // Act & Assert
+        const promise = controller.findFacilityCategory({ categoryCode: mockCategoryCode });
+
+        await expect(promise).rejects.toThrow(mockError);
+      });
     });
   });
 

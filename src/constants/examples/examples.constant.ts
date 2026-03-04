@@ -253,7 +253,7 @@ export const EXAMPLES = {
     },
     INDUSTRY: {
       industry_id: INDUSTRY.ID,
-      classification_type_code: INDUSTRY.CODE,
+      industry_code: INDUSTRY.CODE,
       industry_description: INDUSTRY.DESCRIPTION,
       industry_group_code: INDUSTRY.GROUP_CODE,
       industry_group_description: INDUSTRY.GROUP_DESCRIPTION,
