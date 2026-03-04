@@ -1,15 +1,15 @@
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
-import { mapIndustry } from '@ukef/helpers';
+import { mapOdsClassification } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
 import { ODS_ENTITIES, ODS_QUERY_PARAM_VALUES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
-import { OdsService } from './ods.service';
+import { OdsFacilityCategoryService } from './ods-facility-category.service';
 import { OdsStoredProcedureService } from './ods-stored-procedure.service';
 
-describe('OdsService - findUkefIndustry', () => {
-  let service: OdsService;
+describe('OdsFacilityCategoryService - findOne', () => {
+  let service: OdsFacilityCategoryService;
   let odsStoredProcedureService: OdsStoredProcedureService;
   let mockQueryRunner: jest.Mocked<QueryRunner>;
   let mockDataSource: jest.Mocked<DataSource>;
@@ -26,7 +26,7 @@ describe('OdsService - findUkefIndustry', () => {
     } as unknown as jest.Mocked<DataSource>;
 
     odsStoredProcedureService = new OdsStoredProcedureService(mockDataSource);
-    service = new OdsService(odsStoredProcedureService, mockLogger);
+    service = new OdsFacilityCategoryService(odsStoredProcedureService, mockLogger);
   });
 
   const mockStoredProcedureOutput = `{
@@ -35,12 +35,11 @@ describe('OdsService - findUkefIndustry', () => {
     "total_result_count": 1,
     "results": [
       {
-        "industry_id": "${EXAMPLES.INDUSTRY.ID}",
-        "industry_code": "${EXAMPLES.INDUSTRY.CODE}",
-        "industry_description": "${EXAMPLES.INDUSTRY.DESCRIPTION}",
-        "industry_group_code": "${EXAMPLES.INDUSTRY.GROUP_CODE}",
-        "industry_group_description": "${EXAMPLES.INDUSTRY.GROUP_DESCRIPTION}",
-        "industry_category": "${EXAMPLES.INDUSTRY.CATEGORY}"
+        "classification_type": "${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_type}",
+        "classification_type_code": "${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_type_code}",
+        "classification_code": "${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_code}",
+        "classification_description": "${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_description}",
+        "classification_active_flag": ${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_active_flag}
       }
     ]
   }`;
@@ -51,15 +50,15 @@ describe('OdsService - findUkefIndustry', () => {
 
   it('should call odsStoredProcedureService.call', async () => {
     // Act
-    await service.findUkefIndustry(EXAMPLES.INDUSTRY.CODE);
+    await service.findOne(EXAMPLES.FACILITY_CATEGORY.CODE);
 
     // Assert
     const expectedStoredProcedureInput: OdsStoredProcedureInput = odsStoredProcedureService.createInput({
-      entityToQuery: ODS_ENTITIES.INDUSTRY,
+      entityToQuery: ODS_ENTITIES.FACILITY_CLASSIFICATION,
       queryPageSize: 1,
       queryParameters: {
-        industry_category: ODS_QUERY_PARAM_VALUES.UKEF,
-        industry_code: EXAMPLES.INDUSTRY.CODE,
+        classification_type_code: ODS_QUERY_PARAM_VALUES.FACILITY_CATEGORY,
+        classification_code: EXAMPLES.FACILITY_CATEGORY.CODE,
       },
     });
 
@@ -67,20 +66,20 @@ describe('OdsService - findUkefIndustry', () => {
     expect(odsStoredProcedureService.call).toHaveBeenCalledWith(expectedStoredProcedureInput);
   });
 
-  it('should return a mapped industry', async () => {
+  it('should return a mapped facility category', async () => {
     // Act
-    const result = await service.findUkefIndustry(EXAMPLES.INDUSTRY.CODE);
+    const result = await service.findOne(EXAMPLES.FACILITY_CATEGORY.CODE);
 
     // Assert
     const { results } = JSON.parse(mockStoredProcedureOutput);
     const [jsonResult] = results;
 
-    const expected = mapIndustry(jsonResult);
+    const expected = mapOdsClassification(jsonResult);
 
     expect(result).toEqual(expected);
   });
 
-  describe('when an industry is not found', () => {
+  describe('when a facility category is not found', () => {
     it('should throw an error', async () => {
       // Arrange
       const mockStoredProcedureOutput = `{
@@ -93,11 +92,11 @@ describe('OdsService - findUkefIndustry', () => {
       jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
 
       // Act & Assert
-      const promise = service.findUkefIndustry(EXAMPLES.INDUSTRY.CODE);
+      const promise = service.findOne(EXAMPLES.FACILITY_CATEGORY.CODE);
 
       await expect(promise).rejects.toBeInstanceOf(NotFoundException);
 
-      const expected = new Error(`No UKEF industry ${EXAMPLES.INDUSTRY.CODE} found in ODS`);
+      const expected = new Error(`No facility category ${EXAMPLES.FACILITY_CATEGORY.CODE} found in ODS`);
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -111,14 +110,15 @@ describe('OdsService - findUkefIndustry', () => {
       jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
 
       // Act
-      const promise = service.findUkefIndustry(EXAMPLES.INDUSTRY.CODE);
+      const promise = service.findOne(EXAMPLES.FACILITY_CATEGORY.CODE);
 
       // Assert
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
+
       await expect(promise).rejects.toMatchObject({
-        message: `Error finding UKEF industry ${EXAMPLES.INDUSTRY.CODE} in ODS`,
+        message: `Error finding facility category ${EXAMPLES.FACILITY_CATEGORY.CODE} in ODS`,
         cause: {
-          message: `Error finding UKEF industry ${EXAMPLES.INDUSTRY.CODE} from ODS stored procedure`,
+          message: `Error finding facility category ${EXAMPLES.FACILITY_CATEGORY.CODE} from ODS stored procedure`,
         },
       });
     });
@@ -132,12 +132,13 @@ describe('OdsService - findUkefIndustry', () => {
       jest.spyOn(odsStoredProcedureService, 'call').mockRejectedValue(mockStoredProcedureOutput);
 
       // Act
-      const promise = service.findUkefIndustry(EXAMPLES.INDUSTRY.CODE);
+      const promise = service.findOne(EXAMPLES.FACILITY_CATEGORY.CODE);
 
       // Assert
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
+
       await expect(promise).rejects.toMatchObject({
-        message: `Error finding UKEF industry ${EXAMPLES.INDUSTRY.CODE} in ODS`,
+        message: `Error finding facility category ${EXAMPLES.FACILITY_CATEGORY.CODE} in ODS`,
         cause: mockStoredProcedureOutput,
       });
     });
@@ -151,12 +152,12 @@ describe('OdsService - findUkefIndustry', () => {
       jest.spyOn(odsStoredProcedureService, 'call').mockRejectedValue(mockError);
 
       // Act
-      const promise = service.findUkefIndustry(EXAMPLES.INDUSTRY.CODE);
+      const promise = service.findOne(EXAMPLES.FACILITY_CATEGORY.CODE);
 
       // Assert
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
       await expect(promise).rejects.toMatchObject({
-        message: `Error finding UKEF industry ${EXAMPLES.INDUSTRY.CODE} in ODS`,
+        message: `Error finding facility category ${EXAMPLES.FACILITY_CATEGORY.CODE} in ODS`,
         cause: mockError,
       });
     });

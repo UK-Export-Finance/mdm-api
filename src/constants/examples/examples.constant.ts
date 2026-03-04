@@ -97,6 +97,13 @@ export const EXAMPLES = {
     NAME: 'ABC PARIS CLUB 01',
     DESCRIPTION: 'Paris Club agreement',
   },
+  FACILITY_CATEGORY: {
+    TYPE: 'Facility Category',
+    TYPE_CODE: 'facilityCategory',
+    CODE: 'FCT006',
+    DESCRIPTION: 'GEF: Contingent',
+    IS_ACTIVE: true,
+  },
   INDUSTRY,
   DOM: {
     BUSINESS_CENTRES: [
@@ -235,6 +242,13 @@ export const EXAMPLES = {
         business_centre_name: 'Mock name StB',
       },
     ],
+    FACILITY_CLASSIFICATION: {
+      classification_type: 'Facility Category',
+      classification_type_code: 'facilityCategory',
+      classification_code: 'FCT006',
+      classification_description: 'GEF: Contingent',
+      classification_active_flag: true,
+    },
     INDUSTRY: {
       industry_id: INDUSTRY.ID,
       industry_code: INDUSTRY.CODE,

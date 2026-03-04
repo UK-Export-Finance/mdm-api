@@ -10,6 +10,7 @@ import {
   GetOdsCustomerResponse,
   GetOdsDealResponse,
   ODS_ENTITIES,
+  ODS_QUERY_PARAM_VALUES,
   OdsStoredProcedureOutputBody,
 } from './dto';
 import { OdsStoredProcedureService } from './ods-stored-procedure.service';
@@ -182,7 +183,7 @@ export class OdsService {
         entityToQuery: ODS_ENTITIES.INDUSTRY,
         queryPageSize: 1,
         queryParameters: {
-          industry_category: 'UKEF',
+          industry_category: ODS_QUERY_PARAM_VALUES.UKEF,
           industry_code: industryCode,
         },
       });
@@ -226,7 +227,9 @@ export class OdsService {
 
       const storedProcedureInput = this.odsStoredProcedureService.createInput({
         entityToQuery: ODS_ENTITIES.INDUSTRY,
-        queryParameters: { industry_category: 'UKEF' },
+        queryParameters: {
+          industry_category: ODS_QUERY_PARAM_VALUES.UKEF,
+        },
       });
 
       const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
@@ -262,7 +265,9 @@ export class OdsService {
 
       const storedProcedureInput = this.odsStoredProcedureService.createInput({
         entityToQuery: ODS_ENTITIES.INDUSTRY,
-        queryParameters: { industry_category: 'UKEF' },
+        queryParameters: {
+          industry_category: ODS_QUERY_PARAM_VALUES.UKEF,
+        },
       });
 
       const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);

@@ -5,6 +5,7 @@ import { PinoLogger } from 'nestjs-pino';
 import { OdsController } from './ods.controller';
 import { OdsService } from './ods.service';
 import { OdsAccrualsService } from './ods-accruals.service';
+import { OdsFacilityCategoryService } from './ods-facility-category.service';
 
 const mockError = new Error('An error occurred');
 
@@ -19,11 +20,16 @@ const mockMappedIndustry = mapIndustry(EXAMPLES.ODS.INDUSTRY);
 const mockAccrualScheduleClassification = EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION;
 const mockAccrualScheduleClassifications = [mockAccrualScheduleClassification, mockAccrualScheduleClassification];
 
+const mockFacilityCategory = EXAMPLES.FACILITY_CATEGORY;
+const mockFacilityCategories = [mockFacilityCategory, mockFacilityCategory];
+
 describe('OdsController', () => {
   const mockLogger = new PinoLogger({});
 
   const odsService = new OdsService(null, mockLogger);
   const odsAccrualsService = new OdsAccrualsService(null, mockLogger);
+  const odsFacilityCategoryService = new OdsFacilityCategoryService(null, mockLogger);
+
   let odsServiceFindBusinessCentreNonWorkingDays: jest.Mock;
   let odsServiceFindCustomer: jest.Mock;
   let odsServiceFindDeal: jest.Mock;
@@ -31,6 +37,8 @@ describe('OdsController', () => {
   let odsServiceGetUkefIndustryCodes: jest.Mock;
   let odsAccrualsServiceGetScheduleClassifications: jest.Mock;
   let odsAccrualsServiceFindScheduleClassification: jest.Mock;
+  let odsFacilityCategoryServiceGetAll: jest.Mock;
+  let odsFacilityCategoryServiceFindOne: jest.Mock;
   let findUkefIndustry: jest.Mock;
 
   let controller: OdsController;
@@ -45,22 +53,28 @@ describe('OdsController', () => {
     odsServiceFindDeal = jest.fn().mockResolvedValueOnce(mockDeal);
     odsService.findDeal = odsServiceFindDeal;
 
-    odsServiceGetUkefIndustries = jest.fn().mockReturnValueOnce(mockUkefIndustries);
+    odsServiceGetUkefIndustries = jest.fn().mockResolvedValueOnce(mockUkefIndustries);
     odsService.getUkefIndustries = odsServiceGetUkefIndustries;
 
-    odsServiceGetUkefIndustryCodes = jest.fn().mockReturnValueOnce(mockUkefIndustryCodes);
+    odsServiceGetUkefIndustryCodes = jest.fn().mockResolvedValueOnce(mockUkefIndustryCodes);
     odsService.getUkefIndustryCodes = odsServiceGetUkefIndustryCodes;
 
-    findUkefIndustry = jest.fn().mockReturnValueOnce(mockMappedIndustry);
+    findUkefIndustry = jest.fn().mockResolvedValueOnce(mockMappedIndustry);
     odsService.findUkefIndustry = findUkefIndustry;
 
-    odsAccrualsServiceGetScheduleClassifications = jest.fn().mockReturnValueOnce(mockAccrualScheduleClassifications);
+    odsAccrualsServiceGetScheduleClassifications = jest.fn().mockResolvedValueOnce(mockAccrualScheduleClassifications);
     odsAccrualsService.getScheduleClassifications = odsAccrualsServiceGetScheduleClassifications;
 
-    odsAccrualsServiceFindScheduleClassification = jest.fn().mockReturnValueOnce(mockAccrualScheduleClassification);
+    odsAccrualsServiceFindScheduleClassification = jest.fn().mockResolvedValueOnce(mockAccrualScheduleClassification);
     odsAccrualsService.findScheduleClassification = odsAccrualsServiceFindScheduleClassification;
 
-    controller = new OdsController(odsService, odsAccrualsService);
+    odsFacilityCategoryServiceGetAll = jest.fn().mockResolvedValueOnce(mockFacilityCategories);
+    odsFacilityCategoryService.getAll = odsFacilityCategoryServiceGetAll;
+
+    odsFacilityCategoryServiceFindOne = jest.fn().mockResolvedValueOnce(mockFacilityCategory);
+    odsFacilityCategoryService.findOne = odsFacilityCategoryServiceFindOne;
+
+    controller = new OdsController(odsService, odsAccrualsService, odsFacilityCategoryService);
   });
 
   describe('getAccrualSchedules', () => {
@@ -72,9 +86,9 @@ describe('OdsController', () => {
       expect(odsAccrualsServiceGetScheduleClassifications).toHaveBeenCalledTimes(1);
     });
 
-    it('should return accrual schedule classifications', () => {
+    it('should return accrual schedule classifications', async () => {
       // Act
-      const result = controller.getAccrualScheduleClassifications();
+      const result = await controller.getAccrualScheduleClassifications();
 
       // Assert
       expect(result).toStrictEqual(mockAccrualScheduleClassifications);
@@ -108,10 +122,65 @@ describe('OdsController', () => {
 
         odsAccrualsService.findScheduleClassification = jest.fn().mockRejectedValueOnce(mockError);
 
-        controller = new OdsController(odsService, odsAccrualsService);
+        controller = new OdsController(odsService, odsAccrualsService, odsFacilityCategoryService);
 
         // Act & Assert
         const promise = controller.findAccrualScheduleClassification({ classificationCode: mockClassificationCode });
+
+        await expect(promise).rejects.toThrow(mockError);
+      });
+    });
+  });
+
+  describe('getFacilityCategories', () => {
+    it('should call odsFacilityCategoryService.getAll', async () => {
+      // Act
+      await controller.getFacilityCategories();
+
+      // Assert
+      expect(odsFacilityCategoryServiceGetAll).toHaveBeenCalledTimes(1);
+    });
+
+    it('should return facility categories', async () => {
+      // Act
+      const result = await controller.getFacilityCategories();
+
+      // Assert
+      expect(result).toStrictEqual(mockFacilityCategories);
+    });
+  });
+
+  describe('findFacilityCategory', () => {
+    const mockCategoryCode = EXAMPLES.FACILITY_CATEGORY.CODE;
+
+    it('should call odsFacilityCategoryService.findOne', async () => {
+      // Act
+      await controller.findFacilityCategory({ categoryCode: mockCategoryCode });
+
+      // Assert
+      expect(odsFacilityCategoryServiceFindOne).toHaveBeenCalledTimes(1);
+      expect(odsFacilityCategoryServiceFindOne).toHaveBeenCalledWith(mockCategoryCode);
+    });
+
+    it('should return a facility category', async () => {
+      // Act
+      const result = await controller.findFacilityCategory({ categoryCode: mockCategoryCode });
+
+      // Assert
+      expect(result).toStrictEqual(mockFacilityCategory);
+    });
+
+    describe('when odsFacilityCategoryService.findOne throws an error', () => {
+      it('should throw an error', async () => {
+        // Arrange
+        const odsService = new OdsService(null, mockLogger);
+
+        odsFacilityCategoryService.findOne = jest.fn().mockRejectedValueOnce(mockError);
+
+        controller = new OdsController(odsService, odsAccrualsService, odsFacilityCategoryService);
+
+        // Act & Assert
+        const promise = controller.findFacilityCategory({ categoryCode: mockCategoryCode });
 
         await expect(promise).rejects.toThrow(mockError);
       });
@@ -146,7 +215,7 @@ describe('OdsController', () => {
 
         odsService.findCustomer = jest.fn().mockRejectedValueOnce(mockError);
 
-        controller = new OdsController(odsService, odsAccrualsService);
+        controller = new OdsController(odsService, odsAccrualsService, odsFacilityCategoryService);
 
         // Act & Assert
         const promise = controller.findCustomer({ urn: EXAMPLES.CUSTOMER.PARTYURN });
@@ -181,7 +250,7 @@ describe('OdsController', () => {
 
         odsService.findDeal = jest.fn().mockRejectedValueOnce(mockError);
 
-        controller = new OdsController(odsService, odsAccrualsService);
+        controller = new OdsController(odsService, odsAccrualsService, odsFacilityCategoryService);
 
         // Act & Assert
         const promise = controller.findDeal({ id: EXAMPLES.DEAL.ID });
@@ -192,17 +261,17 @@ describe('OdsController', () => {
   });
 
   describe('getUkefIndustries', () => {
-    it('should call odsService.getUkefIndustries', () => {
+    it('should call odsService.getUkefIndustries', async () => {
       // Act
-      controller.getUkefIndustries();
+      await controller.getUkefIndustries();
 
       // Assert
       expect(odsServiceGetUkefIndustries).toHaveBeenCalledTimes(1);
     });
 
-    it('should return UKEF industries', () => {
+    it('should return UKEF industries', async () => {
       // Act
-      const result = controller.getUkefIndustries();
+      const result = await controller.getUkefIndustries();
 
       // Assert
       expect(result).toStrictEqual(mockUkefIndustries);
@@ -210,17 +279,17 @@ describe('OdsController', () => {
   });
 
   describe('getUkefIndustryCodes', () => {
-    it('should call odsService.getUkefIndustryCodes', () => {
+    it('should call odsService.getUkefIndustryCodes', async () => {
       // Act
-      controller.getUkefIndustryCodes();
+      await controller.getUkefIndustryCodes();
 
       // Assert
       expect(odsServiceGetUkefIndustryCodes).toHaveBeenCalledTimes(1);
     });
 
-    it('should return UKEF industry codes', () => {
+    it('should return UKEF industry codes', async () => {
       // Act
-      const result = controller.getUkefIndustryCodes();
+      const result = await controller.getUkefIndustryCodes();
 
       // Assert
       expect(result).toStrictEqual(mockUkefIndustryCodes);
@@ -255,7 +324,7 @@ describe('OdsController', () => {
 
         odsService.findUkefIndustry = jest.fn().mockRejectedValueOnce(mockError);
 
-        controller = new OdsController(odsService, odsAccrualsService);
+        controller = new OdsController(odsService, odsAccrualsService, odsFacilityCategoryService);
 
         // Act & Assert
         const promise = controller.findUkefIndustry({ industryCode: EXAMPLES.INDUSTRY.CODE });

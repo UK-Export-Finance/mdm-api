@@ -1,6 +1,6 @@
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
-import { mapAccrualScheduleClassification } from '@ukef/helpers';
+import { mapOdsClassification } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
@@ -35,12 +35,12 @@ describe('OdsAccrualsService - findScheduleClassification', () => {
     "total_result_count": 1,
     "results": [
       {
-        "classification_type": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.TYPE}",
-        "classification_type_code": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.TYPE_CODE}",
-        "classification_code": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.CODE}",
-        "classification_description": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.DESCRIPTION}",
-        "classification_numeric_value": ${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.NUMERIC_VALUE},
-        "classification_active_flag": ${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.IS_ACTIVE}
+        "classification_type": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.classification_type}",
+        "classification_type_code": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.classification_type_code}",
+        "classification_code": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.classification_code}",
+        "classification_description": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.classification_description}",
+        "classification_numeric_value": ${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.classification_numeric_value},
+        "classification_active_flag": ${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.classification_active_flag}
       }
     ]
   }`;
@@ -74,7 +74,7 @@ describe('OdsAccrualsService - findScheduleClassification', () => {
     const { results } = JSON.parse(mockStoredProcedureOutput);
     const [jsonResult] = results;
 
-    const expected = mapAccrualScheduleClassification(jsonResult);
+    const expected = mapOdsClassification(jsonResult);
 
     expect(result).toEqual(expected);
   });
