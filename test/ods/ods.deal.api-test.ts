@@ -50,7 +50,7 @@ describe('/ods - deal', () => {
 
       expect(body).toEqual({
         statusCode: HttpStatus.NOT_FOUND,
-        message: `No deal found ${mockId}`,
+        message: `No deal found ${mockId} in ODS`,
         error: 'Not Found',
       });
     });

@@ -7,6 +7,7 @@
     "extra-label": "Type: chore, Type: Docs",
     "extra-files": [
         "CHANGELOG.md"
-    ]
+    ],
+    "trigger": true
 }
 

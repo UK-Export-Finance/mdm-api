@@ -1,15 +1,15 @@
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
-import { mapIndustry } from '@ukef/helpers';
+import { mapAccrualScheduleClassification } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
 import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
-import { OdsService } from './ods.service';
+import { OdsAccrualsService } from './ods-accruals.service';
 import { OdsStoredProcedureService } from './ods-stored-procedure.service';
 
-describe('OdsService - findUkefIndustry', () => {
-  let service: OdsService;
+describe('OdsAccrualsService - findScheduleClassification', () => {
+  let service: OdsAccrualsService;
   let odsStoredProcedureService: OdsStoredProcedureService;
   let mockQueryRunner: jest.Mocked<QueryRunner>;
   let mockDataSource: jest.Mocked<DataSource>;
@@ -26,7 +26,7 @@ describe('OdsService - findUkefIndustry', () => {
     } as unknown as jest.Mocked<DataSource>;
 
     odsStoredProcedureService = new OdsStoredProcedureService(mockDataSource);
-    service = new OdsService(odsStoredProcedureService, mockLogger);
+    service = new OdsAccrualsService(odsStoredProcedureService, mockLogger);
   });
 
   const mockStoredProcedureOutput = `{
@@ -35,12 +35,12 @@ describe('OdsService - findUkefIndustry', () => {
     "total_result_count": 1,
     "results": [
       {
-        "industry_id": "${EXAMPLES.INDUSTRY.ID}",
-        "industry_code": "${EXAMPLES.INDUSTRY.CODE}",
-        "industry_description": "${EXAMPLES.INDUSTRY.DESCRIPTION}",
-        "industry_group_code": "${EXAMPLES.INDUSTRY.GROUP_CODE}",
-        "industry_group_description": "${EXAMPLES.INDUSTRY.GROUP_DESCRIPTION}",
-        "industry_category": "${EXAMPLES.INDUSTRY.CATEGORY}"
+        "classification_type": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.TYPE}",
+        "classification_type_code": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.TYPE_CODE}",
+        "classification_code": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.CODE}",
+        "classification_description": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.DESCRIPTION}",
+        "classification_numeric_value": ${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.NUMERIC_VALUE},
+        "classification_active_flag": ${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.IS_ACTIVE}
       }
     ]
   }`;
@@ -51,15 +51,14 @@ describe('OdsService - findUkefIndustry', () => {
 
   it('should call odsStoredProcedureService.call', async () => {
     // Act
-    await service.findUkefIndustry(EXAMPLES.INDUSTRY.CODE);
+    await service.findScheduleClassification(EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.CODE);
 
     // Assert
     const expectedStoredProcedureInput: OdsStoredProcedureInput = odsStoredProcedureService.createInput({
-      entityToQuery: ODS_ENTITIES.INDUSTRY,
+      entityToQuery: ODS_ENTITIES.ACCRUAL_SCHEDULE_CLASSIFICATION,
       queryPageSize: 1,
       queryParameters: {
-        industry_category: 'UKEF',
-        industry_code: EXAMPLES.INDUSTRY.CODE,
+        classification_code: EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.CODE,
       },
     });
 
@@ -67,20 +66,20 @@ describe('OdsService - findUkefIndustry', () => {
     expect(odsStoredProcedureService.call).toHaveBeenCalledWith(expectedStoredProcedureInput);
   });
 
-  it('should return a mapped industry', async () => {
+  it('should return a mapped accrual schedule classification', async () => {
     // Act
-    const result = await service.findUkefIndustry(EXAMPLES.INDUSTRY.CODE);
+    const result = await service.findScheduleClassification(EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.CODE);
 
     // Assert
     const { results } = JSON.parse(mockStoredProcedureOutput);
     const [jsonResult] = results;
 
-    const expected = mapIndustry(jsonResult);
+    const expected = mapAccrualScheduleClassification(jsonResult);
 
     expect(result).toEqual(expected);
   });
 
-  describe('when an industry is not found', () => {
+  describe('when an accrual schedule classification is not found', () => {
     it('should throw an error', async () => {
       // Arrange
       const mockStoredProcedureOutput = `{
@@ -93,11 +92,11 @@ describe('OdsService - findUkefIndustry', () => {
       jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
 
       // Act & Assert
-      const promise = service.findUkefIndustry(EXAMPLES.INDUSTRY.CODE);
+      const promise = service.findScheduleClassification(EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.CODE);
 
       await expect(promise).rejects.toBeInstanceOf(NotFoundException);
 
-      const expected = new Error(`No UKEF industry ${EXAMPLES.INDUSTRY.CODE} found in ODS`);
+      const expected = new Error(`No accrual schedule classification ${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.CODE} found in ODS`);
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -111,14 +110,15 @@ describe('OdsService - findUkefIndustry', () => {
       jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
 
       // Act
-      const promise = service.findUkefIndustry(EXAMPLES.INDUSTRY.CODE);
+      const promise = service.findScheduleClassification(EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.CODE);
 
       // Assert
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
+
       await expect(promise).rejects.toMatchObject({
-        message: `Error finding UKEF industry ${EXAMPLES.INDUSTRY.CODE} in ODS`,
+        message: `Error finding accrual schedule classification ${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.CODE} in ODS`,
         cause: {
-          message: `Error finding UKEF industry ${EXAMPLES.INDUSTRY.CODE} from ODS stored procedure`,
+          message: `Error finding accrual schedule classification ${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.CODE} from ODS stored procedure`,
         },
       });
     });
@@ -132,12 +132,13 @@ describe('OdsService - findUkefIndustry', () => {
       jest.spyOn(odsStoredProcedureService, 'call').mockRejectedValue(mockStoredProcedureOutput);
 
       // Act
-      const promise = service.findUkefIndustry(EXAMPLES.INDUSTRY.CODE);
+      const promise = service.findScheduleClassification(EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.CODE);
 
       // Assert
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
+
       await expect(promise).rejects.toMatchObject({
-        message: `Error finding UKEF industry ${EXAMPLES.INDUSTRY.CODE} in ODS`,
+        message: `Error finding accrual schedule classification ${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.CODE} in ODS`,
         cause: mockStoredProcedureOutput,
       });
     });
@@ -151,12 +152,12 @@ describe('OdsService - findUkefIndustry', () => {
       jest.spyOn(odsStoredProcedureService, 'call').mockRejectedValue(mockError);
 
       // Act
-      const promise = service.findUkefIndustry(EXAMPLES.INDUSTRY.CODE);
+      const promise = service.findScheduleClassification(EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.CODE);
 
       // Assert
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
       await expect(promise).rejects.toMatchObject({
-        message: `Error finding UKEF industry ${EXAMPLES.INDUSTRY.CODE} in ODS`,
+        message: `Error finding accrual schedule classification ${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.CODE} in ODS`,
         cause: mockError,
       });
     });

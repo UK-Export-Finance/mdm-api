@@ -50,7 +50,7 @@ describe('/ods - customers', () => {
 
       expect(body).toEqual({
         statusCode: HttpStatus.NOT_FOUND,
-        message: `No customer found ${mockUrn}`,
+        message: `No customer found ${mockUrn} in ODS`,
         error: 'Not Found',
       });
     });

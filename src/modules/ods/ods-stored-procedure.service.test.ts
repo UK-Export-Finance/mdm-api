@@ -1,17 +1,15 @@
 import { EXAMPLES } from '@ukef/constants';
-import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
 import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
-import { OdsService } from './ods.service';
+import { OdsStoredProcedureService } from './ods-stored-procedure.service';
 
 const mockError = new Error('An error occurred');
 
-describe('OdsService', () => {
-  let service: OdsService;
+describe('OdsStoredProcedureService', () => {
+  let service: OdsStoredProcedureService;
   let mockQueryRunner: jest.Mocked<QueryRunner>;
   let mockDataSource: jest.Mocked<DataSource>;
-  const mockLogger = new PinoLogger({});
 
   beforeEach(() => {
     mockQueryRunner = {
@@ -23,21 +21,21 @@ describe('OdsService', () => {
       createQueryRunner: jest.fn().mockReturnValue(mockQueryRunner),
     } as unknown as jest.Mocked<DataSource>;
 
-    service = new OdsService(mockDataSource, mockLogger);
+    service = new OdsStoredProcedureService(mockDataSource);
   });
 
-  describe('createOdsStoredProcedureInput', () => {
+  describe('createInput', () => {
     it('should map the inputs to the stored procedure input format', () => {
       // Arrange
-      const exampleCustomerQueryParameters = {
+      const mockQueryParameters = {
         customer_party_unique_reference_number: EXAMPLES.CUSTOMER.PARTYURN,
       };
 
       // Act
-      const result = service.createOdsStoredProcedureInput({
+      const result = service.createInput({
         entityToQuery: ODS_ENTITIES.CUSTOMER,
         queryPageSize: 100,
-        queryParameters: exampleCustomerQueryParameters,
+        queryParameters: mockQueryParameters,
       });
 
       // Assert
@@ -46,17 +44,30 @@ describe('OdsService', () => {
         query_object: ODS_ENTITIES.CUSTOMER,
         query_page_size: 100,
         query_page_index: 1,
-        query_parameters: exampleCustomerQueryParameters,
+        query_parameters: mockQueryParameters,
       };
 
       expect(result).toEqual(expected);
     });
+
+    describe('when queryParameters are NOT provided', () => {
+      it('should default query_parameters to an empty object', () => {
+        // Act
+        const result = service.createInput({
+          entityToQuery: ODS_ENTITIES.CUSTOMER,
+          queryPageSize: 100,
+        });
+
+        // Assert
+        expect(result.query_parameters).toEqual({});
+      });
+    });
   });
 
-  describe('callOdsStoredProcedure', () => {
+  describe('call', () => {
     it('should call the stored procedure with the query runner', async () => {
       // Arrange
-      const mockInput: OdsStoredProcedureInput = service.createOdsStoredProcedureInput({
+      const mockInput: OdsStoredProcedureInput = service.createInput({
         entityToQuery: ODS_ENTITIES.CUSTOMER,
         queryPageSize: 100,
         queryParameters: { customer_party_unique_reference_number: EXAMPLES.CUSTOMER.PARTYURN },
@@ -69,7 +80,7 @@ describe('OdsService', () => {
       mockQueryRunner.query.mockResolvedValue(mockResult);
 
       // Act
-      const result = await service.callOdsStoredProcedure(mockInput);
+      const result = await service.call(mockInput);
 
       // Assert
       expect(mockDataSource.createQueryRunner).toHaveBeenCalledTimes(1);
@@ -88,7 +99,7 @@ describe('OdsService', () => {
 
     it('throws an error if calling the stored procedure fails', async () => {
       // Arrange
-      const mockInput: OdsStoredProcedureInput = service.createOdsStoredProcedureInput({
+      const mockInput: OdsStoredProcedureInput = service.createInput({
         entityToQuery: ODS_ENTITIES.CUSTOMER,
         queryParameters: { customer_party_unique_reference_number: EXAMPLES.CUSTOMER.PARTYURN },
       });
@@ -96,7 +107,7 @@ describe('OdsService', () => {
       mockQueryRunner.query.mockRejectedValue(mockError);
 
       // Act & Assert
-      const promise = service.callOdsStoredProcedure(mockInput);
+      const promise = service.call(mockInput);
 
       await expect(promise).rejects.toThrow(mockError);
 

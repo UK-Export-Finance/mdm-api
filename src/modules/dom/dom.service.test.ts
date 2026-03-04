@@ -7,6 +7,7 @@ import { DataSource, QueryRunner } from 'typeorm';
 
 import { GetOdsBusinessCentreNonWorkingDayResponse } from '../ods/dto';
 import { OdsService } from '../ods/ods.service';
+import { OdsStoredProcedureService } from '../ods/ods-stored-procedure.service';
 import { DomService } from './dom.service';
 
 const mockError = new Error('An error occurred');
@@ -32,7 +33,9 @@ describe('DomService', () => {
     createQueryRunner: jest.fn().mockReturnValue(mockQueryRunner),
   } as unknown as jest.Mocked<DataSource>;
 
-  const odsService = new OdsService(mockDataSource, mockLogger);
+  const odsStoredProcedureService = new OdsStoredProcedureService(mockDataSource);
+
+  const odsService = new OdsService(odsStoredProcedureService, mockLogger);
 
   let odsServiceFindBusinessCentreNonWorkingDays: jest.Mock;
   let mockFindBusinessCentreNonWorkingDays: jest.Mock;

@@ -1,14 +1,15 @@
-import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { InternalServerErrorException } from '@nestjs/common';
 import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
+import { mapAccrualScheduleClassifications } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
 import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
-import { OdsService } from './ods.service';
+import { OdsAccrualsService } from './ods-accruals.service';
 import { OdsStoredProcedureService } from './ods-stored-procedure.service';
 
-describe('OdsService - findBusinessCentreNonWorkingDays', () => {
-  let service: OdsService;
+describe('OdsAccrualsService - getScheduleClassifications', () => {
+  let service: OdsAccrualsService;
   let odsStoredProcedureService: OdsStoredProcedureService;
   let mockQueryRunner: jest.Mocked<QueryRunner>;
   let mockDataSource: jest.Mocked<DataSource>;
@@ -25,7 +26,7 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
     } as unknown as jest.Mocked<DataSource>;
 
     odsStoredProcedureService = new OdsStoredProcedureService(mockDataSource);
-    service = new OdsService(odsStoredProcedureService, mockLogger);
+    service = new OdsAccrualsService(odsStoredProcedureService, mockLogger);
   });
 
   const mockStoredProcedureOutput = `{
@@ -34,14 +35,20 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
     "total_result_count": 2,
     "results": [
       {
-        "business_centre_code": "${EXAMPLES.BUSINESS_CENTRE.CODE}",
-        "non_working_day_name": "${EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME}",
-        "non_working_day_date": "${EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME}"
+        "classification_type": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.TYPE}",
+        "classification_type_code": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.TYPE_CODE}",
+        "classification_code": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.CODE}",
+        "classification_description": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.DESCRIPTION}",
+        "classification_numeric_value": ${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.NUMERIC_VALUE},
+        "classification_active_flag": ${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.IS_ACTIVE}
       },
       {
-        "business_centre_code": "${EXAMPLES.BUSINESS_CENTRE.CODE}",
-        "non_working_day_name": "${EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME}",
-        "non_working_day_date": "${EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME}"
+        "classification_type": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.TYPE}",
+        "classification_type_code": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.TYPE_CODE}",
+        "classification_code": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.CODE}",
+        "classification_description": "${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.DESCRIPTION}",
+        "classification_numeric_value": ${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.NUMERIC_VALUE},
+        "classification_active_flag": ${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.IS_ACTIVE}
       }
     ]
   }`;
@@ -52,26 +59,25 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
 
   it('should call odsStoredProcedureService.call', async () => {
     // Act
-    await service.findBusinessCentreNonWorkingDays(EXAMPLES.BUSINESS_CENTRE.CODE);
+    await service.getScheduleClassifications();
 
     // Assert
     const expectedStoredProcedureInput: OdsStoredProcedureInput = odsStoredProcedureService.createInput({
-      entityToQuery: ODS_ENTITIES.BUSINESS_CENTRE_NON_WORKING_DAY,
-      queryParameters: {
-        business_centre_code: EXAMPLES.BUSINESS_CENTRE.CODE,
-      },
+      entityToQuery: ODS_ENTITIES.ACCRUAL_SCHEDULE_CLASSIFICATION,
     });
 
     expect(odsStoredProcedureService.call).toHaveBeenCalledTimes(1);
     expect(odsStoredProcedureService.call).toHaveBeenCalledWith(expectedStoredProcedureInput);
   });
 
-  it('should return mapped non working days', async () => {
+  it('should return mapped accrual schedule classifications', async () => {
     // Act
-    const result = await service.findBusinessCentreNonWorkingDays(EXAMPLES.BUSINESS_CENTRE.CODE);
+    const result = await service.getScheduleClassifications();
 
     // Assert
-    const expected = JSON.parse(mockStoredProcedureOutput).results;
+    const jsonResults = JSON.parse(mockStoredProcedureOutput).results;
+
+    const expected = mapAccrualScheduleClassifications(jsonResults);
 
     expect(result).toEqual(expected);
   });
@@ -84,29 +90,11 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
       jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
 
       // Act & Assert
-      const promise = service.findBusinessCentreNonWorkingDays(EXAMPLES.BUSINESS_CENTRE.CODE);
+      const promise = service.getScheduleClassifications();
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error(`Error finding business centre ${EXAMPLES.BUSINESS_CENTRE.CODE} non working days in ODS`);
-
-      await expect(promise).rejects.toThrow(expected);
-    });
-  });
-
-  describe('when the response from ODS has total_result_count as 0', () => {
-    it('should throw an error', async () => {
-      // Arrange
-      const mockStoredProcedureOutput = `{ "status": "${STORED_PROCEDURE.SUCCESS}", "total_result_count": 0 }`;
-
-      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
-
-      const expected = new Error(`No business centre ${EXAMPLES.BUSINESS_CENTRE.CODE} non working days found in ODS`);
-
-      // Act & Assert
-      const promise = service.findBusinessCentreNonWorkingDays(EXAMPLES.BUSINESS_CENTRE.CODE);
-
-      await expect(promise).rejects.toBeInstanceOf(NotFoundException);
+      const expected = new Error('Error getting Accrual schedule classifications from ODS');
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -120,11 +108,11 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
       jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
 
       // Act & Assert
-      const promise = service.findBusinessCentreNonWorkingDays(EXAMPLES.BUSINESS_CENTRE.CODE);
+      const promise = service.getScheduleClassifications();
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error(`Error finding business centre ${EXAMPLES.BUSINESS_CENTRE.CODE} non working days in ODS`);
+      const expected = new Error('Error getting Accrual schedule classifications from ODS');
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -136,11 +124,11 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
       jest.spyOn(odsStoredProcedureService, 'call').mockRejectedValue('Mock ODS error');
 
       // Act & Assert
-      const promise = service.findBusinessCentreNonWorkingDays(EXAMPLES.BUSINESS_CENTRE.CODE);
+      const promise = service.getScheduleClassifications();
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error(`Error finding business centre ${EXAMPLES.BUSINESS_CENTRE.CODE} non working days in ODS`);
+      const expected = new Error('Error getting Accrual schedule classifications from ODS');
 
       await expect(promise).rejects.toThrow(expected);
     });

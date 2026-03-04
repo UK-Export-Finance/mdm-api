@@ -1,9 +1,7 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { InjectDataSource } from '@nestjs/typeorm';
-import { DATABASE_NAME, STORED_PROCEDURE } from '@ukef/constants';
+import { STORED_PROCEDURE } from '@ukef/constants';
 import { mapIndustries, mapIndustry, mapIndustryCodes } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
-import { DataSource } from 'typeorm';
 
 import {
   GetIndustryOdsResponseDto,
@@ -12,23 +10,14 @@ import {
   GetOdsCustomerResponse,
   GetOdsDealResponse,
   ODS_ENTITIES,
-  OdsEntity,
-  OdsStoredProcedureInput,
   OdsStoredProcedureOutputBody,
-  OdsStoredProcedureQueryParams,
 } from './dto';
-
-interface CreateOdsStoredProcedureInputParams {
-  entityToQuery: OdsEntity;
-  queryPageSize?: number;
-  queryParameters?: OdsStoredProcedureQueryParams;
-}
+import { OdsStoredProcedureService } from './ods-stored-procedure.service';
 
 @Injectable()
 export class OdsService {
   constructor(
-    @InjectDataSource(DATABASE_NAME.ODS)
-    private readonly odsDataSource: DataSource,
+    private readonly odsStoredProcedureService: OdsStoredProcedureService,
     private readonly logger: PinoLogger,
   ) {}
 
@@ -42,15 +31,15 @@ export class OdsService {
    */
   async findCustomer(uniqueReferenceNumber: string): Promise<GetOdsCustomerResponse> {
     try {
-      this.logger.info('Finding customer %s', uniqueReferenceNumber);
+      this.logger.info('Finding customer %s in ODS', uniqueReferenceNumber);
 
-      const storedProcedureInput = this.createOdsStoredProcedureInput({
+      const storedProcedureInput = this.odsStoredProcedureService.createInput({
         entityToQuery: ODS_ENTITIES.CUSTOMER,
         queryPageSize: 1,
         queryParameters: { customer_party_unique_reference_number: uniqueReferenceNumber },
       });
 
-      const storedProcedureResult = await this.callOdsStoredProcedure(storedProcedureInput);
+      const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
@@ -61,7 +50,7 @@ export class OdsService {
       }
 
       if (storedProcedureJson?.total_result_count === 0) {
-        throw new NotFoundException(`No customer found ${uniqueReferenceNumber}`);
+        throw new NotFoundException(`No customer found ${uniqueReferenceNumber} in ODS`);
       }
 
       const urn = storedProcedureJson.results[0]?.customer_party_unique_reference_number;
@@ -72,13 +61,13 @@ export class OdsService {
         name,
       };
     } catch (error) {
-      this.logger.error('Error finding customer %s %o', uniqueReferenceNumber, error);
+      this.logger.error('Error finding customer %s in ODS %o', uniqueReferenceNumber, error);
 
       if (error instanceof NotFoundException) {
         throw error;
       }
 
-      throw new InternalServerErrorException(`Error finding customer ${uniqueReferenceNumber}`);
+      throw new InternalServerErrorException(`Error finding customer ${uniqueReferenceNumber} in ODS`);
     }
   }
 
@@ -92,15 +81,15 @@ export class OdsService {
    */
   async findDeal(id: string): Promise<GetOdsDealResponse> {
     try {
-      this.logger.info('Finding deal %s', id);
+      this.logger.info('Finding deal %s in ODS', id);
 
-      const storedProcedureInput = this.createOdsStoredProcedureInput({
+      const storedProcedureInput = this.odsStoredProcedureService.createInput({
         entityToQuery: ODS_ENTITIES.DEAL,
         queryPageSize: 1,
         queryParameters: { deal_code: id },
       });
 
-      const storedProcedureResult = await this.callOdsStoredProcedure(storedProcedureInput);
+      const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
@@ -111,7 +100,7 @@ export class OdsService {
       }
 
       if (storedProcedureJson?.total_result_count === 0) {
-        throw new NotFoundException(`No deal found ${id}`);
+        throw new NotFoundException(`No deal found ${id} in ODS`);
       }
 
       const dealId = storedProcedureJson.results[0]?.deal_code;
@@ -124,14 +113,13 @@ export class OdsService {
         description,
       };
     } catch (error) {
-      this.logger.error('Error finding deal %s %o', id, error);
+      this.logger.error('Error finding deal %s in ODS %o', id, error);
 
       if (error instanceof NotFoundException) {
         throw error;
       }
 
-      this.logger.error(error);
-      throw new InternalServerErrorException(`Error finding deal ${id}`);
+      throw new InternalServerErrorException(`Error finding deal ${id} in ODS`);
     }
   }
 
@@ -143,41 +131,87 @@ export class OdsService {
    */
   async findBusinessCentreNonWorkingDays(centreCode: string): Promise<GetOdsBusinessCentreNonWorkingDayResponse[]> {
     try {
-      this.logger.info('Getting business centre non working days %s', centreCode);
+      this.logger.info('Finding business centre %s non working days in ODS', centreCode);
 
-      const storedProcedureInput = this.createOdsStoredProcedureInput({
+      const storedProcedureInput = this.odsStoredProcedureService.createInput({
         entityToQuery: ODS_ENTITIES.BUSINESS_CENTRE_NON_WORKING_DAY,
         queryParameters: {
           business_centre_code: centreCode,
         },
       });
 
-      const storedProcedureResult = await this.callOdsStoredProcedure(storedProcedureInput);
+      const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
       if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
-        this.logger.error('Error getting business centre %s non working days from ODS stored procedure, output %o', centreCode, storedProcedureResult);
+        this.logger.error('Error finding business centre %s non working days from ODS stored procedure, output %o', centreCode, storedProcedureResult);
 
-        throw new InternalServerErrorException(`Error getting business centre ${centreCode} non working days from ODS stored procedure`);
+        throw new InternalServerErrorException(`Error finding business centre ${centreCode} non working days from ODS stored procedure`);
       }
 
       if (storedProcedureJson?.total_result_count === 0) {
-        throw new NotFoundException(`No business centre ${centreCode} non working days found`);
+        throw new NotFoundException(`No business centre ${centreCode} non working days found in ODS`);
       }
 
       const nonWorkingDays = storedProcedureJson.results as GetOdsBusinessCentreNonWorkingDayResponse[];
 
       return nonWorkingDays;
     } catch (error) {
-      this.logger.error(`Getting business centre ${centreCode} non working days %o`, error);
+      this.logger.error('Finding business centre %s non working days in ODS %o', centreCode, error);
 
       if (error instanceof NotFoundException) {
         throw error;
       }
 
-      this.logger.error(error);
-      throw new InternalServerErrorException(`Error getting business centre ${centreCode} non working days`);
+      throw new InternalServerErrorException(`Error finding business centre ${centreCode} non working days in ODS`);
+    }
+  }
+
+  /**
+   * Find a UKEF industry by industry code
+   * @param {string} industryCode: UKEF industry code
+   * @returns {Promise<GetIndustryResponseDto>}
+   * @throws {NotFoundException} If no UKEF industry is found
+   */
+  async findUkefIndustry(industryCode: string): Promise<GetIndustryResponseDto> {
+    try {
+      this.logger.info('Finding UKEF industry in ODS %s', industryCode);
+
+      const storedProcedureInput = this.odsStoredProcedureService.createInput({
+        entityToQuery: ODS_ENTITIES.INDUSTRY,
+        queryPageSize: 1,
+        queryParameters: {
+          industry_category: 'UKEF',
+          industry_code: industryCode,
+        },
+      });
+
+      const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
+
+      const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
+
+      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+        this.logger.error('Error finding UKEF industry %s from ODS stored procedure, output %o', industryCode, storedProcedureResult);
+
+        throw new Error(`Error finding UKEF industry ${industryCode} from ODS stored procedure`);
+      }
+
+      if (storedProcedureJson?.total_result_count === 0) {
+        throw new NotFoundException(`No UKEF industry ${industryCode} found in ODS`);
+      }
+
+      const industry = storedProcedureJson.results[0] as GetIndustryOdsResponseDto;
+
+      return mapIndustry(industry);
+    } catch (error) {
+      this.logger.error('Error finding UKEF industry in ODS %s %o', industryCode, error);
+
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException(`Error finding UKEF industry ${industryCode} in ODS`, { cause: error });
     }
   }
 
@@ -188,14 +222,14 @@ export class OdsService {
    */
   async getUkefIndustries(): Promise<GetIndustryResponseDto[]> {
     try {
-      this.logger.info('Getting UKEF industries');
+      this.logger.info('Getting UKEF industries from ODS');
 
-      const storedProcedureInput = this.createOdsStoredProcedureInput({
+      const storedProcedureInput = this.odsStoredProcedureService.createInput({
         entityToQuery: ODS_ENTITIES.INDUSTRY,
         queryParameters: { industry_category: 'UKEF' },
       });
 
-      const storedProcedureResult = await this.callOdsStoredProcedure(storedProcedureInput);
+      const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
@@ -213,7 +247,7 @@ export class OdsService {
     } catch (error) {
       this.logger.error('Error getting UKEF industries %o', error);
 
-      throw new InternalServerErrorException('Error getting UKEF industries');
+      throw new InternalServerErrorException('Error getting UKEF industries from ODS');
     }
   }
 
@@ -224,14 +258,14 @@ export class OdsService {
    */
   async getUkefIndustryCodes(): Promise<string[]> {
     try {
-      this.logger.info('Getting UKEF industry codes');
+      this.logger.info('Getting UKEF industry codes from ODS');
 
-      const storedProcedureInput = this.createOdsStoredProcedureInput({
+      const storedProcedureInput = this.odsStoredProcedureService.createInput({
         entityToQuery: ODS_ENTITIES.INDUSTRY,
         queryParameters: { industry_category: 'UKEF' },
       });
 
-      const storedProcedureResult = await this.callOdsStoredProcedure(storedProcedureInput);
+      const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
@@ -247,102 +281,9 @@ export class OdsService {
 
       return industryCodes;
     } catch (error) {
-      this.logger.error('Error getting UKEF industry codes %o', error);
+      this.logger.error('Error getting UKEF industry codes from ODS %o', error);
 
-      throw new InternalServerErrorException('Error getting UKEF industry codes');
-    }
-  }
-
-  /**
-   * Find a UKEF industry by industry code
-   * @param {string} industryCode: UKEF industry code
-   * @returns {Promise<GetIndustryResponseDto[]>}
-   * @throws {NotFoundException} If no UKEF industry is found
-   */
-  async findUkefIndustry(industryCode: string): Promise<GetIndustryResponseDto> {
-    try {
-      this.logger.info('Finding UKEF industry %s', industryCode);
-
-      const storedProcedureInput = this.createOdsStoredProcedureInput({
-        entityToQuery: ODS_ENTITIES.INDUSTRY,
-        queryPageSize: 1,
-        queryParameters: {
-          industry_category: 'UKEF',
-          industry_code: industryCode,
-        },
-      });
-
-      const storedProcedureResult = await this.callOdsStoredProcedure(storedProcedureInput);
-
-      const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
-
-      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
-        this.logger.error('Error finding UKEF industry %s from ODS stored procedure, output %o', industryCode, storedProcedureResult);
-
-        throw new Error(`Error finding UKEF industry ${industryCode} from ODS stored procedure`);
-      }
-
-      if (storedProcedureJson?.total_result_count === 0) {
-        throw new NotFoundException(`No UKEF industry ${industryCode} found`);
-      }
-
-      const industry = storedProcedureJson.results[0] as GetIndustryOdsResponseDto;
-
-      return mapIndustry(industry);
-    } catch (error) {
-      this.logger.error('Error finding UKEF industry %s %o', industryCode, error);
-
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-
-      throw new Error(`Error finding UKEF industry ${industryCode}`, { cause: error });
-    }
-  }
-
-  /**
-   * Creates the input parameter for the stored procedure
-   * @param {OdsEntity} entityToQuery The entity you want to query in ODS
-   * @param {number} queryPageSize The page size to query in ODS
-   * @param {OdsStoredProcedureQueryParams} queryParameters The query parameters and filters to apply to the query
-   *
-   * @returns {OdsStoredProcedureInput} The ODS stored procedure input in object format
-   */
-  createOdsStoredProcedureInput({ entityToQuery, queryPageSize, queryParameters }: CreateOdsStoredProcedureInputParams): OdsStoredProcedureInput {
-    return {
-      query_method: 'get',
-      query_object: entityToQuery,
-      query_page_size: queryPageSize,
-      query_page_index: 1,
-      query_parameters: queryParameters,
-    };
-  }
-
-  /**
-   * Calls the ODS stored procedure with the input provided and returns the output of it
-   * @param {OdsStoredProcedureInput} storedProcedureInput The input parameter of the stored procedure
-   *
-   * @returns {Promise<OdsStoredProcedureOutput>} The result of the stored procedure
-   */
-  async callOdsStoredProcedure(storedProcedureInput: OdsStoredProcedureInput): Promise<string> {
-    const queryRunner = this.odsDataSource.createQueryRunner();
-
-    try {
-      // Use the query runner to call a stored procedure
-      const result = await queryRunner.query(
-        `
-        DECLARE @output_body NVARCHAR(MAX);
-        EXEC t_apim.sp_ODS_query @input_body=@0, @output_body=@output_body OUTPUT;
-        SELECT @output_body as output_body
-      `,
-        [JSON.stringify(storedProcedureInput)],
-      );
-
-      return result[0]?.output_body || null;
-    } catch (error) {
-      throw error;
-    } finally {
-      await queryRunner.release();
+      throw new InternalServerErrorException('Error getting UKEF industry codes from ODS');
     }
   }
 }

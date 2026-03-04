@@ -2,8 +2,18 @@ import { Controller, Get, Param } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import AppConfig from '@ukef/config/app.config';
 
-import { FindOdsIndustryParamDto, GetIndustryResponseDto, GetOdsCustomerParamDto, GetOdsCustomerResponse, GetOdsDealParamDto, GetOdsDealResponse } from './dto';
+import {
+  FindOdsIndustryParamDto,
+  GetAccrualScheduleClassificationResponseDto,
+  GetIndustryResponseDto,
+  GetOdsAccrualScheduleClassificationParamDto,
+  GetOdsCustomerParamDto,
+  GetOdsCustomerResponse,
+  GetOdsDealParamDto,
+  GetOdsDealResponse,
+} from './dto';
 import { OdsService } from './ods.service';
+import { OdsAccrualsService } from './ods-accruals.service';
 
 const { domOdsVersioning } = AppConfig();
 
@@ -13,7 +23,50 @@ const { domOdsVersioning } = AppConfig();
   version: domOdsVersioning.version,
 })
 export class OdsController {
-  constructor(private readonly odsService: OdsService) {}
+  constructor(
+    private readonly odsService: OdsService,
+    private readonly odsAccrualsService: OdsAccrualsService,
+  ) {}
+
+  @Get('accrual-schedule-classifications')
+  @ApiOperation({
+    summary: 'Get accrual schedule classifications from ODS',
+  })
+  @ApiOkResponse({
+    description: 'ODS accrual schedule classifications',
+    isArray: true,
+    type: GetAccrualScheduleClassificationResponseDto,
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad request',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  getAccrualScheduleClassifications(): Promise<GetAccrualScheduleClassificationResponseDto[]> {
+    return this.odsAccrualsService.getScheduleClassifications();
+  }
+
+  @Get('accrual-schedule-classification/:classificationCode')
+  @ApiOperation({
+    summary: 'Get an accrual schedule classification from ODS',
+  })
+  @ApiOkResponse({
+    description: 'ODS accrual schedule classification',
+    type: GetAccrualScheduleClassificationResponseDto,
+  })
+  @ApiNotFoundResponse({
+    description: 'Accrual schedule classification not found',
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad request',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  findAccrualScheduleClassification(@Param() param: GetOdsAccrualScheduleClassificationParamDto): Promise<GetAccrualScheduleClassificationResponseDto> {
+    return this.odsAccrualsService.findScheduleClassification(param.classificationCode);
+  }
 
   @Get('customers/:urn')
   @ApiOperation({

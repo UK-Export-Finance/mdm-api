@@ -6,9 +6,11 @@ import { DataSource, QueryRunner } from 'typeorm';
 
 import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { OdsService } from './ods.service';
+import { OdsStoredProcedureService } from './ods-stored-procedure.service';
 
 describe('OdsService - getUkefIndustries', () => {
   let service: OdsService;
+  let odsStoredProcedureService: OdsStoredProcedureService;
   let mockQueryRunner: jest.Mocked<QueryRunner>;
   let mockDataSource: jest.Mocked<DataSource>;
   const mockLogger = new PinoLogger({});
@@ -23,7 +25,8 @@ describe('OdsService - getUkefIndustries', () => {
       createQueryRunner: jest.fn().mockReturnValue(mockQueryRunner),
     } as unknown as jest.Mocked<DataSource>;
 
-    service = new OdsService(mockDataSource, mockLogger);
+    odsStoredProcedureService = new OdsStoredProcedureService(mockDataSource);
+    service = new OdsService(odsStoredProcedureService, mockLogger);
   });
 
   const mockStoredProcedureOutput = `{
@@ -51,21 +54,21 @@ describe('OdsService - getUkefIndustries', () => {
   }`;
 
   beforeEach(() => {
-    jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
+    jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
   });
 
-  it('should call service.callOdsStoredProcedure', async () => {
+  it('should call odsStoredProcedureService.call', async () => {
     // Act
     await service.getUkefIndustries();
 
     // Assert
-    const expectedStoredProcedureInput: OdsStoredProcedureInput = service.createOdsStoredProcedureInput({
+    const expectedStoredProcedureInput: OdsStoredProcedureInput = odsStoredProcedureService.createInput({
       entityToQuery: ODS_ENTITIES.INDUSTRY,
       queryParameters: { industry_category: 'UKEF' },
     });
 
-    expect(service.callOdsStoredProcedure).toHaveBeenCalledTimes(1);
-    expect(service.callOdsStoredProcedure).toHaveBeenCalledWith(expectedStoredProcedureInput);
+    expect(odsStoredProcedureService.call).toHaveBeenCalledTimes(1);
+    expect(odsStoredProcedureService.call).toHaveBeenCalledWith(expectedStoredProcedureInput);
   });
 
   it('should return mapped industries', async () => {
@@ -85,14 +88,14 @@ describe('OdsService - getUkefIndustries', () => {
       // Arrange
       const mockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
 
-      jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
+      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
 
       // Act & Assert
       const promise = service.getUkefIndustries();
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error(`Error getting UKEF industries`);
+      const expected = new Error(`Error getting UKEF industries from ODS`);
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -103,30 +106,30 @@ describe('OdsService - getUkefIndustries', () => {
       // Arrange
       const mockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
 
-      jest.spyOn(service, 'callOdsStoredProcedure').mockResolvedValue(mockStoredProcedureOutput);
+      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
 
       // Act & Assert
       const promise = service.getUkefIndustries();
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error('Error getting UKEF industries');
+      const expected = new Error('Error getting UKEF industries from ODS');
 
       await expect(promise).rejects.toThrow(expected);
     });
   });
 
-  describe('when callOdsStoredProcedure throws an error', () => {
+  describe('when call throws an error', () => {
     it('should throw an error', async () => {
       // Arrange
-      jest.spyOn(service, 'callOdsStoredProcedure').mockRejectedValue('Mock ODS error');
+      jest.spyOn(odsStoredProcedureService, 'call').mockRejectedValue('Mock ODS error');
 
       // Act & Assert
       const promise = service.getUkefIndustries();
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error('Error getting UKEF industries');
+      const expected = new Error('Error getting UKEF industries from ODS');
 
       await expect(promise).rejects.toThrow(expected);
     });

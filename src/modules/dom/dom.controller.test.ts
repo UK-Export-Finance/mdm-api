@@ -4,6 +4,7 @@ import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
 import { OdsService } from '../ods/ods.service';
+import { OdsStoredProcedureService } from '../ods/ods-stored-procedure.service';
 import { CreditRiskRatingsService } from './credit-risk-ratings/credit-risk-ratings.service';
 import { DomController } from './dom.controller';
 import { DomService } from './dom.service';
@@ -34,7 +35,8 @@ describe('DomController', () => {
   } as unknown as jest.Mocked<DataSource>;
 
   const creditRiskRatingsService = new CreditRiskRatingsService(null, mockLogger);
-  const odsService = new OdsService(mockDataSource, mockLogger);
+  const odsStoredProcedureService = new OdsStoredProcedureService(mockDataSource);
+  const odsService = new OdsService(odsStoredProcedureService, mockLogger);
   const domService = new DomService(odsService, mockLogger);
 
   let creditRiskRatingsServiceGetAll: jest.Mock;
