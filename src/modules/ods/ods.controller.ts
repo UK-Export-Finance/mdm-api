@@ -7,16 +7,19 @@ import {
   GetAccrualScheduleClassificationResponseDto,
   GetFacilityCategoryResponseDto,
   GetIndustryResponseDto,
+  GetObligationSubTypeResponseDto,
   GetOdsAccrualScheduleClassificationParamDto,
   GetOdsCustomerParamDto,
   GetOdsCustomerResponse,
   GetOdsDealParamDto,
   GetOdsDealResponse,
   GetOdsFacilityCategoryParamDto,
+  GetOdsObligationSubTypeParamDto,
 } from './dto';
 import { OdsService } from './ods.service';
 import { OdsAccrualsService } from './ods-accruals.service';
 import { OdsFacilityCategoryService } from './ods-facility-category.service';
+import { OdsObligationSubTypeService } from './ods-obligation-sub-type.service';
 
 const { domOdsVersioning } = AppConfig();
 
@@ -30,6 +33,7 @@ export class OdsController {
     private readonly odsService: OdsService,
     private readonly odsAccrualsService: OdsAccrualsService,
     private readonly odsFacilityCategoryService: OdsFacilityCategoryService,
+    private readonly odsObligationSubTypeService: OdsObligationSubTypeService,
   ) {}
 
   @Get('accrual-schedule-classifications')
@@ -146,6 +150,43 @@ export class OdsController {
   })
   findFacilityCategory(@Param() param: GetOdsFacilityCategoryParamDto): Promise<GetFacilityCategoryResponseDto> {
     return this.odsFacilityCategoryService.findOne(param.categoryCode);
+  }
+
+  @Get('obligation-sub-types')
+  @ApiOperation({
+    summary: 'Get obligation sub-types from ODS',
+  })
+  @ApiOkResponse({
+    description: 'ODS obligation sub-types',
+    isArray: true,
+    type: GetObligationSubTypeResponseDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  getObligationSubTypes(): Promise<GetObligationSubTypeResponseDto[]> {
+    return this.odsObligationSubTypeService.getAll();
+  }
+
+  @Get('obligation-sub-type/:subTypeCode')
+  @ApiOperation({
+    summary: 'Get an obligation sub-type from ODS',
+  })
+  @ApiOkResponse({
+    description: 'An obligation sub-type matching the provided sub-type code',
+    type: GetObligationSubTypeResponseDto,
+  })
+  @ApiNotFoundResponse({
+    description: 'Obligation sub-type not found',
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid parameters provided',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  findObligationSubType(@Param() param: GetOdsObligationSubTypeParamDto): Promise<GetObligationSubTypeResponseDto> {
+    return this.odsObligationSubTypeService.findOne(param.subTypeCode);
   }
 
   @Get('ukef-industries')

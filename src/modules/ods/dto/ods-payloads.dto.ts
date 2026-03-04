@@ -49,12 +49,14 @@ export const ODS_ENTITIES = {
   CUSTOMER: 'customer',
   DEAL: 'deal',
   FACILITY_CLASSIFICATION: 'facility_classification',
+  OBLIGATION_CLASSIFICATION: 'obligation_classification',
   INDUSTRY: 'industry',
 } as const;
 
 export type OdsEntity = (typeof ODS_ENTITIES)[keyof typeof ODS_ENTITIES];
 
 export const ODS_QUERY_PARAM_VALUES = {
+  OBLIGATION_SUB_TYPE: 'obligationSubType',
   FACILITY_CATEGORY: 'facilityCategory',
   UKEF: 'UKEF',
 } as const;

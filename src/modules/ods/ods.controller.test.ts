@@ -6,6 +6,7 @@ import { OdsController } from './ods.controller';
 import { OdsService } from './ods.service';
 import { OdsAccrualsService } from './ods-accruals.service';
 import { OdsFacilityCategoryService } from './ods-facility-category.service';
+import { OdsObligationSubTypeService } from './ods-obligation-sub-type.service';
 
 const mockError = new Error('An error occurred');
 
@@ -23,12 +24,16 @@ const mockAccrualScheduleClassifications = [mockAccrualScheduleClassification, m
 const mockFacilityCategory = EXAMPLES.FACILITY_CATEGORY;
 const mockFacilityCategories = [mockFacilityCategory, mockFacilityCategory];
 
+const mockObligationSubType = EXAMPLES.OBLIGATION_SUB_TYPE;
+const mockObligationSubTypes = [mockObligationSubType, mockObligationSubType];
+
 describe('OdsController', () => {
   const mockLogger = new PinoLogger({});
 
   const odsService = new OdsService(null, mockLogger);
   const odsAccrualsService = new OdsAccrualsService(null, mockLogger);
   const odsFacilityCategoryService = new OdsFacilityCategoryService(null, mockLogger);
+  const odsObligationSubTypeService = new OdsObligationSubTypeService(null, mockLogger);
 
   let odsServiceFindBusinessCentreNonWorkingDays: jest.Mock;
   let odsServiceFindCustomer: jest.Mock;
@@ -40,6 +45,8 @@ describe('OdsController', () => {
   let odsFacilityCategoryServiceGetAll: jest.Mock;
   let odsFacilityCategoryServiceFindOne: jest.Mock;
   let findUkefIndustry: jest.Mock;
+  let odsObligationSubTypeServiceGetAll: jest.Mock;
+  let odsObligationSubTypeServiceFindOne: jest.Mock;
 
   let controller: OdsController;
 
@@ -74,7 +81,13 @@ describe('OdsController', () => {
     odsFacilityCategoryServiceFindOne = jest.fn().mockResolvedValueOnce(mockFacilityCategory);
     odsFacilityCategoryService.findOne = odsFacilityCategoryServiceFindOne;
 
-    controller = new OdsController(odsService, odsAccrualsService, odsFacilityCategoryService);
+    odsObligationSubTypeServiceGetAll = jest.fn().mockResolvedValueOnce(mockObligationSubTypes);
+    odsObligationSubTypeService.getAll = odsObligationSubTypeServiceGetAll;
+
+    odsObligationSubTypeServiceFindOne = jest.fn().mockResolvedValueOnce(mockObligationSubType);
+    odsObligationSubTypeService.findOne = odsObligationSubTypeServiceFindOne;
+
+    controller = new OdsController(odsService, odsAccrualsService, odsFacilityCategoryService, odsObligationSubTypeService);
   });
 
   describe('getAccrualSchedules', () => {
@@ -122,7 +135,7 @@ describe('OdsController', () => {
 
         odsAccrualsService.findScheduleClassification = jest.fn().mockRejectedValueOnce(mockError);
 
-        controller = new OdsController(odsService, odsAccrualsService, odsFacilityCategoryService);
+        controller = new OdsController(odsService, odsAccrualsService, odsFacilityCategoryService, odsObligationSubTypeService);
 
         // Act & Assert
         const promise = controller.findAccrualScheduleClassification({ classificationCode: mockClassificationCode });
@@ -177,10 +190,65 @@ describe('OdsController', () => {
 
         odsFacilityCategoryService.findOne = jest.fn().mockRejectedValueOnce(mockError);
 
-        controller = new OdsController(odsService, odsAccrualsService, odsFacilityCategoryService);
+        controller = new OdsController(odsService, odsAccrualsService, odsFacilityCategoryService, odsObligationSubTypeService);
 
         // Act & Assert
         const promise = controller.findFacilityCategory({ categoryCode: mockCategoryCode });
+
+        await expect(promise).rejects.toThrow(mockError);
+      });
+    });
+  });
+
+  describe('getObligationSubTypes', () => {
+    it('should call odsObligationSubTypeService.getAll', async () => {
+      // Act
+      await controller.getObligationSubTypes();
+
+      // Assert
+      expect(odsObligationSubTypeServiceGetAll).toHaveBeenCalledTimes(1);
+    });
+
+    it('should return obligation sub-types', async () => {
+      // Act
+      const result = await controller.getObligationSubTypes();
+
+      // Assert
+      expect(result).toStrictEqual(mockObligationSubTypes);
+    });
+  });
+
+  describe('findObligationSubType', () => {
+    const mockSubTypeCode = EXAMPLES.OBLIGATION_SUB_TYPE.CODE;
+
+    it('should call odsObligationSubTypeService.findOne', async () => {
+      // Act
+      await controller.findObligationSubType({ subTypeCode: mockSubTypeCode });
+
+      // Assert
+      expect(odsObligationSubTypeServiceFindOne).toHaveBeenCalledTimes(1);
+      expect(odsObligationSubTypeServiceFindOne).toHaveBeenCalledWith(mockSubTypeCode);
+    });
+
+    it('should return an obligation sub-type', async () => {
+      // Act
+      const result = await controller.findObligationSubType({ subTypeCode: mockSubTypeCode });
+
+      // Assert
+      expect(result).toStrictEqual(mockObligationSubType);
+    });
+
+    describe('when odsObligationSubTypeService.findOne throws an error', () => {
+      it('should throw an error', async () => {
+        // Arrange
+        const odsService = new OdsService(null, mockLogger);
+
+        odsObligationSubTypeService.findOne = jest.fn().mockRejectedValueOnce(mockError);
+
+        controller = new OdsController(odsService, odsAccrualsService, odsFacilityCategoryService, odsObligationSubTypeService);
+
+        // Act & Assert
+        const promise = controller.findObligationSubType({ subTypeCode: mockSubTypeCode });
 
         await expect(promise).rejects.toThrow(mockError);
       });
@@ -215,7 +283,7 @@ describe('OdsController', () => {
 
         odsService.findCustomer = jest.fn().mockRejectedValueOnce(mockError);
 
-        controller = new OdsController(odsService, odsAccrualsService, odsFacilityCategoryService);
+        controller = new OdsController(odsService, odsAccrualsService, odsFacilityCategoryService, odsObligationSubTypeService);
 
         // Act & Assert
         const promise = controller.findCustomer({ urn: EXAMPLES.CUSTOMER.PARTYURN });
@@ -250,7 +318,7 @@ describe('OdsController', () => {
 
         odsService.findDeal = jest.fn().mockRejectedValueOnce(mockError);
 
-        controller = new OdsController(odsService, odsAccrualsService, odsFacilityCategoryService);
+        controller = new OdsController(odsService, odsAccrualsService, odsFacilityCategoryService, odsObligationSubTypeService);
 
         // Act & Assert
         const promise = controller.findDeal({ id: EXAMPLES.DEAL.ID });
@@ -324,7 +392,7 @@ describe('OdsController', () => {
 
         odsService.findUkefIndustry = jest.fn().mockRejectedValueOnce(mockError);
 
-        controller = new OdsController(odsService, odsAccrualsService, odsFacilityCategoryService);
+        controller = new OdsController(odsService, odsAccrualsService, odsFacilityCategoryService, odsObligationSubTypeService);
 
         // Act & Assert
         const promise = controller.findUkefIndustry({ industryCode: EXAMPLES.INDUSTRY.CODE });
