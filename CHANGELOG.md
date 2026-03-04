@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.41.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.40.0...v1.41.0) (2026-03-04)
+
+
+### Features
+
+* **GIFT-20898:** get facility categories from ODS ([#1739](https://github.com/UK-Export-Finance/mdm-api/issues/1739)) ([3739950](https://github.com/UK-Export-Finance/mdm-api/commit/3739950c5098c3925fb31243dccb54ce2e304136))
+
 ## [1.40.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.39.1...v1.40.0) (2026-03-04)
 
 
