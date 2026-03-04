@@ -5,15 +5,18 @@ import AppConfig from '@ukef/config/app.config';
 import {
   FindOdsIndustryParamDto,
   GetAccrualScheduleClassificationResponseDto,
+  GetFacilityCategoryResponseDto,
   GetIndustryResponseDto,
   GetOdsAccrualScheduleClassificationParamDto,
   GetOdsCustomerParamDto,
   GetOdsCustomerResponse,
   GetOdsDealParamDto,
   GetOdsDealResponse,
+  GetOdsFacilityCategoryParamDto,
 } from './dto';
 import { OdsService } from './ods.service';
 import { OdsAccrualsService } from './ods-accruals.service';
+import { OdsFacilityCategoryService } from './ods-facility-category.service';
 
 const { domOdsVersioning } = AppConfig();
 
@@ -26,6 +29,7 @@ export class OdsController {
   constructor(
     private readonly odsService: OdsService,
     private readonly odsAccrualsService: OdsAccrualsService,
+    private readonly odsFacilityCategoryService: OdsFacilityCategoryService,
   ) {}
 
   @Get('accrual-schedule-classifications')
@@ -36,9 +40,6 @@ export class OdsController {
     description: 'ODS accrual schedule classifications',
     isArray: true,
     type: GetAccrualScheduleClassificationResponseDto,
-  })
-  @ApiBadRequestResponse({
-    description: 'Bad request',
   })
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
@@ -108,6 +109,43 @@ export class OdsController {
   })
   findDeal(@Param() param: GetOdsDealParamDto): Promise<GetOdsDealResponse> {
     return this.odsService.findDeal(param.id);
+  }
+
+  @Get('facility-categories')
+  @ApiOperation({
+    summary: 'Get facility categories from ODS',
+  })
+  @ApiOkResponse({
+    description: 'ODS facility categories',
+    isArray: true,
+    type: GetFacilityCategoryResponseDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  getFacilityCategories(): Promise<GetFacilityCategoryResponseDto[]> {
+    return this.odsFacilityCategoryService.getAll();
+  }
+
+  @Get('facility-category/:categoryCode')
+  @ApiOperation({
+    summary: 'Get a facility category from ODS',
+  })
+  @ApiOkResponse({
+    description: 'A facility category matching the provided category code',
+    type: GetFacilityCategoryResponseDto,
+  })
+  @ApiNotFoundResponse({
+    description: 'Facility category not found',
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid parameters provided',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  findFacilityCategory(@Param() param: GetOdsFacilityCategoryParamDto): Promise<GetFacilityCategoryResponseDto> {
+    return this.odsFacilityCategoryService.findOne(param.categoryCode);
   }
 
   @Get('ukef-industries')

@@ -1,6 +1,6 @@
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
-import { mapAccrualScheduleClassification } from '@ukef/helpers';
+import { mapOdsClassification } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
@@ -74,7 +74,7 @@ describe('OdsAccrualsService - findScheduleClassification', () => {
     const { results } = JSON.parse(mockStoredProcedureOutput);
     const [jsonResult] = results;
 
-    const expected = mapAccrualScheduleClassification(jsonResult);
+    const expected = mapOdsClassification(jsonResult);
 
     expect(result).toEqual(expected);
   });

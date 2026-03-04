@@ -1,14 +1,14 @@
 import { EXAMPLES } from '@ukef/constants';
 
-import { mapAccrualScheduleClassification } from './map-accrual-schedule-classification';
+import { mapOdsClassification } from './map-ods-classification';
 
-describe('mapAccrualScheduleClassification', () => {
-  it('should return a mapped ODS accrual schedule classification', () => {
+describe('mapOdsClassification', () => {
+  it('should return a mapped ODS classification', () => {
     // Arrange
     const mockClassification = EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION;
 
     // Act
-    const result = mapAccrualScheduleClassification(mockClassification);
+    const result = mapOdsClassification(mockClassification);
 
     // Assert
     const expected = {

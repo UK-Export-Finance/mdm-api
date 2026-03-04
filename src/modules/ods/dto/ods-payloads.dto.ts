@@ -42,10 +42,11 @@ export type OdsStoredProcedureOutputBody = {
 
 export const ODS_ENTITIES = {
   ACCRUAL_SCHEDULE_CLASSIFICATION: 'accrual_schedule_classification',
-  CUSTOMER: 'customer',
-  DEAL: 'deal',
   BUSINESS_CENTRE: 'business_centre',
   BUSINESS_CENTRE_NON_WORKING_DAY: 'business_centre_non_working_day',
+  CUSTOMER: 'customer',
+  DEAL: 'deal',
+  FACILITY_CLASSIFICATION: 'facility_classification',
   INDUSTRY: 'industry',
 } as const;
 

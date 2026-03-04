@@ -97,6 +97,14 @@ export const EXAMPLES = {
     NAME: 'ABC PARIS CLUB 01',
     DESCRIPTION: 'Paris Club agreement',
   },
+  FACILITY_CATEGORY: {
+    TYPE: 'Product Type',
+    TYPE_CODE: 'productType',
+    CODE: 'PRT002',
+    DESCRIPTION: 'Export Insurance Policy',
+    NUMERIC_VALUE: 1,
+    IS_ACTIVE: true,
+  },
   INDUSTRY,
   DOM: {
     BUSINESS_CENTRES: [
@@ -235,9 +243,17 @@ export const EXAMPLES = {
         business_centre_name: 'Mock name StB',
       },
     ],
+    FACILITY_CLASSIFICATION: {
+      classification_type: 'Product Type',
+      classification_type_code: 'productType',
+      classification_code: 'PRT002',
+      classification_description: 'Export Insurance Policy',
+      classification_numeric_value: 1,
+      classification_active_flag: true,
+    },
     INDUSTRY: {
       industry_id: INDUSTRY.ID,
-      industry_code: INDUSTRY.CODE,
+      classification_type_code: INDUSTRY.CODE,
       industry_description: INDUSTRY.DESCRIPTION,
       industry_group_code: INDUSTRY.GROUP_CODE,
       industry_group_description: INDUSTRY.GROUP_DESCRIPTION,

@@ -1,6 +1,8 @@
 export * from './find-ods-industry-param.dto';
 export * from './get-accrual-schedule-classification-ods-response.dto';
 export * from './get-accrual-schedule-classification-response.dto';
+export * from './get-facility-category-ods-response.dto';
+export * from './get-facility-category-response.dto';
 export * from './get-industry-ods-response.dto';
 export * from './get-industry-response.dto';
 export * from './get-ods-accrual-schedule-classification-param.dto';
@@ -9,4 +11,5 @@ export * from './get-ods-customer-param.dto';
 export * from './get-ods-customer-response.dto';
 export * from './get-ods-deal-param.dto';
 export * from './get-ods-deal-response.dto';
+export * from './get-ods-facility-category-param.dto';
 export * from './ods-payloads.dto';

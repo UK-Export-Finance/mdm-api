@@ -1,6 +1,6 @@
 import { InternalServerErrorException } from '@nestjs/common';
 import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
-import { mapAccrualScheduleClassifications } from '@ukef/helpers';
+import { mapOdsClassifications } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
@@ -77,7 +77,7 @@ describe('OdsAccrualsService - getScheduleClassifications', () => {
     // Assert
     const jsonResults = JSON.parse(mockStoredProcedureOutput).results;
 
-    const expected = mapAccrualScheduleClassifications(jsonResults);
+    const expected = mapOdsClassifications(jsonResults);
 
     expect(result).toEqual(expected);
   });
