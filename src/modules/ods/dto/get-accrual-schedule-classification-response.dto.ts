@@ -30,7 +30,7 @@ export class GetAccrualScheduleClassificationResponseDto {
     description: 'Optional accrual schedule classification numeric value',
     example: EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.NUMERIC_VALUE,
   })
-  readonly numericValue: number;
+  readonly numericValue?: number;
 
   @ApiProperty({
     description: 'Accrual schedule classification active flag',

@@ -30,7 +30,7 @@ export class GetAccrualScheduleClassificationOdsResponseDto {
     description: 'Optional accrual schedule classification numeric value',
     example: EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.classification_numeric_value,
   })
-  readonly classification_numeric_value: number;
+  readonly classification_numeric_value?: number;
 
   @ApiProperty({
     description: 'Accrual schedule classification active flag',

@@ -21,7 +21,7 @@ export class OdsAccrualsService {
    */
   async findScheduleClassification(classificationCode: string): Promise<GetAccrualScheduleClassificationResponseDto> {
     try {
-      this.logger.info('Finding accrual schedule classification  in ODS %s', classificationCode);
+      this.logger.info('Finding accrual schedule classification in ODS %s', classificationCode);
 
       const storedProcedureInput = this.odsStoredProcedureService.createInput({
         entityToQuery: ODS_ENTITIES.ACCRUAL_SCHEDULE_CLASSIFICATION,
@@ -82,11 +82,11 @@ export class OdsAccrualsService {
         throw new InternalServerErrorException('Error getting Accrual schedule classifications from ODS stored procedure');
       }
 
-      const accrualSchedules = storedProcedureJson.results as GetAccrualScheduleClassificationOdsResponseDto[];
+      const classifications = storedProcedureJson.results as GetAccrualScheduleClassificationOdsResponseDto[];
 
-      const mappedSchedules = mapAccrualScheduleClassifications(accrualSchedules);
+      const mappedClassification = mapAccrualScheduleClassifications(classifications);
 
-      return mappedSchedules;
+      return mappedClassification;
     } catch (error) {
       this.logger.error('Error getting Accrual schedule classifications from ODS %o', error);
 
