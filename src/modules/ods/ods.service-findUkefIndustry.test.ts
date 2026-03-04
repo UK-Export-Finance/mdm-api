@@ -110,16 +110,17 @@ describe('OdsService - findUkefIndustry', () => {
 
       jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
 
-      // Act & Assert
+      // Act
       const promise = service.findUkefIndustry(EXAMPLES.INDUSTRY.CODE);
 
-      const expected = new Error(`Error finding UKEF industry ${EXAMPLES.INDUSTRY.CODE} in ODS`, {
+      // Assert
+      await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
+      await expect(promise).rejects.toMatchObject({
+        message: `Error finding UKEF industry ${EXAMPLES.INDUSTRY.CODE} in ODS`,
         cause: {
           message: `Error finding UKEF industry ${EXAMPLES.INDUSTRY.CODE} from ODS stored procedure`,
         },
       });
-
-      await expect(promise).rejects.toThrow(expected);
     });
   });
 
@@ -130,12 +131,15 @@ describe('OdsService - findUkefIndustry', () => {
 
       jest.spyOn(odsStoredProcedureService, 'call').mockRejectedValue(mockStoredProcedureOutput);
 
-      // Act & Assert
+      // Act
       const promise = service.findUkefIndustry(EXAMPLES.INDUSTRY.CODE);
 
-      const expected = new Error(`Error finding UKEF industry ${EXAMPLES.INDUSTRY.CODE} in ODS`, { cause: mockStoredProcedureOutput });
-
-      await expect(promise).rejects.toThrow(expected);
+      // Assert
+      await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
+      await expect(promise).rejects.toMatchObject({
+        message: `Error finding UKEF industry ${EXAMPLES.INDUSTRY.CODE} in ODS`,
+        cause: mockStoredProcedureOutput,
+      });
     });
   });
 
@@ -146,14 +150,15 @@ describe('OdsService - findUkefIndustry', () => {
 
       jest.spyOn(odsStoredProcedureService, 'call').mockRejectedValue(mockError);
 
-      // Act & Assert
+      // Act
       const promise = service.findUkefIndustry(EXAMPLES.INDUSTRY.CODE);
 
+      // Assert
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
-
-      const expected = new Error(`Error finding UKEF industry ${EXAMPLES.INDUSTRY.CODE} in ODS`, { cause: mockError });
-
-      await expect(promise).rejects.toThrow(expected);
+      await expect(promise).rejects.toMatchObject({
+        message: `Error finding UKEF industry ${EXAMPLES.INDUSTRY.CODE} in ODS`,
+        cause: mockError,
+      });
     });
   });
 });

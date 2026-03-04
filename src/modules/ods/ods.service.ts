@@ -119,7 +119,6 @@ export class OdsService {
         throw error;
       }
 
-      this.logger.error(error);
       throw new InternalServerErrorException(`Error finding deal ${id} in ODS`);
     }
   }
@@ -165,7 +164,6 @@ export class OdsService {
         throw error;
       }
 
-      this.logger.error(error);
       throw new InternalServerErrorException(`Error finding business centre ${centreCode} non working days in ODS`);
     }
   }
