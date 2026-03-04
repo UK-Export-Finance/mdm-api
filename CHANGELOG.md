@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.40.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.39.1...v1.40.0) (2026-03-04)
+
+
+### Features
+
+* **GIFT-19748:** get accrual schedule classifications from ODS ([#1732](https://github.com/UK-Export-Finance/mdm-api/issues/1732)) ([b1e7600](https://github.com/UK-Export-Finance/mdm-api/commit/b1e7600da91bd167405c2f5d5ab541aeafafe168))
+
 ## [1.39.1](https://github.com/UK-Export-Finance/mdm-api/compare/v1.39.0...v1.39.1) (2026-03-03)
 
 
