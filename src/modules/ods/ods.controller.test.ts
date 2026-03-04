@@ -261,17 +261,17 @@ describe('OdsController', () => {
   });
 
   describe('getUkefIndustries', () => {
-    it('should call odsService.getUkefIndustries', () => {
+    it('should call odsService.getUkefIndustries', async () => {
       // Act
-      controller.getUkefIndustries();
+      await controller.getUkefIndustries();
 
       // Assert
       expect(odsServiceGetUkefIndustries).toHaveBeenCalledTimes(1);
     });
 
-    it('should return UKEF industries', () => {
+    it('should return UKEF industries', async () => {
       // Act
-      const result = controller.getUkefIndustries();
+      const result = await controller.getUkefIndustries();
 
       // Assert
       expect(result).toStrictEqual(mockUkefIndustries);
@@ -279,17 +279,17 @@ describe('OdsController', () => {
   });
 
   describe('getUkefIndustryCodes', () => {
-    it('should call odsService.getUkefIndustryCodes', () => {
+    it('should call odsService.getUkefIndustryCodes', async () => {
       // Act
-      controller.getUkefIndustryCodes();
+      await controller.getUkefIndustryCodes();
 
       // Assert
       expect(odsServiceGetUkefIndustryCodes).toHaveBeenCalledTimes(1);
     });
 
-    it('should return UKEF industry codes', () => {
+    it('should return UKEF industry codes', async () => {
       // Act
-      const result = controller.getUkefIndustryCodes();
+      const result = await controller.getUkefIndustryCodes();
 
       // Assert
       expect(result).toStrictEqual(mockUkefIndustryCodes);
