@@ -1,8 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { EXAMPLES } from '@ukef/constants';
 
-// TODO - update examples
-
 export class GetFacilityCategoryResponseDto {
   @ApiProperty({
     description: 'Facility classification type',
