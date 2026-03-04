@@ -35,20 +35,20 @@ describe('OdsAccrualsService - getScheduleClassifications', () => {
     "total_result_count": 2,
     "results": [
       {
-        "classification_type": "${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_type}",
-        "classification_type_code": "${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_type_code}",
-        "classification_code": "${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_code}",
-        "classification_description": "${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_description}",
-        "classification_numeric_value": ${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_numeric_value},
-        "classification_active_flag": ${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_active_flag}
+        "classification_type": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.classification_type}",
+        "classification_type_code": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.classification_type_code}",
+        "classification_code": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.classification_code}",
+        "classification_description": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.classification_description}",
+        "classification_numeric_value": ${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.classification_numeric_value},
+        "classification_active_flag": ${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.classification_active_flag}
       },
       {
-        "classification_type": "${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_type}",
-        "classification_type_code": "${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_type_code}",
-        "classification_code": "${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_code}",
-        "classification_description": "${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_description}",
-        "classification_numeric_value": ${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_numeric_value},
-        "classification_active_flag": ${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_active_flag}
+        "classification_type": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.classification_type}",
+        "classification_type_code": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.classification_type_code}",
+        "classification_code": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.classification_code}",
+        "classification_description": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.classification_description}",
+        "classification_numeric_value": ${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.classification_numeric_value},
+        "classification_active_flag": ${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.classification_active_flag}
       }
     ]
   }`;

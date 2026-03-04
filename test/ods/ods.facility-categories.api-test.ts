@@ -43,7 +43,7 @@ describe('/ods - Facility categories', () => {
     });
   });
 
-  describe('/facility-categories/:classificationCode', () => {
+  describe('/facility-category/:categoryCode', () => {
     it(`should return ${HttpStatus.OK} with a mapped facility category`, async () => {
       // Arrange
       const url = `/api/${prefixAndVersion}/ods/facility-category/${EXAMPLES.FACILITY_CATEGORY.CODE}`;

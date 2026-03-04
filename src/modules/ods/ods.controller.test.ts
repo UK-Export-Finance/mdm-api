@@ -53,25 +53,25 @@ describe('OdsController', () => {
     odsServiceFindDeal = jest.fn().mockResolvedValueOnce(mockDeal);
     odsService.findDeal = odsServiceFindDeal;
 
-    odsServiceGetUkefIndustries = jest.fn().mockReturnValueOnce(mockUkefIndustries);
+    odsServiceGetUkefIndustries = jest.fn().mockResolvedValueOnce(mockUkefIndustries);
     odsService.getUkefIndustries = odsServiceGetUkefIndustries;
 
-    odsServiceGetUkefIndustryCodes = jest.fn().mockReturnValueOnce(mockUkefIndustryCodes);
+    odsServiceGetUkefIndustryCodes = jest.fn().mockResolvedValueOnce(mockUkefIndustryCodes);
     odsService.getUkefIndustryCodes = odsServiceGetUkefIndustryCodes;
 
-    findUkefIndustry = jest.fn().mockReturnValueOnce(mockMappedIndustry);
+    findUkefIndustry = jest.fn().mockResolvedValueOnce(mockMappedIndustry);
     odsService.findUkefIndustry = findUkefIndustry;
 
-    odsAccrualsServiceGetScheduleClassifications = jest.fn().mockReturnValueOnce(mockAccrualScheduleClassifications);
+    odsAccrualsServiceGetScheduleClassifications = jest.fn().mockResolvedValueOnce(mockAccrualScheduleClassifications);
     odsAccrualsService.getScheduleClassifications = odsAccrualsServiceGetScheduleClassifications;
 
-    odsAccrualsServiceFindScheduleClassification = jest.fn().mockReturnValueOnce(mockAccrualScheduleClassification);
+    odsAccrualsServiceFindScheduleClassification = jest.fn().mockResolvedValueOnce(mockAccrualScheduleClassification);
     odsAccrualsService.findScheduleClassification = odsAccrualsServiceFindScheduleClassification;
 
-    odsFacilityCategoryServiceGetAll = jest.fn().mockReturnValueOnce(mockFacilityCategories);
+    odsFacilityCategoryServiceGetAll = jest.fn().mockResolvedValueOnce(mockFacilityCategories);
     odsFacilityCategoryService.getAll = odsFacilityCategoryServiceGetAll;
 
-    odsFacilityCategoryServiceFindOne = jest.fn().mockReturnValueOnce(mockFacilityCategory);
+    odsFacilityCategoryServiceFindOne = jest.fn().mockResolvedValueOnce(mockFacilityCategory);
     odsFacilityCategoryService.findOne = odsFacilityCategoryServiceFindOne;
 
     controller = new OdsController(odsService, odsAccrualsService, odsFacilityCategoryService);
@@ -86,9 +86,9 @@ describe('OdsController', () => {
       expect(odsAccrualsServiceGetScheduleClassifications).toHaveBeenCalledTimes(1);
     });
 
-    it('should return accrual schedule classifications', () => {
+    it('should return accrual schedule classifications', async () => {
       // Act
-      const result = controller.getAccrualScheduleClassifications();
+      const result = await controller.getAccrualScheduleClassifications();
 
       // Assert
       expect(result).toStrictEqual(mockAccrualScheduleClassifications);
@@ -141,9 +141,9 @@ describe('OdsController', () => {
       expect(odsFacilityCategoryServiceGetAll).toHaveBeenCalledTimes(1);
     });
 
-    it('should return facility categories', () => {
+    it('should return facility categories', async () => {
       // Act
-      const result = controller.getFacilityCategories();
+      const result = await controller.getFacilityCategories();
 
       // Assert
       expect(result).toStrictEqual(mockFacilityCategories);

@@ -12,9 +12,9 @@ type ClassificationOdsDto = GetAccrualScheduleClassificationOdsResponseDto | Get
 type ClassificationDto = GetAccrualScheduleClassificationResponseDto | GetFacilityCategoryResponseDto;
 
 /**
- * Map ODS accrual schedule classifications, into a more suitable format for consumers.
- * @param {ClassificationOdsDto[]} ODS accrual schedules classifications
- * @returns {ClassificationDto[]} Mapped accrual schedule classifications
+ * Map ODS classifications, into a more suitable format for consumers.
+ * @param {ClassificationOdsDto[]} ODS classifications
+ * @returns {ClassificationDto[]} Mapped classifications
  */
 export const mapOdsClassifications = (classifications: ClassificationOdsDto[]): ClassificationDto[] =>
   classifications.map((classification) => mapOdsClassification(classification));
