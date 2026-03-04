@@ -68,7 +68,7 @@ describe('/ods - Facility categories', () => {
     describe('when a single facility category is NOT found', () => {
       it(`should return ${HttpStatus.NOT_FOUND}`, async () => {
         // Arrange
-        const url = `/api/${prefixAndVersion}/ods/facility-category/INVALID_TYPE_CODE`;
+        const url = `/api/${prefixAndVersion}/ods/facility-category/INVALID_CATEGORY_CODE`;
 
         // Act
         const { status } = await api.get(url);
