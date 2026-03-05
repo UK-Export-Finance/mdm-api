@@ -3,11 +3,13 @@ import {
   GetAccrualScheduleClassificationResponseDto,
   GetFacilityCategoryOdsResponseDto,
   GetFacilityCategoryResponseDto,
+  GetObligationSubtypeOdsResponseDto,
+  GetObligationSubtypeResponseDto,
 } from '@ukef/modules/ods/dto';
 
-type ClassificationOdsDto = GetAccrualScheduleClassificationOdsResponseDto | GetFacilityCategoryOdsResponseDto;
+type ClassificationOdsDto = GetAccrualScheduleClassificationOdsResponseDto | GetFacilityCategoryOdsResponseDto | GetObligationSubtypeOdsResponseDto;
 
-type ClassificationDto = GetAccrualScheduleClassificationResponseDto | GetFacilityCategoryResponseDto;
+type ClassificationDto = GetAccrualScheduleClassificationResponseDto | GetFacilityCategoryResponseDto | GetObligationSubtypeResponseDto;
 
 /**
  * Map an ODS classification, into a more suitable format for consumers.

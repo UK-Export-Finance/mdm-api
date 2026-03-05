@@ -38,7 +38,7 @@ export class GetCustomersResponseItem {
   readonly type: string | null;
 
   @ApiProperty({
-    description: 'Customer company sub-type',
+    description: 'Customer company subtype',
     example: EXAMPLES.CUSTOMER.SALESFORCE_SUBTYPE,
     enum: CustomerSubtypesEnum,
   })
