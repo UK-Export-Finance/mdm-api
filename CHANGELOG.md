@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.42.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.41.0...v1.42.0) (2026-03-05)
+
+
+### Features
+
+* **GIFT-20983:** get obligation sub types from ODS ([#1741](https://github.com/UK-Export-Finance/mdm-api/issues/1741)) ([2bfb021](https://github.com/UK-Export-Finance/mdm-api/commit/2bfb021857f422916ebafb0ffc4a6b85fc2809a4))
+
 ## [1.41.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.40.0...v1.41.0) (2026-03-04)
 
 
