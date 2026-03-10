@@ -44,6 +44,7 @@ export type OdsStoredProcedureOutputBody = {
 
 export const ODS_ENTITIES = {
   ACCRUAL_SCHEDULE_CLASSIFICATION: 'accrual_schedule_classification',
+  CONFIGURATION_FREQUENCY: 'configuration_frequency',
   BUSINESS_CENTRE: 'business_centre',
   BUSINESS_CENTRE_NON_WORKING_DAY: 'business_centre_non_working_day',
   CUSTOMER: 'customer',

@@ -4,6 +4,7 @@ import AppConfig from '@ukef/config/app.config';
 
 import {
   FindOdsIndustryParamDto,
+  GetAccrualFrequencyResponseDto,
   GetAccrualScheduleClassificationResponseDto,
   GetFacilityCategoryResponseDto,
   GetIndustryResponseDto,
@@ -35,6 +36,22 @@ export class OdsController {
     private readonly odsFacilityCategoryService: OdsFacilityCategoryService,
     private readonly odsObligationSubtypeService: OdsObligationSubtypeService,
   ) {}
+
+  @Get('accrual-frequencies')
+  @ApiOperation({
+    summary: 'Get accrual frequencies from ODS',
+  })
+  @ApiOkResponse({
+    description: 'ODS accrual frequencies',
+    isArray: true,
+    type: GetAccrualFrequencyResponseDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  getAccrualFrequencies(): Promise<GetAccrualFrequencyResponseDto[]> {
+    return this.odsAccrualsService.getAccrualFrequencies();
+  }
 
   @Get('accrual-schedule-classifications')
   @ApiOperation({

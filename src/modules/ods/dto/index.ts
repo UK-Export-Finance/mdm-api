@@ -1,4 +1,6 @@
 export * from './find-ods-industry-param.dto';
+export * from './get-accrual-frequency-ods-response.dto';
+export * from './get-accrual-frequency-response.dto';
 export * from './get-accrual-schedule-classification-ods-response.dto';
 export * from './get-accrual-schedule-classification-response.dto';
 export * from './get-facility-category-ods-response.dto';

@@ -18,6 +18,9 @@ const mockUkefIndustryCodes = [EXAMPLES.ODS.INDUSTRY.industry_code, EXAMPLES.ODS
 
 const mockMappedIndustry = mapIndustry(EXAMPLES.ODS.INDUSTRY);
 
+const mockAccrualFrequency = EXAMPLES.ODS.CONFIGURATION_FREQUENCY;
+const mockAccrualFrequencies = [mockAccrualFrequency, mockAccrualFrequency];
+
 const mockAccrualScheduleClassification = EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION;
 const mockAccrualScheduleClassifications = [mockAccrualScheduleClassification, mockAccrualScheduleClassification];
 
@@ -40,6 +43,8 @@ describe('OdsController', () => {
   let odsServiceFindDeal: jest.Mock;
   let odsServiceGetUkefIndustries: jest.Mock;
   let odsServiceGetUkefIndustryCodes: jest.Mock;
+  let odsAccrualsServiceGetAccrualFrequencies: jest.Mock;
+  // let odsAccrualServiceFindAccrualFrequency: jest.Mock;
   let odsAccrualsServiceGetScheduleClassifications: jest.Mock;
   let odsAccrualsServiceFindScheduleClassification: jest.Mock;
   let odsFacilityCategoryServiceGetAll: jest.Mock;
@@ -69,6 +74,12 @@ describe('OdsController', () => {
     findUkefIndustry = jest.fn().mockResolvedValueOnce(mockMappedIndustry);
     odsService.findUkefIndustry = findUkefIndustry;
 
+    odsAccrualsServiceGetAccrualFrequencies = jest.fn().mockResolvedValueOnce(mockAccrualFrequencies);
+    odsAccrualsService.getAccrualFrequencies = odsAccrualsServiceGetAccrualFrequencies;
+
+    // odsAccrualServiceFindAccrualFrequency = jest.fn().mockResolvedValueOnce(mockAccrualFrequency);
+    // odsAccrualsService.findAccrualFrequency = odsAccrualServiceGetAccrualFrequencies;
+
     odsAccrualsServiceGetScheduleClassifications = jest.fn().mockResolvedValueOnce(mockAccrualScheduleClassifications);
     odsAccrualsService.getScheduleClassifications = odsAccrualsServiceGetScheduleClassifications;
 
@@ -90,7 +101,25 @@ describe('OdsController', () => {
     controller = new OdsController(odsService, odsAccrualsService, odsFacilityCategoryService, odsObligationSubtypeService);
   });
 
-  describe('getAccrualSchedules', () => {
+  describe('getAccrualFrequencies', () => {
+    it('should call odsAccrualsService.getScheduleClassifications', async () => {
+      // Act
+      await controller.getAccrualFrequencies();
+
+      // Assert
+      expect(odsAccrualsServiceGetAccrualFrequencies).toHaveBeenCalledTimes(1);
+    });
+
+    it('should return accrual frequencies', async () => {
+      // Act
+      const result = await controller.getAccrualFrequencies();
+
+      // Assert
+      expect(result).toStrictEqual(mockAccrualFrequencies);
+    });
+  });
+
+  describe('getAccrualScheduleClassifications', () => {
     it('should call odsAccrualsService.getScheduleClassifications', async () => {
       // Act
       await controller.getAccrualScheduleClassifications();
