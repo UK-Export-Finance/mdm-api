@@ -21,6 +21,87 @@ export class OdsAccrualsService {
   ) {}
 
   /**
+   * Find an accrual frequency by frequency code
+   * @param {string} frequencyCode: Frequency code
+   * @returns {Promise<GetAccrualFrequencyResponseDto>}
+   * @throws {NotFoundException} If no accrual schedule frequency is found
+   */
+  async findAccrualFrequency(frequencyCode: string): Promise<GetAccrualFrequencyResponseDto> {
+    try {
+      this.logger.info('Finding accrual frequency in ODS %s', frequencyCode);
+
+      const storedProcedureInput = this.odsStoredProcedureService.createInput({
+        entityToQuery: ODS_ENTITIES.CONFIGURATION_FREQUENCY,
+        queryPageSize: 1,
+        queryParameters: {
+          frequencyCode: frequencyCode,
+        },
+      });
+
+      const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
+
+      const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
+
+      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+        this.logger.error('Error finding accrual frequency %s from ODS stored procedure, output %o', frequencyCode, storedProcedureResult);
+
+        throw new Error(`Error finding accrual frequency ${frequencyCode} from ODS stored procedure`);
+      }
+
+      if (storedProcedureJson?.total_result_count === 0) {
+        throw new NotFoundException(`No accrual frequency ${frequencyCode} found in ODS`);
+      }
+
+      const frequency = storedProcedureJson.results[0] as GetAccrualFrequencyOdsResponseDto;
+
+      return mapAccrualFrequency(frequency);
+    } catch (error) {
+      this.logger.error('Error finding accrual frequency in ODS %s %o', frequencyCode, error);
+
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException(`Error finding accrual frequency ${frequencyCode} in ODS`, { cause: error });
+    }
+  }
+
+  /**
+   * Get all accrual frequencies from ODS
+   * @returns {Promise<GetAccrualFrequencyResponseDto[]>} Accrual frequencies
+   * @throws {InternalServerErrorException} If there is an error getting accrual frequencies from ODS
+   */
+  async getAccrualFrequencies(): Promise<GetAccrualFrequencyResponseDto[]> {
+    try {
+      this.logger.info('Getting accrual frequencies from ODS');
+
+      const storedProcedureInput = this.odsStoredProcedureService.createInput({
+        entityToQuery: ODS_ENTITIES.CONFIGURATION_FREQUENCY,
+      });
+
+      const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
+
+      const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
+
+      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+        this.logger.error('Error getting accrual frequencies from ODS stored procedure, output %o', storedProcedureResult);
+
+        throw new InternalServerErrorException('Error getting accrual frequencies from ODS stored procedure');
+      }
+
+      const frequencies = storedProcedureJson.results as GetAccrualFrequencyOdsResponseDto[];
+
+      const mappedFrequencies = mapAccrualFrequencies(frequencies);
+
+      return mappedFrequencies;
+    } catch (error) {
+      this.logger.error('Error getting accrual frequencies from ODS %o', error);
+
+      throw new InternalServerErrorException('Error getting accrual frequencies from ODS');
+    }
+  }
+
+  /**
    * Find an accrual schedule classification by classification code
    * @param {string} classificationCode: Classification code
    * @returns {Promise<GetAccrualScheduleClassificationResponseDto>}
@@ -73,7 +154,7 @@ export class OdsAccrualsService {
    */
   async getScheduleClassifications(): Promise<GetAccrualScheduleClassificationResponseDto[]> {
     try {
-      this.logger.info('Getting Accrual schedule classifications from ODS');
+      this.logger.info('Getting accrual schedule classifications from ODS');
 
       const storedProcedureInput = this.odsStoredProcedureService.createInput({
         entityToQuery: ODS_ENTITIES.ACCRUAL_SCHEDULE_CLASSIFICATION,
@@ -84,9 +165,9 @@ export class OdsAccrualsService {
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
       if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
-        this.logger.error('Error getting Accrual schedule classifications from ODS stored procedure, output %o', storedProcedureResult);
+        this.logger.error('Error getting accrual schedule classifications from ODS stored procedure, output %o', storedProcedureResult);
 
-        throw new InternalServerErrorException('Error getting Accrual schedule classifications from ODS stored procedure');
+        throw new InternalServerErrorException('Error getting accrual schedule classifications from ODS stored procedure');
       }
 
       const classifications = storedProcedureJson.results as GetAccrualScheduleClassificationOdsResponseDto[];
@@ -95,94 +176,9 @@ export class OdsAccrualsService {
 
       return mappedClassification;
     } catch (error) {
-      this.logger.error('Error getting Accrual schedule classifications from ODS %o', error);
+      this.logger.error('Error getting accrual schedule classifications from ODS %o', error);
 
-      throw new InternalServerErrorException('Error getting Accrual schedule classifications from ODS');
-    }
-  }
-
-  /**
-   * Find an accrual frequency by frequency code
-   * @param {string} frequencyCode: Frequency code
-   * @returns {Promise<GetAccrualFrequencyResponseDto>}
-   * @throws {NotFoundException} If no accrual schedule frequency is found
-   */
-  async findAccrualFrequency(frequencyCode: string): Promise<GetAccrualFrequencyResponseDto> {
-    try {
-      this.logger.info('Finding accrual frequency in ODS %s', frequencyCode);
-
-      const storedProcedureInput = this.odsStoredProcedureService.createInput({
-        entityToQuery: ODS_ENTITIES.CONFIGURATION_FREQUENCY,
-        queryPageSize: 1,
-        queryParameters: {
-          frequencyCode: frequencyCode,
-        },
-      });
-
-      const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
-
-      const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
-
-      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
-        this.logger.error('Error finding accrual frequency %s from ODS stored procedure, output %o', frequencyCode, storedProcedureResult);
-
-        throw new Error(`Error finding accrual frequency ${frequencyCode} from ODS stored procedure`);
-      }
-
-      if (storedProcedureJson?.total_result_count === 0) {
-        throw new NotFoundException(`No accrual frequency ${frequencyCode} found in ODS`);
-      }
-
-      const frequency = storedProcedureJson.results[0] as GetAccrualFrequencyOdsResponseDto;
-
-      return mapAccrualFrequency(frequency);
-    } catch (error) {
-      this.logger.error('Error finding accrual frequency in ODS %s %o', frequencyCode, error);
-
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-
-      throw new InternalServerErrorException(`Error finding accrual frequency ${frequencyCode} in ODS`, { cause: error });
-    }
-  }
-
-  // TODO
-  // TODO
-  // TODO - align logs, accrual vs Accrual
-
-  /**
-   * Get all accrual frequencies from ODS
-   * @returns {Promise<GetAccrualFrequencyResponseDto[]>} Accrual frequencies
-   * @throws {InternalServerErrorException} If there is an error getting accrual frequencies from ODS
-   */
-  async getAccrualFrequencies(): Promise<GetAccrualFrequencyResponseDto[]> {
-    try {
-      this.logger.info('Getting Accrual frequencies from ODS');
-
-      const storedProcedureInput = this.odsStoredProcedureService.createInput({
-        entityToQuery: ODS_ENTITIES.CONFIGURATION_FREQUENCY,
-      });
-
-      const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
-
-      const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
-
-      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
-        this.logger.error('Error getting Accrual frequencies from ODS stored procedure, output %o', storedProcedureResult);
-
-        throw new InternalServerErrorException('Error getting Accrual frequencies from ODS stored procedure');
-      }
-
-      const frequencies = storedProcedureJson.results as GetAccrualFrequencyOdsResponseDto[];
-
-      const mappedFrequencies = mapAccrualFrequencies(frequencies);
-
-      return mappedFrequencies;
-    } catch (error) {
-      this.logger.error('Error getting Accrual frequencies from ODS %o', error);
-
-      throw new InternalServerErrorException('Error getting Accrual frequencies from ODS');
+      throw new InternalServerErrorException('Error getting accrual schedule classifications from ODS');
     }
   }
 }

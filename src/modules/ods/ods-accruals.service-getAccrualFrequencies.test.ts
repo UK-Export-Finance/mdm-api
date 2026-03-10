@@ -94,7 +94,7 @@ describe('OdsAccrualsService - getAccrualFrequencies', () => {
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error('Error getting Accrual frequencies from ODS');
+      const expected = new Error('Error getting accrual frequencies from ODS');
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -112,7 +112,7 @@ describe('OdsAccrualsService - getAccrualFrequencies', () => {
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error('Error getting Accrual frequencies from ODS');
+      const expected = new Error('Error getting accrual frequencies from ODS');
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -128,7 +128,7 @@ describe('OdsAccrualsService - getAccrualFrequencies', () => {
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error('Error getting Accrual frequencies from ODS');
+      const expected = new Error('Error getting accrual frequencies from ODS');
 
       await expect(promise).rejects.toThrow(expected);
     });

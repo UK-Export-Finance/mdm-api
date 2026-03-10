@@ -58,7 +58,7 @@ describe('OdsAccrualsService - findAccrualFrequency', () => {
       entityToQuery: ODS_ENTITIES.CONFIGURATION_FREQUENCY,
       queryPageSize: 1,
       queryParameters: {
-        frequency_code: EXAMPLES.ACCRUAL_FREQUENCY.CODE,
+        frequencyCode: EXAMPLES.ACCRUAL_FREQUENCY.CODE,
       },
     });
 
