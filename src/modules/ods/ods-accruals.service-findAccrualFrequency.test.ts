@@ -1,6 +1,6 @@
-import { InternalServerErrorException } from '@nestjs/common';
+import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
-import { mapAccrualFrequencies } from '@ukef/helpers';
+import { mapAccrualFrequency } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
@@ -8,7 +8,7 @@ import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { OdsAccrualsService } from './ods-accruals.service';
 import { OdsStoredProcedureService } from './ods-stored-procedure.service';
 
-describe('OdsAccrualsService - getAccrualFrequencies', () => {
+describe('OdsAccrualsService - findAccrualFrequency', () => {
   let service: OdsAccrualsService;
   let odsStoredProcedureService: OdsStoredProcedureService;
   let mockQueryRunner: jest.Mocked<QueryRunner>;
@@ -32,16 +32,8 @@ describe('OdsAccrualsService - getAccrualFrequencies', () => {
   const mockStoredProcedureOutput = `{
     "message": "${STORED_PROCEDURE.SUCCESS}",
     "status": "${STORED_PROCEDURE.SUCCESS}",
-    "total_result_count": 2,
+    "total_result_count": 1,
     "results": [
-      {
-        "code": "${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.code}",
-        "name": "${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.name}",
-        "orderId": "${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.orderId}",
-        "frequencyNumberOfUnits": "${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.frequencyNumberOfUnits}",
-        "frequencyUnits": "${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.frequencyUnits}",
-        "frequencyActive": ${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.frequencyActive}
-      },
       {
         "code": "${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.code}",
         "name": "${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.name}",
@@ -59,27 +51,55 @@ describe('OdsAccrualsService - getAccrualFrequencies', () => {
 
   it('should call odsStoredProcedureService.call', async () => {
     // Act
-    await service.getAccrualFrequencies();
+    await service.findAccrualFrequency(EXAMPLES.ACCRUAL_FREQUENCY.CODE);
 
     // Assert
     const expectedStoredProcedureInput: OdsStoredProcedureInput = odsStoredProcedureService.createInput({
       entityToQuery: ODS_ENTITIES.CONFIGURATION_FREQUENCY,
+      queryPageSize: 1,
+      queryParameters: {
+        frequency_code: EXAMPLES.ACCRUAL_FREQUENCY.CODE,
+      },
     });
 
     expect(odsStoredProcedureService.call).toHaveBeenCalledTimes(1);
     expect(odsStoredProcedureService.call).toHaveBeenCalledWith(expectedStoredProcedureInput);
   });
 
-  it('should return mapped accrual frequencies', async () => {
+  it('should return a mapped accrual frequency', async () => {
     // Act
-    const result = await service.getAccrualFrequencies();
+    const result = await service.findAccrualFrequency(EXAMPLES.ACCRUAL_FREQUENCY.CODE);
 
     // Assert
-    const jsonResults = JSON.parse(mockStoredProcedureOutput).results;
+    const { results } = JSON.parse(mockStoredProcedureOutput);
+    const [jsonResult] = results;
 
-    const expected = mapAccrualFrequencies(jsonResults);
+    const expected = mapAccrualFrequency(jsonResult);
 
     expect(result).toEqual(expected);
+  });
+
+  describe('when an accrual frequency is not found', () => {
+    it('should throw an error', async () => {
+      // Arrange
+      const mockStoredProcedureOutput = `{
+        "message": "${STORED_PROCEDURE.SUCCESS}",
+        "status": "${STORED_PROCEDURE.SUCCESS}",
+        "total_result_count": 0,
+        "results": []
+      }`;
+
+      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
+
+      // Act & Assert
+      const promise = service.findAccrualFrequency(EXAMPLES.ACCRUAL_FREQUENCY.CODE);
+
+      await expect(promise).rejects.toBeInstanceOf(NotFoundException);
+
+      const expected = new Error(`No accrual frequency ${EXAMPLES.ACCRUAL_FREQUENCY.CODE} found in ODS`);
+
+      await expect(promise).rejects.toThrow(expected);
+    });
   });
 
   describe(`when the response from ODS does not have status as ${STORED_PROCEDURE.SUCCESS}`, () => {
@@ -89,14 +109,18 @@ describe('OdsAccrualsService - getAccrualFrequencies', () => {
 
       jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
 
-      // Act & Assert
-      const promise = service.getAccrualFrequencies();
+      // Act
+      const promise = service.findAccrualFrequency(EXAMPLES.ACCRUAL_FREQUENCY.CODE);
 
+      // Assert
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error('Error getting Accrual frequencies from ODS');
-
-      await expect(promise).rejects.toThrow(expected);
+      await expect(promise).rejects.toMatchObject({
+        message: `Error finding accrual frequency ${EXAMPLES.ACCRUAL_FREQUENCY.CODE} in ODS`,
+        cause: {
+          message: `Error finding accrual frequency ${EXAMPLES.ACCRUAL_FREQUENCY.CODE} from ODS stored procedure`,
+        },
+      });
     });
   });
 
@@ -105,32 +129,37 @@ describe('OdsAccrualsService - getAccrualFrequencies', () => {
       // Arrange
       const mockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
 
-      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
+      jest.spyOn(odsStoredProcedureService, 'call').mockRejectedValue(mockStoredProcedureOutput);
 
-      // Act & Assert
-      const promise = service.getAccrualFrequencies();
+      // Act
+      const promise = service.findAccrualFrequency(EXAMPLES.ACCRUAL_FREQUENCY.CODE);
 
+      // Assert
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error('Error getting Accrual frequencies from ODS');
-
-      await expect(promise).rejects.toThrow(expected);
+      await expect(promise).rejects.toMatchObject({
+        message: `Error finding accrual frequency ${EXAMPLES.ACCRUAL_FREQUENCY.CODE} in ODS`,
+        cause: mockStoredProcedureOutput,
+      });
     });
   });
 
   describe('when call throws an error', () => {
     it('should throw an error', async () => {
       // Arrange
-      jest.spyOn(odsStoredProcedureService, 'call').mockRejectedValue('Mock ODS error');
+      const mockError = 'Mock ODS error';
 
-      // Act & Assert
-      const promise = service.getAccrualFrequencies();
+      jest.spyOn(odsStoredProcedureService, 'call').mockRejectedValue(mockError);
 
+      // Act
+      const promise = service.findAccrualFrequency(EXAMPLES.ACCRUAL_FREQUENCY.CODE);
+
+      // Assert
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
-
-      const expected = new Error('Error getting Accrual frequencies from ODS');
-
-      await expect(promise).rejects.toThrow(expected);
+      await expect(promise).rejects.toMatchObject({
+        message: `Error finding accrual frequency ${EXAMPLES.ACCRUAL_FREQUENCY.CODE} in ODS`,
+        cause: mockError,
+      });
     });
   });
 });

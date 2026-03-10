@@ -9,6 +9,7 @@ import {
   GetFacilityCategoryResponseDto,
   GetIndustryResponseDto,
   GetObligationSubtypeResponseDto,
+  GetOdsAccrualFrequencyParamDto,
   GetOdsAccrualScheduleClassificationParamDto,
   GetOdsCustomerParamDto,
   GetOdsCustomerResponse,
@@ -51,6 +52,27 @@ export class OdsController {
   })
   getAccrualFrequencies(): Promise<GetAccrualFrequencyResponseDto[]> {
     return this.odsAccrualsService.getAccrualFrequencies();
+  }
+
+  @Get('accrual-frequency/:frequencyCode')
+  @ApiOperation({
+    summary: 'Get an accrual frequency from ODS',
+  })
+  @ApiOkResponse({
+    description: 'ODS frequency',
+    type: GetAccrualFrequencyResponseDto,
+  })
+  @ApiNotFoundResponse({
+    description: 'Accrual schedule classification not found',
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad request',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  findAccrualFrequency(@Param() param: GetOdsAccrualFrequencyParamDto): Promise<GetAccrualFrequencyResponseDto> {
+    return this.odsAccrualsService.findAccrualFrequency(param.frequencyCode);
   }
 
   @Get('accrual-schedule-classifications')

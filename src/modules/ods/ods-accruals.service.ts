@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { STORED_PROCEDURE } from '@ukef/constants';
-import { mapAccrualFrequencies, mapOdsClassification, mapOdsClassifications } from '@ukef/helpers';
+import { mapAccrualFrequencies, mapAccrualFrequency, mapOdsClassification, mapOdsClassifications } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 
 import {
@@ -100,6 +100,56 @@ export class OdsAccrualsService {
       throw new InternalServerErrorException('Error getting Accrual schedule classifications from ODS');
     }
   }
+
+  /**
+   * Find an accrual frequency by frequency code
+   * @param {string} frequencyCode: Frequency code
+   * @returns {Promise<GetAccrualFrequencyResponseDto>}
+   * @throws {NotFoundException} If no accrual schedule frequency is found
+   */
+  async findAccrualFrequency(frequencyCode: string): Promise<GetAccrualFrequencyResponseDto> {
+    try {
+      this.logger.info('Finding accrual frequency in ODS %s', frequencyCode);
+
+      const storedProcedureInput = this.odsStoredProcedureService.createInput({
+        entityToQuery: ODS_ENTITIES.CONFIGURATION_FREQUENCY,
+        queryPageSize: 1,
+        queryParameters: {
+          frequencyCode: frequencyCode,
+        },
+      });
+
+      const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
+
+      const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
+
+      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+        this.logger.error('Error finding accrual frequency %s from ODS stored procedure, output %o', frequencyCode, storedProcedureResult);
+
+        throw new Error(`Error finding accrual frequency ${frequencyCode} from ODS stored procedure`);
+      }
+
+      if (storedProcedureJson?.total_result_count === 0) {
+        throw new NotFoundException(`No accrual frequency ${frequencyCode} found in ODS`);
+      }
+
+      const frequency = storedProcedureJson.results[0] as GetAccrualFrequencyOdsResponseDto;
+
+      return mapAccrualFrequency(frequency);
+    } catch (error) {
+      this.logger.error('Error finding accrual frequency in ODS %s %o', frequencyCode, error);
+
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException(`Error finding accrual frequency ${frequencyCode} in ODS`, { cause: error });
+    }
+  }
+
+  // TODO
+  // TODO
+  // TODO - align logs, accrual vs Accrual
 
   /**
    * Get all accrual frequencies from ODS
