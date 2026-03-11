@@ -243,20 +243,20 @@ describe('OdsController', () => {
   });
 
   describe('findCounterpartyRole', () => {
-    const mockCategoryCode = EXAMPLES.COUNTERPARTY_ROLE.ROLE_TYPE;
+    const mockRoleType = EXAMPLES.COUNTERPARTY_ROLE.ROLE_TYPE;
 
     it('should call odsCounterpartyRoleService.findOne', async () => {
       // Act
-      await controller.findCounterpartyRole({ categoryCode: mockCategoryCode });
+      await controller.findCounterpartyRole({ roleType: mockRoleType });
 
       // Assert
-      expect(odsCounterpartyRoleServiceFind).toHaveBeenCalledTimes(1);
-      expect(odsCounterpartyRoleServiceFind).toHaveBeenCalledWith(mockCategoryCode);
+      expect(odsCounterpartyRoleServiceFindOne).toHaveBeenCalledTimes(1);
+      expect(odsCounterpartyRoleServiceFindOne).toHaveBeenCalledWith(mockRoleType);
     });
 
     it('should return a counterparty role', async () => {
       // Act
-      const result = await controller.findCounterpartyRole({ categoryCode: mockCategoryCode });
+      const result = await controller.findCounterpartyRole({ roleType: mockRoleType });
 
       // Assert
       expect(result).toStrictEqual(mockFacilityCategory);
@@ -272,7 +272,7 @@ describe('OdsController', () => {
         controller = new OdsController(odsService, odsAccrualsService, odsCounterpartyRoleService, odsFacilityCategoryService, odsObligationSubtypeService);
 
         // Act & Assert
-        const promise = controller.findFacilityCategory({ categoryCode: mockCategoryCode });
+        const promise = controller.findCounterpartyRole({ roleType: mockRoleType });
 
         await expect(promise).rejects.toThrow(mockError);
       });
