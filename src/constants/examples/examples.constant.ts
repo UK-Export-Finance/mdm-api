@@ -57,7 +57,9 @@ export const EXAMPLES = {
   COMPANIES_HOUSE_REGISTRATION_NUMBER: '00000001',
   COMPANIES_HOUSE_INDUSTRY_CODE: '1406',
   COUNTERPARTY_ROLE: {
-    counterpartyRoleType: 'CRT001',
+    // TODO: UPPERCASE
+    // and for CREDIT_RISK_RATINGS??
+    roleType: 'CRT001',
     name: 'Exporter',
     hasSharePercentage: false,
     isActive: true,

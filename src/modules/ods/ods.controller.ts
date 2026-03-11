@@ -3,6 +3,7 @@ import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiNotFoundRespo
 import AppConfig from '@ukef/config/app.config';
 
 import {
+  FindCounterpartyRoleParamDto,
   FindOdsIndustryParamDto,
   GetAccrualFrequencyResponseDto,
   GetAccrualScheduleClassificationResponseDto,
@@ -129,6 +130,27 @@ export class OdsController {
   })
   getCounterpartyRoles(): Promise<GetCounterpartyRoleResponseDto[]> {
     return this.odsCounterpartyRoleService.getAll();
+  }
+
+  @Get('counterparty-role/:roleType')
+  @ApiOperation({
+    summary: 'Get a counterparty role from ODS',
+  })
+  @ApiOkResponse({
+    description: 'ODS counterparty role',
+    type: GetCounterpartyRoleResponseDto,
+  })
+  @ApiNotFoundResponse({
+    description: 'Counterparty role not found',
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad request',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  findCounterpartyRole(@Param() param: FindCounterpartyRoleParamDto): Promise<GetCounterpartyRoleResponseDto> {
+    return this.odsCounterpartyRoleService.findOne(param.roleType);
   }
 
   @Get('customers/:urn')

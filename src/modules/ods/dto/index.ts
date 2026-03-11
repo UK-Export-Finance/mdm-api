@@ -1,3 +1,4 @@
+export * from './find-counterparty-role-param.dto';
 export * from './find-ods-industry-param.dto';
 export * from './get-accrual-frequency-ods-response.dto';
 export * from './get-accrual-frequency-response.dto';

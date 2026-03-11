@@ -137,7 +137,7 @@ describe('OdsController', () => {
 
         odsAccrualsService.findAccrualFrequency = jest.fn().mockRejectedValueOnce(mockError);
 
-        controller = new OdsController(odsService, odsAccrualsService, odsFacilityCategoryService, odsObligationSubtypeService);
+        controller = new OdsController(odsService, odsAccrualsService, odsCounterpartyRoleService, odsFacilityCategoryService, odsObligationSubtypeService);
 
         // Act & Assert
         const promise = controller.findAccrualFrequency({ frequencyCode: mockFrequencyCode });

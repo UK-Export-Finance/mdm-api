@@ -4,9 +4,9 @@ import { EXAMPLES } from '@ukef/constants';
 export class GetCounterpartyRoleResponseDto {
   @ApiProperty({
     description: 'Counterparty role type',
-    example: EXAMPLES.COUNTERPARTY_ROLE.counterpartyRoleType,
+    example: EXAMPLES.COUNTERPARTY_ROLE.roleType,
   })
-  readonly counterpartyRoleType: string;
+  readonly roleType: string;
 
   @ApiProperty({
     description: 'Counterparty role name',

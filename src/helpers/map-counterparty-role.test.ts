@@ -13,6 +13,7 @@ describe('mapCounterpartyRole', () => {
     // Assert
     const expected = {
       ...mockRole,
+      roleType: mockRole.counterpartyRoleType,
       isActive: mockRole.counterpartyRoleTypeActive,
     };
 

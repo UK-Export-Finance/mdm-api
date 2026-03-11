@@ -7,5 +7,6 @@ import { GetCounterpartyRoleOdsResponseDto, GetCounterpartyRoleResponseDto } fro
  */
 export const mapCounterpartyRole = (counterpartyRole: GetCounterpartyRoleOdsResponseDto): GetCounterpartyRoleResponseDto => ({
   ...counterpartyRole,
+  roleType: counterpartyRole.counterpartyRoleType,
   isActive: counterpartyRole.counterpartyRoleTypeActive,
 });
