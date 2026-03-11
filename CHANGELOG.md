@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.43.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.42.0...v1.43.0) (2026-03-11)
+
+
+### Features
+
+* **GIFT-20291:** get accrual frequencies from ODS ([#1752](https://github.com/UK-Export-Finance/mdm-api/issues/1752)) ([3655b3e](https://github.com/UK-Export-Finance/mdm-api/commit/3655b3e89866eec6f2301af1984b254510c94d2e))
+
 ## [1.42.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.41.0...v1.42.0) (2026-03-05)
 
 
