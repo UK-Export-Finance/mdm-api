@@ -37,8 +37,8 @@ describe('OdsAccrualsService - findAccrualFrequency', () => {
       {
         "code": "${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.code}",
         "name": "${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.name}",
-        "orderId": "${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.orderId}",
-        "frequencyNumberOfUnits": "${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.frequencyNumberOfUnits}",
+        "orderId": ${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.orderId},
+        "frequencyNumberOfUnits": ${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.frequencyNumberOfUnits},
         "frequencyUnits": "${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.frequencyUnits}",
         "frequencyActive": ${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.frequencyActive}
       }

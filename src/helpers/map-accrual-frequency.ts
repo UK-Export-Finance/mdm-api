@@ -2,7 +2,7 @@ import { GetAccrualFrequencyOdsResponseDto, GetAccrualFrequencyResponseDto } fro
 
 /**
  * Map an ODS accrual frequency, into a more suitable format for consumers.
- * @param {GetAccrualFrequencyOdsResponseDto} ODS accrual frequencies
+ * @param {GetAccrualFrequencyOdsResponseDto} ODS accrual frequency
  * @returns {GetAccrualFrequencyResponseDto} Mapped accrual frequency
  */
 export const mapAccrualFrequency = (frequency: GetAccrualFrequencyOdsResponseDto): GetAccrualFrequencyResponseDto => ({

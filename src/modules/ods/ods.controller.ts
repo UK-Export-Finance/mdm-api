@@ -63,7 +63,7 @@ export class OdsController {
     type: GetAccrualFrequencyResponseDto,
   })
   @ApiNotFoundResponse({
-    description: 'Accrual schedule classification not found',
+    description: 'Accrual frequency not found',
   })
   @ApiBadRequestResponse({
     description: 'Bad request',

@@ -113,7 +113,7 @@ describe('OdsController', () => {
       expect(odsAccrualServiceFindAccrualFrequency).toHaveBeenCalledWith(mockFrequencyCode);
     });
 
-    it('should return an accrual schedule classification', async () => {
+    it('should return an accrual frequency', async () => {
       // Act
       const result = await controller.findAccrualFrequency({ frequencyCode: mockFrequencyCode });
 
@@ -139,7 +139,7 @@ describe('OdsController', () => {
   });
 
   describe('getAccrualFrequencies', () => {
-    it('should call odsAccrualsService.getScheduleClassifications', async () => {
+    it('should call odsAccrualsService.getAccrualFrequencies', async () => {
       // Act
       await controller.getAccrualFrequencies();
 
