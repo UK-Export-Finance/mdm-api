@@ -45,7 +45,7 @@ describe('/ods - Counterparty roles', () => {
   describe('/counterparty-role/:roleType', () => {
     it(`should return ${HttpStatus.OK} with a mapped counterparty roles`, async () => {
       // Arrange
-      const url = `/api/${prefixAndVersion}/ods/counterparty-role/${EXAMPLES.COUNTERPARTY_ROLE.roleType}`;
+      const url = `/api/${prefixAndVersion}/ods/counterparty-role/${EXAMPLES.COUNTERPARTY_ROLE.ROLE_TYPE}`;
 
       // Act
       const { status, body } = await api.get(url);

@@ -5,7 +5,7 @@ import { IsString } from 'class-validator';
 export class FindCounterpartyRoleParamDto {
   @ApiProperty({
     required: true,
-    example: EXAMPLES.COUNTERPARTY_ROLE.roleType,
+    example: EXAMPLES.COUNTERPARTY_ROLE.ROLE_TYPE,
     description: 'Unique counterparty role type',
   })
   @IsString()

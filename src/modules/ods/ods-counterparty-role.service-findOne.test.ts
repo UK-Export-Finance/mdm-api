@@ -49,14 +49,14 @@ describe('OdsCounterpartyRoleService - findOne', () => {
 
   it('should call odsStoredProcedureService.call', async () => {
     // Act
-    await service.findOne(EXAMPLES.COUNTERPARTY_ROLE.roleType);
+    await service.findOne(EXAMPLES.COUNTERPARTY_ROLE.ROLE_TYPE);
 
     // Assert
     const expectedStoredProcedureInput: OdsStoredProcedureInput = odsStoredProcedureService.createInput({
       entityToQuery: ODS_ENTITIES.CONFIGURATION_COUNTERPARTY_ROLE,
       queryPageSize: 1,
       queryParameters: {
-        counterpartyRoleType: EXAMPLES.COUNTERPARTY_ROLE.roleType,
+        counterpartyRoleType: EXAMPLES.COUNTERPARTY_ROLE.ROLE_TYPE,
       },
     });
 
@@ -66,7 +66,7 @@ describe('OdsCounterpartyRoleService - findOne', () => {
 
   it('should return a mapped counterparty role', async () => {
     // Act
-    const result = await service.findOne(EXAMPLES.COUNTERPARTY_ROLE.roleType);
+    const result = await service.findOne(EXAMPLES.COUNTERPARTY_ROLE.ROLE_TYPE);
 
     // Assert
     const { results } = JSON.parse(mockStoredProcedureOutput);
@@ -90,11 +90,11 @@ describe('OdsCounterpartyRoleService - findOne', () => {
       jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
 
       // Act & Assert
-      const promise = service.findOne(EXAMPLES.COUNTERPARTY_ROLE.roleType);
+      const promise = service.findOne(EXAMPLES.COUNTERPARTY_ROLE.ROLE_TYPE);
 
       await expect(promise).rejects.toBeInstanceOf(NotFoundException);
 
-      const expected = new Error(`No counterparty role ${EXAMPLES.COUNTERPARTY_ROLE.roleType} found in ODS`);
+      const expected = new Error(`No counterparty role ${EXAMPLES.COUNTERPARTY_ROLE.ROLE_TYPE} found in ODS`);
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -108,15 +108,15 @@ describe('OdsCounterpartyRoleService - findOne', () => {
       jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
 
       // Act
-      const promise = service.findOne(EXAMPLES.COUNTERPARTY_ROLE.roleType);
+      const promise = service.findOne(EXAMPLES.COUNTERPARTY_ROLE.ROLE_TYPE);
 
       // Assert
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
       await expect(promise).rejects.toMatchObject({
-        message: `Error finding counterparty role ${EXAMPLES.COUNTERPARTY_ROLE.roleType} in ODS`,
+        message: `Error finding counterparty role ${EXAMPLES.COUNTERPARTY_ROLE.ROLE_TYPE} in ODS`,
         cause: {
-          message: `Error finding counterparty role ${EXAMPLES.COUNTERPARTY_ROLE.roleType} from ODS stored procedure`,
+          message: `Error finding counterparty role ${EXAMPLES.COUNTERPARTY_ROLE.ROLE_TYPE} from ODS stored procedure`,
         },
       });
     });
@@ -130,13 +130,13 @@ describe('OdsCounterpartyRoleService - findOne', () => {
       jest.spyOn(odsStoredProcedureService, 'call').mockRejectedValue(mockStoredProcedureOutput);
 
       // Act
-      const promise = service.findOne(EXAMPLES.COUNTERPARTY_ROLE.roleType);
+      const promise = service.findOne(EXAMPLES.COUNTERPARTY_ROLE.ROLE_TYPE);
 
       // Assert
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
       await expect(promise).rejects.toMatchObject({
-        message: `Error finding counterparty role ${EXAMPLES.COUNTERPARTY_ROLE.roleType} in ODS`,
+        message: `Error finding counterparty role ${EXAMPLES.COUNTERPARTY_ROLE.ROLE_TYPE} in ODS`,
         cause: mockStoredProcedureOutput,
       });
     });
@@ -150,12 +150,12 @@ describe('OdsCounterpartyRoleService - findOne', () => {
       jest.spyOn(odsStoredProcedureService, 'call').mockRejectedValue(mockError);
 
       // Act
-      const promise = service.findOne(EXAMPLES.COUNTERPARTY_ROLE.roleType);
+      const promise = service.findOne(EXAMPLES.COUNTERPARTY_ROLE.ROLE_TYPE);
 
       // Assert
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
       await expect(promise).rejects.toMatchObject({
-        message: `Error finding counterparty role ${EXAMPLES.COUNTERPARTY_ROLE.roleType} in ODS`,
+        message: `Error finding counterparty role ${EXAMPLES.COUNTERPARTY_ROLE.ROLE_TYPE} in ODS`,
         cause: mockError,
       });
     });
