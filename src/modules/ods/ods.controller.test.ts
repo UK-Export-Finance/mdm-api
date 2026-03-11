@@ -259,7 +259,7 @@ describe('OdsController', () => {
       const result = await controller.findCounterpartyRole({ roleType: mockRoleType });
 
       // Assert
-      expect(result).toStrictEqual(mockFacilityCategory);
+      expect(result).toStrictEqual(mockCounterpartyRole);
     });
 
     describe('when odsCounterpartyRoleService.findOne throws an error', () => {
