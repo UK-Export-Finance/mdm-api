@@ -1,4 +1,6 @@
 export * from './find-ods-industry-param.dto';
+export * from './get-accrual-frequency-ods-response.dto';
+export * from './get-accrual-frequency-response.dto';
 export * from './get-accrual-schedule-classification-ods-response.dto';
 export * from './get-accrual-schedule-classification-response.dto';
 export * from './get-counterparty-role-ods-response.dto';
@@ -9,6 +11,7 @@ export * from './get-industry-ods-response.dto';
 export * from './get-industry-response.dto';
 export * from './get-obligation-subtype-ods-response.dto';
 export * from './get-obligation-subtype-response.dto';
+export * from './get-ods-accrual-frequency-param.dto';
 export * from './get-ods-accrual-schedule-classification-param.dto';
 export * from './get-ods-business-centre-non-working-day-response.dto';
 export * from './get-ods-customer-param.dto';

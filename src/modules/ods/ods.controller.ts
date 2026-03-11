@@ -4,11 +4,13 @@ import AppConfig from '@ukef/config/app.config';
 
 import {
   FindOdsIndustryParamDto,
+  GetAccrualFrequencyResponseDto,
   GetAccrualScheduleClassificationResponseDto,
   GetCounterpartyRoleResponseDto,
   GetFacilityCategoryResponseDto,
   GetIndustryResponseDto,
   GetObligationSubtypeResponseDto,
+  GetOdsAccrualFrequencyParamDto,
   GetOdsAccrualScheduleClassificationParamDto,
   GetOdsCustomerParamDto,
   GetOdsCustomerResponse,
@@ -38,6 +40,43 @@ export class OdsController {
     private readonly odsFacilityCategoryService: OdsFacilityCategoryService,
     private readonly odsObligationSubtypeService: OdsObligationSubtypeService,
   ) {}
+
+  @Get('accrual-frequencies')
+  @ApiOperation({
+    summary: 'Get accrual frequencies from ODS',
+  })
+  @ApiOkResponse({
+    description: 'ODS accrual frequencies',
+    isArray: true,
+    type: GetAccrualFrequencyResponseDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  getAccrualFrequencies(): Promise<GetAccrualFrequencyResponseDto[]> {
+    return this.odsAccrualsService.getAccrualFrequencies();
+  }
+
+  @Get('accrual-frequency/:frequencyCode')
+  @ApiOperation({
+    summary: 'Get an accrual frequency from ODS',
+  })
+  @ApiOkResponse({
+    description: 'ODS frequency',
+    type: GetAccrualFrequencyResponseDto,
+  })
+  @ApiNotFoundResponse({
+    description: 'Accrual frequency not found',
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad request',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  findAccrualFrequency(@Param() param: GetOdsAccrualFrequencyParamDto): Promise<GetAccrualFrequencyResponseDto> {
+    return this.odsAccrualsService.findAccrualFrequency(param.frequencyCode);
+  }
 
   @Get('accrual-schedule-classifications')
   @ApiOperation({

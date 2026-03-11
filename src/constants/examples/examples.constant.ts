@@ -37,6 +37,14 @@ const PRODUCT_TYPES = {
 };
 
 export const EXAMPLES = {
+  ACCRUAL_FREQUENCY: {
+    CODE: 'FREQ12MON',
+    NAME: 'Annually',
+    ORDER_ID: 4,
+    FREQUENCY_NUMBER_OF_UNITS: 12,
+    FREQUENCY_UNIT: 'Months',
+    IS_ACTIVE: true,
+  },
   ACCRUAL_SCHEDULE_CLASSIFICATION: {
     TYPE: 'Day Basis',
     TYPE_CODE: 'dayBasis',
@@ -260,6 +268,14 @@ export const EXAMPLES = {
       name: 'Exporter',
       hasSharePercentage: false,
       counterpartyRoleTypeActive: true,
+    },
+    CONFIGURATION_FREQUENCY: {
+      code: 'FREQ12MON',
+      name: 'Annually',
+      orderId: 4,
+      frequencyNumberOfUnits: 12,
+      frequencyUnits: 'Months',
+      frequencyActive: true,
     },
     FACILITY_CLASSIFICATION: {
       classification_type: 'Facility Category',

@@ -1,7 +1,8 @@
 // https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_configuration_counterparty_role.sql
 
 /**
- * Customer, Deal, Business centre, Industry, Accrual schedule classifications, facility classifications, Stored Procedure query params can be found here:
+ * Customer, Deal, Business centre, Industry, Accrual schedule classifications, Accrual frequencies, Facility classifications.
+ * Stored Procedure query params can be found here:
  * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_customer.sql
  * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_deal.sql
  * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_business_centre.sql
@@ -9,6 +10,7 @@
  * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_industry.sql
  * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_accrual_schedule_classification.sql
  * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_facility_classification.sql
+ * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_configuration_frequency.sql
  */
 export type OdsStoredProcedureQueryParams = {
   business_centre_code?: string;
@@ -16,6 +18,7 @@ export type OdsStoredProcedureQueryParams = {
   classification_type_code?: string;
   customer_party_unique_reference_number?: string;
   deal_code?: string;
+  frequencyCode?: string;
   industry_category?: string;
   industry_code?: string;
 };
@@ -46,6 +49,7 @@ export type OdsStoredProcedureOutputBody = {
 
 export const ODS_ENTITIES = {
   ACCRUAL_SCHEDULE_CLASSIFICATION: 'accrual_schedule_classification',
+  CONFIGURATION_FREQUENCY: 'configuration_frequency',
   BUSINESS_CENTRE: 'business_centre',
   BUSINESS_CENTRE_NON_WORKING_DAY: 'business_centre_non_working_day',
   CONFIGURATION_COUNTERPARTY_ROLE: 'configuration_counterparty_role',
