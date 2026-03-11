@@ -48,6 +48,12 @@ export const EXAMPLES = {
   BUSINESS_CENTRE,
   COMPANIES_HOUSE_REGISTRATION_NUMBER: '00000001',
   COMPANIES_HOUSE_INDUSTRY_CODE: '1406',
+  COUNTERPARTY_ROLE: {
+    counterpartyRoleType: 'CRT001',
+    name: 'Exporter',
+    hasSharePercentage: false,
+    isActive: true,
+  },
   CREDIT_RISK_RATINGS: [
     {
       id: 1,
@@ -249,6 +255,12 @@ export const EXAMPLES = {
         business_centre_name: 'Mock name StB',
       },
     ],
+    CONFIGURATION_COUNTERPARTY_ROLE: {
+      counterpartyRoleType: 'CRT001',
+      name: 'Exporter',
+      hasSharePercentage: false,
+      counterpartyRoleTypeActive: true,
+    },
     FACILITY_CLASSIFICATION: {
       classification_type: 'Facility Category',
       classification_type_code: 'facilityCategory',

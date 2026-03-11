@@ -1,3 +1,5 @@
+// https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_configuration_counterparty_role.sql
+
 /**
  * Customer, Deal, Business centre, Industry, Accrual schedule classifications, facility classifications, Stored Procedure query params can be found here:
  * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_customer.sql
@@ -46,6 +48,7 @@ export const ODS_ENTITIES = {
   ACCRUAL_SCHEDULE_CLASSIFICATION: 'accrual_schedule_classification',
   BUSINESS_CENTRE: 'business_centre',
   BUSINESS_CENTRE_NON_WORKING_DAY: 'business_centre_non_working_day',
+  CONFIGURATION_COUNTERPARTY_ROLE: 'configuration_counterparty_role',
   CUSTOMER: 'customer',
   DEAL: 'deal',
   FACILITY_CLASSIFICATION: 'facility_classification',

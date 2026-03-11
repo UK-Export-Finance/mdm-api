@@ -5,6 +5,7 @@ import AppConfig from '@ukef/config/app.config';
 import {
   FindOdsIndustryParamDto,
   GetAccrualScheduleClassificationResponseDto,
+  GetCounterpartyRoleResponseDto,
   GetFacilityCategoryResponseDto,
   GetIndustryResponseDto,
   GetObligationSubtypeResponseDto,
@@ -18,6 +19,7 @@ import {
 } from './dto';
 import { OdsService } from './ods.service';
 import { OdsAccrualsService } from './ods-accruals.service';
+import { OdsCounterpartyRoleService } from './ods-counterparty-role.service';
 import { OdsFacilityCategoryService } from './ods-facility-category.service';
 import { OdsObligationSubtypeService } from './ods-obligation-subtype.service';
 
@@ -32,6 +34,7 @@ export class OdsController {
   constructor(
     private readonly odsService: OdsService,
     private readonly odsAccrualsService: OdsAccrualsService,
+    private readonly odsCounterpartyRoleService: OdsCounterpartyRoleService,
     private readonly odsFacilityCategoryService: OdsFacilityCategoryService,
     private readonly odsObligationSubtypeService: OdsObligationSubtypeService,
   ) {}
@@ -71,6 +74,22 @@ export class OdsController {
   })
   findAccrualScheduleClassification(@Param() param: GetOdsAccrualScheduleClassificationParamDto): Promise<GetAccrualScheduleClassificationResponseDto> {
     return this.odsAccrualsService.findScheduleClassification(param.classificationCode);
+  }
+
+  @Get('counterparty-roles')
+  @ApiOperation({
+    summary: 'Get counterparty roles from ODS',
+  })
+  @ApiOkResponse({
+    description: 'ODS counterparty roles',
+    isArray: true,
+    type: GetCounterpartyRoleResponseDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  getCounterpartyRoles(): Promise<GetCounterpartyRoleResponseDto[]> {
+    return this.odsCounterpartyRoleService.getAll();
   }
 
   @Get('customers/:urn')
