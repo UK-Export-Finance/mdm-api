@@ -4,7 +4,7 @@ import { mapCounterpartyRole } from './map-counterparty-role';
 
 /**
  * Map an ODS counterparty roles, into a more suitable format for consumers.
- * @param {GetCounterpartyRoleResponseOdsDto[]} ODS counterparty roles
+ * @param {GetCounterpartyRoleOdsResponseDto[]} ODS counterparty roles
  * @returns {GetCounterpartyRoleResponseDto[]} Mapped counterparty roles
  */
 export const mapCounterpartyRoles = (counterpartyRoles: GetCounterpartyRoleOdsResponseDto[]): GetCounterpartyRoleResponseDto[] =>

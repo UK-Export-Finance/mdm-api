@@ -43,7 +43,7 @@ describe('/ods - Counterparty roles', () => {
   });
 
   describe('/counterparty-role/:roleType', () => {
-    it(`should return ${HttpStatus.OK} with a mapped counterparty roles`, async () => {
+    it(`should return ${HttpStatus.OK} with a mapped counterparty role`, async () => {
       // Arrange
       const url = `/api/${prefixAndVersion}/ods/counterparty-role/${EXAMPLES.COUNTERPARTY_ROLE.ROLE_TYPE}`;
 
@@ -54,7 +54,7 @@ describe('/ods - Counterparty roles', () => {
       expect(status).toBe(HttpStatus.OK);
 
       const expected = expect.objectContaining({
-        counterpartyRoleType: expect.any(String),
+        roleType: expect.any(String),
         name: expect.any(String),
         hasSharePercentage: expect.any(Boolean),
         isActive: expect.any(Boolean),

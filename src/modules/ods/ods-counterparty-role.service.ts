@@ -16,7 +16,7 @@ export class OdsCounterpartyRoleService {
   /**
    * Find a counterparty role by role type
    * @param {string} roleType: Role type
-   * @returns {Promise<GetObligationSubtypeResponseDto>}
+   * @returns {Promise<GetCounterpartyRoleResponseDto>}
    * @throws {NotFoundException} If no counterparty role is found
    */
   async findOne(roleType: string): Promise<GetCounterpartyRoleResponseDto> {

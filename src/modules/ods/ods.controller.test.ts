@@ -55,6 +55,7 @@ describe('OdsController', () => {
   let odsFacilityCategoryServiceGetAll: jest.Mock;
   let odsFacilityCategoryServiceFindOne: jest.Mock;
   let odsCounterpartyRoleServiceGetAll: jest.Mock;
+  let odsCounterpartyRoleServiceFindOne: jest.Mock;
   let findUkefIndustry: jest.Mock;
   let odsObligationSubtypeServiceGetAll: jest.Mock;
   let odsObligationSubtypeServiceFindOne: jest.Mock;
@@ -97,6 +98,9 @@ describe('OdsController', () => {
 
     odsCounterpartyRoleServiceGetAll = jest.fn().mockResolvedValueOnce(mockCounterpartyRoles);
     odsCounterpartyRoleService.getAll = odsCounterpartyRoleServiceGetAll;
+
+    odsCounterpartyRoleServiceFindOne = jest.fn().mockResolvedValueOnce(mockCounterpartyRole);
+    odsCounterpartyRoleService.findOne = odsCounterpartyRoleServiceFindOne;
 
     odsFacilityCategoryServiceFindOne = jest.fn().mockResolvedValueOnce(mockFacilityCategory);
     odsFacilityCategoryService.findOne = odsFacilityCategoryServiceFindOne;
@@ -235,6 +239,43 @@ describe('OdsController', () => {
 
       // Assert
       expect(result).toStrictEqual(mockCounterpartyRoles);
+    });
+  });
+
+  describe('findCounterpartyRole', () => {
+    const mockCategoryCode = EXAMPLES.COUNTERPARTY_ROLE.ROLE_TYPE;
+
+    it('should call odsCounterpartyRoleService.findOne', async () => {
+      // Act
+      await controller.findCounterpartyRole({ categoryCode: mockCategoryCode });
+
+      // Assert
+      expect(odsCounterpartyRoleServiceFind).toHaveBeenCalledTimes(1);
+      expect(odsCounterpartyRoleServiceFind).toHaveBeenCalledWith(mockCategoryCode);
+    });
+
+    it('should return a counterparty role', async () => {
+      // Act
+      const result = await controller.findCounterpartyRole({ categoryCode: mockCategoryCode });
+
+      // Assert
+      expect(result).toStrictEqual(mockFacilityCategory);
+    });
+
+    describe('when odsCounterpartyRoleService.findOne throws an error', () => {
+      it('should throw an error', async () => {
+        // Arrange
+        const odsService = new OdsService(null, mockLogger);
+
+        odsCounterpartyRoleService.findOne = jest.fn().mockRejectedValueOnce(mockError);
+
+        controller = new OdsController(odsService, odsAccrualsService, odsCounterpartyRoleService, odsFacilityCategoryService, odsObligationSubtypeService);
+
+        // Act & Assert
+        const promise = controller.findFacilityCategory({ categoryCode: mockCategoryCode });
+
+        await expect(promise).rejects.toThrow(mockError);
+      });
     });
   });
 

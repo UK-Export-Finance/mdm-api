@@ -77,7 +77,7 @@ describe('OdsCounterpartyRoleService - findOne', () => {
     expect(result).toEqual(expected);
   });
 
-  describe('when a facility category is not found', () => {
+  describe('when a counterparty role is not found', () => {
     it('should throw an error', async () => {
       // Arrange
       const mockStoredProcedureOutput = `{
