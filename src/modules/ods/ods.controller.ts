@@ -3,9 +3,11 @@ import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiNotFoundRespo
 import AppConfig from '@ukef/config/app.config';
 
 import {
+  FindCounterpartyRoleParamDto,
   FindOdsIndustryParamDto,
   GetAccrualFrequencyResponseDto,
   GetAccrualScheduleClassificationResponseDto,
+  GetCounterpartyRoleResponseDto,
   GetFacilityCategoryResponseDto,
   GetIndustryResponseDto,
   GetObligationSubtypeResponseDto,
@@ -20,6 +22,7 @@ import {
 } from './dto';
 import { OdsService } from './ods.service';
 import { OdsAccrualsService } from './ods-accruals.service';
+import { OdsCounterpartyRoleService } from './ods-counterparty-role.service';
 import { OdsFacilityCategoryService } from './ods-facility-category.service';
 import { OdsObligationSubtypeService } from './ods-obligation-subtype.service';
 
@@ -34,6 +37,7 @@ export class OdsController {
   constructor(
     private readonly odsService: OdsService,
     private readonly odsAccrualsService: OdsAccrualsService,
+    private readonly odsCounterpartyRoleService: OdsCounterpartyRoleService,
     private readonly odsFacilityCategoryService: OdsFacilityCategoryService,
     private readonly odsObligationSubtypeService: OdsObligationSubtypeService,
   ) {}
@@ -110,6 +114,43 @@ export class OdsController {
   })
   findAccrualScheduleClassification(@Param() param: GetOdsAccrualScheduleClassificationParamDto): Promise<GetAccrualScheduleClassificationResponseDto> {
     return this.odsAccrualsService.findScheduleClassification(param.classificationCode);
+  }
+
+  @Get('counterparty-roles')
+  @ApiOperation({
+    summary: 'Get counterparty roles from ODS',
+  })
+  @ApiOkResponse({
+    description: 'ODS counterparty roles',
+    isArray: true,
+    type: GetCounterpartyRoleResponseDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  getCounterpartyRoles(): Promise<GetCounterpartyRoleResponseDto[]> {
+    return this.odsCounterpartyRoleService.getAll();
+  }
+
+  @Get('counterparty-role/:roleType')
+  @ApiOperation({
+    summary: 'Get a counterparty role from ODS',
+  })
+  @ApiOkResponse({
+    description: 'ODS counterparty role',
+    type: GetCounterpartyRoleResponseDto,
+  })
+  @ApiNotFoundResponse({
+    description: 'Counterparty role not found',
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad request',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  findCounterpartyRole(@Param() param: FindCounterpartyRoleParamDto): Promise<GetCounterpartyRoleResponseDto> {
+    return this.odsCounterpartyRoleService.findOne(param.roleType);
   }
 
   @Get('customers/:urn')

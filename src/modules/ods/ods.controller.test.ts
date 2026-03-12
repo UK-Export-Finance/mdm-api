@@ -5,6 +5,7 @@ import { PinoLogger } from 'nestjs-pino';
 import { OdsController } from './ods.controller';
 import { OdsService } from './ods.service';
 import { OdsAccrualsService } from './ods-accruals.service';
+import { OdsCounterpartyRoleService } from './ods-counterparty-role.service';
 import { OdsFacilityCategoryService } from './ods-facility-category.service';
 import { OdsObligationSubtypeService } from './ods-obligation-subtype.service';
 
@@ -24,6 +25,9 @@ const mockAccrualFrequencies = [mockAccrualFrequency, mockAccrualFrequency];
 const mockAccrualScheduleClassification = EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION;
 const mockAccrualScheduleClassifications = [mockAccrualScheduleClassification, mockAccrualScheduleClassification];
 
+const mockCounterpartyRole = EXAMPLES.COUNTERPARTY_ROLE;
+const mockCounterpartyRoles = [mockCounterpartyRole, mockCounterpartyRole];
+
 const mockFacilityCategory = EXAMPLES.FACILITY_CATEGORY;
 const mockFacilityCategories = [mockFacilityCategory, mockFacilityCategory];
 
@@ -36,6 +40,7 @@ describe('OdsController', () => {
   const odsService = new OdsService(null, mockLogger);
   const odsAccrualsService = new OdsAccrualsService(null, mockLogger);
   const odsFacilityCategoryService = new OdsFacilityCategoryService(null, mockLogger);
+  const odsCounterpartyRoleService = new OdsCounterpartyRoleService(null, mockLogger);
   const odsObligationSubtypeService = new OdsObligationSubtypeService(null, mockLogger);
 
   let odsServiceFindBusinessCentreNonWorkingDays: jest.Mock;
@@ -49,6 +54,8 @@ describe('OdsController', () => {
   let odsAccrualsServiceFindScheduleClassification: jest.Mock;
   let odsFacilityCategoryServiceGetAll: jest.Mock;
   let odsFacilityCategoryServiceFindOne: jest.Mock;
+  let odsCounterpartyRoleServiceGetAll: jest.Mock;
+  let odsCounterpartyRoleServiceFindOne: jest.Mock;
   let findUkefIndustry: jest.Mock;
   let odsObligationSubtypeServiceGetAll: jest.Mock;
   let odsObligationSubtypeServiceFindOne: jest.Mock;
@@ -89,6 +96,12 @@ describe('OdsController', () => {
     odsFacilityCategoryServiceGetAll = jest.fn().mockResolvedValueOnce(mockFacilityCategories);
     odsFacilityCategoryService.getAll = odsFacilityCategoryServiceGetAll;
 
+    odsCounterpartyRoleServiceGetAll = jest.fn().mockResolvedValueOnce(mockCounterpartyRoles);
+    odsCounterpartyRoleService.getAll = odsCounterpartyRoleServiceGetAll;
+
+    odsCounterpartyRoleServiceFindOne = jest.fn().mockResolvedValueOnce(mockCounterpartyRole);
+    odsCounterpartyRoleService.findOne = odsCounterpartyRoleServiceFindOne;
+
     odsFacilityCategoryServiceFindOne = jest.fn().mockResolvedValueOnce(mockFacilityCategory);
     odsFacilityCategoryService.findOne = odsFacilityCategoryServiceFindOne;
 
@@ -98,7 +111,7 @@ describe('OdsController', () => {
     odsObligationSubtypeServiceFindOne = jest.fn().mockResolvedValueOnce(mockObligationSubtype);
     odsObligationSubtypeService.findOne = odsObligationSubtypeServiceFindOne;
 
-    controller = new OdsController(odsService, odsAccrualsService, odsFacilityCategoryService, odsObligationSubtypeService);
+    controller = new OdsController(odsService, odsAccrualsService, odsCounterpartyRoleService, odsFacilityCategoryService, odsObligationSubtypeService);
   });
 
   describe('findAccrualFrequency', () => {
@@ -128,7 +141,7 @@ describe('OdsController', () => {
 
         odsAccrualsService.findAccrualFrequency = jest.fn().mockRejectedValueOnce(mockError);
 
-        controller = new OdsController(odsService, odsAccrualsService, odsFacilityCategoryService, odsObligationSubtypeService);
+        controller = new OdsController(odsService, odsAccrualsService, odsCounterpartyRoleService, odsFacilityCategoryService, odsObligationSubtypeService);
 
         // Act & Assert
         const promise = controller.findAccrualFrequency({ frequencyCode: mockFrequencyCode });
@@ -201,10 +214,65 @@ describe('OdsController', () => {
 
         odsAccrualsService.findScheduleClassification = jest.fn().mockRejectedValueOnce(mockError);
 
-        controller = new OdsController(odsService, odsAccrualsService, odsFacilityCategoryService, odsObligationSubtypeService);
+        controller = new OdsController(odsService, odsAccrualsService, odsCounterpartyRoleService, odsFacilityCategoryService, odsObligationSubtypeService);
 
         // Act & Assert
         const promise = controller.findAccrualScheduleClassification({ classificationCode: mockClassificationCode });
+
+        await expect(promise).rejects.toThrow(mockError);
+      });
+    });
+  });
+
+  describe('getCounterpartyRoles', () => {
+    it('should call odsCounterpartyRoleService.getAll', async () => {
+      // Act
+      await controller.getCounterpartyRoles();
+
+      // Assert
+      expect(odsCounterpartyRoleServiceGetAll).toHaveBeenCalledTimes(1);
+    });
+
+    it('should return counterparty roles', async () => {
+      // Act
+      const result = await controller.getCounterpartyRoles();
+
+      // Assert
+      expect(result).toStrictEqual(mockCounterpartyRoles);
+    });
+  });
+
+  describe('findCounterpartyRole', () => {
+    const mockRoleType = EXAMPLES.COUNTERPARTY_ROLE.ROLE_TYPE;
+
+    it('should call odsCounterpartyRoleService.findOne', async () => {
+      // Act
+      await controller.findCounterpartyRole({ roleType: mockRoleType });
+
+      // Assert
+      expect(odsCounterpartyRoleServiceFindOne).toHaveBeenCalledTimes(1);
+      expect(odsCounterpartyRoleServiceFindOne).toHaveBeenCalledWith(mockRoleType);
+    });
+
+    it('should return a counterparty role', async () => {
+      // Act
+      const result = await controller.findCounterpartyRole({ roleType: mockRoleType });
+
+      // Assert
+      expect(result).toStrictEqual(mockCounterpartyRole);
+    });
+
+    describe('when odsCounterpartyRoleService.findOne throws an error', () => {
+      it('should throw an error', async () => {
+        // Arrange
+        const odsService = new OdsService(null, mockLogger);
+
+        odsCounterpartyRoleService.findOne = jest.fn().mockRejectedValueOnce(mockError);
+
+        controller = new OdsController(odsService, odsAccrualsService, odsCounterpartyRoleService, odsFacilityCategoryService, odsObligationSubtypeService);
+
+        // Act & Assert
+        const promise = controller.findCounterpartyRole({ roleType: mockRoleType });
 
         await expect(promise).rejects.toThrow(mockError);
       });
@@ -256,7 +324,7 @@ describe('OdsController', () => {
 
         odsFacilityCategoryService.findOne = jest.fn().mockRejectedValueOnce(mockError);
 
-        controller = new OdsController(odsService, odsAccrualsService, odsFacilityCategoryService, odsObligationSubtypeService);
+        controller = new OdsController(odsService, odsAccrualsService, odsCounterpartyRoleService, odsFacilityCategoryService, odsObligationSubtypeService);
 
         // Act & Assert
         const promise = controller.findFacilityCategory({ categoryCode: mockCategoryCode });
@@ -311,7 +379,7 @@ describe('OdsController', () => {
 
         odsObligationSubtypeService.findOne = jest.fn().mockRejectedValueOnce(mockError);
 
-        controller = new OdsController(odsService, odsAccrualsService, odsFacilityCategoryService, odsObligationSubtypeService);
+        controller = new OdsController(odsService, odsAccrualsService, odsCounterpartyRoleService, odsFacilityCategoryService, odsObligationSubtypeService);
 
         // Act & Assert
         const promise = controller.findObligationSubtype({ subtypeCode: mockSubtypeCode });
@@ -349,7 +417,7 @@ describe('OdsController', () => {
 
         odsService.findCustomer = jest.fn().mockRejectedValueOnce(mockError);
 
-        controller = new OdsController(odsService, odsAccrualsService, odsFacilityCategoryService, odsObligationSubtypeService);
+        controller = new OdsController(odsService, odsAccrualsService, odsCounterpartyRoleService, odsFacilityCategoryService, odsObligationSubtypeService);
 
         // Act & Assert
         const promise = controller.findCustomer({ urn: EXAMPLES.CUSTOMER.PARTYURN });
@@ -384,7 +452,7 @@ describe('OdsController', () => {
 
         odsService.findDeal = jest.fn().mockRejectedValueOnce(mockError);
 
-        controller = new OdsController(odsService, odsAccrualsService, odsFacilityCategoryService, odsObligationSubtypeService);
+        controller = new OdsController(odsService, odsAccrualsService, odsCounterpartyRoleService, odsFacilityCategoryService, odsObligationSubtypeService);
 
         // Act & Assert
         const promise = controller.findDeal({ id: EXAMPLES.DEAL.ID });
@@ -458,7 +526,7 @@ describe('OdsController', () => {
 
         odsService.findUkefIndustry = jest.fn().mockRejectedValueOnce(mockError);
 
-        controller = new OdsController(odsService, odsAccrualsService, odsFacilityCategoryService, odsObligationSubtypeService);
+        controller = new OdsController(odsService, odsAccrualsService, odsCounterpartyRoleService, odsFacilityCategoryService, odsObligationSubtypeService);
 
         // Act & Assert
         const promise = controller.findUkefIndustry({ industryCode: EXAMPLES.INDUSTRY.CODE });
