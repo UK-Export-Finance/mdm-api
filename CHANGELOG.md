@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.44.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.43.0...v1.44.0) (2026-03-12)
+
+
+### Features
+
+* **GIFT-21361:** get counterparty roles from ODS ([#1757](https://github.com/UK-Export-Finance/mdm-api/issues/1757)) ([da1ff7b](https://github.com/UK-Export-Finance/mdm-api/commit/da1ff7b36f454a6d1aac2d6dfdc31d61fe9362d6))
+
 ## [1.43.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.42.0...v1.43.0) (2026-03-11)
 
 
