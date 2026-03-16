@@ -99,13 +99,13 @@ jobs:
           username: ${{ env.ACR_USER }}
           password: ${{ secrets.ACR_PASSWORD }}
 
-      # - name: Artifacts 🗃️
-      #   run: |
-      #     docker build . \
-      #     -t ${{ env.ACR }}/${{ env.NAME }}:${{ github.sha }} \
-      #     -t ${{ env.ACR }}/${{ env.NAME }}:${{ env.FROM }}
-      #     docker push ${{ env.ACR }}/${{ env.NAME }}:${{ github.sha }}
-      #     docker push ${{ env.ACR }}/${{ env.NAME }}:${{ env.FROM }}
+      - name: Artifacts 🗃️
+        run: |
+          docker build . \
+          -t ${{ env.ACR }}/${{ env.NAME }}:${{ github.sha }} \
+          -t ${{ env.ACR }}/${{ env.NAME }}:${{ env.FROM }}
+          docker push ${{ env.ACR }}/${{ env.NAME }}:${{ github.sha }}
+          docker push ${{ env.ACR }}/${{ env.NAME }}:${{ env.FROM }}
 
       # - name: Revisions 🔀
       #   uses: Azure/cli@v2.1.0
