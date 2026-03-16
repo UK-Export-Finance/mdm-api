@@ -23,7 +23,7 @@ run-name: APIM deployment for ${{ github.repository }}
 on:
   push:
     branches:
-      - feat/APIM-20039/test-deployment-using-new-subscription
+      - dev1
 
     paths:
       - 'src/**'
