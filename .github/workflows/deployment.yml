@@ -82,7 +82,7 @@ jobs:
           inlineScript: |
             # Basic
             az configure --defaults location=${{ vars.REGION }}
-            az configure --defaults group=rg-${{ env.PRODUCT }}-${{ env.ENVIRONMENT }}-${{ vars.VERSION }}
+            az configure --defaults group=rg-${{ env.PRODUCT }}-dev-${{ vars.VERSION }}
 
       - name: CLI 📝
         run: |
