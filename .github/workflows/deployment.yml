@@ -76,21 +76,21 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # - name: Defaults ✨
-      #   uses: Azure/cli@v2.1.0
-      #   with:
-      #     inlineScript: |
-      #       # Basic
-      #       az configure --defaults location=${{ vars.REGION }}
-      #       az configure --defaults group=rg-${{ env.PRODUCT }}-${{ env.ENVIRONMENT }}-${{ vars.VERSION }}
+      - name: Defaults ✨
+        uses: Azure/cli@v2.1.0
+        with:
+          inlineScript: |
+            # Basic
+            az configure --defaults location=${{ vars.REGION }}
+            az configure --defaults group=rg-${{ env.PRODUCT }}-${{ env.ENVIRONMENT }}-${{ vars.VERSION }}
 
-      # - name: CLI 📝
-      #   run: |
-      #     echo ACR=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query loginServer -o tsv) >> $GITHUB_ENV
-      #     echo ACR_USER=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query name -o tsv) >> $GITHUB_ENV
-      #     echo CA_NAME=$(az resource list --resource-type 'Microsoft.App/containerApps' --query '[?contains(name, `${{ env.NAME }}`)].name' -o tsv) >> $GITHUB_ENV
-      #     echo APIM=$(az resource list --resource-type 'Microsoft.ApiManagement/service' --query '[0].name' -o tsv) >> $GITHUB_ENV
-      #     echo API_ID=$(az apim api list --service-name $(az resource list --resource-type 'Microsoft.ApiManagement/service' --query '[0].name' -o tsv) --query '[?contains(displayName, `${{ env.NAME_UPPERCASE }}`)].name' -o tsv) >> $GITHUB_ENV
+      - name: CLI 📝
+        run: |
+          echo ACR=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query loginServer -o tsv) >> $GITHUB_ENV
+          echo ACR_USER=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query name -o tsv) >> $GITHUB_ENV
+          echo CA_NAME=$(az resource list --resource-type 'Microsoft.App/containerApps' --query '[?contains(name, `${{ env.NAME }}`)].name' -o tsv) >> $GITHUB_ENV
+          echo APIM=$(az resource list --resource-type 'Microsoft.ApiManagement/service' --query '[0].name' -o tsv) >> $GITHUB_ENV
+          echo API_ID=$(az apim api list --service-name $(az resource list --resource-type 'Microsoft.ApiManagement/service' --query '[0].name' -o tsv) --query '[?contains(displayName, `${{ env.NAME_UPPERCASE }}`)].name' -o tsv) >> $GITHUB_ENV
 
       # - name: ACR 🔐
       #   uses: azure/docker-login@v2
