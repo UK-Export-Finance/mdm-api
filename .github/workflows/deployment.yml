@@ -107,65 +107,65 @@ jobs:
           docker push ${{ env.ACR }}/${{ env.NAME }}:${{ github.sha }}
           docker push ${{ env.ACR }}/${{ env.NAME }}:${{ env.FROM }}
 
-      # - name: Revisions 🔀
-      #   uses: Azure/cli@v2.1.0
-      #   with:
-      #     inlineScript: |
-      #       az containerapp update \
-      #       --name ${{ env.CA_NAME }} \
-      #       --container-name ${{ env.CA_NAME }} \
-      #       --image ${{ env.ACR }}/${{ env.NAME }}:${{ env.FROM }} \
-      #       --revision-suffix v${{ github.run_id }} \
-      #       --set-env-vars \
-      #       "PORT=${{ secrets.PORT }}" \
-      #       "TZ=${{ secrets.TZ }}" \
-      #       "NODE_ENV=${{ secrets.NODE_ENV }}" \
-      #       "LOG_LEVEL=${{ vars.LOG_LEVEL }}" \
-      #       "REDACT_LOGS=${{ vars.REDACT_LOGS }}" \
-      #       "SINGLE_LINE_LOG_FORMAT=${{ vars.SINGLE_LINE_LOG_FORMAT }}" \
-      #       "SWAGGER_USER=${{ secrets.SWAGGER_USER }}" \
-      #       "SWAGGER_PASSWORD=${{ secrets.SWAGGER_PASSWORD }}" \
-      #       "DATABASE_PORT=${{ secrets.DATABASE_PORT }}" \
-      #       "DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}" \
-      #       "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" \
-      #       "DATABASE_HOST=${{ secrets.DATABASE_HOST }}" \
-      #       "DATABASE_MDM_NAME=${{ secrets.DATABASE_MDM_NAME }}" \
-      #       "DATABASE_NUMBER_GENERATOR_NAME=${{ secrets.DATABASE_NUMBER_GENERATOR_NAME }}" \
-      #       "DATABASE_CEDAR_NAME=${{ secrets.DATABASE_CEDAR_NAME }}" \
-      #       "DATABASE_CIS_NAME=${{ secrets.DATABASE_CIS_NAME }}" \
-      #       "DATABASE_ODS_HOST=${{ secrets.DATABASE_ODS_HOST }}" \
-      #       "DATABASE_ODS_PORT=${{ secrets.DATABASE_ODS_PORT }}" \
-      #       "DATABASE_ODS_CLIENT_ID=${{ secrets.DATABASE_ODS_CLIENT_ID }}" \
-      #       "DATABASE_ODS_TENANT_ID=${{ secrets.DATABASE_ODS_TENANT_ID }}" \
-      #       "DATABASE_ODS_CLIENT_SECRET=${{ secrets.DATABASE_ODS_CLIENT_SECRET }}" \
-      #       "DATABASE_ODS_NAME=${{ secrets.DATABASE_ODS_NAME }}" \
-      #       "APIM_INFORMATICA_URL=${{ secrets.APIM_INFORMATICA_URL }}" \
-      #       "APIM_INFORMATICA_USERNAME=${{ secrets.APIM_INFORMATICA_USERNAME }}" \
-      #       "APIM_INFORMATICA_PASSWORD=${{ secrets.APIM_INFORMATICA_PASSWORD }}" \
-      #       "APIM_INFORMATICA_MAX_REDIRECTS=${{ secrets.APIM_INFORMATICA_MAX_REDIRECTS }}" \
-      #       "APIM_INFORMATICA_TIMEOUT=${{ secrets.APIM_INFORMATICA_TIMEOUT }}" \
-      #       "API_KEY=${{ secrets.API_KEY }}" \
-      #       "ORDNANCE_SURVEY_URL=${{ secrets.ORDNANCE_SURVEY_URL }}" \
-      #       "ORDNANCE_SURVEY_KEY=${{ secrets.ORDNANCE_SURVEY_KEY }}" \
-      #       "ORDNANCE_SURVEY_MAX_REDIRECTS=${{ secrets.ORDNANCE_SURVEY_MAX_REDIRECTS }}" \
-      #       "ORDNANCE_SURVEY_TIMEOUT=${{ secrets.ORDNANCE_SURVEY_TIMEOUT }}" \
-      #       "COMPANIES_HOUSE_URL=${{ secrets.COMPANIES_HOUSE_URL }}" \
-      #       "COMPANIES_HOUSE_KEY=${{ secrets.COMPANIES_HOUSE_KEY }}" \
-      #       "COMPANIES_HOUSE_MAX_REDIRECTS=${{ secrets.COMPANIES_HOUSE_MAX_REDIRECTS }}" \
-      #       "COMPANIES_HOUSE_TIMEOUT=${{ secrets.COMPANIES_HOUSE_TIMEOUT }}" \
-      #       "DUN_AND_BRADSTREET_URL=${{ secrets.DUN_AND_BRADSTREET_URL }}" \
-      #       "DUN_AND_BRADSTREET_KEY=${{ secrets.DUN_AND_BRADSTREET_KEY }}" \
-      #       "DUN_AND_BRADSTREET_MAX_REDIRECTS=${{ secrets.DUN_AND_BRADSTREET_MAX_REDIRECTS }}" \
-      #       "DUN_AND_BRADSTREET_TIMEOUT=${{ secrets.DUN_AND_BRADSTREET_TIMEOUT }}" \
-      #       "SALESFORCE_ACCESS_URL=${{ secrets.SALESFORCE_ACCESS_URL }}" \
-      #       "SALESFORCE_INSTANCE_URL=${{ secrets.SALESFORCE_INSTANCE_URL }}" \
-      #       "SALESFORCE_CLIENT_ID=${{ secrets.SALESFORCE_CLIENT_ID }}" \
-      #       "SALESFORCE_CLIENT_SECRET=${{ secrets.SALESFORCE_CLIENT_SECRET }}" \
-      #       "SALESFORCE_USERNAME=${{ secrets.SALESFORCE_USERNAME }}" \
-      #       "SALESFORCE_PASSWORD=${{ secrets.SALESFORCE_PASSWORD }}" \
-      #       "SALESFORCE_MAX_REDIRECTS=${{ secrets.SALESFORCE_MAX_REDIRECTS }}" \
-      #       "SALESFORCE_TIMEOUT=${{ secrets.SALESFORCE_TIMEOUT }}" \
-      #       "DOM_ODS_HTTP_VERSION=${{ vars.DOM_ODS_HTTP_VERSION }}"
+      - name: Revisions 🔀
+        uses: Azure/cli@v2.1.0
+        with:
+          inlineScript: |
+            az containerapp update \
+            --name ${{ env.CA_NAME }} \
+            --container-name ${{ env.CA_NAME }} \
+            --image ${{ env.ACR }}/${{ env.NAME }}:${{ env.FROM }} \
+            --revision-suffix v${{ github.run_id }} \
+            --set-env-vars \
+            "PORT=${{ secrets.PORT }}" \
+            "TZ=${{ secrets.TZ }}" \
+            "NODE_ENV=${{ secrets.NODE_ENV }}" \
+            "LOG_LEVEL=${{ vars.LOG_LEVEL }}" \
+            "REDACT_LOGS=${{ vars.REDACT_LOGS }}" \
+            "SINGLE_LINE_LOG_FORMAT=${{ vars.SINGLE_LINE_LOG_FORMAT }}" \
+            "SWAGGER_USER=${{ secrets.SWAGGER_USER }}" \
+            "SWAGGER_PASSWORD=${{ secrets.SWAGGER_PASSWORD }}" \
+            "DATABASE_PORT=${{ secrets.DATABASE_PORT }}" \
+            "DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}" \
+            "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" \
+            "DATABASE_HOST=${{ secrets.DATABASE_HOST }}" \
+            "DATABASE_MDM_NAME=${{ secrets.DATABASE_MDM_NAME }}" \
+            "DATABASE_NUMBER_GENERATOR_NAME=${{ secrets.DATABASE_NUMBER_GENERATOR_NAME }}" \
+            "DATABASE_CEDAR_NAME=${{ secrets.DATABASE_CEDAR_NAME }}" \
+            "DATABASE_CIS_NAME=${{ secrets.DATABASE_CIS_NAME }}" \
+            "DATABASE_ODS_HOST=${{ secrets.DATABASE_ODS_HOST }}" \
+            "DATABASE_ODS_PORT=${{ secrets.DATABASE_ODS_PORT }}" \
+            "DATABASE_ODS_CLIENT_ID=${{ secrets.DATABASE_ODS_CLIENT_ID }}" \
+            "DATABASE_ODS_TENANT_ID=${{ secrets.DATABASE_ODS_TENANT_ID }}" \
+            "DATABASE_ODS_CLIENT_SECRET=${{ secrets.DATABASE_ODS_CLIENT_SECRET }}" \
+            "DATABASE_ODS_NAME=${{ secrets.DATABASE_ODS_NAME }}" \
+            "APIM_INFORMATICA_URL=${{ secrets.APIM_INFORMATICA_URL }}" \
+            "APIM_INFORMATICA_USERNAME=${{ secrets.APIM_INFORMATICA_USERNAME }}" \
+            "APIM_INFORMATICA_PASSWORD=${{ secrets.APIM_INFORMATICA_PASSWORD }}" \
+            "APIM_INFORMATICA_MAX_REDIRECTS=${{ secrets.APIM_INFORMATICA_MAX_REDIRECTS }}" \
+            "APIM_INFORMATICA_TIMEOUT=${{ secrets.APIM_INFORMATICA_TIMEOUT }}" \
+            "API_KEY=${{ secrets.API_KEY }}" \
+            "ORDNANCE_SURVEY_URL=${{ secrets.ORDNANCE_SURVEY_URL }}" \
+            "ORDNANCE_SURVEY_KEY=${{ secrets.ORDNANCE_SURVEY_KEY }}" \
+            "ORDNANCE_SURVEY_MAX_REDIRECTS=${{ secrets.ORDNANCE_SURVEY_MAX_REDIRECTS }}" \
+            "ORDNANCE_SURVEY_TIMEOUT=${{ secrets.ORDNANCE_SURVEY_TIMEOUT }}" \
+            "COMPANIES_HOUSE_URL=${{ secrets.COMPANIES_HOUSE_URL }}" \
+            "COMPANIES_HOUSE_KEY=${{ secrets.COMPANIES_HOUSE_KEY }}" \
+            "COMPANIES_HOUSE_MAX_REDIRECTS=${{ secrets.COMPANIES_HOUSE_MAX_REDIRECTS }}" \
+            "COMPANIES_HOUSE_TIMEOUT=${{ secrets.COMPANIES_HOUSE_TIMEOUT }}" \
+            "DUN_AND_BRADSTREET_URL=${{ secrets.DUN_AND_BRADSTREET_URL }}" \
+            "DUN_AND_BRADSTREET_KEY=${{ secrets.DUN_AND_BRADSTREET_KEY }}" \
+            "DUN_AND_BRADSTREET_MAX_REDIRECTS=${{ secrets.DUN_AND_BRADSTREET_MAX_REDIRECTS }}" \
+            "DUN_AND_BRADSTREET_TIMEOUT=${{ secrets.DUN_AND_BRADSTREET_TIMEOUT }}" \
+            "SALESFORCE_ACCESS_URL=${{ secrets.SALESFORCE_ACCESS_URL }}" \
+            "SALESFORCE_INSTANCE_URL=${{ secrets.SALESFORCE_INSTANCE_URL }}" \
+            "SALESFORCE_CLIENT_ID=${{ secrets.SALESFORCE_CLIENT_ID }}" \
+            "SALESFORCE_CLIENT_SECRET=${{ secrets.SALESFORCE_CLIENT_SECRET }}" \
+            "SALESFORCE_USERNAME=${{ secrets.SALESFORCE_USERNAME }}" \
+            "SALESFORCE_PASSWORD=${{ secrets.SALESFORCE_PASSWORD }}" \
+            "SALESFORCE_MAX_REDIRECTS=${{ secrets.SALESFORCE_MAX_REDIRECTS }}" \
+            "SALESFORCE_TIMEOUT=${{ secrets.SALESFORCE_TIMEOUT }}" \
+            "DOM_ODS_HTTP_VERSION=${{ vars.DOM_ODS_HTTP_VERSION }}"
 
       # - name: Import ⬇️
       #   if: ${{ '' != env.API_ID }}
