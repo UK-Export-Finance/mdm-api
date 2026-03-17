@@ -97,4 +97,36 @@ describe('/ods - UKEF industries', () => {
       });
     });
   });
+
+  describe('/ukef-industry-code/:industryCode/by-companies-house-industry-code', () => {
+    it(`should return ${HttpStatus.OK} with a UKEF industry code`, async () => {
+      // Arrange
+      const url = `/api/${prefixAndVersion}/ods/ukef-industry-code/${EXAMPLES.COMPANIES_HOUSE_INDUSTRY_CODE}/by-companies-house-industry-code`;
+
+      // Act
+      const { status, body } = await api.get(url);
+
+      // Assert
+      expect(status).toBe(HttpStatus.OK);
+
+      const expected = {
+        ukefIndustryCode: expect.any(String),
+      };
+
+      expect(body).toEqual(expected);
+    });
+
+    describe('when a single UKEF industry is NOT found', () => {
+      it(`should return ${HttpStatus.NOT_FOUND}`, async () => {
+        // Arrange
+        const url = `/api/${prefixAndVersion}/ods/ukef-industry-code/INVALID_ID/by-companies-house-industry-code`;
+
+        // Act
+        const { status } = await api.get(url);
+
+        // Assert
+        expect(status).toBe(HttpStatus.NOT_FOUND);
+      });
+    });
+  });
 });

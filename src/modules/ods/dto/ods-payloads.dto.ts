@@ -1,6 +1,16 @@
 /**
- * Customer, Deal, Business centre, Counterparty roles, Industry, Accrual schedule classifications, Accrual frequencies, Facility classifications.
- * Stored Procedure query params can be found here:
+ * ODS Stored Procedure query params:
+ * - Customer
+ * - Deal
+ * - Business centre
+ * - Counterparty roles
+ * - Industry
+ * - Accrual schedule classifications
+ * - Accrual frequencies
+ * - Facility classifications
+ * - Map SIC code to UKEF industry
+ *
+ * Full details can be found here:
  * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_customer.sql
  * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_deal.sql
  * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_business_centre.sql
@@ -10,6 +20,7 @@
  * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_facility_classification.sql
  * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_configuration_frequency.sql
  * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_configuration_counterparty_role.sql
+ * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_map_sic_code_to_ukef_industry.sql
  */
 export type OdsStoredProcedureQueryParams = {
   business_centre_code?: string;
@@ -21,6 +32,7 @@ export type OdsStoredProcedureQueryParams = {
   frequencyCode?: string;
   industry_category?: string;
   industry_code?: string;
+  sic_industry_code?: string;
 };
 
 /**
@@ -58,6 +70,7 @@ export const ODS_ENTITIES = {
   FACILITY_CLASSIFICATION: 'facility_classification',
   OBLIGATION_CLASSIFICATION: 'obligation_classification',
   INDUSTRY: 'industry',
+  SIC_CODE_TO_UKEF_INDUSTRY: 'map_sic_code_to_ukef_industry',
 } as const;
 
 export type OdsEntity = (typeof ODS_ENTITIES)[keyof typeof ODS_ENTITIES];
