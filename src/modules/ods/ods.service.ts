@@ -331,8 +331,6 @@ export class OdsService {
 
       const industry = storedProcedureJson.results[0] as GetSicCodeToUkefIndustryOdsResponseDto;
 
-      // TODO: deprecate old endpoint.
-      // TODO: param validation/length?
       return {
         ukefIndustryCode: industry.ukef_industry_code,
       };
