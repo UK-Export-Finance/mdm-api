@@ -128,7 +128,7 @@ describe('/ods - UKEF industries', () => {
       });
     });
 
-    describe('when the industry code is a valid format, but does collate to a UKEF industry code', () => {
+    describe('when the industry code is a valid format, but does NOT collate to a UKEF industry code', () => {
       it(`should return ${HttpStatus.NOT_FOUND}`, async () => {
         // Arrange
         const mockIndustryCode = '12345';
