@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.44.1](https://github.com/UK-Export-Finance/mdm-api/compare/v1.44.0...v1.44.1) (2026-03-17)
+
+
+### Bug Fixes
+
+* **APIM-624:** premium schedules endpoint ([#1765](https://github.com/UK-Export-Finance/mdm-api/issues/1765)) ([412f986](https://github.com/UK-Export-Finance/mdm-api/commit/412f98681c3408dd10d40bdb156f5bf92357ae02))
+
 ## [1.44.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.43.0...v1.44.0) (2026-03-12)
 
 
