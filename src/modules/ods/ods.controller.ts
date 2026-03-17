@@ -330,7 +330,7 @@ export class OdsController {
   })
   @ApiOkResponse({
     description: 'The UKEF industry code from ODS',
-    type: String,
+    type: GetSicCodeToUkefIndustryResponseDto,
   })
   @ApiNotFoundResponse({
     description: 'UKEF industry not found',

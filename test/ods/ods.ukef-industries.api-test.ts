@@ -1,6 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
 import AppConfig from '@ukef/config/app.config';
-import { COMPANIES_HOUSE, EXAMPLES, UKEF_INDUSTRY_CODE } from '@ukef/constants';
+import { COMPANIES_HOUSE, EXAMPLES } from '@ukef/constants';
 import { Api } from '@ukef-test/support/api';
 
 const {
@@ -179,7 +179,7 @@ describe('/ods - UKEF industries', () => {
 
         expect(body).toEqual({
           statusCode: HttpStatus.BAD_REQUEST,
-          message: [`industryCode must be exactly ${UKEF_INDUSTRY_CODE.EXACT_LENGTH} characters long`, 'industryCode must be a number string'],
+          message: [`industryCode must be exactly ${COMPANIES_HOUSE.INDUSTRY_CODE.EXACT_LENGTH} characters long`, 'industryCode must be a number string'],
           error: 'Bad Request',
         });
       });
@@ -191,7 +191,7 @@ describe('/ods - UKEF industries', () => {
         const mockIndustryCode = 'a'.repeat(COMPANIES_HOUSE.INDUSTRY_CODE.EXACT_LENGTH + 1);
 
         // Act
-        const { status, body } = await api.get(`${baseUrl}/${mockIndustryCode}`);
+        const { status, body } = await api.get(`${baseUrl}/${mockIndustryCode}/by-companies-house-industry-code`);
 
         // Assert
         expect(status).toBe(HttpStatus.BAD_REQUEST);

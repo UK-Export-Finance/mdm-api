@@ -18,7 +18,7 @@ const mockUkefIndustries = [EXAMPLES.ODS.INDUSTRY, EXAMPLES.ODS.INDUSTRY];
 const mockUkefIndustryCodes = [EXAMPLES.ODS.INDUSTRY.industry_code, EXAMPLES.ODS.INDUSTRY.industry_code];
 
 const mockMappedIndustry = mapIndustry(EXAMPLES.ODS.INDUSTRY);
-const mockUkefIndustryCode = EXAMPLES.INDUSTRY.CODE;
+const mockUkefIndustryCode = EXAMPLES.UKEF_INDUSTRY_CODE;
 
 const mockAccrualFrequency = EXAMPLES.ACCRUAL_FREQUENCY;
 const mockAccrualFrequencies = [mockAccrualFrequency, mockAccrualFrequency];
@@ -83,7 +83,7 @@ describe('OdsController', () => {
     findUkefIndustry = jest.fn().mockResolvedValueOnce(mockMappedIndustry);
     odsService.findUkefIndustry = findUkefIndustry;
 
-    findUkefIndustryCodeByCompaniesHouseCode = jest.fn().mockResolvedValueOnce(mockUkefIndustryCode);
+    findUkefIndustryCodeByCompaniesHouseCode = jest.fn().mockResolvedValueOnce({ ukefIndustryCode: mockUkefIndustryCode });
     odsService.findUkefIndustryCodeByCompaniesHouseCode = findUkefIndustryCodeByCompaniesHouseCode;
 
     odsAccrualsServiceGetAccrualFrequencies = jest.fn().mockResolvedValueOnce(mockAccrualFrequencies);
@@ -542,7 +542,7 @@ describe('OdsController', () => {
   });
 
   describe('findUkefIndustryCodeByCompaniesHouseCode', () => {
-    it.each([{ value: EXAMPLES.INDUSTRY.CODE }, { value: '' }, { value: 'invalid' }])(
+    it.each([{ value: EXAMPLES.COMPANIES_HOUSE_INDUSTRY_CODE }, { value: '' }, { value: 'invalid' }])(
       `should call odsService.findUkefIndustryCodeByCompaniesHouseCode with $value`,
       async ({ value }) => {
         // Act
@@ -556,10 +556,14 @@ describe('OdsController', () => {
 
     it('should return an industry when a valid industry code is provided', async () => {
       // Act
-      const result = await controller.findUkefIndustryCode({ industryCode: EXAMPLES.INDUSTRY.CODE });
+      const result = await controller.findUkefIndustryCode({ industryCode: EXAMPLES.COMPANIES_HOUSE_INDUSTRY_CODE });
 
       // Assert
-      expect(result).toEqual(mockMappedIndustry);
+      const expected = {
+        industryCode: EXAMPLES.UKEF_INDUSTRY_CODE,
+      };
+
+      expect(result).toEqual(expected);
     });
 
     describe('when odsService.findUkefIndustryCodeByCompaniesHouseCode throws an error', () => {
@@ -572,7 +576,7 @@ describe('OdsController', () => {
         controller = new OdsController(odsService, odsAccrualsService, odsCounterpartyRoleService, odsFacilityCategoryService, odsObligationSubtypeService);
 
         // Act & Assert
-        const promise = controller.findUkefIndustryCode({ industryCode: EXAMPLES.INDUSTRY.CODE });
+        const promise = controller.findUkefIndustryCode({ industryCode: EXAMPLES.COMPANIES_HOUSE_INDUSTRY_CODE });
 
         await expect(promise).rejects.toThrow(mockError);
       });
