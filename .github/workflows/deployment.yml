@@ -168,7 +168,6 @@ jobs:
             "DOM_ODS_HTTP_VERSION=${{ vars.DOM_ODS_HTTP_VERSION }}"
 
       - name: Import ⬇️
-        if: ${{ '' != env.API_ID }}
         uses: Azure/cli@v2.1.0
         with:
           inlineScript: |
