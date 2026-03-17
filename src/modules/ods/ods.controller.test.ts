@@ -560,7 +560,7 @@ describe('OdsController', () => {
 
       // Assert
       const expected = {
-        industryCode: EXAMPLES.UKEF_INDUSTRY_CODE,
+        ukefIndustryCode: EXAMPLES.UKEF_INDUSTRY_CODE,
       };
 
       expect(result).toEqual(expected);
