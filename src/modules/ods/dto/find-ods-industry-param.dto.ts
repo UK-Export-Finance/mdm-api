@@ -5,7 +5,7 @@ import { IsString } from 'class-validator';
 export class FindOdsIndustryParamDto {
   @ApiProperty({
     required: true,
-    example: EXAMPLES.COMPANIES_HOUSE_INDUSTRY_CODE,
+    example: EXAMPLES.INDUSTRY.CODE,
     description: 'Unique UKEF industry code',
   })
   @IsString()
