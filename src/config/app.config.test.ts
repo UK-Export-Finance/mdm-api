@@ -17,6 +17,40 @@ describe('appConfig', () => {
     process.env = originalProcessEnv;
   });
 
+  describe('apiKey', () => {
+    it('should return the API_KEY environment variable', () => {
+      const config = appConfig();
+
+      expect(config.apiKey).toBe(process.env.API_KEY);
+    });
+  });
+
+  describe('apiKeyStrategy', () => {
+    describe('when API_KEY_STRATEGY_HEADER is not provided', () => {
+      it('should default to `Authorization`', () => {
+        replaceEnvironmentVariables({
+          API_KEY_STRATEGY_HEADER: undefined,
+        });
+
+        const config = appConfig();
+
+        expect(config.apiKeyStrategy).toBe('Authorization');
+      });
+    });
+
+    describe('when API_KEY_STRATEGY_HEADER is provided', () => {
+      it('should return the API_KEY_STRATEGY_HEADER environment variable', () => {
+        replaceEnvironmentVariables({
+          API_KEY_STRATEGY_HEADER: 'CustomStrategy',
+        });
+
+        const config = appConfig();
+
+        expect(config.apiKeyStrategy).toBe('CustomStrategy');
+      });
+    });
+  });
+
   describe('logLevel', () => {
     describe('when LOG_LEVEL is specified, but is not a valid log level', () => {
       it('should throw an InvalidConfigException', () => {

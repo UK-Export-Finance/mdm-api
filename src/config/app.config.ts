@@ -12,6 +12,7 @@ const validLogLevels = ['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'sil
 
 export interface AppConfig {
   apiKey: string;
+  apiKeyStrategy: string;
   env: string;
   name: string;
   globalPrefix: string;
@@ -65,6 +66,7 @@ export default registerAs('app', (): Record<string, any> => {
 
   return {
     apiKey: process.env.API_KEY,
+    apiKeyStrategy: process.env.API_KEY_STRATEGY_HEADER || 'Authorization',
     env: NODE_ENV,
     globalPrefix: '/api',
     logLevel: process.env.LOG_LEVEL || 'info',
