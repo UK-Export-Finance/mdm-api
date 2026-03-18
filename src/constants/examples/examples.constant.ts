@@ -159,6 +159,7 @@ export const EXAMPLES = {
         productType: PRODUCT_TYPES.BIP,
         name: 'Bond Insurance Product (BIP)',
         shortName: 'BIP',
+        productActive: true,
         configuration: {
           commitmentDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
           issuedDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
@@ -200,12 +201,16 @@ export const EXAMPLES = {
         counterpartyRoleTypes: [COUNTERPARTY_ROLE_TYPES.BROKER],
         facilityCategoryTypes: ['FCT001', 'FCT002'],
         obligationSubtypes: ['OST001', 'OST002', 'OST003'],
+        additionalRateTypes: [],
+        baseRateTypes: [],
+        accrualScheduleTypes: [],
         account: [1, 2, 3],
       },
       EXIP: {
         productType: PRODUCT_TYPES.EXIP,
         name: 'Export Insurance Product (EXIP)',
         shortName: 'EXIP',
+        productActive: true,
         configuration: {
           commitmentDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
           issuedDate: PRODUCT_CONFIG_REQUIREMENT.NOT_APPLICABLE,
