@@ -1,6 +1,6 @@
 export const mockProductConfigs = [
   {
-    productType: 'BIP',
+    productType: 'PRT001',
     name: 'Mock name',
     shortName: 'BIP',
     productActive: true,
@@ -21,7 +21,7 @@ export const mockProductConfigs = [
     accrualScheduleTypes: [],
   },
   {
-    productType: 'EXIP',
+    productType: 'PRT002',
     name: 'Mock name',
     shortName: 'EXIP',
     productActive: true,
@@ -44,7 +44,7 @@ export const mockProductConfigs = [
 ];
 
 export const mockObligationSubtype = {
-  type: 'Obligation Sub-Type',
+  type: 'Mock obligation Sub-Type',
   typeCode: 'obligationSubtype',
   description: 'Mock description',
   isActive: true,

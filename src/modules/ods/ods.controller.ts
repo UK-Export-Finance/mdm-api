@@ -249,12 +249,12 @@ export class OdsController {
     return this.odsObligationSubtypeService.getAll();
   }
 
-  @Get('obligation-subtypes/with-product-codes')
+  @Get('obligation-subtypes/with-product-type-codes')
   @ApiOperation({
-    summary: 'Get obligation subtypes with product codes from ODS',
+    summary: 'Get obligation subtypes with product type codes from ODS',
   })
   @ApiOkResponse({
-    description: 'ODS obligation subtypes with product codes',
+    description: 'ODS obligation subtypes with product type codes',
     isArray: true,
     type: ObligationSubtypeWithProductTypeDto,
   })

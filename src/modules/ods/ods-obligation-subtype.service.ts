@@ -116,9 +116,7 @@ export class OdsObligationSubtypeService {
     try {
       this.logger.info('Getting obligation subtypes with product types from ODS');
 
-      const productConfigs = await this.odsProductConfigService.getAll();
-
-      const obligationSubtypes = await this.getAll();
+      const [productConfigs, obligationSubtypes] = await Promise.all([this.odsProductConfigService.getAll(), this.getAll()]);
 
       const subtypesWithProductType = mapObligationSubtypesWithProductCode({
         productConfigs,

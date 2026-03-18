@@ -18,6 +18,10 @@ export const mapObligationSubtypesWithProductCode = ({ productConfigs, obligatio
     return productObligationSubtypes.map((subtypeCode: string) => {
       const populatedSubtype = obligationSubtypes.find((obligationSubtype: GetObligationSubtypeResponseDto) => obligationSubtype.code === subtypeCode);
 
+      if (!populatedSubtype) {
+        throw new Error(`Obligation subtype with code "${subtypeCode}" not found for product type "${productType}".`);
+      }
+
       return {
         ...populatedSubtype,
         productTypeCode: productType,

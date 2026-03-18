@@ -43,11 +43,11 @@ describe('/ods - Obligation subtypes', () => {
     });
   });
 
-  describe('/obligation-subtypes/with-product-codes', () => {
+  describe('/obligation-subtypes/with-product-type-codes', () => {
     describe('/obligation-subtypes', () => {
       it(`should return ${HttpStatus.OK} with mapped obligation subtypes`, async () => {
         // Arrange
-        const url = `/api/${prefixAndVersion}/ods/obligation-subtypes/with-product-codes`;
+        const url = `/api/${prefixAndVersion}/ods/obligation-subtypes/with-product-type-codes`;
 
         // Act
         const { status, body } = await api.get(url);

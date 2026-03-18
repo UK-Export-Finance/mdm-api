@@ -204,7 +204,7 @@ export const EXAMPLES = {
         additionalRateTypes: [],
         baseRateTypes: [],
         accrualScheduleTypes: [],
-        account: [1, 2, 3],
+        account: ['1', '2', '3'],
       },
       EXIP: {
         productType: PRODUCT_TYPES.EXIP,
@@ -219,7 +219,7 @@ export const EXAMPLES = {
         counterpartyRoleTypes: [COUNTERPARTY_ROLE_TYPES.BROKER, COUNTERPARTY_ROLE_TYPES.GUARANTOR],
         facilityCategoryTypes: ['FCT001', 'FCT002'],
         obligationSubtypes: ['OST001', 'OST002', 'OST003'],
-        account: [1, 2, 3],
+        account: ['1', '2', '3'],
       },
     },
   },
