@@ -1,5 +1,5 @@
 import { registerAs } from '@nestjs/config';
-import { APPLICATION } from '@ukef/constants';
+import { APPLICATION, AUTH } from '@ukef/constants';
 import { getIntConfig } from '@ukef/helpers/get-int-config';
 
 import { InvalidConfigException } from './invalid-config.exception';
@@ -66,7 +66,7 @@ export default registerAs('app', (): Record<string, any> => {
 
   return {
     apiKey: process.env.API_KEY,
-    apiKeyStrategy: process.env.API_KEY_STRATEGY_HEADER || 'Authorization',
+    apiKeyStrategy: AUTH.STRATEGY,
     env: NODE_ENV,
     globalPrefix: '/api',
     logLevel: process.env.LOG_LEVEL || 'info',

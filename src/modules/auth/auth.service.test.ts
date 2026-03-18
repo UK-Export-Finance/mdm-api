@@ -73,34 +73,40 @@ describe('AuthService', () => {
     });
   });
 
-  describe('when API key lengths do not match', () => {
+  describe('when API key lengths do not match (hashes will be different)', () => {
     it('should return false', () => {
       // Arrange
+      const configuredKey = 'very-long-configured-api-key-value';
+      const providedKey = 'short';
+
       configService = {
-        get: jest.fn().mockReturnValue('configured-api-key'),
+        get: jest.fn().mockReturnValue(configuredKey),
       } as any;
 
       authService = new AuthService(configService);
 
       // Act
-      const result = authService.validateApiKey('short-key');
+      const result = authService.validateApiKey(providedKey);
 
       // Assert
       expect(result).toBe(false);
     });
   });
 
-  describe('when API keys have the same length but different values', () => {
+  describe('when API keys have the same length, but different values (SHA hashes will be different)', () => {
     it('should return false', () => {
       // Arrange
+      const configuredKey = 'abc123xyz';
+      const providedKey = 'xyz123abc';
+
       configService = {
-        get: jest.fn().mockReturnValue('abc123xyz'),
+        get: jest.fn().mockReturnValue(configuredKey),
       } as any;
 
       authService = new AuthService(configService);
 
       // Act
-      const result = authService.validateApiKey('xyz123abc');
+      const result = authService.validateApiKey(providedKey);
 
       // Assert
       expect(result).toBe(false);

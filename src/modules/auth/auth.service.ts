@@ -1,7 +1,8 @@
-import { timingSafeEqual } from 'node:crypto';
+import { createHash, timingSafeEqual } from 'node:crypto';
 
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { AUTH } from '@ukef/constants';
 
 @Injectable()
 export class AuthService {
@@ -20,14 +21,13 @@ export class AuthService {
       return false;
     }
 
-    const keyBuffer = Buffer.from(apiKey);
+    const apiKeyDigest = createHash(AUTH.HASH.SHA).update(apiKey, AUTH.HASH.UTF).digest();
+    const providedKeyDigest = createHash(AUTH.HASH.SHA).update(providedKey, AUTH.HASH.UTF).digest();
 
-    const providedBuffer = Buffer.from(providedKey);
-
-    if (keyBuffer.length !== providedBuffer.length) {
+    if (apiKeyDigest.length !== providedKeyDigest.length) {
       return false;
     }
 
-    return timingSafeEqual(keyBuffer, providedBuffer);
+    return timingSafeEqual(apiKeyDigest, providedKeyDigest);
   }
 }
