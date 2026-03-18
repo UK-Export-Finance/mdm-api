@@ -43,6 +43,34 @@ describe('/ods - Obligation subtypes', () => {
     });
   });
 
+  describe('/obligation-subtypes/with-product-codes', () => {
+    describe('/obligation-subtypes', () => {
+      it(`should return ${HttpStatus.OK} with mapped obligation subtypes`, async () => {
+        // Arrange
+        const url = `/api/${prefixAndVersion}/ods/obligation-subtypes/with-product-codes`;
+
+        // Act
+        const { status, body } = await api.get(url);
+
+        // Assert
+        expect(status).toBe(HttpStatus.OK);
+
+        const expected = expect.arrayContaining([
+          expect.objectContaining({
+            type: expect.any(String),
+            typeCode: expect.any(String),
+            code: expect.any(String),
+            description: expect.any(String),
+            isActive: expect.any(Boolean),
+            productTypeCode: expect.any(String),
+          }),
+        ]);
+
+        expect(body).toEqual(expected);
+      });
+    });
+  });
+
   describe('/obligation-subtype/:subtypeCode', () => {
     it(`should return ${HttpStatus.OK} with a mapped obligation subtype`, async () => {
       // Arrange
