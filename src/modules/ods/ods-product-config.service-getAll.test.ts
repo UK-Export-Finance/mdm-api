@@ -84,7 +84,7 @@ describe('OdsProductConfigService - getAll', () => {
       // Arrange
       const mockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
 
-      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
+      jest.spyOn(odsStoredProcedureService, 'call').mockRejectedValue(mockStoredProcedureOutput);
 
       // Act & Assert
       const promise = service.getAll();
