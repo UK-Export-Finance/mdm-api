@@ -19,9 +19,13 @@ describe('appConfig', () => {
 
   describe('apiKey', () => {
     it('should return the API_KEY environment variable', () => {
+      const mockApiKey = 'test-api-key';
+
+      replaceEnvironmentVariables({ API_KEY: mockApiKey });
+
       const config = appConfig();
 
-      expect(config.apiKey).toBe(process.env.API_KEY);
+      expect(config.apiKey).toBe(mockApiKey);
     });
   });
 

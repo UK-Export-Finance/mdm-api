@@ -43,9 +43,9 @@ export class ApiKeyStrategy extends PassportStrategy(HeaderAPIKeyStrategy, AUTH.
    * Validates the provided API key.
    *
    * @param apiKey - The API key to validate.
-   * @returns True if the API key is valid, otherwise throws an UnauthorizedException.
+   * @returns True if the API key is valid
    */
-  validate(apiKey: string): boolean | UnauthorizedException {
+  validate(apiKey: string): boolean {
     const valid = this.authService.validateApiKey(apiKey);
 
     if (!valid) {
