@@ -1,6 +1,7 @@
+import { timingSafeEqual } from 'node:crypto';
+
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { timingSafeEqual } from 'crypto';
 
 @Injectable()
 export class AuthService {
