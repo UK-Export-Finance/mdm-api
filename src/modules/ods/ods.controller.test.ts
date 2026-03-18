@@ -8,6 +8,7 @@ import { OdsAccrualsService } from './ods-accruals.service';
 import { OdsCounterpartyRoleService } from './ods-counterparty-role.service';
 import { OdsFacilityCategoryService } from './ods-facility-category.service';
 import { OdsObligationSubtypeService } from './ods-obligation-subtype.service';
+import { OdsProductConfigService } from './ods-product-config.service';
 
 const mockError = new Error('An error occurred');
 
@@ -34,6 +35,8 @@ const mockFacilityCategories = [mockFacilityCategory, mockFacilityCategory];
 const mockObligationSubtype = EXAMPLES.OBLIGATION_SUBTYPE;
 const mockObligationSubtypes = [mockObligationSubtype, mockObligationSubtype];
 
+const mockObligationSubtypesWithProductTypes = [EXAMPLES.OBLIGATION_SUBTYPE_WITH_PRODUCT_TYPE, EXAMPLES.OBLIGATION_SUBTYPE_WITH_PRODUCT_TYPE];
+
 describe('OdsController', () => {
   const mockLogger = new PinoLogger({});
 
@@ -41,7 +44,8 @@ describe('OdsController', () => {
   const odsAccrualsService = new OdsAccrualsService(null, mockLogger);
   const odsFacilityCategoryService = new OdsFacilityCategoryService(null, mockLogger);
   const odsCounterpartyRoleService = new OdsCounterpartyRoleService(null, mockLogger);
-  const odsObligationSubtypeService = new OdsObligationSubtypeService(null, mockLogger);
+  const odsProductConfigService = new OdsProductConfigService(null, mockLogger);
+  const odsObligationSubtypeService = new OdsObligationSubtypeService(null, odsProductConfigService, mockLogger);
 
   let odsServiceFindBusinessCentreNonWorkingDays: jest.Mock;
   let odsServiceFindCustomer: jest.Mock;
@@ -58,6 +62,7 @@ describe('OdsController', () => {
   let odsCounterpartyRoleServiceFindOne: jest.Mock;
   let findUkefIndustry: jest.Mock;
   let odsObligationSubtypeServiceGetAll: jest.Mock;
+  let odsObligationSubtypeServiceGetAllWithProductTypes: jest.Mock;
   let odsObligationSubtypeServiceFindOne: jest.Mock;
 
   let controller: OdsController;
@@ -107,6 +112,9 @@ describe('OdsController', () => {
 
     odsObligationSubtypeServiceGetAll = jest.fn().mockResolvedValueOnce(mockObligationSubtypes);
     odsObligationSubtypeService.getAll = odsObligationSubtypeServiceGetAll;
+
+    odsObligationSubtypeServiceGetAllWithProductTypes = jest.fn().mockResolvedValueOnce(mockObligationSubtypesWithProductTypes);
+    odsObligationSubtypeService.getAllWithProductTypes = odsObligationSubtypeServiceGetAllWithProductTypes;
 
     odsObligationSubtypeServiceFindOne = jest.fn().mockResolvedValueOnce(mockObligationSubtype);
     odsObligationSubtypeService.findOne = odsObligationSubtypeServiceFindOne;
@@ -349,6 +357,24 @@ describe('OdsController', () => {
 
       // Assert
       expect(result).toStrictEqual(mockObligationSubtypes);
+    });
+  });
+
+  describe('getObligationSubtypesWithProductCodes', () => {
+    it('should call odsObligationSubtypeService.getAllWithProductTypes', async () => {
+      // Act
+      await controller.getObligationSubtypesWithProductCodes();
+
+      // Assert
+      expect(odsObligationSubtypeServiceGetAllWithProductTypes).toHaveBeenCalledTimes(1);
+    });
+
+    it('should return obligation subtypes with product types', async () => {
+      // Act
+      const result = await controller.getObligationSubtypesWithProductCodes();
+
+      // Assert
+      expect(result).toStrictEqual(mockObligationSubtypesWithProductTypes);
     });
   });
 

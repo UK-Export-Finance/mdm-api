@@ -1,18 +1,16 @@
 import { InternalServerErrorException } from '@nestjs/common';
-import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
-import { mapOdsClassifications } from '@ukef/helpers';
+import { STORED_PROCEDURE } from '@ukef/constants';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
-import { ODS_ENTITIES, ODS_QUERY_PARAM_VALUES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
-import { OdsObligationSubtypeService } from './ods-obligation-subtype.service';
+import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { OdsProductConfigService } from './ods-product-config.service';
 import { OdsStoredProcedureService } from './ods-stored-procedure.service';
+import { mockProductConfigs } from './test-helpers';
 
-describe('OdsObligationSubtypeService - getAll', () => {
-  let service: OdsObligationSubtypeService;
+describe('OdsProductConfigService - getAll', () => {
+  let service: OdsProductConfigService;
   let odsStoredProcedureService: OdsStoredProcedureService;
-  let odsProductConfigService: OdsProductConfigService;
   let mockQueryRunner: jest.Mocked<QueryRunner>;
   let mockDataSource: jest.Mocked<DataSource>;
   const mockLogger = new PinoLogger({});
@@ -28,32 +26,15 @@ describe('OdsObligationSubtypeService - getAll', () => {
     } as unknown as jest.Mocked<DataSource>;
 
     odsStoredProcedureService = new OdsStoredProcedureService(mockDataSource);
-    odsProductConfigService = new OdsProductConfigService(odsStoredProcedureService, mockLogger);
-
-    service = new OdsObligationSubtypeService(odsStoredProcedureService, odsProductConfigService, mockLogger);
+    service = new OdsProductConfigService(odsStoredProcedureService, mockLogger);
   });
 
-  const mockStoredProcedureOutput = `{
-    "message": "${STORED_PROCEDURE.SUCCESS}",
-    "status": "${STORED_PROCEDURE.SUCCESS}",
-    "total_result_count": 2,
-    "results": [
-      {
-        "classification_type": "${EXAMPLES.ODS.OBLIGATION_CLASSIFICATION.classification_type}",
-        "classification_type_code": "${EXAMPLES.ODS.OBLIGATION_CLASSIFICATION.classification_type_code}",
-        "classification_code": "${EXAMPLES.ODS.OBLIGATION_CLASSIFICATION.classification_code}",
-        "classification_description": "${EXAMPLES.ODS.OBLIGATION_CLASSIFICATION.classification_description}",
-        "classification_active_flag": ${EXAMPLES.ODS.OBLIGATION_CLASSIFICATION.classification_active_flag}
-      },
-      {
-        "classification_type": "${EXAMPLES.ODS.OBLIGATION_CLASSIFICATION.classification_type}",
-        "classification_type_code": "${EXAMPLES.ODS.OBLIGATION_CLASSIFICATION.classification_type_code}",
-        "classification_code": "${EXAMPLES.ODS.OBLIGATION_CLASSIFICATION.classification_code}",
-        "classification_description": "${EXAMPLES.ODS.OBLIGATION_CLASSIFICATION.classification_description}",
-        "classification_active_flag": ${EXAMPLES.ODS.OBLIGATION_CLASSIFICATION.classification_active_flag}
-      }
-    ]
-  }`;
+  const mockStoredProcedureOutput = JSON.stringify({
+    message: STORED_PROCEDURE.SUCCESS,
+    status: STORED_PROCEDURE.SUCCESS,
+    total_result_count: mockProductConfigs.length,
+    results: mockProductConfigs,
+  });
 
   beforeEach(() => {
     jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
@@ -65,26 +46,19 @@ describe('OdsObligationSubtypeService - getAll', () => {
 
     // Assert
     const expectedStoredProcedureInput: OdsStoredProcedureInput = odsStoredProcedureService.createInput({
-      entityToQuery: ODS_ENTITIES.OBLIGATION_CLASSIFICATION,
-      queryParameters: {
-        classification_type_code: ODS_QUERY_PARAM_VALUES.OBLIGATION_SUBTYPE,
-      },
+      entityToQuery: ODS_ENTITIES.CONFIGURATION_PRODUCT,
     });
 
     expect(odsStoredProcedureService.call).toHaveBeenCalledTimes(1);
     expect(odsStoredProcedureService.call).toHaveBeenCalledWith(expectedStoredProcedureInput);
   });
 
-  it('should return mapped obligation subtypes', async () => {
+  it('should return product configs', async () => {
     // Act
     const result = await service.getAll();
 
     // Assert
-    const jsonResults = JSON.parse(mockStoredProcedureOutput).results;
-
-    const expected = mapOdsClassifications(jsonResults);
-
-    expect(result).toEqual(expected);
+    expect(result).toEqual(mockProductConfigs);
   });
 
   describe(`when the response from ODS does not have status as ${STORED_PROCEDURE.SUCCESS}`, () => {
@@ -99,7 +73,7 @@ describe('OdsObligationSubtypeService - getAll', () => {
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error('Error getting obligation subtypes from ODS');
+      const expected = new Error('Error getting product configs from ODS');
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -117,7 +91,7 @@ describe('OdsObligationSubtypeService - getAll', () => {
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error('Error getting obligation subtypes from ODS');
+      const expected = new Error('Error getting product configs from ODS');
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -133,7 +107,7 @@ describe('OdsObligationSubtypeService - getAll', () => {
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error('Error getting obligation subtypes from ODS');
+      const expected = new Error('Error getting product configs from ODS');
 
       await expect(promise).rejects.toThrow(expected);
     });

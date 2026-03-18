@@ -9,6 +9,7 @@ export * from './map-counterparty-roles';
 export * from './map-industries';
 export * from './map-industry';
 export * from './map-industry-codes';
+export * from './map-obligation-subtypes-with-product-code';
 export * from './map-ods-classification';
 export * from './map-ods-classifications';
 export * from './regex.helper';

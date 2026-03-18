@@ -1,15 +1,24 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { STORED_PROCEDURE } from '@ukef/constants';
-import { mapOdsClassification, mapOdsClassifications } from '@ukef/helpers';
+import { mapObligationSubtypesWithProductCode, mapOdsClassification, mapOdsClassifications } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 
-import { GetObligationSubtypeOdsResponseDto, GetObligationSubtypeResponseDto, ODS_ENTITIES, ODS_QUERY_PARAM_VALUES, OdsStoredProcedureOutputBody } from './dto';
+import {
+  GetObligationSubtypeOdsResponseDto,
+  GetObligationSubtypeResponseDto,
+  ObligationSubtypeWithProductTypeDto,
+  ODS_ENTITIES,
+  ODS_QUERY_PARAM_VALUES,
+  OdsStoredProcedureOutputBody,
+} from './dto';
+import { OdsProductConfigService } from './ods-product-config.service';
 import { OdsStoredProcedureService } from './ods-stored-procedure.service';
 
 @Injectable()
 export class OdsObligationSubtypeService {
   constructor(
     private readonly odsStoredProcedureService: OdsStoredProcedureService,
+    private readonly odsProductConfigService: OdsProductConfigService,
     private readonly logger: PinoLogger,
   ) {}
 
@@ -95,6 +104,32 @@ export class OdsObligationSubtypeService {
       this.logger.error('Error getting obligation subtypes from ODS %o', error);
 
       throw new InternalServerErrorException('Error getting obligation subtypes from ODS');
+    }
+  }
+
+  /**
+   * Get all obligation subtypes from ODS with their associated product type codes,
+   * by matching the obligation subtype codes in the product configs, with the obligation subtypes from ODS.
+   * @returns {Promise<ObligationSubtypeWithProductTypeDto[]>} Obligation subtypes with product types
+   */
+  async getAllWithProductTypes(): Promise<ObligationSubtypeWithProductTypeDto[]> {
+    try {
+      this.logger.info('Getting obligation subtypes with product types from ODS');
+
+      const productConfigs = await this.odsProductConfigService.getAll();
+
+      const obligationSubtypes = await this.getAll();
+
+      const subtypesWithProductType = mapObligationSubtypesWithProductCode({
+        productConfigs,
+        obligationSubtypes,
+      });
+
+      return subtypesWithProductType;
+    } catch (error) {
+      this.logger.error('Error getting obligation subtypes with product types from ODS %o', error);
+
+      throw new InternalServerErrorException('Error getting obligation subtypes with product types from ODS');
     }
   }
 }
