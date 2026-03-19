@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.45.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.44.1...v1.45.0) (2026-03-19)
+
+
+### Features
+
+* **GIFT-21541:** get obligation subtypes with productTypeCode ([#1769](https://github.com/UK-Export-Finance/mdm-api/issues/1769)) ([51ea9b4](https://github.com/UK-Export-Finance/mdm-api/commit/51ea9b47b6e4769e3dcba5851686c3045fa115b7))
+
 ## [1.44.1](https://github.com/UK-Export-Finance/mdm-api/compare/v1.44.0...v1.44.1) (2026-03-17)
 
 
