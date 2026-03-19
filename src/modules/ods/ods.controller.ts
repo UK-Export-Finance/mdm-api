@@ -19,6 +19,7 @@ import {
   GetOdsDealResponse,
   GetOdsFacilityCategoryParamDto,
   GetOdsObligationSubtypeParamDto,
+  ObligationSubtypeWithProductTypeDto,
 } from './dto';
 import { OdsService } from './ods.service';
 import { OdsAccrualsService } from './ods-accruals.service';
@@ -246,6 +247,22 @@ export class OdsController {
   })
   getObligationSubtypes(): Promise<GetObligationSubtypeResponseDto[]> {
     return this.odsObligationSubtypeService.getAll();
+  }
+
+  @Get('obligation-subtypes/with-product-type-codes')
+  @ApiOperation({
+    summary: 'Get obligation subtypes with product type codes from ODS',
+  })
+  @ApiOkResponse({
+    description: 'ODS obligation subtypes with product type codes',
+    isArray: true,
+    type: ObligationSubtypeWithProductTypeDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  getObligationSubtypesWithProductCodes(): Promise<ObligationSubtypeWithProductTypeDto[]> {
+    return this.odsObligationSubtypeService.getAllWithProductTypes();
   }
 
   @Get('obligation-subtype/:subtypeCode')
