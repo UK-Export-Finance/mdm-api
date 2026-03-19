@@ -98,12 +98,12 @@ describe('/ods - UKEF industries', () => {
     });
   });
 
-  describe('/ukef-industry-code/:industryCode/by-companies-house-industry-code', () => {
+  describe('/ukef-industry-code/by-companies-house-industry-code/:companiesHouseIndustryCode', () => {
     const baseUrl = `/api/${prefixAndVersion}/ods/ukef-industry-code`;
 
     it(`should return ${HttpStatus.OK} with a UKEF industry code`, async () => {
       // Act
-      const { status, body } = await api.get(`${baseUrl}/${EXAMPLES.COMPANIES_HOUSE_INDUSTRY_CODE}/by-companies-house-industry-code`);
+      const { status, body } = await api.get(`${baseUrl}/by-companies-house-industry-code/${EXAMPLES.COMPANIES_HOUSE_INDUSTRY_CODE}`);
 
       // Assert
       expect(status).toBe(HttpStatus.OK);
@@ -121,7 +121,7 @@ describe('/ods - UKEF industries', () => {
         const mockIndustryCode = '00000';
 
         // Act
-        const { status } = await api.get(`${baseUrl}/${mockIndustryCode}/by-companies-house-industry-code`);
+        const { status } = await api.get(`${baseUrl}/by-companies-house-industry-code/${mockIndustryCode}`);
 
         // Assert
         expect(status).toBe(HttpStatus.NOT_FOUND);
@@ -134,7 +134,7 @@ describe('/ods - UKEF industries', () => {
         const mockIndustryCode = '12345';
 
         // Act
-        const { status, body } = await api.get(`${baseUrl}/${mockIndustryCode}/by-companies-house-industry-code`);
+        const { status, body } = await api.get(`${baseUrl}/by-companies-house-industry-code/${mockIndustryCode}`);
 
         // Assert
         expect(status).toBe(HttpStatus.NOT_FOUND);
@@ -153,7 +153,7 @@ describe('/ods - UKEF industries', () => {
         const mockIndustryCode = 'ABCDE';
 
         // Act
-        const { status, body } = await api.get(`${baseUrl}/${mockIndustryCode}/by-companies-house-industry-code`);
+        const { status, body } = await api.get(`${baseUrl}/by-companies-house-industry-code/${mockIndustryCode}`);
 
         // Assert
         expect(status).toBe(HttpStatus.BAD_REQUEST);
@@ -172,7 +172,7 @@ describe('/ods - UKEF industries', () => {
         const mockIndustryCode = 'a'.repeat(COMPANIES_HOUSE.INDUSTRY_CODE.EXACT_LENGTH - 1);
 
         // Act
-        const { status, body } = await api.get(`${baseUrl}/${mockIndustryCode}/by-companies-house-industry-code`);
+        const { status, body } = await api.get(`${baseUrl}/by-companies-house-industry-code/${mockIndustryCode}`);
 
         // Assert
         expect(status).toBe(HttpStatus.BAD_REQUEST);
@@ -191,7 +191,7 @@ describe('/ods - UKEF industries', () => {
         const mockIndustryCode = 'a'.repeat(COMPANIES_HOUSE.INDUSTRY_CODE.EXACT_LENGTH + 1);
 
         // Act
-        const { status, body } = await api.get(`${baseUrl}/${mockIndustryCode}/by-companies-house-industry-code`);
+        const { status, body } = await api.get(`${baseUrl}/by-companies-house-industry-code/${mockIndustryCode}`);
 
         // Assert
         expect(status).toBe(HttpStatus.BAD_REQUEST);

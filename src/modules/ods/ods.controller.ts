@@ -320,6 +320,27 @@ export class OdsController {
     return this.odsService.getUkefIndustryCodes();
   }
 
+  @Get('ukef-industry-code/by-companies-house-industry-code/:companiesHouseIndustryCode')
+  @ApiOperation({
+    summary: 'Get a UKEF industry code by Companies House industry code. Sourced from MDM database',
+  })
+  @ApiOkResponse({
+    description: 'The UKEF industry code from ODS',
+    type: GetSicCodeToUkefIndustryResponseDto,
+  })
+  @ApiNotFoundResponse({
+    description: 'UKEF industry not found',
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid parameters provided',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  async findUkefIndustryCode(@Param() param: GetOdsUkefIndustryCodeParamDto): Promise<GetSicCodeToUkefIndustryResponseDto> {
+    return await this.odsService.findUkefIndustryCodeByCompaniesHouseCode(param.industryCode);
+  }
+
   @Get('ukef-industry/:industryCode')
   @ApiOperation({
     summary: 'Get a UKEF industry from ODS',
@@ -339,26 +360,5 @@ export class OdsController {
   })
   findUkefIndustry(@Param() param: FindOdsIndustryParamDto): Promise<GetIndustryResponseDto> {
     return this.odsService.findUkefIndustry(param.industryCode);
-  }
-
-  @Get('ukef-industry-code/:industryCode/by-companies-house-industry-code')
-  @ApiOperation({
-    summary: 'Get a UKEF industry code by Companies House industry code. Sourced from MDM database',
-  })
-  @ApiOkResponse({
-    description: 'The UKEF industry code from ODS',
-    type: GetSicCodeToUkefIndustryResponseDto,
-  })
-  @ApiNotFoundResponse({
-    description: 'UKEF industry not found',
-  })
-  @ApiBadRequestResponse({
-    description: 'Invalid parameters provided',
-  })
-  @ApiInternalServerErrorResponse({
-    description: 'Internal server error',
-  })
-  async findUkefIndustryCode(@Param() param: GetOdsUkefIndustryCodeParamDto): Promise<GetSicCodeToUkefIndustryResponseDto> {
-    return await this.odsService.findUkefIndustryCodeByCompaniesHouseCode(param.industryCode);
   }
 }
