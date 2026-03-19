@@ -23,6 +23,14 @@ const INDUSTRY = {
   CATEGORY: 'UKEF',
 };
 
+const OBLIGATION_SUBTYPE = {
+  TYPE: 'Obligation Sub-Type',
+  TYPE_CODE: 'obligationSubtype',
+  CODE: 'OST012',
+  DESCRIPTION: 'BSS Advance Payment Guarantee',
+  IS_ACTIVE: true,
+};
+
 const PRODUCT_CONFIG_REQUIREMENT = {
   NOT_APPLICABLE: 'NOT_APPLICABLE',
   OPTIONAL: 'OPTIONAL',
@@ -151,6 +159,7 @@ export const EXAMPLES = {
         productType: PRODUCT_TYPES.BIP,
         name: 'Bond Insurance Product (BIP)',
         shortName: 'BIP',
+        productActive: true,
         configuration: {
           commitmentDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
           issuedDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
@@ -192,12 +201,16 @@ export const EXAMPLES = {
         counterpartyRoleTypes: [COUNTERPARTY_ROLE_TYPES.BROKER],
         facilityCategoryTypes: ['FCT001', 'FCT002'],
         obligationSubtypes: ['OST001', 'OST002', 'OST003'],
-        account: [1, 2, 3],
+        additionalRateTypes: [],
+        baseRateTypes: [],
+        accrualScheduleTypes: [],
+        account: ['1', '2', '3'],
       },
       EXIP: {
         productType: PRODUCT_TYPES.EXIP,
         name: 'Export Insurance Product (EXIP)',
         shortName: 'EXIP',
+        productActive: true,
         configuration: {
           commitmentDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
           issuedDate: PRODUCT_CONFIG_REQUIREMENT.NOT_APPLICABLE,
@@ -206,7 +219,7 @@ export const EXAMPLES = {
         counterpartyRoleTypes: [COUNTERPARTY_ROLE_TYPES.BROKER, COUNTERPARTY_ROLE_TYPES.GUARANTOR],
         facilityCategoryTypes: ['FCT001', 'FCT002'],
         obligationSubtypes: ['OST001', 'OST002', 'OST003'],
-        account: [1, 2, 3],
+        account: ['1', '2', '3'],
       },
     },
   },
@@ -233,12 +246,10 @@ export const EXAMPLES = {
     TEMPLATE_URI: 'https://api.notifications.service.gov.uk/services/abc12345-a123-4567-8901-123456789012/templates/tmpl1234-1234-5678-9012-abcd12345678',
     FILE: '<Buffer 43 31 2c 43 32 2c 43 33 0a 41 2c 42 2c 43 0a 44 2c 45 2c 46 0a 31 2c 32 2c 33 0a 34 2c 35 2c 36 0a>',
   },
-  OBLIGATION_SUBTYPE: {
-    TYPE: 'Obligation Sub-Type',
-    TYPE_CODE: 'obligationSubtype',
-    CODE: 'OST012',
-    DESCRIPTION: 'BSS Advance Payment Guarantee',
-    IS_ACTIVE: true,
+  OBLIGATION_SUBTYPE,
+  OBLIGATION_SUBTYPE_WITH_PRODUCT_TYPE: {
+    ...OBLIGATION_SUBTYPE,
+    productTypeCode: PRODUCT_TYPES.BIP,
   },
   ODS: {
     ACCRUAL_SCHEDULE_CLASSIFICATION: {

@@ -65,6 +65,7 @@ export const ODS_ENTITIES = {
   BUSINESS_CENTRE: 'business_centre',
   BUSINESS_CENTRE_NON_WORKING_DAY: 'business_centre_non_working_day',
   CONFIGURATION_COUNTERPARTY_ROLE: 'configuration_counterparty_role',
+  CONFIGURATION_PRODUCT: 'configuration_product',
   CUSTOMER: 'customer',
   DEAL: 'deal',
   FACILITY_CLASSIFICATION: 'facility_classification',

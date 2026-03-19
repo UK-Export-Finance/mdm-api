@@ -6,11 +6,13 @@ import { DataSource, QueryRunner } from 'typeorm';
 
 import { ODS_ENTITIES, ODS_QUERY_PARAM_VALUES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { OdsObligationSubtypeService } from './ods-obligation-subtype.service';
+import { OdsProductConfigService } from './ods-product-config.service';
 import { OdsStoredProcedureService } from './ods-stored-procedure.service';
 
 describe('OdsObligationSubtypeService - findOne', () => {
   let service: OdsObligationSubtypeService;
   let odsStoredProcedureService: OdsStoredProcedureService;
+  let odsProductConfigService: OdsProductConfigService;
   let mockQueryRunner: jest.Mocked<QueryRunner>;
   let mockDataSource: jest.Mocked<DataSource>;
   const mockLogger = new PinoLogger({});
@@ -26,7 +28,9 @@ describe('OdsObligationSubtypeService - findOne', () => {
     } as unknown as jest.Mocked<DataSource>;
 
     odsStoredProcedureService = new OdsStoredProcedureService(mockDataSource);
-    service = new OdsObligationSubtypeService(odsStoredProcedureService, mockLogger);
+    odsProductConfigService = new OdsProductConfigService(odsStoredProcedureService, mockLogger);
+
+    service = new OdsObligationSubtypeService(odsStoredProcedureService, odsProductConfigService, mockLogger);
   });
 
   const mockStoredProcedureOutput = `{

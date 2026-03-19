@@ -22,6 +22,8 @@ export * from './get-ods-deal-response.dto';
 export * from './get-ods-facility-category-param.dto';
 export * from './get-ods-obligation-subtype-param.dto';
 export * from './get-ods-ukef-industry-code-param.dto';
+export * from './get-product-config-ods-response.dto';
 export * from './get-sic-code-to-ukef-industry-ods-response.dto';
 export * from './get-sic-code-to-ukef-industry-response.dto';
+export * from './obligation-subtype-with-product-type.dto';
 export * from './ods-payloads.dto';
