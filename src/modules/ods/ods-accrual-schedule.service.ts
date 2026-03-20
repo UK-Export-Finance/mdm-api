@@ -1,8 +1,9 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { STORED_PROCEDURE } from '@ukef/constants';
+import { mapAccrualSchedule, mapAccrualSchedules } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 
-import { GetAccrualScheduleOdsResponseDto, ODS_ENTITIES, OdsStoredProcedureOutputBody } from './dto';
+import { GetAccrualScheduleOdsResponseDto, GetAccrualScheduleResponseDto, ODS_ENTITIES, OdsStoredProcedureOutputBody } from './dto';
 import { OdsStoredProcedureService } from './ods-stored-procedure.service';
 
 @Injectable()
@@ -18,7 +19,7 @@ export class OdsAccrualScheduleService {
    * @returns {Promise<GetAccrualScheduleOdsResponseDto>}
    * @throws {NotFoundException} If no accrual schedule is found
    */
-  async findOne(scheduleCode: string): Promise<GetAccrualScheduleOdsResponseDto> {
+  async findOne(scheduleCode: string): Promise<GetAccrualScheduleResponseDto> {
     try {
       this.logger.info('Finding accrual schedule in ODS %s', scheduleCode);
 
@@ -46,7 +47,9 @@ export class OdsAccrualScheduleService {
 
       const schedule = storedProcedureJson.results[0] as GetAccrualScheduleOdsResponseDto;
 
-      return schedule;
+      const mappedSchedule = mapAccrualSchedule(schedule);
+
+      return mappedSchedule;
     } catch (error) {
       this.logger.error('Error finding accrual schedule in ODS %s %o', scheduleCode, error);
 
@@ -63,7 +66,7 @@ export class OdsAccrualScheduleService {
    * @returns {Promise<GetAccrualScheduleOdsResponseDto[]>} Accrual schedules
    * @throws {InternalServerErrorException} If there is an error getting accrual schedules from ODS
    */
-  async getAll(): Promise<GetAccrualScheduleOdsResponseDto[]> {
+  async getAll(): Promise<GetAccrualScheduleResponseDto[]> {
     try {
       this.logger.info('Getting accrual schedules from ODS');
 
@@ -83,7 +86,9 @@ export class OdsAccrualScheduleService {
 
       const schedules = storedProcedureJson.results as GetAccrualScheduleOdsResponseDto[];
 
-      return schedules;
+      const mappedSchedules = mapAccrualSchedules(schedules);
+
+      return mappedSchedules;
     } catch (error) {
       this.logger.error('Error getting accrual schedules from ODS %o', error);
 

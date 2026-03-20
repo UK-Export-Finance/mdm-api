@@ -7,7 +7,7 @@ import {
   FindOdsIndustryParamDto,
   GetAccrualFrequencyResponseDto,
   GetAccrualScheduleClassificationResponseDto,
-  GetAccrualScheduleOdsResponseDto,
+  GetAccrualScheduleResponseDto,
   GetCounterpartyRoleResponseDto,
   GetFacilityCategoryResponseDto,
   GetIndustryResponseDto,
@@ -91,12 +91,12 @@ export class OdsController {
   @ApiOkResponse({
     description: 'ODS accrual schedules',
     isArray: true,
-    type: GetAccrualScheduleOdsResponseDto,
+    type: GetAccrualScheduleResponseDto,
   })
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
   })
-  getAccrualSchedules(): Promise<GetAccrualScheduleOdsResponseDto[]> {
+  getAccrualSchedules(): Promise<GetAccrualScheduleResponseDto[]> {
     return this.odsAccrualScheduleService.getAll();
   }
 
@@ -106,7 +106,7 @@ export class OdsController {
   })
   @ApiOkResponse({
     description: 'ODS accrual schedule',
-    type: GetAccrualScheduleOdsResponseDto,
+    type: GetAccrualScheduleResponseDto,
   })
   @ApiNotFoundResponse({
     description: 'Accrual schedule not found',
@@ -117,7 +117,7 @@ export class OdsController {
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
   })
-  findAccrualSchedule(@Param() param: GetOdsAccrualScheduleParamDto): Promise<GetAccrualScheduleOdsResponseDto> {
+  findAccrualSchedule(@Param() param: GetOdsAccrualScheduleParamDto): Promise<GetAccrualScheduleResponseDto> {
     return this.odsAccrualScheduleService.findOne(param.scheduleCode);
   }
 

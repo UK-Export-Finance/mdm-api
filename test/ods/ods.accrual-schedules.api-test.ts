@@ -33,8 +33,8 @@ describe('/ods - Accrual schedules', () => {
         expect.objectContaining({
           code: expect.any(String),
           name: expect.any(String),
-          accrualRateType: expect.any(Number),
-          baseBalanceCategory: expect.any(Number),
+          accrualRateType: expect.any(String),
+          baseBalanceCategory: expect.any(String),
           incomeClassCode: expect.any(String),
           isActive: expect.any(Boolean),
         }),
@@ -58,8 +58,8 @@ describe('/ods - Accrual schedules', () => {
       const expected = expect.objectContaining({
         code: expect.any(String),
         name: expect.any(String),
-        accrualRateType: expect.any(Number),
-        baseBalanceCategory: expect.any(Number),
+        accrualRateType: expect.any(String),
+        baseBalanceCategory: expect.any(String),
         incomeClassCode: expect.any(String),
         isActive: expect.any(Boolean),
       });
