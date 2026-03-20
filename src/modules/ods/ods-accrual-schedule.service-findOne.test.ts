@@ -1,5 +1,6 @@
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
+import { mapAccrualSchedule } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
@@ -67,10 +68,10 @@ describe('OdsAccrualScheduleService - findOne', () => {
 
   it('should return an accrual schedule', async () => {
     // Act
-    const result = await service.findOne(EXAMPLES.COUNTERPARTY_ROLE.ROLE_TYPE);
+    const result = await service.findOne(EXAMPLES.ACCRUAL_SCHEDULE.CODE);
 
     // Assert
-    const expected = EXAMPLES.ODS.ACCRUAL_SCHEDULE;
+    const expected = mapAccrualSchedule(EXAMPLES.ODS.ACCRUAL_SCHEDULE);
 
     expect(result).toEqual(expected);
   });
@@ -88,11 +89,11 @@ describe('OdsAccrualScheduleService - findOne', () => {
       jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
 
       // Act & Assert
-      const promise = service.findOne(EXAMPLES.COUNTERPARTY_ROLE.ROLE_TYPE);
+      const promise = service.findOne(EXAMPLES.ACCRUAL_SCHEDULE.CODE);
 
       await expect(promise).rejects.toBeInstanceOf(NotFoundException);
 
-      const expected = new Error(`No accrual schedule ${EXAMPLES.COUNTERPARTY_ROLE.ROLE_TYPE} found in ODS`);
+      const expected = new Error(`No accrual schedule ${EXAMPLES.ACCRUAL_SCHEDULE.CODE} found in ODS`);
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -106,15 +107,15 @@ describe('OdsAccrualScheduleService - findOne', () => {
       jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
 
       // Act
-      const promise = service.findOne(EXAMPLES.COUNTERPARTY_ROLE.ROLE_TYPE);
+      const promise = service.findOne(EXAMPLES.ACCRUAL_SCHEDULE.CODE);
 
       // Assert
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
       await expect(promise).rejects.toMatchObject({
-        message: `Error finding accrual schedule ${EXAMPLES.COUNTERPARTY_ROLE.ROLE_TYPE} in ODS`,
+        message: `Error finding accrual schedule ${EXAMPLES.ACCRUAL_SCHEDULE.CODE} in ODS`,
         cause: {
-          message: `Error finding accrual schedule ${EXAMPLES.COUNTERPARTY_ROLE.ROLE_TYPE} from ODS stored procedure`,
+          message: `Error finding accrual schedule ${EXAMPLES.ACCRUAL_SCHEDULE.CODE} from ODS stored procedure`,
         },
       });
     });
@@ -128,13 +129,13 @@ describe('OdsAccrualScheduleService - findOne', () => {
       jest.spyOn(odsStoredProcedureService, 'call').mockRejectedValue(mockStoredProcedureOutput);
 
       // Act
-      const promise = service.findOne(EXAMPLES.COUNTERPARTY_ROLE.ROLE_TYPE);
+      const promise = service.findOne(EXAMPLES.ACCRUAL_SCHEDULE.CODE);
 
       // Assert
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
       await expect(promise).rejects.toMatchObject({
-        message: `Error finding accrual schedule ${EXAMPLES.COUNTERPARTY_ROLE.ROLE_TYPE} in ODS`,
+        message: `Error finding accrual schedule ${EXAMPLES.ACCRUAL_SCHEDULE.CODE} in ODS`,
         cause: mockStoredProcedureOutput,
       });
     });
@@ -148,12 +149,12 @@ describe('OdsAccrualScheduleService - findOne', () => {
       jest.spyOn(odsStoredProcedureService, 'call').mockRejectedValue(mockError);
 
       // Act
-      const promise = service.findOne(EXAMPLES.COUNTERPARTY_ROLE.ROLE_TYPE);
+      const promise = service.findOne(EXAMPLES.ACCRUAL_SCHEDULE.CODE);
 
       // Assert
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
       await expect(promise).rejects.toMatchObject({
-        message: `Error finding accrual schedule ${EXAMPLES.COUNTERPARTY_ROLE.ROLE_TYPE} in ODS`,
+        message: `Error finding accrual schedule ${EXAMPLES.ACCRUAL_SCHEDULE.CODE} in ODS`,
         cause: mockError,
       });
     });

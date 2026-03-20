@@ -16,5 +16,4 @@ type ClassificationDto = GetAccrualScheduleClassificationResponseDto | GetFacili
  * @param {ClassificationOdsDto[]} ODS classifications
  * @returns {ClassificationDto[]} Mapped classifications
  */
-export const mapOdsClassifications = (classifications: ClassificationOdsDto[]): ClassificationDto[] =>
-  classifications.map((classification) => mapOdsClassification(classification));
+export const mapOdsClassifications = (classifications: ClassificationOdsDto[]): ClassificationDto[] => classifications.map(mapOdsClassification);

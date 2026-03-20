@@ -67,7 +67,7 @@ describe('/ods - Accrual schedules', () => {
       expect(body).toEqual(expected);
     });
 
-    describe('when a single accrual frequency is NOT found', () => {
+    describe('when a single accrual schedule is NOT found', () => {
       it(`should return ${HttpStatus.NOT_FOUND}`, async () => {
         // Arrange
         const url = `/api/${prefixAndVersion}/ods/accrual-schedule/INVALID_SCHEDULE_CODE`;

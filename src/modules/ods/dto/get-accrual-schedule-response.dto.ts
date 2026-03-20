@@ -5,8 +5,8 @@ import { GetAccrualScheduleBaseDto } from './get-accrual-schedule-base.dto';
 
 export class GetAccrualScheduleResponseDto extends GetAccrualScheduleBaseDto {
   @ApiProperty({
-    description: 'Accrual schedule classification active flag',
-    example: EXAMPLES.ACCRUAL_SCHEDULE.isActive,
+    description: 'Accrual schedule active flag',
+    example: EXAMPLES.ACCRUAL_SCHEDULE.IS_ACTIVE,
   })
   readonly isActive: boolean;
 }

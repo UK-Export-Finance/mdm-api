@@ -1,5 +1,6 @@
 import { InternalServerErrorException } from '@nestjs/common';
 import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
+import { mapAccrualSchedules } from '@ukef/helpers/map-accrual-schedules';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
@@ -74,7 +75,7 @@ describe('OdsAccrualScheduleService - getAll', () => {
     const result = await service.getAll();
 
     // Assert
-    const expected = [EXAMPLES.ODS.ACCRUAL_SCHEDULE, EXAMPLES.ODS.ACCRUAL_SCHEDULE];
+    const expected = mapAccrualSchedules([EXAMPLES.ODS.ACCRUAL_SCHEDULE, EXAMPLES.ODS.ACCRUAL_SCHEDULE]);
 
     expect(result).toEqual(expected);
   });

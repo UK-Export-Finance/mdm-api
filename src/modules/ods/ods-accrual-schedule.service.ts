@@ -15,7 +15,7 @@ export class OdsAccrualScheduleService {
 
   /**
    * Find an accrual schedule by code
-   * @param {string} code: Accrual schedule code
+   * @param {string} scheduleCode: Accrual schedule code
    * @returns {Promise<GetAccrualScheduleOdsResponseDto>}
    * @throws {NotFoundException} If no accrual schedule is found
    */

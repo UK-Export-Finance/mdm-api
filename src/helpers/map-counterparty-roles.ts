@@ -8,4 +8,4 @@ import { mapCounterpartyRole } from './map-counterparty-role';
  * @returns {GetCounterpartyRoleResponseDto[]} Mapped counterparty roles
  */
 export const mapCounterpartyRoles = (counterpartyRoles: GetCounterpartyRoleOdsResponseDto[]): GetCounterpartyRoleResponseDto[] =>
-  counterpartyRoles.map((role: GetCounterpartyRoleOdsResponseDto) => mapCounterpartyRole(role));
+  counterpartyRoles.map(mapCounterpartyRole);

@@ -7,5 +7,4 @@ import { mapAccrualSchedule } from './map-accrual-schedule';
  * @param {GetAccrualScheduleOdsResponseDto[]} ODS accrual schedules
  * @returns {GetAccrualScheduleResponseDto[]} Mapped accrual schedules
  */
-export const mapAccrualSchedules = (schedules: GetAccrualScheduleOdsResponseDto[]): GetAccrualScheduleResponseDto[] =>
-  schedules.map((schedule) => mapAccrualSchedule(schedule));
+export const mapAccrualSchedules = (schedules: GetAccrualScheduleOdsResponseDto[]): GetAccrualScheduleResponseDto[] => schedules.map(mapAccrualSchedule);
