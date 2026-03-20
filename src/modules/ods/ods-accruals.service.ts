@@ -154,7 +154,7 @@ export class OdsAccrualsService {
   }
 
   /**
-   * Get all accrual schedule classifications from ODS
+   * Get accrual schedule classifications by a classification type code from ODS
    * @param {OdsScheduleClassificationTypeCodes} classificationTypeCode: Classification type code
    * @returns {Promise<GetAccrualScheduleClassificationResponseDto[]>} Accrual schedule classifications
    * @throws {InternalServerErrorException} If there is an error getting accrual schedule classifications from ODS
