@@ -8,4 +8,4 @@ import { mapAccrualFrequency } from './map-accrual-frequency';
  * @returns {GetAccrualFrequencyResponseDto[]} Mapped accrual frequencies
  */
 export const mapAccrualFrequencies = (frequencies: GetAccrualFrequencyOdsResponseDto[]): GetAccrualFrequencyResponseDto[] =>
-  frequencies.map((frequency) => mapAccrualFrequency(frequency));
+  frequencies.map(mapAccrualFrequency);

@@ -10,7 +10,7 @@
  * - Facility classifications
  * - Map SIC code to UKEF industry
  *
- * Full details can be found here:
+ * Stored Procedure query params can be found here:
  * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_customer.sql
  * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_deal.sql
  * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_business_centre.sql
@@ -18,8 +18,9 @@
  * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_industry.sql
  * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_accrual_schedule_classification.sql
  * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_facility_classification.sql
- * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_configuration_frequency.sql
+ * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_configuration_accrual_schedule.sql
  * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_configuration_counterparty_role.sql
+ * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_configuration_frequency.sql
  * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_map_sic_code_to_ukef_industry.sql
  */
 export type OdsStoredProcedureQueryParams = {
@@ -33,6 +34,7 @@ export type OdsStoredProcedureQueryParams = {
   industry_category?: string;
   industry_code?: string;
   sic_industry_code?: string;
+  code?: string;
 };
 
 /**
@@ -62,6 +64,7 @@ export type OdsStoredProcedureOutputBody = {
 export const ODS_ENTITIES = {
   ACCRUAL_SCHEDULE_CLASSIFICATION: 'accrual_schedule_classification',
   CONFIGURATION_FREQUENCY: 'configuration_frequency',
+  CONFIGURATION_ACCRUAL_SCHEDULE: 'configuration_accrual_schedule',
   BUSINESS_CENTRE: 'business_centre',
   BUSINESS_CENTRE_NON_WORKING_DAY: 'business_centre_non_working_day',
   CONFIGURATION_COUNTERPARTY_ROLE: 'configuration_counterparty_role',
