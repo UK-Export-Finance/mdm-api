@@ -52,8 +52,6 @@ describe('OdsAccrualScheduleService - getAll', () => {
     ]
   }`;
 
-  // TODO: mapping so accrualScheduleTypeActive => isActive
-
   beforeEach(() => {
     jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
   });
