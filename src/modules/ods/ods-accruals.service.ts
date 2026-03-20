@@ -6,8 +6,8 @@ import { PinoLogger } from 'nestjs-pino';
 import {
   GetAccrualFrequencyOdsResponseDto,
   GetAccrualFrequencyResponseDto,
-  GetAccrualScheduleClassificationOdsResponseDto,
   GetAccrualScheduleClassificationResponseDto,
+  GetAdditionalRateOdsResponseDto,
   ODS_ENTITIES,
   OdsScheduleClassificationTypeCodes,
   OdsStoredProcedureOutputBody,
@@ -139,7 +139,7 @@ export class OdsAccrualsService {
         throw new NotFoundException(`No accrual schedule classification ${classificationCode} found in ODS`);
       }
 
-      const classification = storedProcedureJson.results[0] as GetAccrualScheduleClassificationOdsResponseDto;
+      const classification = storedProcedureJson.results[0] as GetAdditionalRateOdsResponseDto;
 
       return mapOdsClassification(classification);
     } catch (error) {
@@ -184,7 +184,7 @@ export class OdsAccrualsService {
         throw new InternalServerErrorException(`Error getting accrual schedule classifications from ODS stored procedure ${classificationTypeCode}`);
       }
 
-      const classifications = storedProcedureJson.results as GetAccrualScheduleClassificationOdsResponseDto[];
+      const classifications = storedProcedureJson.results as GetAdditionalRateOdsResponseDto[];
 
       const mappedClassification = mapOdsClassifications(classifications);
 

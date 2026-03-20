@@ -7,7 +7,7 @@ const {
   domOdsVersioning: { prefixAndVersion },
 } = AppConfig();
 
-describe('/ods - Additional rates', () => {
+describe('/ods - Base rates', () => {
   let api: Api;
 
   beforeAll(async () => {
@@ -18,10 +18,10 @@ describe('/ods - Additional rates', () => {
     await api.destroy();
   });
 
-  describe('/additional-rates', () => {
-    it(`should return ${HttpStatus.OK} with mapped additional rates`, async () => {
+  describe('/base-rates', () => {
+    it(`should return ${HttpStatus.OK} with mapped base rates`, async () => {
       // Arrange
-      const url = `/api/${prefixAndVersion}/ods/additional-rates`;
+      const url = `/api/${prefixAndVersion}/ods/base-rates`;
 
       // Act
       const { status, body } = await api.get(url);
@@ -43,10 +43,10 @@ describe('/ods - Additional rates', () => {
     });
   });
 
-  describe('/additional-rate/:rateCode', () => {
-    it(`should return ${HttpStatus.OK} with a mapped additional rate`, async () => {
+  describe('/base-rate/:rateCode', () => {
+    it(`should return ${HttpStatus.OK} with a mapped base rate`, async () => {
       // Arrange
-      const url = `/api/${prefixAndVersion}/ods/additional-rate/${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE.CODE}`;
+      const url = `/api/${prefixAndVersion}/ods/base-rate/${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.BASE_RATE.CODE}`;
 
       // Act
       const { status, body } = await api.get(url);
@@ -65,10 +65,10 @@ describe('/ods - Additional rates', () => {
       expect(body).toEqual(expected);
     });
 
-    describe('when a single additional rate is NOT found', () => {
+    describe('when a single base rate is NOT found', () => {
       it(`should return ${HttpStatus.NOT_FOUND}`, async () => {
         // Arrange
-        const url = `/api/${prefixAndVersion}/ods/additional-rate/INVALID_RATE_CODE`;
+        const url = `/api/${prefixAndVersion}/ods/base-rate/INVALID_RATE_CODE`;
 
         // Act
         const { status } = await api.get(url);
