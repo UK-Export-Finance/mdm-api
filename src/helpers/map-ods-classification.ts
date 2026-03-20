@@ -1,15 +1,4 @@
-import {
-  GetAdditionalRateOdsResponseDto,
-  GetAdditionalRateResponseDto,
-  GetFacilityCategoryOdsResponseDto,
-  GetFacilityCategoryResponseDto,
-  GetObligationSubtypeOdsResponseDto,
-  GetObligationSubtypeResponseDto,
-} from '@ukef/modules/ods/dto';
-
-type ClassificationOdsDto = GetAdditionalRateOdsResponseDto | GetFacilityCategoryOdsResponseDto | GetObligationSubtypeOdsResponseDto;
-
-type ClassificationDto = GetAdditionalRateResponseDto | GetFacilityCategoryResponseDto | GetObligationSubtypeResponseDto;
+import { ClassificationDto, ClassificationOdsDto } from '@ukef/modules/ods/dto';
 
 /**
  * Map an ODS classification, into a more suitable format for consumers.

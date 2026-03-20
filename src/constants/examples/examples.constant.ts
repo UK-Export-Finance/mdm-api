@@ -1,7 +1,5 @@
-import { ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES } from '@ukef/modules/ods/dto/ods-payloads.dto';
-
 import { DOM_BUSINESS_CENTRES } from '../dom.constant';
-import { ODS_BUSINESS_CENTRES } from '../ods.constant';
+import { ODS_BUSINESS_CENTRES, ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES } from '../ods.constant';
 
 const BUSINESS_CENTRE = {
   ...DOM_BUSINESS_CENTRES.GH_ACC,
@@ -281,7 +279,7 @@ export const EXAMPLES = {
     ACCRUAL_SCHEDULE_CLASSIFICATION: {
       ADDITIONAL_RATE: {
         classification_type: 'Additional Rate Type',
-        classification_type_code: 'additionalRateType',
+        classification_type_code: ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES.ADDITIONAL_RATE_TYPE,
         classification_code: 'ARTCAS',
         classification_description: 'CAS - Credit Adjustment Spread',
         classification_numeric_value: 1,

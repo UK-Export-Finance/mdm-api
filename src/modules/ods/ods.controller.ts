@@ -1,6 +1,7 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import AppConfig from '@ukef/config/app.config';
+import { ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES } from '@ukef/constants';
 
 import {
   FindCounterpartyRoleParamDto,
@@ -24,7 +25,6 @@ import {
   GetOdsFacilityCategoryParamDto,
   GetOdsObligationSubtypeParamDto,
   ObligationSubtypeWithProductTypeDto,
-  ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES,
 } from './dto';
 import { OdsService } from './ods.service';
 import { OdsAccrualScheduleService } from './ods-accrual-schedule.service';

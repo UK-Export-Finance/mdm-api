@@ -1,8 +1,7 @@
-import { EXAMPLES } from '@ukef/constants';
+import { EXAMPLES, ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES } from '@ukef/constants';
 import { mapIndustry } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 
-import { ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES } from './dto';
 import { OdsController } from './ods.controller';
 import { OdsService } from './ods.service';
 import { OdsAccrualScheduleService } from './ods-accrual-schedule.service';
@@ -286,7 +285,7 @@ describe('OdsController', () => {
   });
 
   describe('findAdditionalRate', () => {
-    const mockRateCode = EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE.TYPE_CODE;
+    const mockRateCode = EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE.CODE;
 
     it('should call odsAccrualsService.findScheduleClassification', async () => {
       // Act
@@ -348,7 +347,7 @@ describe('OdsController', () => {
   });
 
   describe('findBaseRate', () => {
-    const mockRateCode = EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.BASE_RATE.TYPE_CODE;
+    const mockRateCode = EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.BASE_RATE.CODE;
 
     it('should call odsAccrualsService.findScheduleClassification', async () => {
       // Act

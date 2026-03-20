@@ -1,15 +1,14 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { STORED_PROCEDURE } from '@ukef/constants';
+import { OdsScheduleClassificationTypeCodes, STORED_PROCEDURE } from '@ukef/constants';
 import { mapAccrualFrequencies, mapAccrualFrequency, mapOdsClassification, mapOdsClassifications } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 
 import {
+  ClassificationOdsDto,
   GetAccrualFrequencyOdsResponseDto,
   GetAccrualFrequencyResponseDto,
   GetAccrualScheduleClassificationResponseDto,
-  GetAdditionalRateOdsResponseDto,
   ODS_ENTITIES,
-  OdsScheduleClassificationTypeCodes,
   OdsStoredProcedureOutputBody,
 } from './dto';
 import { OdsStoredProcedureService } from './ods-stored-procedure.service';
@@ -139,7 +138,7 @@ export class OdsAccrualsService {
         throw new NotFoundException(`No accrual schedule classification ${classificationCode} found in ODS`);
       }
 
-      const classification = storedProcedureJson.results[0] as GetAdditionalRateOdsResponseDto;
+      const classification = storedProcedureJson.results[0] as ClassificationOdsDto;
 
       return mapOdsClassification(classification);
     } catch (error) {
@@ -184,7 +183,7 @@ export class OdsAccrualsService {
         throw new InternalServerErrorException(`Error getting accrual schedule classifications from ODS stored procedure ${classificationTypeCode}`);
       }
 
-      const classifications = storedProcedureJson.results as GetAdditionalRateOdsResponseDto[];
+      const classifications = storedProcedureJson.results as ClassificationOdsDto[];
 
       const mappedClassification = mapOdsClassifications(classifications);
 
