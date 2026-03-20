@@ -53,6 +53,14 @@ export const EXAMPLES = {
     FREQUENCY_UNIT: 'Months',
     IS_ACTIVE: true,
   },
+  ACCRUAL_SCHEDULE: {
+    code: 'CTL01',
+    name: 'Contractual Interest Fixed Rate',
+    accrualRateType: 'Fixed',
+    baseBalanceCategory: 'On Principal Drawn Amount',
+    incomeClassCode: 'Income',
+    isActive: true,
+  },
   ACCRUAL_SCHEDULE_CLASSIFICATION: {
     TYPE: 'Day Basis',
     TYPE_CODE: 'dayBasis',
