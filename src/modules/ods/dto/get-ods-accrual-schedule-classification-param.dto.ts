@@ -2,6 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { EXAMPLES } from '@ukef/constants';
 import { IsString } from 'class-validator';
 
+import { OdsScheduleClassificationTypeCodes } from './ods-payloads.dto';
+
 export class GetOdsAccrualScheduleClassificationParamDto {
   @ApiProperty({
     required: true,
@@ -9,5 +11,5 @@ export class GetOdsAccrualScheduleClassificationParamDto {
     description: 'Unique accrual schedule classification code',
   })
   @IsString()
-  public classificationCode: string;
+  public rateCode: OdsScheduleClassificationTypeCodes;
 }

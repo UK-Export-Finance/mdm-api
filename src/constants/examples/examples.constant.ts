@@ -1,3 +1,5 @@
+import { ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES } from '@ukef/modules/ods/dto/ods-payloads.dto';
+
 import { DOM_BUSINESS_CENTRES } from '../dom.constant';
 import { ODS_BUSINESS_CENTRES } from '../ods.constant';
 
@@ -62,11 +64,10 @@ export const EXAMPLES = {
     IS_ACTIVE: true,
   },
   ACCRUAL_SCHEDULE_CLASSIFICATION: {
-    TYPE: 'Day Basis',
-    TYPE_CODE: 'dayBasis',
-    CODE: 'ACTUAL_365',
-    DESCRIPTION: 'Actual/365  (Actual number of days in each month divisible by 365)',
-    NUMERIC_VALUE: 1,
+    TYPE: 'Additional Rate Type',
+    TYPE_CODE: ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES.ADDITIONAL_RATE_TYPE,
+    CODE: 'ARTCAS',
+    DESCRIPTION: 'CAS - Credit Adjustment Spread',
     IS_ACTIVE: true,
   },
   BUSINESS_CENTRE,
@@ -269,10 +270,10 @@ export const EXAMPLES = {
       accrualScheduleTypeActive: true,
     },
     ACCRUAL_SCHEDULE_CLASSIFICATION: {
-      classification_type: 'Day Basis',
-      classification_type_code: 'dayBasis',
-      classification_code: 'ACTUAL_365',
-      classification_description: 'Actual/365  (Actual number of days in each month divisible by 365)',
+      classification_type: 'Additional Rate Type',
+      classification_type_code: 'additionalRateType',
+      classification_code: 'ARTCAS',
+      classification_description: 'CAS - Credit Adjustment Spread',
       classification_numeric_value: 1,
       classification_active_flag: true,
     },

@@ -22,6 +22,7 @@ import {
   GetOdsFacilityCategoryParamDto,
   GetOdsObligationSubtypeParamDto,
   ObligationSubtypeWithProductTypeDto,
+  ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES,
 } from './dto';
 import { OdsService } from './ods.service';
 import { OdsAccrualScheduleService } from './ods-accrual-schedule.service';
@@ -121,12 +122,12 @@ export class OdsController {
     return this.odsAccrualScheduleService.findOne(param.scheduleCode);
   }
 
-  @Get('accrual-schedule-classifications')
+  @Get('additional-rates')
   @ApiOperation({
-    summary: 'Get accrual schedule classifications from ODS',
+    summary: 'Get additional rates from ODS',
   })
   @ApiOkResponse({
-    description: 'ODS accrual schedule classifications',
+    description: 'ODS additional rates',
     isArray: true,
     type: GetAccrualScheduleClassificationResponseDto,
   })
@@ -134,19 +135,19 @@ export class OdsController {
     description: 'Internal server error',
   })
   getAccrualScheduleClassifications(): Promise<GetAccrualScheduleClassificationResponseDto[]> {
-    return this.odsAccrualsService.getScheduleClassifications();
+    return this.odsAccrualsService.getScheduleClassifications(ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES.ADDITIONAL_RATE_TYPE);
   }
 
-  @Get('accrual-schedule-classification/:classificationCode')
+  @Get('additional-rate/:rateCode')
   @ApiOperation({
-    summary: 'Get an accrual schedule classification from ODS',
+    summary: 'Get an additional rate from ODS',
   })
   @ApiOkResponse({
-    description: 'ODS accrual schedule classification',
+    description: 'ODS additional rate',
     type: GetAccrualScheduleClassificationResponseDto,
   })
   @ApiNotFoundResponse({
-    description: 'Accrual schedule classification not found',
+    description: 'Additional rate not found',
   })
   @ApiBadRequestResponse({
     description: 'Bad request',
@@ -155,7 +156,7 @@ export class OdsController {
     description: 'Internal server error',
   })
   findAccrualScheduleClassification(@Param() param: GetOdsAccrualScheduleClassificationParamDto): Promise<GetAccrualScheduleClassificationResponseDto> {
-    return this.odsAccrualsService.findScheduleClassification(param.classificationCode);
+    return this.odsAccrualsService.findScheduleClassification(ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES.ADDITIONAL_RATE_TYPE, param.rateCode);
   }
 
   @Get('counterparty-roles')

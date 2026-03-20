@@ -2,6 +2,7 @@ import { EXAMPLES } from '@ukef/constants';
 import { mapIndustry } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 
+import { ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES } from './dto';
 import { OdsController } from './ods.controller';
 import { OdsService } from './ods.service';
 import { OdsAccrualScheduleService } from './ods-accrual-schedule.service';
@@ -285,20 +286,20 @@ describe('OdsController', () => {
   });
 
   describe('findAccrualScheduleClassification', () => {
-    const mockClassificationCode = EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.CODE;
+    const mockRateCode = EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.TYPE_CODE;
 
     it('should call odsAccrualsService.findScheduleClassification', async () => {
       // Act
-      await controller.findAccrualScheduleClassification({ classificationCode: mockClassificationCode });
+      await controller.findAccrualScheduleClassification({ rateCode: mockRateCode });
 
       // Assert
       expect(odsAccrualsServiceFindScheduleClassification).toHaveBeenCalledTimes(1);
-      expect(odsAccrualsServiceFindScheduleClassification).toHaveBeenCalledWith(mockClassificationCode);
+      expect(odsAccrualsServiceFindScheduleClassification).toHaveBeenCalledWith(ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES.ADDITIONAL_RATE_TYPE, mockRateCode);
     });
 
     it('should return an accrual schedule classification', async () => {
       // Act
-      const result = await controller.findAccrualScheduleClassification({ classificationCode: mockClassificationCode });
+      const result = await controller.findAccrualScheduleClassification({ rateCode: mockRateCode });
 
       // Assert
       expect(result).toStrictEqual(mockAccrualScheduleClassification);
@@ -321,7 +322,7 @@ describe('OdsController', () => {
         );
 
         // Act & Assert
-        const promise = controller.findAccrualScheduleClassification({ classificationCode: mockClassificationCode });
+        const promise = controller.findAccrualScheduleClassification({ rateCode: mockRateCode });
 
         await expect(promise).rejects.toThrow(mockError);
       });
