@@ -21,6 +21,7 @@ export type OdsStoredProcedureQueryParams = {
   frequencyCode?: string;
   industry_category?: string;
   industry_code?: string;
+  code?: string;
 };
 
 /**
@@ -50,6 +51,7 @@ export type OdsStoredProcedureOutputBody = {
 export const ODS_ENTITIES = {
   ACCRUAL_SCHEDULE_CLASSIFICATION: 'accrual_schedule_classification',
   CONFIGURATION_FREQUENCY: 'configuration_frequency',
+  CONFIGURATION_ACCRUAL_SCHEDULE: 'configuration_accrual_schedule',
   BUSINESS_CENTRE: 'business_centre',
   BUSINESS_CENTRE_NON_WORKING_DAY: 'business_centre_non_working_day',
   CONFIGURATION_COUNTERPARTY_ROLE: 'configuration_counterparty_role',

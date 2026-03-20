@@ -252,6 +252,14 @@ export const EXAMPLES = {
     productTypeCode: PRODUCT_TYPES.BIP,
   },
   ODS: {
+    ACCRUAL_SCHEDULE: {
+      code: 'CTL01',
+      name: 'Contractual Interest Fixed Rate',
+      accrualRateType: 'Fixed',
+      baseBalanceCategory: 'On Principal Drawn Amount',
+      incomeClassCode: 'Income',
+      accrualScheduleTypeActive: true,
+    },
     ACCRUAL_SCHEDULE_CLASSIFICATION: {
       classification_type: 'Day Basis',
       classification_type_code: 'dayBasis',

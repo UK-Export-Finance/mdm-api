@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { MsSqlOdsDatabaseModule } from '../database/mssql-ods-database.module';
 import { OdsController } from './ods.controller';
 import { OdsService } from './ods.service';
+import { OdsAccrualScheduleService } from './ods-accrual-schedule.service';
 import { OdsAccrualsService } from './ods-accruals.service';
 import { OdsCounterpartyRoleService } from './ods-counterparty-role.service';
 import { OdsFacilityCategoryService } from './ods-facility-category.service';
@@ -15,6 +16,7 @@ import { OdsStoredProcedureService } from './ods-stored-procedure.service';
   controllers: [OdsController],
   providers: [
     OdsService,
+    OdsAccrualScheduleService,
     OdsAccrualsService,
     OdsFacilityCategoryService,
     OdsCounterpartyRoleService,
