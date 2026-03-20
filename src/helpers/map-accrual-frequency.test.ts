@@ -3,7 +3,7 @@ import { EXAMPLES } from '@ukef/constants';
 import { mapAccrualFrequency } from './map-accrual-frequency';
 
 describe('mapAccrualFrequency', () => {
-  it('should return an mapped accrual frequencies', () => {
+  it('should return a mapped accrual frequency', () => {
     // Arrange
     const mockFrequency = EXAMPLES.ODS.CONFIGURATION_FREQUENCY;
 

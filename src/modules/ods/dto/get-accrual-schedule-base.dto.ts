@@ -30,5 +30,5 @@ export class GetAccrualScheduleBaseDto {
     description: 'Optional accrual schedule classification numeric value',
     example: EXAMPLES.ODS.ACCRUAL_SCHEDULE.incomeClassCode,
   })
-  readonly incomeClassCode: number;
+  readonly incomeClassCode: string;
 }
