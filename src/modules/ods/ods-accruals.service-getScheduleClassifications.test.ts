@@ -8,6 +8,8 @@ import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { OdsAccrualsService } from './ods-accruals.service';
 import { OdsStoredProcedureService } from './ods-stored-procedure.service';
 
+const mockClassificationTypeCode = EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE.TYPE_CODE;
+
 describe('OdsAccrualsService - getScheduleClassifications', () => {
   let service: OdsAccrualsService;
   let odsStoredProcedureService: OdsStoredProcedureService;
@@ -35,20 +37,20 @@ describe('OdsAccrualsService - getScheduleClassifications', () => {
     "total_result_count": 2,
     "results": [
       {
-        "classification_type": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.classification_type}",
-        "classification_type_code": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.classification_type_code}",
-        "classification_code": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.classification_code}",
-        "classification_description": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.classification_description}",
-        "classification_numeric_value": ${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.classification_numeric_value},
-        "classification_active_flag": ${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.classification_active_flag}
+        "classification_type": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE.classification_type}",
+        "classification_type_code": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE.classification_type_code}",
+        "classification_code": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE.classification_code}",
+        "classification_description": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE.classification_description}",
+        "classification_numeric_value": ${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE.classification_numeric_value},
+        "classification_active_flag": ${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE.classification_active_flag}
       },
       {
-        "classification_type": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.classification_type}",
-        "classification_type_code": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.classification_type_code}",
-        "classification_code": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.classification_code}",
-        "classification_description": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.classification_description}",
-        "classification_numeric_value": ${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.classification_numeric_value},
-        "classification_active_flag": ${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.classification_active_flag}
+        "classification_type": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE.classification_type}",
+        "classification_type_code": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE.classification_type_code}",
+        "classification_code": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE.classification_code}",
+        "classification_description": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE.classification_description}",
+        "classification_numeric_value": ${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE.classification_numeric_value},
+        "classification_active_flag": ${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE.classification_active_flag}
       }
     ]
   }`;
@@ -59,11 +61,14 @@ describe('OdsAccrualsService - getScheduleClassifications', () => {
 
   it('should call odsStoredProcedureService.call', async () => {
     // Act
-    await service.getScheduleClassifications();
+    await service.getScheduleClassifications(mockClassificationTypeCode);
 
     // Assert
     const expectedStoredProcedureInput: OdsStoredProcedureInput = odsStoredProcedureService.createInput({
       entityToQuery: ODS_ENTITIES.ACCRUAL_SCHEDULE_CLASSIFICATION,
+      queryParameters: {
+        classification_type_code: mockClassificationTypeCode,
+      },
     });
 
     expect(odsStoredProcedureService.call).toHaveBeenCalledTimes(1);
@@ -72,7 +77,7 @@ describe('OdsAccrualsService - getScheduleClassifications', () => {
 
   it('should return mapped accrual schedule classifications', async () => {
     // Act
-    const result = await service.getScheduleClassifications();
+    const result = await service.getScheduleClassifications(mockClassificationTypeCode);
 
     // Assert
     const jsonResults = JSON.parse(mockStoredProcedureOutput).results;
@@ -90,11 +95,11 @@ describe('OdsAccrualsService - getScheduleClassifications', () => {
       jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
 
       // Act & Assert
-      const promise = service.getScheduleClassifications();
+      const promise = service.getScheduleClassifications(mockClassificationTypeCode);
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error('Error getting accrual schedule classifications from ODS');
+      const expected = new Error(`Error getting accrual schedule classifications from ODS ${mockClassificationTypeCode}`);
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -108,11 +113,11 @@ describe('OdsAccrualsService - getScheduleClassifications', () => {
       jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
 
       // Act & Assert
-      const promise = service.getScheduleClassifications();
+      const promise = service.getScheduleClassifications(mockClassificationTypeCode);
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error('Error getting accrual schedule classifications from ODS');
+      const expected = new Error(`Error getting accrual schedule classifications from ODS ${mockClassificationTypeCode}`);
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -124,11 +129,11 @@ describe('OdsAccrualsService - getScheduleClassifications', () => {
       jest.spyOn(odsStoredProcedureService, 'call').mockRejectedValue('Mock ODS error');
 
       // Act & Assert
-      const promise = service.getScheduleClassifications();
+      const promise = service.getScheduleClassifications(mockClassificationTypeCode);
 
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
-      const expected = new Error('Error getting accrual schedule classifications from ODS');
+      const expected = new Error(`Error getting accrual schedule classifications from ODS ${mockClassificationTypeCode}`);
 
       await expect(promise).rejects.toThrow(expected);
     });

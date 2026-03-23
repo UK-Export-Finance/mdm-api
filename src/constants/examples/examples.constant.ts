@@ -1,5 +1,5 @@
 import { DOM_BUSINESS_CENTRES } from '../dom.constant';
-import { ODS_BUSINESS_CENTRES } from '../ods.constant';
+import { ODS_BUSINESS_CENTRES, ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES } from '../ods.constant';
 
 const BUSINESS_CENTRE = {
   ...DOM_BUSINESS_CENTRES.GH_ACC,
@@ -62,12 +62,20 @@ export const EXAMPLES = {
     IS_ACTIVE: true,
   },
   ACCRUAL_SCHEDULE_CLASSIFICATION: {
-    TYPE: 'Day Basis',
-    TYPE_CODE: 'dayBasis',
-    CODE: 'ACTUAL_365',
-    DESCRIPTION: 'Actual/365  (Actual number of days in each month divisible by 365)',
-    NUMERIC_VALUE: 1,
-    IS_ACTIVE: true,
+    ADDITIONAL_RATE: {
+      TYPE: 'Additional Rate Type',
+      TYPE_CODE: ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES.ADDITIONAL_RATE_TYPE,
+      CODE: 'ARTCAS',
+      DESCRIPTION: 'CAS - Credit Adjustment Spread',
+      IS_ACTIVE: true,
+    },
+    BASE_RATE: {
+      TYPE: 'Base Rate Type',
+      TYPE_CODE: ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES.BASE_RATE_TYPE,
+      CODE: 'BRTBANK',
+      DESCRIPTION: 'Bank Rate',
+      IS_ACTIVE: true,
+    },
   },
   BUSINESS_CENTRE,
   COMPANIES_HOUSE_REGISTRATION_NUMBER: '00000001',
@@ -269,12 +277,22 @@ export const EXAMPLES = {
       accrualScheduleTypeActive: true,
     },
     ACCRUAL_SCHEDULE_CLASSIFICATION: {
-      classification_type: 'Day Basis',
-      classification_type_code: 'dayBasis',
-      classification_code: 'ACTUAL_365',
-      classification_description: 'Actual/365  (Actual number of days in each month divisible by 365)',
-      classification_numeric_value: 1,
-      classification_active_flag: true,
+      ADDITIONAL_RATE: {
+        classification_type: 'Additional Rate Type',
+        classification_type_code: ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES.ADDITIONAL_RATE_TYPE,
+        classification_code: 'ARTCAS',
+        classification_description: 'CAS - Credit Adjustment Spread',
+        classification_numeric_value: 1,
+        classification_active_flag: true,
+      },
+      BASE_RATE: {
+        classification_type: 'Base Rate Type',
+        classification_type_code: ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES.BASE_RATE_TYPE,
+        classification_code: 'BRTBANK',
+        classification_description: 'Bank Rate',
+        classification_numeric_value: 1,
+        classification_active_flag: true,
+      },
     },
     BUSINESS_CENTRES: [
       {
