@@ -11,5 +11,5 @@ export class GetOdsUkefIndustryCodeParamDto {
   })
   @IsNumberString()
   @ExactLength(COMPANIES_HOUSE.INDUSTRY_CODE.EXACT_LENGTH)
-  public industryCode: string;
+  public companiesHouseIndustryCode: string;
 }

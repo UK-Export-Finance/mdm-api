@@ -61,6 +61,7 @@ describe('OdsService - findUkefIndustryCodeByCompaniesHouseCode', () => {
     // Assert
     const expectedStoredProcedureInput: OdsStoredProcedureInput = odsStoredProcedureService.createInput({
       entityToQuery: ODS_ENTITIES.SIC_CODE_TO_UKEF_INDUSTRY,
+      queryPageSize: 1,
       queryParameters: {
         sic_industry_code: EXAMPLES.COMPANIES_HOUSE_INDUSTRY_CODE,
       },

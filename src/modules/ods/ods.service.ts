@@ -306,6 +306,7 @@ export class OdsService {
 
       const storedProcedureInput = this.odsStoredProcedureService.createInput({
         entityToQuery: ODS_ENTITIES.SIC_CODE_TO_UKEF_INDUSTRY,
+        queryPageSize: 1,
         queryParameters: {
           sic_industry_code: industryCode,
         },

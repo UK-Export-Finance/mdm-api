@@ -774,7 +774,7 @@ describe('OdsController', () => {
       `should call odsService.findUkefIndustryCodeByCompaniesHouseCode with $value`,
       async ({ value }) => {
         // Act
-        await controller.findUkefIndustryCode({ industryCode: value });
+        await controller.findUkefIndustryCode({ companiesHouseIndustryCode: value });
 
         // Assert
         expect(findUkefIndustryCodeByCompaniesHouseCode).toHaveBeenCalledTimes(1);
@@ -784,7 +784,7 @@ describe('OdsController', () => {
 
     it('should return an industry when a valid industry code is provided', async () => {
       // Act
-      const result = await controller.findUkefIndustryCode({ industryCode: EXAMPLES.COMPANIES_HOUSE_INDUSTRY_CODE });
+      const result = await controller.findUkefIndustryCode({ companiesHouseIndustryCode: EXAMPLES.COMPANIES_HOUSE_INDUSTRY_CODE });
 
       // Assert
       const expected = {
@@ -811,7 +811,7 @@ describe('OdsController', () => {
         );
 
         // Act & Assert
-        const promise = controller.findUkefIndustryCode({ industryCode: EXAMPLES.COMPANIES_HOUSE_INDUSTRY_CODE });
+        const promise = controller.findUkefIndustryCode({ companiesHouseIndustryCode: EXAMPLES.COMPANIES_HOUSE_INDUSTRY_CODE });
 
         await expect(promise).rejects.toThrow(mockError);
       });
