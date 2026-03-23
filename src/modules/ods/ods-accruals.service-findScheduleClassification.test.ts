@@ -100,7 +100,7 @@ describe('OdsAccrualsService - findScheduleClassification', () => {
 
       await expect(promise).rejects.toBeInstanceOf(NotFoundException);
 
-      const expected = new Error(`No accrual schedule classification ${mockRateCode} found in ODS`);
+      const expected = new Error(`No accrual schedule classification ${mockRateTypeCode} ${mockRateCode} found in ODS`);
 
       await expect(promise).rejects.toThrow(expected);
     });
@@ -120,9 +120,9 @@ describe('OdsAccrualsService - findScheduleClassification', () => {
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
       await expect(promise).rejects.toMatchObject({
-        message: `Error finding accrual schedule classification ${mockRateCode} in ODS`,
+        message: `Error finding accrual schedule classification ${mockRateTypeCode} ${mockRateCode} in ODS`,
         cause: {
-          message: `Error finding accrual schedule classification ${mockRateCode} from ODS stored procedure`,
+          message: `Error finding accrual schedule classification ${mockRateTypeCode} ${mockRateCode} from ODS stored procedure`,
         },
       });
     });
@@ -142,7 +142,7 @@ describe('OdsAccrualsService - findScheduleClassification', () => {
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
 
       await expect(promise).rejects.toMatchObject({
-        message: `Error finding accrual schedule classification ${mockRateCode} in ODS`,
+        message: `Error finding accrual schedule classification ${mockRateTypeCode} ${mockRateCode} in ODS`,
         cause: mockStoredProcedureOutput,
       });
     });
@@ -161,7 +161,7 @@ describe('OdsAccrualsService - findScheduleClassification', () => {
       // Assert
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
       await expect(promise).rejects.toMatchObject({
-        message: `Error finding accrual schedule classification ${mockRateCode} in ODS`,
+        message: `Error finding accrual schedule classification ${mockRateTypeCode} ${mockRateCode} in ODS`,
         cause: mockError,
       });
     });

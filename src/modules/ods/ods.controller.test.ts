@@ -335,6 +335,8 @@ describe('OdsController', () => {
 
       // Assert
       expect(odsAccrualsServiceGetScheduleClassifications).toHaveBeenCalledTimes(1);
+
+      expect(odsAccrualsServiceGetScheduleClassifications).toHaveBeenCalledWith(ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES.BASE_RATE_TYPE);
     });
 
     it('should return accrual schedule classifications', async () => {

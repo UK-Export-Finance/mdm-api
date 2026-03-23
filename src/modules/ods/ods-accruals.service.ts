@@ -113,7 +113,7 @@ export class OdsAccrualsService {
     classificationCode: string,
   ): Promise<GetAccrualScheduleClassificationResponseDto> {
     try {
-      this.logger.info('Finding accrual schedule classification in ODS %s', classificationCode);
+      this.logger.info('Finding accrual schedule classification in ODS %s %s', classificationTypeCode, classificationCode);
 
       const storedProcedureInput = this.odsStoredProcedureService.createInput({
         entityToQuery: ODS_ENTITIES.ACCRUAL_SCHEDULE_CLASSIFICATION,
@@ -129,26 +129,33 @@ export class OdsAccrualsService {
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
       if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
-        this.logger.error('Error finding accrual schedule classification %s from ODS stored procedure, output %o', classificationCode, storedProcedureResult);
+        this.logger.error(
+          'Error finding accrual schedule classification %s %s from ODS stored procedure, output %o',
+          classificationTypeCode,
+          classificationCode,
+          storedProcedureResult,
+        );
 
-        throw new Error(`Error finding accrual schedule classification ${classificationCode} from ODS stored procedure`);
+        throw new Error(`Error finding accrual schedule classification ${classificationTypeCode} ${classificationCode} from ODS stored procedure`);
       }
 
       if (storedProcedureJson?.total_result_count === 0) {
-        throw new NotFoundException(`No accrual schedule classification ${classificationCode} found in ODS`);
+        throw new NotFoundException(`No accrual schedule classification ${classificationTypeCode} ${classificationCode} found in ODS`);
       }
 
       const classification = storedProcedureJson.results[0] as ClassificationOdsDto;
 
       return mapOdsClassification(classification);
     } catch (error) {
-      this.logger.error('Error finding accrual schedule classification in ODS %s %o', classificationCode, error);
+      this.logger.error('Error finding accrual schedule classification in ODS %s %s %o', classificationTypeCode, classificationCode, error);
 
       if (error instanceof NotFoundException) {
         throw error;
       }
 
-      throw new InternalServerErrorException(`Error finding accrual schedule classification ${classificationCode} in ODS`, { cause: error });
+      throw new InternalServerErrorException(`Error finding accrual schedule classification ${classificationTypeCode} ${classificationCode} in ODS`, {
+        cause: error,
+      });
     }
   }
 
