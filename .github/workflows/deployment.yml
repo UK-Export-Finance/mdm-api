@@ -174,7 +174,7 @@ jobs:
         uses: Azure/cli@v2.2.0
         with:
           inlineScript: |
-            echo "🔍 Fetching Container App FQDN..."
+            echo "🔍 Fetching Container App FQDN"
             FQDN=$(az containerapp show \
               --name "${{ env.CA_NAME }}" \
               --query properties.latestRevisionFqdn -o tsv)
@@ -188,7 +188,7 @@ jobs:
             SPEC_URL="https://$FQDN/openapi/json"
             echo "📄 OpenAPI Spec URL: $SPEC_URL"
 
-            echo "📡 Importing API into APIM (with retry logic)..."
+            echo "📡 Importing API into APIM (with retry logic)"
             max_retries=5
             delay=15
 
@@ -216,6 +216,6 @@ jobs:
                 exit 1
               fi
 
-              echo "⚠️ Import failed. Retrying in $delay seconds..."
+              echo "⚠️ Import failed. Retrying in $delay seconds"
               sleep $delay
             done
