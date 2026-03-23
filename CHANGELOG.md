@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.47.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.46.0...v1.47.0) (2026-03-23)
+
+
+### Features
+
+* **GIFT-20051:** get additional and base rates from ODS ([#1776](https://github.com/UK-Export-Finance/mdm-api/issues/1776)) ([ae4bea1](https://github.com/UK-Export-Finance/mdm-api/commit/ae4bea136723400eae6b10e9ac4e1172f0fc9ee8))
+
 ## [1.46.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.45.0...v1.46.0) (2026-03-20)
 
 ### Features
