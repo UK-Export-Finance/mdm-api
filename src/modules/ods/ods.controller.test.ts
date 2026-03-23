@@ -1,4 +1,4 @@
-import { EXAMPLES } from '@ukef/constants';
+import { EXAMPLES, ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES } from '@ukef/constants';
 import { mapIndustry } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 
@@ -271,10 +271,10 @@ describe('OdsController', () => {
     });
   });
 
-  describe('getAccrualScheduleClassifications', () => {
+  describe('getAdditionalRates', () => {
     it('should call odsAccrualsService.getScheduleClassifications', async () => {
       // Act
-      await controller.getAccrualScheduleClassifications();
+      await controller.getAdditionalRates();
 
       // Assert
       expect(odsAccrualsServiceGetScheduleClassifications).toHaveBeenCalledTimes(1);
@@ -282,28 +282,28 @@ describe('OdsController', () => {
 
     it('should return accrual schedule classifications', async () => {
       // Act
-      const result = await controller.getAccrualScheduleClassifications();
+      const result = await controller.getAdditionalRates();
 
       // Assert
       expect(result).toStrictEqual(mockAccrualScheduleClassifications);
     });
   });
 
-  describe('findAccrualScheduleClassification', () => {
-    const mockClassificationCode = EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.CODE;
+  describe('findAdditionalRate', () => {
+    const mockRateCode = EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE.CODE;
 
     it('should call odsAccrualsService.findScheduleClassification', async () => {
       // Act
-      await controller.findAccrualScheduleClassification({ classificationCode: mockClassificationCode });
+      await controller.findAdditionalRate({ rateCode: mockRateCode });
 
       // Assert
       expect(odsAccrualsServiceFindScheduleClassification).toHaveBeenCalledTimes(1);
-      expect(odsAccrualsServiceFindScheduleClassification).toHaveBeenCalledWith(mockClassificationCode);
+      expect(odsAccrualsServiceFindScheduleClassification).toHaveBeenCalledWith(ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES.ADDITIONAL_RATE_TYPE, mockRateCode);
     });
 
     it('should return an accrual schedule classification', async () => {
       // Act
-      const result = await controller.findAccrualScheduleClassification({ classificationCode: mockClassificationCode });
+      const result = await controller.findAdditionalRate({ rateCode: mockRateCode });
 
       // Assert
       expect(result).toStrictEqual(mockAccrualScheduleClassification);
@@ -326,7 +326,71 @@ describe('OdsController', () => {
         );
 
         // Act & Assert
-        const promise = controller.findAccrualScheduleClassification({ classificationCode: mockClassificationCode });
+        const promise = controller.findAdditionalRate({ rateCode: mockRateCode });
+
+        await expect(promise).rejects.toThrow(mockError);
+      });
+    });
+  });
+
+  describe('getBaseRates', () => {
+    it('should call odsAccrualsService.getScheduleClassifications', async () => {
+      // Act
+      await controller.getBaseRates();
+
+      // Assert
+      expect(odsAccrualsServiceGetScheduleClassifications).toHaveBeenCalledTimes(1);
+
+      expect(odsAccrualsServiceGetScheduleClassifications).toHaveBeenCalledWith(ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES.BASE_RATE_TYPE);
+    });
+
+    it('should return accrual schedule classifications', async () => {
+      // Act
+      const result = await controller.getBaseRates();
+
+      // Assert
+      expect(result).toStrictEqual(mockAccrualScheduleClassifications);
+    });
+  });
+
+  describe('findBaseRate', () => {
+    const mockRateCode = EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.BASE_RATE.CODE;
+
+    it('should call odsAccrualsService.findScheduleClassification', async () => {
+      // Act
+      await controller.findBaseRate({ rateCode: mockRateCode });
+
+      // Assert
+      expect(odsAccrualsServiceFindScheduleClassification).toHaveBeenCalledTimes(1);
+      expect(odsAccrualsServiceFindScheduleClassification).toHaveBeenCalledWith(ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES.BASE_RATE_TYPE, mockRateCode);
+    });
+
+    it('should return an accrual schedule classification', async () => {
+      // Act
+      const result = await controller.findBaseRate({ rateCode: mockRateCode });
+
+      // Assert
+      expect(result).toStrictEqual(mockAccrualScheduleClassification);
+    });
+
+    describe('when odsAccrualsService.findScheduleClassification throws an error', () => {
+      it('should throw an error', async () => {
+        // Arrange
+        const odsService = new OdsService(null, mockLogger);
+
+        odsAccrualsService.findScheduleClassification = jest.fn().mockRejectedValueOnce(mockError);
+
+        controller = new OdsController(
+          odsService,
+          odsAccrualsService,
+          odsAccrualScheduleService,
+          odsCounterpartyRoleService,
+          odsFacilityCategoryService,
+          odsObligationSubtypeService,
+        );
+
+        // Act & Assert
+        const promise = controller.findBaseRate({ rateCode: mockRateCode });
 
         await expect(promise).rejects.toThrow(mockError);
       });

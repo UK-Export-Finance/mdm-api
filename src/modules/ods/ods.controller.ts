@@ -1,20 +1,23 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import AppConfig from '@ukef/config/app.config';
+import { ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES } from '@ukef/constants';
 
 import {
   FindCounterpartyRoleParamDto,
   FindOdsIndustryParamDto,
   GetAccrualFrequencyResponseDto,
-  GetAccrualScheduleClassificationResponseDto,
   GetAccrualScheduleResponseDto,
+  GetAdditionalRateResponseDto,
+  GetBaseRateResponseDto,
   GetCounterpartyRoleResponseDto,
   GetFacilityCategoryResponseDto,
   GetIndustryResponseDto,
   GetObligationSubtypeResponseDto,
   GetOdsAccrualFrequencyParamDto,
-  GetOdsAccrualScheduleClassificationParamDto,
   GetOdsAccrualScheduleParamDto,
+  GetOdsAdditionalRateParamDto,
+  GetOdsBaseRateParamDto,
   GetOdsCustomerParamDto,
   GetOdsCustomerResponse,
   GetOdsDealParamDto,
@@ -123,32 +126,32 @@ export class OdsController {
     return this.odsAccrualScheduleService.findOne(param.scheduleCode);
   }
 
-  @Get('accrual-schedule-classifications')
+  @Get('additional-rates')
   @ApiOperation({
-    summary: 'Get accrual schedule classifications from ODS',
+    summary: 'Get additional rates from ODS',
   })
   @ApiOkResponse({
-    description: 'ODS accrual schedule classifications',
+    description: 'ODS additional rates',
     isArray: true,
-    type: GetAccrualScheduleClassificationResponseDto,
+    type: GetAdditionalRateResponseDto,
   })
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
   })
-  getAccrualScheduleClassifications(): Promise<GetAccrualScheduleClassificationResponseDto[]> {
-    return this.odsAccrualsService.getScheduleClassifications();
+  getAdditionalRates(): Promise<GetAdditionalRateResponseDto[]> {
+    return this.odsAccrualsService.getScheduleClassifications(ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES.ADDITIONAL_RATE_TYPE);
   }
 
-  @Get('accrual-schedule-classification/:classificationCode')
+  @Get('additional-rate/:rateCode')
   @ApiOperation({
-    summary: 'Get an accrual schedule classification from ODS',
+    summary: 'Get an additional rate from ODS',
   })
   @ApiOkResponse({
-    description: 'ODS accrual schedule classification',
-    type: GetAccrualScheduleClassificationResponseDto,
+    description: 'ODS additional rate',
+    type: GetAdditionalRateResponseDto,
   })
   @ApiNotFoundResponse({
-    description: 'Accrual schedule classification not found',
+    description: 'Additional rate not found',
   })
   @ApiBadRequestResponse({
     description: 'Bad request',
@@ -156,8 +159,45 @@ export class OdsController {
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
   })
-  findAccrualScheduleClassification(@Param() param: GetOdsAccrualScheduleClassificationParamDto): Promise<GetAccrualScheduleClassificationResponseDto> {
-    return this.odsAccrualsService.findScheduleClassification(param.classificationCode);
+  findAdditionalRate(@Param() param: GetOdsAdditionalRateParamDto): Promise<GetAdditionalRateResponseDto> {
+    return this.odsAccrualsService.findScheduleClassification(ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES.ADDITIONAL_RATE_TYPE, param.rateCode);
+  }
+
+  @Get('base-rates')
+  @ApiOperation({
+    summary: 'Get base rates from ODS',
+  })
+  @ApiOkResponse({
+    description: 'ODS base rates',
+    isArray: true,
+    type: GetBaseRateResponseDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  getBaseRates(): Promise<GetBaseRateResponseDto[]> {
+    return this.odsAccrualsService.getScheduleClassifications(ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES.BASE_RATE_TYPE);
+  }
+
+  @Get('base-rate/:rateCode')
+  @ApiOperation({
+    summary: 'Get a base rate from ODS',
+  })
+  @ApiOkResponse({
+    description: 'ODS base rate',
+    type: GetBaseRateResponseDto,
+  })
+  @ApiNotFoundResponse({
+    description: 'Base rate not found',
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad request',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  findBaseRate(@Param() param: GetOdsBaseRateParamDto): Promise<GetBaseRateResponseDto> {
+    return this.odsAccrualsService.findScheduleClassification(ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES.BASE_RATE_TYPE, param.rateCode);
   }
 
   @Get('counterparty-roles')

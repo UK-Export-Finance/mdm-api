@@ -5,7 +5,7 @@ import { mapOdsClassification } from './map-ods-classification';
 describe('mapOdsClassification', () => {
   it('should return a mapped ODS classification', () => {
     // Arrange
-    const mockClassification = EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION;
+    const mockClassification = EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE;
 
     // Act
     const result = mapOdsClassification(mockClassification);
