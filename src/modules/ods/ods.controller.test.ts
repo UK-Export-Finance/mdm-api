@@ -737,7 +737,14 @@ describe('OdsController', () => {
 
         odsService.findUkefIndustryCodeByCompaniesHouseCode = jest.fn().mockRejectedValueOnce(mockError);
 
-        controller = new OdsController(odsService, odsAccrualsService, odsCounterpartyRoleService, odsFacilityCategoryService, odsObligationSubtypeService);
+        controller = new OdsController(
+          odsService,
+          odsAccrualsService,
+          odsAccrualScheduleService,
+          odsCounterpartyRoleService,
+          odsFacilityCategoryService,
+          odsObligationSubtypeService,
+        );
 
         // Act & Assert
         const promise = controller.findUkefIndustryCode({ industryCode: EXAMPLES.COMPANIES_HOUSE_INDUSTRY_CODE });
