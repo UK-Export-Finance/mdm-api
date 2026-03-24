@@ -15,11 +15,11 @@ const COUNTERPARTY_ROLE_TYPES = {
 };
 
 const INDUSTRY = {
-  ID: 'UKEF_0101',
-  CODE: '0101',
-  DESCRIPTION: 'AIRPORTS',
-  GROUP_CODE: '01',
-  GROUP_DESCRIPTION: 'CIVIL: CONSTRUCTION',
+  ID: 'UKEF_1908',
+  CODE: '1908',
+  DESCRIPTION: 'MINING & METALS : MISCELLANEOUS',
+  GROUP_CODE: '19',
+  GROUP_DESCRIPTION: 'CIVIL: MINING & METALS',
   CATEGORY: 'UKEF',
 };
 
@@ -79,7 +79,7 @@ export const EXAMPLES = {
   },
   BUSINESS_CENTRE,
   COMPANIES_HOUSE_REGISTRATION_NUMBER: '00000001',
-  COMPANIES_HOUSE_INDUSTRY_CODE: '1406',
+  COMPANIES_HOUSE_INDUSTRY_CODE: '25920',
   COUNTERPARTY_ROLE: {
     ROLE_TYPE: 'CRT001',
     NAME: 'Exporter',
@@ -344,7 +344,20 @@ export const EXAMPLES = {
       classification_description: 'BSS Advance Payment Guarantee',
       classification_active_flag: true,
     },
+    SIC_CODE_TO_UKEF_INDUSTRY: {
+      sic_section_code: 'C',
+      sic_section_legacy_code: '1003',
+      sic_section_name: 'Manufacturing',
+      sic_industry_code: '25920',
+      sic_industry_description: 'Manufacture of light metal packaging',
+      sic_industry_level: 'Class',
+      sic_code_active_flag: true,
+      ukef_industry_code: '1908',
+      ukef_industry_description: 'MINING & METALS : MISCELLANEOUS',
+      ukef_sector_code: '19',
+      ukef_sector_description: 'CIVIL: MINING & METALS',
+    },
   },
   PRODUCT_TYPES,
-  UKEF_INDUSTRY_CODE: '1003',
+  UKEF_INDUSTRY_CODE: '1908',
 };
