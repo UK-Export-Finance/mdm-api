@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.48.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.47.0...v1.48.0) (2026-03-24)
+
+
+### Features
+
+* **GIFT-21467:** get UKEF industry code by Companies House industry code ([#1764](https://github.com/UK-Export-Finance/mdm-api/issues/1764)) ([9835e5f](https://github.com/UK-Export-Finance/mdm-api/commit/9835e5f1f541a0cae7e1252612da83349aa13c93))
+
 ## [1.47.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.46.0...v1.47.0) (2026-03-23)
 
 
