@@ -172,11 +172,17 @@ jobs:
       - name: Import ⬇️
         if: ${{ env.API_ID != '' }}
         uses: Azure/cli@v2.2.0
+        env:
+          API_ID: ${{ env.API_ID }}
+          APIM: ${{ env.APIM }}
+          CA_NAME: ${{ env.CA_NAME }}
+          NAME: ${{ env.NAME }}
         with:
+          azcliversion: latest
           inlineScript: |
             echo "🔍 Fetching Container App FQDN"
             FQDN=$(az containerapp show \
-              --name "${{ env.CA_NAME }}" \
+              --name "$CA_NAME" \
               --query properties.latestRevisionFqdn -o tsv)
 
             if [ -z "$FQDN" ]; then
@@ -196,15 +202,16 @@ jobs:
               echo "➡️ Attempt $attempt of $max_retries"
 
               az apim api import \
-                --service-name "${{ env.APIM }}" \
-                --api-id "${{ env.API_ID }}" \
-                --path "${{ env.NAME }}" \
+                --service-name "$APIM" \
+                --api-id "$API_ID" \
+                --path "$NAME" \
                 --specification-format OpenApi \
                 --specification-url "$SPEC_URL" \
                 --api-type http \
                 --service-url "https://$FQDN" \
                 --protocols https \
                 --subscription-required true
+
 
               if [ $? -eq 0 ]; then
                 echo "✅ API import succeeded"
