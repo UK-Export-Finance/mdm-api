@@ -24,6 +24,8 @@ import {
   GetOdsDealResponse,
   GetOdsFacilityCategoryParamDto,
   GetOdsObligationSubtypeParamDto,
+  GetOdsUkefIndustryCodeParamDto,
+  GetSicCodeToUkefIndustryResponseDto,
   ObligationSubtypeWithProductTypeDto,
 } from './dto';
 import { OdsService } from './ods.service';
@@ -397,6 +399,27 @@ export class OdsController {
   })
   getUkefIndustryCodes(): Promise<string[]> {
     return this.odsService.getUkefIndustryCodes();
+  }
+
+  @Get('ukef-industry-code/by-companies-house-industry-code/:companiesHouseIndustryCode')
+  @ApiOperation({
+    summary: 'Get a UKEF industry code by Companies House industry code. Sourced from ODS',
+  })
+  @ApiOkResponse({
+    description: 'The UKEF industry code from ODS',
+    type: GetSicCodeToUkefIndustryResponseDto,
+  })
+  @ApiNotFoundResponse({
+    description: 'UKEF industry not found',
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid parameters provided',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  async findUkefIndustryCode(@Param() param: GetOdsUkefIndustryCodeParamDto): Promise<GetSicCodeToUkefIndustryResponseDto> {
+    return await this.odsService.findUkefIndustryCodeByCompaniesHouseCode(param.companiesHouseIndustryCode);
   }
 
   @Get('ukef-industry/:industryCode')

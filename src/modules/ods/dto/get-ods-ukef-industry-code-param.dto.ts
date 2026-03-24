@@ -1,15 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { EXAMPLES, INDUSTRY_CODE } from '@ukef/constants';
+import { COMPANIES_HOUSE, EXAMPLES } from '@ukef/constants';
 import { ExactLength } from '@ukef/custom-decorators';
 import { IsNumberString } from 'class-validator';
 
-export class CompaniesHouseIndustryCodeParamDto {
+export class GetOdsUkefIndustryCodeParamDto {
   @ApiProperty({
     required: true,
     example: EXAMPLES.COMPANIES_HOUSE_INDUSTRY_CODE,
-    description: 'Companies House industry code',
+    description: 'Unique Companies House industry code',
   })
   @IsNumberString()
-  @ExactLength(INDUSTRY_CODE.EXACT_LENGTH)
-  public industryCode: string;
+  @ExactLength(COMPANIES_HOUSE.INDUSTRY_CODE.EXACT_LENGTH)
+  public companiesHouseIndustryCode: string;
 }
