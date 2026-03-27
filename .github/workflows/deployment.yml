@@ -79,7 +79,7 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Defaults ✨
-        uses: Azure/cli@v2.1.0
+        uses: Azure/cli@v2.2.0
         with:
           inlineScript: |
             # Basic
@@ -110,7 +110,7 @@ jobs:
           docker push ${{ env.ACR }}/${{ env.NAME }}:${{ env.FROM }}
 
       - name: Revisions 🔀
-        uses: Azure/cli@v2.1.0
+        uses: Azure/cli@v2.2.0
         with:
           inlineScript: |
             az containerapp update \
