@@ -101,7 +101,21 @@ describe('/ods - UKEF industries', () => {
   describe('/ukef-industry-code/by-companies-house-industry-code/:companiesHouseIndustryCode', () => {
     const baseUrl = `/api/${prefixAndVersion}/ods/ukef-industry-code`;
 
-    it(`should return ${HttpStatus.OK} with a UKEF industry code`, async () => {
+    it(`should return ${HttpStatus.OK} with a UKEF industry code - ${COMPANIES_HOUSE.INDUSTRY_CODE.MIN_LENGTH} digits`, async () => {
+      // Act
+      const { status, body } = await api.get(`${baseUrl}/by-companies-house-industry-code/${EXAMPLES.COMPANIES_HOUSE_INDUSTRY_CODE_FOUR_DIGITS}`);
+
+      // Assert
+      expect(status).toBe(HttpStatus.OK);
+
+      const expected = {
+        ukefIndustryCode: expect.any(String),
+      };
+
+      expect(body).toEqual(expected);
+    });
+
+    it(`should return ${HttpStatus.OK} with a UKEF industry code - ${COMPANIES_HOUSE.INDUSTRY_CODE.MAX_LENGTH} digits`, async () => {
       // Act
       const { status, body } = await api.get(`${baseUrl}/by-companies-house-industry-code/${EXAMPLES.COMPANIES_HOUSE_INDUSTRY_CODE}`);
 
@@ -169,7 +183,7 @@ describe('/ods - UKEF industries', () => {
     describe('when the industry code is below the minimum length', () => {
       it(`should return ${HttpStatus.BAD_REQUEST}`, async () => {
         // Arrange
-        const mockIndustryCode = 'a'.repeat(COMPANIES_HOUSE.INDUSTRY_CODE.MIN_LENGTH - 1);
+        const mockIndustryCode = '1'.repeat(COMPANIES_HOUSE.INDUSTRY_CODE.MIN_LENGTH - 1);
 
         // Act
         const { status, body } = await api.get(`${baseUrl}/by-companies-house-industry-code/${mockIndustryCode}`);
@@ -191,7 +205,7 @@ describe('/ods - UKEF industries', () => {
     describe('when the industry code is above the maximum length', () => {
       it(`should return ${HttpStatus.BAD_REQUEST}`, async () => {
         // Arrange
-        const mockIndustryCode = 'a'.repeat(COMPANIES_HOUSE.INDUSTRY_CODE.MAX_LENGTH + 1);
+        const mockIndustryCode = '1'.repeat(COMPANIES_HOUSE.INDUSTRY_CODE.MAX_LENGTH + 1);
 
         // Act
         const { status, body } = await api.get(`${baseUrl}/by-companies-house-industry-code/${mockIndustryCode}`);
