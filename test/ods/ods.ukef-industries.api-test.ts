@@ -160,16 +160,16 @@ describe('/ods - UKEF industries', () => {
 
         expect(body).toEqual({
           statusCode: HttpStatus.BAD_REQUEST,
-          message: ['industryCode must be a number string'],
+          message: [`companiesHouseIndustryCode must be a number string`],
           error: 'Bad Request',
         });
       });
     });
 
-    describe('when the industry code is below the exact length', () => {
+    describe('when the industry code is below the minimum length', () => {
       it(`should return ${HttpStatus.BAD_REQUEST}`, async () => {
         // Arrange
-        const mockIndustryCode = 'a'.repeat(COMPANIES_HOUSE.INDUSTRY_CODE.EXACT_LENGTH - 1);
+        const mockIndustryCode = 'a'.repeat(COMPANIES_HOUSE.INDUSTRY_CODE.MIN_LENGTH - 1);
 
         // Act
         const { status, body } = await api.get(`${baseUrl}/by-companies-house-industry-code/${mockIndustryCode}`);
@@ -179,16 +179,19 @@ describe('/ods - UKEF industries', () => {
 
         expect(body).toEqual({
           statusCode: HttpStatus.BAD_REQUEST,
-          message: [`industryCode must be exactly ${COMPANIES_HOUSE.INDUSTRY_CODE.EXACT_LENGTH} characters long`, 'industryCode must be a number string'],
+          message: [
+            `companiesHouseIndustryCode must be longer than or equal to ${COMPANIES_HOUSE.INDUSTRY_CODE.MIN_LENGTH} characters`,
+            `companiesHouseIndustryCode must be a number string`,
+          ],
           error: 'Bad Request',
         });
       });
     });
 
-    describe('when the industry code is above the exact length', () => {
+    describe('when the industry code is above the maximum length', () => {
       it(`should return ${HttpStatus.BAD_REQUEST}`, async () => {
         // Arrange
-        const mockIndustryCode = 'a'.repeat(COMPANIES_HOUSE.INDUSTRY_CODE.EXACT_LENGTH + 1);
+        const mockIndustryCode = 'a'.repeat(COMPANIES_HOUSE.INDUSTRY_CODE.MAX_LENGTH + 1);
 
         // Act
         const { status, body } = await api.get(`${baseUrl}/by-companies-house-industry-code/${mockIndustryCode}`);
@@ -198,7 +201,10 @@ describe('/ods - UKEF industries', () => {
 
         expect(body).toEqual({
           statusCode: HttpStatus.BAD_REQUEST,
-          message: [`industryCode must be exactly ${COMPANIES_HOUSE.INDUSTRY_CODE.EXACT_LENGTH} characters long`, 'industryCode must be a number string'],
+          message: [
+            `companiesHouseIndustryCode must be shorter than or equal to ${COMPANIES_HOUSE.INDUSTRY_CODE.MAX_LENGTH} characters`,
+            `companiesHouseIndustryCode must be a number string`,
+          ],
           error: 'Bad Request',
         });
       });
