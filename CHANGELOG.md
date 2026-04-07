@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.49.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.48.0...v1.49.0) (2026-04-07)
+
+
+### Features
+
+* **22117:** update companies house industry code validation ([#1802](https://github.com/UK-Export-Finance/mdm-api/issues/1802)) ([61252d1](https://github.com/UK-Export-Finance/mdm-api/commit/61252d1f7297535177e40bb0cadfb2e90cb513e8))
+
 ## [1.48.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.47.0...v1.48.0) (2026-03-24)
 
 
