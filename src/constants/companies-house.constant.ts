@@ -3,6 +3,7 @@ export const COMPANIES_HOUSE = {
     KEY: 'companiesHouse',
   },
   INDUSTRY_CODE: {
-    EXACT_LENGTH: 5,
+    MIN_LENGTH: 4,
+    MAX_LENGTH: 5,
   },
 };
