@@ -95,7 +95,7 @@ describe('OdsService - findUkefIndustryCodeByCompaniesHouseCode', () => {
         entityToQuery: ODS_ENTITIES.SIC_CODE_TO_UKEF_INDUSTRY,
         queryPageSize: 1,
         queryParameters: {
-          section_section_code: EXAMPLES.COMPANIES_HOUSE_INDUSTRY_CODE_FOUR_DIGITS,
+          sic_section_code: EXAMPLES.COMPANIES_HOUSE_INDUSTRY_CODE_FOUR_DIGITS,
         },
       });
 
@@ -129,7 +129,7 @@ describe('OdsService - findUkefIndustryCodeByCompaniesHouseCode', () => {
         entityToQuery: ODS_ENTITIES.SIC_CODE_TO_UKEF_INDUSTRY,
         queryPageSize: 1,
         queryParameters: {
-          section_section_code: mockIndustryCode,
+          sic_section_code: mockIndustryCode,
         },
       });
 
@@ -151,7 +151,7 @@ describe('OdsService - findUkefIndustryCodeByCompaniesHouseCode', () => {
         entityToQuery: ODS_ENTITIES.SIC_CODE_TO_UKEF_INDUSTRY,
         queryPageSize: 1,
         queryParameters: {
-          section_section_code: mockIndustryCode,
+          sic_section_code: mockIndustryCode,
         },
       });
 
