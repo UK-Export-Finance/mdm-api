@@ -1,5 +1,5 @@
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
+import { COMPANIES, EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
@@ -54,33 +54,110 @@ describe('OdsService - findUkefIndustryCodeByCompaniesHouseCode', () => {
     jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
   });
 
-  it('should call odsStoredProcedureService.call', async () => {
-    // Act
-    await service.findUkefIndustryCodeByCompaniesHouseCode(EXAMPLES.COMPANIES_HOUSE_INDUSTRY_CODE);
+  describe(`when an industry code is provided with ${COMPANIES.INDUSTRY_CODE.MODERN_LENGTH} length`, () => {
+    it('should call odsStoredProcedureService.call', async () => {
+      // Act
+      await service.findUkefIndustryCodeByCompaniesHouseCode(EXAMPLES.COMPANIES_HOUSE_INDUSTRY_CODE);
 
-    // Assert
-    const expectedStoredProcedureInput: OdsStoredProcedureInput = odsStoredProcedureService.createInput({
-      entityToQuery: ODS_ENTITIES.SIC_CODE_TO_UKEF_INDUSTRY,
-      queryPageSize: 1,
-      queryParameters: {
-        sic_industry_code: EXAMPLES.COMPANIES_HOUSE_INDUSTRY_CODE,
-      },
+      // Assert
+      const expectedStoredProcedureInput: OdsStoredProcedureInput = odsStoredProcedureService.createInput({
+        entityToQuery: ODS_ENTITIES.SIC_CODE_TO_UKEF_INDUSTRY,
+        queryPageSize: 1,
+        queryParameters: {
+          sic_industry_code: EXAMPLES.COMPANIES_HOUSE_INDUSTRY_CODE,
+        },
+      });
+
+      expect(odsStoredProcedureService.call).toHaveBeenCalledTimes(1);
+      expect(odsStoredProcedureService.call).toHaveBeenCalledWith(expectedStoredProcedureInput);
     });
 
-    expect(odsStoredProcedureService.call).toHaveBeenCalledTimes(1);
-    expect(odsStoredProcedureService.call).toHaveBeenCalledWith(expectedStoredProcedureInput);
+    it('should return an UKEF industry code', async () => {
+      // Act
+      const result = await service.findUkefIndustryCodeByCompaniesHouseCode(EXAMPLES.COMPANIES_HOUSE_INDUSTRY_CODE);
+
+      // Assert
+      const expected: GetSicCodeToUkefIndustryResponseDto = {
+        ukefIndustryCode: EXAMPLES.ODS.SIC_CODE_TO_UKEF_INDUSTRY.ukef_industry_code,
+      };
+
+      expect(result).toEqual(expected);
+    });
   });
 
-  it('should return an UKEF industry code', async () => {
-    // Act
-    const result = await service.findUkefIndustryCodeByCompaniesHouseCode(EXAMPLES.COMPANIES_HOUSE_INDUSTRY_CODE);
+  describe(`when an industry code is provided with ${COMPANIES.INDUSTRY_CODE.LEGACY_LENGTH} length`, () => {
+    it('should call odsStoredProcedureService.call', async () => {
+      // Act
+      await service.findUkefIndustryCodeByCompaniesHouseCode(EXAMPLES.COMPANIES_HOUSE_INDUSTRY_CODE_FOUR_DIGITS);
 
-    // Assert
-    const expected: GetSicCodeToUkefIndustryResponseDto = {
-      ukefIndustryCode: EXAMPLES.ODS.SIC_CODE_TO_UKEF_INDUSTRY.ukef_industry_code,
-    };
+      // Assert
+      const expectedStoredProcedureInput: OdsStoredProcedureInput = odsStoredProcedureService.createInput({
+        entityToQuery: ODS_ENTITIES.SIC_CODE_TO_UKEF_INDUSTRY,
+        queryPageSize: 1,
+        queryParameters: {
+          section_section_code: EXAMPLES.COMPANIES_HOUSE_INDUSTRY_CODE_FOUR_DIGITS,
+        },
+      });
 
-    expect(result).toEqual(expected);
+      expect(odsStoredProcedureService.call).toHaveBeenCalledTimes(1);
+      expect(odsStoredProcedureService.call).toHaveBeenCalledWith(expectedStoredProcedureInput);
+    });
+
+    it('should return an UKEF industry code', async () => {
+      // Act
+      const result = await service.findUkefIndustryCodeByCompaniesHouseCode(EXAMPLES.COMPANIES_HOUSE_INDUSTRY_CODE_FOUR_DIGITS);
+
+      // Assert
+      const expected: GetSicCodeToUkefIndustryResponseDto = {
+        ukefIndustryCode: EXAMPLES.ODS.SIC_CODE_TO_UKEF_INDUSTRY.ukef_industry_code,
+      };
+
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe(`when an industry code is provided with ${COMPANIES.INDUSTRY_CODE.LEGACY_LENGTH - 1} length`, () => {
+    it('should call odsStoredProcedureService.call', async () => {
+      // Arrange
+      const mockIndustryCode = '123';
+
+      // Act
+      await service.findUkefIndustryCodeByCompaniesHouseCode(mockIndustryCode);
+
+      // Assert
+      const expectedStoredProcedureInput: OdsStoredProcedureInput = odsStoredProcedureService.createInput({
+        entityToQuery: ODS_ENTITIES.SIC_CODE_TO_UKEF_INDUSTRY,
+        queryPageSize: 1,
+        queryParameters: {
+          section_section_code: mockIndustryCode,
+        },
+      });
+
+      expect(odsStoredProcedureService.call).toHaveBeenCalledTimes(1);
+      expect(odsStoredProcedureService.call).toHaveBeenCalledWith(expectedStoredProcedureInput);
+    });
+  });
+
+  describe(`when an industry code is provided with ${COMPANIES.INDUSTRY_CODE.MODERN_LENGTH + 1} length`, () => {
+    it('should call odsStoredProcedureService.call', async () => {
+      // Arrange
+      const mockIndustryCode = '123456';
+
+      // Act
+      await service.findUkefIndustryCodeByCompaniesHouseCode(mockIndustryCode);
+
+      // Assert
+      const expectedStoredProcedureInput: OdsStoredProcedureInput = odsStoredProcedureService.createInput({
+        entityToQuery: ODS_ENTITIES.SIC_CODE_TO_UKEF_INDUSTRY,
+        queryPageSize: 1,
+        queryParameters: {
+          section_section_code: mockIndustryCode,
+        },
+      });
+
+      expect(odsStoredProcedureService.call).toHaveBeenCalledTimes(1);
+      expect(odsStoredProcedureService.call).toHaveBeenCalledWith(expectedStoredProcedureInput);
+    });
   });
 
   describe('when an industry is not found', () => {

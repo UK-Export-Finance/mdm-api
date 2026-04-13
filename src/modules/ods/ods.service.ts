@@ -1,5 +1,5 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { STORED_PROCEDURE } from '@ukef/constants';
+import { COMPANIES, STORED_PROCEDURE } from '@ukef/constants';
 import { mapIndustries, mapIndustry, mapIndustryCodes } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 
@@ -304,12 +304,22 @@ export class OdsService {
     try {
       this.logger.info('Finding UKEF industry code by Companies House industry code %s in ODS', industryCode);
 
+      let queryParameters = {};
+
+      if (industryCode.length === COMPANIES.INDUSTRY_CODE.MODERN_LENGTH) {
+        queryParameters = {
+          sic_industry_code: industryCode,
+        };
+      } else {
+        queryParameters = {
+          sic_section_code: industryCode,
+        };
+      }
+
       const storedProcedureInput = this.odsStoredProcedureService.createInput({
         entityToQuery: ODS_ENTITIES.SIC_CODE_TO_UKEF_INDUSTRY,
         queryPageSize: 1,
-        queryParameters: {
-          sic_industry_code: industryCode,
-        },
+        queryParameters,
       });
 
       const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);

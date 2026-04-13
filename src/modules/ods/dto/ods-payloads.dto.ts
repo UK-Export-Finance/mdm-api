@@ -34,6 +34,7 @@ export type OdsStoredProcedureQueryParams = {
   industry_category?: string;
   industry_code?: string;
   sic_industry_code?: string;
+  sic_section_code?: string;
   code?: string;
 };
 
