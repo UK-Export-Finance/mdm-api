@@ -25,7 +25,15 @@ describe('POST /emails', () => {
   });
   const errorMessage = valueGenerator.sentence();
 
-  const sendEmailMethodMock = jest.spyOn(NotifyClient.prototype, 'sendEmail').mockImplementation(() => Promise.resolve(postEmailsResponse[0]));
+  const mockNotifySendEmailResponse: AxiosResponse = {
+    status: 201,
+    statusText: 'Created',
+    headers: {},
+    config: {} as AxiosResponse['config'],
+    data: postEmailsResponse[0],
+  };
+
+  const sendEmailMethodMock = jest.spyOn(NotifyClient.prototype, 'sendEmail').mockImplementation(() => Promise.resolve(mockNotifySendEmailResponse));
 
   const generateNotifyError = (status: number, message?: string | null) => {
     const response = {
@@ -61,7 +69,7 @@ describe('POST /emails', () => {
 
   withClientAuthenticationTests({
     givenTheRequestWouldOtherwiseSucceed: () => {
-      jest.spyOn(NotifyClient.prototype, 'sendEmail').mockImplementation(() => Promise.resolve(postEmailsResponse[0]));
+      jest.spyOn(NotifyClient.prototype, 'sendEmail').mockImplementation(() => Promise.resolve(mockNotifySendEmailResponse));
     },
     makeRequestWithoutAuth: (incorrectAuth?: IncorrectAuthArg) => api.postWithoutAuth(mdmPath, request, incorrectAuth?.headerName, incorrectAuth?.headerValue),
   });
@@ -176,7 +184,7 @@ describe('POST /emails', () => {
 
   it('returns a 422 response if the Notify client responds with empty response', async () => {
     // Arrange
-    jest.mocked(sendEmailMethodMock).mockImplementation(() => Promise.resolve(''));
+    jest.mocked(sendEmailMethodMock).mockImplementation(() => Promise.resolve(undefined as unknown as AxiosResponse));
 
     // Act
     const { status, body } = await api.post(mdmPath, request, { govUkNotifyKey });
@@ -210,7 +218,7 @@ describe('POST /emails', () => {
       validRequestBody: request,
       makeRequest: (body) => api.post(mdmPath, body, { govUkNotifyKey }),
       givenAnyRequestBodyWouldSucceed: () => {
-        jest.spyOn(NotifyClient.prototype, 'sendEmail').mockImplementation(() => Promise.resolve(postEmailsResponse[0]));
+        jest.spyOn(NotifyClient.prototype, 'sendEmail').mockImplementation(() => Promise.resolve(mockNotifySendEmailResponse));
       },
     });
 
@@ -220,7 +228,7 @@ describe('POST /emails', () => {
       validRequestBody: request,
       makeRequest: (body) => api.post(mdmPath, body, { govUkNotifyKey }),
       givenAnyRequestBodyWouldSucceed: () => {
-        jest.spyOn(NotifyClient.prototype, 'sendEmail').mockImplementation(() => Promise.resolve(postEmailsResponse[0]));
+        jest.spyOn(NotifyClient.prototype, 'sendEmail').mockImplementation(() => Promise.resolve(mockNotifySendEmailResponse));
       },
     });
 
@@ -233,7 +241,7 @@ describe('POST /emails', () => {
       validRequestBody: request,
       makeRequest: (body) => api.post(mdmPath, body, { govUkNotifyKey }),
       givenAnyRequestBodyWouldSucceed: () => {
-        jest.spyOn(NotifyClient.prototype, 'sendEmail').mockImplementation(() => Promise.resolve(postEmailsResponse[0]));
+        jest.spyOn(NotifyClient.prototype, 'sendEmail').mockImplementation(() => Promise.resolve(mockNotifySendEmailResponse));
       },
     });
 
@@ -243,7 +251,7 @@ describe('POST /emails', () => {
       validRequestBody: request,
       makeRequest: (body) => api.post(mdmPath, body, { govUkNotifyKey }),
       givenAnyRequestBodyWouldSucceed: () => {
-        jest.spyOn(NotifyClient.prototype, 'sendEmail').mockImplementation(() => Promise.resolve(postEmailsResponse[0]));
+        jest.spyOn(NotifyClient.prototype, 'sendEmail').mockImplementation(() => Promise.resolve(mockNotifySendEmailResponse));
       },
     });
   });
