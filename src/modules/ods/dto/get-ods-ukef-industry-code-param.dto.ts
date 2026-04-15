@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { COMPANIES_HOUSE, EXAMPLES } from '@ukef/constants';
+import { COMPANIES, EXAMPLES } from '@ukef/constants';
 import { IsNumberString, MaxLength, MinLength } from 'class-validator';
 
 export class GetOdsUkefIndustryCodeParamDto {
@@ -9,7 +9,7 @@ export class GetOdsUkefIndustryCodeParamDto {
     description: 'Unique Companies House industry code',
   })
   @IsNumberString()
-  @MinLength(COMPANIES_HOUSE.INDUSTRY_CODE.MIN_LENGTH)
-  @MaxLength(COMPANIES_HOUSE.INDUSTRY_CODE.MAX_LENGTH)
+  @MinLength(COMPANIES.INDUSTRY_CODE.LEGACY_LENGTH)
+  @MaxLength(COMPANIES.INDUSTRY_CODE.MODERN_LENGTH)
   public companiesHouseIndustryCode: string;
 }

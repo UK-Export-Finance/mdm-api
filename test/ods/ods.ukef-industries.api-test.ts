@@ -1,6 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
 import AppConfig from '@ukef/config/app.config';
-import { COMPANIES_HOUSE, EXAMPLES } from '@ukef/constants';
+import { COMPANIES, EXAMPLES } from '@ukef/constants';
 import { Api } from '@ukef-test/support/api';
 
 const {
@@ -101,62 +101,98 @@ describe('/ods - UKEF industries', () => {
   describe('/ukef-industry-code/by-companies-house-industry-code/:companiesHouseIndustryCode', () => {
     const baseUrl = `/api/${prefixAndVersion}/ods/ukef-industry-code`;
 
-    it(`should return ${HttpStatus.OK} with a UKEF industry code - ${COMPANIES_HOUSE.INDUSTRY_CODE.MIN_LENGTH} digits`, async () => {
-      // Act
-      const { status, body } = await api.get(`${baseUrl}/by-companies-house-industry-code/${EXAMPLES.COMPANIES_HOUSE_INDUSTRY_CODE_FOUR_DIGITS}`);
-
-      // Assert
-      expect(status).toBe(HttpStatus.OK);
-
-      const expected = {
-        ukefIndustryCode: expect.any(String),
-      };
-
-      expect(body).toEqual(expected);
-    });
-
-    it(`should return ${HttpStatus.OK} with a UKEF industry code - ${COMPANIES_HOUSE.INDUSTRY_CODE.MAX_LENGTH} digits`, async () => {
-      // Act
-      const { status, body } = await api.get(`${baseUrl}/by-companies-house-industry-code/${EXAMPLES.COMPANIES_HOUSE_INDUSTRY_CODE}`);
-
-      // Assert
-      expect(status).toBe(HttpStatus.OK);
-
-      const expected = {
-        ukefIndustryCode: expect.any(String),
-      };
-
-      expect(body).toEqual(expected);
-    });
-
-    describe('when a single UKEF industry is NOT found', () => {
-      it(`should return ${HttpStatus.NOT_FOUND}`, async () => {
-        // Arrange
-        const mockIndustryCode = '00000';
-
+    describe(`with a UKEF industry code - ${COMPANIES.INDUSTRY_CODE.MODERN_LENGTH} digits`, () => {
+      it(`should return ${HttpStatus.OK}`, async () => {
         // Act
-        const { status } = await api.get(`${baseUrl}/by-companies-house-industry-code/${mockIndustryCode}`);
+        const { status, body } = await api.get(`${baseUrl}/by-companies-house-industry-code/${EXAMPLES.COMPANIES_HOUSE_INDUSTRY_CODE}`);
 
         // Assert
-        expect(status).toBe(HttpStatus.NOT_FOUND);
+        expect(status).toBe(HttpStatus.OK);
+
+        const expected = {
+          ukefIndustryCode: expect.any(String),
+        };
+
+        expect(body).toEqual(expected);
+      });
+
+      describe('when a single UKEF industry is NOT found', () => {
+        it(`should return ${HttpStatus.NOT_FOUND}`, async () => {
+          // Arrange
+          const mockIndustryCode = '00000';
+
+          // Act
+          const { status } = await api.get(`${baseUrl}/by-companies-house-industry-code/${mockIndustryCode}`);
+
+          // Assert
+          expect(status).toBe(HttpStatus.NOT_FOUND);
+        });
       });
     });
 
-    describe('when the industry code is a valid format, but does NOT collate to a UKEF industry code', () => {
-      it(`should return ${HttpStatus.NOT_FOUND}`, async () => {
+    describe(`with a UKEF industry code - ${COMPANIES.INDUSTRY_CODE.LEGACY_LENGTH} digits`, () => {
+      it(`should return ${HttpStatus.OK} with a UKEF industry code - ${COMPANIES.INDUSTRY_CODE.LEGACY_LENGTH} digits`, async () => {
+        // Act
+        const { status, body } = await api.get(`${baseUrl}/by-companies-house-industry-code/${EXAMPLES.COMPANIES_HOUSE_INDUSTRY_CODE_FOUR_DIGITS}`);
+
+        // Assert
+        expect(status).toBe(HttpStatus.OK);
+
+        const expected = {
+          ukefIndustryCode: expect.any(String),
+        };
+
+        expect(body).toEqual(expected);
+      });
+
+      describe('when a single UKEF industry is NOT found', () => {
+        it(`should return ${HttpStatus.NOT_FOUND}`, async () => {
+          // Arrange
+          const mockIndustryCode = '0000';
+
+          // Act
+          const { status } = await api.get(`${baseUrl}/by-companies-house-industry-code/${mockIndustryCode}`);
+
+          // Assert
+          expect(status).toBe(HttpStatus.NOT_FOUND);
+        });
+      });
+    });
+
+    describe('when the industry code is above the maximum length', () => {
+      it(`should return ${HttpStatus.BAD_REQUEST}`, async () => {
         // Arrange
-        const mockIndustryCode = '12345';
+        const mockIndustryCode = '000000';
 
         // Act
         const { status, body } = await api.get(`${baseUrl}/by-companies-house-industry-code/${mockIndustryCode}`);
 
         // Assert
-        expect(status).toBe(HttpStatus.NOT_FOUND);
+        expect(status).toBe(HttpStatus.BAD_REQUEST);
 
         expect(body).toEqual({
-          statusCode: HttpStatus.NOT_FOUND,
-          message: `No UKEF industry by Companies House industry code ${mockIndustryCode} found in ODS`,
-          error: 'Not Found',
+          statusCode: HttpStatus.BAD_REQUEST,
+          message: [`companiesHouseIndustryCode must be shorter than or equal to ${COMPANIES.INDUSTRY_CODE.MODERN_LENGTH} characters`],
+          error: 'Bad Request',
+        });
+      });
+    });
+
+    describe('when the industry code is below the minimum length', () => {
+      it(`should return ${HttpStatus.BAD_REQUEST}`, async () => {
+        // Arrange
+        const mockIndustryCode = '000';
+
+        // Act
+        const { status, body } = await api.get(`${baseUrl}/by-companies-house-industry-code/${mockIndustryCode}`);
+
+        // Assert
+        expect(status).toBe(HttpStatus.BAD_REQUEST);
+
+        expect(body).toEqual({
+          statusCode: HttpStatus.BAD_REQUEST,
+          message: [`companiesHouseIndustryCode must be longer than or equal to ${COMPANIES.INDUSTRY_CODE.LEGACY_LENGTH} characters`],
+          error: 'Bad Request',
         });
       });
     });
@@ -175,50 +211,6 @@ describe('/ods - UKEF industries', () => {
         expect(body).toEqual({
           statusCode: HttpStatus.BAD_REQUEST,
           message: [`companiesHouseIndustryCode must be a number string`],
-          error: 'Bad Request',
-        });
-      });
-    });
-
-    describe('when the industry code is below the minimum length', () => {
-      it(`should return ${HttpStatus.BAD_REQUEST}`, async () => {
-        // Arrange
-        const mockIndustryCode = '1'.repeat(COMPANIES_HOUSE.INDUSTRY_CODE.MIN_LENGTH - 1);
-
-        // Act
-        const { status, body } = await api.get(`${baseUrl}/by-companies-house-industry-code/${mockIndustryCode}`);
-
-        // Assert
-        expect(status).toBe(HttpStatus.BAD_REQUEST);
-
-        expect(body).toEqual({
-          statusCode: HttpStatus.BAD_REQUEST,
-          message: [
-            `companiesHouseIndustryCode must be longer than or equal to ${COMPANIES_HOUSE.INDUSTRY_CODE.MIN_LENGTH} characters`,
-            `companiesHouseIndustryCode must be a number string`,
-          ],
-          error: 'Bad Request',
-        });
-      });
-    });
-
-    describe('when the industry code is above the maximum length', () => {
-      it(`should return ${HttpStatus.BAD_REQUEST}`, async () => {
-        // Arrange
-        const mockIndustryCode = '1'.repeat(COMPANIES_HOUSE.INDUSTRY_CODE.MAX_LENGTH + 1);
-
-        // Act
-        const { status, body } = await api.get(`${baseUrl}/by-companies-house-industry-code/${mockIndustryCode}`);
-
-        // Assert
-        expect(status).toBe(HttpStatus.BAD_REQUEST);
-
-        expect(body).toEqual({
-          statusCode: HttpStatus.BAD_REQUEST,
-          message: [
-            `companiesHouseIndustryCode must be shorter than or equal to ${COMPANIES_HOUSE.INDUSTRY_CODE.MAX_LENGTH} characters`,
-            `companiesHouseIndustryCode must be a number string`,
-          ],
           error: 'Bad Request',
         });
       });
