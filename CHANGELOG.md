@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.49.1](https://github.com/UK-Export-Finance/mdm-api/compare/v1.49.0...v1.49.1) (2026-04-15)
+
+
+### Bug Fixes
+
+* **GIFT-22117:** get UKEF industry code - legacy codes support ([#1815](https://github.com/UK-Export-Finance/mdm-api/issues/1815)) ([79136ea](https://github.com/UK-Export-Finance/mdm-api/commit/79136eab201937b37abe7e693f1ca3a6038246d6))
+
 ## [1.49.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.48.0...v1.49.0) (2026-04-07)
 
 
