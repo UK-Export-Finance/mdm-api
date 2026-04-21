@@ -7,4 +7,4 @@ import { mapIndustry } from './map-industry';
  * @param {GetIndustryOdsResponseDto[]} ODS industries
  * @returns {GetIndustryResponseDto[]} Mapped industries
  */
-export const mapIndustries = (industries: GetIndustryOdsResponseDto[]): GetIndustryResponseDto[] => industries.map((industry) => mapIndustry(industry));
+export const mapIndustries = (industries: GetIndustryOdsResponseDto[]): GetIndustryResponseDto[] => industries.map(mapIndustry);

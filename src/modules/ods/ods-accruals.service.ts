@@ -1,12 +1,12 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { STORED_PROCEDURE } from '@ukef/constants';
+import { OdsScheduleClassificationTypeCodes, STORED_PROCEDURE } from '@ukef/constants';
 import { mapAccrualFrequencies, mapAccrualFrequency, mapOdsClassification, mapOdsClassifications } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 
 import {
+  ClassificationOdsDto,
   GetAccrualFrequencyOdsResponseDto,
   GetAccrualFrequencyResponseDto,
-  GetAccrualScheduleClassificationOdsResponseDto,
   GetAccrualScheduleClassificationResponseDto,
   ODS_ENTITIES,
   OdsStoredProcedureOutputBody,
@@ -103,18 +103,23 @@ export class OdsAccrualsService {
 
   /**
    * Find an accrual schedule classification by classification code
+   * @param {string} classificationTypeCode: Classification type code
    * @param {string} classificationCode: Classification code
    * @returns {Promise<GetAccrualScheduleClassificationResponseDto>}
    * @throws {NotFoundException} If no accrual schedule classification is found
    */
-  async findScheduleClassification(classificationCode: string): Promise<GetAccrualScheduleClassificationResponseDto> {
+  async findScheduleClassification(
+    classificationTypeCode: OdsScheduleClassificationTypeCodes,
+    classificationCode: string,
+  ): Promise<GetAccrualScheduleClassificationResponseDto> {
     try {
-      this.logger.info('Finding accrual schedule classification in ODS %s', classificationCode);
+      this.logger.info('Finding accrual schedule classification in ODS %s %s', classificationTypeCode, classificationCode);
 
       const storedProcedureInput = this.odsStoredProcedureService.createInput({
         entityToQuery: ODS_ENTITIES.ACCRUAL_SCHEDULE_CLASSIFICATION,
         queryPageSize: 1,
         queryParameters: {
+          classification_type_code: classificationTypeCode,
           classification_code: classificationCode,
         },
       });
@@ -124,40 +129,51 @@ export class OdsAccrualsService {
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
       if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
-        this.logger.error('Error finding accrual schedule classification %s from ODS stored procedure, output %o', classificationCode, storedProcedureResult);
+        this.logger.error(
+          'Error finding accrual schedule classification %s %s from ODS stored procedure, output %o',
+          classificationTypeCode,
+          classificationCode,
+          storedProcedureResult,
+        );
 
-        throw new Error(`Error finding accrual schedule classification ${classificationCode} from ODS stored procedure`);
+        throw new Error(`Error finding accrual schedule classification ${classificationTypeCode} ${classificationCode} from ODS stored procedure`);
       }
 
       if (storedProcedureJson?.total_result_count === 0) {
-        throw new NotFoundException(`No accrual schedule classification ${classificationCode} found in ODS`);
+        throw new NotFoundException(`No accrual schedule classification ${classificationTypeCode} ${classificationCode} found in ODS`);
       }
 
-      const classification = storedProcedureJson.results[0] as GetAccrualScheduleClassificationOdsResponseDto;
+      const classification = storedProcedureJson.results[0] as ClassificationOdsDto;
 
       return mapOdsClassification(classification);
     } catch (error) {
-      this.logger.error('Error finding accrual schedule classification in ODS %s %o', classificationCode, error);
+      this.logger.error('Error finding accrual schedule classification in ODS %s %s %o', classificationTypeCode, classificationCode, error);
 
       if (error instanceof NotFoundException) {
         throw error;
       }
 
-      throw new InternalServerErrorException(`Error finding accrual schedule classification ${classificationCode} in ODS`, { cause: error });
+      throw new InternalServerErrorException(`Error finding accrual schedule classification ${classificationTypeCode} ${classificationCode} in ODS`, {
+        cause: error,
+      });
     }
   }
 
   /**
-   * Get all accrual schedule classifications from ODS
+   * Get accrual schedule classifications by a classification type code from ODS
+   * @param {OdsScheduleClassificationTypeCodes} classificationTypeCode: Classification type code
    * @returns {Promise<GetAccrualScheduleClassificationResponseDto[]>} Accrual schedule classifications
    * @throws {InternalServerErrorException} If there is an error getting accrual schedule classifications from ODS
    */
-  async getScheduleClassifications(): Promise<GetAccrualScheduleClassificationResponseDto[]> {
+  async getScheduleClassifications(classificationTypeCode: OdsScheduleClassificationTypeCodes): Promise<GetAccrualScheduleClassificationResponseDto[]> {
     try {
-      this.logger.info('Getting accrual schedule classifications from ODS');
+      this.logger.info('Getting accrual schedule classifications from ODS %s', classificationTypeCode);
 
       const storedProcedureInput = this.odsStoredProcedureService.createInput({
         entityToQuery: ODS_ENTITIES.ACCRUAL_SCHEDULE_CLASSIFICATION,
+        queryParameters: {
+          classification_type_code: classificationTypeCode,
+        },
       });
 
       const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
@@ -165,20 +181,24 @@ export class OdsAccrualsService {
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
       if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
-        this.logger.error('Error getting accrual schedule classifications from ODS stored procedure, output %o', storedProcedureResult);
+        this.logger.error(
+          'Error getting accrual schedule classifications from ODS stored procedure %s, output %o',
+          classificationTypeCode,
+          storedProcedureResult,
+        );
 
-        throw new InternalServerErrorException('Error getting accrual schedule classifications from ODS stored procedure');
+        throw new InternalServerErrorException(`Error getting accrual schedule classifications from ODS stored procedure ${classificationTypeCode}`);
       }
 
-      const classifications = storedProcedureJson.results as GetAccrualScheduleClassificationOdsResponseDto[];
+      const classifications = storedProcedureJson.results as ClassificationOdsDto[];
 
       const mappedClassification = mapOdsClassifications(classifications);
 
       return mappedClassification;
     } catch (error) {
-      this.logger.error('Error getting accrual schedule classifications from ODS %o', error);
+      this.logger.error('Error getting accrual schedule classifications from ODS %s %o', classificationTypeCode, error);
 
-      throw new InternalServerErrorException('Error getting accrual schedule classifications from ODS');
+      throw new InternalServerErrorException(`Error getting accrual schedule classifications from ODS ${classificationTypeCode}`);
     }
   }
 }

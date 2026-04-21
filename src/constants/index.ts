@@ -4,25 +4,23 @@
  *
  * 1) Application
  * 2) Auth strategy
- * 3) Business centre
- * 4) Companies
- * 5) Companies House
- * 6) Database
- * 7) Date
- * 8) Deals
- * 9) DOM
- * 10) Dun and Bradstreet
- * 11) Enums
- * 12) Examples
- * 13) GOV.UK Notify
- * 14) Industry code
- * 15) Geospatial
- * 16) ODS
- * 17) Products
- * 18) Strings to redact
- * 19) Strings paths to redact
- * 20) Stored procedures
- * 21) UKEF ID
+ * 3) Companies
+ * 4) Companies House
+ * 5) Database
+ * 6) Date
+ * 7) DOM
+ * 8) Dun and Bradstreet
+ * 9) Enums
+ * 10) Examples
+ * 11) Geospatial
+ * 12) GOV.UK Notify
+ * 13) ODS
+ * 14) Products
+ * 15) Strings to redact
+ * 16) Strings paths to redact
+ * 17) Stored procedures
+ * 18) UKEF ID
+ * 19) UKEF industry code
  */
 
 export * from './application.constant';
@@ -37,10 +35,10 @@ export * from './enums';
 export * from './examples/examples.constant';
 export * from './geospatial.constant';
 export * from './govuk-notify.constant';
-export * from './industry-code.constant';
 export * from './ods.constant';
 export * from './products.constant';
 export * from './redact-strings.constant';
 export * from './redact-strings-paths.constant';
 export * from './stored-procedure.constant';
 export * from './ukef-id.constant';
+export * from './ukef-industry-code.constant';

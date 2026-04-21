@@ -1,5 +1,5 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { STORED_PROCEDURE } from '@ukef/constants';
+import { COMPANIES, STORED_PROCEDURE } from '@ukef/constants';
 import { mapIndustries, mapIndustry, mapIndustryCodes } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 
@@ -9,6 +9,8 @@ import {
   GetOdsBusinessCentreNonWorkingDayResponse,
   GetOdsCustomerResponse,
   GetOdsDealResponse,
+  GetSicCodeToUkefIndustryOdsResponseDto,
+  GetSicCodeToUkefIndustryResponseDto,
   ODS_ENTITIES,
   ODS_QUERY_PARAM_VALUES,
   OdsStoredProcedureOutputBody,
@@ -289,6 +291,68 @@ export class OdsService {
       this.logger.error('Error getting UKEF industry codes from ODS %o', error);
 
       throw new InternalServerErrorException('Error getting UKEF industry codes from ODS');
+    }
+  }
+
+  /**
+   * Find a UKEF industry code by Companies House industry code
+   * @param {string} industryCode: Companies House industry code
+   * @returns {Promise<GetSicCodeToUkefIndustryResponseDto>} The mapped UKEF industry code
+   * @throws {NotFoundException} If no UKEF industry code is found
+   */
+  async findUkefIndustryCodeByCompaniesHouseCode(industryCode: string): Promise<GetSicCodeToUkefIndustryResponseDto> {
+    try {
+      this.logger.info('Finding UKEF industry code by Companies House industry code %s in ODS', industryCode);
+
+      let queryParameters = {};
+
+      if (industryCode.length === COMPANIES.INDUSTRY_CODE.MODERN_LENGTH) {
+        queryParameters = {
+          sic_industry_code: industryCode,
+        };
+      } else {
+        queryParameters = {
+          sic_section_code: industryCode,
+        };
+      }
+
+      const storedProcedureInput = this.odsStoredProcedureService.createInput({
+        entityToQuery: ODS_ENTITIES.SIC_CODE_TO_UKEF_INDUSTRY,
+        queryPageSize: 1,
+        queryParameters,
+      });
+
+      const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
+
+      const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
+
+      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+        this.logger.error(
+          'Error finding UKEF industry code by Companies House industry code %s in ODS stored procedure, output %o',
+          industryCode,
+          storedProcedureResult,
+        );
+
+        throw new Error(`Error finding UKEF industry code by Companies House industry code ${industryCode} in ODS stored procedure`);
+      }
+
+      if (storedProcedureJson?.total_result_count === 0) {
+        throw new NotFoundException(`No UKEF industry by Companies House industry code ${industryCode} found in ODS`);
+      }
+
+      const industry = storedProcedureJson.results[0] as GetSicCodeToUkefIndustryOdsResponseDto;
+
+      return {
+        ukefIndustryCode: industry.ukef_industry_code,
+      };
+    } catch (error) {
+      this.logger.error('Error finding UKEF industry code by Companies House industry code %s in ODS %o', industryCode, error);
+
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException(`Error finding UKEF industry code by Companies House industry code ${industryCode} in ODS`, { cause: error });
     }
   }
 }

@@ -7,7 +7,7 @@ const {
   domOdsVersioning: { prefixAndVersion },
 } = AppConfig();
 
-describe('/ods - Accrual schedule classifications', () => {
+describe('/ods - Additional rates', () => {
   let api: Api;
 
   beforeAll(async () => {
@@ -18,10 +18,10 @@ describe('/ods - Accrual schedule classifications', () => {
     await api.destroy();
   });
 
-  describe('/accrual-schedule-classifications', () => {
-    it(`should return ${HttpStatus.OK} with mapped accrual schedule classifications`, async () => {
+  describe('/additional-rates', () => {
+    it(`should return ${HttpStatus.OK} with mapped additional rates`, async () => {
       // Arrange
-      const url = `/api/${prefixAndVersion}/ods/accrual-schedule-classifications`;
+      const url = `/api/${prefixAndVersion}/ods/additional-rates`;
 
       // Act
       const { status, body } = await api.get(url);
@@ -43,10 +43,10 @@ describe('/ods - Accrual schedule classifications', () => {
     });
   });
 
-  describe('/accrual-schedule-classification/:classificationCode', () => {
-    it(`should return ${HttpStatus.OK} with a mapped accrual schedule classification`, async () => {
+  describe('/additional-rate/:rateCode', () => {
+    it(`should return ${HttpStatus.OK} with a mapped additional rate`, async () => {
       // Arrange
-      const url = `/api/${prefixAndVersion}/ods/accrual-schedule-classification/${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.CODE}`;
+      const url = `/api/${prefixAndVersion}/ods/additional-rate/${EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE.CODE}`;
 
       // Act
       const { status, body } = await api.get(url);
@@ -65,10 +65,10 @@ describe('/ods - Accrual schedule classifications', () => {
       expect(body).toEqual(expected);
     });
 
-    describe('when a single accrual schedule is NOT found', () => {
+    describe('when a single additional rate is NOT found', () => {
       it(`should return ${HttpStatus.NOT_FOUND}`, async () => {
         // Arrange
-        const url = `/api/${prefixAndVersion}/ods/accrual-schedule-classification/INVALID_TYPE_CODE`;
+        const url = `/api/${prefixAndVersion}/ods/additional-rate/INVALID_RATE_CODE`;
 
         // Act
         const { status } = await api.get(url);

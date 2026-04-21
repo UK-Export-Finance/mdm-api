@@ -1,5 +1,5 @@
 import { registerAs } from '@nestjs/config';
-import { APPLICATION } from '@ukef/constants';
+import { APPLICATION, AUTH } from '@ukef/constants';
 import { getIntConfig } from '@ukef/helpers/get-int-config';
 
 import { InvalidConfigException } from './invalid-config.exception';
@@ -12,6 +12,7 @@ const validLogLevels = ['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'sil
 
 export interface AppConfig {
   apiKey: string;
+  apiKeyStrategy: string;
   env: string;
   name: string;
   globalPrefix: string;
@@ -65,6 +66,7 @@ export default registerAs('app', (): Record<string, any> => {
 
   return {
     apiKey: process.env.API_KEY,
+    apiKeyStrategy: AUTH.STRATEGY,
     env: NODE_ENV,
     globalPrefix: '/api',
     logLevel: process.env.LOG_LEVEL || 'info',

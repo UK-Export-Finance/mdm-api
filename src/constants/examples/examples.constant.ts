@@ -1,5 +1,5 @@
 import { DOM_BUSINESS_CENTRES } from '../dom.constant';
-import { ODS_BUSINESS_CENTRES } from '../ods.constant';
+import { ODS_BUSINESS_CENTRES, ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES } from '../ods.constant';
 
 const BUSINESS_CENTRE = {
   ...DOM_BUSINESS_CENTRES.GH_ACC,
@@ -15,12 +15,20 @@ const COUNTERPARTY_ROLE_TYPES = {
 };
 
 const INDUSTRY = {
-  ID: 'UKEF_0101',
-  CODE: '0101',
-  DESCRIPTION: 'AIRPORTS',
-  GROUP_CODE: '01',
-  GROUP_DESCRIPTION: 'CIVIL: CONSTRUCTION',
+  ID: 'UKEF_1908',
+  CODE: '1908',
+  DESCRIPTION: 'MINING & METALS : MISCELLANEOUS',
+  GROUP_CODE: '19',
+  GROUP_DESCRIPTION: 'CIVIL: MINING & METALS',
   CATEGORY: 'UKEF',
+};
+
+const OBLIGATION_SUBTYPE = {
+  TYPE: 'Obligation Sub-Type',
+  TYPE_CODE: 'obligationSubtype',
+  CODE: 'OST012',
+  DESCRIPTION: 'BSS Advance Payment Guarantee',
+  IS_ACTIVE: true,
 };
 
 const PRODUCT_CONFIG_REQUIREMENT = {
@@ -45,17 +53,40 @@ export const EXAMPLES = {
     FREQUENCY_UNIT: 'Months',
     IS_ACTIVE: true,
   },
-  ACCRUAL_SCHEDULE_CLASSIFICATION: {
-    TYPE: 'Day Basis',
-    TYPE_CODE: 'dayBasis',
-    CODE: 'ACTUAL_365',
-    DESCRIPTION: 'Actual/365  (Actual number of days in each month divisible by 365)',
-    NUMERIC_VALUE: 1,
+  ACCRUAL_SCHEDULE: {
+    CODE: 'CTL01',
+    NAME: 'Contractual Interest Fixed Rate',
+    ACCRUAL_RATE_TYPE: 'Fixed',
+    BASE_BALANCE_CATEGORY: 'On Principal Drawn Amount',
+    INCOME_CLASS_CODE: 'Income',
     IS_ACTIVE: true,
+  },
+  ACCRUAL_SCHEDULE_CLASSIFICATION: {
+    ADDITIONAL_RATE: {
+      TYPE: 'Additional Rate Type',
+      TYPE_CODE: ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES.ADDITIONAL_RATE_TYPE,
+      CODE: 'ARTCAS',
+      DESCRIPTION: 'CAS - Credit Adjustment Spread',
+      IS_ACTIVE: true,
+    },
+    BASE_RATE: {
+      TYPE: 'Base Rate Type',
+      TYPE_CODE: ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES.BASE_RATE_TYPE,
+      CODE: 'BRTBANK',
+      DESCRIPTION: 'Bank Rate',
+      IS_ACTIVE: true,
+    },
   },
   BUSINESS_CENTRE,
   COMPANIES_HOUSE_REGISTRATION_NUMBER: '00000001',
-  COMPANIES_HOUSE_INDUSTRY_CODE: '1406',
+  COMPANIES_HOUSE_INDUSTRY_CODE: '25920',
+  COMPANIES_HOUSE_INDUSTRY_CODE_FOUR_DIGITS: '1001',
+  COUNTERPARTY_ROLE: {
+    ROLE_TYPE: 'CRT001',
+    NAME: 'Exporter',
+    HAS_SHARE_PERCENTAGE: false,
+    IS_ACTIVE: true,
+  },
   CREDIT_RISK_RATINGS: [
     {
       id: 1,
@@ -145,6 +176,7 @@ export const EXAMPLES = {
         productType: PRODUCT_TYPES.BIP,
         name: 'Bond Insurance Product (BIP)',
         shortName: 'BIP',
+        productActive: true,
         configuration: {
           commitmentDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
           issuedDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
@@ -186,12 +218,16 @@ export const EXAMPLES = {
         counterpartyRoleTypes: [COUNTERPARTY_ROLE_TYPES.BROKER],
         facilityCategoryTypes: ['FCT001', 'FCT002'],
         obligationSubtypes: ['OST001', 'OST002', 'OST003'],
-        account: [1, 2, 3],
+        additionalRateTypes: [],
+        baseRateTypes: [],
+        accrualScheduleTypes: [],
+        account: ['1', '2', '3'],
       },
       EXIP: {
         productType: PRODUCT_TYPES.EXIP,
         name: 'Export Insurance Product (EXIP)',
         shortName: 'EXIP',
+        productActive: true,
         configuration: {
           commitmentDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
           issuedDate: PRODUCT_CONFIG_REQUIREMENT.NOT_APPLICABLE,
@@ -200,7 +236,7 @@ export const EXAMPLES = {
         counterpartyRoleTypes: [COUNTERPARTY_ROLE_TYPES.BROKER, COUNTERPARTY_ROLE_TYPES.GUARANTOR],
         facilityCategoryTypes: ['FCT001', 'FCT002'],
         obligationSubtypes: ['OST001', 'OST002', 'OST003'],
-        account: [1, 2, 3],
+        account: ['1', '2', '3'],
       },
     },
   },
@@ -227,21 +263,37 @@ export const EXAMPLES = {
     TEMPLATE_URI: 'https://api.notifications.service.gov.uk/services/abc12345-a123-4567-8901-123456789012/templates/tmpl1234-1234-5678-9012-abcd12345678',
     FILE: '<Buffer 43 31 2c 43 32 2c 43 33 0a 41 2c 42 2c 43 0a 44 2c 45 2c 46 0a 31 2c 32 2c 33 0a 34 2c 35 2c 36 0a>',
   },
-  OBLIGATION_SUBTYPE: {
-    TYPE: 'Obligation Sub-Type',
-    TYPE_CODE: 'obligationSubtype',
-    CODE: 'OST012',
-    DESCRIPTION: 'BSS Advance Payment Guarantee',
-    IS_ACTIVE: true,
+  OBLIGATION_SUBTYPE,
+  OBLIGATION_SUBTYPE_WITH_PRODUCT_TYPE: {
+    ...OBLIGATION_SUBTYPE,
+    productTypeCode: PRODUCT_TYPES.BIP,
   },
   ODS: {
+    ACCRUAL_SCHEDULE: {
+      code: 'CTL01',
+      name: 'Contractual Interest Fixed Rate',
+      accrualRateType: 'Fixed',
+      baseBalanceCategory: 'On Principal Drawn Amount',
+      incomeClassCode: 'Income',
+      accrualScheduleTypeActive: true,
+    },
     ACCRUAL_SCHEDULE_CLASSIFICATION: {
-      classification_type: 'Day Basis',
-      classification_type_code: 'dayBasis',
-      classification_code: 'ACTUAL_365',
-      classification_description: 'Actual/365  (Actual number of days in each month divisible by 365)',
-      classification_numeric_value: 1,
-      classification_active_flag: true,
+      ADDITIONAL_RATE: {
+        classification_type: 'Additional Rate Type',
+        classification_type_code: ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES.ADDITIONAL_RATE_TYPE,
+        classification_code: 'ARTCAS',
+        classification_description: 'CAS - Credit Adjustment Spread',
+        classification_numeric_value: 1,
+        classification_active_flag: true,
+      },
+      BASE_RATE: {
+        classification_type: 'Base Rate Type',
+        classification_type_code: ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES.BASE_RATE_TYPE,
+        classification_code: 'BRTBANK',
+        classification_description: 'Bank Rate',
+        classification_numeric_value: 1,
+        classification_active_flag: true,
+      },
     },
     BUSINESS_CENTRES: [
       {
@@ -257,6 +309,12 @@ export const EXAMPLES = {
         business_centre_name: 'Mock name StB',
       },
     ],
+    CONFIGURATION_COUNTERPARTY_ROLE: {
+      counterpartyRoleType: 'CRT001',
+      name: 'Exporter',
+      hasSharePercentage: false,
+      counterpartyRoleTypeActive: true,
+    },
     CONFIGURATION_FREQUENCY: {
       code: 'FREQ12MON',
       name: 'Annually',
@@ -287,7 +345,20 @@ export const EXAMPLES = {
       classification_description: 'BSS Advance Payment Guarantee',
       classification_active_flag: true,
     },
+    SIC_CODE_TO_UKEF_INDUSTRY: {
+      sic_section_code: 'C',
+      sic_section_legacy_code: '1003',
+      sic_section_name: 'Manufacturing',
+      sic_industry_code: '25920',
+      sic_industry_description: 'Manufacture of light metal packaging',
+      sic_industry_level: 'Class',
+      sic_code_active_flag: true,
+      ukef_industry_code: '1908',
+      ukef_industry_description: 'MINING & METALS : MISCELLANEOUS',
+      ukef_sector_code: '19',
+      ukef_sector_description: 'CIVIL: MINING & METALS',
+    },
   },
   PRODUCT_TYPES,
-  UKEF_INDUSTRY_CODE: '1003',
+  UKEF_INDUSTRY_CODE: '1908',
 };

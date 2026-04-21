@@ -1,5 +1,15 @@
 /**
- * Customer, Deal, Business centre, Industry, Accrual schedule classifications, Accrual frequencies, Facility classifications.
+ * ODS Stored Procedure query params:
+ * - Customer
+ * - Deal
+ * - Business centre
+ * - Counterparty roles
+ * - Industry
+ * - Accrual schedule classifications
+ * - Accrual frequencies
+ * - Facility classifications
+ * - Map SIC code to UKEF industry
+ *
  * Stored Procedure query params can be found here:
  * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_customer.sql
  * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_deal.sql
@@ -8,17 +18,24 @@
  * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_industry.sql
  * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_accrual_schedule_classification.sql
  * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_facility_classification.sql
+ * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_configuration_accrual_schedule.sql
+ * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_configuration_counterparty_role.sql
  * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_configuration_frequency.sql
+ * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_get_map_sic_code_to_ukef_industry.sql
  */
 export type OdsStoredProcedureQueryParams = {
   business_centre_code?: string;
   classification_code?: string;
   classification_type_code?: string;
+  counterpartyRoleType?: string;
   customer_party_unique_reference_number?: string;
   deal_code?: string;
   frequencyCode?: string;
   industry_category?: string;
   industry_code?: string;
+  sic_industry_code?: string;
+  sic_section_code?: string;
+  code?: string;
 };
 
 /**
@@ -48,13 +65,17 @@ export type OdsStoredProcedureOutputBody = {
 export const ODS_ENTITIES = {
   ACCRUAL_SCHEDULE_CLASSIFICATION: 'accrual_schedule_classification',
   CONFIGURATION_FREQUENCY: 'configuration_frequency',
+  CONFIGURATION_ACCRUAL_SCHEDULE: 'configuration_accrual_schedule',
   BUSINESS_CENTRE: 'business_centre',
   BUSINESS_CENTRE_NON_WORKING_DAY: 'business_centre_non_working_day',
+  CONFIGURATION_COUNTERPARTY_ROLE: 'configuration_counterparty_role',
+  CONFIGURATION_PRODUCT: 'configuration_product',
   CUSTOMER: 'customer',
   DEAL: 'deal',
   FACILITY_CLASSIFICATION: 'facility_classification',
   OBLIGATION_CLASSIFICATION: 'obligation_classification',
   INDUSTRY: 'industry',
+  SIC_CODE_TO_UKEF_INDUSTRY: 'map_sic_code_to_ukef_industry',
 } as const;
 
 export type OdsEntity = (typeof ODS_ENTITIES)[keyof typeof ODS_ENTITIES];
@@ -62,6 +83,7 @@ export type OdsEntity = (typeof ODS_ENTITIES)[keyof typeof ODS_ENTITIES];
 export const ODS_QUERY_PARAM_VALUES = {
   OBLIGATION_SUBTYPE: 'obligationSubtype',
   FACILITY_CATEGORY: 'facilityCategory',
+  COUNTERPARTY_ROLE_TYPE: 'counterpartyRoleType',
   UKEF: 'UKEF',
 } as const;
 

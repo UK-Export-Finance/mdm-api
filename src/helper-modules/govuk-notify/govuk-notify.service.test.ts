@@ -7,7 +7,6 @@ import { NotifyClient } from 'notifications-node-client';
 
 import { convertStringToBuffer } from '../../helpers';
 import { PostEmailsRequestDto } from '../../modules/emails/dto/post-emails-request.dto';
-import expectedPrepareUploadResponse from './examples/example-response-for-prepare-upload.json';
 import expectedSendEmailsResponse from './examples/example-response-for-send-emails.json';
 import { GovukNotifyService } from './govuk-notify.service';
 
@@ -33,12 +32,23 @@ describe('GovukNotifyService', () => {
     file: '<Buffer 43 31 2c 43 32 2c 43 33 0a 41 2c 42 2c 43 0a 44 2c 45 2c 46 0a 31 2c 32 2c 33 0a 34 2c 35 2c 36 0a>',
   };
 
-  const mockSendEmailResponse = { status: 201, data: expectedSendEmailsResponse };
-  const mockPrepareUploadResponse = { status: 201, data: expectedPrepareUploadResponse };
+  const mockSendEmailResponse: AxiosResponse = {
+    status: 201,
+    statusText: 'Created',
+    headers: {},
+    config: {} as AxiosResponse['config'],
+    data: expectedSendEmailsResponse,
+  };
+  const mockPrepareUploadResponse = {
+    file: 'https://example.gov.uk/file.csv',
+    filename: 'file.csv',
+    confirm_email_before_download: true,
+    retention_period: null,
+  };
 
   const sendEmailMethodMock = jest.spyOn(NotifyClient.prototype, 'sendEmail').mockImplementation(() => Promise.resolve(mockSendEmailResponse));
 
-  const prepareUploadMethodMock = jest.spyOn(NotifyClient.prototype, 'prepareUpload').mockImplementation(() => Promise.resolve(mockPrepareUploadResponse));
+  const prepareUploadMethodMock = jest.spyOn(NotifyClient.prototype, 'prepareUpload').mockImplementation(() => mockPrepareUploadResponse);
 
   const logger = new PinoLogger({});
   logger.error = loggerError;
@@ -105,7 +115,7 @@ describe('GovukNotifyService', () => {
 
         const expectedPersonalisation = {
           ...filePersonalisation,
-          linkToFile: mockPrepareUploadResponse,
+          linkToFile: mockPrepareUploadResponse.file,
         };
 
         expect(sendEmailMethodMock).toHaveBeenCalledWith(templateId, sendToEmailAddress, { personalisation: expectedPersonalisation, reference });
@@ -181,7 +191,7 @@ describe('GovukNotifyService', () => {
     });
 
     it('throws exception UnprocessableEntityException for empty response from GOV.UK Notify client', async () => {
-      jest.mocked(sendEmailMethodMock).mockImplementation(() => Promise.resolve(''));
+      jest.mocked(sendEmailMethodMock).mockImplementation(() => Promise.resolve(undefined as unknown as AxiosResponse));
 
       const resultPromise = service.sendEmail(govUkNotifyKey, { sendToEmailAddress, templateId, personalisation });
 

@@ -8,5 +8,4 @@ import { mapBusinessCentre } from './map-business-centre';
  * @param {DomBusinessCentre[]} DOM Business centres
  * @returns {FindDomBusinessCentreResponse[]} Mapped business centres
  */
-export const mapBusinessCentres = (centres: DomBusinessCentre[]): FindDomBusinessCentreResponse[] =>
-  centres.map((centre: DomBusinessCentre) => mapBusinessCentre(centre));
+export const mapBusinessCentres = (centres: DomBusinessCentre[]): FindDomBusinessCentreResponse[] => centres.map(mapBusinessCentre);

@@ -1,4 +1,4 @@
-import { APPLICATION } from '@ukef/constants';
+import { APPLICATION, AUTH } from '@ukef/constants';
 import { withEnvironmentVariableParsingUnitTests } from '@ukef-test/common-tests/environment-variable-parsing-unit-tests';
 
 import appConfig, { AppConfig } from './app.config';
@@ -15,6 +15,26 @@ describe('appConfig', () => {
 
   afterEach(() => {
     process.env = originalProcessEnv;
+  });
+
+  describe('apiKey', () => {
+    it('should return the API_KEY environment variable', () => {
+      const mockApiKey = 'test-api-key';
+
+      replaceEnvironmentVariables({ API_KEY: mockApiKey });
+
+      const config = appConfig();
+
+      expect(config.apiKey).toBe(mockApiKey);
+    });
+  });
+
+  describe('apiKeyStrategy', () => {
+    it('should return the API_KEY_STRATEGY_HEADER environment variable', () => {
+      const config = appConfig();
+
+      expect(config.apiKeyStrategy).toBe(AUTH.STRATEGY);
+    });
   });
 
   describe('logLevel', () => {

@@ -8,11 +8,11 @@ import { PremiumScheduleEntity } from './entities/premium-schedule.entity';
 import { PremiumSchedulesService } from './premium-schedules.service';
 
 @ApiTags('premium-schedules')
-@Controller('premium-schedules')
+@Controller('premium')
 export class PremiumSchedulesController {
   constructor(private readonly premiumSchedulesService: PremiumSchedulesService) {}
 
-  @Post('premium/schedule')
+  @Post('/schedule')
   @ApiOperation({ summary: 'Create a premium schedule sequence (AKA Income exposure)' })
   @ApiBody({ type: [CreatePremiumScheduleDto] })
   create(
@@ -26,7 +26,7 @@ export class PremiumSchedulesController {
     return this.premiumSchedulesService.create(res, createPremiumSchedule[0]);
   }
 
-  @Get('premium/segments/:facilityId')
+  @Get('/segments/:facilityId')
   @ApiOperation({ summary: 'Return previously generated premium schedule sequence/segments (AKA Income exposures)' })
   @ApiResponse({
     status: 200,
