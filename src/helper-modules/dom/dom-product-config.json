@@ -23,7 +23,7 @@
       "provisionRate": "REQUIRED",
       "forecastYear": "REQUIRED",
       "bankRate": "NOT_APPLICABLE",
-      "instrumentType": "INSURANCE",
+      "instrumentType": "Insurance",
       "fees": {
         "creation": "REQUIRED",
         "inLife": "OPTIONAL"
@@ -84,7 +84,7 @@
       "provisionRate": "REQUIRED",
       "forecastYear": "REQUIRED",
       "bankRate": "NOT_APPLICABLE",
-      "instrumentType": "INSURANCE",
+      "instrumentType": "Insurance",
       "fees": {
         "creation": "REQUIRED",
         "inLife": "OPTIONAL"
@@ -138,7 +138,7 @@
       "provisionRate": "NOT_APPLICABLE",
       "forecastYear": "NOT_APPLICABLE",
       "bankRate": "NOT_APPLICABLE",
-      "instrumentType": "GUARANTEE",
+      "instrumentType": "Guarantee",
       "fees": {
         "creation": "NOT_APPLICABLE",
         "inLife": "OPTIONAL"
@@ -202,7 +202,7 @@
       "provisionRate": "NOT_APPLICABLE",
       "forecastYear": "NOT_APPLICABLE",
       "bankRate": "NOT_APPLICABLE",
-      "instrumentType": "GUARANTEE",
+      "instrumentType": "Guarantee",
       "fees": {
         "creation": "NOT_APPLICABLE",
         "inLife": "OPTIONAL"
