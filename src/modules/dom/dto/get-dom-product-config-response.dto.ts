@@ -64,6 +64,12 @@ export class GetDomProductConfigResponse {
   readonly facilityCategoryTypes: string[];
 
   @ApiProperty({
+    description: "The product's fee types",
+    example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.facilityCategoryTypes,
+  })
+  readonly feeTypes: string[];
+
+  @ApiProperty({
     description: "The product's obligation subtypes",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.obligationSubtypes,
   })
