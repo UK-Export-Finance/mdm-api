@@ -51,7 +51,7 @@
     ],
     "feeTypes": [
       "BEX",
-      "PAC"
+      "PLA"
     ],
     "obligationSubtypes": [
       "OST001",
@@ -113,7 +113,7 @@
     "facilityCategoryTypes": [],
     "feeTypes": [
       "BEX",
-      "PAC"
+      "PLA"
     ],
     "obligationSubtypes": [
       "OST009",
