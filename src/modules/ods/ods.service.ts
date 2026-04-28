@@ -1,5 +1,5 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { COMPANIES, OdsBusinessCentreOdsResponse, STORED_PROCEDURE } from '@ukef/constants';
+import { COMPANIES, STORED_PROCEDURE } from '@ukef/constants';
 import { mapBusinessCentre, mapBusinessCentres, mapIndustries, mapIndustry, mapIndustryCodes } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 
@@ -14,6 +14,7 @@ import {
   GetSicCodeToUkefIndustryResponseDto,
   ODS_ENTITIES,
   ODS_QUERY_PARAM_VALUES,
+  OdsBusinessCentreOdsResponse,
   OdsStoredProcedureOutputBody,
 } from './dto';
 import { OdsStoredProcedureService } from './ods-stored-procedure.service';

@@ -161,19 +161,23 @@ export const EXAMPLES = {
   DOM: {
     BUSINESS_CENTRES: [
       {
-        CODE: BUSINESS_CENTRE.CODE,
-        NAME: BUSINESS_CENTRE.NAME,
+        business_centre_code: BUSINESS_CENTRE.CODE,
+        business_centre_name: BUSINESS_CENTRE.NAME,
+        business_centre_type_description: BUSINESS_CENTRE.DESCRIPTION,
+        business_centre_active_flag: BUSINESS_CENTRE.IS_ACTIVE,
       },
       {
-        CODE: BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.CODE,
-        NAME: BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.NAME,
+        business_centre_code: BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.CODE,
+        business_centre_name: BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.NAME,
+        business_centre_type_description: BUSINESS_CENTRE.DESCRIPTION,
+        business_centre_active_flag: BUSINESS_CENTRE.IS_ACTIVE,
       },
     ],
     BUSINESS_CENTRES_NON_WORKING_DAYS: [
       {
-        CODE: BUSINESS_CENTRE.CODE,
-        NAME: BUSINESS_CENTRE.NAME,
-        DATE: BUSINESS_CENTRE.NON_WORKING_DAY.DATE,
+        business_centre_code: BUSINESS_CENTRE.CODE,
+        business_centre_name: BUSINESS_CENTRE.NAME,
+        non_working_day_date: BUSINESS_CENTRE.NON_WORKING_DAY.DATE,
       },
     ],
     PRODUCT_CONFIG: {
