@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.50.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.49.1...v1.50.0) (2026-04-28)
+
+
+### Features
+
+* **GIFT-23374:** product config - add fee types ([#1830](https://github.com/UK-Export-Finance/mdm-api/issues/1830)) ([a4812f3](https://github.com/UK-Export-Finance/mdm-api/commit/a4812f37062462185c1dc2f7bea250ebdbf003e2))
+
 ## [1.49.1](https://github.com/UK-Export-Finance/mdm-api/compare/v1.49.0...v1.49.1) (2026-04-15)
 
 
