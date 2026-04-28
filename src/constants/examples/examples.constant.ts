@@ -1,11 +1,24 @@
-import { DOM_BUSINESS_CENTRES } from '../dom.constant';
-import { ODS_BUSINESS_CENTRES, ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES } from '../ods.constant';
+import { ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES } from '../ods.constant';
 
 const BUSINESS_CENTRE = {
-  ...DOM_BUSINESS_CENTRES.GH_ACC,
+  CODE: 'GH_ACC',
+  NAME: 'Accra',
+  DESCRIPTION: 'Location',
+  IS_ACTIVE: true,
   NON_WORKING_DAY: {
     NAME: 'Weekend',
     DATE: '2025-07-05',
+  },
+};
+
+const BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE = {
+  CODE: 'AO_LAD',
+  NAME: 'Luanda',
+  DESCRIPTION: 'Location',
+  IS_ACTIVE: true,
+  NON_WORKING_DAY: {
+    NAME: 'Weekend',
+    DATE: '2026-03-04',
   },
 };
 
@@ -78,6 +91,7 @@ export const EXAMPLES = {
     },
   },
   BUSINESS_CENTRE,
+  BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE,
   COMPANIES_HOUSE_REGISTRATION_NUMBER: '00000001',
   COMPANIES_HOUSE_INDUSTRY_CODE: '25920',
   COMPANIES_HOUSE_INDUSTRY_CODE_FOUR_DIGITS: '1001',
@@ -147,28 +161,19 @@ export const EXAMPLES = {
   DOM: {
     BUSINESS_CENTRES: [
       {
-        code: DOM_BUSINESS_CENTRES.AE_DXB.CODE,
-        name: DOM_BUSINESS_CENTRES.AE_DXB.NAME,
+        CODE: BUSINESS_CENTRE.CODE,
+        NAME: BUSINESS_CENTRE.NAME,
       },
       {
-        code: DOM_BUSINESS_CENTRES.CM_YAO.CODE,
-        name: DOM_BUSINESS_CENTRES.CM_YAO.NAME,
-      },
-      {
-        code: DOM_BUSINESS_CENTRES.JO_AMM.CODE,
-        name: DOM_BUSINESS_CENTRES.JO_AMM.NAME,
+        CODE: BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.CODE,
+        NAME: BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.NAME,
       },
     ],
     BUSINESS_CENTRES_NON_WORKING_DAYS: [
       {
-        code: DOM_BUSINESS_CENTRES.AE_DXB.CODE,
-        date: BUSINESS_CENTRE.NON_WORKING_DAY.DATE,
-        name: DOM_BUSINESS_CENTRES.AE_DXB.NAME,
-      },
-      {
-        code: DOM_BUSINESS_CENTRES.CM_YAO.CODE,
-        date: BUSINESS_CENTRE.NON_WORKING_DAY.DATE,
-        name: DOM_BUSINESS_CENTRES.CM_YAO.NAME,
+        CODE: BUSINESS_CENTRE.CODE,
+        NAME: BUSINESS_CENTRE.NAME,
+        DATE: BUSINESS_CENTRE.NON_WORKING_DAY.DATE,
       },
     ],
     PRODUCT_CONFIG: {
@@ -299,15 +304,15 @@ export const EXAMPLES = {
     },
     BUSINESS_CENTRES: [
       {
-        business_centre_code: ODS_BUSINESS_CENTRES.AaB,
+        business_centre_code: 'AaB',
         business_centre_name: 'Mock name AaB',
       },
       {
-        business_centre_code: ODS_BUSINESS_CENTRES.JoB,
+        business_centre_code: 'JoB',
         business_centre_name: 'Mock name JoB',
       },
       {
-        business_centre_code: ODS_BUSINESS_CENTRES.StB,
+        business_centre_code: 'StB',
         business_centre_name: 'Mock name StB',
       },
     ],

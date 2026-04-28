@@ -5,7 +5,7 @@ import { IsString, MaxLength, MinLength } from 'class-validator';
 export class GetDomBusinessCentresNonWorkingDaysParamDto {
   @ApiProperty({
     required: true,
-    example: `${EXAMPLES.DOM.BUSINESS_CENTRES[0].code},${EXAMPLES.DOM.BUSINESS_CENTRES[1].code}`,
+    example: `${EXAMPLES.DOM.BUSINESS_CENTRES[0].CODE},${EXAMPLES.DOM.BUSINESS_CENTRES[1].CODE}`,
     description: 'Unique business centre codes - separated by commas',
   })
   @IsString()

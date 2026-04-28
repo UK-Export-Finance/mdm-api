@@ -1,17 +1,17 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { DOM_BUSINESS_CENTRES, DOM_TO_ODS_BUSINESS_CENTRES_MAPPING } from '@ukef/constants';
+import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import PRODUCT_CONFIG from '@ukef/helper-modules/dom/dom-product-config.json';
-import { mapBusinessCentre, mapBusinessCentreNonWorkingDays, mapBusinessCentres } from '@ukef/helpers';
+import { mapBusinessCentreNonWorkingDays } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 
 import { OdsService } from '../ods/ods.service';
 import {
   FindDomBusinessCentreNonWorkingDayMappedResponse,
-  FindDomBusinessCentreResponse,
   FindMultipleDomBusinessCentresNonWorkingDaysResponse,
   FindMultipleProductConfigsResponse,
   GetDomProductConfigResponse,
 } from './dto';
+
+// BUSINESS_CENTRE
 
 /**
  * DOM service.
@@ -27,23 +27,6 @@ export class DomService {
   ) {}
 
   /**
-   * Find a business centre in DOM
-   * @returns {FindDomBusinessCentreResponse}
-   * @throws {NotFoundException} If no business centre is found
-   */
-  findBusinessCentre(centreCode: string): FindDomBusinessCentreResponse {
-    this.logger.info('Finding DOM business centre %s', centreCode);
-
-    const centre = DOM_BUSINESS_CENTRES[`${centreCode}`];
-
-    if (centre) {
-      return mapBusinessCentre(centre);
-    }
-
-    throw new NotFoundException(`No business centre found ${centreCode}`);
-  }
-
-  /**
    * Find a business centre's non working days in DOM
    * @param {string} domCentreCode: DOM business centre code
    * @returns {Promise<FindDomBusinessCentreNonWorkingDayMappedResponse[]>}
@@ -53,39 +36,23 @@ export class DomService {
     try {
       this.logger.info('Finding DOM business centre %s non working days', domCentreCode);
 
-      // get the business centre's ODS code from DOM code
-      const odsCentreCode = DOM_TO_ODS_BUSINESS_CENTRES_MAPPING[`${domCentreCode}`];
-
-      if (!odsCentreCode) {
-        throw new NotFoundException(`No DOM to ODS business centre code found ${domCentreCode}`);
-      }
-
-      // get the non working days from ODS
-      const nonWorkingDays = await this.odsService.findBusinessCentreNonWorkingDays(odsCentreCode);
+      const nonWorkingDays = await this.odsService.findBusinessCentreNonWorkingDays(domCentreCode);
 
       return mapBusinessCentreNonWorkingDays(nonWorkingDays, domCentreCode);
     } catch (error) {
-      if (error instanceof NotFoundException) {
-        this.logger.warn(error);
-        throw error;
+      const isNotFoundError =
+        error instanceof NotFoundException || error?.['status'] === HttpStatus.NOT_FOUND || error?.['statusCode'] === HttpStatus.NOT_FOUND;
+
+      if (isNotFoundError) {
+        this.logger.warn('DOM business centre %s non working days not found %o', domCentreCode, error);
+
+        throw new NotFoundException(`No DOM to ODS business centre code found ${domCentreCode}`);
       }
 
       this.logger.error('Error finding DOM business centre %s non working days %o', domCentreCode, error);
 
       throw new Error(`Error finding DOM business centre ${domCentreCode} non working days`, { cause: error });
     }
-  }
-
-  /**
-   * Get all business centres
-   * @returns {FindDomBusinessCentreResponse[]}
-   */
-  getBusinessCentres(): FindDomBusinessCentreResponse[] {
-    this.logger.info('Getting DOM business centres');
-
-    const odsBusinessCentres = Object.values(DOM_BUSINESS_CENTRES);
-
-    return mapBusinessCentres(odsBusinessCentres);
   }
 
   /**

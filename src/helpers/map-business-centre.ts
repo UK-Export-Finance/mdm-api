@@ -8,6 +8,8 @@ import { FindDomBusinessCentreResponse } from '../modules/dom/dto';
  * @returns {FindDomBusinessCentreResponse} Mapped business centre
  */
 export const mapBusinessCentre = (centre: DomBusinessCentre): FindDomBusinessCentreResponse => ({
-  code: centre.CODE,
-  name: centre.NAME,
+  code: centre.business_centre_code,
+  name: centre.business_centre_name,
+  description: centre.business_centre_type_description,
+  isActive: centre.business_centre_active_flag,
 });

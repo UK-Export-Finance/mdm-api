@@ -2,6 +2,8 @@ import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import AppConfig from '@ukef/config/app.config';
 
+// import { GetOdsBusinessCentreResponse } from '../ods/dto';
+import { OdsService } from '../ods/ods.service';
 import { CreditRiskRatingsService } from './credit-risk-ratings/credit-risk-ratings.service';
 import { DomService } from './dom.service';
 import {
@@ -29,6 +31,7 @@ const { domOdsVersioning } = AppConfig();
 export class DomController {
   constructor(
     private readonly domService: DomService,
+    private readonly odsService: OdsService,
     private readonly creditRiskRatingsService: CreditRiskRatingsService,
   ) {}
 
@@ -49,8 +52,8 @@ export class DomController {
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
   })
-  findBusinessCentre(@Param() param: FindDomBusinessCentreParamDto): FindDomBusinessCentreResponse {
-    return this.domService.findBusinessCentre(param.centreCode);
+  findBusinessCentre(@Param() param: FindDomBusinessCentreParamDto): Promise<FindDomBusinessCentreResponse> {
+    return this.odsService.findBusinessCentre(param.centreCode);
   }
 
   @Get('business-centre/:centreCode/non-working-days')
@@ -90,8 +93,8 @@ export class DomController {
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
   })
-  getBusinessCentres(): FindDomBusinessCentreResponse[] {
-    return this.domService.getBusinessCentres();
+  getBusinessCentres(): Promise<FindDomBusinessCentreResponse[]> {
+    return this.odsService.getBusinessCentres();
   }
 
   @Get('business-centres/non-working-days')
