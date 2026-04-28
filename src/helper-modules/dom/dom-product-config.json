@@ -49,6 +49,10 @@
       "FCT002",
       "FCT003"
     ],
+    "feeTypes": [
+      "BEX",
+      "PLA"
+    ],
     "obligationSubtypes": [
       "OST001",
       "OST002",
@@ -107,6 +111,10 @@
       "CRT042"
     ],
     "facilityCategoryTypes": [],
+    "feeTypes": [
+      "BEX",
+      "PLA"
+    ],
     "obligationSubtypes": [
       "OST009",
       "OST010",
@@ -163,6 +171,7 @@
       "CRT040"
     ],
     "facilityCategoryTypes": [],
+    "feeTypes": [],
     "obligationSubtypes": [
       "OST012",
       "OST013",
@@ -228,6 +237,7 @@
       "FCT006",
       "FCT007"
     ],
+    "feeTypes": [],
     "obligationSubtypes": [],
     "account": ["2"]
   }
