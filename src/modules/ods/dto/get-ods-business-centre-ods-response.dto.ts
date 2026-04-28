@@ -1,4 +1,4 @@
-export interface DomBusinessCentre {
+export interface OdsBusinessCentreOdsResponse {
   business_centre_code: string;
   business_centre_name: string;
   business_centre_type_description: string;

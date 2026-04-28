@@ -8,11 +8,11 @@ import { OdsStoredProcedureService } from '../ods/ods-stored-procedure.service';
 import { CreditRiskRatingsService } from './credit-risk-ratings/credit-risk-ratings.service';
 import { DomController } from './dom.controller';
 import { DomService } from './dom.service';
-import { FindMultipleDomBusinessCentresNonWorkingDaysResponse, FindMultipleProductConfigsResponse } from './dto';
+import { FindMultipleOdsBusinessCentreOdsResponsesNonWorkingDaysResponse, FindMultipleProductConfigsResponse } from './dto';
 
 const mockError = new Error('An error occurred');
 
-const mockMultipleBusinessCentreNonWorkingDays: FindMultipleDomBusinessCentresNonWorkingDaysResponse = {
+const mockMultipleBusinessCentreNonWorkingDays: FindMultipleOdsBusinessCentreOdsResponsesNonWorkingDaysResponse = {
   [EXAMPLES.BUSINESS_CENTRE.CODE]: EXAMPLES.DOM.BUSINESS_CENTRES_NON_WORKING_DAYS,
   [EXAMPLES.BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.CODE]: EXAMPLES.DOM.BUSINESS_CENTRES_NON_WORKING_DAYS,
 };
@@ -54,13 +54,13 @@ describe('DomController', () => {
     creditRiskRatingsServiceGetAll = jest.fn().mockReturnValueOnce(EXAMPLES.CREDIT_RISK_RATINGS);
     creditRiskRatingsService.getAll = creditRiskRatingsServiceGetAll;
 
-    odsServiceFindBusinessCentre = jest.fn().mockReturnValueOnce(EXAMPLES.BUSINESS_CENTRE);
+    odsServiceFindBusinessCentre = jest.fn().mockResolvedValueOnce(EXAMPLES.BUSINESS_CENTRE);
     odsService.findBusinessCentre = odsServiceFindBusinessCentre;
 
     domServiceFindBusinessCentreNonWorkingDays = jest.fn().mockResolvedValueOnce(EXAMPLES.DOM.BUSINESS_CENTRES_NON_WORKING_DAYS);
     domService.findBusinessCentreNonWorkingDays = domServiceFindBusinessCentreNonWorkingDays;
 
-    odsServiceGetBusinessCentres = jest.fn().mockReturnValueOnce(EXAMPLES.DOM.BUSINESS_CENTRES);
+    odsServiceGetBusinessCentres = jest.fn().mockResolvedValueOnce(EXAMPLES.DOM.BUSINESS_CENTRES);
     odsService.getBusinessCentres = odsServiceGetBusinessCentres;
 
     domServiceFindMultipleBusinessCentresNonWorkingDays = jest.fn().mockResolvedValueOnce(mockMultipleBusinessCentreNonWorkingDays);
@@ -79,20 +79,36 @@ describe('DomController', () => {
   });
 
   describe('findBusinessCentre', () => {
-    it('should call domService.findBusinessCentre', () => {
+    it('should call domService.findBusinessCentre', async () => {
       // Act
-      controller.findBusinessCentre({ centreCode: EXAMPLES.BUSINESS_CENTRE.CODE });
+      await controller.findBusinessCentre({ centreCode: EXAMPLES.BUSINESS_CENTRE.CODE });
 
       // Assert
       expect(odsServiceFindBusinessCentre).toHaveBeenCalledTimes(1);
     });
 
-    it('should return the result of domService.findBusinessCentre', () => {
+    it('should return the result of domService.findBusinessCentre', async () => {
       // Act
-      const result = controller.findBusinessCentre({ centreCode: EXAMPLES.BUSINESS_CENTRE.CODE });
+      const result = await controller.findBusinessCentre({ centreCode: EXAMPLES.BUSINESS_CENTRE.CODE });
 
       // Assert
       expect(result).toEqual(EXAMPLES.BUSINESS_CENTRE);
+    });
+
+    describe('when odsService.findBusinessCentre throws an error', () => {
+      it('should throw an error', async () => {
+        // Arrange
+        const domService = new DomService(odsService, mockLogger);
+
+        odsService.findBusinessCentre = jest.fn().mockRejectedValueOnce(mockError);
+
+        controller = new DomController(domService, odsService, creditRiskRatingsService);
+
+        // Act & Assert
+        const promise = controller.findBusinessCentre({ centreCode: EXAMPLES.BUSINESS_CENTRE.CODE });
+
+        await expect(promise).rejects.toThrow(mockError);
+      });
     });
   });
 

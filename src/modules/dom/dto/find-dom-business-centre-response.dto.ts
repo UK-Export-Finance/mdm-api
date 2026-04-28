@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { EXAMPLES } from '@ukef/constants';
 
-export class FindDomBusinessCentreResponse {
+export class FindOdsBusinessCentreOdsResponse {
   @ApiProperty({
     description: 'Business centre code',
     example: EXAMPLES.BUSINESS_CENTRE.CODE,

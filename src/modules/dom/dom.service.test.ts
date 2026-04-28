@@ -5,12 +5,12 @@ import { mapBusinessCentreNonWorkingDays } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
-import { GetOdsBusinessCentreNonWorkingDayResponse } from '../ods/dto';
+import { GetOdsBusinessCentreOdsResponseNonWorkingDayResponse } from '../ods/dto';
 import { OdsService } from '../ods/ods.service';
 import { OdsStoredProcedureService } from '../ods/ods-stored-procedure.service';
 import { DomService } from './dom.service';
 
-const mockOdsBusinessCentreNonWorkingDays: GetOdsBusinessCentreNonWorkingDayResponse[] = [
+const mockOdsBusinessCentreOdsResponseNonWorkingDays: GetOdsBusinessCentreOdsResponseNonWorkingDayResponse[] = [
   {
     business_centre_code: EXAMPLES.BUSINESS_CENTRE.CODE,
     non_working_day_date: EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.DATE,
@@ -42,7 +42,7 @@ describe('DomService', () => {
   let service: DomService;
 
   beforeEach(() => {
-    odsServiceFindBusinessCentreNonWorkingDays = jest.fn().mockResolvedValueOnce(mockOdsBusinessCentreNonWorkingDays);
+    odsServiceFindBusinessCentreNonWorkingDays = jest.fn().mockResolvedValueOnce(mockOdsBusinessCentreOdsResponseNonWorkingDays);
     odsService.findBusinessCentreNonWorkingDays = odsServiceFindBusinessCentreNonWorkingDays;
 
     service = new DomService(odsService, mockLogger);
@@ -71,7 +71,7 @@ describe('DomService', () => {
         const response = await service.findBusinessCentreNonWorkingDays(mockCentreCode);
 
         // Assert
-        const expected = mapBusinessCentreNonWorkingDays(mockOdsBusinessCentreNonWorkingDays, mockCentreCode);
+        const expected = mapBusinessCentreNonWorkingDays(mockOdsBusinessCentreOdsResponseNonWorkingDays, mockCentreCode);
 
         expect(response).toEqual(expected);
       });
@@ -82,7 +82,7 @@ describe('DomService', () => {
         // Arrange
         const mockCentreCode = 'INVALID CODE';
 
-        const mockNotFoundError = new NotFoundException('No business centre found in ODS');
+        const mockNotFoundError = new NotFoundException(`No business centre ${mockCentreCode} found in ODS`);
 
         odsServiceFindBusinessCentreNonWorkingDays = jest.fn().mockRejectedValueOnce(mockNotFoundError);
         odsService.findBusinessCentreNonWorkingDays = odsServiceFindBusinessCentreNonWorkingDays;
@@ -94,7 +94,7 @@ describe('DomService', () => {
 
         await expect(promise).rejects.toBeInstanceOf(NotFoundException);
 
-        const expected = new Error(`No DOM to ODS business centre code found ${mockCentreCode}`);
+        const expected = new Error(`No DOM business centre non working days found ${mockCentreCode}`);
 
         await expect(promise).rejects.toThrow(expected);
       });

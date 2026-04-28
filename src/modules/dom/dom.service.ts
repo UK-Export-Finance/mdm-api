@@ -5,9 +5,9 @@ import { PinoLogger } from 'nestjs-pino';
 
 import { OdsService } from '../ods/ods.service';
 import {
-  FindDomBusinessCentreNonWorkingDayMappedResponse,
-  FindMultipleDomBusinessCentresNonWorkingDaysResponse,
+  FindMultipleOdsBusinessCentreOdsResponsesNonWorkingDaysResponse,
   FindMultipleProductConfigsResponse,
+  FindOdsBusinessCentreOdsResponseNonWorkingDayMappedResponse,
   GetDomProductConfigResponse,
 } from './dto';
 
@@ -27,10 +27,10 @@ export class DomService {
   /**
    * Find a business centre's non working days in DOM
    * @param {string} domCentreCode: DOM business centre code
-   * @returns {Promise<FindDomBusinessCentreNonWorkingDayMappedResponse[]>}
+   * @returns {Promise<FindOdsBusinessCentreOdsResponseNonWorkingDayMappedResponse[]>}
    * @throws {NotFoundException} If no business centre is found
    */
-  async findBusinessCentreNonWorkingDays(domCentreCode: string): Promise<FindDomBusinessCentreNonWorkingDayMappedResponse[]> {
+  async findBusinessCentreNonWorkingDays(domCentreCode: string): Promise<FindOdsBusinessCentreOdsResponseNonWorkingDayMappedResponse[]> {
     try {
       this.logger.info('Finding DOM business centre %s non working days', domCentreCode);
 
@@ -44,7 +44,7 @@ export class DomService {
       if (isNotFoundError) {
         this.logger.warn('DOM business centre %s non working days not found %o', domCentreCode, error);
 
-        throw new NotFoundException(`No DOM to ODS business centre code found ${domCentreCode}`);
+        throw new NotFoundException(`No DOM business centre non working days found ${domCentreCode}`);
       }
 
       this.logger.error('Error finding DOM business centre %s non working days %o', domCentreCode, error);
@@ -56,10 +56,10 @@ export class DomService {
   /**
    * Find multiple business centre's non working days in DOM
    * @param {string} centreCodes: DOM business centre codes, comma separated
-   * @returns {Promise<FindMultipleDomBusinessCentresNonWorkingDaysResponse>}
+   * @returns {Promise<FindMultipleOdsBusinessCentreOdsResponsesNonWorkingDaysResponse>}
    * @throws {NotFoundException} If no business centre is found
    */
-  async findMultipleBusinessCentresNonWorkingDays(centreCodes: string): Promise<FindMultipleDomBusinessCentresNonWorkingDaysResponse> {
+  async findMultipleBusinessCentresNonWorkingDays(centreCodes: string): Promise<FindMultipleOdsBusinessCentreOdsResponsesNonWorkingDaysResponse> {
     try {
       this.logger.info(`Finding multiple DOM business centres non working days %s`, centreCodes);
 
