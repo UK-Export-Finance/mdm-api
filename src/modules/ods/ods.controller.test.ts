@@ -37,6 +37,15 @@ const mockCounterpartyRoles = [mockCounterpartyRole, mockCounterpartyRole];
 const mockFacilityCategory = EXAMPLES.FACILITY_CATEGORY;
 const mockFacilityCategories = [mockFacilityCategory, mockFacilityCategory];
 
+const mockFeeType = {
+  feeType: 'BEX',
+  name: 'Brokerage Expense',
+  feeTypeClassification: 'Fixed',
+  feeTypeExpenseIncome: 'Expense',
+  feeTypeActive: true,
+};
+const mockFeeTypes = [mockFeeType, mockFeeType];
+
 const mockObligationSubtype = EXAMPLES.OBLIGATION_SUBTYPE;
 const mockObligationSubtypes = [mockObligationSubtype, mockObligationSubtype];
 
@@ -58,6 +67,8 @@ describe('OdsController', () => {
   let odsServiceFindDeal: jest.Mock;
   let odsServiceGetUkefIndustries: jest.Mock;
   let odsServiceGetUkefIndustryCodes: jest.Mock;
+  let odsServiceGetFeeTypes: jest.Mock;
+  let odsServiceFindFeeType: jest.Mock;
   let odsAccrualsServiceGetAccrualFrequencies: jest.Mock;
   let odsAccrualServiceFindAccrualFrequency: jest.Mock;
   let odsAccrualsServiceGetScheduleClassifications: jest.Mock;
@@ -91,6 +102,12 @@ describe('OdsController', () => {
 
     odsServiceGetUkefIndustryCodes = jest.fn().mockResolvedValueOnce(mockUkefIndustryCodes);
     odsService.getUkefIndustryCodes = odsServiceGetUkefIndustryCodes;
+
+    odsServiceGetFeeTypes = jest.fn().mockResolvedValueOnce(mockFeeTypes);
+    odsService.getFeeTypes = odsServiceGetFeeTypes;
+
+    odsServiceFindFeeType = jest.fn().mockResolvedValueOnce(mockFeeType);
+    odsService.findFeeType = odsServiceFindFeeType;
 
     findUkefIndustry = jest.fn().mockResolvedValueOnce(mockMappedIndustry);
     odsService.findUkefIndustry = findUkefIndustry;
@@ -515,6 +532,68 @@ describe('OdsController', () => {
 
         // Act & Assert
         const promise = controller.findFacilityCategory({ categoryCode: mockCategoryCode });
+
+        await expect(promise).rejects.toThrow(mockError);
+      });
+    });
+  });
+
+  describe('getFeeTypes', () => {
+    it('should call odsService.getFeeTypes', async () => {
+      // Act
+      await controller.getFeeTypes();
+
+      // Assert
+      expect(odsServiceGetFeeTypes).toHaveBeenCalledTimes(1);
+    });
+
+    it('should return fee types', async () => {
+      // Act
+      const result = await controller.getFeeTypes();
+
+      // Assert
+      expect(result).toStrictEqual(mockFeeTypes);
+    });
+  });
+
+  describe('findFeeType', () => {
+    const mockFeeTypeCode = mockFeeType.feeType;
+
+    it('should call odsService.findFeeType', async () => {
+      // Act
+      await controller.findFeeType({ feeTypeCode: mockFeeTypeCode });
+
+      // Assert
+      expect(odsServiceFindFeeType).toHaveBeenCalledTimes(1);
+      expect(odsServiceFindFeeType).toHaveBeenCalledWith(mockFeeTypeCode);
+    });
+
+    it('should return a fee type', async () => {
+      // Act
+      const result = await controller.findFeeType({ feeTypeCode: mockFeeTypeCode });
+
+      // Assert
+      expect(result).toStrictEqual(mockFeeType);
+    });
+
+    describe('when odsService.findFeeType throws an error', () => {
+      it('should throw an error', async () => {
+        // Arrange
+        const odsService = new OdsService(null, mockLogger);
+
+        odsService.findFeeType = jest.fn().mockRejectedValueOnce(mockError);
+
+        controller = new OdsController(
+          odsService,
+          odsAccrualsService,
+          odsAccrualScheduleService,
+          odsCounterpartyRoleService,
+          odsFacilityCategoryService,
+          odsObligationSubtypeService,
+        );
+
+        // Act & Assert
+        const promise = controller.findFeeType({ feeTypeCode: mockFeeTypeCode });
 
         await expect(promise).rejects.toThrow(mockError);
       });

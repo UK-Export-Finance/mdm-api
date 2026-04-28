@@ -8,6 +8,8 @@ export * from './map-business-centre-non-working-days';
 export * from './map-business-centres';
 export * from './map-counterparty-role';
 export * from './map-counterparty-roles';
+export * from './map-fee-type';
+export * from './map-fee-types';
 export * from './map-industries';
 export * from './map-industry';
 export * from './map-industry-codes';
