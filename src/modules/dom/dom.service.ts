@@ -11,8 +11,6 @@ import {
   GetDomProductConfigResponse,
 } from './dto';
 
-// BUSINESS_CENTRE
-
 /**
  * DOM service.
  * This is responsible for all DOM operations.
