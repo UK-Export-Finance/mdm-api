@@ -169,8 +169,8 @@ export const EXAMPLES = {
       {
         business_centre_code: BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.CODE,
         business_centre_name: BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.NAME,
-        business_centre_type_description: BUSINESS_CENTRE.DESCRIPTION,
-        business_centre_active_flag: BUSINESS_CENTRE.IS_ACTIVE,
+        business_centre_type_description: BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.DESCRIPTION,
+        business_centre_active_flag: BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.IS_ACTIVE,
       },
     ],
     BUSINESS_CENTRES_NON_WORKING_DAYS: [
