@@ -37,7 +37,7 @@ const mockCounterpartyRoles = [mockCounterpartyRole, mockCounterpartyRole];
 const mockFacilityCategory = EXAMPLES.FACILITY_CATEGORY;
 const mockFacilityCategories = [mockFacilityCategory, mockFacilityCategory];
 
-const mockFeeType = EXAMPLES.ODS.FEE_TYPE;
+const mockFeeType = EXAMPLES.FEE_TYPE;
 const mockFeeTypes = [mockFeeType, mockFeeType];
 
 const mockObligationSubtype = EXAMPLES.OBLIGATION_SUBTYPE;
@@ -551,7 +551,7 @@ describe('OdsController', () => {
   });
 
   describe('findFeeType', () => {
-    const mockFeeTypeCode = mockFeeType.feeType;
+    const mockFeeTypeCode = mockFeeType.FEE_TYPE;
 
     it('should call odsService.findFeeType', async () => {
       // Act

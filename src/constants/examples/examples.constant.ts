@@ -348,13 +348,6 @@ export const EXAMPLES = {
       classification_description: 'GEF: Contingent',
       classification_active_flag: true,
     },
-    FEE_TYPE: {
-      feeType: 'BEX',
-      name: 'Brokerage Expense',
-      classification: 'Fixed',
-      expenseIncome: 'Expense',
-      isActive: true,
-    },
     INDUSTRY: {
       industry_id: INDUSTRY.ID,
       industry_code: INDUSTRY.CODE,
