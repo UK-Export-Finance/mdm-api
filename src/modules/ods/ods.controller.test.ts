@@ -37,13 +37,7 @@ const mockCounterpartyRoles = [mockCounterpartyRole, mockCounterpartyRole];
 const mockFacilityCategory = EXAMPLES.FACILITY_CATEGORY;
 const mockFacilityCategories = [mockFacilityCategory, mockFacilityCategory];
 
-const mockFeeType = {
-  feeType: 'BEX',
-  name: 'Brokerage Expense',
-  feeTypeClassification: 'Fixed',
-  feeTypeExpenseIncome: 'Expense',
-  feeTypeActive: true,
-};
+const mockFeeType = EXAMPLES.ODS.FEE_TYPE;
 const mockFeeTypes = [mockFeeType, mockFeeType];
 
 const mockObligationSubtype = EXAMPLES.OBLIGATION_SUBTYPE;

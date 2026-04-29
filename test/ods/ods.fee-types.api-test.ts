@@ -1,5 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
 import AppConfig from '@ukef/config/app.config';
+import { EXAMPLES } from '@ukef/constants';
 import { Api } from '@ukef-test/support/api';
 
 const {
@@ -45,7 +46,7 @@ describe('/ods - Fee types', () => {
   describe('/fee-type/:feeTypeCode', () => {
     it(`should return ${HttpStatus.OK} with a mapped fee type`, async () => {
       // Arrange
-      const url = `/api/${prefixAndVersion}/ods/fee-type/BEX`;
+      const url = `/api/${prefixAndVersion}/ods/fee-type/${EXAMPLES.FEE_TYPE.FEE_TYPE}`;
 
       // Act
       const { status, body } = await api.get(url);
