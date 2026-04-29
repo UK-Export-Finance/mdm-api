@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.51.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.50.0...v1.51.0) (2026-04-29)
+
+
+### Features
+
+* **GIFT-23371:** get fee types from ODS ([#1833](https://github.com/UK-Export-Finance/mdm-api/issues/1833)) ([ae16660](https://github.com/UK-Export-Finance/mdm-api/commit/ae16660afae28c6666943f54601449bdcdb59d67))
+
 ## [1.50.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.49.1...v1.50.0) (2026-04-28)
 
 
