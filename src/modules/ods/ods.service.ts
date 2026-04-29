@@ -175,6 +175,7 @@ export class OdsService {
 
       const storedProcedureInput = this.odsStoredProcedureService.createInput({
         entityToQuery: ODS_ENTITIES.BUSINESS_CENTRE,
+        queryPageSize: 1,
         queryParameters: {
           business_centre_code: centreCode,
         },

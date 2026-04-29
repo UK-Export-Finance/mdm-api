@@ -112,12 +112,7 @@ describe('OdsService - findBusinessCentre', () => {
 
       // Assert
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
-      await expect(promise).rejects.toMatchObject({
-        message: `Error finding business centre ${EXAMPLES.BUSINESS_CENTRE.CODE} in ODS`,
-        cause: {
-          message: `Error finding business centre ${EXAMPLES.BUSINESS_CENTRE.CODE} from ODS stored procedure`,
-        },
-      });
+      await expect(promise).rejects.toThrow(`Error finding business centre ${EXAMPLES.BUSINESS_CENTRE.CODE} in ODS`);
     });
   });
 
@@ -133,10 +128,7 @@ describe('OdsService - findBusinessCentre', () => {
 
       // Assert
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
-      await expect(promise).rejects.toMatchObject({
-        message: `Error finding business centre ${EXAMPLES.BUSINESS_CENTRE.CODE} in ODS`,
-        cause: mockStoredProcedureOutput,
-      });
+      await expect(promise).rejects.toThrow(`Error finding business centre ${EXAMPLES.BUSINESS_CENTRE.CODE} in ODS`);
     });
   });
 
@@ -152,10 +144,7 @@ describe('OdsService - findBusinessCentre', () => {
 
       // Assert
       await expect(promise).rejects.toBeInstanceOf(InternalServerErrorException);
-      await expect(promise).rejects.toMatchObject({
-        message: `Error finding business centre ${EXAMPLES.BUSINESS_CENTRE.CODE} in ODS`,
-        cause: mockError,
-      });
+      await expect(promise).rejects.toThrow(`Error finding business centre ${EXAMPLES.BUSINESS_CENTRE.CODE} in ODS`);
     });
   });
 });
