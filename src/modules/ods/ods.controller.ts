@@ -12,6 +12,7 @@ import {
   GetBaseRateResponseDto,
   GetCounterpartyRoleResponseDto,
   GetFacilityCategoryResponseDto,
+  GetFeeTypeResponseDto,
   GetIndustryResponseDto,
   GetObligationSubtypeResponseDto,
   GetOdsAccrualFrequencyParamDto,
@@ -23,6 +24,7 @@ import {
   GetOdsDealParamDto,
   GetOdsDealResponse,
   GetOdsFacilityCategoryParamDto,
+  GetOdsFeeTypeParamDto,
   GetOdsObligationSubtypeParamDto,
   GetOdsUkefIndustryCodeParamDto,
   GetSicCodeToUkefIndustryResponseDto,
@@ -314,6 +316,43 @@ export class OdsController {
   })
   findFacilityCategory(@Param() param: GetOdsFacilityCategoryParamDto): Promise<GetFacilityCategoryResponseDto> {
     return this.odsFacilityCategoryService.findOne(param.categoryCode);
+  }
+
+  @Get('fee-types')
+  @ApiOperation({
+    summary: 'Get fee types from ODS',
+  })
+  @ApiOkResponse({
+    description: 'ODS fee types',
+    isArray: true,
+    type: GetFeeTypeResponseDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  getFeeTypes(): Promise<GetFeeTypeResponseDto[]> {
+    return this.odsService.getFeeTypes();
+  }
+
+  @Get('fee-type/:feeTypeCode')
+  @ApiOperation({
+    summary: 'Get a fee type from ODS',
+  })
+  @ApiOkResponse({
+    description: 'A fee type matching the provided fee type code',
+    type: GetFeeTypeResponseDto,
+  })
+  @ApiNotFoundResponse({
+    description: 'Fee type not found',
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid parameters provided',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  findFeeType(@Param() param: GetOdsFeeTypeParamDto): Promise<GetFeeTypeResponseDto> {
+    return this.odsService.findFeeType(param.feeTypeCode);
   }
 
   @Get('obligation-subtypes')

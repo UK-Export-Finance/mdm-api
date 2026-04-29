@@ -1,10 +1,12 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { COMPANIES, STORED_PROCEDURE } from '@ukef/constants';
-import { mapBusinessCentre, mapBusinessCentres, mapIndustries, mapIndustry, mapIndustryCodes } from '@ukef/helpers';
+import { mapBusinessCentre, mapBusinessCentres, mapFeeType, mapFeeTypes, mapIndustries, mapIndustry, mapIndustryCodes } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 
 import { FindOdsBusinessCentreOdsResponse } from '../dom/dto';
 import {
+  GetFeeTypeOdsResponseDto,
+  GetFeeTypeResponseDto,
   GetIndustryOdsResponseDto,
   GetIndustryResponseDto,
   GetOdsBusinessCentreOdsResponseNonWorkingDayResponse,
@@ -253,6 +255,87 @@ export class OdsService {
       }
 
       throw new InternalServerErrorException(`Error finding business centre ${centreCode} non working days in ODS`);
+    }
+  }
+
+  /**
+   * Find a fee type by fee type code
+   * @param {string} feeTypeCode: Fee type code
+   * @returns {Promise<GetFeeTypeResponseDto>}
+   * @throws {NotFoundException} If no fee type is found
+   */
+  async findFeeType(feeTypeCode: string): Promise<GetFeeTypeResponseDto> {
+    try {
+      this.logger.info('Finding fee type in ODS %s', feeTypeCode);
+
+      const storedProcedureInput = this.odsStoredProcedureService.createInput({
+        entityToQuery: ODS_ENTITIES.CONFIGURATION_FEE,
+        queryPageSize: 1,
+        queryParameters: {
+          feeType: feeTypeCode,
+        },
+      });
+
+      const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
+
+      const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
+
+      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+        this.logger.error('Error finding fee type %s from ODS stored procedure, output %o', feeTypeCode, storedProcedureResult);
+
+        throw new Error(`Error finding fee type ${feeTypeCode} from ODS stored procedure`);
+      }
+
+      if (storedProcedureJson?.total_result_count === 0) {
+        throw new NotFoundException(`No fee type ${feeTypeCode} found in ODS`);
+      }
+
+      const feeType = storedProcedureJson.results[0] as GetFeeTypeOdsResponseDto;
+
+      return mapFeeType(feeType);
+    } catch (error) {
+      this.logger.error('Error finding fee type in ODS %s %o', feeTypeCode, error);
+
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException(`Error finding fee type ${feeTypeCode} in ODS`, { cause: error });
+    }
+  }
+
+  /**
+   * Get all fee types from ODS
+   * @returns {Promise<GetFeeTypeResponseDto[]>} Fee types
+   * @throws {InternalServerErrorException} If there is an error getting fee types from ODS
+   */
+  async getFeeTypes(): Promise<GetFeeTypeResponseDto[]> {
+    try {
+      this.logger.info('Getting fee types from ODS');
+
+      const storedProcedureInput = this.odsStoredProcedureService.createInput({
+        entityToQuery: ODS_ENTITIES.CONFIGURATION_FEE,
+      });
+
+      const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
+
+      const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
+
+      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+        this.logger.error('Error getting fee types from ODS stored procedure, output %o', storedProcedureResult);
+
+        throw new InternalServerErrorException('Error getting fee types from ODS stored procedure');
+      }
+
+      const feeTypes = storedProcedureJson.results as GetFeeTypeOdsResponseDto[];
+
+      const mappedFeeTypes = mapFeeTypes(feeTypes);
+
+      return mappedFeeTypes;
+    } catch (error) {
+      this.logger.error('Error getting fee types from ODS %o', error);
+
+      throw new InternalServerErrorException('Error getting fee types from ODS');
     }
   }
 
