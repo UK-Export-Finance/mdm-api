@@ -181,20 +181,36 @@ describe('DomController', () => {
   });
 
   describe('getBusinessCentres', () => {
-    it('should call domService.getBusinessCentres', () => {
+    it('should call domService.getBusinessCentres', async () => {
       // Act
-      controller.getBusinessCentres();
+      await controller.getBusinessCentres();
 
       // Assert
       expect(odsServiceGetBusinessCentres).toHaveBeenCalledTimes(1);
     });
 
-    it('should return product configurations', () => {
+    it('should return business centres', async () => {
       // Act
-      const result = controller.getBusinessCentres();
+      const result = await controller.getBusinessCentres();
 
       // Assert
       expect(result).toEqual(EXAMPLES.DOM.BUSINESS_CENTRES);
+    });
+
+    describe('when odsService.getBusinessCentres throws an error', () => {
+      it('should throw an error', async () => {
+        // Arrange
+        const domService = new DomService(odsService, mockLogger);
+
+        odsService.getBusinessCentres = jest.fn().mockRejectedValueOnce(mockError);
+
+        controller = new DomController(domService, odsService, creditRiskRatingsService);
+
+        // Act & Assert
+        const promise = controller.getBusinessCentres();
+
+        await expect(promise).rejects.toThrow(mockError);
+      });
     });
   });
 
