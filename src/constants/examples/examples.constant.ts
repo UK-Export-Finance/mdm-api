@@ -14,6 +14,14 @@ const COUNTERPARTY_ROLE_TYPES = {
   GUARANTOR: 'GUARANTOR',
 };
 
+const FEE_TYPE = {
+  FEE_TYPE: 'BEX',
+  NAME: 'Brokerage Expense',
+  CLASSIFICATION: 'Fixed',
+  EXPENSE_INCOME: 'Expense',
+  IS_ACTIVE: true,
+};
+
 const INDUSTRY = {
   ID: 'UKEF_1908',
   CODE: '1908',
@@ -143,6 +151,7 @@ export const EXAMPLES = {
     DESCRIPTION: 'GEF: Contingent',
     IS_ACTIVE: true,
   },
+  FEE_TYPE,
   INDUSTRY,
   DOM: {
     BUSINESS_CENTRES: [
@@ -316,6 +325,13 @@ export const EXAMPLES = {
       name: 'Exporter',
       hasSharePercentage: false,
       counterpartyRoleTypeActive: true,
+    },
+    CONFIGURATION_FEE: {
+      feeType: 'BEX',
+      name: 'Brokerage Expense',
+      feeTypeClassification: 'Fixed',
+      feeTypeExpenseIncome: 'Expense',
+      feeTypeActive: true,
     },
     CONFIGURATION_FREQUENCY: {
       code: 'FREQ12MON',
