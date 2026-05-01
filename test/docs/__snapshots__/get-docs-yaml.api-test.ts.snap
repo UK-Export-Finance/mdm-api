@@ -335,7 +335,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FindDomBusinessCentreResponse'
+                $ref: '#/components/schemas/FindOdsBusinessCentreOdsResponse'
         '400':
           description: Bad request
         '404':
@@ -365,7 +365,7 @@ paths:
                 type: array
                 items:
                   $ref: >-
-                    #/components/schemas/GetDomBusinessCentreNonWorkingDayMappedResponse
+                    #/components/schemas/GetOdsBusinessCentreOdsResponseNonWorkingDayMappedResponse
         '400':
           description: Bad request
         '500':
@@ -385,7 +385,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/FindDomBusinessCentreResponse'
+                  $ref: '#/components/schemas/FindOdsBusinessCentreOdsResponse'
         '400':
           description: Bad request
         '500':
@@ -1190,7 +1190,7 @@ components:
         - createdBy
         - createdDatetime
         - requestingSystem
-    FindDomBusinessCentreResponse:
+    FindOdsBusinessCentreOdsResponse:
       type: object
       properties:
         code:
@@ -1204,7 +1204,7 @@ components:
       required:
         - code
         - name
-    GetDomBusinessCentreNonWorkingDayMappedResponse:
+    GetOdsBusinessCentreOdsResponseNonWorkingDayMappedResponse:
       type: object
       properties:
         code:

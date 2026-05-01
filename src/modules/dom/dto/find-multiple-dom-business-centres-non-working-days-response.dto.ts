@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { FindDomBusinessCentreNonWorkingDayMappedResponse } from './find-dom-business-centre-non-working-day-mapped-response.dto';
+import { FindOdsBusinessCentreOdsResponseNonWorkingDayMappedResponse } from './find-dom-business-centre-non-working-day-mapped-response.dto';
 
-export class FindMultipleDomBusinessCentresNonWorkingDaysResponse {
+export class FindMultipleOdsBusinessCentreOdsResponsesNonWorkingDaysResponse {
   @ApiProperty({
     description: "Multiple business centre's non working days",
-    example: FindDomBusinessCentreNonWorkingDayMappedResponse,
+    example: FindOdsBusinessCentreOdsResponseNonWorkingDayMappedResponse,
   })
-  rawDefinition?: FindDomBusinessCentreNonWorkingDayMappedResponse;
+  rawDefinition?: FindOdsBusinessCentreOdsResponseNonWorkingDayMappedResponse;
 }

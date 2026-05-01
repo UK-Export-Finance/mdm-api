@@ -8,19 +8,18 @@
  * 4) Companies House
  * 5) Database
  * 6) Date
- * 7) DOM
- * 8) Dun and Bradstreet
- * 9) Enums
- * 10) Examples
- * 11) Geospatial
- * 12) GOV.UK Notify
- * 13) ODS
- * 14) Products
- * 15) Strings to redact
- * 16) Strings paths to redact
- * 17) Stored procedures
- * 18) UKEF ID
- * 19) UKEF industry code
+ * 7) Dun and Bradstreet
+ * 8) Enums
+ * 9) Examples
+ * 10) Geospatial
+ * 11) GOV.UK Notify
+ * 12) ODS
+ * 13) Products
+ * 14) Strings to redact
+ * 15) Strings paths to redact
+ * 16) Stored procedures
+ * 17) UKEF ID
+ * 18) UKEF industry code
  */
 
 export * from './application.constant';
@@ -29,7 +28,6 @@ export * from './companies.constant';
 export * from './companies-house.constant';
 export * from './database.constant';
 export * from './date.constant';
-export * from './dom.constant';
 export * from './dun-and-bradstreet.constant';
 export * from './enums';
 export * from './examples/examples.constant';

@@ -27,6 +27,7 @@ export * from './get-ods-accrual-schedule-param.dto';
 export * from './get-ods-additional-rate-param.dto';
 export * from './get-ods-base-rate-param.dto';
 export * from './get-ods-business-centre-non-working-day-response.dto';
+export * from './get-ods-business-centre-ods-response.dto';
 export * from './get-ods-customer-param.dto';
 export * from './get-ods-customer-response.dto';
 export * from './get-ods-deal-param.dto';

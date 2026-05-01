@@ -2,20 +2,21 @@ import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import AppConfig from '@ukef/config/app.config';
 
+import { OdsService } from '../ods/ods.service';
 import { CreditRiskRatingsService } from './credit-risk-ratings/credit-risk-ratings.service';
 import { DomService } from './dom.service';
 import {
   FindCreditRiskRatingDto,
-  FindDomBusinessCentreNonWorkingDayMappedResponse,
-  FindDomBusinessCentreNonWorkingDaysParamDto,
-  FindDomBusinessCentreParamDto,
-  FindDomBusinessCentreResponse,
   FindDomProductConfigParamDto,
   FindDomProductConfigsParam,
-  FindMultipleDomBusinessCentresNonWorkingDaysResponse,
+  FindMultipleOdsBusinessCentreOdsResponsesNonWorkingDaysResponse,
   FindMultipleProductConfigsResponse,
-  GetDomBusinessCentresNonWorkingDaysParamDto,
+  FindOdsBusinessCentreOdsResponse,
+  FindOdsBusinessCentreOdsResponseNonWorkingDayMappedResponse,
+  FindOdsBusinessCentreOdsResponseNonWorkingDaysParamDto,
+  FindOdsBusinessCentreOdsResponseParamDto,
   GetDomProductConfigResponse,
+  GetOdsBusinessCentreOdsResponsesNonWorkingDaysParamDto,
 } from './dto';
 import { CreditRiskRatingEntity } from './entities';
 
@@ -29,6 +30,7 @@ const { domOdsVersioning } = AppConfig();
 export class DomController {
   constructor(
     private readonly domService: DomService,
+    private readonly odsService: OdsService,
     private readonly creditRiskRatingsService: CreditRiskRatingsService,
   ) {}
 
@@ -38,7 +40,7 @@ export class DomController {
   })
   @ApiOkResponse({
     description: 'A DOM business centre',
-    type: FindDomBusinessCentreResponse,
+    type: FindOdsBusinessCentreOdsResponse,
   })
   @ApiNotFoundResponse({
     description: 'Business centre not found',
@@ -49,8 +51,8 @@ export class DomController {
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
   })
-  findBusinessCentre(@Param() param: FindDomBusinessCentreParamDto): FindDomBusinessCentreResponse {
-    return this.domService.findBusinessCentre(param.centreCode);
+  findBusinessCentre(@Param() param: FindOdsBusinessCentreOdsResponseParamDto): Promise<FindOdsBusinessCentreOdsResponse> {
+    return this.odsService.findBusinessCentre(param.centreCode);
   }
 
   @Get('business-centre/:centreCode/non-working-days')
@@ -60,7 +62,7 @@ export class DomController {
   @ApiOkResponse({
     description: "A DOM business centre's non working days",
     isArray: true,
-    type: FindDomBusinessCentreNonWorkingDayMappedResponse,
+    type: FindOdsBusinessCentreOdsResponseNonWorkingDayMappedResponse,
   })
   @ApiNotFoundResponse({
     description: 'Business centre not found',
@@ -71,7 +73,9 @@ export class DomController {
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
   })
-  findBusinessCentreNonWorkingDays(@Param() param: FindDomBusinessCentreNonWorkingDaysParamDto): Promise<FindDomBusinessCentreNonWorkingDayMappedResponse[]> {
+  findBusinessCentreNonWorkingDays(
+    @Param() param: FindOdsBusinessCentreOdsResponseNonWorkingDaysParamDto,
+  ): Promise<FindOdsBusinessCentreOdsResponseNonWorkingDayMappedResponse[]> {
     return this.domService.findBusinessCentreNonWorkingDays(param.centreCode);
   }
 
@@ -82,7 +86,7 @@ export class DomController {
   @ApiOkResponse({
     description: 'DOM business centres',
     isArray: true,
-    type: FindDomBusinessCentreResponse,
+    type: FindOdsBusinessCentreOdsResponse,
   })
   @ApiBadRequestResponse({
     description: 'Bad request',
@@ -90,8 +94,8 @@ export class DomController {
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
   })
-  getBusinessCentres(): FindDomBusinessCentreResponse[] {
-    return this.domService.getBusinessCentres();
+  getBusinessCentres(): Promise<FindOdsBusinessCentreOdsResponse[]> {
+    return this.odsService.getBusinessCentres();
   }
 
   @Get('business-centres/non-working-days')
@@ -100,7 +104,7 @@ export class DomController {
   })
   @ApiOkResponse({
     description: "Multiple DOM business centre's non working days",
-    type: FindMultipleDomBusinessCentresNonWorkingDaysResponse,
+    type: FindMultipleOdsBusinessCentreOdsResponsesNonWorkingDaysResponse,
   })
   @ApiNotFoundResponse({
     description: 'Business centres non working days not found',
@@ -112,8 +116,8 @@ export class DomController {
     description: 'Internal server error',
   })
   findMultipleBusinessCentresNonWorkingDays(
-    @Query() query: GetDomBusinessCentresNonWorkingDaysParamDto,
-  ): Promise<FindMultipleDomBusinessCentresNonWorkingDaysResponse> {
+    @Query() query: GetOdsBusinessCentreOdsResponsesNonWorkingDaysParamDto,
+  ): Promise<FindMultipleOdsBusinessCentreOdsResponsesNonWorkingDaysResponse> {
     return this.domService.findMultipleBusinessCentresNonWorkingDays(query.centreCodes);
   }
 

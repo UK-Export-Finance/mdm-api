@@ -1,6 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
 import AppConfig from '@ukef/config/app.config';
-import { DOM_BUSINESS_CENTRES } from '@ukef/constants';
+import { EXAMPLES } from '@ukef/constants';
 import { Api } from '@ukef-test/support/api';
 
 const {
@@ -22,7 +22,7 @@ describe('/dom - business centres', () => {
     describe('when a business centre is found', () => {
       it(`should return ${HttpStatus.OK} with a business centre`, async () => {
         // Arrange
-        const mockCentreCode = DOM_BUSINESS_CENTRES.AE_DXB.CODE;
+        const mockCentreCode = EXAMPLES.BUSINESS_CENTRE.CODE;
 
         const url = `/api/${prefixAndVersion}/dom/business-centre/${mockCentreCode}`;
 
@@ -33,8 +33,10 @@ describe('/dom - business centres', () => {
         expect(status).toBe(HttpStatus.OK);
 
         const expected = {
-          code: DOM_BUSINESS_CENTRES.AE_DXB.CODE,
-          name: DOM_BUSINESS_CENTRES.AE_DXB.NAME,
+          code: EXAMPLES.BUSINESS_CENTRE.CODE,
+          name: EXAMPLES.BUSINESS_CENTRE.NAME,
+          description: EXAMPLES.BUSINESS_CENTRE.DESCRIPTION,
+          isActive: EXAMPLES.BUSINESS_CENTRE.IS_ACTIVE,
         };
 
         expect(body).toEqual(expected);
@@ -63,7 +65,7 @@ describe('/dom - business centres', () => {
 
     it(`should return ${HttpStatus.OK} with mapped non working days`, async () => {
       // Arrange
-      const mockCentreCode = DOM_BUSINESS_CENTRES.AE_DXB.CODE;
+      const mockCentreCode = EXAMPLES.BUSINESS_CENTRE.CODE;
 
       // Act
       const { status, body } = await api.get(`${baseUrl}/${mockCentreCode}/non-working-days`);
@@ -113,10 +115,12 @@ describe('/dom - business centres', () => {
       // Assert
       expect(status).toBe(HttpStatus.OK);
 
-      const expected = Object.values(DOM_BUSINESS_CENTRES).map((centre) => ({
-        code: centre.CODE,
-        name: centre.NAME,
-      }));
+      const expected = expect.arrayContaining([
+        expect.objectContaining({
+          code: expect.any(String),
+          name: expect.any(String),
+        }),
+      ]);
 
       expect(body).toEqual(expected);
     });
@@ -127,7 +131,7 @@ describe('/dom - business centres', () => {
 
     it(`should return ${HttpStatus.OK} with mapped business centres`, async () => {
       // Arrange
-      const mockCentreCodes = `${DOM_BUSINESS_CENTRES.AE_DXB.CODE},${DOM_BUSINESS_CENTRES.JO_AMM.CODE}`;
+      const mockCentreCodes = `${EXAMPLES.BUSINESS_CENTRE.CODE},${EXAMPLES.BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.CODE}`;
 
       const url = `${baseUrl}?centreCodes=${mockCentreCodes}`;
 
@@ -139,20 +143,20 @@ describe('/dom - business centres', () => {
 
       expect(Object.keys(body)).toHaveLength(2);
 
-      expect(body[DOM_BUSINESS_CENTRES.AE_DXB.CODE]).toEqual(
+      expect(body[EXAMPLES.BUSINESS_CENTRE.CODE]).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
-            code: DOM_BUSINESS_CENTRES.AE_DXB.CODE,
+            code: EXAMPLES.BUSINESS_CENTRE.CODE,
             name: expect.any(String),
             date: expect.any(String),
           }),
         ]),
       );
 
-      expect(body[DOM_BUSINESS_CENTRES.JO_AMM.CODE]).toEqual(
+      expect(body[EXAMPLES.BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.CODE]).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
-            code: DOM_BUSINESS_CENTRES.JO_AMM.CODE,
+            code: EXAMPLES.BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.CODE,
             name: expect.any(String),
             date: expect.any(String),
           }),
@@ -163,7 +167,7 @@ describe('/dom - business centres', () => {
     describe("when a single business centre's non working days are NOT found", () => {
       it(`should return ${HttpStatus.NOT_FOUND}`, async () => {
         // Arrange
-        const mockCentreCodes = `${DOM_BUSINESS_CENTRES.AE_DXB.CODE},INVALID CODE`;
+        const mockCentreCodes = `${EXAMPLES.BUSINESS_CENTRE.CODE},INVALID CODE`;
 
         const url = `${baseUrl}?centreCodes=${mockCentreCodes}`;
 

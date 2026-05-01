@@ -1,11 +1,11 @@
-import { DomBusinessCentre } from '@ukef/constants';
+import { OdsBusinessCentreOdsResponse } from '@ukef/modules/ods/dto/get-ods-business-centre-ods-response.dto';
 
-import { FindDomBusinessCentreResponse } from '../modules/dom/dto';
+import { FindOdsBusinessCentreOdsResponse } from '../modules/dom/dto';
 import { mapBusinessCentre } from './map-business-centre';
 
 /**
- * Map DOM business centres data from constants, into a more suitable format for consumers.
- * @param {DomBusinessCentre[]} DOM Business centres
- * @returns {FindDomBusinessCentreResponse[]} Mapped business centres
+ * Map ODS business centres data from constants, into a more suitable format for consumers.
+ * @param {OdsBusinessCentreOdsResponse[]} ODS Business centres
+ * @returns {FindOdsBusinessCentreOdsResponse[]} Mapped business centres
  */
-export const mapBusinessCentres = (centres: DomBusinessCentre[]): FindDomBusinessCentreResponse[] => centres.map(mapBusinessCentre);
+export const mapBusinessCentres = (centres: OdsBusinessCentreOdsResponse[]): FindOdsBusinessCentreOdsResponse[] => centres.map(mapBusinessCentre);
