@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.52.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.51.0...v1.52.0) (2026-05-01)
+
+
+### Features
+
+* **GIFT-23531:** business calendars - remove ODS/DOM mapping ([#1832](https://github.com/UK-Export-Finance/mdm-api/issues/1832)) ([f34c40b](https://github.com/UK-Export-Finance/mdm-api/commit/f34c40b1634eee6463eb70f912eb128c85b50698))
+
 ## [1.51.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.50.0...v1.51.0) (2026-04-29)
 
 
