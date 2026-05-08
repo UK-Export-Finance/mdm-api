@@ -114,11 +114,19 @@ describe('DomController', () => {
 
   describe('findBusinessCentreNonWorkingDays', () => {
     it('should call domService.findBusinessCentreNonWorkingDays', async () => {
+      // Arrange
+      const mockQuery = {
+        centreCode: EXAMPLES.BUSINESS_CENTRE.CODE,
+        startDate: '2026-01-01',
+        endDate: '2026-12-31',
+      };
+
       // Act
-      await controller.findBusinessCentreNonWorkingDays({ centreCode: EXAMPLES.BUSINESS_CENTRE.CODE });
+      await controller.findBusinessCentreNonWorkingDays(mockQuery);
 
       // Assert
       expect(domServiceFindBusinessCentreNonWorkingDays).toHaveBeenCalledTimes(1);
+      expect(domServiceFindBusinessCentreNonWorkingDays).toHaveBeenCalledWith(mockQuery.centreCode, mockQuery.startDate, mockQuery.endDate);
     });
 
     it('should return the result of domService.findBusinessCentreNonWorkingDays', async () => {

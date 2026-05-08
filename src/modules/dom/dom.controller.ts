@@ -74,9 +74,9 @@ export class DomController {
     description: 'Internal server error',
   })
   findBusinessCentreNonWorkingDays(
-    @Param() param: FindOdsBusinessCentreOdsResponseNonWorkingDaysParamDto,
+    @Param() query: FindOdsBusinessCentreOdsResponseNonWorkingDaysParamDto,
   ): Promise<FindOdsBusinessCentreOdsResponseNonWorkingDayMappedResponse[]> {
-    return this.domService.findBusinessCentreNonWorkingDays(param.centreCode);
+    return this.domService.findBusinessCentreNonWorkingDays(query.centreCode, query.startDate, query.endDate);
   }
 
   @Get('business-centres')
