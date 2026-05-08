@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { EXAMPLES } from '@ukef/constants';
-import { BUSINESS_CENTRE } from '@ukef/constants/business-centre.constant';
+import { BUSINESS_CENTRE, EXAMPLES } from '@ukef/constants';
 import { IsDateString, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 
 export class GetOdsBusinessCentreOdsResponsesNonWorkingDaysParamDto {
@@ -19,7 +18,7 @@ export class GetOdsBusinessCentreOdsResponsesNonWorkingDaysParamDto {
   @MaxLength(BUSINESS_CENTRE.DATE_QUERY_PARAM.MAX_LENGTH)
   @IsOptional()
   @ApiProperty({
-    example: '2026-01-01',
+    example: EXAMPLES.DATE_START,
     description: 'Optional non-working day start date filter (inclusive) in YYYY-MM-DD format',
     required: false,
   })
@@ -30,7 +29,7 @@ export class GetOdsBusinessCentreOdsResponsesNonWorkingDaysParamDto {
   @MaxLength(BUSINESS_CENTRE.DATE_QUERY_PARAM.MAX_LENGTH)
   @IsOptional()
   @ApiProperty({
-    example: '2026-12-31',
+    example: EXAMPLES.DATE_END,
     description: 'Optional non-working day end date filter (inclusive) in YYYY-MM-DD format',
     required: false,
   })
