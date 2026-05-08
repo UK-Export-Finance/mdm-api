@@ -66,6 +66,30 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
     expect(odsStoredProcedureService.call).toHaveBeenCalledWith(expectedStoredProcedureInput);
   });
 
+  describe('when optional non working day start and end dates are provided', () => {
+    it('should include optional non working day start and end dates in the query', async () => {
+      // Arrange
+      const startDate = '2026-01-01';
+      const endDate = '2026-12-31';
+
+      // Act
+      await service.findBusinessCentreNonWorkingDays(EXAMPLES.BUSINESS_CENTRE.CODE, startDate, endDate);
+
+      // Assert
+      const expectedStoredProcedureInput: OdsStoredProcedureInput = odsStoredProcedureService.createInput({
+        entityToQuery: ODS_ENTITIES.BUSINESS_CENTRE_NON_WORKING_DAY,
+        queryParameters: {
+          business_centre_code: EXAMPLES.BUSINESS_CENTRE.CODE,
+          non_working_day_start_date: startDate,
+          non_working_day_end_date: endDate,
+        },
+      });
+
+      expect(odsStoredProcedureService.call).toHaveBeenCalledTimes(1);
+      expect(odsStoredProcedureService.call).toHaveBeenCalledWith(expectedStoredProcedureInput);
+    });
+  });
+
   it('should return mapped non working days', async () => {
     // Act
     const result = await service.findBusinessCentreNonWorkingDays(EXAMPLES.BUSINESS_CENTRE.CODE);

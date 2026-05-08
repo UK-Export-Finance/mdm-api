@@ -27,6 +27,8 @@
  */
 export type OdsStoredProcedureQueryParams = {
   business_centre_code?: string;
+  non_working_day_start_date?: string;
+  non_working_day_end_date?: string;
   classification_code?: string;
   classification_type_code?: string;
   counterpartyRoleType?: string;

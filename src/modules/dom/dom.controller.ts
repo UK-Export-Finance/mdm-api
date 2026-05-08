@@ -118,7 +118,7 @@ export class DomController {
   findMultipleBusinessCentresNonWorkingDays(
     @Query() query: GetOdsBusinessCentreOdsResponsesNonWorkingDaysParamDto,
   ): Promise<FindMultipleOdsBusinessCentreOdsResponsesNonWorkingDaysResponse> {
-    return this.domService.findMultipleBusinessCentresNonWorkingDays(query.centreCodes);
+    return this.domService.findMultipleBusinessCentresNonWorkingDays(query.centreCodes, query.startDate, query.endDate);
   }
 
   @Get('credit-risk-ratings')

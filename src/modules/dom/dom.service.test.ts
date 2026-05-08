@@ -63,7 +63,19 @@ describe('DomService', () => {
 
         // Assert
         expect(odsServiceFindBusinessCentreNonWorkingDays).toHaveBeenCalledTimes(1);
-        expect(odsServiceFindBusinessCentreNonWorkingDays).toHaveBeenCalledWith(EXAMPLES.BUSINESS_CENTRE.CODE);
+        expect(odsServiceFindBusinessCentreNonWorkingDays).toHaveBeenCalledWith(EXAMPLES.BUSINESS_CENTRE.CODE, undefined, undefined);
+      });
+
+      it('should pass optional start and end date filters', async () => {
+        // Arrange
+        const startDate = '2026-01-01';
+        const endDate = '2026-12-31';
+
+        // Act
+        await service.findBusinessCentreNonWorkingDays(mockCentreCode, startDate, endDate);
+
+        // Assert
+        expect(odsServiceFindBusinessCentreNonWorkingDays).toHaveBeenCalledWith(EXAMPLES.BUSINESS_CENTRE.CODE, startDate, endDate);
       });
 
       it(`should return mapped non working days`, async () => {
@@ -124,8 +136,29 @@ describe('DomService', () => {
 
         // Assert
         expect(mockFindBusinessCentreNonWorkingDays).toHaveBeenCalledTimes(2);
-        expect(mockFindBusinessCentreNonWorkingDays).toHaveBeenCalledWith(EXAMPLES.BUSINESS_CENTRE.CODE);
-        expect(mockFindBusinessCentreNonWorkingDays).toHaveBeenCalledWith(EXAMPLES.BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.CODE);
+        expect(mockFindBusinessCentreNonWorkingDays).toHaveBeenCalledWith(EXAMPLES.BUSINESS_CENTRE.CODE, EXAMPLES.DATE_START, EXAMPLES.DATE_END);
+        expect(mockFindBusinessCentreNonWorkingDays).toHaveBeenCalledWith(
+          EXAMPLES.BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.CODE,
+          EXAMPLES.DATE_START,
+          EXAMPLES.DATE_END,
+        );
+      });
+
+      it('should pass optional start and end date filters to each centre lookup', async () => {
+        // Arrange
+        const mockCentreCodes = `${EXAMPLES.BUSINESS_CENTRE.CODE},${EXAMPLES.BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.CODE}`;
+
+        // Act
+        await service.findMultipleBusinessCentresNonWorkingDays(mockCentreCodes, EXAMPLES.DATE_START, EXAMPLES.DATE_END);
+
+        // Assert
+        expect(mockFindBusinessCentreNonWorkingDays).toHaveBeenCalledTimes(2);
+        expect(mockFindBusinessCentreNonWorkingDays).toHaveBeenCalledWith(EXAMPLES.BUSINESS_CENTRE.CODE, EXAMPLES.DATE_START, EXAMPLES.DATE_END);
+        expect(mockFindBusinessCentreNonWorkingDays).toHaveBeenCalledWith(
+          EXAMPLES.BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.CODE,
+          EXAMPLES.DATE_START,
+          EXAMPLES.DATE_END,
+        );
       });
 
       it('should return mapped business centres', async () => {

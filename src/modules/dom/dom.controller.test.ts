@@ -214,6 +214,31 @@ describe('DomController', () => {
     });
   });
 
+  describe('findMultipleBusinessCentresNonWorkingDays', () => {
+    const mockQuery = {
+      centreCodes: `${EXAMPLES.BUSINESS_CENTRE.CODE},${EXAMPLES.BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.CODE}`,
+      startDate: '2026-01-01',
+      endDate: '2026-12-31',
+    };
+
+    it('should call domService.findMultipleBusinessCentresNonWorkingDays with date filters', async () => {
+      // Act
+      await controller.findMultipleBusinessCentresNonWorkingDays(mockQuery);
+
+      // Assert
+      expect(domServiceFindMultipleBusinessCentresNonWorkingDays).toHaveBeenCalledTimes(1);
+      expect(domServiceFindMultipleBusinessCentresNonWorkingDays).toHaveBeenCalledWith(mockQuery.centreCodes, mockQuery.startDate, mockQuery.endDate);
+    });
+
+    it('should return mapped business centres non working days', async () => {
+      // Act
+      const result = await controller.findMultipleBusinessCentresNonWorkingDays(mockQuery);
+
+      // Assert
+      expect(result).toStrictEqual(mockMultipleBusinessCentreNonWorkingDays);
+    });
+  });
+
   describe('findProductConfiguration', () => {
     const mockProductType = EXAMPLES.PRODUCT_TYPES.BIP;
 
