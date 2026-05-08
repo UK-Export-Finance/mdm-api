@@ -27,6 +27,8 @@ export class DomService {
   /**
    * Find a business centre's non working days in DOM
    * @param {string} domCentreCode: DOM business centre code
+   * @param {string} startDate: Optional non working day start date filter (inclusive) in YYYY-MM-DD format
+   * @param {string} endDate: Optional non working day end date filter (inclusive) in YYYY-MM-DD format
    * @returns {Promise<FindOdsBusinessCentreOdsResponseNonWorkingDayMappedResponse[]>}
    * @throws {NotFoundException} If no business centre is found
    */

@@ -216,6 +216,8 @@ export class OdsService {
   /**
    * Find and map a business centre's non working days from ODS
    * @param {string} centreCode The business centre's code
+   * @param {string} [startDate] Optional non working day start date filter (inclusive) in YYYY-MM-DD format
+   * @param {string} [endDate] Optional non working day end date filter (inclusive) in YYYY-MM-DD format
    * @returns {Promise<GetOdsBusinessCentreOdsResponseNonWorkingDayResponse[]>} Business centre's non working days
    * @throws {InternalServerErrorException} If there is an error finding a business centre's non working days
    */

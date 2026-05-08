@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { EXAMPLES } from '@ukef/constants';
+import { BUSINESS_CENTRE } from '@ukef/constants/business-centre.constant';
 import { IsDateString, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 
 export class GetOdsBusinessCentreOdsResponsesNonWorkingDaysParamDto {
@@ -9,12 +10,13 @@ export class GetOdsBusinessCentreOdsResponsesNonWorkingDaysParamDto {
     description: 'Unique business centre codes - separated by commas',
   })
   @IsString()
-  @MinLength(3)
-  @MaxLength(30)
+  @MinLength(BUSINESS_CENTRE.CODE_PARAM.MIN_LENGTH)
+  @MaxLength(BUSINESS_CENTRE.CODE_PARAM.MAX_LENGTH)
   public centreCodes: string;
 
   @IsDateString({ strict: true })
-  @MaxLength(10, { message: '$property should use format YYYY-MM-DD' })
+  @MinLength(BUSINESS_CENTRE.DATE_QUERY_PARAM.MIN_LENGTH)
+  @MaxLength(BUSINESS_CENTRE.DATE_QUERY_PARAM.MAX_LENGTH)
   @IsOptional()
   @ApiProperty({
     example: '2026-01-01',
@@ -24,7 +26,8 @@ export class GetOdsBusinessCentreOdsResponsesNonWorkingDaysParamDto {
   public startDate?: string;
 
   @IsDateString({ strict: true })
-  @MaxLength(10, { message: '$property should use format YYYY-MM-DD' })
+  @MinLength(BUSINESS_CENTRE.DATE_QUERY_PARAM.MIN_LENGTH)
+  @MaxLength(BUSINESS_CENTRE.DATE_QUERY_PARAM.MAX_LENGTH)
   @IsOptional()
   @ApiProperty({
     example: '2026-12-31',
