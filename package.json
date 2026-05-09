@@ -115,7 +115,7 @@
     "eslint-plugin-switch-case": "^3.0.1",
     "eslint-plugin-unused-imports": "^4.4.1",
     "husky": "^9.1.7",
-    "jest": "30.3.0",
+    "jest": "30.4.2",
     "jest-when": "^4.0.1",
     "lint-staged": "^16.4.0",
     "markdownlint-cli": "^0.48.0",
