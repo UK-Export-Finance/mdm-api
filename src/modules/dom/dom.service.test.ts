@@ -134,12 +134,8 @@ describe('DomService', () => {
 
         // Assert
         expect(mockFindBusinessCentreNonWorkingDays).toHaveBeenCalledTimes(2);
-        expect(mockFindBusinessCentreNonWorkingDays).toHaveBeenCalledWith(EXAMPLES.BUSINESS_CENTRE.CODE, EXAMPLES.DATE_START, EXAMPLES.DATE_END);
-        expect(mockFindBusinessCentreNonWorkingDays).toHaveBeenCalledWith(
-          EXAMPLES.BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.CODE,
-          EXAMPLES.DATE_START,
-          EXAMPLES.DATE_END,
-        );
+        expect(mockFindBusinessCentreNonWorkingDays).toHaveBeenCalledWith(EXAMPLES.BUSINESS_CENTRE.CODE, undefined, undefined);
+        expect(mockFindBusinessCentreNonWorkingDays).toHaveBeenCalledWith(EXAMPLES.BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.CODE, undefined, undefined);
       });
 
       describe('when optional start and end date params are provided', () => {

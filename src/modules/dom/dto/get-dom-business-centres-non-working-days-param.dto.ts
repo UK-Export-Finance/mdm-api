@@ -15,7 +15,7 @@ export class GetOdsBusinessCentreOdsResponsesNonWorkingDaysParamDto {
 
   @IsDateString({ strict: true })
   @MinLength(BUSINESS_CENTRE.DATE_QUERY_PARAM.MIN_LENGTH)
-  @MaxLength(BUSINESS_CENTRE.DATE_QUERY_PARAM.MAX_LENGTH)
+  @MaxLength(BUSINESS_CENTRE.DATE_QUERY_PARAM.MAX_LENGTH, { message: '$property should use format YYYY-MM-DD' })
   @IsOptional()
   @ApiProperty({
     example: EXAMPLES.DATE_START,
@@ -26,7 +26,7 @@ export class GetOdsBusinessCentreOdsResponsesNonWorkingDaysParamDto {
 
   @IsDateString({ strict: true })
   @MinLength(BUSINESS_CENTRE.DATE_QUERY_PARAM.MIN_LENGTH)
-  @MaxLength(BUSINESS_CENTRE.DATE_QUERY_PARAM.MAX_LENGTH)
+  @MaxLength(BUSINESS_CENTRE.DATE_QUERY_PARAM.MAX_LENGTH, { message: '$property should use format YYYY-MM-DD' })
   @IsOptional()
   @ApiProperty({
     example: EXAMPLES.DATE_END,

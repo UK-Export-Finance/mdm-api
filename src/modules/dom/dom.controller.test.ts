@@ -115,23 +115,26 @@ describe('DomController', () => {
   describe('findBusinessCentreNonWorkingDays', () => {
     it('should call domService.findBusinessCentreNonWorkingDays', async () => {
       // Arrange
-      const mockQuery = {
+      const mockParam = {
         centreCode: EXAMPLES.BUSINESS_CENTRE.CODE,
+      };
+
+      const mockQuery = {
         startDate: '2026-01-01',
         endDate: '2026-12-31',
       };
 
       // Act
-      await controller.findBusinessCentreNonWorkingDays(mockQuery);
+      await controller.findBusinessCentreNonWorkingDays(mockParam, mockQuery);
 
       // Assert
       expect(domServiceFindBusinessCentreNonWorkingDays).toHaveBeenCalledTimes(1);
-      expect(domServiceFindBusinessCentreNonWorkingDays).toHaveBeenCalledWith(mockQuery.centreCode, mockQuery.startDate, mockQuery.endDate);
+      expect(domServiceFindBusinessCentreNonWorkingDays).toHaveBeenCalledWith(mockParam.centreCode, mockQuery.startDate, mockQuery.endDate);
     });
 
     it('should return the result of domService.findBusinessCentreNonWorkingDays', async () => {
       // Act
-      const result = await controller.findBusinessCentreNonWorkingDays({ centreCode: EXAMPLES.BUSINESS_CENTRE.CODE });
+      const result = await controller.findBusinessCentreNonWorkingDays({ centreCode: EXAMPLES.BUSINESS_CENTRE.CODE }, {});
 
       // Assert
       expect(result).toEqual(EXAMPLES.DOM.BUSINESS_CENTRES_NON_WORKING_DAYS);
@@ -147,7 +150,7 @@ describe('DomController', () => {
         controller = new DomController(domService, odsService, creditRiskRatingsService);
 
         // Act & Assert
-        const promise = controller.findBusinessCentreNonWorkingDays({ centreCode: EXAMPLES.BUSINESS_CENTRE.CODE });
+        const promise = controller.findBusinessCentreNonWorkingDays({ centreCode: EXAMPLES.BUSINESS_CENTRE.CODE }, {});
 
         await expect(promise).rejects.toThrow(mockError);
       });

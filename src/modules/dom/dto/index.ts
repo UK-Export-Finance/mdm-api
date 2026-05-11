@@ -1,6 +1,7 @@
 export * from './find-credit-risk-rating.dto';
 export * from './find-dom-business-centre-non-working-day-mapped-response.dto';
 export * from './find-dom-business-centre-non-working-days-param.dto';
+export * from './find-dom-business-centre-non-working-days-query.dto';
 export * from './find-dom-business-centre-param.dto';
 export * from './find-dom-business-centre-response.dto';
 export * from './find-dom-product-config-param.dto';

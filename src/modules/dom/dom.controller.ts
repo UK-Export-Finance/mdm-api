@@ -13,7 +13,7 @@ import {
   FindMultipleProductConfigsResponse,
   FindOdsBusinessCentreOdsResponse,
   FindOdsBusinessCentreOdsResponseNonWorkingDayMappedResponse,
-  FindOdsBusinessCentreOdsResponseNonWorkingDaysParamDto,
+  FindOdsBusinessCentreOdsResponseNonWorkingDaysQueryDto,
   FindOdsBusinessCentreOdsResponseParamDto,
   GetDomProductConfigResponse,
   GetOdsBusinessCentreOdsResponsesNonWorkingDaysParamDto,
@@ -74,9 +74,10 @@ export class DomController {
     description: 'Internal server error',
   })
   findBusinessCentreNonWorkingDays(
-    @Param() query: FindOdsBusinessCentreOdsResponseNonWorkingDaysParamDto,
+    @Param() param: FindOdsBusinessCentreOdsResponseParamDto,
+    @Query() query: FindOdsBusinessCentreOdsResponseNonWorkingDaysQueryDto,
   ): Promise<FindOdsBusinessCentreOdsResponseNonWorkingDayMappedResponse[]> {
-    return this.domService.findBusinessCentreNonWorkingDays(query.centreCode, query.startDate, query.endDate);
+    return this.domService.findBusinessCentreNonWorkingDays(param.centreCode, query.startDate, query.endDate);
   }
 
   @Get('business-centres')
