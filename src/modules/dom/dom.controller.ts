@@ -13,7 +13,7 @@ import {
   FindMultipleProductConfigsResponse,
   FindOdsBusinessCentreOdsResponse,
   FindOdsBusinessCentreOdsResponseNonWorkingDayMappedResponse,
-  FindOdsBusinessCentreOdsResponseNonWorkingDaysParamDto,
+  FindOdsBusinessCentreOdsResponseNonWorkingDaysQueryDto,
   FindOdsBusinessCentreOdsResponseParamDto,
   GetDomProductConfigResponse,
   GetOdsBusinessCentreOdsResponsesNonWorkingDaysParamDto,
@@ -74,9 +74,10 @@ export class DomController {
     description: 'Internal server error',
   })
   findBusinessCentreNonWorkingDays(
-    @Param() param: FindOdsBusinessCentreOdsResponseNonWorkingDaysParamDto,
+    @Param() param: FindOdsBusinessCentreOdsResponseParamDto,
+    @Query() query: FindOdsBusinessCentreOdsResponseNonWorkingDaysQueryDto,
   ): Promise<FindOdsBusinessCentreOdsResponseNonWorkingDayMappedResponse[]> {
-    return this.domService.findBusinessCentreNonWorkingDays(param.centreCode);
+    return this.domService.findBusinessCentreNonWorkingDays(param.centreCode, query.startDate, query.endDate);
   }
 
   @Get('business-centres')
@@ -118,7 +119,7 @@ export class DomController {
   findMultipleBusinessCentresNonWorkingDays(
     @Query() query: GetOdsBusinessCentreOdsResponsesNonWorkingDaysParamDto,
   ): Promise<FindMultipleOdsBusinessCentreOdsResponsesNonWorkingDaysResponse> {
-    return this.domService.findMultipleBusinessCentresNonWorkingDays(query.centreCodes);
+    return this.domService.findMultipleBusinessCentresNonWorkingDays(query.centreCodes, query.startDate, query.endDate);
   }
 
   @Get('credit-risk-ratings')

@@ -114,16 +114,27 @@ describe('DomController', () => {
 
   describe('findBusinessCentreNonWorkingDays', () => {
     it('should call domService.findBusinessCentreNonWorkingDays', async () => {
+      // Arrange
+      const mockParam = {
+        centreCode: EXAMPLES.BUSINESS_CENTRE.CODE,
+      };
+
+      const mockQuery = {
+        startDate: '2026-01-01',
+        endDate: '2026-12-31',
+      };
+
       // Act
-      await controller.findBusinessCentreNonWorkingDays({ centreCode: EXAMPLES.BUSINESS_CENTRE.CODE });
+      await controller.findBusinessCentreNonWorkingDays(mockParam, mockQuery);
 
       // Assert
       expect(domServiceFindBusinessCentreNonWorkingDays).toHaveBeenCalledTimes(1);
+      expect(domServiceFindBusinessCentreNonWorkingDays).toHaveBeenCalledWith(mockParam.centreCode, mockQuery.startDate, mockQuery.endDate);
     });
 
     it('should return the result of domService.findBusinessCentreNonWorkingDays', async () => {
       // Act
-      const result = await controller.findBusinessCentreNonWorkingDays({ centreCode: EXAMPLES.BUSINESS_CENTRE.CODE });
+      const result = await controller.findBusinessCentreNonWorkingDays({ centreCode: EXAMPLES.BUSINESS_CENTRE.CODE }, {});
 
       // Assert
       expect(result).toEqual(EXAMPLES.DOM.BUSINESS_CENTRES_NON_WORKING_DAYS);
@@ -139,7 +150,7 @@ describe('DomController', () => {
         controller = new DomController(domService, odsService, creditRiskRatingsService);
 
         // Act & Assert
-        const promise = controller.findBusinessCentreNonWorkingDays({ centreCode: EXAMPLES.BUSINESS_CENTRE.CODE });
+        const promise = controller.findBusinessCentreNonWorkingDays({ centreCode: EXAMPLES.BUSINESS_CENTRE.CODE }, {});
 
         await expect(promise).rejects.toThrow(mockError);
       });
@@ -211,6 +222,31 @@ describe('DomController', () => {
 
         await expect(promise).rejects.toThrow(mockError);
       });
+    });
+  });
+
+  describe('findMultipleBusinessCentresNonWorkingDays', () => {
+    const mockQuery = {
+      centreCodes: `${EXAMPLES.BUSINESS_CENTRE.CODE},${EXAMPLES.BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.CODE}`,
+      startDate: '2026-01-01',
+      endDate: '2026-12-31',
+    };
+
+    it('should call domService.findMultipleBusinessCentresNonWorkingDays with date filters', async () => {
+      // Act
+      await controller.findMultipleBusinessCentresNonWorkingDays(mockQuery);
+
+      // Assert
+      expect(domServiceFindMultipleBusinessCentresNonWorkingDays).toHaveBeenCalledTimes(1);
+      expect(domServiceFindMultipleBusinessCentresNonWorkingDays).toHaveBeenCalledWith(mockQuery.centreCodes, mockQuery.startDate, mockQuery.endDate);
+    });
+
+    it('should return mapped business centres non working days', async () => {
+      // Act
+      const result = await controller.findMultipleBusinessCentresNonWorkingDays(mockQuery);
+
+      // Assert
+      expect(result).toStrictEqual(mockMultipleBusinessCentreNonWorkingDays);
     });
   });
 

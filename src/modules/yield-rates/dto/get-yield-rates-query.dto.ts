@@ -3,7 +3,6 @@ import { IsDateString, IsOptional, MaxLength } from 'class-validator';
 
 export class GetYieldRatesQueryDto {
   @IsDateString({ strict: true })
-  // Max length validation blocks dates with time.
   @MaxLength(10, { message: '$property should use format YYYY-MM-DD' })
   @IsOptional()
   @ApiProperty({

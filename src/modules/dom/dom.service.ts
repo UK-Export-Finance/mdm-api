@@ -27,14 +27,20 @@ export class DomService {
   /**
    * Find a business centre's non working days in DOM
    * @param {string} domCentreCode: DOM business centre code
+   * @param {string} startDate: Optional non working day start date filter (inclusive) in YYYY-MM-DD format
+   * @param {string} endDate: Optional non working day end date filter (inclusive) in YYYY-MM-DD format
    * @returns {Promise<FindOdsBusinessCentreOdsResponseNonWorkingDayMappedResponse[]>}
    * @throws {NotFoundException} If no business centre is found
    */
-  async findBusinessCentreNonWorkingDays(domCentreCode: string): Promise<FindOdsBusinessCentreOdsResponseNonWorkingDayMappedResponse[]> {
+  async findBusinessCentreNonWorkingDays(
+    domCentreCode: string,
+    startDate?: string,
+    endDate?: string,
+  ): Promise<FindOdsBusinessCentreOdsResponseNonWorkingDayMappedResponse[]> {
     try {
       this.logger.info('Finding DOM business centre %s non working days', domCentreCode);
 
-      const nonWorkingDays = await this.odsService.findBusinessCentreNonWorkingDays(domCentreCode);
+      const nonWorkingDays = await this.odsService.findBusinessCentreNonWorkingDays(domCentreCode, startDate, endDate);
 
       return mapBusinessCentreNonWorkingDays(nonWorkingDays, domCentreCode);
     } catch (error) {
@@ -56,10 +62,16 @@ export class DomService {
   /**
    * Find multiple business centre's non working days in DOM
    * @param {string} centreCodes: DOM business centre codes, comma separated
+   * @param {string} startDate: Optional non working day start date filter (inclusive) in YYYY-MM-DD format
+   * @param {string} endDate: Optional non working day end date filter (inclusive) in YYYY-MM-DD format
    * @returns {Promise<FindMultipleOdsBusinessCentreOdsResponsesNonWorkingDaysResponse>}
    * @throws {NotFoundException} If no business centre is found
    */
-  async findMultipleBusinessCentresNonWorkingDays(centreCodes: string): Promise<FindMultipleOdsBusinessCentreOdsResponsesNonWorkingDaysResponse> {
+  async findMultipleBusinessCentresNonWorkingDays(
+    centreCodes: string,
+    startDate?: string,
+    endDate?: string,
+  ): Promise<FindMultipleOdsBusinessCentreOdsResponsesNonWorkingDaysResponse> {
     try {
       this.logger.info(`Finding multiple DOM business centres non working days %s`, centreCodes);
 
@@ -69,7 +81,7 @@ export class DomService {
         const centreCodesArray = centreCodes.split(',');
 
         for (const domCentreCode of centreCodesArray) {
-          mappedCentres[`${domCentreCode}`] = await this.findBusinessCentreNonWorkingDays(domCentreCode);
+          mappedCentres[`${domCentreCode}`] = await this.findBusinessCentreNonWorkingDays(domCentreCode, startDate, endDate);
         }
       }
 

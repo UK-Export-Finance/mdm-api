@@ -216,10 +216,16 @@ export class OdsService {
   /**
    * Find and map a business centre's non working days from ODS
    * @param {string} centreCode The business centre's code
+   * @param {string} [startDate] Optional non working day start date filter (inclusive) in YYYY-MM-DD format
+   * @param {string} [endDate] Optional non working day end date filter (inclusive) in YYYY-MM-DD format
    * @returns {Promise<GetOdsBusinessCentreOdsResponseNonWorkingDayResponse[]>} Business centre's non working days
    * @throws {InternalServerErrorException} If there is an error finding a business centre's non working days
    */
-  async findBusinessCentreNonWorkingDays(centreCode: string): Promise<GetOdsBusinessCentreOdsResponseNonWorkingDayResponse[]> {
+  async findBusinessCentreNonWorkingDays(
+    centreCode: string,
+    startDate?: string,
+    endDate?: string,
+  ): Promise<GetOdsBusinessCentreOdsResponseNonWorkingDayResponse[]> {
     try {
       this.logger.info('Finding business centre %s non working days in ODS', centreCode);
 
@@ -227,6 +233,8 @@ export class OdsService {
         entityToQuery: ODS_ENTITIES.BUSINESS_CENTRE_NON_WORKING_DAY,
         queryParameters: {
           business_centre_code: centreCode,
+          ...(startDate ? { non_working_day_start_date: startDate } : {}),
+          ...(endDate ? { non_working_day_end_date: endDate } : {}),
         },
       });
 

@@ -96,8 +96,149 @@ describe('/dom - business centres', () => {
 
       expect(body).toEqual({
         statusCode: HttpStatus.NOT_FOUND,
-        message: `No DOM to ODS business centre code found ${mockCentreCode}`,
+        message: `No DOM business centre non working days found ${mockCentreCode}`,
         error: 'Not Found',
+      });
+    });
+
+    describe('with optional date filters', () => {
+      it(`should return ${HttpStatus.OK} when startDate and endDate are provided in YYYY-MM-DD format`, async () => {
+        // Arrange
+        const mockCentreCode = EXAMPLES.BUSINESS_CENTRE.CODE;
+        const startDate = EXAMPLES.DATE_START;
+        const endDate = EXAMPLES.DATE_END;
+
+        // Act
+        const { status, body } = await api.get(`${baseUrl}/${mockCentreCode}/non-working-days?startDate=${startDate}&endDate=${endDate}`);
+
+        // Assert
+        expect(status).toBe(HttpStatus.OK);
+
+        expect(body).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              code: mockCentreCode,
+              name: expect.any(String),
+              date: expect.any(String),
+            }),
+          ]),
+        );
+      });
+
+      it(`should return ${HttpStatus.OK} when only startDate is provided`, async () => {
+        // Arrange
+        const mockCentreCode = EXAMPLES.BUSINESS_CENTRE.CODE;
+        const startDate = EXAMPLES.DATE_START;
+
+        // Act
+        const { status, body } = await api.get(`${baseUrl}/${mockCentreCode}/non-working-days?startDate=${startDate}`);
+
+        // Assert
+        expect(status).toBe(HttpStatus.OK);
+
+        expect(body).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              code: mockCentreCode,
+              name: expect.any(String),
+              date: expect.any(String),
+            }),
+          ]),
+        );
+      });
+
+      it(`should return ${HttpStatus.OK} when only endDate is provided`, async () => {
+        // Arrange
+        const mockCentreCode = EXAMPLES.BUSINESS_CENTRE.CODE;
+        const endDate = EXAMPLES.DATE_END;
+
+        // Act
+        const { status, body } = await api.get(`${baseUrl}/${mockCentreCode}/non-working-days?endDate=${endDate}`);
+
+        // Assert
+        expect(status).toBe(HttpStatus.OK);
+
+        expect(body).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              code: mockCentreCode,
+              name: expect.any(String),
+              date: expect.any(String),
+            }),
+          ]),
+        );
+      });
+
+      it(`should return ${HttpStatus.BAD_REQUEST} when startDate is not in YYYY-MM-DD format`, async () => {
+        // Arrange
+        const mockCentreCode = EXAMPLES.BUSINESS_CENTRE.CODE;
+        const invalidStartDate = '01-06-2026';
+
+        // Act
+        const { status, body } = await api.get(`${baseUrl}/${mockCentreCode}/non-working-days?startDate=${invalidStartDate}`);
+
+        // Assert
+        expect(status).toBe(HttpStatus.BAD_REQUEST);
+
+        expect(body).toEqual({
+          message: expect.arrayContaining([expect.stringContaining('startDate')]),
+          error: 'Bad Request',
+          statusCode: HttpStatus.BAD_REQUEST,
+        });
+      });
+
+      it(`should return ${HttpStatus.BAD_REQUEST} when endDate is not in YYYY-MM-DD format`, async () => {
+        // Arrange
+        const mockCentreCode = EXAMPLES.BUSINESS_CENTRE.CODE;
+        const invalidEndDate = '12/31/2026';
+
+        // Act
+        const { status, body } = await api.get(`${baseUrl}/${mockCentreCode}/non-working-days?endDate=${invalidEndDate}`);
+
+        // Assert
+        expect(status).toBe(HttpStatus.BAD_REQUEST);
+
+        expect(body).toEqual({
+          message: expect.arrayContaining([expect.stringContaining('endDate')]),
+          error: 'Bad Request',
+          statusCode: HttpStatus.BAD_REQUEST,
+        });
+      });
+
+      it(`should return ${HttpStatus.BAD_REQUEST} when startDate exceeds the expected length`, async () => {
+        // Arrange
+        const mockCentreCode = EXAMPLES.BUSINESS_CENTRE.CODE;
+        const invalidStartDate = '2026-01-01T10:00:00';
+
+        // Act
+        const { status, body } = await api.get(`${baseUrl}/${mockCentreCode}/non-working-days?startDate=${encodeURIComponent(invalidStartDate)}`);
+
+        // Assert
+        expect(status).toBe(HttpStatus.BAD_REQUEST);
+
+        expect(body).toEqual({
+          message: expect.arrayContaining([expect.stringContaining('startDate')]),
+          error: 'Bad Request',
+          statusCode: HttpStatus.BAD_REQUEST,
+        });
+      });
+
+      it(`should return ${HttpStatus.BAD_REQUEST} when endDate exceeds the expected length`, async () => {
+        // Arrange
+        const mockCentreCode = EXAMPLES.BUSINESS_CENTRE.CODE;
+        const invalidEndDate = '2026-12-31T23:59:59';
+
+        // Act
+        const { status, body } = await api.get(`${baseUrl}/${mockCentreCode}/non-working-days?endDate=${encodeURIComponent(invalidEndDate)}`);
+
+        // Assert
+        expect(status).toBe(HttpStatus.BAD_REQUEST);
+
+        expect(body).toEqual({
+          message: expect.arrayContaining([expect.stringContaining('endDate')]),
+          error: 'Bad Request',
+          statusCode: HttpStatus.BAD_REQUEST,
+        });
       });
     });
 
@@ -218,7 +359,7 @@ describe('/dom - business centres', () => {
     describe('when a query param with a string above the maximum is provided', () => {
       it(`should return ${HttpStatus.BAD_REQUEST} with validation errors`, async () => {
         // Arrange
-        const mockParam = 'a'.repeat(31);
+        const mockParam = 'a'.repeat(201);
 
         const url = `${baseUrl}?centreCodes=${mockParam}`;
 
@@ -229,7 +370,7 @@ describe('/dom - business centres', () => {
         expect(status).toBe(HttpStatus.BAD_REQUEST);
 
         expect(body).toEqual({
-          message: ['centreCodes must be shorter than or equal to 30 characters'],
+          message: ['centreCodes must be shorter than or equal to 200 characters'],
           error: 'Bad Request',
           statusCode: HttpStatus.BAD_REQUEST,
         });
@@ -249,7 +390,7 @@ describe('/dom - business centres', () => {
 
         expect(body).toEqual({
           message: [
-            'centreCodes must be shorter than or equal to 30 characters',
+            'centreCodes must be shorter than or equal to 200 characters',
             'centreCodes must be longer than or equal to 3 characters',
             'centreCodes must be a string',
           ],
@@ -293,6 +434,187 @@ describe('/dom - business centres', () => {
           message: ['centreCodes must be longer than or equal to 3 characters'],
           error: 'Bad Request',
           statusCode: HttpStatus.BAD_REQUEST,
+        });
+      });
+    });
+
+    describe('with optional date filters', () => {
+      describe('when startDate and endDate filters are provided in YYYY-MM-DD format', () => {
+        it(`should return ${HttpStatus.OK} with filtered non-working days`, async () => {
+          // Arrange
+          const mockCentreCodes = `${EXAMPLES.BUSINESS_CENTRE.CODE},${EXAMPLES.BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.CODE}`;
+          const startDate = EXAMPLES.DATE_START;
+          const endDate = EXAMPLES.DATE_END;
+
+          const url = `${baseUrl}?centreCodes=${mockCentreCodes}&startDate=${startDate}&endDate=${endDate}`;
+
+          // Act
+          const { status, body } = await api.get(url);
+
+          // Assert
+          expect(status).toBe(HttpStatus.OK);
+
+          expect(Object.keys(body)).toHaveLength(2);
+
+          expect(body[EXAMPLES.BUSINESS_CENTRE.CODE]).toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({
+                code: EXAMPLES.BUSINESS_CENTRE.CODE,
+                name: expect.any(String),
+                date: expect.any(String),
+              }),
+            ]),
+          );
+
+          expect(body[EXAMPLES.BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.CODE]).toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({
+                code: EXAMPLES.BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.CODE,
+                name: expect.any(String),
+                date: expect.any(String),
+              }),
+            ]),
+          );
+        });
+      });
+
+      describe('when only startDate filter is provided', () => {
+        it(`should return ${HttpStatus.OK} with non-working days from startDate onwards`, async () => {
+          // Arrange
+          const mockCentreCodes = EXAMPLES.BUSINESS_CENTRE.CODE;
+          const startDate = EXAMPLES.DATE_START;
+
+          const url = `${baseUrl}?centreCodes=${mockCentreCodes}&startDate=${startDate}`;
+
+          // Act
+          const { status, body } = await api.get(url);
+
+          // Assert
+          expect(status).toBe(HttpStatus.OK);
+
+          expect(body[EXAMPLES.BUSINESS_CENTRE.CODE]).toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({
+                code: EXAMPLES.BUSINESS_CENTRE.CODE,
+                name: expect.any(String),
+                date: expect.any(String),
+              }),
+            ]),
+          );
+        });
+      });
+
+      describe('when only endDate filter is provided', () => {
+        it(`should return ${HttpStatus.OK} with non-working days up to endDate`, async () => {
+          // Arrange
+          const mockCentreCodes = EXAMPLES.BUSINESS_CENTRE.CODE;
+          const endDate = EXAMPLES.DATE_END;
+
+          const url = `${baseUrl}?centreCodes=${mockCentreCodes}&endDate=${endDate}`;
+
+          // Act
+          const { status, body } = await api.get(url);
+
+          // Assert
+          expect(status).toBe(HttpStatus.OK);
+
+          expect(body[EXAMPLES.BUSINESS_CENTRE.CODE]).toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({
+                code: EXAMPLES.BUSINESS_CENTRE.CODE,
+                name: expect.any(String),
+                date: expect.any(String),
+              }),
+            ]),
+          );
+        });
+      });
+
+      describe('when startDate is provided in an invalid format', () => {
+        it(`should return ${HttpStatus.BAD_REQUEST} with validation errors`, async () => {
+          // Arrange
+          const mockCentreCodes = EXAMPLES.BUSINESS_CENTRE.CODE;
+          const invalidStartDate = '01-06-2026'; // MM-DD-YYYY format instead of YYYY-MM-DD
+
+          const url = `${baseUrl}?centreCodes=${mockCentreCodes}&startDate=${invalidStartDate}`;
+
+          // Act
+          const { status, body } = await api.get(url);
+
+          // Assert
+          expect(status).toBe(HttpStatus.BAD_REQUEST);
+
+          expect(body).toEqual({
+            message: expect.arrayContaining([expect.stringContaining('startDate')]),
+            error: 'Bad Request',
+            statusCode: HttpStatus.BAD_REQUEST,
+          });
+        });
+      });
+
+      describe('when endDate is provided in an invalid format', () => {
+        it(`should return ${HttpStatus.BAD_REQUEST} with validation errors`, async () => {
+          // Arrange
+          const mockCentreCodes = EXAMPLES.BUSINESS_CENTRE.CODE;
+          const invalidEndDate = '12/31/2026'; // MM/DD/YYYY format instead of YYYY-MM-DD
+
+          const url = `${baseUrl}?centreCodes=${mockCentreCodes}&endDate=${invalidEndDate}`;
+
+          // Act
+          const { status, body } = await api.get(url);
+
+          // Assert
+          expect(status).toBe(HttpStatus.BAD_REQUEST);
+
+          expect(body).toEqual({
+            message: expect.arrayContaining([expect.stringContaining('endDate')]),
+            error: 'Bad Request',
+            statusCode: HttpStatus.BAD_REQUEST,
+          });
+        });
+      });
+
+      describe('when startDate exceeds max length for YYYY-MM-DD format', () => {
+        it(`should return ${HttpStatus.BAD_REQUEST} with validation error`, async () => {
+          // Arrange
+          const mockCentreCodes = EXAMPLES.BUSINESS_CENTRE.CODE;
+          const invalidStartDate = '2026-01-01T10:00:00'; // includes time
+
+          const url = `${baseUrl}?centreCodes=${mockCentreCodes}&startDate=${encodeURIComponent(invalidStartDate)}`;
+
+          // Act
+          const { status, body } = await api.get(url);
+
+          // Assert
+          expect(status).toBe(HttpStatus.BAD_REQUEST);
+
+          expect(body).toEqual({
+            message: expect.arrayContaining([expect.stringContaining('startDate should use format YYYY-MM-DD')]),
+            error: 'Bad Request',
+            statusCode: HttpStatus.BAD_REQUEST,
+          });
+        });
+      });
+
+      describe('when endDate exceeds max length for YYYY-MM-DD format', () => {
+        it(`should return ${HttpStatus.BAD_REQUEST} with validation error`, async () => {
+          // Arrange
+          const mockCentreCodes = EXAMPLES.BUSINESS_CENTRE.CODE;
+          const invalidEndDate = '2026-12-31T23:59:59'; // includes time
+
+          const url = `${baseUrl}?centreCodes=${mockCentreCodes}&endDate=${encodeURIComponent(invalidEndDate)}`;
+
+          // Act
+          const { status, body } = await api.get(url);
+
+          // Assert
+          expect(status).toBe(HttpStatus.BAD_REQUEST);
+
+          expect(body).toEqual({
+            message: expect.arrayContaining([expect.stringContaining('endDate should use format YYYY-MM-DD')]),
+            error: 'Bad Request',
+            statusCode: HttpStatus.BAD_REQUEST,
+          });
         });
       });
     });
