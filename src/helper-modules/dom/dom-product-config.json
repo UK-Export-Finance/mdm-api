@@ -2,24 +2,10 @@
   {
     "productType": "PRT001",
     "configuration": {
-      "commitmentDate": "NOT_APPLICABLE",
       "issuedDate": "NOT_APPLICABLE",
       "effectiveDate": "REQUIRED",
       "availabilityEndDate": "NOT_APPLICABLE",
       "expiryDate": "REQUIRED",
-      "participations": "OPTIONAL",
-      "scheduledRepayments": "REQUIRED",
-      "nonCashObligations": "REQUIRED",
-      "cashObligations": "NOT_APPLICABLE",
-      "accrualSchedule": "NOT_APPLICABLE",
-      "pimOwner": "REQUIRED",
-      "riskRating": "REQUIRED",
-      "preCreditPeriod": "REQUIRED",
-      "creditPeriod": "REQUIRED",
-      "lossGivenDefault": "REQUIRED",
-      "provisionRate": "REQUIRED",
-      "forecastYear": "REQUIRED",
-      "bankRate": "NOT_APPLICABLE",
       "fees": {
         "creation": "REQUIRED",
         "inLife": "OPTIONAL"
@@ -29,24 +15,10 @@
   {
     "productType": "PRT002",
     "configuration": {
-      "commitmentDate": "NOT_APPLICABLE",
       "issuedDate": "NOT_APPLICABLE",
       "effectiveDate": "REQUIRED",
       "availabilityEndDate": "NOT_APPLICABLE",
       "expiryDate": "REQUIRED",
-      "participations": "OPTIONAL",
-      "scheduledRepayments": "REQUIRED",
-      "nonCashObligations": "REQUIRED",
-      "cashObligations": "NOT_APPLICABLE",
-      "accrualSchedule": "NOT_APPLICABLE",
-      "pimOwner": "REQUIRED",
-      "riskRating": "REQUIRED",
-      "preCreditPeriod": "REQUIRED",
-      "creditPeriod": "REQUIRED",
-      "lossGivenDefault": "REQUIRED",
-      "provisionRate": "REQUIRED",
-      "forecastYear": "REQUIRED",
-      "bankRate": "NOT_APPLICABLE",
       "fees": {
         "creation": "REQUIRED",
         "inLife": "OPTIONAL"
@@ -56,24 +28,10 @@
   {
     "productType": "PRT003",
     "configuration": {
-      "commitmentDate": "REQUIRED",
       "issuedDate": "NOT_APPLICABLE",
       "effectiveDate": "REQUIRED",
       "availabilityEndDate": "NOT_APPLICABLE",
       "expiryDate": "REQUIRED",
-      "participations": "NOT_APPLICABLE",
-      "scheduledRepayments": "NOT_APPLICABLE",
-      "nonCashObligations": "NOT_APPLICABLE",
-      "cashObligations": "NOT_APPLICABLE",
-      "accrualSchedule": "REQUIRED",
-      "pimOwner": "REQUIRED",
-      "riskRating": "REQUIRED",
-      "preCreditPeriod": "NOT_APPLICABLE",
-      "creditPeriod": "NOT_APPLICABLE",
-      "lossGivenDefault": "REQUIRED",
-      "provisionRate": "NOT_APPLICABLE",
-      "forecastYear": "NOT_APPLICABLE",
-      "bankRate": "NOT_APPLICABLE",
       "fees": {
         "creation": "NOT_APPLICABLE",
         "inLife": "OPTIONAL"
@@ -83,24 +41,10 @@
   {
     "productType": "PRT004",
     "configuration": {
-      "commitmentDate": "REQUIRED",
       "issuedDate": "NOT_APPLICABLE",
       "effectiveDate": "REQUIRED",
       "availabilityEndDate": "NOT_APPLICABLE",
       "expiryDate": "REQUIRED",
-      "participations": "NOT_APPLICABLE",
-      "scheduledRepayments": "NOT_APPLICABLE",
-      "nonCashObligations": "NOT_APPLICABLE",
-      "cashObligations": "NOT_APPLICABLE",
-      "accrualSchedule": "REQUIRED",
-      "pimOwner": "REQUIRED",
-      "riskRating": "REQUIRED",
-      "preCreditPeriod": "NOT_APPLICABLE",
-      "creditPeriod": "NOT_APPLICABLE",
-      "lossGivenDefault": "REQUIRED",
-      "provisionRate": "NOT_APPLICABLE",
-      "forecastYear": "NOT_APPLICABLE",
-      "bankRate": "NOT_APPLICABLE",
       "fees": {
         "creation": "NOT_APPLICABLE",
         "inLife": "OPTIONAL"

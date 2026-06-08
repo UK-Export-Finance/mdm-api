@@ -2,6 +2,8 @@ import { GetProductConfigOdsResponse } from '@ukef/modules/ods/dto';
 
 import { mapProductConfig } from './map-product-config';
 
+const REQUIRED = 'REQUIRED';
+const OPTIONAL = 'OPTIONAL';
 const NOT_APPLICABLE = 'NOT_APPLICABLE';
 
 const baseOdsConfig = {
@@ -59,21 +61,21 @@ describe('mapProductConfig', () => {
       // PRT001 values from dom-product-config.json
       expect(result.configuration.commitmentDate).toEqual(NOT_APPLICABLE);
       expect(result.configuration.issuedDate).toEqual(NOT_APPLICABLE);
-      expect(result.configuration.effectiveDate).toEqual('REQUIRED');
+      expect(result.configuration.effectiveDate).toEqual(REQUIRED);
       expect(result.configuration.availabilityEndDate).toEqual(NOT_APPLICABLE);
-      expect(result.configuration.expiryDate).toEqual('REQUIRED');
-      expect(result.configuration.participations).toEqual('OPTIONAL');
-      expect(result.configuration.scheduledRepayments).toEqual('REQUIRED');
-      expect(result.configuration.nonCashObligations).toEqual('REQUIRED');
+      expect(result.configuration.expiryDate).toEqual(REQUIRED);
+      expect(result.configuration.participations).toEqual(NOT_APPLICABLE);
+      expect(result.configuration.scheduledRepayments).toEqual(NOT_APPLICABLE);
+      expect(result.configuration.nonCashObligations).toEqual(NOT_APPLICABLE);
       expect(result.configuration.cashObligations).toEqual(NOT_APPLICABLE);
       expect(result.configuration.accrualSchedule).toEqual(NOT_APPLICABLE);
-      expect(result.configuration.pimOwner).toEqual('REQUIRED');
-      expect(result.configuration.riskRating).toEqual('REQUIRED');
-      expect(result.configuration.preCreditPeriod).toEqual('REQUIRED');
-      expect(result.configuration.creditPeriod).toEqual('REQUIRED');
-      expect(result.configuration.lossGivenDefault).toEqual('REQUIRED');
-      expect(result.configuration.provisionRate).toEqual('REQUIRED');
-      expect(result.configuration.forecastYear).toEqual('REQUIRED');
+      expect(result.configuration.pimOwner).toEqual(NOT_APPLICABLE);
+      expect(result.configuration.riskRating).toEqual(NOT_APPLICABLE);
+      expect(result.configuration.preCreditPeriod).toEqual(NOT_APPLICABLE);
+      expect(result.configuration.creditPeriod).toEqual(NOT_APPLICABLE);
+      expect(result.configuration.lossGivenDefault).toEqual(NOT_APPLICABLE);
+      expect(result.configuration.provisionRate).toEqual(NOT_APPLICABLE);
+      expect(result.configuration.forecastYear).toEqual(NOT_APPLICABLE);
       expect(result.configuration.bankRate).toEqual(NOT_APPLICABLE);
     });
 
@@ -81,8 +83,8 @@ describe('mapProductConfig', () => {
       const result = mapProductConfig(mockOdsProductConfigKnown);
 
       // PRT001 values from dom-product-config.json
-      expect(result.configuration.fees.creation).toEqual('REQUIRED');
-      expect(result.configuration.fees.inLife).toEqual('OPTIONAL');
+      expect(result.configuration.fees.creation).toEqual(REQUIRED);
+      expect(result.configuration.fees.inLife).toEqual(OPTIONAL);
     });
   });
 
