@@ -6,6 +6,8 @@ export const mockProductConfigs = [
     productActive: true,
     configuration: {
       creditType: 'Mock credit type',
+      instrumentType: 'Mock instrument type',
+      repaymentType: 'Mock repayment type',
       leadDays: {
         repayments: 1,
         interestAccruals: 1,
@@ -14,6 +16,7 @@ export const mockProductConfigs = [
     },
     counterpartyRoleTypes: [],
     facilityCategoryTypes: [],
+    feeTypes: [],
     obligationSubtypes: ['OST001', 'OST003', 'OST006'],
     account: [],
     additionalRateTypes: [],
@@ -27,6 +30,8 @@ export const mockProductConfigs = [
     productActive: true,
     configuration: {
       creditType: 'Mock credit type',
+      instrumentType: 'Mock instrument type',
+      repaymentType: 'Mock repayment type',
       leadDays: {
         repayments: 1,
         interestAccruals: 1,
@@ -35,6 +40,7 @@ export const mockProductConfigs = [
     },
     counterpartyRoleTypes: [],
     facilityCategoryTypes: [],
+    feeTypes: [],
     obligationSubtypes: ['OST001', 'OST002', 'OST004', 'OST005'],
     account: [],
     additionalRateTypes: [],

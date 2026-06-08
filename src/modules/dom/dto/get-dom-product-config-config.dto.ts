@@ -42,6 +42,11 @@ export class GetDomProductConfigConfig {
   readonly creditType: string;
 
   @ApiProperty({
+    description: "The product's 'instrument type'",
+  })
+  readonly instrumentType: string;
+
+  @ApiProperty({
     description: "The product's 'participations' requirement",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.participations,
   })
@@ -130,4 +135,10 @@ export class GetDomProductConfigConfig {
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.leadDays,
   })
   readonly leadDays: GetDomProductConfigConfigLeadDays;
+
+  @ApiProperty({
+    description: 'The repayment type of the product, Bullet or Scheduled',
+    example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.repaymentType,
+  })
+  readonly repaymentType: string;
 }

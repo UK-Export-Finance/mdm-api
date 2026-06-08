@@ -1,8 +1,8 @@
 import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import PRODUCT_CONFIG from '@ukef/helper-modules/dom/dom-product-config.json';
-import { mapBusinessCentreNonWorkingDays } from '@ukef/helpers';
+import { mapBusinessCentreNonWorkingDays, mapProductConfig } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 
+import { OdsProductConfigService } from '../ods/ods-product-config.service';
 import { OdsService } from '../ods/ods.service';
 import {
   FindMultipleOdsBusinessCentreOdsResponsesNonWorkingDaysResponse,
@@ -21,6 +21,7 @@ import {
 export class DomService {
   constructor(
     private readonly odsService: OdsService,
+    private readonly odsProductConfigService: OdsProductConfigService,
     private readonly logger: PinoLogger,
   ) {}
 
@@ -100,18 +101,15 @@ export class DomService {
   /**
    * Find a product configuration
    * @param {string} productType: Product type
-   * @returns {GetDomProductConfigResponse}
+   * @returns {Promise<GetDomProductConfigResponse>}
+   * @throws {NotFoundException} If no product configuration is found
    */
-  findProductConfiguration(productType: string): GetDomProductConfigResponse {
+  async findProductConfiguration(productType: string): Promise<GetDomProductConfigResponse> {
     this.logger.info('Finding DOM product configuration %s', productType);
 
-    const productConfig = PRODUCT_CONFIG.find((config: GetDomProductConfigResponse) => config.productType === productType);
+    const odsProductConfig = await this.odsProductConfigService.findOne(productType);
 
-    if (productConfig) {
-      return productConfig;
-    }
-
-    throw new NotFoundException(`No DOM product configuration found ${productType}`);
+    return mapProductConfig(odsProductConfig);
   }
 
   /**
@@ -148,11 +146,13 @@ export class DomService {
 
   /**
    * Get all product configurations
-   * @returns {GetDomProductConfigResponse[]}
+   * @returns {Promise<GetDomProductConfigResponse[]>}
    */
-  getProductConfigurations(productTypes?: string): GetDomProductConfigResponse[] {
-    this.logger.info('Getting product configurations %s', productTypes);
+  async getProductConfigurations(): Promise<GetDomProductConfigResponse[]> {
+    this.logger.info('Getting product configurations');
 
-    return PRODUCT_CONFIG;
+    const odsProductConfigs = await this.odsProductConfigService.getAll();
+
+    return odsProductConfigs.map(mapProductConfig);
   }
 }

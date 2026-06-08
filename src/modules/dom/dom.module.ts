@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DATABASE_NAME } from '@ukef/constants';
 
+import { OdsProductConfigService } from '../ods/ods-product-config.service';
 import { OdsService } from '../ods/ods.service';
 import { OdsStoredProcedureService } from '../ods/ods-stored-procedure.service';
 import { CreditRiskRatingsService } from './credit-risk-ratings/credit-risk-ratings.service';
@@ -12,6 +13,6 @@ import { CreditRiskRatingEntity } from './entities';
 @Module({
   imports: [TypeOrmModule.forFeature([CreditRiskRatingEntity], DATABASE_NAME.MDM)],
   controllers: [DomController],
-  providers: [DomService, OdsService, OdsStoredProcedureService, CreditRiskRatingsService],
+  providers: [DomService, OdsProductConfigService, OdsService, OdsStoredProcedureService, CreditRiskRatingsService],
 })
 export class DomModule {}

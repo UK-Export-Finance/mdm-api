@@ -70,6 +70,22 @@ const PRODUCT_TYPES = {
   GEF: 'PRT004',
 };
 
+const CREDIT_TYPES = {
+  TERM: 'Term',
+  REVOLVER: 'Revolver',
+};
+
+const INSTRUMENT_TYPES = {
+  CASH_ADVANCE: 'Cash Advance',
+  INSURANCE: 'Insurance',
+  GUARANTEE: 'Guarantee',
+};
+
+const REPAYMENT_TYPES = {
+  BULLET: 'Bullet',
+  SCHEDULED: 'Scheduled',
+};
+
 export const EXAMPLES = {
   ACCRUAL_FREQUENCY: {
     CODE: 'FREQ12MON',
@@ -208,7 +224,7 @@ export const EXAMPLES = {
           effectiveDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
           availabilityEndDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
           expiryDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          creditType: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
+          creditType: CREDIT_TYPES.TERM,
           participations: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
           scheduledRepayments: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
           nonCashObligations: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
@@ -222,6 +238,8 @@ export const EXAMPLES = {
           provisionRate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
           forecastYear: PRODUCT_CONFIG_REQUIREMENT.NOT_APPLICABLE,
           bankRate: PRODUCT_CONFIG_REQUIREMENT.OPTIONAL,
+          instrumentType: INSTRUMENT_TYPES.INSURANCE,
+          repaymentType: REPAYMENT_TYPES.BULLET,
           fees: {
             creation: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
             inLife: PRODUCT_CONFIG_REQUIREMENT.OPTIONAL,

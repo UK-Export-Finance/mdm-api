@@ -23,16 +23,28 @@ class ConfigurationLeadDaysOdsResponse {
 
 class ConfigurationOdsResponse {
   @ApiProperty({
-    description: "The product's 'credit type' requirement",
+    description: 'The credit type of the product, Term or Revolving',
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.creditType,
   })
   readonly creditType: string;
 
   @ApiProperty({
-    description: "The product's 'lead days'",
+    description: 'The instrument type of the product: Cash Advance, Insurance, Guarantee',
+    example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.instrumentType,
+  })
+  readonly instrumentType: string;
+
+  @ApiProperty({
+    description: 'The lead day configuration for the product',
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.leadDays,
   })
   readonly leadDays: ConfigurationLeadDaysOdsResponse;
+
+  @ApiProperty({
+    description: 'The repayment type of the product, Bullet or Scheduled',
+    example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.repaymentType,
+  })
+  readonly repaymentType: string;
 }
 
 export class GetProductConfigOdsResponse {
@@ -61,50 +73,56 @@ export class GetProductConfigOdsResponse {
   readonly productActive: boolean;
 
   @ApiProperty({
-    description: "The product's configuration",
+    description: 'Configuration information for the product',
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration,
   })
   readonly configuration: ConfigurationOdsResponse;
 
   @ApiProperty({
-    description: "The product's counterparty role types",
+    description: 'The counterparty role types applicable to the product',
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.counterpartyRoleTypes,
   })
   readonly counterpartyRoleTypes: string[];
 
   @ApiProperty({
-    description: "The product's facility category subtypes",
+    description: 'The facility category subtypes applicable to the product',
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.facilityCategoryTypes,
   })
   readonly facilityCategoryTypes: string[];
 
   @ApiProperty({
-    description: "The product's obligation subtypes",
+    description: 'The obligation subtypes applicable to the product',
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.obligationSubtypes,
   })
   readonly obligationSubtypes: string[];
 
   @ApiProperty({
-    description: 'The UKEF accounts that the product is in',
+    description: 'The account numbers available for selection on the product',
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.account,
   })
   readonly account: string[];
 
   @ApiProperty({
-    description: "The product's additional rates",
+    description: 'The additional rate types applicable to accrual schedules on the product',
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.additionalRateTypes,
   })
   readonly additionalRateTypes: string[];
 
   @ApiProperty({
-    description: "The product's base rates",
+    description: 'The base rate types applicable to accrual schedules on the product',
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.baseRateTypes,
   })
   readonly baseRateTypes: string[];
 
   @ApiProperty({
-    description: "The product's accrual schedule",
+    description: 'The fee types applicable to the product',
+    example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.feeTypes,
+  })
+  readonly feeTypes: string[];
+
+  @ApiProperty({
+    description: 'The accrual schedule types applicable to the product',
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.accrualScheduleTypes,
   })
-  readonly accrualScheduleTypes: string[];
+  readonly accrualScheduleTypes: Array<{ code: string; cashIndicator: boolean }>;
 }

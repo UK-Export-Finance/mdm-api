@@ -151,7 +151,7 @@ export class DomController {
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
   })
-  findProductConfiguration(@Param() param: FindDomProductConfigParamDto): GetDomProductConfigResponse {
+  findProductConfiguration(@Param() param: FindDomProductConfigParamDto): Promise<GetDomProductConfigResponse> {
     return this.domService.findProductConfiguration(param.productType);
   }
 
@@ -167,7 +167,7 @@ export class DomController {
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
   })
-  getProductConfigurations(): GetDomProductConfigResponse[] {
+  getProductConfigurations(): Promise<GetDomProductConfigResponse[]> {
     return this.domService.getProductConfigurations();
   }
 
