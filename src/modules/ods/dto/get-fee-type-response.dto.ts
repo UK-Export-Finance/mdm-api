@@ -31,4 +31,24 @@ export class GetFeeTypeResponseDto {
     example: EXAMPLES.FEE_TYPE.IS_ACTIVE,
   })
   readonly isActive: boolean;
+
+  @ApiProperty({
+    description: 'Balance category',
+    example: EXAMPLES.FEE_TYPE.BALANCE_CATEGORY,
+    nullable: true,
+  })
+  readonly balanceCategory: string | null;
+
+  @ApiProperty({
+    description: 'Base balance category',
+    example: EXAMPLES.FEE_TYPE.BASE_BALANCE_CATEGORY,
+    nullable: true,
+  })
+  readonly baseBalanceCategory: string | null;
+
+  @ApiProperty({
+    description: 'Non-facility currency settlement flag',
+    example: EXAMPLES.FEE_TYPE.NON_FACILITY_CURRENCY_SETTLEMENT,
+  })
+  readonly nonFacilityCurrencySettlement: boolean;
 }

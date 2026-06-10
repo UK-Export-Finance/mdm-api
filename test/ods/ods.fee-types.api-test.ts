@@ -36,6 +36,9 @@ describe('/ods - Fee types', () => {
           classification: expect.any(String),
           expenseIncome: expect.any(String),
           isActive: expect.any(Boolean),
+          balanceCategory: expect.anything(),
+          baseBalanceCategory: expect.anything(),
+          nonFacilityCurrencySettlement: expect.any(Boolean),
         }),
       ]);
 
@@ -60,6 +63,9 @@ describe('/ods - Fee types', () => {
         classification: expect.any(String),
         expenseIncome: expect.any(String),
         isActive: expect.any(Boolean),
+        balanceCategory: expect.anything(),
+        baseBalanceCategory: expect.anything(),
+        nonFacilityCurrencySettlement: expect.any(Boolean),
       });
 
       expect(body).toEqual(expected);
