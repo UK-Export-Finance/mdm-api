@@ -31,4 +31,24 @@ export class GetFeeTypeOdsResponseDto {
     example: EXAMPLES.ODS.CONFIGURATION_FEE.feeTypeActive,
   })
   readonly feeTypeActive: boolean;
+
+  @ApiProperty({
+    description: 'Balance category',
+    example: EXAMPLES.ODS.CONFIGURATION_FEE.balanceCategory,
+    nullable: true,
+  })
+  readonly balanceCategory: string | null;
+
+  @ApiProperty({
+    description: 'Base balance category',
+    example: EXAMPLES.ODS.CONFIGURATION_FEE.baseBalanceCategory,
+    nullable: true,
+  })
+  readonly baseBalanceCategory?: string;
+
+  @ApiProperty({
+    description: 'Non-facility currency settlement flag',
+    example: EXAMPLES.ODS.CONFIGURATION_FEE.nonFacilityCurrencySettlement,
+  })
+  readonly nonFacilityCurrencySettlement: boolean;
 }

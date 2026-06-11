@@ -31,11 +31,14 @@ const DATE_START = '2026-01-01';
 const DATE_END = '2026-12-31';
 
 const FEE_TYPE = {
-  FEE_TYPE: 'BEX',
-  NAME: 'Brokerage Expense',
-  CLASSIFICATION: 'Fixed',
-  EXPENSE_INCOME: 'Expense',
+  FEE_TYPE: 'CMF',
+  NAME: 'Commitment Fee',
+  CLASSIFICATION: 'Accruing',
+  EXPENSE_INCOME: 'Income',
   IS_ACTIVE: true,
+  BALANCE_CATEGORY: 'CMF',
+  BASE_BALANCE_CATEGORY: 'On facility available amount',
+  NON_FACILITY_CURRENCY_SETTLEMENT: false,
 };
 
 const INDUSTRY = {
@@ -341,11 +344,14 @@ export const EXAMPLES = {
       counterpartyRoleTypeActive: true,
     },
     CONFIGURATION_FEE: {
-      feeType: 'BEX',
-      name: 'Brokerage Expense',
-      feeTypeClassification: 'Fixed',
-      feeTypeExpenseIncome: 'Expense',
+      feeType: 'CMF',
+      name: 'Commitment Fee Accruing',
+      feeTypeClassification: 'Accruing',
+      feeTypeExpenseIncome: 'Income',
       feeTypeActive: true,
+      balanceCategory: 'CMF',
+      baseBalanceCategory: 'On Principal Drawn Amount',
+      nonFacilityCurrencySettlement: false,
     },
     CONFIGURATION_FREQUENCY: {
       code: 'FREQ12MON',

@@ -11,4 +11,7 @@ export const mapFeeType = (feeType: GetFeeTypeOdsResponseDto): GetFeeTypeRespons
   classification: feeType.feeTypeClassification,
   expenseIncome: feeType.feeTypeExpenseIncome,
   isActive: feeType.feeTypeActive,
+  balanceCategory: feeType.balanceCategory,
+  baseBalanceCategory: feeType.baseBalanceCategory ?? null,
+  nonFacilityCurrencySettlement: feeType.nonFacilityCurrencySettlement,
 });

@@ -17,6 +17,9 @@ describe('mapFeeType', () => {
       classification: mockFeeType.feeTypeClassification,
       expenseIncome: mockFeeType.feeTypeExpenseIncome,
       isActive: mockFeeType.feeTypeActive,
+      balanceCategory: mockFeeType.balanceCategory,
+      baseBalanceCategory: mockFeeType.baseBalanceCategory ?? null,
+      nonFacilityCurrencySettlement: mockFeeType.nonFacilityCurrencySettlement,
     };
 
     expect(result).toEqual(expected);
