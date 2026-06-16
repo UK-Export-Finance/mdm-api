@@ -3,32 +3,26 @@ import { EXAMPLES } from '@ukef/constants';
 
 export class GetObligationSubtypeOdsResponseDto {
   @ApiProperty({
-    description: 'Obligation subtype classification type',
-    example: EXAMPLES.ODS.OBLIGATION_CLASSIFICATION.classification_type,
+    description: 'Obligation subtype code',
+    example: EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.code,
   })
-  readonly classification_type: string;
+  readonly code: string;
 
   @ApiProperty({
-    description: 'Obligation subtype classification type code',
-    example: EXAMPLES.ODS.OBLIGATION_CLASSIFICATION.classification_type_code,
+    description: 'Obligation subtype name',
+    example: EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.name,
   })
-  readonly classification_type_code: string;
+  readonly name: string;
 
   @ApiProperty({
-    description: 'Obligation subtype classification code',
-    example: EXAMPLES.ODS.OBLIGATION_CLASSIFICATION.classification_code,
+    description: 'Obligation subtype balance category',
+    example: EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.balanceCategory,
   })
-  readonly classification_code: string;
+  readonly balanceCategory: string;
 
   @ApiProperty({
-    description: 'Obligation subtype classification description',
-    example: EXAMPLES.ODS.OBLIGATION_CLASSIFICATION.classification_description,
+    description: 'Obligation subtype active',
+    example: EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.obligationSubtypeActive,
   })
-  readonly classification_description: string;
-
-  @ApiProperty({
-    description: 'Obligation subtype active flag',
-    example: EXAMPLES.ODS.OBLIGATION_CLASSIFICATION.classification_active_flag,
-  })
-  readonly classification_active_flag: boolean;
+  readonly obligationSubtypeActive: boolean;
 }

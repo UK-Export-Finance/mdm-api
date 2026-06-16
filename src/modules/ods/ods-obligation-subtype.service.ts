@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { STORED_PROCEDURE } from '@ukef/constants';
-import { mapObligationSubtypesWithProductCode, mapOdsClassification, mapOdsClassifications } from '@ukef/helpers';
+import { mapObligationSubtypesWithProductCode } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 
 import {
@@ -8,7 +8,6 @@ import {
   GetObligationSubtypeResponseDto,
   ObligationSubtypeWithProductTypeDto,
   ODS_ENTITIES,
-  ODS_QUERY_PARAM_VALUES,
   OdsStoredProcedureOutputBody,
 } from './dto';
 import { OdsProductConfigService } from './ods-product-config.service';
@@ -33,11 +32,10 @@ export class OdsObligationSubtypeService {
       this.logger.info('Finding obligation subtype in ODS %s', subtypeCode);
 
       const storedProcedureInput = this.odsStoredProcedureService.createInput({
-        entityToQuery: ODS_ENTITIES.OBLIGATION_CLASSIFICATION,
+        entityToQuery: ODS_ENTITIES.CONFIGURATION_OBLIGATION_SUBTYPE,
         queryPageSize: 1,
         queryParameters: {
-          classification_type_code: ODS_QUERY_PARAM_VALUES.OBLIGATION_SUBTYPE,
-          classification_code: subtypeCode,
+          code: subtypeCode,
         },
       });
 
@@ -57,7 +55,7 @@ export class OdsObligationSubtypeService {
 
       const subType = storedProcedureJson.results[0] as GetObligationSubtypeOdsResponseDto;
 
-      return mapOdsClassification(subType);
+      return this.mapOdsResponse(subType);
     } catch (error) {
       this.logger.error('Error finding obligation subtype in ODS %s %o', subtypeCode, error);
 
@@ -79,10 +77,7 @@ export class OdsObligationSubtypeService {
       this.logger.info('Getting obligation subtypes from ODS');
 
       const storedProcedureInput = this.odsStoredProcedureService.createInput({
-        entityToQuery: ODS_ENTITIES.OBLIGATION_CLASSIFICATION,
-        queryParameters: {
-          classification_type_code: ODS_QUERY_PARAM_VALUES.OBLIGATION_SUBTYPE,
-        },
+        entityToQuery: ODS_ENTITIES.CONFIGURATION_OBLIGATION_SUBTYPE,
       });
 
       const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
@@ -97,7 +92,7 @@ export class OdsObligationSubtypeService {
 
       const obligationSubtypes = storedProcedureJson.results as GetObligationSubtypeOdsResponseDto[];
 
-      const mappedSubtypes = mapOdsClassifications(obligationSubtypes);
+      const mappedSubtypes: GetObligationSubtypeResponseDto[] = obligationSubtypes.map(this.mapOdsResponse);
 
       return mappedSubtypes;
     } catch (error) {
@@ -129,5 +124,14 @@ export class OdsObligationSubtypeService {
 
       throw new InternalServerErrorException('Error getting obligation subtypes with product types from ODS');
     }
+  }
+
+  private mapOdsResponse(subType: GetObligationSubtypeOdsResponseDto): GetObligationSubtypeResponseDto {
+    return {
+      code: subType.code,
+      description: subType.name,
+      balanceCategory: subType.balanceCategory,
+      isActive: subType.obligationSubtypeActive,
+    };
   }
 }

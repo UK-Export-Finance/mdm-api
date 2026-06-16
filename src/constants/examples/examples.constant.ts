@@ -51,10 +51,9 @@ const INDUSTRY = {
 };
 
 const OBLIGATION_SUBTYPE = {
-  TYPE: 'Obligation Sub-Type',
-  TYPE_CODE: 'obligationSubtype',
   CODE: 'OST012',
   DESCRIPTION: 'BSS Advance Payment Guarantee',
+  BALANCE_CATEGORY: 'PRIN1',
   IS_ACTIVE: true,
 };
 
@@ -360,6 +359,12 @@ export const EXAMPLES = {
       frequencyNumberOfUnits: 12,
       frequencyUnits: 'Months',
       frequencyActive: true,
+    },
+    CONFIGURATION_OBLIGATION_SUBTYPE: {
+      code: 'OST012',
+      name: 'BSS Advance Payment Guarantee',
+      balanceCategory: 'PRIN1',
+      obligationSubtypeActive: true,
     },
     FACILITY_CLASSIFICATION: {
       classification_type: 'Facility Category',

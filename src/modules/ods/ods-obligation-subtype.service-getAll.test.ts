@@ -1,10 +1,9 @@
 import { InternalServerErrorException } from '@nestjs/common';
 import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
-import { mapOdsClassifications } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
-import { ODS_ENTITIES, ODS_QUERY_PARAM_VALUES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
+import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { OdsObligationSubtypeService } from './ods-obligation-subtype.service';
 import { OdsProductConfigService } from './ods-product-config.service';
 import { OdsStoredProcedureService } from './ods-stored-procedure.service';
@@ -39,18 +38,16 @@ describe('OdsObligationSubtypeService - getAll', () => {
     "total_result_count": 2,
     "results": [
       {
-        "classification_type": "${EXAMPLES.ODS.OBLIGATION_CLASSIFICATION.classification_type}",
-        "classification_type_code": "${EXAMPLES.ODS.OBLIGATION_CLASSIFICATION.classification_type_code}",
-        "classification_code": "${EXAMPLES.ODS.OBLIGATION_CLASSIFICATION.classification_code}",
-        "classification_description": "${EXAMPLES.ODS.OBLIGATION_CLASSIFICATION.classification_description}",
-        "classification_active_flag": ${EXAMPLES.ODS.OBLIGATION_CLASSIFICATION.classification_active_flag}
+        "code": "${EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.code}",
+        "name": "${EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.name}",
+        "balanceCategory": "${EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.balanceCategory}",
+        "obligationSubtypeActive": ${EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.obligationSubtypeActive}
       },
       {
-        "classification_type": "${EXAMPLES.ODS.OBLIGATION_CLASSIFICATION.classification_type}",
-        "classification_type_code": "${EXAMPLES.ODS.OBLIGATION_CLASSIFICATION.classification_type_code}",
-        "classification_code": "${EXAMPLES.ODS.OBLIGATION_CLASSIFICATION.classification_code}",
-        "classification_description": "${EXAMPLES.ODS.OBLIGATION_CLASSIFICATION.classification_description}",
-        "classification_active_flag": ${EXAMPLES.ODS.OBLIGATION_CLASSIFICATION.classification_active_flag}
+        "code": "${EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.code}",
+        "name": "${EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.name}",
+        "balanceCategory": "${EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.balanceCategory}",
+        "obligationSubtypeActive": ${EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.obligationSubtypeActive}
       }
     ]
   }`;
@@ -65,10 +62,7 @@ describe('OdsObligationSubtypeService - getAll', () => {
 
     // Assert
     const expectedStoredProcedureInput: OdsStoredProcedureInput = odsStoredProcedureService.createInput({
-      entityToQuery: ODS_ENTITIES.OBLIGATION_CLASSIFICATION,
-      queryParameters: {
-        classification_type_code: ODS_QUERY_PARAM_VALUES.OBLIGATION_SUBTYPE,
-      },
+      entityToQuery: ODS_ENTITIES.CONFIGURATION_OBLIGATION_SUBTYPE,
     });
 
     expect(odsStoredProcedureService.call).toHaveBeenCalledTimes(1);
@@ -80,9 +74,20 @@ describe('OdsObligationSubtypeService - getAll', () => {
     const result = await service.getAll();
 
     // Assert
-    const jsonResults = JSON.parse(mockStoredProcedureOutput).results;
-
-    const expected = mapOdsClassifications(jsonResults);
+    const expected = [
+      {
+        code: EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.code,
+        description: EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.name,
+        balanceCategory: EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.balanceCategory,
+        isActive: EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.obligationSubtypeActive,
+      },
+      {
+        code: EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.code,
+        description: EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.name,
+        balanceCategory: EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.balanceCategory,
+        isActive: EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.obligationSubtypeActive,
+      },
+    ];
 
     expect(result).toEqual(expected);
   });

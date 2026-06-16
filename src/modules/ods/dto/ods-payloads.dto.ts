@@ -76,6 +76,7 @@ export const ODS_ENTITIES = {
   CONFIGURATION_FEE: 'configuration_fee',
   CONFIGURATION_FREQUENCY: 'configuration_frequency',
   CONFIGURATION_PRODUCT: 'configuration_product',
+  CONFIGURATION_OBLIGATION_SUBTYPE: 'configuration_obligation_subtype',
   CUSTOMER: 'customer',
   DEAL: 'deal',
   FACILITY_CLASSIFICATION: 'facility_classification',
@@ -87,7 +88,6 @@ export const ODS_ENTITIES = {
 export type OdsEntity = (typeof ODS_ENTITIES)[keyof typeof ODS_ENTITIES];
 
 export const ODS_QUERY_PARAM_VALUES = {
-  OBLIGATION_SUBTYPE: 'obligationSubtype',
   FEE_TYPE: 'feeType',
   FACILITY_CATEGORY: 'facilityCategory',
   COUNTERPARTY_ROLE_TYPE: 'counterpartyRoleType',
