@@ -1,6 +1,7 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { STORED_PROCEDURE } from '@ukef/constants';
 import { mapObligationSubtypesWithProductCode } from '@ukef/helpers';
+import { mapObligationSubtype } from '@ukef/helpers/map-obligation-subtype';
 import { PinoLogger } from 'nestjs-pino';
 
 import {
@@ -55,7 +56,7 @@ export class OdsObligationSubtypeService {
 
       const subType = storedProcedureJson.results[0] as GetObligationSubtypeOdsResponseDto;
 
-      return this.mapOdsResponse(subType);
+      return mapObligationSubtype(subType);
     } catch (error) {
       this.logger.error('Error finding obligation subtype in ODS %s %o', subtypeCode, error);
 
@@ -92,7 +93,7 @@ export class OdsObligationSubtypeService {
 
       const obligationSubtypes = storedProcedureJson.results as GetObligationSubtypeOdsResponseDto[];
 
-      const mappedSubtypes: GetObligationSubtypeResponseDto[] = obligationSubtypes.map(this.mapOdsResponse);
+      const mappedSubtypes: GetObligationSubtypeResponseDto[] = obligationSubtypes.map(mapObligationSubtype);
 
       return mappedSubtypes;
     } catch (error) {
@@ -124,14 +125,5 @@ export class OdsObligationSubtypeService {
 
       throw new InternalServerErrorException('Error getting obligation subtypes with product types from ODS');
     }
-  }
-
-  private mapOdsResponse(subType: GetObligationSubtypeOdsResponseDto): GetObligationSubtypeResponseDto {
-    return {
-      code: subType.code,
-      description: subType.name,
-      balanceCategory: subType.balanceCategory,
-      isActive: subType.obligationSubtypeActive,
-    };
   }
 }

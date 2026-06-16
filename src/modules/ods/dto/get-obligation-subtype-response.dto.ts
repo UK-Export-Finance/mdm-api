@@ -3,13 +3,13 @@ import { EXAMPLES } from '@ukef/constants';
 
 export class GetObligationSubtypeResponseDto {
   @ApiProperty({
-    description: 'Obligation subtype classification code',
+    description: 'Obligation subtype code',
     example: EXAMPLES.OBLIGATION_SUBTYPE.CODE,
   })
   readonly code: string;
 
   @ApiProperty({
-    description: 'Obligation subtype classification description',
+    description: 'Obligation subtype description',
     example: EXAMPLES.OBLIGATION_SUBTYPE.DESCRIPTION,
   })
   readonly description: string;
