@@ -44,9 +44,8 @@ export const mockProductConfigs = [
 ];
 
 export const mockObligationSubtype = {
-  type: 'Mock obligation Sub-Type',
-  typeCode: 'obligationSubtype',
   description: 'Mock description',
+  balanceCategory: 'Mock balance category',
   isActive: true,
 };
 
