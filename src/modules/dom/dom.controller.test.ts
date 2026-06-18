@@ -2,8 +2,8 @@ import { EXAMPLES } from '@ukef/constants';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
-import { OdsProductConfigService } from '../ods/ods-product-config.service';
 import { OdsService } from '../ods/ods.service';
+import { OdsProductConfigService } from '../ods/ods-product-config.service';
 import { OdsStoredProcedureService } from '../ods/ods-stored-procedure.service';
 import { CreditRiskRatingsService } from './credit-risk-ratings/credit-risk-ratings.service';
 import { DomController } from './dom.controller';

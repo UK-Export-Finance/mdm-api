@@ -15,7 +15,7 @@ describe('OdsProductConfigService - findOne', () => {
   let mockDataSource: jest.Mocked<DataSource>;
   const mockLogger = new PinoLogger({});
 
-  const mockProductConfig = mockProductConfigs[0];
+  const [mockProductConfig] = mockProductConfigs;
   const mockProductType = mockProductConfig.productType;
 
   beforeEach(() => {

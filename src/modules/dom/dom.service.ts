@@ -2,8 +2,8 @@ import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { mapBusinessCentreNonWorkingDays, mapProductConfig } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 
-import { OdsProductConfigService } from '../ods/ods-product-config.service';
 import { OdsService } from '../ods/ods.service';
+import { OdsProductConfigService } from '../ods/ods-product-config.service';
 import {
   FindMultipleOdsBusinessCentreOdsResponsesNonWorkingDaysResponse,
   FindMultipleProductConfigsResponse,

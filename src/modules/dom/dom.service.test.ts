@@ -5,8 +5,8 @@ import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
 import { GetOdsBusinessCentreOdsResponseNonWorkingDayResponse } from '../ods/dto';
-import { OdsProductConfigService } from '../ods/ods-product-config.service';
 import { OdsService } from '../ods/ods.service';
+import { OdsProductConfigService } from '../ods/ods-product-config.service';
 import { OdsStoredProcedureService } from '../ods/ods-stored-procedure.service';
 import { mockProductConfigs } from '../ods/test-helpers';
 import { DomService } from './dom.service';
@@ -284,10 +284,7 @@ describe('DomService', () => {
   describe('findMultipleProductConfigurations', () => {
     beforeEach(() => {
       // Arrange
-      mockFindProductConfiguration = jest
-        .fn()
-        .mockResolvedValueOnce(EXAMPLES.DOM.PRODUCT_CONFIG.BIP)
-        .mockResolvedValueOnce(EXAMPLES.DOM.PRODUCT_CONFIG.EXIP);
+      mockFindProductConfiguration = jest.fn().mockResolvedValueOnce(EXAMPLES.DOM.PRODUCT_CONFIG.BIP).mockResolvedValueOnce(EXAMPLES.DOM.PRODUCT_CONFIG.EXIP);
 
       service = new DomService(odsService, odsProductConfigService, mockLogger);
 
