@@ -39,6 +39,7 @@ const FEE_TYPE = {
   BALANCE_CATEGORY: 'CMF',
   BASE_BALANCE_CATEGORY: 'On facility available amount',
   NON_FACILITY_CURRENCY_SETTLEMENT: false,
+  CAPPED_BASE_BALANCE: false,
 };
 
 const INDUSTRY = {
@@ -351,6 +352,7 @@ export const EXAMPLES = {
       balanceCategory: 'CMF',
       baseBalanceCategory: 'On Principal Drawn Amount',
       nonFacilityCurrencySettlement: false,
+      feeTypeCappedBaseBalanceIndicator: false,
     },
     CONFIGURATION_FREQUENCY: {
       code: 'FREQ12MON',

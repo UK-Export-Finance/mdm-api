@@ -14,4 +14,5 @@ export const mapFeeType = (feeType: GetFeeTypeOdsResponseDto): GetFeeTypeRespons
   balanceCategory: feeType.balanceCategory,
   baseBalanceCategory: feeType.baseBalanceCategory ?? null,
   nonFacilityCurrencySettlement: feeType.nonFacilityCurrencySettlement,
+  cappedBaseBalance: feeType.feeTypeCappedBaseBalanceIndicator,
 });

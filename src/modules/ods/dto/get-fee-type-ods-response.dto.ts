@@ -51,4 +51,10 @@ export class GetFeeTypeOdsResponseDto {
     example: EXAMPLES.ODS.CONFIGURATION_FEE.nonFacilityCurrencySettlement,
   })
   readonly nonFacilityCurrencySettlement: boolean;
+
+  @ApiProperty({
+    description: 'If the base balance upon which the fee accrues should be capped',
+    example: EXAMPLES.ODS.CONFIGURATION_FEE.feeTypeCappedBaseBalanceIndicator,
+  })
+  readonly feeTypeCappedBaseBalanceIndicator: boolean;
 }
