@@ -50,5 +50,18 @@
         "inLife": "OPTIONAL"
       }
     }
+  },
+  {
+    "productType": "PRT009",
+    "configuration": {
+      "issuedDate": "REQUIRED",
+      "effectiveDate": "OPTIONAL",
+      "availabilityEndDate": "REQUIRED",
+      "expiryDate": "REQUIRED",
+      "fees": {
+        "creation": "REQUIRED",
+        "inLife": "OPTIONAL"
+      }
+    }
   }
 ]
