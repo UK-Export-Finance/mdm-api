@@ -39,6 +39,7 @@ const FEE_TYPE = {
   BALANCE_CATEGORY: 'CMF',
   BASE_BALANCE_CATEGORY: 'On facility available amount',
   NON_FACILITY_CURRENCY_SETTLEMENT: false,
+  CAPPED_BASE_BALANCE: false,
 };
 
 const INDUSTRY = {
@@ -83,6 +84,7 @@ export const EXAMPLES = {
     CODE: 'CTL01',
     NAME: 'Contractual Interest Fixed Rate',
     ACCRUAL_RATE_TYPE: 'Fixed',
+    BALANCE_CATEGORY: 'Int',
     BASE_BALANCE_CATEGORY: 'On Principal Drawn Amount',
     INCOME_CLASS_CODE: 'Income',
     IS_ACTIVE: true,
@@ -300,6 +302,7 @@ export const EXAMPLES = {
       code: 'CTL01',
       name: 'Contractual Interest Fixed Rate',
       accrualRateType: 'Fixed',
+      balanceCategory: 'Outstanding Balance',
       baseBalanceCategory: 'On Principal Drawn Amount',
       incomeClassCode: 'Income',
       accrualScheduleTypeActive: true,
@@ -351,6 +354,7 @@ export const EXAMPLES = {
       balanceCategory: 'CMF',
       baseBalanceCategory: 'On Principal Drawn Amount',
       nonFacilityCurrencySettlement: false,
+      feeTypeCappedBaseBalanceIndicator: false,
     },
     CONFIGURATION_FREQUENCY: {
       code: 'FREQ12MON',
