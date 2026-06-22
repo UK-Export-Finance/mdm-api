@@ -1,9 +1,9 @@
 import { EXAMPLES } from '@ukef/constants';
-import PRODUCT_CONFIG from '@ukef/helper-modules/dom/dom-product-config.json';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
 import { OdsService } from '../ods/ods.service';
+import { OdsProductConfigService } from '../ods/ods-product-config.service';
 import { OdsStoredProcedureService } from '../ods/ods-stored-procedure.service';
 import { CreditRiskRatingsService } from './credit-risk-ratings/credit-risk-ratings.service';
 import { DomController } from './dom.controller';
@@ -17,11 +17,11 @@ const mockMultipleBusinessCentreNonWorkingDays: FindMultipleOdsBusinessCentreOds
   [EXAMPLES.BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.CODE]: EXAMPLES.DOM.BUSINESS_CENTRES_NON_WORKING_DAYS,
 };
 
-const [mockFindProductConfiguration] = PRODUCT_CONFIG;
+const mockFindProductConfiguration = EXAMPLES.DOM.PRODUCT_CONFIG.BIP;
 
 const mockMultipleProductConfigurations: FindMultipleProductConfigsResponse = {
-  [PRODUCT_CONFIG[1].productType]: PRODUCT_CONFIG[1],
-  [PRODUCT_CONFIG[2].productType]: PRODUCT_CONFIG[2],
+  [EXAMPLES.PRODUCT_TYPES.BIP]: EXAMPLES.DOM.PRODUCT_CONFIG.BIP,
+  [EXAMPLES.PRODUCT_TYPES.EXIP]: EXAMPLES.DOM.PRODUCT_CONFIG.EXIP,
 };
 
 const mockProductTypesString = `${EXAMPLES.PRODUCT_TYPES.BIP},${EXAMPLES.PRODUCT_TYPES.EXIP}`;
@@ -37,7 +37,8 @@ describe('DomController', () => {
   const creditRiskRatingsService = new CreditRiskRatingsService(null, mockLogger);
   const odsStoredProcedureService = new OdsStoredProcedureService(mockDataSource);
   const odsService = new OdsService(odsStoredProcedureService, mockLogger);
-  const domService = new DomService(odsService, mockLogger);
+  const odsProductConfigService = new OdsProductConfigService(odsStoredProcedureService, mockLogger);
+  const domService = new DomService(odsService, odsProductConfigService, mockLogger);
 
   let creditRiskRatingsServiceGetAll: jest.Mock;
   let odsServiceFindBusinessCentre: jest.Mock;
@@ -66,10 +67,10 @@ describe('DomController', () => {
     domServiceFindMultipleBusinessCentresNonWorkingDays = jest.fn().mockResolvedValueOnce(mockMultipleBusinessCentreNonWorkingDays);
     domService.findMultipleBusinessCentresNonWorkingDays = domServiceFindMultipleBusinessCentresNonWorkingDays;
 
-    domServiceFindProductConfiguration = jest.fn().mockReturnValueOnce(mockFindProductConfiguration);
+    domServiceFindProductConfiguration = jest.fn().mockResolvedValueOnce(mockFindProductConfiguration);
     domService.findProductConfiguration = domServiceFindProductConfiguration;
 
-    domServiceGetProductConfigurations = jest.fn().mockReturnValueOnce(PRODUCT_CONFIG);
+    domServiceGetProductConfigurations = jest.fn().mockResolvedValueOnce([EXAMPLES.DOM.PRODUCT_CONFIG.BIP, EXAMPLES.DOM.PRODUCT_CONFIG.EXIP]);
     domService.getProductConfigurations = domServiceGetProductConfigurations;
 
     domServiceFindMultipleProductConfigurations = jest.fn().mockReturnValueOnce(mockMultipleProductConfigurations);
@@ -98,7 +99,7 @@ describe('DomController', () => {
     describe('when odsService.findBusinessCentre throws an error', () => {
       it('should throw an error', async () => {
         // Arrange
-        const domService = new DomService(odsService, mockLogger);
+        const domService = new DomService(odsService, odsProductConfigService, mockLogger);
 
         odsService.findBusinessCentre = jest.fn().mockRejectedValueOnce(mockError);
 
@@ -143,7 +144,7 @@ describe('DomController', () => {
     describe('when domService.findBusinessCentreNonWorkingDays throws an error', () => {
       it('should throw an error', async () => {
         // Arrange
-        const domService = new DomService(odsService, mockLogger);
+        const domService = new DomService(odsService, odsProductConfigService, mockLogger);
 
         domService.findBusinessCentreNonWorkingDays = jest.fn().mockRejectedValueOnce(mockError);
 
@@ -177,7 +178,7 @@ describe('DomController', () => {
     describe('when creditRiskRatingsService.getAll throws an error', () => {
       it('should throw an error', async () => {
         // Arrange
-        const domService = new DomService(odsService, mockLogger);
+        const domService = new DomService(odsService, odsProductConfigService, mockLogger);
 
         creditRiskRatingsService.getAll = jest.fn().mockRejectedValueOnce(mockError);
 
@@ -211,7 +212,7 @@ describe('DomController', () => {
     describe('when odsService.getBusinessCentres throws an error', () => {
       it('should throw an error', async () => {
         // Arrange
-        const domService = new DomService(odsService, mockLogger);
+        const domService = new DomService(odsService, odsProductConfigService, mockLogger);
 
         odsService.getBusinessCentres = jest.fn().mockRejectedValueOnce(mockError);
 
@@ -253,18 +254,18 @@ describe('DomController', () => {
   describe('findProductConfiguration', () => {
     const mockProductType = EXAMPLES.PRODUCT_TYPES.BIP;
 
-    it('should call domService.findProductConfiguration', () => {
+    it('should call domService.findProductConfiguration', async () => {
       // Act
-      controller.findProductConfiguration({ productType: mockProductType });
+      await controller.findProductConfiguration({ productType: mockProductType });
 
       // Assert
       expect(domServiceFindProductConfiguration).toHaveBeenCalledTimes(1);
       expect(domServiceFindProductConfiguration).toHaveBeenCalledWith(mockProductType);
     });
 
-    it('should return the result of domService.findProductConfiguration', () => {
+    it('should return the result of domService.findProductConfiguration', async () => {
       // Act
-      const result = controller.findProductConfiguration({ productType: mockProductType });
+      const result = await controller.findProductConfiguration({ productType: mockProductType });
 
       // Assert
       expect(result).toEqual(mockFindProductConfiguration);
@@ -272,36 +273,36 @@ describe('DomController', () => {
   });
 
   describe('getProductConfigurations', () => {
-    it('should call domService.getProductConfigurations', () => {
+    it('should call domService.getProductConfigurations', async () => {
       // Act
-      controller.getProductConfigurations();
+      await controller.getProductConfigurations();
 
       // Assert
       expect(domServiceGetProductConfigurations).toHaveBeenCalledTimes(1);
     });
 
-    it('should return product configurations', () => {
+    it('should return product configurations', async () => {
       // Act
-      const result = controller.getProductConfigurations();
+      const result = await controller.getProductConfigurations();
 
       // Assert
-      expect(result).toStrictEqual(PRODUCT_CONFIG);
+      expect(result).toStrictEqual([EXAMPLES.DOM.PRODUCT_CONFIG.BIP, EXAMPLES.DOM.PRODUCT_CONFIG.EXIP]);
     });
   });
 
   describe('findMultipleProductConfigurations', () => {
-    it('should call domService.findMultipleProductConfigurations', () => {
+    it('should call domService.findMultipleProductConfigurations', async () => {
       // Act
-      controller.findMultipleProductConfigurations({ productTypes: mockProductTypesString });
+      await controller.findMultipleProductConfigurations({ productTypes: mockProductTypesString });
 
       // Assert
       expect(domServiceFindMultipleProductConfigurations).toHaveBeenCalledTimes(1);
       expect(domServiceFindMultipleProductConfigurations).toHaveBeenCalledWith(mockProductTypesString);
     });
 
-    it('should return product configurations', () => {
+    it('should return product configurations', async () => {
       // Act
-      const result = controller.findMultipleProductConfigurations({ productTypes: mockProductTypesString });
+      const result = await controller.findMultipleProductConfigurations({ productTypes: mockProductTypesString });
 
       // Assert
       expect(result).toStrictEqual(mockMultipleProductConfigurations);

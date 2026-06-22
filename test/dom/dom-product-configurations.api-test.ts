@@ -1,7 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
 import AppConfig from '@ukef/config/app.config';
 import { EXAMPLES } from '@ukef/constants';
-import PRODUCT_CONFIG from '@ukef/helper-modules/dom/dom-product-config.json';
 import { Api } from '@ukef-test/support/api';
 
 const {
@@ -22,6 +21,28 @@ describe('/dom - product-configuration', () => {
   describe('/product-configuration/:productType', () => {
     const baseUrl = `/api/${prefixAndVersion}/dom/product-configuration`;
 
+    const expectedProductConfigShape = expect.objectContaining({
+      productType: expect.any(String),
+      name: expect.any(String),
+      shortName: expect.any(String),
+      configuration: expect.objectContaining({
+        creditType: expect.any(String),
+        leadDays: expect.objectContaining({
+          repayments: expect.any(Number),
+          interestAccruals: expect.any(Number),
+          accruingFees: expect.any(Number),
+        }),
+      }),
+      additionalRates: expect.any(Array),
+      accrualSchedules: expect.any(Array),
+      baseRates: expect.any(Array),
+      counterpartyRoleTypes: expect.any(Array),
+      facilityCategoryTypes: expect.any(Array),
+      feeTypes: expect.any(Array),
+      obligationSubtypes: expect.any(Array),
+      account: expect.any(Array),
+    });
+
     it(`should return ${HttpStatus.OK} with product configuration - ${EXAMPLES.PRODUCT_TYPES.BIP}`, async () => {
       // Arrange
       const url = `${baseUrl}/${EXAMPLES.PRODUCT_TYPES.BIP}`;
@@ -32,7 +53,7 @@ describe('/dom - product-configuration', () => {
       // Assert
       expect(status).toBe(HttpStatus.OK);
 
-      expect(body).toEqual(PRODUCT_CONFIG[0]);
+      expect(body).toEqual(expectedProductConfigShape);
 
       expect(body.productType).toEqual(EXAMPLES.PRODUCT_TYPES.BIP);
     });
@@ -47,7 +68,7 @@ describe('/dom - product-configuration', () => {
       // Assert
       expect(status).toBe(HttpStatus.OK);
 
-      expect(body).toEqual(PRODUCT_CONFIG[1]);
+      expect(body).toEqual(expectedProductConfigShape);
 
       expect(body.productType).toEqual(EXAMPLES.PRODUCT_TYPES.EXIP);
     });
@@ -62,7 +83,7 @@ describe('/dom - product-configuration', () => {
       // Assert
       expect(status).toBe(HttpStatus.OK);
 
-      expect(body).toEqual(PRODUCT_CONFIG[2]);
+      expect(body).toEqual(expectedProductConfigShape);
 
       expect(body.productType).toEqual(EXAMPLES.PRODUCT_TYPES.BSS);
     });
@@ -77,7 +98,7 @@ describe('/dom - product-configuration', () => {
       // Assert
       expect(status).toBe(HttpStatus.OK);
 
-      expect(body).toEqual(PRODUCT_CONFIG[3]);
+      expect(body).toEqual(expectedProductConfigShape);
 
       expect(body.productType).toEqual(EXAMPLES.PRODUCT_TYPES.GEF);
     });
@@ -121,7 +142,15 @@ describe('/dom - product-configuration', () => {
       // Assert
       expect(status).toBe(HttpStatus.OK);
 
-      expect(body).toEqual(PRODUCT_CONFIG);
+      expect(body).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            productType: expect.any(String),
+            name: expect.any(String),
+            shortName: expect.any(String),
+          }),
+        ]),
+      );
     });
   });
 
@@ -139,8 +168,8 @@ describe('/dom - product-configuration', () => {
       expect(status).toBe(HttpStatus.OK);
 
       const expected = {
-        [EXAMPLES.PRODUCT_TYPES.BIP]: PRODUCT_CONFIG[0],
-        [EXAMPLES.PRODUCT_TYPES.GEF]: PRODUCT_CONFIG[3],
+        [EXAMPLES.PRODUCT_TYPES.BIP]: expect.objectContaining({ productType: EXAMPLES.PRODUCT_TYPES.BIP }),
+        [EXAMPLES.PRODUCT_TYPES.GEF]: expect.objectContaining({ productType: EXAMPLES.PRODUCT_TYPES.GEF }),
       };
 
       expect(body).toEqual(expected);

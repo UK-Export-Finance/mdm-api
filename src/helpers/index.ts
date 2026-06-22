@@ -16,6 +16,7 @@ export * from './map-industry-codes';
 export * from './map-obligation-subtypes-with-product-code';
 export * from './map-ods-classification';
 export * from './map-ods-classifications';
+export * from './map-product-config';
 export * from './regex.helper';
 export * from './response-status.helper';
 export * from './transform-interceptor.helper';

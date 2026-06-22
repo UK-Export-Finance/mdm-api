@@ -1,244 +1,67 @@
 [
   {
     "productType": "PRT001",
-    "name": "Bond Insurance Policy (BIP)",
-    "shortName": "BIP",
     "configuration": {
-      "commitmentDate": "NOT_APPLICABLE",
       "issuedDate": "NOT_APPLICABLE",
       "effectiveDate": "REQUIRED",
       "availabilityEndDate": "NOT_APPLICABLE",
       "expiryDate": "REQUIRED",
-      "creditType": "TERM",
-      "participations": "OPTIONAL",
-      "scheduledRepayments": "REQUIRED",
-      "nonCashObligations": "REQUIRED",
-      "cashObligations": "NOT_APPLICABLE",
-      "accrualSchedule": "NOT_APPLICABLE",
-      "pimOwner": "REQUIRED",
-      "riskRating": "REQUIRED",
-      "preCreditPeriod": "REQUIRED",
-      "creditPeriod": "REQUIRED",
-      "lossGivenDefault": "REQUIRED",
-      "provisionRate": "REQUIRED",
-      "forecastYear": "REQUIRED",
-      "bankRate": "NOT_APPLICABLE",
-      "instrumentType": "Insurance",
       "fees": {
         "creation": "REQUIRED",
         "inLife": "OPTIONAL"
-      },
-      "leadDays": {
-        "repayments": 5,
-        "interestAccruals": 5,
-        "accruingFees": 5
       }
-    },
-    "additionalRates": [],
-    "accrualSchedules": [],
-    "baseRates": [],
-    "counterpartyRoleTypes": [
-      "CRT001",
-      "CRT004",
-      "CRT005",
-      "CRT013",
-      "CRT042"
-    ],
-    "facilityCategoryTypes": [
-      "FCT001",
-      "FCT002",
-      "FCT003"
-    ],
-    "feeTypes": [
-      "BEX",
-      "PLA"
-    ],
-    "obligationSubtypes": [
-      "OST001",
-      "OST002",
-      "OST003",
-      "OST004",
-      "OST005",
-      "OST006",
-      "OST008"
-    ],
-    "account": ["2", "3", "7"]
+    }
   },
   {
     "productType": "PRT002",
-    "name": "Export Insurance Policy (EXIP)",
-    "shortName": "EXIP",
     "configuration": {
-      "commitmentDate": "NOT_APPLICABLE",
       "issuedDate": "NOT_APPLICABLE",
       "effectiveDate": "REQUIRED",
       "availabilityEndDate": "NOT_APPLICABLE",
       "expiryDate": "REQUIRED",
-      "creditType": "TERM",
-      "participations": "OPTIONAL",
-      "scheduledRepayments": "REQUIRED",
-      "nonCashObligations": "REQUIRED",
-      "cashObligations": "NOT_APPLICABLE",
-      "accrualSchedule": "NOT_APPLICABLE",
-      "pimOwner": "REQUIRED",
-      "riskRating": "REQUIRED",
-      "preCreditPeriod": "REQUIRED",
-      "creditPeriod": "REQUIRED",
-      "lossGivenDefault": "REQUIRED",
-      "provisionRate": "REQUIRED",
-      "forecastYear": "REQUIRED",
-      "bankRate": "NOT_APPLICABLE",
-      "instrumentType": "Insurance",
       "fees": {
         "creation": "REQUIRED",
         "inLife": "OPTIONAL"
-      },
-      "leadDays": {
-        "repayments": 5,
-        "interestAccruals": 5,
-        "accruingFees": 5
       }
-    },
-    "additionalRates": [],
-    "accrualSchedules": [],
-    "baseRates": [],
-    "counterpartyRoleTypes": [
-      "CRT001",
-      "CRT002",
-      "CRT013",
-      "CRT018",
-      "CRT036",
-      "CRT042"
-    ],
-    "facilityCategoryTypes": [],
-    "feeTypes": [
-      "BEX",
-      "PLA"
-    ],
-    "obligationSubtypes": [
-      "OST009",
-      "OST010",
-      "OST011"
-    ],
-    "account": ["1", "2", "3", "7"]
+    }
   },
   {
     "productType": "PRT003",
-    "name": "Bond Support Scheme (BSS)",
-    "shortName": "BSS",
     "configuration": {
-      "commitmentDate": "REQUIRED",
       "issuedDate": "NOT_APPLICABLE",
       "effectiveDate": "REQUIRED",
       "availabilityEndDate": "NOT_APPLICABLE",
       "expiryDate": "REQUIRED",
-      "creditType": "TERM",
-      "participations": "NOT_APPLICABLE",
-      "scheduledRepayments": "NOT_APPLICABLE",
-      "nonCashObligations": "NOT_APPLICABLE",
-      "cashObligations": "NOT_APPLICABLE",
-      "accrualSchedule": "REQUIRED",
-      "pimOwner": "REQUIRED",
-      "riskRating": "REQUIRED",
-      "preCreditPeriod": "NOT_APPLICABLE",
-      "creditPeriod": "NOT_APPLICABLE",
-      "lossGivenDefault": "REQUIRED",
-      "provisionRate": "NOT_APPLICABLE",
-      "forecastYear": "NOT_APPLICABLE",
-      "bankRate": "NOT_APPLICABLE",
-      "instrumentType": "Guarantee",
       "fees": {
         "creation": "NOT_APPLICABLE",
         "inLife": "OPTIONAL"
-      },
-      "leadDays": {
-        "repayments": 5,
-        "interestAccruals": 5,
-        "accruingFees": 1
       }
-    },
-    "additionalRates": ["ARTOTH"],
-    "accrualSchedules": [
-      {
-        "code": "PAC01",
-        "cashIndicator": true
-      }
-    ],
-    "baseRates": ["BRTOTH"],
-    "counterpartyRoleTypes": [
-      "CRT004",
-      "CRT005",
-      "CRT040"
-    ],
-    "facilityCategoryTypes": [],
-    "feeTypes": [],
-    "obligationSubtypes": [
-      "OST012",
-      "OST013",
-      "OST014",
-      "OST015",
-      "OST016",
-      "OST017",
-      "OST018",
-      "OST019",
-      "OST020",
-      "OST021",
-      "OST022"
-    ],
-    "account": ["2"]
+    }
   },
   {
     "productType": "PRT004",
-    "name": "General Export Facility (GEF)",
-    "shortName": "GEF",
     "configuration": {
-      "commitmentDate": "REQUIRED",
       "issuedDate": "NOT_APPLICABLE",
       "effectiveDate": "REQUIRED",
       "availabilityEndDate": "NOT_APPLICABLE",
       "expiryDate": "REQUIRED",
-      "creditType": "REVOLVER",
-      "participations": "NOT_APPLICABLE",
-      "scheduledRepayments": "NOT_APPLICABLE",
-      "nonCashObligations": "NOT_APPLICABLE",
-      "cashObligations": "NOT_APPLICABLE",
-      "accrualSchedule": "REQUIRED",
-      "pimOwner": "REQUIRED",
-      "riskRating": "REQUIRED",
-      "preCreditPeriod": "NOT_APPLICABLE",
-      "creditPeriod": "NOT_APPLICABLE",
-      "lossGivenDefault": "REQUIRED",
-      "provisionRate": "NOT_APPLICABLE",
-      "forecastYear": "NOT_APPLICABLE",
-      "bankRate": "NOT_APPLICABLE",
-      "instrumentType": "Guarantee",
       "fees": {
         "creation": "NOT_APPLICABLE",
         "inLife": "OPTIONAL"
-      },
-      "leadDays": {
-        "repayments": 5,
-        "interestAccruals": 5,
-        "accruingFees": 1
       }
-    },
-    "additionalRates": ["ARTOTH"],
-    "accrualSchedules": [
-      {
-        "code": "PAC01",
-        "cashIndicator": true
+    }
+  },
+  {
+    "productType": "PRT009",
+    "configuration": {
+      "issuedDate": "REQUIRED",
+      "effectiveDate": "OPTIONAL",
+      "availabilityEndDate": "REQUIRED",
+      "expiryDate": "REQUIRED",
+      "fees": {
+        "creation": "REQUIRED",
+        "inLife": "OPTIONAL"
       }
-    ],
-    "baseRates": ["BRTOTH"],
-    "counterpartyRoleTypes": [
-      "CRT043"
-    ],
-    "facilityCategoryTypes": [
-      "FCT006",
-      "FCT007"
-    ],
-    "feeTypes": [],
-    "obligationSubtypes": [],
-    "account": ["2"]
+    }
   }
 ]

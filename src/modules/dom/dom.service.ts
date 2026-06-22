@@ -1,9 +1,9 @@
 import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import PRODUCT_CONFIG from '@ukef/helper-modules/dom/dom-product-config.json';
-import { mapBusinessCentreNonWorkingDays } from '@ukef/helpers';
+import { mapBusinessCentreNonWorkingDays, mapProductConfig } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 
 import { OdsService } from '../ods/ods.service';
+import { OdsProductConfigService } from '../ods/ods-product-config.service';
 import {
   FindMultipleOdsBusinessCentreOdsResponsesNonWorkingDaysResponse,
   FindMultipleProductConfigsResponse,
@@ -21,6 +21,7 @@ import {
 export class DomService {
   constructor(
     private readonly odsService: OdsService,
+    private readonly odsProductConfigService: OdsProductConfigService,
     private readonly logger: PinoLogger,
   ) {}
 
@@ -100,18 +101,27 @@ export class DomService {
   /**
    * Find a product configuration
    * @param {string} productType: Product type
-   * @returns {GetDomProductConfigResponse}
+   * @returns {Promise<GetDomProductConfigResponse>}
+   * @throws {NotFoundException} If no product configuration is found
    */
-  findProductConfiguration(productType: string): GetDomProductConfigResponse {
-    this.logger.info('Finding DOM product configuration %s', productType);
+  async findProductConfiguration(productType: string): Promise<GetDomProductConfigResponse> {
+    try {
+      this.logger.info('Finding DOM product configuration %s', productType);
 
-    const productConfig = PRODUCT_CONFIG.find((config: GetDomProductConfigResponse) => config.productType === productType);
+      const odsProductConfig = await this.odsProductConfigService.findOne(productType);
 
-    if (productConfig) {
-      return productConfig;
+      return mapProductConfig(odsProductConfig);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        this.logger.warn('DOM product configuration %s not found %o', productType, error);
+
+        throw new NotFoundException(`No DOM product configuration found ${productType}`);
+      }
+
+      this.logger.error('Error finding DOM product configuration %s %o', productType, error);
+
+      throw new Error(`Error finding DOM product configuration ${productType}`, { cause: error });
     }
-
-    throw new NotFoundException(`No DOM product configuration found ${productType}`);
   }
 
   /**
@@ -148,11 +158,25 @@ export class DomService {
 
   /**
    * Get all product configurations
-   * @returns {GetDomProductConfigResponse[]}
+   * @returns {Promise<GetDomProductConfigResponse[]>}
    */
-  getProductConfigurations(productTypes?: string): GetDomProductConfigResponse[] {
-    this.logger.info('Getting product configurations %s', productTypes);
+  async getProductConfigurations(): Promise<GetDomProductConfigResponse[]> {
+    try {
+      this.logger.info('Getting product configurations');
 
-    return PRODUCT_CONFIG;
+      const odsProductConfigs = await this.odsProductConfigService.getAll();
+
+      return odsProductConfigs.map(mapProductConfig);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        this.logger.warn('DOM product configurations not found %o', error);
+
+        throw new NotFoundException(`No DOM product configurations found`, error);
+      }
+
+      this.logger.error('Error getting DOM product configurations %o', error);
+
+      throw new Error(`Error getting DOM product configurations`, { cause: error });
+    }
   }
 }
