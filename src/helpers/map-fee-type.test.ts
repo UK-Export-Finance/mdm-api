@@ -20,6 +20,7 @@ describe('mapFeeType', () => {
       balanceCategory: mockFeeType.balanceCategory,
       baseBalanceCategory: mockFeeType.baseBalanceCategory ?? null,
       nonFacilityCurrencySettlement: mockFeeType.nonFacilityCurrencySettlement,
+      cappedBaseBalance: mockFeeType.feeTypeCappedBaseBalanceIndicator,
     };
 
     expect(result).toEqual(expected);

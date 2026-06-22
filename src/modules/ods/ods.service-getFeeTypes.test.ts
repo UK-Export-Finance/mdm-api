@@ -41,7 +41,8 @@ describe('OdsService - getFeeTypes', () => {
         "feeTypeExpenseIncome": "${EXAMPLES.ODS.CONFIGURATION_FEE.feeTypeExpenseIncome}",
         "feeTypeActive": ${EXAMPLES.ODS.CONFIGURATION_FEE.feeTypeActive},
         "balanceCategory": "${EXAMPLES.ODS.CONFIGURATION_FEE.balanceCategory}",
-        "nonFacilityCurrencySettlement": ${EXAMPLES.ODS.CONFIGURATION_FEE.nonFacilityCurrencySettlement}
+        "nonFacilityCurrencySettlement": ${EXAMPLES.ODS.CONFIGURATION_FEE.nonFacilityCurrencySettlement},
+        "feeTypeCappedBaseBalanceIndicator": ${EXAMPLES.ODS.CONFIGURATION_FEE.feeTypeCappedBaseBalanceIndicator}
       },
       {
         "feeType": "${EXAMPLES.ODS.CONFIGURATION_FEE.feeType}",
@@ -51,7 +52,8 @@ describe('OdsService - getFeeTypes', () => {
         "feeTypeActive": ${EXAMPLES.ODS.CONFIGURATION_FEE.feeTypeActive},
         "balanceCategory": "${EXAMPLES.ODS.CONFIGURATION_FEE.balanceCategory}",
         "baseBalanceCategory": "On Principal Drawn Amount",
-        "nonFacilityCurrencySettlement": ${EXAMPLES.ODS.CONFIGURATION_FEE.nonFacilityCurrencySettlement}
+        "nonFacilityCurrencySettlement": ${EXAMPLES.ODS.CONFIGURATION_FEE.nonFacilityCurrencySettlement},
+        "feeTypeCappedBaseBalanceIndicator": true
       }
     ]
   }`;

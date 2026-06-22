@@ -51,4 +51,10 @@ export class GetFeeTypeResponseDto {
     example: EXAMPLES.FEE_TYPE.NON_FACILITY_CURRENCY_SETTLEMENT,
   })
   readonly nonFacilityCurrencySettlement: boolean;
+
+  @ApiProperty({
+    description: 'If the base balance upon which the fee accrues should be capped',
+    example: EXAMPLES.FEE_TYPE.CAPPED_BASE_BALANCE,
+  })
+  readonly cappedBaseBalance: boolean;
 }

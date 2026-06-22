@@ -41,7 +41,8 @@ describe('OdsService - findFeeType', () => {
         "feeTypeExpenseIncome": "${EXAMPLES.ODS.CONFIGURATION_FEE.feeTypeExpenseIncome}",
         "feeTypeActive": ${EXAMPLES.ODS.CONFIGURATION_FEE.feeTypeActive},
         "balanceCategory": "${EXAMPLES.ODS.CONFIGURATION_FEE.balanceCategory}",
-        "nonFacilityCurrencySettlement": ${EXAMPLES.ODS.CONFIGURATION_FEE.nonFacilityCurrencySettlement}
+        "nonFacilityCurrencySettlement": ${EXAMPLES.ODS.CONFIGURATION_FEE.nonFacilityCurrencySettlement},
+        "feeTypeCappedBaseBalanceIndicator": ${EXAMPLES.ODS.CONFIGURATION_FEE.feeTypeCappedBaseBalanceIndicator}
       }
     ]
   }`;

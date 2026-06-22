@@ -39,6 +39,7 @@ describe('OdsAccrualScheduleService - getAll', () => {
         "name": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.name}",
         "accrualRateType": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.accrualRateType}",
         "baseBalanceCategory": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.baseBalanceCategory}",
+        "balanceCategory": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.balanceCategory}",
         "incomeClassCode": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.incomeClassCode}",
         "accrualScheduleTypeActive": ${EXAMPLES.ODS.ACCRUAL_SCHEDULE.accrualScheduleTypeActive}
       },
@@ -47,6 +48,7 @@ describe('OdsAccrualScheduleService - getAll', () => {
         "name": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.name}",
         "accrualRateType": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.accrualRateType}",
         "baseBalanceCategory": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.baseBalanceCategory}",
+        "balanceCategory": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.balanceCategory}",
         "incomeClassCode": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.incomeClassCode}",
         "accrualScheduleTypeActive": ${EXAMPLES.ODS.ACCRUAL_SCHEDULE.accrualScheduleTypeActive}
       }
