@@ -105,11 +105,23 @@ export class DomService {
    * @throws {NotFoundException} If no product configuration is found
    */
   async findProductConfiguration(productType: string): Promise<GetDomProductConfigResponse> {
-    this.logger.info('Finding DOM product configuration %s', productType);
+    try {
+      this.logger.info('Finding DOM product configuration %s', productType);
 
-    const odsProductConfig = await this.odsProductConfigService.findOne(productType);
+      const odsProductConfig = await this.odsProductConfigService.findOne(productType);
 
-    return mapProductConfig(odsProductConfig);
+      return mapProductConfig(odsProductConfig);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        this.logger.warn('DOM product configuration %s not found %o', productType, error);
+
+        throw new NotFoundException(`No DOM product configuration found ${productType}`);
+      }
+
+      this.logger.error('Error finding DOM product configuration %s %o', productType, error);
+
+      throw new Error(`Error finding DOM product configuration ${productType}`, { cause: error });
+    }
   }
 
   /**
@@ -149,10 +161,22 @@ export class DomService {
    * @returns {Promise<GetDomProductConfigResponse[]>}
    */
   async getProductConfigurations(): Promise<GetDomProductConfigResponse[]> {
-    this.logger.info('Getting product configurations');
+    try {
+      this.logger.info('Getting product configurations');
 
-    const odsProductConfigs = await this.odsProductConfigService.getAll();
+      const odsProductConfigs = await this.odsProductConfigService.getAll();
 
-    return odsProductConfigs.map(mapProductConfig);
+      return odsProductConfigs.map(mapProductConfig);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        this.logger.warn('DOM product configurations not found %o', error);
+
+        throw new NotFoundException(`No DOM product configurations found`, error);
+      }
+
+      this.logger.error('Error getting DOM product configurations %o', error);
+
+      throw new Error(`Error getting DOM product configurations`, { cause: error });
+    }
   }
 }

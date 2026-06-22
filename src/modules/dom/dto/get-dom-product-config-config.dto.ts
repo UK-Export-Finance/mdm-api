@@ -43,6 +43,7 @@ export class GetDomProductConfigConfig {
 
   @ApiProperty({
     description: "The product's 'instrument type'",
+    example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.instrumentType,
   })
   readonly instrumentType: string;
 

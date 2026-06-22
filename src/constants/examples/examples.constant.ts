@@ -71,6 +71,11 @@ const PRODUCT_TYPES = {
 };
 
 const CREDIT_TYPES = {
+  TERM: 'TERM',
+  REVOLVER: 'REVOLVER',
+};
+
+const ODS_CREDIT_TYPES = {
   TERM: 'Term',
   REVOLVER: 'Revolver',
 };
@@ -384,6 +389,7 @@ export const EXAMPLES = {
       balanceCategory: 'PRIN1',
       obligationSubtypeActive: true,
     },
+    CREDIT_TYPE: ODS_CREDIT_TYPES.TERM,
     FACILITY_CLASSIFICATION: {
       classification_type: 'Facility Category',
       classification_type_code: 'facilityCategory',

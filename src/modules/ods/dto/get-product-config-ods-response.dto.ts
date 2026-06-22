@@ -24,7 +24,7 @@ class ConfigurationLeadDaysOdsResponse {
 class ConfigurationOdsResponse {
   @ApiProperty({
     description: 'The credit type of the product, Term or Revolving',
-    example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.creditType,
+    example: EXAMPLES.ODS.CREDIT_TYPE,
   })
   readonly creditType: string;
 
@@ -45,6 +45,20 @@ class ConfigurationOdsResponse {
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.repaymentType,
   })
   readonly repaymentType: string;
+}
+
+class AccrualScheduleOdsResponse {
+  @ApiProperty({
+    description: "The accrual schedule's code",
+    example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.accrualSchedules[0].code,
+  })
+  readonly code: string;
+
+  @ApiProperty({
+    description: "The accrual schedule's cash indicator",
+    example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.accrualSchedules[0].cashIndicator,
+  })
+  readonly cashIndicator: boolean;
 }
 
 export class GetProductConfigOdsResponse {
@@ -124,5 +138,5 @@ export class GetProductConfigOdsResponse {
     description: 'The accrual schedule types applicable to the product',
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.accrualScheduleTypes,
   })
-  readonly accrualScheduleTypes: Array<{ code: string; cashIndicator: boolean }>;
+  readonly accrualScheduleTypes: AccrualScheduleOdsResponse[];
 }
