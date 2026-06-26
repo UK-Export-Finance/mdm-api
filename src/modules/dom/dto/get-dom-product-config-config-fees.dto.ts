@@ -3,13 +3,13 @@ import { EXAMPLES } from '@ukef/constants';
 
 export class GetDomProductConfigConfigFees {
   @ApiProperty({
-    description: "The product's 'fees - creation'",
+    description: 'If fees can be added to the product at creation time',
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.fees.creation,
   })
   readonly creation: string;
 
   @ApiProperty({
-    description: "The product's 'fees - inLife'",
+    description: 'If fees can be added to the product during its lifecycle',
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.fees.inLife,
   })
   readonly inLife: string;

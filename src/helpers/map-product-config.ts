@@ -51,6 +51,10 @@ export const mapProductConfig = (odsProductConfig: GetProductConfigOdsResponse):
         creation: conf?.fees?.creation ?? NOT_APPLICABLE,
         inLife: conf?.fees?.inLife ?? NOT_APPLICABLE,
       },
+      reinsurance: {
+        creation: conf?.reinsurance?.creation ?? NOT_APPLICABLE,
+        inLife: conf?.reinsurance?.inLife ?? NOT_APPLICABLE,
+      },
       leadDays: odsProductConfig.configuration.leadDays,
     },
     additionalRates: odsProductConfig.additionalRateTypes,
