@@ -7,7 +7,7 @@
       "availabilityEndDate": "NOT_APPLICABLE",
       "expiryDate": "REQUIRED",
       "fees": {
-        "creation": "REQUIRED",
+        "creation": "OPTIONAL",
         "inLife": "OPTIONAL"
       }
     }
@@ -20,7 +20,7 @@
       "availabilityEndDate": "NOT_APPLICABLE",
       "expiryDate": "REQUIRED",
       "fees": {
-        "creation": "REQUIRED",
+        "creation": "OPTIONAL",
         "inLife": "OPTIONAL"
       }
     }
@@ -59,7 +59,7 @@
       "availabilityEndDate": "REQUIRED",
       "expiryDate": "REQUIRED",
       "fees": {
-        "creation": "REQUIRED",
+        "creation": "OPTIONAL",
         "inLife": "OPTIONAL"
       }
     }
