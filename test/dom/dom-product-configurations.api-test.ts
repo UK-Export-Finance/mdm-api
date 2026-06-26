@@ -32,6 +32,14 @@ describe('/dom - product-configuration', () => {
           interestAccruals: expect.any(Number),
           accruingFees: expect.any(Number),
         }),
+        fees: expect.objectContaining({
+          creation: expect.any(String),
+          inLife: expect.any(String),
+        }),
+        reinsurance: expect.objectContaining({
+          creation: expect.any(String),
+          inLife: expect.any(String),
+        }),
       }),
       additionalRates: expect.any(Array),
       accrualSchedules: expect.any(Array),
