@@ -1,5 +1,31 @@
 # Changelog
 
+## [1.53.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.52.0...v1.53.0) (2026-06-26)
+
+
+### Features
+
+* **GIFT-23518:** business centres - non working days - start/end date query ([#1848](https://github.com/UK-Export-Finance/mdm-api/issues/1848)) ([f724d23](https://github.com/UK-Export-Finance/mdm-api/commit/f724d23c6aabb47404296aa453ba34b2bf9fdf21))
+* **GIFT-24539:** add new fields to fee type response ([0f0ba2a](https://github.com/UK-Export-Finance/mdm-api/commit/0f0ba2a100f1bfa05b28c4b35e218cb8e5255161))
+* **GIFT-24539:** add new fields to fee type response ([#1865](https://github.com/UK-Export-Finance/mdm-api/issues/1865)) ([655a1e6](https://github.com/UK-Export-Finance/mdm-api/commit/655a1e6533e39ebb7731a356868b7629a3636d5c))
+* **GIFT-24539:** update example fee ([65b854d](https://github.com/UK-Export-Finance/mdm-api/commit/65b854d8339ad6f33179614d73e90ed000eb7ddb))
+* **GIFT-24672:** map additional obligation subtype fields ([ec74afa](https://github.com/UK-Export-Finance/mdm-api/commit/ec74afa50bfcdd9b54518b003a2c7889ff889cd1))
+* **GIFT-24672:** map additional obligation subtype fields ([#1867](https://github.com/UK-Export-Finance/mdm-api/issues/1867)) ([c3f5a32](https://github.com/UK-Export-Finance/mdm-api/commit/c3f5a32b5a0984b215c9606ae1ba524fb39f0cfb))
+* **GIFT-24672:** markups ([d43cf10](https://github.com/UK-Export-Finance/mdm-api/commit/d43cf10c526df498bc7316b09870787c488fe499))
+* **GIFT-24719:** add config for DL ([8bbf7a6](https://github.com/UK-Export-Finance/mdm-api/commit/8bbf7a6799542d74f306159b0884e8d9f5de5378))
+* **GIFT-24719:** default unused configuration ([026b0ad](https://github.com/UK-Export-Finance/mdm-api/commit/026b0ad7e0903ea3894a1540d9c290d4a1a49f69))
+* **GIFT-24719:** fetch product config from DOM with local override ([58ddc6f](https://github.com/UK-Export-Finance/mdm-api/commit/58ddc6fc6a358e9e95f1635a33856619a7224694))
+* **GIFT-24719:** fix lint ([d05b8c1](https://github.com/UK-Export-Finance/mdm-api/commit/d05b8c1f0e30c1e833510e5feac9d790f8ca53c5))
+* **GIFT-24719:** get product config from DOM ([#1869](https://github.com/UK-Export-Finance/mdm-api/issues/1869)) ([e70d85a](https://github.com/UK-Export-Finance/mdm-api/commit/e70d85a10fad0510bde9f3abc7c064e42e9e62bf))
+* **GIFT-24719:** markups ([f3547c8](https://github.com/UK-Export-Finance/mdm-api/commit/f3547c8b3399f056c8e64b4d7b73be1728416570))
+* **GIFT-24756:** add balance category to accrual schedule ([4568372](https://github.com/UK-Export-Finance/mdm-api/commit/45683728a3633eb323431c29714120b6789f2a73))
+* **GIFT-24756:** add cappedBaseBalanceIndicator to fee type ([133bb4f](https://github.com/UK-Export-Finance/mdm-api/commit/133bb4fcd278e1b786ceeb349ec3a19d7c8ce892))
+* **GIFT-24756:** new dom fields ([#1870](https://github.com/UK-Export-Finance/mdm-api/issues/1870)) ([9227c1d](https://github.com/UK-Export-Finance/mdm-api/commit/9227c1d12b4ed71ac866f24c3a31070148be167c))
+* **GIFT-24756:** tests for capped base balance ([36b6380](https://github.com/UK-Export-Finance/mdm-api/commit/36b638073ede1d419908c506e970c23700c863a8))
+* **GIFT-25131,GIFT-25132:** update product config ([#1873](https://github.com/UK-Export-Finance/mdm-api/issues/1873)) ([571425f](https://github.com/UK-Export-Finance/mdm-api/commit/571425fde7edd1635b9e1fbc73314b77fa18b9ec))
+* **GIFT-25131:** make reinsurance configurable ([560bc22](https://github.com/UK-Export-Finance/mdm-api/commit/560bc22c3d84f35fa2cb257b046319ab4a01700f))
+* **GIFT-25132:** make fees optional on EXIP and BIP ([0db542a](https://github.com/UK-Export-Finance/mdm-api/commit/0db542a9858ece21c2cbb9d11c36930dd634c847))
+
 ## [1.52.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.51.0...v1.52.0) (2026-05-01)
 
 
