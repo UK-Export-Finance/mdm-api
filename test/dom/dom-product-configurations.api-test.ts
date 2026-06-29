@@ -40,6 +40,10 @@ describe('/dom - product-configuration', () => {
           creation: expect.any(String),
           inLife: expect.any(String),
         }),
+        obligations: expect.objectContaining({
+          creation: expect.any(String),
+          inLife: expect.any(String),
+        }),
       }),
       additionalRates: expect.any(Array),
       accrualSchedules: expect.any(Array),

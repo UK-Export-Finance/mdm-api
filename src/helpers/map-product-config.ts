@@ -3,6 +3,7 @@ import { GetDomProductConfigResponse } from '@ukef/modules/dom/dto';
 import { GetProductConfigOdsResponse } from '@ukef/modules/ods/dto';
 
 const NOT_APPLICABLE = 'NOT_APPLICABLE';
+const OPTIONAL = 'OPTIONAL';
 
 /**
  * Maps an ODS product config response to a DOM product config response.
@@ -48,12 +49,16 @@ export const mapProductConfig = (odsProductConfig: GetProductConfigOdsResponse):
       bankRate: NOT_APPLICABLE,
       repaymentType: odsProductConfig.configuration.repaymentType,
       fees: {
-        creation: conf?.fees?.creation ?? NOT_APPLICABLE,
-        inLife: conf?.fees?.inLife ?? NOT_APPLICABLE,
+        creation: conf?.fees?.creation ?? OPTIONAL,
+        inLife: conf?.fees?.inLife ?? OPTIONAL,
+      },
+      obligations: {
+        creation: conf?.obligations?.creation ?? OPTIONAL,
+        inLife: conf?.obligations?.inLife ?? OPTIONAL,
       },
       reinsurance: {
-        creation: conf?.reinsurance?.creation ?? NOT_APPLICABLE,
-        inLife: conf?.reinsurance?.inLife ?? NOT_APPLICABLE,
+        creation: conf?.reinsurance?.creation ?? OPTIONAL,
+        inLife: conf?.reinsurance?.inLife ?? OPTIONAL,
       },
       leadDays: odsProductConfig.configuration.leadDays,
     },
