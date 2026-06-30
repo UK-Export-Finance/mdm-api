@@ -251,6 +251,10 @@ export const EXAMPLES = {
             creation: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
             inLife: PRODUCT_CONFIG_REQUIREMENT.OPTIONAL,
           },
+          obligations: {
+            creation: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
+            inLife: PRODUCT_CONFIG_REQUIREMENT.OPTIONAL,
+          },
           reinsurance: {
             creation: PRODUCT_CONFIG_REQUIREMENT.OPTIONAL,
             inLife: PRODUCT_CONFIG_REQUIREMENT.OPTIONAL,

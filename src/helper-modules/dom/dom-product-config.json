@@ -10,6 +10,10 @@
         "creation": "OPTIONAL",
         "inLife": "OPTIONAL"
       },
+      "obligations": {
+        "creation": "REQUIRED",
+        "inLife": "OPTIONAL"
+      },
       "reinsurance": {
         "creation": "OPTIONAL",
         "inLife": "OPTIONAL"
@@ -26,7 +30,11 @@
       "fees": {
         "creation": "OPTIONAL",
         "inLife": "OPTIONAL"
-      },
+        },
+        "obligations": {
+          "creation": "REQUIRED",
+          "inLife": "OPTIONAL"
+        },
       "reinsurance": {
         "creation": "OPTIONAL",
         "inLife": "OPTIONAL"
@@ -42,6 +50,10 @@
       "expiryDate": "REQUIRED",
       "fees": {
         "creation": "NOT_APPLICABLE",
+        "inLife": "OPTIONAL"
+      },
+      "obligations": {
+        "creation": "REQUIRED",
         "inLife": "OPTIONAL"
       },
       "reinsurance": {
@@ -61,6 +73,10 @@
         "creation": "NOT_APPLICABLE",
         "inLife": "OPTIONAL"
       },
+      "obligations": {
+        "creation": "REQUIRED",
+        "inLife": "OPTIONAL"
+      },
       "reinsurance": {
         "creation": "NOT_APPLICABLE",
         "inLife": "NOT_APPLICABLE"
@@ -75,6 +91,10 @@
       "availabilityEndDate": "REQUIRED",
       "expiryDate": "REQUIRED",
       "fees": {
+        "creation": "OPTIONAL",
+        "inLife": "OPTIONAL"
+      },
+      "obligations": {
         "creation": "OPTIONAL",
         "inLife": "OPTIONAL"
       },

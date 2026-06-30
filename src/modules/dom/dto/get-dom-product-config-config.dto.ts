@@ -3,6 +3,7 @@ import { EXAMPLES } from '@ukef/constants';
 
 import { GetDomProductConfigConfigFees } from './get-dom-product-config-config-fees.dto';
 import { GetDomProductConfigConfigLeadDays } from './get-dom-product-config-config-lead-days.dto';
+import { GetDomProductConfigConfigObligations } from './get-dom-product-config-config-obligations.dto';
 import { GetDomProductConfigConfigReinsurance } from './get-dom-product-config-config-reinsurance.dto';
 
 export class GetDomProductConfigConfig {
@@ -131,6 +132,12 @@ export class GetDomProductConfigConfig {
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.fees,
   })
   readonly fees: GetDomProductConfigConfigFees;
+
+  @ApiProperty({
+    description: "The product's 'obligations'",
+    example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.obligations,
+  })
+  readonly obligations: GetDomProductConfigConfigObligations;
 
   @ApiProperty({
     description: "The product's 'reinsurance'",

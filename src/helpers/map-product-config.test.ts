@@ -85,6 +85,8 @@ describe('mapProductConfig', () => {
       // PRT001 values from dom-product-config.json
       expect(result.configuration.fees.creation).toEqual(OPTIONAL);
       expect(result.configuration.fees.inLife).toEqual(OPTIONAL);
+      expect(result.configuration.obligations.creation).toEqual(REQUIRED);
+      expect(result.configuration.obligations.inLife).toEqual(OPTIONAL);
       expect(result.configuration.reinsurance.creation).toEqual(OPTIONAL);
       expect(result.configuration.reinsurance.inLife).toEqual(OPTIONAL);
     });
@@ -114,13 +116,15 @@ describe('mapProductConfig', () => {
       expect(result.configuration.bankRate).toEqual(NOT_APPLICABLE);
     });
 
-    it('should default configuration.fees to NOT_APPLICABLE', () => {
+    it('should default entity options to OPTIONAL', () => {
       const result = mapProductConfig(mockOdsProductConfigUnknown);
 
-      expect(result.configuration.fees.creation).toEqual(NOT_APPLICABLE);
-      expect(result.configuration.fees.inLife).toEqual(NOT_APPLICABLE);
-      expect(result.configuration.reinsurance.creation).toEqual(NOT_APPLICABLE);
-      expect(result.configuration.reinsurance.inLife).toEqual(NOT_APPLICABLE);
+      expect(result.configuration.fees.creation).toEqual(OPTIONAL);
+      expect(result.configuration.fees.inLife).toEqual(OPTIONAL);
+      expect(result.configuration.obligations.creation).toEqual(OPTIONAL);
+      expect(result.configuration.obligations.inLife).toEqual(OPTIONAL);
+      expect(result.configuration.reinsurance.creation).toEqual(OPTIONAL);
+      expect(result.configuration.reinsurance.inLife).toEqual(OPTIONAL);
     });
   });
 
