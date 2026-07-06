@@ -14,8 +14,6 @@ import {
 /**
  * DOM service.
  * This is responsible for all DOM operations.
- * NOTE: This service does not actually call DOM, all data is stored in APIM MDM.
- * In the future, this will be updated to call DOM.
  */
 @Injectable()
 export class DomService {
