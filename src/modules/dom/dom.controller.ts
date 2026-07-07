@@ -18,6 +18,7 @@ import {
   GetDomProductConfigResponse,
   GetOdsBusinessCentreOdsResponsesNonWorkingDaysParamDto,
 } from './dto';
+import { GetDomInterestRateTickersResponseDto } from './dto/get-dom-interest-rate-tickers-response.dto';
 import { CreditRiskRatingEntity } from './entities';
 
 const { domOdsVersioning } = AppConfig();
@@ -135,6 +136,21 @@ export class DomController {
   })
   getCreditRiskRatings(): Promise<CreditRiskRatingEntity[]> {
     return this.creditRiskRatingsService.getAll();
+  }
+
+  @Get('interest-rate-tickers')
+  @ApiOperation({
+    summary: 'Get all interest rate tickers',
+  })
+  @ApiOkResponse({
+    description: 'All interest rate tickers',
+    type: [GetDomInterestRateTickersResponseDto],
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  getInterestRateTickers(): Promise<GetDomInterestRateTickersResponseDto[]> {
+    return this.odsService.getInterestRateTickers();
   }
 
   @Get('product-configuration/:productType')

@@ -219,6 +219,18 @@ export const EXAMPLES = {
         non_working_day_date: BUSINESS_CENTRE.NON_WORKING_DAY.DATE,
       },
     ],
+    INTEREST_RATE_TICKERS: [
+      {
+        code: 'EUR001',
+        name: 'ESTR Overnight Daily Compounding (5-day lag)',
+        type: 'Compounding Rate',
+        frequencyCode: 'FREQEBD',
+        frequencyName: 'Every Business Day',
+        leadDays: 5,
+        currencyCode: 'EUR',
+        active: true,
+      },
+    ],
     PRODUCT_CONFIG: {
       BIP: {
         productType: PRODUCT_TYPES.BIP,

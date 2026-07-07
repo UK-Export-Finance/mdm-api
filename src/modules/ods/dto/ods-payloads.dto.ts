@@ -61,12 +61,12 @@ export type OdsStoredProcedureInput = {
  * Stored Procedure output definition can be found here:
  * https://github.com/UK-Export-Finance/database-ods-datateam/blob/dev/t_apim/Stored%20Procedures/sp_ODS_query.sql#L279-L286
  */
-export type OdsStoredProcedureOutputBody = {
+export type OdsStoredProcedureOutputBody<TResult = Record<string, any>[]> = {
   query_request_id: string;
   message: string;
   status: 'SUCCESS' | 'ERROR';
   total_result_count: number;
-  results: Record<string, any>[];
+  results: TResult;
 };
 
 export const ODS_ENTITIES = {
@@ -84,6 +84,7 @@ export const ODS_ENTITIES = {
   FACILITY_CLASSIFICATION: 'facility_classification',
   OBLIGATION_CLASSIFICATION: 'obligation_classification',
   INDUSTRY: 'industry',
+  INTEREST_RATE_TICKER: 'interest_rate_ticker',
   SIC_CODE_TO_UKEF_INDUSTRY: 'map_sic_code_to_ukef_industry',
 } as const;
 

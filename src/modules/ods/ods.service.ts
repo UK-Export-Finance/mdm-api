@@ -1,9 +1,12 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { COMPANIES, STORED_PROCEDURE } from '@ukef/constants';
 import { mapBusinessCentre, mapBusinessCentres, mapFeeType, mapFeeTypes, mapIndustries, mapIndustry, mapIndustryCodes } from '@ukef/helpers';
+import { mapDomInterestRateTickers } from '@ukef/helpers/map-dom-interest-rate-tickers';
 import { PinoLogger } from 'nestjs-pino';
 
 import { FindOdsBusinessCentreOdsResponse } from '../dom/dto';
+import { GetDomInterestRateTickersDomResponseDto } from '../dom/dto/get-dom-interest-rate-tickers-dom-response.dto';
+import { GetDomInterestRateTickersResponseDto } from '../dom/dto/get-dom-interest-rate-tickers-response.dto';
 import {
   GetFeeTypeOdsResponseDto,
   GetFeeTypeResponseDto,
@@ -529,6 +532,32 @@ export class OdsService {
       }
 
       throw new InternalServerErrorException(`Error finding UKEF industry code by Companies House industry code ${industryCode} in ODS`, { cause: error });
+    }
+  }
+
+  async getInterestRateTickers(): Promise<GetDomInterestRateTickersResponseDto[]> {
+    try {
+      this.logger.info('Getting interest rate tickers from ODS');
+
+      const storedProcedureInput = this.odsStoredProcedureService.createInput({
+        entityToQuery: ODS_ENTITIES.INTEREST_RATE_TICKER,
+      });
+
+      const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
+
+      const storedProcedureJson: OdsStoredProcedureOutputBody<GetDomInterestRateTickersDomResponseDto[]> = JSON.parse(storedProcedureResult);
+
+      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+        this.logger.error('Error getting interest rate tickers from ODS stored procedure, output %o', storedProcedureResult);
+
+        throw new Error('Error getting interest rate tickers from ODS stored procedure');
+      }
+
+      return mapDomInterestRateTickers(storedProcedureJson.results);
+    } catch (error) {
+      this.logger.error('Error getting interest rate tickers from ODS %o', error);
+
+      throw new InternalServerErrorException('Error getting interest rate tickers from ODS', { cause: error });
     }
   }
 }
