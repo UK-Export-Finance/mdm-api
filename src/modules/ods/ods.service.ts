@@ -550,14 +550,14 @@ export class OdsService {
       if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
         this.logger.error('Error getting interest rate tickers from ODS stored procedure, output %o', storedProcedureResult);
 
-        throw new InternalServerErrorException('Error getting interest rate tickers from ODS stored procedure');
+        throw new Error('Error getting interest rate tickers from ODS stored procedure');
       }
 
       return mapDomInterestRateTickers(storedProcedureJson.results);
     } catch (error) {
       this.logger.error('Error getting interest rate tickers from ODS %o', error);
 
-      throw new InternalServerErrorException('Error getting interest rate tickers from ODS');
+      throw new InternalServerErrorException('Error getting interest rate tickers from ODS', { cause: error });
     }
   }
 }
