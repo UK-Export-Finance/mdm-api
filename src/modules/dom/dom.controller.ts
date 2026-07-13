@@ -15,6 +15,8 @@ import {
   FindOdsBusinessCentreOdsResponseNonWorkingDayMappedResponse,
   FindOdsBusinessCentreOdsResponseNonWorkingDaysQueryDto,
   FindOdsBusinessCentreOdsResponseParamDto,
+  GetDomInterestRateQueryDto,
+  GetDomInterestRateResponseDto,
   GetDomProductConfigResponse,
   GetOdsBusinessCentreOdsResponsesNonWorkingDaysParamDto,
 } from './dto';
@@ -151,6 +153,25 @@ export class DomController {
   })
   getInterestRateTickers(): Promise<GetDomInterestRateTickersResponseDto[]> {
     return this.odsService.getInterestRateTickers();
+  }
+
+  @Get('interest-rate')
+  @ApiOperation({
+    summary: 'Get interest rates for a ticker within a date range from DOM',
+  })
+  @ApiOkResponse({
+    description: 'DOM interest rates',
+    isArray: true,
+    type: GetDomInterestRateResponseDto,
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad request',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  getInterestRates(@Query() query: GetDomInterestRateQueryDto): Promise<GetDomInterestRateResponseDto[]> {
+    return this.domService.getInterestRates(query.rateCode, query.endDate, query.startDate);
   }
 
   @Get('product-configuration/:productType')

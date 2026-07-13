@@ -43,6 +43,9 @@ export type OdsStoredProcedureQueryParams = {
   sic_industry_code?: string;
   sic_section_code?: string;
   code?: string;
+  interest_rate_ticker_code?: string;
+  interest_rate_datetime?: string;
+  interest_rate_start_datetime?: string;
 };
 
 /**
@@ -84,6 +87,7 @@ export const ODS_ENTITIES = {
   FACILITY_CLASSIFICATION: 'facility_classification',
   OBLIGATION_CLASSIFICATION: 'obligation_classification',
   INDUSTRY: 'industry',
+  INTEREST_RATE: 'interest_rate',
   INTEREST_RATE_TICKER: 'interest_rate_ticker',
   SIC_CODE_TO_UKEF_INDUSTRY: 'map_sic_code_to_ukef_industry',
 } as const;
