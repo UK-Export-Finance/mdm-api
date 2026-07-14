@@ -161,8 +161,7 @@ export class DomController {
   })
   @ApiOkResponse({
     description: 'DOM interest rates',
-    isArray: true,
-    type: GetDomInterestRateResponseDto,
+    type: [GetDomInterestRateResponseDto],
   })
   @ApiBadRequestResponse({
     description: 'Bad request',

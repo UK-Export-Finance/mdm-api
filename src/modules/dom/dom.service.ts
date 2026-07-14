@@ -187,13 +187,13 @@ export class DomService {
    * @returns {Promise<GetDomInterestRateResponseDto[]>}
    * @throws {BadRequestException} If the start date is not before the end date
    */
-  async getInterestRates(rateCode: string, endDate: string, startDate?: string): Promise<GetDomInterestRateResponseDto[]> {
+  getInterestRates(rateCode: string, endDate: string, startDate?: string): Promise<GetDomInterestRateResponseDto[]> {
     this.logger.info('Getting DOM interest rates for %s', rateCode);
 
     if (startDate && new Date(startDate) > new Date(endDate)) {
-      throw new BadRequestException('The start date must be before the end date');
+      throw new BadRequestException('The start date must be on or before the end date');
     }
 
-    return await this.odsService.getInterestRates(rateCode, endDate, startDate);
+    return this.odsService.getInterestRates(rateCode, endDate, startDate);
   }
 }
