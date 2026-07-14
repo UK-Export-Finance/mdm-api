@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { EXAMPLES } from '@ukef/constants';
 import { mapBusinessCentreNonWorkingDays, mapProductConfig } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
@@ -385,6 +385,69 @@ describe('DomService', () => {
 
       // Assert
       expect(response).toEqual(mockProductConfigs.map(mapProductConfig));
+    });
+  });
+
+  describe('getInterestRates', () => {
+    const [exampleInterestRate] = EXAMPLES.DOM.INTEREST_RATES;
+    const mockRateCode = exampleInterestRate.code;
+
+    let odsServiceGetInterestRates: jest.Mock;
+
+    beforeEach(() => {
+      odsServiceGetInterestRates = jest.fn().mockResolvedValue(EXAMPLES.DOM.INTEREST_RATES);
+      odsService.getInterestRates = odsServiceGetInterestRates;
+
+      service = new DomService(odsService, odsProductConfigService, mockLogger);
+    });
+
+    describe('when a start date is provided', () => {
+      it('should call odsService.getInterestRates with the rate code, end date and start date', async () => {
+        // Act
+        await service.getInterestRates(mockRateCode, EXAMPLES.DATE_END, EXAMPLES.DATE_START);
+
+        // Assert
+        expect(odsServiceGetInterestRates).toHaveBeenCalledTimes(1);
+        expect(odsServiceGetInterestRates).toHaveBeenCalledWith(mockRateCode, EXAMPLES.DATE_END, EXAMPLES.DATE_START);
+      });
+    });
+
+    describe('when a start date is NOT provided', () => {
+      it('should call odsService.getInterestRates with an undefined start date', async () => {
+        // Act
+        await service.getInterestRates(mockRateCode, EXAMPLES.DATE_END);
+
+        // Assert
+        expect(odsServiceGetInterestRates).toHaveBeenCalledTimes(1);
+        expect(odsServiceGetInterestRates).toHaveBeenCalledWith(mockRateCode, EXAMPLES.DATE_END, undefined);
+      });
+    });
+
+    it('should return the result of odsService.getInterestRates', async () => {
+      // Act
+      const response = await service.getInterestRates(mockRateCode, EXAMPLES.DATE_END, EXAMPLES.DATE_START);
+
+      // Assert
+      expect(response).toEqual(EXAMPLES.DOM.INTEREST_RATES);
+    });
+
+    describe('when the start date is after the end date', () => {
+      it('should throw a bad request exception', () => {
+        // Act & Assert
+        expect(() => service.getInterestRates(mockRateCode, EXAMPLES.DATE_START, EXAMPLES.DATE_END)).toThrow(BadRequestException);
+
+        expect(() => service.getInterestRates(mockRateCode, EXAMPLES.DATE_START, EXAMPLES.DATE_END)).toThrow(
+          'The start date must be on or before the end date',
+        );
+      });
+
+      it('should NOT call odsService.getInterestRates', () => {
+        // Act
+        expect(() => service.getInterestRates(mockRateCode, EXAMPLES.DATE_START, EXAMPLES.DATE_END)).toThrow();
+
+        // Assert
+        expect(odsServiceGetInterestRates).not.toHaveBeenCalled();
+      });
     });
   });
 });

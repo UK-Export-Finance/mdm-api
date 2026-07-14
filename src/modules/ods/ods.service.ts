@@ -2,9 +2,12 @@ import { Injectable, InternalServerErrorException, NotFoundException } from '@ne
 import { COMPANIES, STORED_PROCEDURE } from '@ukef/constants';
 import { mapBusinessCentre, mapBusinessCentres, mapFeeType, mapFeeTypes, mapIndustries, mapIndustry, mapIndustryCodes } from '@ukef/helpers';
 import { mapDomInterestRateTickers } from '@ukef/helpers/map-dom-interest-rate-tickers';
+import { mapDomInterestRates } from '@ukef/helpers/map-dom-interest-rates';
 import { PinoLogger } from 'nestjs-pino';
 
 import { FindOdsBusinessCentreOdsResponse } from '../dom/dto';
+import { GetDomInterestRateOdsResponseDto } from '../dom/dto/get-dom-interest-rate-ods-response.dto';
+import { GetDomInterestRateResponseDto } from '../dom/dto/get-dom-interest-rate-response.dto';
 import { GetDomInterestRateTickersDomResponseDto } from '../dom/dto/get-dom-interest-rate-tickers-dom-response.dto';
 import { GetDomInterestRateTickersResponseDto } from '../dom/dto/get-dom-interest-rate-tickers-response.dto';
 import {
@@ -558,6 +561,50 @@ export class OdsService {
       this.logger.error('Error getting interest rate tickers from ODS %o', error);
 
       throw new InternalServerErrorException('Error getting interest rate tickers from ODS', { cause: error });
+    }
+  }
+
+  /**
+   * Gets interest rates for a ticker within a date range from ODS
+   * @param {string} rateCode The interest rate ticker code to query
+   * @param {string} endDate The end date (inclusive) to retrieve interest rates until
+   * @param {string} startDate Optional start date (inclusive) to retrieve interest rates from. If omitted, only the rate for the end date is returned.
+   *
+   * @returns {Promise<GetDomInterestRateResponseDto[]>} The interest rates
+   * @throws {InternalServerErrorException} If there is an error trying to get the interest rates
+   */
+  async getInterestRates(rateCode: string, endDate: string, startDate?: string): Promise<GetDomInterestRateResponseDto[]> {
+    try {
+      this.logger.info('Getting interest rates for %s from ODS', rateCode);
+
+      const storedProcedureInput = this.odsStoredProcedureService.createInput({
+        entityToQuery: ODS_ENTITIES.INTEREST_RATE,
+        queryParameters: {
+          interest_rate_ticker_code: rateCode,
+          interest_rate_datetime: endDate,
+          ...(startDate && { interest_rate_start_datetime: startDate }),
+        },
+      });
+
+      const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
+
+      const storedProcedureJson: OdsStoredProcedureOutputBody<GetDomInterestRateOdsResponseDto[]> = JSON.parse(storedProcedureResult);
+
+      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+        this.logger.error('Error getting interest rates for %s from ODS stored procedure, output %o', rateCode, storedProcedureResult);
+
+        throw new Error(`Error getting interest rates for ${rateCode} from ODS stored procedure`);
+      }
+
+      if (storedProcedureJson?.total_result_count === 0 || storedProcedureJson?.results === undefined) {
+        return [];
+      }
+
+      return mapDomInterestRates(storedProcedureJson.results);
+    } catch (error) {
+      this.logger.error('Error getting interest rates for %s from ODS %o', rateCode, error);
+
+      throw new InternalServerErrorException(`Error getting interest rates for ${rateCode} from ODS`, { cause: error });
     }
   }
 }

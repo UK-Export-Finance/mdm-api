@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { mapBusinessCentreNonWorkingDays, mapProductConfig } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 
@@ -8,6 +8,7 @@ import {
   FindMultipleOdsBusinessCentreOdsResponsesNonWorkingDaysResponse,
   FindMultipleProductConfigsResponse,
   FindOdsBusinessCentreOdsResponseNonWorkingDayMappedResponse,
+  GetDomInterestRateResponseDto,
   GetDomProductConfigResponse,
 } from './dto';
 
@@ -176,5 +177,23 @@ export class DomService {
 
       throw new Error(`Error getting DOM product configurations`, { cause: error });
     }
+  }
+
+  /**
+   * Get interest rates for a ticker within a date range from DOM
+   * @param {string} rateCode: Interest rate ticker code
+   * @param {string} endDate: End date (inclusive) to retrieve interest rates until
+   * @param {string} startDate: Optional start date (inclusive) to retrieve interest rates from. If omitted, only the rate for the end date is returned.
+   * @returns {Promise<GetDomInterestRateResponseDto[]>}
+   * @throws {BadRequestException} If the start date is not before the end date
+   */
+  getInterestRates(rateCode: string, endDate: string, startDate?: string): Promise<GetDomInterestRateResponseDto[]> {
+    this.logger.info('Getting DOM interest rates for %s', rateCode);
+
+    if (startDate && new Date(startDate) > new Date(endDate)) {
+      throw new BadRequestException('The start date must be on or before the end date');
+    }
+
+    return this.odsService.getInterestRates(rateCode, endDate, startDate);
   }
 }

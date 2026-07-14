@@ -9,4 +9,7 @@ export * from './find-dom-product-configs-param.dto';
 export * from './find-multiple-dom-business-centres-non-working-days-response.dto';
 export * from './find-multiple-dom-product-configs-response.dto';
 export * from './get-dom-business-centres-non-working-days-param.dto';
+export * from './get-dom-interest-rate-ods-response.dto';
+export * from './get-dom-interest-rate-query.dto';
+export * from './get-dom-interest-rate-response.dto';
 export * from './get-dom-product-config-response.dto';

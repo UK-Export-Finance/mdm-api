@@ -44,10 +44,12 @@ describe('DomController', () => {
   let odsServiceFindBusinessCentre: jest.Mock;
   let domServiceFindBusinessCentreNonWorkingDays: jest.Mock;
   let odsServiceGetBusinessCentres: jest.Mock;
+  let odsServiceGetInterestRateTickers: jest.Mock;
   let domServiceFindProductConfiguration: jest.Mock;
   let domServiceFindMultipleBusinessCentresNonWorkingDays: jest.Mock;
   let domServiceGetProductConfigurations: jest.Mock;
   let domServiceFindMultipleProductConfigurations: jest.Mock;
+  let domServiceGetInterestRates: jest.Mock;
 
   let controller: DomController;
 
@@ -64,6 +66,9 @@ describe('DomController', () => {
     odsServiceGetBusinessCentres = jest.fn().mockResolvedValueOnce(EXAMPLES.DOM.BUSINESS_CENTRES);
     odsService.getBusinessCentres = odsServiceGetBusinessCentres;
 
+    odsServiceGetInterestRateTickers = jest.fn().mockResolvedValueOnce(EXAMPLES.DOM.INTEREST_RATE_TICKERS);
+    odsService.getInterestRateTickers = odsServiceGetInterestRateTickers;
+
     domServiceFindMultipleBusinessCentresNonWorkingDays = jest.fn().mockResolvedValueOnce(mockMultipleBusinessCentreNonWorkingDays);
     domService.findMultipleBusinessCentresNonWorkingDays = domServiceFindMultipleBusinessCentresNonWorkingDays;
 
@@ -75,6 +80,9 @@ describe('DomController', () => {
 
     domServiceFindMultipleProductConfigurations = jest.fn().mockReturnValueOnce(mockMultipleProductConfigurations);
     domService.findMultipleProductConfigurations = domServiceFindMultipleProductConfigurations;
+
+    domServiceGetInterestRates = jest.fn().mockResolvedValueOnce(EXAMPLES.DOM.INTEREST_RATES);
+    domService.getInterestRates = domServiceGetInterestRates;
 
     controller = new DomController(domService, odsService, creditRiskRatingsService);
   });
@@ -226,6 +234,38 @@ describe('DomController', () => {
     });
   });
 
+  describe('getInterestRateTickers', () => {
+    it('should call odsService.getInterestRateTickers', async () => {
+      // Act
+      await controller.getInterestRateTickers();
+
+      // Assert
+      expect(odsServiceGetInterestRateTickers).toHaveBeenCalledTimes(1);
+    });
+
+    it('should return the result of odsService.getInterestRateTickers', async () => {
+      // Act
+      const result = await controller.getInterestRateTickers();
+
+      // Assert
+      expect(result).toEqual(EXAMPLES.DOM.INTEREST_RATE_TICKERS);
+    });
+
+    describe('when odsService.getInterestRateTickers throws an error', () => {
+      it('should throw an error', async () => {
+        // Arrange
+        odsService.getInterestRateTickers = jest.fn().mockRejectedValueOnce(mockError);
+
+        controller = new DomController(domService, odsService, creditRiskRatingsService);
+
+        // Act & Assert
+        const promise = controller.getInterestRateTickers();
+
+        await expect(promise).rejects.toThrow(mockError);
+      });
+    });
+  });
+
   describe('findMultipleBusinessCentresNonWorkingDays', () => {
     const mockQuery = {
       centreCodes: `${EXAMPLES.BUSINESS_CENTRE.CODE},${EXAMPLES.BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.CODE}`,
@@ -306,6 +346,56 @@ describe('DomController', () => {
 
       // Assert
       expect(result).toStrictEqual(mockMultipleProductConfigurations);
+    });
+  });
+
+  describe('getInterestRates', () => {
+    const mockQuery = {
+      rateCode: EXAMPLES.DOM.INTEREST_RATES[0].code,
+      startDate: EXAMPLES.DATE_START,
+      endDate: EXAMPLES.DATE_END,
+    };
+
+    it('should call domService.getInterestRates with the rate code, end date and start date', async () => {
+      // Act
+      await controller.getInterestRates(mockQuery);
+
+      // Assert
+      expect(domServiceGetInterestRates).toHaveBeenCalledTimes(1);
+      expect(domServiceGetInterestRates).toHaveBeenCalledWith(mockQuery.rateCode, mockQuery.endDate, mockQuery.startDate);
+    });
+
+    it('should call domService.getInterestRates with an undefined start date when it is not provided', async () => {
+      // Act
+      await controller.getInterestRates({ rateCode: mockQuery.rateCode, endDate: mockQuery.endDate });
+
+      // Assert
+      expect(domServiceGetInterestRates).toHaveBeenCalledTimes(1);
+      expect(domServiceGetInterestRates).toHaveBeenCalledWith(mockQuery.rateCode, mockQuery.endDate, undefined);
+    });
+
+    it('should return the result of domService.getInterestRates', async () => {
+      // Act
+      const result = await controller.getInterestRates(mockQuery);
+
+      // Assert
+      expect(result).toEqual(EXAMPLES.DOM.INTEREST_RATES);
+    });
+
+    describe('when domService.getInterestRates throws an error', () => {
+      it('should throw an error', async () => {
+        // Arrange
+        const domService = new DomService(odsService, odsProductConfigService, mockLogger);
+
+        domService.getInterestRates = jest.fn().mockRejectedValueOnce(mockError);
+
+        controller = new DomController(domService, odsService, creditRiskRatingsService);
+
+        // Act & Assert
+        const promise = controller.getInterestRates(mockQuery);
+
+        await expect(promise).rejects.toThrow(mockError);
+      });
     });
   });
 });

@@ -231,6 +231,15 @@ export const EXAMPLES = {
         active: true,
       },
     ],
+    INTEREST_RATES: [
+      {
+        code: 'EUR001',
+        startDate: '2026-07-01T00:00:00',
+        endDate: '2026-07-01T23:59:59',
+        rate: 3.25,
+        adjustedRate: 3.25,
+      },
+    ],
     PRODUCT_CONFIG: {
       BIP: {
         productType: PRODUCT_TYPES.BIP,
@@ -428,6 +437,16 @@ export const EXAMPLES = {
       industry_group_code: INDUSTRY.GROUP_CODE,
       industry_group_description: INDUSTRY.GROUP_DESCRIPTION,
       industry_category: INDUSTRY.CATEGORY,
+    },
+    INTEREST_RATE: {
+      interest_rate_ticker_code: 'EUR002',
+      interest_rate_start_datetime: '2026-07-01T00:00:00',
+      interest_rate_end_datetime: '2026-07-01T23:59:59',
+      interest_rate: 2.183,
+      interest_rate_adjusted: 2.183,
+      interest_rate_source: 'Bloomberg',
+      interest_rate_source_ticker_value: 'ESTRON',
+      interest_rate_source_ticker_name: 'ESTR Volume Weighted Trimmed M',
     },
     OBLIGATION_CLASSIFICATION: {
       classification_type: 'Obligation Sub-Type',
