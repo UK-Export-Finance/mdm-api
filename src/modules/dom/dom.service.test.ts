@@ -432,19 +432,18 @@ describe('DomService', () => {
     });
 
     describe('when the start date is after the end date', () => {
-      it('should throw a bad request exception', async () => {
-        // Act
-        const promise = service.getInterestRates(mockRateCode, EXAMPLES.DATE_START, EXAMPLES.DATE_END);
+      it('should throw a bad request exception', () => {
+        // Act & Assert
+        expect(() => service.getInterestRates(mockRateCode, EXAMPLES.DATE_START, EXAMPLES.DATE_END)).toThrow(BadRequestException);
 
-        // Assert
-        await expect(promise).rejects.toBeInstanceOf(BadRequestException);
-
-        await expect(promise).rejects.toThrow('The start date must be before the end date');
+        expect(() => service.getInterestRates(mockRateCode, EXAMPLES.DATE_START, EXAMPLES.DATE_END)).toThrow(
+          'The start date must be on or before the end date',
+        );
       });
 
-      it('should NOT call odsService.getInterestRates', async () => {
+      it('should NOT call odsService.getInterestRates', () => {
         // Act
-        await service.getInterestRates(mockRateCode, EXAMPLES.DATE_START, EXAMPLES.DATE_END).catch(() => {});
+        expect(() => service.getInterestRates(mockRateCode, EXAMPLES.DATE_START, EXAMPLES.DATE_END)).toThrow();
 
         // Assert
         expect(odsServiceGetInterestRates).not.toHaveBeenCalled();
