@@ -538,6 +538,11 @@ export class OdsService {
     }
   }
 
+  /**
+   * Get all interest rate tickers from ODS
+   * @returns {Promise<GetDomInterestRateTickersResponseDto[]>} Mapped interest rate tickers
+   * @throws {InternalServerErrorException} If there is an error getting interest rate tickers
+   */
   async getInterestRateTickers(): Promise<GetDomInterestRateTickersResponseDto[]> {
     try {
       this.logger.info('Getting interest rate tickers from ODS');

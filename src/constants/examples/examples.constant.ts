@@ -233,7 +233,7 @@ export const EXAMPLES = {
     ],
     INTEREST_RATES: [
       {
-        code: 'EUR001',
+        code: 'EUR002',
         startDate: '2026-07-01T00:00:00',
         endDate: '2026-07-01T23:59:59',
         rate: 3.25,
