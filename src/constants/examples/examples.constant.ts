@@ -135,6 +135,7 @@ export const EXAMPLES = {
     ROLE_TYPE: 'CRT001',
     NAME: 'Exporter',
     HAS_SHARE_PERCENTAGE: false,
+    HAS_ASSOCIATED_PAYMENT_CODE: false,
     IS_ACTIVE: true,
   },
   CREDIT_RISK_RATINGS: [
@@ -395,6 +396,7 @@ export const EXAMPLES = {
       counterpartyRoleType: 'CRT001',
       name: 'Exporter',
       hasSharePercentage: false,
+      hasAssociatedPaymentCode: false,
       counterpartyRoleTypeActive: true,
     },
     CONFIGURATION_FEE: {
