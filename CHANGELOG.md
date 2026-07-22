@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.54.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.53.0...v1.54.0) (2026-07-22)
+
+
+### Features
+
+* **GIFT-26506:** add hasAssociatedPaymentCode to counterparty response ([#1879](https://github.com/UK-Export-Finance/mdm-api/issues/1879)) ([cd5ba6b](https://github.com/UK-Export-Finance/mdm-api/commit/cd5ba6b0be0954009c35645474c170986e130eb3))
+
 ## [1.53.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.52.0...v1.53.0) (2026-07-14)
 
 
