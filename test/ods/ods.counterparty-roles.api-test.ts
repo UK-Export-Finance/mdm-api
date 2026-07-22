@@ -34,6 +34,7 @@ describe('/ods - Counterparty roles', () => {
           roleType: expect.any(String),
           name: expect.any(String),
           hasSharePercentage: expect.any(Boolean),
+          hasAssociatedPaymentCode: expect.any(Boolean),
           isActive: expect.any(Boolean),
         }),
       ]);
@@ -57,6 +58,7 @@ describe('/ods - Counterparty roles', () => {
         roleType: expect.any(String),
         name: expect.any(String),
         hasSharePercentage: expect.any(Boolean),
+        hasAssociatedPaymentCode: expect.any(Boolean),
         isActive: expect.any(Boolean),
       });
 

@@ -38,12 +38,14 @@ describe('OdsCounterpartyRoleService - getAll', () => {
         "counterpartyRoleType": "${EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.counterpartyRoleType}",
         "name": "${EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.name}",
         "hasSharePercentage": ${EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.hasSharePercentage},
+        "hasAssociatedPaymentCode": ${EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.hasAssociatedPaymentCode},
         "counterpartyRoleTypeActive": ${EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.counterpartyRoleTypeActive}
       },
       {
         "counterpartyRoleType": "${EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.counterpartyRoleType}",
         "name": "${EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.name}",
         "hasSharePercentage": ${EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.hasSharePercentage},
+        "hasAssociatedPaymentCode": ${EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.hasAssociatedPaymentCode},
         "counterpartyRoleTypeActive": ${EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.counterpartyRoleTypeActive}
       }
     ]
