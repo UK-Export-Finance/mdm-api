@@ -40,6 +40,8 @@ const FEE_TYPE = {
   BASE_BALANCE_CATEGORY: 'On facility available amount',
   NON_FACILITY_CURRENCY_SETTLEMENT: false,
   CAPPED_BASE_BALANCE: false,
+  EFFECTIVE_DATE_DEFAULT: 'Facility Signed Date',
+  MATURITY_DATE_DEFAULT: 'Facility Availability End Date',
 };
 
 const INDUSTRY = {
@@ -409,6 +411,8 @@ export const EXAMPLES = {
       baseBalanceCategory: 'On Principal Drawn Amount',
       nonFacilityCurrencySettlement: false,
       feeTypeCappedBaseBalanceIndicator: false,
+      feeEffectiveDateDefault: 'Facility Signed Date',
+      feeMaturityDateDefault: 'Facility Availability End Date',
     },
     CONFIGURATION_FREQUENCY: {
       code: 'FREQ12MON',

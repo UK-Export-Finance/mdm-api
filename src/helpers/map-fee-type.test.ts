@@ -21,8 +21,28 @@ describe('mapFeeType', () => {
       baseBalanceCategory: mockFeeType.baseBalanceCategory ?? null,
       nonFacilityCurrencySettlement: mockFeeType.nonFacilityCurrencySettlement,
       cappedBaseBalance: mockFeeType.feeTypeCappedBaseBalanceIndicator,
+      effectiveDateDefault: mockFeeType.feeEffectiveDateDefault,
+      maturityDateDefault: mockFeeType.feeMaturityDateDefault,
     };
 
     expect(result).toEqual(expected);
+  });
+
+  it('should map missing date defaults to null', () => {
+    // Arrange
+    const mockFeeType = {
+      ...EXAMPLES.ODS.CONFIGURATION_FEE,
+      feeEffectiveDateDefault: undefined,
+      feeMaturityDateDefault: null,
+    };
+
+    // Act
+    const result = mapFeeType(mockFeeType);
+
+    // Assert
+    expect(result).toMatchObject({
+      effectiveDateDefault: null,
+      maturityDateDefault: null,
+    });
   });
 });

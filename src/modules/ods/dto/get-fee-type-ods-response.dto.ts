@@ -57,4 +57,18 @@ export class GetFeeTypeOdsResponseDto {
     example: EXAMPLES.ODS.CONFIGURATION_FEE.feeTypeCappedBaseBalanceIndicator,
   })
   readonly feeTypeCappedBaseBalanceIndicator: boolean;
+
+  @ApiProperty({
+    description: 'What the effective date of the fee should default to if not specified',
+    example: EXAMPLES.ODS.CONFIGURATION_FEE.feeEffectiveDateDefault,
+    nullable: true,
+  })
+  readonly feeEffectiveDateDefault: string | null;
+
+  @ApiProperty({
+    description: 'What the maturity date of the fee should default to if not specified',
+    example: EXAMPLES.ODS.CONFIGURATION_FEE.feeMaturityDateDefault,
+    nullable: true,
+  })
+  readonly feeMaturityDateDefault: string | null;
 }
