@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.54.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.53.0...v1.54.0) (2026-07-31)
+
+
+### Features
+
+* **GIFT-25470:** add fields to fee response ([#1881](https://github.com/UK-Export-Finance/mdm-api/issues/1881)) ([31c7945](https://github.com/UK-Export-Finance/mdm-api/commit/31c7945d1a75b12e18fb7ffe0674811dd6483997))
+* **GIFT-26506:** add hasAssociatedPaymentCode to counterparty response ([#1879](https://github.com/UK-Export-Finance/mdm-api/issues/1879)) ([cd5ba6b](https://github.com/UK-Export-Finance/mdm-api/commit/cd5ba6b0be0954009c35645474c170986e130eb3))
+
 ## [1.53.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.52.0...v1.53.0) (2026-07-14)
 
 
