@@ -40,6 +40,8 @@ describe('/ods - Fee types', () => {
           baseBalanceCategory: expect.anything(),
           nonFacilityCurrencySettlement: expect.any(Boolean),
           cappedBaseBalance: expect.any(Boolean),
+          effectiveDateDefault: expect.any(String),
+          maturityDateDefault: expect.any(String),
         }),
       ]);
 
@@ -68,6 +70,8 @@ describe('/ods - Fee types', () => {
         baseBalanceCategory: expect.anything(),
         nonFacilityCurrencySettlement: expect.any(Boolean),
         cappedBaseBalance: expect.any(Boolean),
+        effectiveDateDefault: expect.any(String),
+        maturityDateDefault: expect.any(String),
       });
 
       expect(body).toEqual(expected);

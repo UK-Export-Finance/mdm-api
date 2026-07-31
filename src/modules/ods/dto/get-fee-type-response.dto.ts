@@ -57,4 +57,18 @@ export class GetFeeTypeResponseDto {
     example: EXAMPLES.FEE_TYPE.CAPPED_BASE_BALANCE,
   })
   readonly cappedBaseBalance: boolean;
+
+  @ApiProperty({
+    description: 'What the effective date of the fee should default to if not specified',
+    example: EXAMPLES.FEE_TYPE.EFFECTIVE_DATE_DEFAULT,
+    nullable: true,
+  })
+  readonly effectiveDateDefault: string | null;
+
+  @ApiProperty({
+    description: 'What the maturity date of the fee should default to if not specified',
+    example: EXAMPLES.FEE_TYPE.MATURITY_DATE_DEFAULT,
+    nullable: true,
+  })
+  readonly maturityDateDefault: string | null;
 }

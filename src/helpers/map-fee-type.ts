@@ -15,4 +15,6 @@ export const mapFeeType = (feeType: GetFeeTypeOdsResponseDto): GetFeeTypeRespons
   baseBalanceCategory: feeType.baseBalanceCategory ?? null,
   nonFacilityCurrencySettlement: feeType.nonFacilityCurrencySettlement,
   cappedBaseBalance: feeType.feeTypeCappedBaseBalanceIndicator,
+  effectiveDateDefault: feeType.feeEffectiveDateDefault ?? null,
+  maturityDateDefault: feeType.feeMaturityDateDefault ?? null,
 });
