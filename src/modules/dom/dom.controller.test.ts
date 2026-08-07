@@ -45,6 +45,7 @@ describe('DomController', () => {
   let domServiceFindBusinessCentreNonWorkingDays: jest.Mock;
   let odsServiceGetBusinessCentres: jest.Mock;
   let odsServiceGetInterestRateTickers: jest.Mock;
+  let odsServiceGetCurrencies: jest.Mock;
   let domServiceFindProductConfiguration: jest.Mock;
   let domServiceFindMultipleBusinessCentresNonWorkingDays: jest.Mock;
   let domServiceGetProductConfigurations: jest.Mock;
@@ -68,6 +69,9 @@ describe('DomController', () => {
 
     odsServiceGetInterestRateTickers = jest.fn().mockResolvedValueOnce(EXAMPLES.DOM.INTEREST_RATE_TICKERS);
     odsService.getInterestRateTickers = odsServiceGetInterestRateTickers;
+
+    odsServiceGetCurrencies = jest.fn().mockResolvedValueOnce(EXAMPLES.DOM.CURRENCIES);
+    odsService.getCurrencies = odsServiceGetCurrencies;
 
     domServiceFindMultipleBusinessCentresNonWorkingDays = jest.fn().mockResolvedValueOnce(mockMultipleBusinessCentreNonWorkingDays);
     domService.findMultipleBusinessCentresNonWorkingDays = domServiceFindMultipleBusinessCentresNonWorkingDays;
@@ -260,6 +264,38 @@ describe('DomController', () => {
 
         // Act & Assert
         const promise = controller.getInterestRateTickers();
+
+        await expect(promise).rejects.toThrow(mockError);
+      });
+    });
+  });
+
+  describe('getCurrencies', () => {
+    it('should call odsService.getCurrencies', async () => {
+      // Act
+      await controller.getCurrencies();
+
+      // Assert
+      expect(odsServiceGetCurrencies).toHaveBeenCalledTimes(1);
+    });
+
+    it('should return the result of odsService.getCurrencies', async () => {
+      // Act
+      const result = await controller.getCurrencies();
+
+      // Assert
+      expect(result).toEqual(EXAMPLES.DOM.CURRENCIES);
+    });
+
+    describe('when odsService.getCurrencies throws an error', () => {
+      it('should throw an error', async () => {
+        // Arrange
+        odsService.getCurrencies = jest.fn().mockRejectedValueOnce(mockError);
+
+        controller = new DomController(domService, odsService, creditRiskRatingsService);
+
+        // Act & Assert
+        const promise = controller.getCurrencies();
 
         await expect(promise).rejects.toThrow(mockError);
       });

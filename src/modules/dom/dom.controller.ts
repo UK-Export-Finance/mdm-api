@@ -15,6 +15,7 @@ import {
   FindOdsBusinessCentreOdsResponseNonWorkingDayMappedResponse,
   FindOdsBusinessCentreOdsResponseNonWorkingDaysQueryDto,
   FindOdsBusinessCentreOdsResponseParamDto,
+  GetDomCurrencyResponseDto,
   GetDomInterestRateQueryDto,
   GetDomInterestRateResponseDto,
   GetDomProductConfigResponse,
@@ -153,6 +154,21 @@ export class DomController {
   })
   getInterestRateTickers(): Promise<GetDomInterestRateTickersResponseDto[]> {
     return this.odsService.getInterestRateTickers();
+  }
+
+  @Get('currencies')
+  @ApiOperation({
+    summary: 'Get all currencies',
+  })
+  @ApiOkResponse({
+    description: 'All currencies',
+    type: [GetDomCurrencyResponseDto],
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  getCurrencies(): Promise<GetDomCurrencyResponseDto[]> {
+    return this.odsService.getCurrencies();
   }
 
   @Get('interest-rate')

@@ -76,6 +76,7 @@ export const ODS_ENTITIES = {
   ACCRUAL_SCHEDULE_CLASSIFICATION: 'accrual_schedule_classification',
   BUSINESS_CENTRE: 'business_centre',
   BUSINESS_CENTRE_NON_WORKING_DAY: 'business_centre_non_working_day',
+  CURRENCY: 'currency',
   CONFIGURATION_ACCRUAL_SCHEDULE: 'configuration_accrual_schedule',
   CONFIGURATION_COUNTERPARTY_ROLE: 'configuration_counterparty_role',
   CONFIGURATION_FEE: 'configuration_fee',
