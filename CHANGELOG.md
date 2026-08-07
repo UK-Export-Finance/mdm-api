@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.55.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.54.0...v1.55.0) (2026-08-07)
+
+
+### Features
+
+* **GIFT-12843:** endpoint to fetch a list of currencies from DOM ([#1883](https://github.com/UK-Export-Finance/mdm-api/issues/1883)) ([58b537b](https://github.com/UK-Export-Finance/mdm-api/commit/58b537bb05fe2060fe4b5f05486444b70ca96f8a))
+
 ## [1.54.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.53.0...v1.54.0) (2026-07-31)
 
 
