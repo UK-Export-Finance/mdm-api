@@ -1,11 +1,14 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { COMPANIES, STORED_PROCEDURE } from '@ukef/constants';
 import { mapBusinessCentre, mapBusinessCentres, mapFeeType, mapFeeTypes, mapIndustries, mapIndustry, mapIndustryCodes } from '@ukef/helpers';
+import { mapDomCurrencies } from '@ukef/helpers/map-dom-currencies';
 import { mapDomInterestRateTickers } from '@ukef/helpers/map-dom-interest-rate-tickers';
 import { mapDomInterestRates } from '@ukef/helpers/map-dom-interest-rates';
 import { PinoLogger } from 'nestjs-pino';
 
 import { FindOdsBusinessCentreOdsResponse } from '../dom/dto';
+import { GetDomCurrencyOdsResponseDto } from '../dom/dto/get-dom-currency-ods-response.dto';
+import { GetDomCurrencyResponseDto } from '../dom/dto/get-dom-currency-response.dto';
 import { GetDomInterestRateOdsResponseDto } from '../dom/dto/get-dom-interest-rate-ods-response.dto';
 import { GetDomInterestRateResponseDto } from '../dom/dto/get-dom-interest-rate-response.dto';
 import { GetDomInterestRateTickersDomResponseDto } from '../dom/dto/get-dom-interest-rate-tickers-dom-response.dto';
@@ -566,6 +569,38 @@ export class OdsService {
       this.logger.error('Error getting interest rate tickers from ODS %o', error);
 
       throw new InternalServerErrorException('Error getting interest rate tickers from ODS', { cause: error });
+    }
+  }
+
+  /**
+   * Get all currencies from ODS
+   * @returns {Promise<GetDomCurrencyResponseDto[]>} Mapped currencies
+   * @throws {InternalServerErrorException} If there is an error getting currencies
+   */
+  async getCurrencies(): Promise<GetDomCurrencyResponseDto[]> {
+    try {
+      this.logger.info('Getting currencies from ODS');
+
+      const storedProcedureInput = this.odsStoredProcedureService.createInput({
+        entityToQuery: ODS_ENTITIES.CURRENCY,
+        queryPageSize: 100,
+      });
+
+      const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
+
+      const storedProcedureJson: OdsStoredProcedureOutputBody<GetDomCurrencyOdsResponseDto[]> = JSON.parse(storedProcedureResult);
+
+      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+        this.logger.error('Error getting currencies from ODS stored procedure, output %o', storedProcedureResult);
+
+        throw new Error('Error getting currencies from ODS stored procedure');
+      }
+
+      return mapDomCurrencies(storedProcedureJson.results);
+    } catch (error) {
+      this.logger.error('Error getting currencies from ODS %o', error);
+
+      throw new InternalServerErrorException('Error getting currencies from ODS', { cause: error });
     }
   }
 
