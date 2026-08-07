@@ -89,6 +89,17 @@ const INSTRUMENT_TYPES = {
   GUARANTEE: 'Guarantee',
 };
 
+const CURRENCIES = {
+  USD: {
+    ISO_CODE: 'USD',
+    NAME: 'United States Dollar',
+  },
+  JPY: {
+    ISO_CODE: 'JPY',
+    NAME: 'Japanese Yen',
+  },
+};
+
 const REPAYMENT_TYPES = {
   BULLET: 'Bullet',
   SCHEDULED: 'Scheduled',
@@ -236,14 +247,14 @@ export const EXAMPLES = {
     ],
     CURRENCIES: [
       {
-        code: 'USD',
-        name: 'United States Dollar',
+        code: CURRENCIES.USD.ISO_CODE,
+        name: CURRENCIES.USD.NAME,
         decimalPlaces: 2,
         calendarCode: 'CCYUSD',
       },
       {
-        code: 'JPY',
-        name: 'Japanese Yen',
+        code: CURRENCIES.JPY.ISO_CODE,
+        name: CURRENCIES.JPY.NAME,
         decimalPlaces: 0,
         calendarCode: null,
       },
@@ -470,17 +481,17 @@ export const EXAMPLES = {
     },
     CURRENCIES: [
       {
-        currency_code: 'USD',
-        currency_iso_code: 'USD',
-        currency_name: 'United States Dollar',
+        currency_code: CURRENCIES.USD.ISO_CODE,
+        currency_iso_code: CURRENCIES.USD.ISO_CODE,
+        currency_name: CURRENCIES.USD.NAME,
         currency_decimal_place: 2,
         rate_setting_calendar_code: 'CCYUSD',
         currency_active_flag: true,
       },
       {
-        currency_code: 'JPY',
-        currency_iso_code: 'JPY',
-        currency_name: 'Japanese Yen',
+        currency_code: CURRENCIES.JPY.ISO_CODE,
+        currency_iso_code: CURRENCIES.JPY.ISO_CODE,
+        currency_name: CURRENCIES.JPY.NAME,
         currency_decimal_place: 0,
         currency_active_flag: true,
       },
