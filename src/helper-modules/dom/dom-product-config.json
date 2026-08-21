@@ -84,6 +84,27 @@
     }
   },
   {
+    "productType": "PRT005",
+    "configuration": {
+      "issuedDate": "NOT_APPLICABLE",
+      "effectiveDate": "REQUIRED",
+      "availabilityEndDate": "NOT_APPLICABLE",
+      "expiryDate": "REQUIRED",
+      "fees": {
+        "creation": "NOT_APPLICABLE",
+        "inLife": "NOT_APPLICABLE"
+      },
+      "obligations": {
+        "creation": "REQUIRED",
+        "inLife": "REQUIRED"
+      },
+      "reinsurance": {
+        "creation": "NOT_APPLICABLE",
+        "inLife": "NOT_APPLICABLE"
+      }
+    }
+  },
+  {
     "productType": "PRT009",
     "configuration": {
       "issuedDate": "REQUIRED",
