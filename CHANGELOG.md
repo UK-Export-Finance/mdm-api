@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.56.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.55.0...v1.56.0) (2026-08-21)
+
+
+### Features
+
+* **GIFT-24135:** add ewcs to config ([ff5edcd](https://github.com/UK-Export-Finance/mdm-api/commit/ff5edcd2d524ae7d7a4802cdbd4e47794e57396a))
+* **GIFT-24135:** product config - add ewcs ([#1885](https://github.com/UK-Export-Finance/mdm-api/issues/1885)) ([1b0923c](https://github.com/UK-Export-Finance/mdm-api/commit/1b0923c0b102a2cd29285632e2ee2a9b570c6de6))
+
 ## [1.55.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.54.0...v1.55.0) (2026-08-07)
 
 
