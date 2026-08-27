@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.57.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.56.0...v1.57.0) (2026-08-27)
+
+
+### Features
+
+* **GIFT-27579:** add endpoint to fetch compounding index ([#1887](https://github.com/UK-Export-Finance/mdm-api/issues/1887)) ([ffcf964](https://github.com/UK-Export-Finance/mdm-api/commit/ffcf9642d4e41e30ecdc18fe9995b02bbae04585))
+
 ## [1.56.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.55.0...v1.56.0) (2026-08-21)
 
 
