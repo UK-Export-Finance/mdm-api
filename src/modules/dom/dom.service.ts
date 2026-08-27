@@ -8,6 +8,7 @@ import {
   FindMultipleOdsBusinessCentreOdsResponsesNonWorkingDaysResponse,
   FindMultipleProductConfigsResponse,
   FindOdsBusinessCentreOdsResponseNonWorkingDayMappedResponse,
+  GetDomCompoundingIndexResponseDto,
   GetDomInterestRateResponseDto,
   GetDomProductConfigResponse,
 } from './dto';
@@ -195,5 +196,18 @@ export class DomService {
     }
 
     return this.odsService.getInterestRates(rateCode, endDate, startDate);
+  }
+
+  /**
+   * Get compounding index values for a ticker within a date range from DOM.
+   */
+  getCompoundingIndices(rateCode: string, endDate: string, startDate?: string): Promise<GetDomCompoundingIndexResponseDto[]> {
+    this.logger.info('Getting DOM compounding indices for %s', rateCode);
+
+    if (startDate && new Date(startDate) > new Date(endDate)) {
+      throw new BadRequestException('The start date must be on or before the end date');
+    }
+
+    return this.odsService.getCompoundingIndices(rateCode, endDate, startDate);
   }
 }
