@@ -50,6 +50,7 @@ describe('DomController', () => {
   let domServiceFindMultipleBusinessCentresNonWorkingDays: jest.Mock;
   let domServiceGetProductConfigurations: jest.Mock;
   let domServiceFindMultipleProductConfigurations: jest.Mock;
+  let domServiceGetCompoundingIndices: jest.Mock;
   let domServiceGetInterestRates: jest.Mock;
 
   let controller: DomController;
@@ -84,6 +85,9 @@ describe('DomController', () => {
 
     domServiceFindMultipleProductConfigurations = jest.fn().mockReturnValueOnce(mockMultipleProductConfigurations);
     domService.findMultipleProductConfigurations = domServiceFindMultipleProductConfigurations;
+
+    domServiceGetCompoundingIndices = jest.fn().mockResolvedValueOnce([]);
+    domService.getCompoundingIndices = domServiceGetCompoundingIndices;
 
     domServiceGetInterestRates = jest.fn().mockResolvedValueOnce(EXAMPLES.DOM.INTEREST_RATES);
     domService.getInterestRates = domServiceGetInterestRates;
@@ -264,6 +268,40 @@ describe('DomController', () => {
 
         // Act & Assert
         const promise = controller.getInterestRateTickers();
+
+        await expect(promise).rejects.toThrow(mockError);
+      });
+    });
+  });
+
+  describe('getCompoundingIndices', () => {
+    const mockQuery = { rateCode: 'EUR001', startDate: '2026-02-09', endDate: '2026-02-20' };
+
+    it('should call domService.getCompoundingIndices with the rate code, end date and start date', async () => {
+      await controller.getCompoundingIndices(mockQuery);
+
+      expect(domServiceGetCompoundingIndices).toHaveBeenCalledWith(mockQuery.rateCode, mockQuery.endDate, mockQuery.startDate);
+    });
+
+    it('should call domService.getCompoundingIndices with an undefined start date when it is not provided', async () => {
+      await controller.getCompoundingIndices({ rateCode: mockQuery.rateCode, endDate: mockQuery.endDate });
+
+      expect(domServiceGetCompoundingIndices).toHaveBeenCalledWith(mockQuery.rateCode, mockQuery.endDate, undefined);
+    });
+
+    it('should return the result of domService.getCompoundingIndices', async () => {
+      const result = await controller.getCompoundingIndices(mockQuery);
+
+      expect(result).toEqual([]);
+    });
+
+    describe('when domService.getCompoundingIndices throws an error', () => {
+      it('should throw an error', async () => {
+        const domService = new DomService(odsService, odsProductConfigService, mockLogger);
+        domService.getCompoundingIndices = jest.fn().mockRejectedValueOnce(mockError);
+        controller = new DomController(domService, odsService, creditRiskRatingsService);
+
+        const promise = controller.getCompoundingIndices(mockQuery);
 
         await expect(promise).rejects.toThrow(mockError);
       });

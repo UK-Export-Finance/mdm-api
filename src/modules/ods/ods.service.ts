@@ -1,12 +1,15 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { COMPANIES, STORED_PROCEDURE } from '@ukef/constants';
 import { mapBusinessCentre, mapBusinessCentres, mapFeeType, mapFeeTypes, mapIndustries, mapIndustry, mapIndustryCodes } from '@ukef/helpers';
+import { mapDomCompoundingIndices } from '@ukef/helpers/map-dom-compounding-indices';
 import { mapDomCurrencies } from '@ukef/helpers/map-dom-currencies';
 import { mapDomInterestRateTickers } from '@ukef/helpers/map-dom-interest-rate-tickers';
 import { mapDomInterestRates } from '@ukef/helpers/map-dom-interest-rates';
 import { PinoLogger } from 'nestjs-pino';
 
 import { FindOdsBusinessCentreOdsResponse } from '../dom/dto';
+import { GetDomCompoundingIndexOdsResponseDto } from '../dom/dto/get-dom-compounding-index-ods-response.dto';
+import { GetDomCompoundingIndexResponseDto } from '../dom/dto/get-dom-compounding-index-response.dto';
 import { GetDomCurrencyOdsResponseDto } from '../dom/dto/get-dom-currency-ods-response.dto';
 import { GetDomCurrencyResponseDto } from '../dom/dto/get-dom-currency-response.dto';
 import { GetDomInterestRateOdsResponseDto } from '../dom/dto/get-dom-interest-rate-ods-response.dto';
@@ -645,6 +648,43 @@ export class OdsService {
       this.logger.error('Error getting interest rates for %s from ODS %o', rateCode, error);
 
       throw new InternalServerErrorException(`Error getting interest rates for ${rateCode} from ODS`, { cause: error });
+    }
+  }
+
+  /**
+   * Gets compounding index values for a ticker within a date range from ODS.
+   */
+  async getCompoundingIndices(rateCode: string, endDate: string, startDate?: string): Promise<GetDomCompoundingIndexResponseDto[]> {
+    try {
+      this.logger.info('Getting compounding indices for %s from ODS', rateCode);
+
+      const storedProcedureInput = this.odsStoredProcedureService.createInput({
+        entityToQuery: ODS_ENTITIES.COMPOUNDING_INTEREST_RATE,
+        queryParameters: {
+          interest_rate_ticker_code: rateCode,
+          interest_rate_datetime: endDate,
+          ...(startDate && { interest_rate_start_datetime: startDate }),
+        },
+      });
+
+      const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
+      const storedProcedureJson: OdsStoredProcedureOutputBody<GetDomCompoundingIndexOdsResponseDto[]> = JSON.parse(storedProcedureResult);
+
+      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+        this.logger.error('Error getting compounding indices for %s from ODS stored procedure, output %o', rateCode, storedProcedureResult);
+
+        throw new Error(`Error getting compounding indices for ${rateCode} from ODS stored procedure`);
+      }
+
+      if (storedProcedureJson?.total_result_count === 0 || storedProcedureJson?.results === undefined) {
+        return [];
+      }
+
+      return mapDomCompoundingIndices(storedProcedureJson.results);
+    } catch (error) {
+      this.logger.error('Error getting compounding indices for %s from ODS %o', rateCode, error);
+
+      throw new InternalServerErrorException(`Error getting compounding indices for ${rateCode} from ODS`, { cause: error });
     }
   }
 }

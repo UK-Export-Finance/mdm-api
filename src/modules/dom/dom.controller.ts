@@ -15,6 +15,7 @@ import {
   FindOdsBusinessCentreOdsResponseNonWorkingDayMappedResponse,
   FindOdsBusinessCentreOdsResponseNonWorkingDaysQueryDto,
   FindOdsBusinessCentreOdsResponseParamDto,
+  GetDomCompoundingIndexResponseDto,
   GetDomCurrencyResponseDto,
   GetDomInterestRateQueryDto,
   GetDomInterestRateResponseDto,
@@ -187,6 +188,24 @@ export class DomController {
   })
   getInterestRates(@Query() query: GetDomInterestRateQueryDto): Promise<GetDomInterestRateResponseDto[]> {
     return this.domService.getInterestRates(query.rateCode, query.endDate, query.startDate);
+  }
+
+  @Get('compounding-index')
+  @ApiOperation({
+    summary: 'Get compounding index values for a ticker within a date range from DOM',
+  })
+  @ApiOkResponse({
+    description: 'DOM compounding index values',
+    type: [GetDomCompoundingIndexResponseDto],
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad request',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  getCompoundingIndices(@Query() query: GetDomInterestRateQueryDto): Promise<GetDomCompoundingIndexResponseDto[]> {
+    return this.domService.getCompoundingIndices(query.rateCode, query.endDate, query.startDate);
   }
 
   @Get('product-configuration/:productType')

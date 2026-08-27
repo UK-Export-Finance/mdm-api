@@ -88,6 +88,7 @@ export const ODS_ENTITIES = {
   FACILITY_CLASSIFICATION: 'facility_classification',
   OBLIGATION_CLASSIFICATION: 'obligation_classification',
   INDUSTRY: 'industry',
+  COMPOUNDING_INTEREST_RATE: 'compounding_interest_rate',
   INTEREST_RATE: 'interest_rate',
   INTEREST_RATE_TICKER: 'interest_rate_ticker',
   SIC_CODE_TO_UKEF_INDUSTRY: 'map_sic_code_to_ukef_industry',

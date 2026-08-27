@@ -450,4 +450,63 @@ describe('DomService', () => {
       });
     });
   });
+
+  describe('getCompoundingIndices', () => {
+    const mockRateCode = 'EUR001';
+    const mockCompoundingIndices = [
+      {
+        code: mockRateCode,
+        startDate: '2026-02-09T00:00:00',
+        endDate: '2026-02-09T23:59:59',
+        daysActive: 1,
+        rate: 1.93,
+        compoundingIndexValue: 10000.5361111111,
+      },
+    ];
+
+    let odsServiceGetCompoundingIndices: jest.Mock;
+
+    beforeEach(() => {
+      odsServiceGetCompoundingIndices = jest.fn().mockResolvedValue(mockCompoundingIndices);
+      odsService.getCompoundingIndices = odsServiceGetCompoundingIndices;
+
+      service = new DomService(odsService, odsProductConfigService, mockLogger);
+    });
+
+    describe('when a start date is provided', () => {
+      it('should call odsService.getCompoundingIndices with the rate code, end date and start date', async () => {
+        await service.getCompoundingIndices(mockRateCode, EXAMPLES.DATE_END, EXAMPLES.DATE_START);
+
+        expect(odsServiceGetCompoundingIndices).toHaveBeenCalledTimes(1);
+        expect(odsServiceGetCompoundingIndices).toHaveBeenCalledWith(mockRateCode, EXAMPLES.DATE_END, EXAMPLES.DATE_START);
+      });
+    });
+
+    describe('when a start date is NOT provided', () => {
+      it('should call odsService.getCompoundingIndices with an undefined start date', async () => {
+        await service.getCompoundingIndices(mockRateCode, EXAMPLES.DATE_END);
+
+        expect(odsServiceGetCompoundingIndices).toHaveBeenCalledTimes(1);
+        expect(odsServiceGetCompoundingIndices).toHaveBeenCalledWith(mockRateCode, EXAMPLES.DATE_END, undefined);
+      });
+    });
+
+    it('should return the result of odsService.getCompoundingIndices', async () => {
+      await expect(service.getCompoundingIndices(mockRateCode, EXAMPLES.DATE_END, EXAMPLES.DATE_START)).resolves.toEqual(mockCompoundingIndices);
+    });
+
+    describe('when the start date is after the end date', () => {
+      it('should throw a bad request exception', () => {
+        expect(() => service.getCompoundingIndices(mockRateCode, EXAMPLES.DATE_START, EXAMPLES.DATE_END)).toThrow(BadRequestException);
+        expect(() => service.getCompoundingIndices(mockRateCode, EXAMPLES.DATE_START, EXAMPLES.DATE_END)).toThrow(
+          'The start date must be on or before the end date',
+        );
+      });
+
+      it('should NOT call odsService.getCompoundingIndices', () => {
+        expect(() => service.getCompoundingIndices(mockRateCode, EXAMPLES.DATE_START, EXAMPLES.DATE_END)).toThrow();
+        expect(odsServiceGetCompoundingIndices).not.toHaveBeenCalled();
+      });
+    });
+  });
 });
