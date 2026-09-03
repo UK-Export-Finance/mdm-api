@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { STORED_PROCEDURE } from '@ukef/constants';
-import { mapAccrualSchedule, mapAccrualSchedules } from '@ukef/helpers';
+import { isStoredProcedureResultEmpty, mapAccrualSchedule, mapAccrualSchedules } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 
 import { GetAccrualScheduleOdsResponseDto, GetAccrualScheduleResponseDto, ODS_ENTITIES, OdsStoredProcedureOutputBody } from './dto';
@@ -41,7 +41,9 @@ export class OdsAccrualScheduleService {
         throw new Error(`Error finding accrual schedule ${scheduleCode} from ODS stored procedure`);
       }
 
-      if (storedProcedureJson?.total_result_count === 0) {
+      if (isStoredProcedureResultEmpty(storedProcedureJson)) {
+        this.logger.error('No accrual schedule found %s in ODS', scheduleCode);
+
         throw new NotFoundException(`No accrual schedule ${scheduleCode} found in ODS`);
       }
 

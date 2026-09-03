@@ -1,6 +1,15 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { COMPANIES, STORED_PROCEDURE } from '@ukef/constants';
-import { mapBusinessCentre, mapBusinessCentres, mapFeeType, mapFeeTypes, mapIndustries, mapIndustry, mapIndustryCodes } from '@ukef/helpers';
+import {
+  isStoredProcedureResultEmpty,
+  mapBusinessCentre,
+  mapBusinessCentres,
+  mapFeeType,
+  mapFeeTypes,
+  mapIndustries,
+  mapIndustry,
+  mapIndustryCodes,
+} from '@ukef/helpers';
 import { mapDomCompoundingIndices } from '@ukef/helpers/map-dom-compounding-indices';
 import { mapDomCurrencies } from '@ukef/helpers/map-dom-currencies';
 import { mapDomInterestRateTickers } from '@ukef/helpers/map-dom-interest-rate-tickers';
@@ -68,7 +77,9 @@ export class OdsService {
         throw new InternalServerErrorException(`Error finding customer ${uniqueReferenceNumber} from ODS stored procedure`);
       }
 
-      if (storedProcedureJson?.total_result_count === 0) {
+      if (isStoredProcedureResultEmpty(storedProcedureJson)) {
+        this.logger.error('No customer found %s in ODS', uniqueReferenceNumber);
+
         throw new NotFoundException(`No customer found ${uniqueReferenceNumber} in ODS`);
       }
 
@@ -118,7 +129,9 @@ export class OdsService {
         throw new InternalServerErrorException(`Error finding deal ${id} from ODS stored procedure`);
       }
 
-      if (storedProcedureJson?.total_result_count === 0) {
+      if (isStoredProcedureResultEmpty(storedProcedureJson)) {
+        this.logger.error('No deal found %s in ODS', id);
+
         throw new NotFoundException(`No deal found ${id} in ODS`);
       }
 
@@ -205,7 +218,9 @@ export class OdsService {
         throw new InternalServerErrorException(`Error finding business centre ${centreCode} from ODS stored procedure`);
       }
 
-      if (storedProcedureJson?.total_result_count === 0) {
+      if (isStoredProcedureResultEmpty(storedProcedureJson)) {
+        this.logger.error('No business centre found %s in ODS', centreCode);
+
         throw new NotFoundException(`No business centre ${centreCode} found in ODS`);
       }
 
@@ -260,7 +275,9 @@ export class OdsService {
         throw new InternalServerErrorException(`Error finding business centre ${centreCode} non working days from ODS stored procedure`);
       }
 
-      if (storedProcedureJson?.total_result_count === 0) {
+      if (isStoredProcedureResultEmpty(storedProcedureJson)) {
+        this.logger.error('No business centre %s non working days found in ODS', centreCode);
+
         throw new NotFoundException(`No business centre ${centreCode} non working days found in ODS`);
       }
 
@@ -306,7 +323,9 @@ export class OdsService {
         throw new Error(`Error finding fee type ${feeTypeCode} from ODS stored procedure`);
       }
 
-      if (storedProcedureJson?.total_result_count === 0) {
+      if (isStoredProcedureResultEmpty(storedProcedureJson)) {
+        this.logger.error('No fee type found %s in ODS', feeTypeCode);
+
         throw new NotFoundException(`No fee type ${feeTypeCode} found in ODS`);
       }
 
@@ -388,7 +407,9 @@ export class OdsService {
         throw new Error(`Error finding UKEF industry ${industryCode} from ODS stored procedure`);
       }
 
-      if (storedProcedureJson?.total_result_count === 0) {
+      if (isStoredProcedureResultEmpty(storedProcedureJson)) {
+        this.logger.error('No UKEF industry found %s in ODS', industryCode);
+
         throw new NotFoundException(`No UKEF industry ${industryCode} found in ODS`);
       }
 
@@ -524,7 +545,9 @@ export class OdsService {
         throw new Error(`Error finding UKEF industry code by Companies House industry code ${industryCode} in ODS stored procedure`);
       }
 
-      if (storedProcedureJson?.total_result_count === 0) {
+      if (isStoredProcedureResultEmpty(storedProcedureJson)) {
+        this.logger.error('No UKEF industry by Companies House industry code %s found in ODS', industryCode);
+
         throw new NotFoundException(`No UKEF industry by Companies House industry code ${industryCode} found in ODS`);
       }
 
@@ -639,7 +662,7 @@ export class OdsService {
         throw new Error(`Error getting interest rates for ${rateCode} from ODS stored procedure`);
       }
 
-      if (storedProcedureJson?.total_result_count === 0 || storedProcedureJson?.results === undefined) {
+      if (isStoredProcedureResultEmpty(storedProcedureJson) || storedProcedureJson?.results === undefined) {
         return [];
       }
 
@@ -676,7 +699,7 @@ export class OdsService {
         throw new Error(`Error getting compounding indices for ${rateCode} from ODS stored procedure`);
       }
 
-      if (storedProcedureJson?.total_result_count === 0 || storedProcedureJson?.results === undefined) {
+      if (isStoredProcedureResultEmpty(storedProcedureJson) || storedProcedureJson?.results === undefined) {
         return [];
       }
 
