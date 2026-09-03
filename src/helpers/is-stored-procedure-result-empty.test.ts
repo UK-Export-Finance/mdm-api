@@ -9,6 +9,14 @@ const mockBaseJson: Pick<OdsStoredProcedureOutputBody, 'query_request_id' | 'mes
 };
 
 describe('isStoredProcedureResultEmpty', () => {
+  it('should return true when a stored procedure result is empty', () => {
+    // Act
+    const result = isStoredProcedureResultEmpty();
+
+    // Assert
+    expect(result).toBe(true);
+  });
+
   it('should return true when total_result_count is 0', () => {
     // Arrange
     const storedProcedureJson: OdsStoredProcedureOutputBody = {

@@ -663,6 +663,8 @@ export class OdsService {
       }
 
       if (isStoredProcedureResultEmpty(storedProcedureJson) || storedProcedureJson?.results === undefined) {
+        this.logger.error('Error getting interest rates for %s from ODS stored procedure - empty/undefined, output %o', rateCode, storedProcedureResult);
+
         return [];
       }
 
@@ -700,6 +702,8 @@ export class OdsService {
       }
 
       if (isStoredProcedureResultEmpty(storedProcedureJson) || storedProcedureJson?.results === undefined) {
+        this.logger.error('Error getting compounding indices for %s from ODS stored procedure - empty/undefined, output %o', rateCode, storedProcedureResult);
+
         return [];
       }
 
