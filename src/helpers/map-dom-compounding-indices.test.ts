@@ -25,12 +25,12 @@ describe('mapDomCompoundingIndices', () => {
     const expected = [
       {
         code: EXAMPLES.DOM.INTEREST_RATE_TICKERS[0].code,
-        startDate: EXAMPLES.DOM.INTEREST_RATES[0].startDate,
-        endDate: EXAMPLES.DOM.INTEREST_RATES[0].endDate,
-        daysActive: 1,
-        rate: EXAMPLES.DOM.INTEREST_RATES[0].rate,
         compoundingIndexValue: EXAMPLES.DOM.INTEREST_RATES[0].compoundingIndexValue,
+        daysActive: 1,
+        endDate: EXAMPLES.DOM.INTEREST_RATES[0].endDate,
         indexEffectiveDate: EXAMPLES.DOM.INTEREST_RATES[0].startDate,
+        rate: EXAMPLES.DOM.INTEREST_RATES[0].rate,
+        startDate: EXAMPLES.DOM.INTEREST_RATES[0].startDate,
       },
     ];
 

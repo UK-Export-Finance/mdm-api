@@ -9,10 +9,10 @@ import { GetDomCompoundingIndexResponseDto } from '@ukef/modules/dom/dto/get-dom
 export const mapDomCompoundingIndices = (compoundingIndices: GetDomCompoundingIndexOdsResponseDto[]): GetDomCompoundingIndexResponseDto[] =>
   compoundingIndices.map((compoundingIndex) => ({
     code: compoundingIndex.interest_rate_ticker_code,
-    startDate: compoundingIndex.interest_rate_start_datetime,
-    endDate: compoundingIndex.interest_rate_end_datetime,
-    daysActive: compoundingIndex.interest_rate_days_active,
-    rate: compoundingIndex.interest_rate,
     compoundingIndexValue: compoundingIndex.interest_compounding_index_value,
+    daysActive: compoundingIndex.interest_rate_days_active,
+    endDate: compoundingIndex.interest_rate_end_datetime,
     indexEffectiveDate: compoundingIndex.interest_compounding_index_source_start_datetime,
+    rate: compoundingIndex.interest_rate,
+    startDate: compoundingIndex.interest_rate_start_datetime,
   }));
