@@ -1,4 +1,5 @@
 export * from './convert-string-to-buffer';
+export * from './is-stored-procedure-result-empty';
 export * from './map-accrual-frequencies';
 export * from './map-accrual-frequency';
 export * from './map-accrual-schedule';

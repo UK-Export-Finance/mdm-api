@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { STORED_PROCEDURE } from '@ukef/constants';
-import { mapOdsClassification, mapOdsClassifications } from '@ukef/helpers';
+import { isStoredProcedureResultEmpty, mapOdsClassification, mapOdsClassifications } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 
 import { GetFacilityCategoryOdsResponseDto, GetFacilityCategoryResponseDto, ODS_ENTITIES, ODS_QUERY_PARAM_VALUES, OdsStoredProcedureOutputBody } from './dto';
@@ -42,7 +42,9 @@ export class OdsFacilityCategoryService {
         throw new Error(`Error finding facility category ${categoryCode} from ODS stored procedure`);
       }
 
-      if (storedProcedureJson?.total_result_count === 0) {
+      if (isStoredProcedureResultEmpty(storedProcedureJson)) {
+        this.logger.error('No facility category found %s in ODS', categoryCode);
+
         throw new NotFoundException(`No facility category ${categoryCode} found in ODS`);
       }
 

@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { STORED_PROCEDURE } from '@ukef/constants';
-import { mapObligationSubtypesWithProductCode } from '@ukef/helpers';
+import { isStoredProcedureResultEmpty, mapObligationSubtypesWithProductCode } from '@ukef/helpers';
 import { mapObligationSubtype } from '@ukef/helpers/map-obligation-subtype';
 import { PinoLogger } from 'nestjs-pino';
 
@@ -50,7 +50,9 @@ export class OdsObligationSubtypeService {
         throw new Error(`Error finding obligation subtype ${subtypeCode} from ODS stored procedure`);
       }
 
-      if (storedProcedureJson?.total_result_count === 0) {
+      if (isStoredProcedureResultEmpty(storedProcedureJson)) {
+        this.logger.error('No obligation subtype found %s in ODS', subtypeCode);
+
         throw new NotFoundException(`No obligation subtype ${subtypeCode} found in ODS`);
       }
 

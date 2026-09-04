@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { OdsScheduleClassificationTypeCodes, STORED_PROCEDURE } from '@ukef/constants';
-import { mapAccrualFrequencies, mapAccrualFrequency, mapOdsClassification, mapOdsClassifications } from '@ukef/helpers';
+import { isStoredProcedureResultEmpty, mapAccrualFrequencies, mapAccrualFrequency, mapOdsClassification, mapOdsClassifications } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 
 import {
@@ -48,7 +48,9 @@ export class OdsAccrualsService {
         throw new Error(`Error finding accrual frequency ${frequencyCode} from ODS stored procedure`);
       }
 
-      if (storedProcedureJson?.total_result_count === 0) {
+      if (isStoredProcedureResultEmpty(storedProcedureJson)) {
+        this.logger.error('No accrual frequency found %s in ODS', frequencyCode);
+
         throw new NotFoundException(`No accrual frequency ${frequencyCode} found in ODS`);
       }
 
@@ -139,7 +141,9 @@ export class OdsAccrualsService {
         throw new Error(`Error finding accrual schedule classification ${classificationTypeCode} ${classificationCode} from ODS stored procedure`);
       }
 
-      if (storedProcedureJson?.total_result_count === 0) {
+      if (isStoredProcedureResultEmpty(storedProcedureJson)) {
+        this.logger.error('No accrual schedule classification found %s %s in ODS', classificationTypeCode, classificationCode);
+
         throw new NotFoundException(`No accrual schedule classification ${classificationTypeCode} ${classificationCode} found in ODS`);
       }
 

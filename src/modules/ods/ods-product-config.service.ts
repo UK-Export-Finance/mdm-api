@@ -1,5 +1,6 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { STORED_PROCEDURE } from '@ukef/constants';
+import { isStoredProcedureResultEmpty } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 
 import { GetProductConfigOdsResponse, ODS_ENTITIES, OdsStoredProcedureOutputBody } from './dto';
@@ -39,7 +40,9 @@ export class OdsProductConfigService {
         throw new Error(`Error finding product config ${productType} from ODS stored procedure`);
       }
 
-      if (storedProcedureJson?.total_result_count === 0) {
+      if (isStoredProcedureResultEmpty(storedProcedureJson)) {
+        this.logger.error('No product config found %s in ODS', productType);
+
         throw new NotFoundException(`No product config ${productType} found in ODS`);
       }
 

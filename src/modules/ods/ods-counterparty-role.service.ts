@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { STORED_PROCEDURE } from '@ukef/constants';
-import { mapCounterpartyRole, mapCounterpartyRoles } from '@ukef/helpers';
+import { isStoredProcedureResultEmpty, mapCounterpartyRole, mapCounterpartyRoles } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 
 import { GetCounterpartyRoleOdsResponseDto, GetCounterpartyRoleResponseDto, ODS_ENTITIES, OdsStoredProcedureOutputBody } from './dto';
@@ -41,7 +41,9 @@ export class OdsCounterpartyRoleService {
         throw new Error(`Error finding counterparty role ${roleType} from ODS stored procedure`);
       }
 
-      if (storedProcedureJson?.total_result_count === 0) {
+      if (isStoredProcedureResultEmpty(storedProcedureJson)) {
+        this.logger.error('No counterparty role found %s in ODS', roleType);
+
         throw new NotFoundException(`No counterparty role ${roleType} found in ODS`);
       }
 
