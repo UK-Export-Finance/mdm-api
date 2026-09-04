@@ -266,6 +266,7 @@ export const EXAMPLES = {
         endDate: '2026-07-01T23:59:59',
         rate: 3.25,
         adjustedRate: 3.25,
+        compoundingIndexValue: 10000.5361111111,
       },
     ],
     PRODUCT_CONFIG: {

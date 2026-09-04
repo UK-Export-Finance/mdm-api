@@ -460,7 +460,7 @@ describe('DomService', () => {
         endDate: EXAMPLES.DOM.INTEREST_RATES[0].endDate,
         daysActive: 1,
         rate: EXAMPLES.DOM.INTEREST_RATES[0].rate,
-        compoundingIndexValue: 10000.5361111111,
+        compoundingIndexValue: EXAMPLES.DOM.INTEREST_RATES[0].compoundingIndexValue,
       },
     ];
 

@@ -21,6 +21,6 @@ export class GetDomCompoundingIndexResponseDto {
   @ApiProperty({ description: 'The interest rate', example: EXAMPLES.DOM.INTEREST_RATES[0].rate })
   readonly rate: number;
 
-  @ApiProperty({ description: 'The compounding index value for the interest rate', example: 10000.5361111111 })
+  @ApiProperty({ description: 'The compounding index value for the interest rate', example: EXAMPLES.DOM.INTEREST_RATES[0].compoundingIndexValue })
   readonly compoundingIndexValue: number;
 }

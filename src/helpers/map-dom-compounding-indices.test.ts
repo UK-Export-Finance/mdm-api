@@ -13,7 +13,7 @@ describe('mapDomCompoundingIndices', () => {
         interest_rate_end_datetime: EXAMPLES.DOM.INTEREST_RATES[0].endDate,
         interest_rate_days_active: 1,
         interest_rate: EXAMPLES.DOM.INTEREST_RATES[0].rate,
-        interest_compounding_index_value: 10000.5361111111,
+        interest_compounding_index_value: EXAMPLES.DOM.INTEREST_RATES[0].compoundingIndexValue,
         interest_compounding_index_source_start_datetime: EXAMPLES.DOM.INTEREST_RATES[0].startDate,
       },
     ];
@@ -29,7 +29,7 @@ describe('mapDomCompoundingIndices', () => {
         endDate: EXAMPLES.DOM.INTEREST_RATES[0].endDate,
         daysActive: 1,
         rate: EXAMPLES.DOM.INTEREST_RATES[0].rate,
-        compoundingIndexValue: 10000.5361111111,
+        compoundingIndexValue: EXAMPLES.DOM.INTEREST_RATES[0].compoundingIndexValue,
         indexEffectiveDate: EXAMPLES.DOM.INTEREST_RATES[0].startDate,
       },
     ];

@@ -19,7 +19,7 @@ describe('OdsService - getCompoundingIndices', () => {
     interest_rate_end_datetime: EXAMPLES.DOM.INTEREST_RATES[0].endDate,
     interest_rate_days_active: 1,
     interest_rate: EXAMPLES.DOM.INTEREST_RATES[0].rate,
-    interest_compounding_index_value: 10000.5361111111,
+    interest_compounding_index_value: EXAMPLES.DOM.INTEREST_RATES[0].compoundingIndexValue,
     interest_compounding_index_source_start_datetime: EXAMPLES.DOM.INTEREST_RATES[0].startDate,
   };
 
