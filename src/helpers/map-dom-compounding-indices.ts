@@ -9,4 +9,5 @@ export const mapDomCompoundingIndices = (compoundingIndices: GetDomCompoundingIn
     daysActive: compoundingIndex.interest_rate_days_active,
     rate: compoundingIndex.interest_rate,
     compoundingIndexValue: compoundingIndex.interest_compounding_index_value,
+    indexEffectiveDate: compoundingIndex.interest_compounding_index_source_start_datetime,
   }));

@@ -13,6 +13,7 @@ describe('mapDomCompoundingIndices', () => {
         interest_rate_days_active: 1,
         interest_rate: 1.93,
         interest_compounding_index_value: 10000.5361111111,
+        interest_compounding_index_source_start_datetime: '2026-02-09T00:00:00',
       },
     ];
 
@@ -28,6 +29,7 @@ describe('mapDomCompoundingIndices', () => {
         daysActive: 1,
         rate: 1.93,
         compoundingIndexValue: 10000.5361111111,
+        indexEffectiveDate: '2026-02-09T00:00:00',
       },
     ]);
   });

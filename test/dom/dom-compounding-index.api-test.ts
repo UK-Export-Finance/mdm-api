@@ -40,6 +40,7 @@ describe('/dom - compounding index', () => {
           daysActive: expect.any(Number),
           rate: expect.any(Number),
           compoundingIndexValue: expect.any(Number),
+          indexEffectiveDate: expect.any(String),
         }),
       ]),
     );
@@ -63,6 +64,7 @@ describe('/dom - compounding index', () => {
           daysActive: expect.any(Number),
           rate: expect.any(Number),
           compoundingIndexValue: expect.any(Number),
+          indexEffectiveDate: expect.any(String),
         }),
       ]),
     );
