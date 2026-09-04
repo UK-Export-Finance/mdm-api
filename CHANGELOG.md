@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.58.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.57.0...v1.58.0) (2026-09-04)
+
+
+### Features
+
+* **GIFT-27694:** compounding index - indexEffectiveDate field ([#1890](https://github.com/UK-Export-Finance/mdm-api/issues/1890)) ([1016021](https://github.com/UK-Export-Finance/mdm-api/commit/1016021435e66d5e22a0dd85a2948b70b5272802))
+
 ## [1.57.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.56.0...v1.57.0) (2026-08-27)
 
 
