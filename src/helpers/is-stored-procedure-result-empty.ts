@@ -4,8 +4,12 @@ import { OdsStoredProcedureOutputBody } from '@ukef/modules/ods/dto/ods-payloads
  * Checks if the result of an ODS stored procedure is empty.
  *
  * @param storedProcedureJson The JSON output from the ODS stored procedure
- * @returns {boolean} True if the stored procedure result is empty, false otherwise
+ * @returns {boolean} True if the stored procedure result is empty or not provided, false otherwise
  */
 export const isStoredProcedureResultEmpty = (storedProcedureJson?: OdsStoredProcedureOutputBody): boolean => {
+  if (!storedProcedureJson) {
+    return true;
+  }
+
   return storedProcedureJson?.total_result_count === 0;
 };

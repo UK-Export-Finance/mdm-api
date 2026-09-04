@@ -9,6 +9,22 @@ const mockBaseJson: Pick<OdsStoredProcedureOutputBody, 'query_request_id' | 'mes
 };
 
 describe('isStoredProcedureResultEmpty', () => {
+  it('should return true when storedProcedureJson is null', () => {
+    // Act
+    const result = isStoredProcedureResultEmpty(null);
+
+    // Assert
+    expect(result).toBe(true);
+  });
+
+  it('should return true when storedProcedureJson is undefined', () => {
+    // Act
+    const result = isStoredProcedureResultEmpty(undefined);
+
+    // Assert
+    expect(result).toBe(true);
+  });
+
   it('should return true when a stored procedure result is empty', () => {
     // Act
     const result = isStoredProcedureResultEmpty();
@@ -69,28 +85,6 @@ describe('isStoredProcedureResultEmpty', () => {
       total_result_count: undefined,
       results: [],
     };
-
-    // Act
-    const result = isStoredProcedureResultEmpty(storedProcedureJson);
-
-    // Assert
-    expect(result).toBe(false);
-  });
-
-  it('should return false when storedProcedureJson is null', () => {
-    // Arrange
-    const storedProcedureJson = null as any;
-
-    // Act
-    const result = isStoredProcedureResultEmpty(storedProcedureJson);
-
-    // Assert
-    expect(result).toBe(false);
-  });
-
-  it('should return false when storedProcedureJson is undefined', () => {
-    // Arrange
-    const storedProcedureJson = undefined as any;
 
     // Act
     const result = isStoredProcedureResultEmpty(storedProcedureJson);
