@@ -452,14 +452,14 @@ describe('DomService', () => {
   });
 
   describe('getCompoundingIndices', () => {
-    const mockRateCode = 'EUR001';
+    const mockRateCode = EXAMPLES.DOM.INTEREST_RATE_TICKERS[0].code;
     const mockCompoundingIndices = [
       {
         code: mockRateCode,
-        startDate: '2026-02-09T00:00:00',
-        endDate: '2026-02-09T23:59:59',
+        startDate: EXAMPLES.DOM.INTEREST_RATES[0].startDate,
+        endDate: EXAMPLES.DOM.INTEREST_RATES[0].endDate,
         daysActive: 1,
-        rate: 1.93,
+        rate: EXAMPLES.DOM.INTEREST_RATES[0].rate,
         compoundingIndexValue: 10000.5361111111,
       },
     ];

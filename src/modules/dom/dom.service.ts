@@ -192,6 +192,8 @@ export class DomService {
     this.logger.info('Getting DOM interest rates for %s', rateCode);
 
     if (startDate && new Date(startDate) > new Date(endDate)) {
+      this.logger.warn('Unable to get DOM interest rates: start date is after end date %s > %s %o', startDate, endDate);
+
       throw new BadRequestException('The start date must be on or before the end date');
     }
 
@@ -200,11 +202,18 @@ export class DomService {
 
   /**
    * Get compounding index values for a ticker within a date range from DOM.
+   * @param {string} rateCode: Compounding index ticker code
+   * @param {string} endDate: End date (inclusive) to retrieve compounding indices until
+   * @param {string} startDate: Optional start date (inclusive) to retrieve compounding indices from. If omitted, only the index for the end date is returned.
+   * @returns {Promise<GetDomCompoundingIndexResponseDto[]>}
+   * @throws {BadRequestException} If the start date is not before the end date
    */
   getCompoundingIndices(rateCode: string, endDate: string, startDate?: string): Promise<GetDomCompoundingIndexResponseDto[]> {
     this.logger.info('Getting DOM compounding indices for %s', rateCode);
 
     if (startDate && new Date(startDate) > new Date(endDate)) {
+      this.logger.warn('Unable to get DOM compounding indices: start date is after end date %s > %s %o', startDate, endDate);
+
       throw new BadRequestException('The start date must be on or before the end date');
     }
 

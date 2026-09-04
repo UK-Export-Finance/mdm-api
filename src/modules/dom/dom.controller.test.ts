@@ -145,8 +145,7 @@ describe('DomController', () => {
       await controller.findBusinessCentreNonWorkingDays(mockParam, mockQuery);
 
       // Assert
-      expect(domServiceFindBusinessCentreNonWorkingDays).toHaveBeenCalledTimes(1);
-      expect(domServiceFindBusinessCentreNonWorkingDays).toHaveBeenCalledWith(mockParam.centreCode, mockQuery.startDate, mockQuery.endDate);
+      expect(domServiceFindBusinessCentreNonWorkingDays).toHaveBeenNthCalledWith(1, mockParam.centreCode, mockQuery.startDate, mockQuery.endDate);
     });
 
     it('should return the result of domService.findBusinessCentreNonWorkingDays', async () => {
@@ -275,18 +274,18 @@ describe('DomController', () => {
   });
 
   describe('getCompoundingIndices', () => {
-    const mockQuery = { rateCode: 'EUR001', startDate: '2026-02-09', endDate: '2026-02-20' };
+    const mockQuery = { rateCode: EXAMPLES.DOM.INTEREST_RATE_TICKERS[0].code, startDate: EXAMPLES.DATE_START, endDate: EXAMPLES.DATE_END };
 
     it('should call domService.getCompoundingIndices with the rate code, end date and start date', async () => {
       await controller.getCompoundingIndices(mockQuery);
 
-      expect(domServiceGetCompoundingIndices).toHaveBeenCalledWith(mockQuery.rateCode, mockQuery.endDate, mockQuery.startDate);
+      expect(domServiceGetCompoundingIndices).toHaveBeenNthCalledWith(1, mockQuery.rateCode, mockQuery.endDate, mockQuery.startDate);
     });
 
     it('should call domService.getCompoundingIndices with an undefined start date when it is not provided', async () => {
       await controller.getCompoundingIndices({ rateCode: mockQuery.rateCode, endDate: mockQuery.endDate });
 
-      expect(domServiceGetCompoundingIndices).toHaveBeenCalledWith(mockQuery.rateCode, mockQuery.endDate, undefined);
+      expect(domServiceGetCompoundingIndices).toHaveBeenNthCalledWith(1, mockQuery.rateCode, mockQuery.endDate, undefined);
     });
 
     it('should return the result of domService.getCompoundingIndices', async () => {
@@ -352,8 +351,7 @@ describe('DomController', () => {
       await controller.findMultipleBusinessCentresNonWorkingDays(mockQuery);
 
       // Assert
-      expect(domServiceFindMultipleBusinessCentresNonWorkingDays).toHaveBeenCalledTimes(1);
-      expect(domServiceFindMultipleBusinessCentresNonWorkingDays).toHaveBeenCalledWith(mockQuery.centreCodes, mockQuery.startDate, mockQuery.endDate);
+      expect(domServiceFindMultipleBusinessCentresNonWorkingDays).toHaveBeenNthCalledWith(1, mockQuery.centreCodes, mockQuery.startDate, mockQuery.endDate);
     });
 
     it('should return mapped business centres non working days', async () => {
@@ -373,8 +371,7 @@ describe('DomController', () => {
       await controller.findProductConfiguration({ productType: mockProductType });
 
       // Assert
-      expect(domServiceFindProductConfiguration).toHaveBeenCalledTimes(1);
-      expect(domServiceFindProductConfiguration).toHaveBeenCalledWith(mockProductType);
+      expect(domServiceFindProductConfiguration).toHaveBeenNthCalledWith(1, mockProductType);
     });
 
     it('should return the result of domService.findProductConfiguration', async () => {
@@ -410,8 +407,7 @@ describe('DomController', () => {
       await controller.findMultipleProductConfigurations({ productTypes: mockProductTypesString });
 
       // Assert
-      expect(domServiceFindMultipleProductConfigurations).toHaveBeenCalledTimes(1);
-      expect(domServiceFindMultipleProductConfigurations).toHaveBeenCalledWith(mockProductTypesString);
+      expect(domServiceFindMultipleProductConfigurations).toHaveBeenNthCalledWith(1, mockProductTypesString);
     });
 
     it('should return product configurations', async () => {
@@ -435,8 +431,7 @@ describe('DomController', () => {
       await controller.getInterestRates(mockQuery);
 
       // Assert
-      expect(domServiceGetInterestRates).toHaveBeenCalledTimes(1);
-      expect(domServiceGetInterestRates).toHaveBeenCalledWith(mockQuery.rateCode, mockQuery.endDate, mockQuery.startDate);
+      expect(domServiceGetInterestRates).toHaveBeenNthCalledWith(1, mockQuery.rateCode, mockQuery.endDate, mockQuery.startDate);
     });
 
     it('should call domService.getInterestRates with an undefined start date when it is not provided', async () => {
@@ -444,8 +439,7 @@ describe('DomController', () => {
       await controller.getInterestRates({ rateCode: mockQuery.rateCode, endDate: mockQuery.endDate });
 
       // Assert
-      expect(domServiceGetInterestRates).toHaveBeenCalledTimes(1);
-      expect(domServiceGetInterestRates).toHaveBeenCalledWith(mockQuery.rateCode, mockQuery.endDate, undefined);
+      expect(domServiceGetInterestRates).toHaveBeenNthCalledWith(1, mockQuery.rateCode, mockQuery.endDate, undefined);
     });
 
     it('should return the result of domService.getInterestRates', async () => {
