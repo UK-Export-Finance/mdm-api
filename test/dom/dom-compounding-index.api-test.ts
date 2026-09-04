@@ -40,6 +40,7 @@ describe('/dom - compounding index', () => {
           daysActive: expect.any(Number),
           rate: expect.any(Number),
           compoundingIndexValue: expect.any(Number),
+          indexEffectiveDate: expect.any(String),
         }),
       ]),
     );
@@ -63,32 +64,53 @@ describe('/dom - compounding index', () => {
           daysActive: expect.any(Number),
           rate: expect.any(Number),
           compoundingIndexValue: expect.any(Number),
+          indexEffectiveDate: expect.any(String),
         }),
       ]),
     );
   });
 
   it(`should return ${HttpStatus.BAD_REQUEST} when rateCode is missing`, async () => {
-    const { status } = await api.get(`${baseUrl}?endDate=${endDate}`);
+    // Arrange
+    const url = `${baseUrl}?endDate=${endDate}`;
 
+    // Act
+    const { status } = await api.get(url);
+
+    // Assert
     expect(status).toBe(HttpStatus.BAD_REQUEST);
   });
 
   it(`should return ${HttpStatus.BAD_REQUEST} when endDate is missing`, async () => {
-    const { status } = await api.get(`${baseUrl}?rateCode=${rateCode}`);
+    // Arrange
+    const url = `${baseUrl}?rateCode=${rateCode}`;
 
+    // Act
+    const { status } = await api.get(url);
+
+    // Assert
     expect(status).toBe(HttpStatus.BAD_REQUEST);
   });
 
   it(`should return ${HttpStatus.BAD_REQUEST} when startDate is not in YYYY-MM-DD format`, async () => {
-    const { status } = await api.get(`${baseUrl}?rateCode=${rateCode}&startDate=2026-02-09T00:00:00&endDate=${endDate}`);
+    // Arrange
+    const url = `${baseUrl}?rateCode=${rateCode}&startDate=2026-02-09T00:00:00&endDate=${endDate}`;
 
+    // Act
+    const { status } = await api.get(url);
+
+    // Assert
     expect(status).toBe(HttpStatus.BAD_REQUEST);
   });
 
   it(`should return ${HttpStatus.BAD_REQUEST} when startDate is after endDate`, async () => {
-    const { status } = await api.get(`${baseUrl}?rateCode=${rateCode}&startDate=${endDate}&endDate=${startDate}`);
+    // Arrange
+    const url = `${baseUrl}?rateCode=${rateCode}&startDate=${endDate}&endDate=${startDate}`;
 
+    // Act
+    const { status } = await api.get(url);
+
+    // Assert
     expect(status).toBe(HttpStatus.BAD_REQUEST);
   });
 });

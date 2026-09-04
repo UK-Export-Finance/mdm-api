@@ -21,4 +21,7 @@ export class GetDomCompoundingIndexOdsResponseDto {
 
   @ApiProperty({ description: 'The compounding index value for the interest rate', example: 10000.5361111111 })
   readonly interest_compounding_index_value: number;
+
+  @ApiProperty({ description: 'The start date and time the compounding index is effective from', example: '2026-02-09T00:00:00' })
+  readonly interest_compounding_index_source_start_datetime: string;
 }

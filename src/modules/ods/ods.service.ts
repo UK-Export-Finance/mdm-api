@@ -678,6 +678,12 @@ export class OdsService {
 
   /**
    * Gets compounding index values for a ticker within a date range from ODS.
+   * @param {string} rateCode The code of the interest rate ticker.
+   * @param {string} endDate The end date for the compounding index query.
+   * @param {string} [startDate] The optional start date for the compounding index query.
+   *
+   * @returns {Promise<GetDomCompoundingIndexResponseDto[]>} An array of compounding index values for the specified ticker and date range.
+   * @throws {InternalServerErrorException} When there is an error retrieving compounding indices from ODS.
    */
   async getCompoundingIndices(rateCode: string, endDate: string, startDate?: string): Promise<GetDomCompoundingIndexResponseDto[]> {
     try {

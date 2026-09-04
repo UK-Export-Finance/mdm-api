@@ -1,3 +1,4 @@
+import { EXAMPLES } from '@ukef/constants';
 import { GetDomCompoundingIndexOdsResponseDto } from '@ukef/modules/dom/dto/get-dom-compounding-index-ods-response.dto';
 
 import { mapDomCompoundingIndices } from './map-dom-compounding-indices';
@@ -7,12 +8,13 @@ describe('mapDomCompoundingIndices', () => {
     // Arrange
     const mockCompoundingIndices: GetDomCompoundingIndexOdsResponseDto[] = [
       {
-        interest_rate_ticker_code: 'EUR001',
-        interest_rate_start_datetime: '2026-02-09T00:00:00',
-        interest_rate_end_datetime: '2026-02-09T23:59:59',
+        interest_rate_ticker_code: EXAMPLES.DOM.INTEREST_RATE_TICKERS[0].code,
+        interest_rate_start_datetime: EXAMPLES.DOM.INTEREST_RATES[0].startDate,
+        interest_rate_end_datetime: EXAMPLES.DOM.INTEREST_RATES[0].endDate,
         interest_rate_days_active: 1,
-        interest_rate: 1.93,
-        interest_compounding_index_value: 10000.5361111111,
+        interest_rate: EXAMPLES.DOM.INTEREST_RATES[0].rate,
+        interest_compounding_index_value: EXAMPLES.DOM.INTEREST_RATES[0].compoundingIndexValue,
+        interest_compounding_index_source_start_datetime: EXAMPLES.DOM.INTEREST_RATES[0].startDate,
       },
     ];
 
@@ -20,16 +22,19 @@ describe('mapDomCompoundingIndices', () => {
     const result = mapDomCompoundingIndices(mockCompoundingIndices);
 
     // Assert
-    expect(result).toEqual([
+    const expected = [
       {
-        code: 'EUR001',
-        startDate: '2026-02-09T00:00:00',
-        endDate: '2026-02-09T23:59:59',
+        code: EXAMPLES.DOM.INTEREST_RATE_TICKERS[0].code,
+        compoundingIndexValue: EXAMPLES.DOM.INTEREST_RATES[0].compoundingIndexValue,
         daysActive: 1,
-        rate: 1.93,
-        compoundingIndexValue: 10000.5361111111,
+        endDate: EXAMPLES.DOM.INTEREST_RATES[0].endDate,
+        indexEffectiveDate: EXAMPLES.DOM.INTEREST_RATES[0].startDate,
+        rate: EXAMPLES.DOM.INTEREST_RATES[0].rate,
+        startDate: EXAMPLES.DOM.INTEREST_RATES[0].startDate,
       },
-    ]);
+    ];
+
+    expect(result).toEqual(expected);
   });
 
   it('should return an empty array when given an empty array', () => {
