@@ -1,8 +1,3 @@
-// TODO: map-product-config?
-
-// TODO COUNTERPARTY_ROLE_TYPES - invalid / misleading, codes, not strings
-// TODO: "every rate", which field?
-
 const COUNTERPARTY_ROLE_TYPES = {
   BROKER: 'BROKER',
   GUARANTOR: 'GUARANTOR',
