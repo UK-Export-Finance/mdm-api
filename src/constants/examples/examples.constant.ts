@@ -1,4 +1,5 @@
 import { ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES } from '../ods.constant';
+import { PRODUCT_CONFIG, PRODUCT_TYPES } from './product-config.examples.constant';
 
 const BUSINESS_CENTRE = {
   CODE: 'GH_ACC',
@@ -20,11 +21,6 @@ const BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE = {
     NAME: 'Weekend',
     DATE: '2026-03-04',
   },
-};
-
-const COUNTERPARTY_ROLE_TYPES = {
-  BROKER: 'BROKER',
-  GUARANTOR: 'GUARANTOR',
 };
 
 const DATE_START = '2026-01-01';
@@ -60,33 +56,9 @@ const OBLIGATION_SUBTYPE = {
   IS_ACTIVE: true,
 };
 
-const PRODUCT_CONFIG_REQUIREMENT = {
-  NOT_APPLICABLE: 'NOT_APPLICABLE',
-  OPTIONAL: 'OPTIONAL',
-  REQUIRED: 'REQUIRED',
-};
-
-const PRODUCT_TYPES = {
-  BIP: 'PRT001',
-  EXIP: 'PRT002',
-  BSS: 'PRT003',
-  GEF: 'PRT004',
-};
-
-const CREDIT_TYPES = {
-  TERM: 'TERM',
-  REVOLVER: 'REVOLVER',
-};
-
 const ODS_CREDIT_TYPES = {
   TERM: 'Term',
   REVOLVER: 'Revolver',
-};
-
-const INSTRUMENT_TYPES = {
-  CASH_ADVANCE: 'Cash Advance',
-  INSURANCE: 'Insurance',
-  GUARANTEE: 'Guarantee',
 };
 
 const CURRENCIES = {
@@ -98,11 +70,6 @@ const CURRENCIES = {
     ISO_CODE: 'JPY',
     NAME: 'Japanese Yen',
   },
-};
-
-const REPAYMENT_TYPES = {
-  BULLET: 'Bullet',
-  SCHEDULED: 'Scheduled',
 };
 
 export const EXAMPLES = {
@@ -269,86 +236,7 @@ export const EXAMPLES = {
         compoundingIndexValue: 10000.5361111111,
       },
     ],
-    PRODUCT_CONFIG: {
-      BIP: {
-        productType: PRODUCT_TYPES.BIP,
-        name: 'Bond Insurance Product (BIP)',
-        shortName: 'BIP',
-        productActive: true,
-        configuration: {
-          commitmentDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          issuedDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          effectiveDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          availabilityEndDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          expiryDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          creditType: CREDIT_TYPES.TERM,
-          participations: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          scheduledRepayments: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          nonCashObligations: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          cashObligations: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          accrualSchedule: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          pimOwner: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          riskRating: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          preCreditPeriod: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          creditPeriod: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          lossGivenDefault: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          provisionRate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          forecastYear: PRODUCT_CONFIG_REQUIREMENT.NOT_APPLICABLE,
-          bankRate: PRODUCT_CONFIG_REQUIREMENT.OPTIONAL,
-          instrumentType: INSTRUMENT_TYPES.INSURANCE,
-          repaymentType: REPAYMENT_TYPES.BULLET,
-          fees: {
-            creation: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-            inLife: PRODUCT_CONFIG_REQUIREMENT.OPTIONAL,
-          },
-          obligations: {
-            creation: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-            inLife: PRODUCT_CONFIG_REQUIREMENT.OPTIONAL,
-          },
-          reinsurance: {
-            creation: PRODUCT_CONFIG_REQUIREMENT.OPTIONAL,
-            inLife: PRODUCT_CONFIG_REQUIREMENT.OPTIONAL,
-          },
-          leadDays: {
-            repayments: 1,
-            interestAccruals: 2,
-            accruingFees: 3,
-          },
-        },
-        additionalRates: ['ARTOTH'],
-        accrualSchedules: [
-          {
-            code: 'PAC01',
-            cashIndicator: true,
-          },
-        ],
-        baseRates: ['BRTOTH'],
-        counterpartyRoleTypes: [COUNTERPARTY_ROLE_TYPES.BROKER],
-        facilityCategoryTypes: ['FCT001', 'FCT002'],
-        feeTypes: ['BEX', 'PLA'],
-        obligationSubtypes: ['OST001', 'OST002', 'OST003'],
-        additionalRateTypes: [],
-        baseRateTypes: [],
-        accrualScheduleTypes: [],
-        account: ['1', '2', '3'],
-      },
-      EXIP: {
-        productType: PRODUCT_TYPES.EXIP,
-        name: 'Export Insurance Product (EXIP)',
-        shortName: 'EXIP',
-        productActive: true,
-        configuration: {
-          commitmentDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          issuedDate: PRODUCT_CONFIG_REQUIREMENT.NOT_APPLICABLE,
-          effectiveDate: PRODUCT_CONFIG_REQUIREMENT.OPTIONAL,
-        },
-        counterpartyRoleTypes: [COUNTERPARTY_ROLE_TYPES.BROKER, COUNTERPARTY_ROLE_TYPES.GUARANTOR],
-        facilityCategoryTypes: ['FCT001', 'FCT002'],
-        feeTypes: ['BEX', 'PLA'],
-        obligationSubtypes: ['OST001', 'OST002', 'OST003'],
-        account: ['1', '2', '3'],
-      },
-    },
+    PRODUCT_CONFIG,
   },
   GEOSPATIAL: {
     ENGLISH_POSTCODE: 'SW1A 2AQ',
@@ -455,6 +343,23 @@ export const EXAMPLES = {
       obligationSubtypeActive: true,
     },
     CREDIT_TYPE: ODS_CREDIT_TYPES.TERM,
+    CURRENCIES: [
+      {
+        currency_code: CURRENCIES.USD.ISO_CODE,
+        currency_iso_code: CURRENCIES.USD.ISO_CODE,
+        currency_name: CURRENCIES.USD.NAME,
+        currency_decimal_place: 2,
+        rate_setting_calendar_code: 'CCYUSD',
+        currency_active_flag: true,
+      },
+      {
+        currency_code: CURRENCIES.JPY.ISO_CODE,
+        currency_iso_code: CURRENCIES.JPY.ISO_CODE,
+        currency_name: CURRENCIES.JPY.NAME,
+        currency_decimal_place: 0,
+        currency_active_flag: true,
+      },
+    ],
     FACILITY_CLASSIFICATION: {
       classification_type: 'Facility Category',
       classification_type_code: 'facilityCategory',
@@ -480,23 +385,6 @@ export const EXAMPLES = {
       interest_rate_source_ticker_value: 'ESTRON',
       interest_rate_source_ticker_name: 'ESTR Volume Weighted Trimmed M',
     },
-    CURRENCIES: [
-      {
-        currency_code: CURRENCIES.USD.ISO_CODE,
-        currency_iso_code: CURRENCIES.USD.ISO_CODE,
-        currency_name: CURRENCIES.USD.NAME,
-        currency_decimal_place: 2,
-        rate_setting_calendar_code: 'CCYUSD',
-        currency_active_flag: true,
-      },
-      {
-        currency_code: CURRENCIES.JPY.ISO_CODE,
-        currency_iso_code: CURRENCIES.JPY.ISO_CODE,
-        currency_name: CURRENCIES.JPY.NAME,
-        currency_decimal_place: 0,
-        currency_active_flag: true,
-      },
-    ],
     OBLIGATION_CLASSIFICATION: {
       classification_type: 'Obligation Sub-Type',
       classification_type_code: 'obligationSubtype',
