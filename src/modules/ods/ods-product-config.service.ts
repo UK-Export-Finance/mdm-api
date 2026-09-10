@@ -27,15 +27,15 @@ export class OdsProductConfigService {
       this.logger.info('Finding product config in ODS %s', productType);
 
       if (productType === ALL_REQUIRED_INSURANCE.productType) {
-        return ALL_REQUIRED_INSURANCE;
+        return ALL_REQUIRED_INSURANCE as unknown as GetProductConfigOdsResponse;
       }
 
       if (productType === ALL_REQUIRED_GUARANTEE.productType) {
-        return ALL_REQUIRED_GUARANTEE;
+        return ALL_REQUIRED_GUARANTEE as unknown as GetProductConfigOdsResponse;
       }
 
       if (productType === ALL_DISABLED.productType) {
-        return ALL_DISABLED;
+        return ALL_DISABLED as unknown as GetProductConfigOdsResponse;
       }
 
       const storedProcedureInput = this.odsStoredProcedureService.createInput({

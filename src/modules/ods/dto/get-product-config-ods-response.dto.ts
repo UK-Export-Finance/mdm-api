@@ -118,13 +118,13 @@ export class GetProductConfigOdsResponse {
 
   @ApiProperty({
     description: 'The additional rate types applicable to accrual schedules on the product',
-    example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.additionalRateTypes,
+    example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.additionalRates,
   })
   readonly additionalRateTypes: string[];
 
   @ApiProperty({
     description: 'The base rate types applicable to accrual schedules on the product',
-    example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.baseRateTypes,
+    example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.baseRates,
   })
   readonly baseRateTypes: string[];
 
@@ -136,7 +136,7 @@ export class GetProductConfigOdsResponse {
 
   @ApiProperty({
     description: 'The accrual schedule types applicable to the product',
-    example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.accrualScheduleTypes,
+    example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.accrualSchedules,
   })
   readonly accrualScheduleTypes: AccrualScheduleOdsResponse[];
 }
