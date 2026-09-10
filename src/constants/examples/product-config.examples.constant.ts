@@ -264,7 +264,7 @@ const TEMPORARY_EXAMPLES = {
         accruingFees: 1,
       },
     },
-    additionalRates: ['ARTOTH', 'ARTCAS', 'ARTOTH', 'ARTPEN', 'ARTRAC'],
+    additionalRates: ['ARTOTH', 'ARTCAS', 'ARTPEN', 'ARTRAC'],
     accrualSchedules: [
       {
         code: 'PAC01',
