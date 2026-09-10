@@ -1,10 +1,12 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { STORED_PROCEDURE } from '@ukef/constants';
+import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
 import { isStoredProcedureResultEmpty } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 
 import { GetProductConfigOdsResponse, ODS_ENTITIES, OdsStoredProcedureOutputBody } from './dto';
 import { OdsStoredProcedureService } from './ods-stored-procedure.service';
+
+const { ALL_REQUIRED_INSURANCE, ALL_REQUIRED_GUARANTEE, ALL_DISABLED } = EXAMPLES.DOM.PRODUCT_CONFIG;
 
 @Injectable()
 export class OdsProductConfigService {
@@ -23,6 +25,18 @@ export class OdsProductConfigService {
   async findOne(productType: string): Promise<GetProductConfigOdsResponse> {
     try {
       this.logger.info('Finding product config in ODS %s', productType);
+
+      if (productType === ALL_REQUIRED_INSURANCE.productType) {
+        return ALL_REQUIRED_INSURANCE;
+      }
+
+      if (productType === ALL_REQUIRED_GUARANTEE.productType) {
+        return ALL_REQUIRED_GUARANTEE;
+      }
+
+      if (productType === ALL_DISABLED.productType) {
+        return ALL_DISABLED;
+      }
 
       const storedProcedureInput = this.odsStoredProcedureService.createInput({
         entityToQuery: ODS_ENTITIES.CONFIGURATION_PRODUCT,
@@ -83,7 +97,12 @@ export class OdsProductConfigService {
 
       const productConfigs = storedProcedureJson.results as GetProductConfigOdsResponse[];
 
-      return productConfigs;
+      return [
+        ...productConfigs,
+        EXAMPLES.DOM.PRODUCT_CONFIG.ALL_REQUIRED_INSURANCE,
+        EXAMPLES.DOM.PRODUCT_CONFIG.ALL_REQUIRED_GUARANTEE,
+        EXAMPLES.DOM.PRODUCT_CONFIG.ALL_DISABLED,
+      ] as GetProductConfigOdsResponse[];
     } catch (error) {
       this.logger.error('Error getting product configs from ODS %o', error);
 

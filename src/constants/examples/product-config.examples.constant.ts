@@ -317,6 +317,7 @@ const TEMPORARY_EXAMPLES = {
       'OST025',
       'OST026',
     ],
+    additionalRateTypes: [],
     baseRateTypes: [],
     accrualScheduleTypes: [],
     account: ['1', '2', '3'],
