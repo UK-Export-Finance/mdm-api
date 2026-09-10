@@ -90,9 +90,6 @@ const PRODUCT_CONFIG_CORE = {
     facilityCategoryTypes: ['FCT001', 'FCT002'],
     feeTypes: ['BEX', 'PLA'],
     obligationSubtypes: ['OST001', 'OST002', 'OST003'],
-    additionalRateTypes: [],
-    baseRateTypes: [],
-    accrualScheduleTypes: [],
     account: ['1', '2', '3'],
   },
   EXIP: {
@@ -172,11 +169,11 @@ const TEMPORARY_EXAMPLES = {
       },
       {
         code: 'CTL02',
-        cashIndicator: false,
+        cashIndicator: true,
       },
       {
         code: 'CTL03',
-        cashIndicator: false,
+        cashIndicator: true,
       },
       {
         code: 'PEN01',
@@ -186,7 +183,7 @@ const TEMPORARY_EXAMPLES = {
     baseRates: ['BRTOTH'],
     counterpartyRoleTypes: ['CRT001', 'CRT002', 'CRT004', 'CRT005', 'CRT006', 'CRT013', 'CRT014', 'CRT018', 'CRT036', 'CRT040', 'CRT042', 'CRT043', 'CRT045'],
     facilityCategoryTypes: ['FCT001', 'FCT002', 'FCT003', 'FCT004', 'FCT005', 'FCT006', 'FCT007'],
-    feeTypes: ['BEX', 'PLA', 'CMF', 'SUP'],
+    feeTypes: ['PLA', 'BEX', 'COM', 'CMF', 'PAX', 'PRT', 'UTL', 'ABF', 'SUP'],
     obligationSubtypes: [
       'OST001',
       'OST002',
@@ -213,9 +210,6 @@ const TEMPORARY_EXAMPLES = {
       'OST025',
       'OST026',
     ],
-    additionalRateTypes: [],
-    baseRateTypes: [],
-    accrualScheduleTypes: [],
     account: ['1', '2', '3'],
   },
   ALL_REQUIRED_GUARANTEE: {
@@ -268,11 +262,11 @@ const TEMPORARY_EXAMPLES = {
     accrualSchedules: [
       {
         code: 'PAC01',
-        cashIndicator: true,
+        cashIndicator: false,
       },
       {
         code: 'CTL01',
-        cashIndicator: true,
+        cashIndicator: false,
       },
       {
         code: 'CTL02',
@@ -284,13 +278,13 @@ const TEMPORARY_EXAMPLES = {
       },
       {
         code: 'PEN01',
-        cashIndicator: true,
+        cashIndicator: false,
       },
     ],
     baseRates: ['BRTOTH', 'BRTINDX', 'BRTCIRR', 'BRTNLF'],
     counterpartyRoleTypes: ['CRT001', 'CRT002', 'CRT004', 'CRT005', 'CRT006', 'CRT013', 'CRT014', 'CRT018', 'CRT036', 'CRT040', 'CRT042', 'CRT043', 'CRT045'],
     facilityCategoryTypes: ['FCT001', 'FCT002', 'FCT003', 'FCT004', 'FCT005', 'FCT006', 'FCT007'],
-    feeTypes: ['BEX', 'PLA', 'CMF', 'SUP'],
+    feeTypes: ['PLA', 'BEX', 'COM', 'CMF', 'PAX', 'PRT', 'UTL', 'ABF', 'SUP'],
     obligationSubtypes: [
       'OST001',
       'OST002',
@@ -317,9 +311,6 @@ const TEMPORARY_EXAMPLES = {
       'OST025',
       'OST026',
     ],
-    additionalRateTypes: [],
-    baseRateTypes: [],
-    accrualScheduleTypes: [],
     account: ['1', '2', '3'],
   },
   ALL_DISABLED: {
@@ -380,9 +371,6 @@ const TEMPORARY_EXAMPLES = {
     facilityCategoryTypes: ['FCT001', 'FCT002'],
     feeTypes: ['BEX', 'PLA'],
     obligationSubtypes: ['OST001', 'OST002', 'OST003'],
-    additionalRateTypes: [],
-    baseRateTypes: [],
-    accrualScheduleTypes: [],
     account: ['1', '2', '3'],
   },
 };
