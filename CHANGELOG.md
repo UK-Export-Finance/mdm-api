@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.59.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.58.0...v1.59.0) (2026-09-11)
+
+
+### Features
+
+* **GIFT-28427:** product config - temporary config examples ([#1892](https://github.com/UK-Export-Finance/mdm-api/issues/1892)) ([fc58341](https://github.com/UK-Export-Finance/mdm-api/commit/fc58341d62550274d7ed065ae472501423ce6c0b))
+
 ## [1.58.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.57.0...v1.58.0) (2026-09-04)
 
 
