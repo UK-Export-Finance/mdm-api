@@ -1,5 +1,5 @@
 import { InternalServerErrorException } from '@nestjs/common';
-import { STORED_PROCEDURE } from '@ukef/constants';
+import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
@@ -58,7 +58,14 @@ describe('OdsProductConfigService - getAll', () => {
     const result = await service.getAll();
 
     // Assert
-    expect(result).toEqual(mockProductConfigs);
+    const expected = [
+      ...mockProductConfigs,
+      EXAMPLES.DOM.PRODUCT_CONFIG.ALL_REQUIRED_INSURANCE,
+      EXAMPLES.DOM.PRODUCT_CONFIG.ALL_REQUIRED_GUARANTEE,
+      EXAMPLES.DOM.PRODUCT_CONFIG.ALL_DISABLED,
+    ];
+
+    expect(result).toEqual(expected);
   });
 
   describe(`when the response from ODS does not have status as ${STORED_PROCEDURE.SUCCESS}`, () => {

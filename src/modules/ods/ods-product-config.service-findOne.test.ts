@@ -1,5 +1,5 @@
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { STORED_PROCEDURE } from '@ukef/constants';
+import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 
@@ -126,6 +126,60 @@ describe('OdsProductConfigService - findOne', () => {
         message: `Error finding product config ${mockProductType} in ODS`,
         cause: mockError,
       });
+    });
+  });
+
+  describe('when the productType matches ALL_REQUIRED_INSURANCE', () => {
+    it('should return the hardcoded ALL_REQUIRED_INSURANCE config', async () => {
+      // Act
+      const result = await service.findOne(EXAMPLES.DOM.PRODUCT_CONFIG.ALL_REQUIRED_INSURANCE.productType);
+
+      // Assert
+      expect(result).toEqual(EXAMPLES.DOM.PRODUCT_CONFIG.ALL_REQUIRED_INSURANCE);
+    });
+
+    it('should NOT call odsStoredProcedureService.call', async () => {
+      // Act
+      await service.findOne(EXAMPLES.DOM.PRODUCT_CONFIG.ALL_REQUIRED_INSURANCE.productType);
+
+      // Assert
+      expect(odsStoredProcedureService.call).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('when the productType matches ALL_REQUIRED_GUARANTEE', () => {
+    it('should return the hardcoded ALL_REQUIRED_GUARANTEE config', async () => {
+      // Act
+      const result = await service.findOne(EXAMPLES.DOM.PRODUCT_CONFIG.ALL_REQUIRED_GUARANTEE.productType);
+
+      // Assert
+      expect(result).toEqual(EXAMPLES.DOM.PRODUCT_CONFIG.ALL_REQUIRED_GUARANTEE);
+    });
+
+    it('should NOT call odsStoredProcedureService.call', async () => {
+      // Act
+      await service.findOne(EXAMPLES.DOM.PRODUCT_CONFIG.ALL_REQUIRED_GUARANTEE.productType);
+
+      // Assert
+      expect(odsStoredProcedureService.call).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('when the productType matches ALL_DISABLED', () => {
+    it('should return the hardcoded ALL_DISABLED config', async () => {
+      // Act
+      const result = await service.findOne(EXAMPLES.DOM.PRODUCT_CONFIG.ALL_DISABLED.productType);
+
+      // Assert
+      expect(result).toEqual(EXAMPLES.DOM.PRODUCT_CONFIG.ALL_DISABLED);
+    });
+
+    it('should NOT call odsStoredProcedureService.call', async () => {
+      // Act
+      await service.findOne(EXAMPLES.DOM.PRODUCT_CONFIG.ALL_DISABLED.productType);
+
+      // Assert
+      expect(odsStoredProcedureService.call).not.toHaveBeenCalled();
     });
   });
 });
