@@ -157,8 +157,8 @@ const TEMPORARY_EXAMPLES = {
         accruingFees: 1,
       },
     },
-    additionalRates: ['ARTOTH'],
-    accrualSchedules: [
+    additionalRateTypes: ['ARTOTH'],
+    accrualScheduleTypes: [
       {
         code: 'PAC01',
         cashIndicator: true,
@@ -180,7 +180,7 @@ const TEMPORARY_EXAMPLES = {
         cashIndicator: true,
       },
     ],
-    baseRates: ['BRTOTH'],
+    baseRateTypes: ['BRTOTH'],
     counterpartyRoleTypes: ['CRT001', 'CRT002', 'CRT004', 'CRT005', 'CRT006', 'CRT013', 'CRT014', 'CRT018', 'CRT036', 'CRT040', 'CRT042', 'CRT043', 'CRT045'],
     facilityCategoryTypes: ['FCT001', 'FCT002', 'FCT003', 'FCT004', 'FCT005', 'FCT006', 'FCT007'],
     feeTypes: ['PLA', 'BEX', 'COM', 'CMF', 'PAX', 'PRT', 'UTL', 'ABF', 'SUP'],
@@ -258,8 +258,8 @@ const TEMPORARY_EXAMPLES = {
         accruingFees: 1,
       },
     },
-    additionalRates: ['ARTOTH', 'ARTCAS', 'ARTPEN', 'ARTRAC'],
-    accrualSchedules: [
+    additionalRateTypes: ['ARTOTH', 'ARTCAS', 'ARTPEN', 'ARTRAC'],
+    accrualScheduleTypes: [
       {
         code: 'PAC01',
         cashIndicator: false,
@@ -281,7 +281,7 @@ const TEMPORARY_EXAMPLES = {
         cashIndicator: false,
       },
     ],
-    baseRates: ['BRTOTH', 'BRTINDX', 'BRTCIRR', 'BRTNLF'],
+    baseRateTypes: ['BRTOTH', 'BRTINDX', 'BRTCIRR', 'BRTNLF'],
     counterpartyRoleTypes: ['CRT001', 'CRT002', 'CRT004', 'CRT005', 'CRT006', 'CRT013', 'CRT014', 'CRT018', 'CRT036', 'CRT040', 'CRT042', 'CRT043', 'CRT045'],
     facilityCategoryTypes: ['FCT001', 'FCT002', 'FCT003', 'FCT004', 'FCT005', 'FCT006', 'FCT007'],
     feeTypes: ['PLA', 'BEX', 'COM', 'CMF', 'PAX', 'PRT', 'UTL', 'ABF', 'SUP'],
@@ -359,14 +359,14 @@ const TEMPORARY_EXAMPLES = {
         accruingFees: 1,
       },
     },
-    additionalRates: ['ARTOTH'],
-    accrualSchedules: [
+    additionalRateTypes: ['ARTOTH'],
+    accrualScheduleTypes: [
       {
         code: 'PAC01',
         cashIndicator: true,
       },
     ],
-    baseRates: ['BRTOTH'],
+    baseRateTypes: ['BRTOTH'],
     counterpartyRoleTypes: [COUNTERPARTY_ROLE_TYPES.BROKER],
     facilityCategoryTypes: ['FCT001', 'FCT002'],
     feeTypes: ['BEX', 'PLA'],
