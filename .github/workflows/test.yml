@@ -2,8 +2,9 @@
 #####################################
 # This GHA is responsible for initiating various test suites
 # upon a PR creation. Following test suites are executed:
-# 1. Unit tests (Jest)
-# 2. API tests (Jest)
+# 1. Build and start check
+# 2. Unit tests (Jest)
+# 3. API tests (Jest)
 
 name: Quality Assurance - Tests
 run-name: Executing test QA on ${{ github.repository }} 🚀
@@ -34,7 +35,43 @@ jobs:
       - name: Timezone 🌐
         run: echo "Timezone set to ${{ env.timezone }}"
 
-  # 2. Unit tests
+  # 2. Build and start check
+  build-and-start-check:
+    name: Build and Start Check 🔨
+    needs: setup
+    env:
+      FF_GIFT_ENABLED: 'true'
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Timezone
+        uses: szenius/set-timezone@v2.0
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+
+      - name: Repository
+        uses: actions/checkout@v6
+
+      - name: Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: Dependencies
+        working-directory: ./
+        run: npm ci --legacy-peer-deps
+
+      - name: Build
+        working-directory: ./
+        run: npm run build
+
+      - name: Start (timeout after 30 seconds)
+        working-directory: ./
+        run: timeout 30 npm start || [ $? -eq 124 ]
+        continue-on-error: false
+
+  # 3. Unit tests
   unit-tests:
     name: Unit 👷
     needs: setup
