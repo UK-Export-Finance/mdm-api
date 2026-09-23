@@ -1,18 +1,19 @@
 export type GetCustomersInformaticaResponse = GetCustomersInformaticaResponseItem[];
 
 export interface GetCustomersInformaticaResponseItem {
-  partyUrn: string;
-  name: string;
-  sfId: string;
   companyRegNo: string;
-  type: string;
-  subtype: string;
+  creditClassificationDate?: string;
+  creditClassificationStatus?: string;
+  customerType: string;
   isLegacyRecord: boolean;
+  name: string;
+  partyUrn: string;
   probabilityOfDefault?: number;
+  riskEntity?: string;
+  sfId: string;
+  subtype: string;
+  type: string;
   ukEntity?: string;
   ukefIndustryName?: string;
   ukefSectorName?: string;
-  riskEntity?: string;
-  creditClassificationStatus?: string;
-  creditClassificationDate?: string;
 }

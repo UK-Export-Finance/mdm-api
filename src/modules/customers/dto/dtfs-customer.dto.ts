@@ -25,6 +25,16 @@ export class DTFSCustomerDto {
   companyName: string;
 
   @ApiProperty({
+    description: 'Salesforce customer type',
+    example: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
+  })
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(1)
+  @MaxLength(200)
+  customerType: string;
+
+  @ApiProperty({
     description: 'Probability of default',
     example: EXAMPLES.CUSTOMER.PROBABILITY_OF_DEFAULT,
   })

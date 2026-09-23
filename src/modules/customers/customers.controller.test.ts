@@ -118,22 +118,23 @@ describe('CustomersController', () => {
   });
 
   describe('getOrCreateCustomer', () => {
-    const DTFSCustomerDtoWithProbabilityOfDefault: DTFSCustomerDto = {
+    const baseDto = {
       companyRegistrationNumber: EXAMPLES.CUSTOMER.COMPANYREG,
-      companyName: 'TEST NAME',
+      companyName: EXAMPLES.CUSTOMER.COMPANY_NAME,
+      customerType: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
+    };
+
+    const DTFSCustomerDtoWithProbabilityOfDefault: DTFSCustomerDto = {
+      ...baseDto,
       probabilityOfDefault: 3,
     };
 
     const DTFSCustomerDtoWithFalsyProbabilityOfDefault: DTFSCustomerDto = {
-      companyRegistrationNumber: EXAMPLES.CUSTOMER.COMPANYREG,
-      companyName: 'TEST NAME',
+      ...baseDto,
       probabilityOfDefault: undefined,
     };
 
-    const DTFSCustomerDtoWithoutProbabilityOfDefault: DTFSCustomerDto = {
-      companyRegistrationNumber: EXAMPLES.CUSTOMER.COMPANYREG,
-      companyName: 'TEST NAME',
-    };
+    const DTFSCustomerDtoWithoutProbabilityOfDefault: DTFSCustomerDto = baseDto;
 
     const getOrCreateCustomerResponse: GetCustomersResponse = [
       {
@@ -199,13 +200,13 @@ describe('CustomersController', () => {
   describe('getDunAndBradstreetNumber', () => {
     it.each([
       {
-        query: { companyRegistrationNumber: 'TEST' },
+        query: { companyRegistrationNumber: 'Mock' },
       },
       {
         query: { companyRegistrationNumber: '' },
       },
       {
-        query: { companyRegistrationNumber: 'more_than_10_chars_long' },
+        query: { companyRegistrationNumber: 'a'.repeat(11) },
       },
     ])('returns false if the request is invalid', async ({ query }) => {
       const dto = new CompanyRegistrationNumberDto();

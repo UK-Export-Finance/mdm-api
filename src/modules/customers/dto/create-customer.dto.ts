@@ -4,40 +4,24 @@ import { IsNotEmpty, IsNumber, IsOptional, IsString, Length, Max, MaxLength, Min
 
 export class CreateCustomerDto {
   @ApiProperty({
-    description: 'Account name',
-    example: EXAMPLES.CUSTOMER.NAME,
+    description: 'Risk entity',
+    example: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
   })
   @IsString()
   @IsNotEmpty()
-  Name: string;
+  @MinLength(1)
+  @MaxLength(20)
+  CCM_Assigned_Rating__c?: string;
 
   @ApiProperty({
-    description: 'Party URN',
-    example: EXAMPLES.CUSTOMER.PARTYURN,
+    description: 'UK entity',
+    example: EXAMPLES.CUSTOMER.UK_ENTITY,
   })
   @IsString()
   @IsNotEmpty()
-  @MaxLength(10)
-  Party_URN__c: string;
-
-  @ApiProperty({
-    description: 'D&B number',
-    example: EXAMPLES.CUSTOMER.DNB_NUMBER,
-  })
-  @IsString()
-  @IsNotEmpty()
-  @Length(9)
-  D_B_Number__c: string;
-
-  @ApiProperty({
-    description: 'Companies house number',
-    example: EXAMPLES.CUSTOMER.COMPANYREG,
-  })
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(8)
-  @MaxLength(10)
-  Company_Registration_Number__c: string;
+  @MinLength(1)
+  @MaxLength(3)
+  CCM_Citizenship_Class__c?: string;
 
   @ApiProperty({
     description: 'Credit risk rating',
@@ -57,55 +41,14 @@ export class CreateCustomerDto {
   CCM_Credit_Risk_Rating_Date__c: string;
 
   @ApiProperty({
-    description: 'Loss given default',
-    example: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
-  })
-  @IsNumber()
-  @IsNotEmpty()
-  @Min(0)
-  @Max(100)
-  CCM_Loss_Given_Default__c: number;
-
-  @ApiProperty({
-    description: 'Probability of default',
-    example: EXAMPLES.CUSTOMER.PROBABILITY_OF_DEFAULT,
-  })
-  @IsOptional()
-  @IsNumber()
-  @IsNotEmpty()
-  @Min(0)
-  @Max(100)
-  CCM_Probability_of_Default__c?: number;
-
-  @ApiProperty({
-    description: 'UK entity',
-    example: EXAMPLES.CUSTOMER.UK_ENTITY,
-  })
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(1)
-  @MaxLength(3)
-  CCM_Citizenship_Class__c?: string;
-
-  @ApiProperty({
-    description: 'UKEF primary industry identifier',
-    example: EXAMPLES.CUSTOMER.UK_INDUSTRY_NAME,
+    description: 'Customer type',
+    example: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
   })
   @IsString()
   @IsNotEmpty()
   @MinLength(1)
   @MaxLength(200)
-  CCM_Primary_Industry__c?: string;
-
-  @ApiProperty({
-    description: 'UKEF primary industry sector identifier',
-    example: EXAMPLES.CUSTOMER.UK_INDUSTRY_SECTOR_NAME,
-  })
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(1)
-  @MaxLength(200)
-  CCM_Primary_Industry_Group__c?: string;
+  CCM_Customer_Type__c: string;
 
   @ApiProperty({
     description: 'UKEF industry identifier',
@@ -128,14 +71,45 @@ export class CreateCustomerDto {
   CCM_Industry_Group__c?: string;
 
   @ApiProperty({
-    description: 'Risk entity',
-    example: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
+    description: 'Loss given default',
+    example: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
+  })
+  @IsNumber()
+  @IsNotEmpty()
+  @Min(0)
+  @Max(100)
+  CCM_Loss_Given_Default__c: number;
+
+  @ApiProperty({
+    description: 'UKEF primary industry identifier',
+    example: EXAMPLES.CUSTOMER.UK_INDUSTRY_NAME,
   })
   @IsString()
   @IsNotEmpty()
   @MinLength(1)
-  @MaxLength(20)
-  CCM_Assigned_Rating__c?: string;
+  @MaxLength(200)
+  CCM_Primary_Industry__c?: string;
+
+  @ApiProperty({
+    description: 'UKEF primary industry sector identifier',
+    example: EXAMPLES.CUSTOMER.UK_INDUSTRY_SECTOR_NAME,
+  })
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(1)
+  @MaxLength(200)
+  CCM_Primary_Industry_Group__c?: string;
+
+  @ApiProperty({
+    description: 'Probability of default',
+    example: EXAMPLES.CUSTOMER.PROBABILITY_OF_DEFAULT,
+  })
+  @IsOptional()
+  @IsNumber()
+  @IsNotEmpty()
+  @Min(0)
+  @Max(100)
+  CCM_Probability_of_Default__c?: number;
 
   @ApiProperty({
     description: 'Credit classification status',
@@ -156,4 +130,40 @@ export class CreateCustomerDto {
   @MinLength(1)
   @MaxLength(200)
   CCM_Watch_List_Date__c?: string;
+
+  @ApiProperty({
+    description: 'Companies house number',
+    example: EXAMPLES.CUSTOMER.COMPANYREG,
+  })
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(8)
+  @MaxLength(10)
+  Company_Registration_Number__c: string;
+
+  @ApiProperty({
+    description: 'D&B number',
+    example: EXAMPLES.CUSTOMER.DNB_NUMBER,
+  })
+  @IsString()
+  @IsNotEmpty()
+  @Length(9)
+  D_B_Number__c: string;
+
+  @ApiProperty({
+    description: 'Account name',
+    example: EXAMPLES.CUSTOMER.NAME,
+  })
+  @IsString()
+  @IsNotEmpty()
+  Name: string;
+
+  @ApiProperty({
+    description: 'Party URN',
+    example: EXAMPLES.CUSTOMER.PARTYURN,
+  })
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(10)
+  Party_URN__c: string;
 }
