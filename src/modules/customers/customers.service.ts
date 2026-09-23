@@ -35,20 +35,21 @@ export class CustomersService {
     const customersInInformatica = await this.informaticaService.getCustomers(backendQuery);
     return customersInInformatica.map(
       (customerInInformatica): GetCustomersResponseItem => ({
-        partyUrn: customerInInformatica.partyUrn,
-        name: customerInInformatica.name,
-        sfId: customerInInformatica.sfId,
         companyRegNo: customerInInformatica.companyRegNo,
+        creditClassificationDate: customerInInformatica.creditClassificationDate,
+        creditClassificationStatus: customerInInformatica.creditClassificationStatus,
+        customerType: customerInInformatica.customerType,
+        isLegacyRecord: customerInInformatica.isLegacyRecord,
+        name: customerInInformatica.name,
+        partyUrn: customerInInformatica.partyUrn,
         probabilityOfDefault: customerInInformatica.probabilityOfDefault,
+        riskEntity: customerInInformatica.riskEntity,
+        sfId: customerInInformatica.sfId,
+        subtype: customerInInformatica.subtype,
+        type: customerInInformatica.type,
         ukEntity: customerInInformatica.ukEntity,
         ukefIndustryName: customerInInformatica.ukefIndustryName,
         ukefSectorName: customerInInformatica.ukefSectorName,
-        type: customerInInformatica.type,
-        subtype: customerInInformatica.subtype,
-        isLegacyRecord: customerInInformatica.isLegacyRecord,
-        riskEntity: customerInInformatica.riskEntity,
-        creditClassificationStatus: customerInInformatica.creditClassificationStatus,
-        creditClassificationDate: customerInInformatica.creditClassificationDate,
       }),
     );
   }
@@ -110,6 +111,7 @@ export class CustomersService {
       return res.status(HttpStatusCode.Ok).json(
         existingCustomersInInformatica.map(
           (customerInInformatica): GetCustomersResponseItem => ({
+            customerType: customerInInformatica.customerType,
             partyUrn: customerInInformatica?.partyUrn,
             name: customerInInformatica?.name,
             sfId: customerInInformatica?.sfId,

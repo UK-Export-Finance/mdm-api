@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { EXAMPLES } from '@ukef/constants';
-import { CustomerSubtypesEnum } from '@ukef/constants/enums/customer-subtypes';
+import { CustomerCompanySubtypesEnum } from '@ukef/constants/enums/customer-company-subtypes';
 import { CustomerTypesEnum } from '@ukef/constants/enums/customer-types';
 
 export type GetCustomersResponse = GetCustomersResponseItem[];
@@ -20,12 +20,12 @@ export class GetCustomersResponseItem {
 
   @ApiProperty({
     description: 'Credit classification status',
-    example: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS,
+    example: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
   })
   readonly creditClassificationStatus?: string;
 
   @ApiProperty({
-    description: 'Customer company type',
+    description: 'Customer type',
     example: EXAMPLES.CUSTOMER.SALESFORCE_TYPE,
     enum: CustomerTypesEnum,
   })
@@ -57,7 +57,7 @@ export class GetCustomersResponseItem {
 
   @ApiProperty({
     description: 'Risk entity',
-    example: EXAMPLES.CUSTOMER.RISK_ENTITY,
+    example: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
   })
   readonly riskEntity?: string;
 
@@ -65,12 +65,12 @@ export class GetCustomersResponseItem {
     description: 'The unique Salesforce ID',
     example: EXAMPLES.CUSTOMER.SALESFORCE_ID,
   })
-  readonly sfId: string;
+  readonly sfId: string | null;
 
   @ApiProperty({
     description: 'Customer company subtype',
     example: EXAMPLES.CUSTOMER.SALESFORCE_SUBTYPE,
-    enum: CustomerSubtypesEnum,
+    enum: CustomerCompanySubtypesEnum,
   })
   readonly subtype: string | null;
 

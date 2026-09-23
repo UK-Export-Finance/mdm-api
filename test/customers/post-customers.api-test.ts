@@ -19,6 +19,8 @@ const invalidPayloads = [
       'companyRegistrationNumber must be a string',
       'companyName should not be empty',
       'companyName must be a string',
+      'customerType must be shorter than or equal to 200 characters',
+      'customerType must be longer than or equal to 1 characters',
       'customerType should not be empty',
       'customerType must be a string',
     ],
@@ -32,6 +34,8 @@ const invalidPayloads = [
       'companyRegistrationNumber should not be empty',
       'companyName should not be empty',
       'companyName must be a string',
+      'customerType must be shorter than or equal to 200 characters',
+      'customerType must be longer than or equal to 1 characters',
       'customerType should not be empty',
       'customerType must be a string',
     ],
@@ -40,14 +44,27 @@ const invalidPayloads = [
     payload: {
       companyRegistrationNumber: EXAMPLES.CUSTOMER.COMPANYREG,
     },
-    message: ['companyName should not be empty', 'companyName must be a string', 'customerType should not be empty', 'customerType must be a string'],
+    message: [
+      'companyName should not be empty',
+      'companyName must be a string',
+      'customerType must be shorter than or equal to 200 characters',
+      'customerType must be longer than or equal to 1 characters',
+      'customerType should not be empty',
+      'customerType must be a string',
+    ],
   },
   {
     payload: {
       companyRegistrationNumber: EXAMPLES.CUSTOMER.COMPANYREG,
       companyName: '',
     },
-    message: ['companyName should not be empty', 'customerType should not be empty', 'customerType must be a string'],
+    message: [
+      'companyName should not be empty',
+      'customerType must be shorter than or equal to 200 characters',
+      'customerType must be longer than or equal to 1 characters',
+      'customerType should not be empty',
+      'customerType must be a string',
+    ],
   },
   {
     payload: {
@@ -55,7 +72,7 @@ const invalidPayloads = [
       companyName: EXAMPLES.CUSTOMER.NAME,
       customerType: '',
     },
-    message: ['customerType should not be empty'],
+    message: ['customerType must be longer than or equal to 1 characters', 'customerType should not be empty'],
   },
   {
     payload: {

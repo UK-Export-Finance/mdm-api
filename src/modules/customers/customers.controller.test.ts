@@ -138,20 +138,21 @@ describe('CustomersController', () => {
 
     const getOrCreateCustomerResponse: GetCustomersResponse = [
       {
-        partyUrn: 'string',
-        name: 'string',
-        sfId: 'string',
         companyRegNo: 'string',
+        creditClassificationDate: salesforceFormattedCurrentDate(),
+        creditClassificationStatus: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
+        customerType: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
+        isLegacyRecord: true,
+        name: 'string',
+        partyUrn: 'string',
         probabilityOfDefault: 1,
+        riskEntity: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
+        sfId: 'string',
+        subtype: EXAMPLES.CUSTOMER.SALESFORCE_SUBTYPE,
+        type: EXAMPLES.CUSTOMER.SALESFORCE_TYPE,
         ukEntity: 'Yes',
         ukefIndustryName: 'string',
         ukefSectorName: 'string',
-        type: EXAMPLES.CUSTOMER.SALESFORCE_TYPE,
-        subtype: EXAMPLES.CUSTOMER.SALESFORCE_SUBTYPE,
-        isLegacyRecord: true,
-        riskEntity: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
-        creditClassificationStatus: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
-        creditClassificationDate: salesforceFormattedCurrentDate(),
       },
     ];
 

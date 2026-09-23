@@ -8,7 +8,7 @@ export class CreateCustomerDto {
     example: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
   })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @MinLength(1)
   @MaxLength(20)
   CCM_Assigned_Rating__c?: string;
@@ -18,7 +18,7 @@ export class CreateCustomerDto {
     example: EXAMPLES.CUSTOMER.UK_ENTITY,
   })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @MinLength(1)
   @MaxLength(3)
   CCM_Citizenship_Class__c?: string;
@@ -55,7 +55,7 @@ export class CreateCustomerDto {
     example: EXAMPLES.CUSTOMER.UK_INDUSTRY_NAME,
   })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @MinLength(1)
   @MaxLength(200)
   CCM_Industry__c?: string;
@@ -65,7 +65,7 @@ export class CreateCustomerDto {
     example: EXAMPLES.CUSTOMER.UK_INDUSTRY_SECTOR_NAME,
   })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @MinLength(1)
   @MaxLength(200)
   CCM_Industry_Group__c?: string;
@@ -85,7 +85,7 @@ export class CreateCustomerDto {
     example: EXAMPLES.CUSTOMER.UK_INDUSTRY_NAME,
   })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @MinLength(1)
   @MaxLength(200)
   CCM_Primary_Industry__c?: string;
@@ -95,7 +95,7 @@ export class CreateCustomerDto {
     example: EXAMPLES.CUSTOMER.UK_INDUSTRY_SECTOR_NAME,
   })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @MinLength(1)
   @MaxLength(200)
   CCM_Primary_Industry_Group__c?: string;
@@ -116,7 +116,7 @@ export class CreateCustomerDto {
     example: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
   })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @MinLength(1)
   @MaxLength(20)
   CCM_Watch_List__c?: string;
@@ -126,7 +126,7 @@ export class CreateCustomerDto {
     example: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_DATE,
   })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @MinLength(1)
   @MaxLength(200)
   CCM_Watch_List_Date__c?: string;
