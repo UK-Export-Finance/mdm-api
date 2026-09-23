@@ -35,20 +35,21 @@ export class CustomersService {
     const customersInInformatica = await this.informaticaService.getCustomers(backendQuery);
     return customersInInformatica.map(
       (customerInInformatica): GetCustomersResponseItem => ({
-        partyUrn: customerInInformatica.partyUrn,
-        name: customerInInformatica.name,
-        sfId: customerInInformatica.sfId,
         companyRegNo: customerInInformatica.companyRegNo,
+        creditClassificationDate: customerInInformatica.creditClassificationDate,
+        creditClassificationStatus: customerInInformatica.creditClassificationStatus,
+        customerType: customerInInformatica.customerType,
+        isLegacyRecord: customerInInformatica.isLegacyRecord,
+        name: customerInInformatica.name,
+        partyUrn: customerInInformatica.partyUrn,
         probabilityOfDefault: customerInInformatica.probabilityOfDefault,
+        riskEntity: customerInInformatica.riskEntity,
+        sfId: customerInInformatica.sfId,
+        subtype: customerInInformatica.subtype,
+        type: customerInInformatica.type,
         ukEntity: customerInInformatica.ukEntity,
         ukefIndustryName: customerInInformatica.ukefIndustryName,
         ukefSectorName: customerInInformatica.ukefSectorName,
-        type: customerInInformatica.type,
-        subtype: customerInInformatica.subtype,
-        isLegacyRecord: customerInInformatica.isLegacyRecord,
-        riskEntity: customerInInformatica.riskEntity,
-        creditClassificationStatus: customerInInformatica.creditClassificationStatus,
-        creditClassificationDate: customerInInformatica.creditClassificationDate,
       }),
     );
   }
@@ -110,6 +111,7 @@ export class CustomersService {
       return res.status(HttpStatusCode.Ok).json(
         existingCustomersInInformatica.map(
           (customerInInformatica): GetCustomersResponseItem => ({
+            customerType: customerInInformatica.customerType,
             partyUrn: customerInInformatica?.partyUrn,
             name: customerInInformatica?.name,
             sfId: customerInInformatica?.sfId,
@@ -220,42 +222,44 @@ export class CustomersService {
     const salesForceDate = salesforceFormattedCurrentDate();
 
     const createCustomerDto: CreateCustomerDto = {
-      Name: DTFSCustomerDto.companyName,
-      Party_URN__c: partyUrn,
-      D_B_Number__c: dunsNumber,
-      Company_Registration_Number__c: DTFSCustomerDto.companyRegistrationNumber,
+      CCM_Assigned_Rating__c: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
+      CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity,
       CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
       CCM_Credit_Risk_Rating_Date__c: salesForceDate,
-      CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
-      CCM_Probability_of_Default__c: DTFSCustomerDto.probabilityOfDefault,
-      CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity,
-      CCM_Primary_Industry__c: DTFSCustomerDto.ukefIndustryName,
-      CCM_Primary_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
+      CCM_Customer_Type__c: DTFSCustomerDto.customerType,
       CCM_Industry__c: DTFSCustomerDto.ukefIndustryName,
       CCM_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
-      CCM_Assigned_Rating__c: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
+      CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
+      CCM_Primary_Industry__c: DTFSCustomerDto.ukefIndustryName,
+      CCM_Primary_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
+      CCM_Probability_of_Default__c: DTFSCustomerDto.probabilityOfDefault,
       CCM_Watch_List__c: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
       CCM_Watch_List_Date__c: salesForceDate,
+      Company_Registration_Number__c: DTFSCustomerDto.companyRegistrationNumber,
+      D_B_Number__c: dunsNumber,
+      Name: DTFSCustomerDto.companyName,
+      Party_URN__c: partyUrn,
     };
 
     const salesforceCreateCustomerResponse: CreateCustomerSalesforceResponseDto = await this.salesforceService.createCustomer(createCustomerDto);
 
     return [
       {
-        partyUrn: partyUrn,
-        name: DTFSCustomerDto.companyName,
-        sfId: salesforceCreateCustomerResponse?.success ? salesforceCreateCustomerResponse.id : null,
         companyRegNo: DTFSCustomerDto.companyRegistrationNumber,
-        type: null,
-        subtype: null,
+        creditClassificationDate: salesForceDate,
+        creditClassificationStatus: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
+        customerType: DTFSCustomerDto.customerType,
         isLegacyRecord: isLegacyRecord,
+        name: DTFSCustomerDto.companyName,
+        partyUrn: partyUrn,
         probabilityOfDefault: DTFSCustomerDto.probabilityOfDefault,
-        ukEntity: DTFSCustomerDto.ukEntity,
+        riskEntity: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
+        sfId: salesforceCreateCustomerResponse?.success ? salesforceCreateCustomerResponse.id : null,
+        subtype: null,
+        type: null,
         ukefIndustryName: DTFSCustomerDto.ukefIndustryName,
         ukefSectorName: DTFSCustomerDto.ukefSectorName,
-        riskEntity: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
-        creditClassificationStatus: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
-        creditClassificationDate: salesForceDate,
+        ukEntity: DTFSCustomerDto.ukEntity,
       },
     ];
   }
