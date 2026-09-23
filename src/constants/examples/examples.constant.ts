@@ -139,7 +139,7 @@ export const EXAMPLES = {
     },
   ],
   CUSTOMER: {
-    COMPANY_NAME: 'Mock testing ltd',
+    COMPANY_NAME: 'Mock testing LTD',
     COMPANYREG: '06012345',
     CREDIT_CLASSIFICATION_STATUS: {
       GOOD: 'Good',
