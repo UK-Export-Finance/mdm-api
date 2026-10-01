@@ -20,7 +20,6 @@ const invalidPayloads = [
       'companyName should not be empty',
       'companyName must be a string',
       'customerType must be shorter than or equal to 200 characters',
-      'customerType must be longer than or equal to 1 characters',
       'customerType should not be empty',
       'customerType must be a string',
     ],
@@ -35,7 +34,6 @@ const invalidPayloads = [
       'companyName should not be empty',
       'companyName must be a string',
       'customerType must be shorter than or equal to 200 characters',
-      'customerType must be longer than or equal to 1 characters',
       'customerType should not be empty',
       'customerType must be a string',
     ],
@@ -48,7 +46,6 @@ const invalidPayloads = [
       'companyName should not be empty',
       'companyName must be a string',
       'customerType must be shorter than or equal to 200 characters',
-      'customerType must be longer than or equal to 1 characters',
       'customerType should not be empty',
       'customerType must be a string',
     ],
@@ -61,7 +58,6 @@ const invalidPayloads = [
     message: [
       'companyName should not be empty',
       'customerType must be shorter than or equal to 200 characters',
-      'customerType must be longer than or equal to 1 characters',
       'customerType should not be empty',
       'customerType must be a string',
     ],
@@ -72,7 +68,7 @@ const invalidPayloads = [
       companyName: EXAMPLES.CUSTOMER.NAME,
       customerType: '',
     },
-    message: ['customerType must be longer than or equal to 1 characters', 'customerType should not be empty'],
+    message: ['customerType should not be empty'],
   },
   {
     payload: {
@@ -113,7 +109,7 @@ const invalidPayloads = [
       probabilityOfDefault: EXAMPLES.CUSTOMER.PROBABILITY_OF_DEFAULT,
       ukEntity: '',
     },
-    message: ['ukEntity must be longer than or equal to 1 characters', 'ukEntity should not be empty'],
+    message: ['ukEntity should not be empty'],
   },
   {
     payload: {
@@ -134,7 +130,7 @@ const invalidPayloads = [
       ukEntity: EXAMPLES.CUSTOMER.UK_ENTITY,
       ukefIndustryName: '',
     },
-    message: ['ukefIndustryName must be longer than or equal to 1 characters', 'ukefIndustryName should not be empty'],
+    message: ['ukefIndustryName should not be empty'],
   },
   {
     payload: {
@@ -146,7 +142,7 @@ const invalidPayloads = [
       ukefIndustryName: EXAMPLES.CUSTOMER.UK_INDUSTRY_NAME,
       ukefSectorName: '',
     },
-    message: ['ukefSectorName must be longer than or equal to 1 characters', 'ukefSectorName should not be empty'],
+    message: ['ukefSectorName should not be empty'],
   },
 ];
 

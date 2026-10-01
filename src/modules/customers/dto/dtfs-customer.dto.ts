@@ -30,7 +30,6 @@ export class DTFSCustomerDto {
   })
   @IsString()
   @IsNotEmpty()
-  @MinLength(1)
   @MaxLength(200)
   customerType: string;
 
@@ -52,7 +51,6 @@ export class DTFSCustomerDto {
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  @MinLength(1)
   @MaxLength(3)
   ukEntity?: string;
 
@@ -63,7 +61,6 @@ export class DTFSCustomerDto {
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  @MinLength(1)
   @MaxLength(200)
   ukefIndustryName?: string;
 
@@ -74,7 +71,6 @@ export class DTFSCustomerDto {
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  @MinLength(1)
   @MaxLength(200)
   ukefSectorName?: string;
 }
