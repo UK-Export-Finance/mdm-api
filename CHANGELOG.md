@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.60.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.59.1...v1.60.0) (2026-10-05)
+
+
+### Features
+
+* **APIM-650:** create salesforce customer - customer type field ([#1898](https://github.com/UK-Export-Finance/mdm-api/issues/1898)) ([5d28a73](https://github.com/UK-Export-Finance/mdm-api/commit/5d28a733776dc4bcc688ba1d4eb98187b8773568))
+
 ## [1.59.1](https://github.com/UK-Export-Finance/mdm-api/compare/v1.59.0...v1.59.1) (2026-09-15)
 
 
