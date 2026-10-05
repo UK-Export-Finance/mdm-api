@@ -118,39 +118,41 @@ describe('CustomersController', () => {
   });
 
   describe('getOrCreateCustomer', () => {
-    const DTFSCustomerDtoWithProbabilityOfDefault: DTFSCustomerDto = {
+    const baseDto = {
       companyRegistrationNumber: EXAMPLES.CUSTOMER.COMPANYREG,
-      companyName: 'TEST NAME',
+      companyName: EXAMPLES.CUSTOMER.COMPANY_NAME,
+      customerType: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
+    };
+
+    const DTFSCustomerDtoWithProbabilityOfDefault: DTFSCustomerDto = {
+      ...baseDto,
       probabilityOfDefault: 3,
     };
 
     const DTFSCustomerDtoWithFalsyProbabilityOfDefault: DTFSCustomerDto = {
-      companyRegistrationNumber: EXAMPLES.CUSTOMER.COMPANYREG,
-      companyName: 'TEST NAME',
+      ...baseDto,
       probabilityOfDefault: undefined,
     };
 
-    const DTFSCustomerDtoWithoutProbabilityOfDefault: DTFSCustomerDto = {
-      companyRegistrationNumber: EXAMPLES.CUSTOMER.COMPANYREG,
-      companyName: 'TEST NAME',
-    };
+    const DTFSCustomerDtoWithoutProbabilityOfDefault: DTFSCustomerDto = baseDto;
 
     const getOrCreateCustomerResponse: GetCustomersResponse = [
       {
-        partyUrn: 'string',
-        name: 'string',
-        sfId: 'string',
         companyRegNo: 'string',
+        creditClassificationDate: salesforceFormattedCurrentDate(),
+        creditClassificationStatus: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
+        customerType: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
+        isLegacyRecord: true,
+        name: 'string',
+        partyUrn: 'string',
         probabilityOfDefault: 1,
+        riskEntity: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
+        sfId: 'string',
+        subtype: EXAMPLES.CUSTOMER.SALESFORCE_SUBTYPE,
+        type: EXAMPLES.CUSTOMER.SALESFORCE_TYPE,
         ukEntity: 'Yes',
         ukefIndustryName: 'string',
         ukefSectorName: 'string',
-        type: EXAMPLES.CUSTOMER.SALESFORCE_TYPE,
-        subtype: EXAMPLES.CUSTOMER.SALESFORCE_SUBTYPE,
-        isLegacyRecord: true,
-        riskEntity: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
-        creditClassificationStatus: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
-        creditClassificationDate: salesforceFormattedCurrentDate(),
       },
     ];
 
@@ -199,13 +201,13 @@ describe('CustomersController', () => {
   describe('getDunAndBradstreetNumber', () => {
     it.each([
       {
-        query: { companyRegistrationNumber: 'TEST' },
+        query: { companyRegistrationNumber: 'Mock' },
       },
       {
         query: { companyRegistrationNumber: '' },
       },
       {
-        query: { companyRegistrationNumber: 'more_than_10_chars_long' },
+        query: { companyRegistrationNumber: 'a'.repeat(11) },
       },
     ])('returns false if the request is invalid', async ({ query }) => {
       const dto = new CompanyRegistrationNumberDto();

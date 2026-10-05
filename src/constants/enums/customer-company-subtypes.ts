@@ -1,4 +1,4 @@
-export enum CustomerSubtypesEnum {
+export enum CustomerCompanySubtypesEnum {
   ALTERNATIVE_FINANCE_PROVIDER = 'Alternative Finance Provider',
   BANK = 'Bank',
   BROKER = 'Broker',

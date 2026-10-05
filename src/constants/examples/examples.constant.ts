@@ -139,6 +139,7 @@ export const EXAMPLES = {
     },
   ],
   CUSTOMER: {
+    COMPANY_NAME: 'Mock testing LTD',
     COMPANYREG: '06012345',
     CREDIT_CLASSIFICATION_STATUS: {
       GOOD: 'Good',
@@ -146,8 +147,9 @@ export const EXAMPLES = {
     CREDIT_CLASSIFICATION_DATE: '01/01/1970',
     CREDIT_RISK_RATING: 'B+',
     CREDIT_RISK_RATING_DATE: '1989-09-20',
+    CUSTOMER_TYPE: 'CUSTOMER',
     DNB_NUMBER: '12341234',
-    NAME: 'Testing Systems Ltd',
+    NAME: 'Mock name',
     PARTYURN: '00302069',
     PROBABILITY_OF_DEFAULT: 14.1,
     RISK_ENTITY: {

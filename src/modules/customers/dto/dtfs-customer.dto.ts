@@ -25,6 +25,15 @@ export class DTFSCustomerDto {
   companyName: string;
 
   @ApiProperty({
+    description: 'Salesforce customer type',
+    example: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
+  })
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(200)
+  customerType: string;
+
+  @ApiProperty({
     description: 'Probability of default',
     example: EXAMPLES.CUSTOMER.PROBABILITY_OF_DEFAULT,
   })
@@ -42,7 +51,6 @@ export class DTFSCustomerDto {
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  @MinLength(1)
   @MaxLength(3)
   ukEntity?: string;
 
@@ -53,7 +61,6 @@ export class DTFSCustomerDto {
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  @MinLength(1)
   @MaxLength(200)
   ukefIndustryName?: string;
 
@@ -64,7 +71,6 @@ export class DTFSCustomerDto {
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  @MinLength(1)
   @MaxLength(200)
   ukefSectorName?: string;
 }

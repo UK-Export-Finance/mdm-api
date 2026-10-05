@@ -14,20 +14,21 @@ export class GetCustomersGenerator extends AbstractGenerator<CustomerValues, Gen
 
   protected generateValues(): CustomerValues {
     return {
-      partyUrn: '003' + this.valueGenerator.stringOfNumericCharacters({ length: 5 }),
-      name: this.valueGenerator.word(),
-      sfId: this.valueGenerator.word(),
       companyRegNo: '0' + this.valueGenerator.stringOfNumericCharacters({ length: 7 }),
+      creditClassificationDate: salesforceFormattedCurrentDate(),
+      creditClassificationStatus: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
+      customerType: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
+      isLegacyRecord: this.valueGenerator.boolean(),
+      name: this.valueGenerator.word(),
+      partyUrn: '003' + this.valueGenerator.stringOfNumericCharacters({ length: 5 }),
       probabilityOfDefault: this.valueGenerator.integer({ min: 1, max: 14 }),
+      riskEntity: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
+      sfId: this.valueGenerator.word(),
+      subtype: null,
+      type: null,
       ukEntity: this.valueGenerator.stringOfNumericCharacters({ length: 3 }),
       ukefIndustryName: this.valueGenerator.stringOfNumericCharacters({ length: 100 }),
       ukefSectorName: this.valueGenerator.stringOfNumericCharacters({ length: 100 }),
-      type: null,
-      subtype: null,
-      isLegacyRecord: this.valueGenerator.boolean(),
-      riskEntity: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
-      creditClassificationStatus: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
-      creditClassificationDate: salesforceFormattedCurrentDate(),
     };
   }
 
@@ -62,20 +63,21 @@ export class GetCustomersGenerator extends AbstractGenerator<CustomerValues, Gen
 
     const getCustomersResponse: GetCustomersResponse[] = values.map((v) => [
       {
-        partyUrn: v.partyUrn,
-        name: v.name,
-        sfId: v.sfId,
         companyRegNo: v.companyRegNo,
+        creditClassificationDate: v.creditClassificationDate,
+        creditClassificationStatus: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
+        customerType: v.customerType,
+        isLegacyRecord: v.isLegacyRecord,
+        name: v.name,
+        partyUrn: v.partyUrn,
         probabilityOfDefault: v.probabilityOfDefault,
+        riskEntity: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
+        sfId: v.sfId,
+        subtype: v.subtype,
+        type: v.type,
         ukEntity: v.ukEntity,
         ukefIndustryName: v.ukefIndustryName,
         ukefSectorName: v.ukefSectorName,
-        type: v.type,
-        subtype: v.subtype,
-        isLegacyRecord: v.isLegacyRecord,
-        riskEntity: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
-        creditClassificationStatus: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
-        creditClassificationDate: v.creditClassificationDate,
       },
     ]);
 
@@ -90,20 +92,21 @@ export class GetCustomersGenerator extends AbstractGenerator<CustomerValues, Gen
 }
 
 interface CustomerValues {
-  partyUrn: string;
-  name: string;
-  sfId: string;
   companyRegNo: string;
+  creditClassificationDate: string;
+  creditClassificationStatus: string;
+  customerType: string;
+  isLegacyRecord: boolean;
+  name: string;
+  partyUrn: string;
   probabilityOfDefault: number;
+  riskEntity: string;
+  sfId: string;
+  subtype: string;
+  type: string;
   ukEntity: string;
   ukefIndustryName: string;
   ukefSectorName: string;
-  type: string;
-  subtype: string;
-  isLegacyRecord: boolean;
-  riskEntity: string;
-  creditClassificationStatus: string;
-  creditClassificationDate: string;
 }
 
 interface GenerateOptions {

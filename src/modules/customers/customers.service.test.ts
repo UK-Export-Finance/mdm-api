@@ -27,28 +27,30 @@ const mockResponseObject = {
 } as any as Response;
 
 // Test constants
-const companyRegistrationNumber = '12345678';
-const companyName = 'TEST NAME';
+const companyRegistrationNumber = EXAMPLES.CUSTOMER.COMPANYREG;
+const companyName = EXAMPLES.CUSTOMER.COMPANY_NAME;
+const customerType = EXAMPLES.CUSTOMER.CUSTOMER_TYPE;
 const dunsNumber = '56785678';
 const probabilityOfDefault = 14.1;
 
 // Payloads
 const salesForceDate = salesforceFormattedCurrentDate();
 
-const baseCustomerPayload = {
+const basePayload = {
   companyRegistrationNumber,
   companyName,
+  customerType,
 };
 
 const customerWithPod: DTFSCustomerDto = {
-  ...baseCustomerPayload,
+  ...basePayload,
   probabilityOfDefault,
 };
 const customerWithoutPod: DTFSCustomerDto = {
-  ...baseCustomerPayload,
+  ...basePayload,
 };
 const customerWithFullPayload: DTFSCustomerDto = {
-  ...baseCustomerPayload,
+  ...basePayload,
   probabilityOfDefault,
   ukEntity: EXAMPLES.CUSTOMER.UK_ENTITY,
   ukefIndustryName: EXAMPLES.CUSTOMER.UK_INDUSTRY_NAME,
@@ -68,6 +70,7 @@ const dunAndBradstreetGetDunsNumberResponse: string = 'TEST DUNS_NUMBER';
 // Legacy Salesforce customer which has a party URN
 const createLegacyCustomerWithUrn: GetCustomersInformaticaResponseItem[] = [
   {
+    customerType,
     partyUrn: 'SOME_LEGACY_URN',
     name: companyName,
     sfId: 'customer-id',
@@ -88,6 +91,7 @@ const createLegacyCustomerWithUrn: GetCustomersInformaticaResponseItem[] = [
 // Legacy Salesforce customer which has URN generated
 const createLegacyCustomerWithNoUrn: GetCustomersInformaticaResponseItem[] = [
   {
+    customerType,
     partyUrn: 'TEST PARTY_URN',
     name: companyName,
     sfId: 'customer-id',
@@ -108,6 +112,7 @@ const createLegacyCustomerWithNoUrn: GetCustomersInformaticaResponseItem[] = [
 // New customer creation
 const createNewCustomerWithUrn: GetCustomersInformaticaResponseItem[] = [
   {
+    customerType,
     partyUrn: 'TEST PARTY_URN',
     name: companyName,
     sfId: 'customer-id',
@@ -295,22 +300,23 @@ describe('CustomerService', () => {
 
             expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(
               expect.objectContaining({
-                Name: DTFSCustomerDto.companyName,
-                D_B_Number__c: 'TEST DUNS_NUMBER',
-                Party_URN__c: 'SOME_LEGACY_URN',
-                Company_Registration_Number__c: DTFSCustomerDto.companyRegistrationNumber,
+                CCM_Assigned_Rating__c: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
+                CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity,
                 CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
                 CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
-                CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
-                CCM_Probability_of_Default__c: DTFSCustomerDto.probabilityOfDefault,
-                CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity,
-                CCM_Primary_Industry__c: DTFSCustomerDto.ukefIndustryName,
-                CCM_Primary_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
+                CCM_Customer_Type__c: DTFSCustomerDto.customerType,
                 CCM_Industry__c: DTFSCustomerDto.ukefIndustryName,
                 CCM_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
-                CCM_Assigned_Rating__c: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
+                CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
+                CCM_Primary_Industry__c: DTFSCustomerDto.ukefIndustryName,
+                CCM_Primary_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
+                CCM_Probability_of_Default__c: DTFSCustomerDto.probabilityOfDefault,
                 CCM_Watch_List__c: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
                 CCM_Watch_List_Date__c: salesForceDate,
+                Company_Registration_Number__c: DTFSCustomerDto.companyRegistrationNumber,
+                D_B_Number__c: 'TEST DUNS_NUMBER',
+                Name: DTFSCustomerDto.companyName,
+                Party_URN__c: 'SOME_LEGACY_URN',
               }),
             );
 
@@ -418,22 +424,23 @@ describe('CustomerService', () => {
 
             expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(
               expect.objectContaining({
-                Name: DTFSCustomerDto.companyName,
-                D_B_Number__c: 'TEST DUNS_NUMBER',
-                Party_URN__c: 'TEST PARTY_URN',
-                Company_Registration_Number__c: DTFSCustomerDto.companyRegistrationNumber,
+                CCM_Assigned_Rating__c: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
+                CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity,
                 CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
                 CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
-                CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
-                CCM_Probability_of_Default__c: DTFSCustomerDto.probabilityOfDefault,
-                CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity,
-                CCM_Primary_Industry__c: DTFSCustomerDto.ukefIndustryName,
-                CCM_Primary_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
+                CCM_Customer_Type__c: DTFSCustomerDto.customerType,
                 CCM_Industry__c: DTFSCustomerDto.ukefIndustryName,
                 CCM_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
-                CCM_Assigned_Rating__c: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
+                CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
+                CCM_Primary_Industry__c: DTFSCustomerDto.ukefIndustryName,
+                CCM_Primary_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
+                CCM_Probability_of_Default__c: DTFSCustomerDto.probabilityOfDefault,
                 CCM_Watch_List__c: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
                 CCM_Watch_List_Date__c: salesForceDate,
+                Company_Registration_Number__c: DTFSCustomerDto.companyRegistrationNumber,
+                D_B_Number__c: 'TEST DUNS_NUMBER',
+                Name: DTFSCustomerDto.companyName,
+                Party_URN__c: 'TEST PARTY_URN',
               }),
             );
 
@@ -512,22 +519,23 @@ describe('CustomerService', () => {
 
           expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(
             expect.objectContaining({
-              Name: DTFSCustomerDto.companyName,
-              D_B_Number__c: 'TEST DUNS_NUMBER',
-              Party_URN__c: 'TEST PARTY_URN',
-              Company_Registration_Number__c: DTFSCustomerDto.companyRegistrationNumber,
+              CCM_Assigned_Rating__c: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
+              CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity,
               CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
               CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
-              CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
-              CCM_Probability_of_Default__c: DTFSCustomerDto.probabilityOfDefault,
-              CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity,
-              CCM_Primary_Industry__c: DTFSCustomerDto.ukefIndustryName,
-              CCM_Primary_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
+              CCM_Customer_Type__c: DTFSCustomerDto.customerType,
               CCM_Industry__c: DTFSCustomerDto.ukefIndustryName,
               CCM_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
-              CCM_Assigned_Rating__c: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
+              CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
+              CCM_Primary_Industry__c: DTFSCustomerDto.ukefIndustryName,
+              CCM_Primary_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
+              CCM_Probability_of_Default__c: DTFSCustomerDto.probabilityOfDefault,
               CCM_Watch_List__c: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
               CCM_Watch_List_Date__c: salesForceDate,
+              Company_Registration_Number__c: DTFSCustomerDto.companyRegistrationNumber,
+              D_B_Number__c: 'TEST DUNS_NUMBER',
+              Name: DTFSCustomerDto.companyName,
+              Party_URN__c: 'TEST PARTY_URN',
             }),
           );
 
@@ -594,22 +602,23 @@ describe('CustomerService', () => {
 
           expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(
             expect.objectContaining({
-              Name: DTFSCustomerDto.companyName,
-              D_B_Number__c: 'TEST DUNS_NUMBER',
-              Party_URN__c: null,
-              Company_Registration_Number__c: DTFSCustomerDto.companyRegistrationNumber,
+              CCM_Assigned_Rating__c: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
+              CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity,
               CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
               CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
-              CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
-              CCM_Probability_of_Default__c: DTFSCustomerDto.probabilityOfDefault,
-              CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity,
-              CCM_Primary_Industry__c: DTFSCustomerDto.ukefIndustryName,
-              CCM_Primary_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
+              CCM_Customer_Type__c: DTFSCustomerDto.customerType,
               CCM_Industry__c: DTFSCustomerDto.ukefIndustryName,
               CCM_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
-              CCM_Assigned_Rating__c: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
+              CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
+              CCM_Primary_Industry__c: DTFSCustomerDto.ukefIndustryName,
+              CCM_Primary_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
+              CCM_Probability_of_Default__c: DTFSCustomerDto.probabilityOfDefault,
               CCM_Watch_List__c: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
               CCM_Watch_List_Date__c: salesForceDate,
+              Company_Registration_Number__c: DTFSCustomerDto.companyRegistrationNumber,
+              D_B_Number__c: 'TEST DUNS_NUMBER',
+              Name: DTFSCustomerDto.companyName,
+              Party_URN__c: null,
             }),
           );
 

@@ -19,6 +19,9 @@ const invalidPayloads = [
       'companyRegistrationNumber must be a string',
       'companyName should not be empty',
       'companyName must be a string',
+      'customerType must be shorter than or equal to 200 characters',
+      'customerType should not be empty',
+      'customerType must be a string',
     ],
   },
   {
@@ -30,25 +33,56 @@ const invalidPayloads = [
       'companyRegistrationNumber should not be empty',
       'companyName should not be empty',
       'companyName must be a string',
+      'customerType must be shorter than or equal to 200 characters',
+      'customerType should not be empty',
+      'customerType must be a string',
     ],
   },
   {
     payload: {
       companyRegistrationNumber: EXAMPLES.CUSTOMER.COMPANYREG,
     },
-    message: ['companyName should not be empty', 'companyName must be a string'],
+    message: [
+      'companyName should not be empty',
+      'companyName must be a string',
+      'customerType must be shorter than or equal to 200 characters',
+      'customerType should not be empty',
+      'customerType must be a string',
+    ],
   },
   {
     payload: {
       companyRegistrationNumber: EXAMPLES.CUSTOMER.COMPANYREG,
       companyName: '',
     },
-    message: ['companyName should not be empty'],
+    message: [
+      'companyName should not be empty',
+      'customerType must be shorter than or equal to 200 characters',
+      'customerType should not be empty',
+      'customerType must be a string',
+    ],
   },
   {
     payload: {
       companyRegistrationNumber: EXAMPLES.CUSTOMER.COMPANYREG,
       companyName: EXAMPLES.CUSTOMER.NAME,
+      customerType: '',
+    },
+    message: ['customerType should not be empty'],
+  },
+  {
+    payload: {
+      companyRegistrationNumber: EXAMPLES.CUSTOMER.COMPANYREG,
+      companyName: EXAMPLES.CUSTOMER.NAME,
+      customerType: 'a'.repeat(201),
+    },
+    message: ['customerType must be shorter than or equal to 200 characters'],
+  },
+  {
+    payload: {
+      companyRegistrationNumber: EXAMPLES.CUSTOMER.COMPANYREG,
+      companyName: EXAMPLES.CUSTOMER.NAME,
+      customerType: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
       probabilityOfDefault: '',
     },
     message: [
@@ -62,6 +96,7 @@ const invalidPayloads = [
     payload: {
       companyRegistrationNumber: EXAMPLES.CUSTOMER.COMPANYREG,
       companyName: EXAMPLES.CUSTOMER.NAME,
+      customerType: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
       probabilityOfDefault: 101,
     },
     message: ['probabilityOfDefault must not be greater than 100'],
@@ -70,15 +105,17 @@ const invalidPayloads = [
     payload: {
       companyRegistrationNumber: EXAMPLES.CUSTOMER.COMPANYREG,
       companyName: EXAMPLES.CUSTOMER.NAME,
+      customerType: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
       probabilityOfDefault: EXAMPLES.CUSTOMER.PROBABILITY_OF_DEFAULT,
       ukEntity: '',
     },
-    message: ['ukEntity must be longer than or equal to 1 characters', 'ukEntity should not be empty'],
+    message: ['ukEntity should not be empty'],
   },
   {
     payload: {
       companyRegistrationNumber: EXAMPLES.CUSTOMER.COMPANYREG,
       companyName: EXAMPLES.CUSTOMER.NAME,
+      customerType: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
       probabilityOfDefault: EXAMPLES.CUSTOMER.PROBABILITY_OF_DEFAULT,
       ukEntity: 'False',
     },
@@ -88,22 +125,24 @@ const invalidPayloads = [
     payload: {
       companyRegistrationNumber: EXAMPLES.CUSTOMER.COMPANYREG,
       companyName: EXAMPLES.CUSTOMER.NAME,
+      customerType: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
       probabilityOfDefault: EXAMPLES.CUSTOMER.PROBABILITY_OF_DEFAULT,
       ukEntity: EXAMPLES.CUSTOMER.UK_ENTITY,
       ukefIndustryName: '',
     },
-    message: ['ukefIndustryName must be longer than or equal to 1 characters', 'ukefIndustryName should not be empty'],
+    message: ['ukefIndustryName should not be empty'],
   },
   {
     payload: {
       companyRegistrationNumber: EXAMPLES.CUSTOMER.COMPANYREG,
       companyName: EXAMPLES.CUSTOMER.NAME,
+      customerType: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
       probabilityOfDefault: EXAMPLES.CUSTOMER.PROBABILITY_OF_DEFAULT,
       ukEntity: EXAMPLES.CUSTOMER.UK_ENTITY,
       ukefIndustryName: EXAMPLES.CUSTOMER.UK_INDUSTRY_NAME,
       ukefSectorName: '',
     },
-    message: ['ukefSectorName must be longer than or equal to 1 characters', 'ukefSectorName should not be empty'],
+    message: ['ukefSectorName should not be empty'],
   },
 ];
 
@@ -130,7 +169,6 @@ describe('POST /customers', () => {
     await api.destroy();
   });
 
-  // Authorisation test cases
   withClientAuthenticationTests({
     givenTheRequestWouldOtherwiseSucceed: () => {
       requestToGetCustomers(mdmPath).reply(HttpStatusCode.Ok, getCustomersResponse[0]);
@@ -138,7 +176,6 @@ describe('POST /customers', () => {
     makeRequestWithoutAuth: (incorrectAuth?: IncorrectAuthArg) => api.getWithoutAuth(mdmPath, incorrectAuth?.headerName, incorrectAuth?.headerValue),
   });
 
-  // Bad request test cases
   it.each(invalidPayloads)(`should return ${HttpStatusCode.BadRequest} for a malformed payload`, async ({ payload, message }) => {
     // Act
     const { status, body } = await api.post(url, payload);
@@ -149,12 +186,12 @@ describe('POST /customers', () => {
     expect(body.message).toStrictEqual(message);
   });
 
-  // Good request test case
   it(`should return ${HttpStatusCode.Ok} for a correct payload, when creating an existing customer`, async () => {
     // Arrange
     const payload = {
       companyRegistrationNumber: EXAMPLES.CUSTOMER.COMPANYREG,
       companyName: EXAMPLES.CUSTOMER.NAME,
+      customerType: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
       probabilityOfDefault: EXAMPLES.CUSTOMER.PROBABILITY_OF_DEFAULT,
       ukEntity: EXAMPLES.CUSTOMER.UK_ENTITY,
       ukefIndustryName: EXAMPLES.CUSTOMER.UK_INDUSTRY_NAME,
@@ -165,15 +202,27 @@ describe('POST /customers', () => {
     const { status, body } = await api.post(url, payload);
 
     // Assert
-    // Following response is sent when the customer exist
     expect(status).toBe(HttpStatusCode.Ok);
     expect(body).toHaveLength(1);
-    expect(body[0].companyRegNo).toBeDefined();
-    expect(body[0].name).toBeDefined();
-    expect(body[0].partyUrn).toBeDefined();
-    expect(body[0].sfId).toBeDefined();
-    expect(body[0].type).toBeDefined();
-    expect(body[0].subtype).toBeDefined();
-    expect(body[0].isLegacyRecord).toBeDefined();
+
+    const [customer] = body;
+
+    expect(typeof customer.companyRegNo).toBe('string');
+    expect(typeof customer.customerType).toBe('string');
+    expect(typeof customer.name).toBe('string');
+    expect(typeof customer.partyUrn).toBe('string');
+    expect(typeof customer.sfId).toBe('string');
+    expect(typeof customer.type).toBe('object');
+    expect(typeof customer.subtype).toBe('object');
+    expect(typeof customer.isLegacyRecord).toBe('boolean');
+
+    // Optional fields - verify they exist in the response structure
+    expect(customer).toHaveProperty('creditClassificationDate');
+    expect(customer).toHaveProperty('creditClassificationStatus');
+    expect(customer).toHaveProperty('probabilityOfDefault');
+    expect(customer).toHaveProperty('riskEntity');
+    expect(customer).toHaveProperty('ukEntity');
+    expect(customer).toHaveProperty('ukefIndustryName');
+    expect(customer).toHaveProperty('ukefSectorName');
   });
 });
