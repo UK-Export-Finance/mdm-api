@@ -226,7 +226,6 @@ export class CustomersService {
       CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity,
       CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
       CCM_Credit_Risk_Rating_Date__c: salesForceDate,
-      CCM_Customer_Type__c: DTFSCustomerDto.customerType || null,
       CCM_Industry__c: DTFSCustomerDto.ukefIndustryName,
       CCM_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
       CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
@@ -240,6 +239,10 @@ export class CustomersService {
       Name: DTFSCustomerDto.companyName,
       Party_URN__c: partyUrn,
     };
+
+    if (DTFSCustomerDto.customerType) {
+      createCustomerDto.CCM_Customer_Type__c = DTFSCustomerDto.customerType;
+    }
 
     const salesforceCreateCustomerResponse: CreateCustomerSalesforceResponseDto = await this.salesforceService.createCustomer(createCustomerDto);
 

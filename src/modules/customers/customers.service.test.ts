@@ -304,7 +304,6 @@ describe('CustomerService', () => {
                 CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity,
                 CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
                 CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
-                CCM_Customer_Type__c: DTFSCustomerDto.customerType,
                 CCM_Industry__c: DTFSCustomerDto.ukefIndustryName,
                 CCM_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
                 CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
@@ -325,6 +324,34 @@ describe('CustomerService', () => {
             expect(numbersServiceCreate).toHaveBeenCalledTimes(0);
           },
         );
+
+        describe('when customerType is provided', () => {
+          it('should call salesforceServiceCreateCustomer with the customerType', async () => {
+            // Arrange
+            when(salesforceServiceCreateCustomer).calledWith(expect.any(Object)).mockResolvedValueOnce(salesforceCreateCustomerResponse);
+            when(numbersServiceCreate).calledWith(expect.any(Object)).mockResolvedValueOnce(createUkefIdResponse);
+            when(dunAndBradstreetServiceGetDunsNumber).calledWith(expect.any(String)).mockResolvedValueOnce(dunAndBradstreetGetDunsNumberResponse);
+            when(informaticaServiceGetCustomers)
+              .calledWith({
+                companyreg: customerWithPod.companyRegistrationNumber,
+              })
+              .mockResolvedValueOnce(getCustomersResponse[0]);
+
+            // Act
+            await service.getOrCreateCustomer(mockResponseObject, customerWithPod);
+
+            // Assert
+            expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(
+              expect.objectContaining({
+                CCM_Customer_Type__c: customerWithPod.customerType,
+              }),
+            );
+
+            expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(1);
+            expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(1);
+            expect(numbersServiceCreate).toHaveBeenCalledTimes(0);
+          });
+        });
 
         it('throws an error if Salesforce service fails to create a customer', async () => {
           // Arrange
