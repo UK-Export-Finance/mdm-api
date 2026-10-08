@@ -111,7 +111,7 @@ export class CustomersService {
       return res.status(HttpStatusCode.Ok).json(
         existingCustomersInInformatica.map(
           (customerInInformatica): GetCustomersResponseItem => ({
-            customerType: customerInInformatica?.customerType,
+            customerType: customerInInformatica.customerType,
             partyUrn: customerInInformatica?.partyUrn,
             name: customerInInformatica?.name,
             sfId: customerInInformatica?.sfId,
@@ -251,7 +251,7 @@ export class CustomersService {
         companyRegNo: DTFSCustomerDto.companyRegistrationNumber,
         creditClassificationDate: salesForceDate,
         creditClassificationStatus: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
-        customerType: DTFSCustomerDto?.customerType,
+        customerType: DTFSCustomerDto.customerType,
         isLegacyRecord: isLegacyRecord,
         name: DTFSCustomerDto.companyName,
         partyUrn: partyUrn,
