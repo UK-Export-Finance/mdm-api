@@ -39,16 +39,29 @@ const salesForceDate = salesforceFormattedCurrentDate();
 const basePayload = {
   companyRegistrationNumber,
   companyName,
-  customerType,
+  // customerType,
 };
 
 const customerWithPod: DTFSCustomerDto = {
   ...basePayload,
   probabilityOfDefault,
 };
+
 const customerWithoutPod: DTFSCustomerDto = {
   ...basePayload,
 };
+
+const customerWithCustomerType: DTFSCustomerDto = {
+  ...basePayload,
+  probabilityOfDefault,
+  customerType,
+};
+
+const customerWithoutCustomerType: DTFSCustomerDto = {
+  ...basePayload,
+};
+
+
 const customerWithFullPayload: DTFSCustomerDto = {
   ...basePayload,
   probabilityOfDefault,
@@ -267,7 +280,7 @@ describe('CustomerService', () => {
             pod: customerWithPod.probabilityOfDefault,
           },
           {
-            DTFSCustomerDto: customerWithoutPod,
+            DTFSCustomerDto: customerWithoutCustomerType,
             pod: customerWithoutPod.probabilityOfDefault,
           },
         ])(
@@ -338,7 +351,7 @@ describe('CustomerService', () => {
               .mockResolvedValueOnce(getCustomersResponse[0]);
 
             // Act
-            await service.getOrCreateCustomer(mockResponseObject, customerWithPod);
+            await service.getOrCreateCustomer(mockResponseObject, customerWithCustomerType);
 
             // Assert
             expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(
