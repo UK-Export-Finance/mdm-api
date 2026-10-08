@@ -48,7 +48,7 @@ export class CreateCustomerDto {
   @IsNotEmpty()
   @MinLength(1)
   @MaxLength(200)
-  CCM_Customer_Type__c: string;
+  CCM_Customer_Type__c?: string;
 
   @ApiProperty({
     description: 'UKEF industry identifier',

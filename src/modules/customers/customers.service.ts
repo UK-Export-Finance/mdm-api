@@ -38,7 +38,7 @@ export class CustomersService {
         companyRegNo: customerInInformatica.companyRegNo,
         creditClassificationDate: customerInInformatica.creditClassificationDate,
         creditClassificationStatus: customerInInformatica.creditClassificationStatus,
-        customerType: customerInInformatica.customerType,
+        customerType: customerInInformatica.customerType || null,
         isLegacyRecord: customerInInformatica.isLegacyRecord,
         name: customerInInformatica.name,
         partyUrn: customerInInformatica.partyUrn,
@@ -111,7 +111,7 @@ export class CustomersService {
       return res.status(HttpStatusCode.Ok).json(
         existingCustomersInInformatica.map(
           (customerInInformatica): GetCustomersResponseItem => ({
-            customerType: customerInInformatica.customerType,
+            customerType: customerInInformatica?.customerType,
             partyUrn: customerInInformatica?.partyUrn,
             name: customerInInformatica?.name,
             sfId: customerInInformatica?.sfId,
@@ -226,7 +226,7 @@ export class CustomersService {
       CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity,
       CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
       CCM_Credit_Risk_Rating_Date__c: salesForceDate,
-      CCM_Customer_Type__c: DTFSCustomerDto.customerType,
+      CCM_Customer_Type__c: DTFSCustomerDto.customerType || null,
       CCM_Industry__c: DTFSCustomerDto.ukefIndustryName,
       CCM_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
       CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
@@ -248,7 +248,7 @@ export class CustomersService {
         companyRegNo: DTFSCustomerDto.companyRegistrationNumber,
         creditClassificationDate: salesForceDate,
         creditClassificationStatus: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
-        customerType: DTFSCustomerDto.customerType,
+        customerType: DTFSCustomerDto?.customerType,
         isLegacyRecord: isLegacyRecord,
         name: DTFSCustomerDto.companyName,
         partyUrn: partyUrn,

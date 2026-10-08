@@ -29,7 +29,7 @@ export class GetCustomersResponseItem {
     example: EXAMPLES.CUSTOMER.SALESFORCE_TYPE,
     enum: CustomerTypesEnum,
   })
-  readonly customerType: string | null;
+  readonly customerType?: string | null;
 
   @ApiProperty({
     description: 'False for Salesforce account record, True for legacy Party DB record',
