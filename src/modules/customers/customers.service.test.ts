@@ -61,7 +61,6 @@ const customerWithoutCustomerType: DTFSCustomerDto = {
   ...basePayload,
 };
 
-
 const customerWithFullPayload: DTFSCustomerDto = {
   ...basePayload,
   probabilityOfDefault,
@@ -290,6 +289,7 @@ describe('CustomerService', () => {
             const mockSalesforceResponse = [
               {
                 ...createLegacyCustomerWithUrn[0],
+                customerType: DTFSCustomerDto.customerType,
                 probabilityOfDefault: DTFSCustomerDto.probabilityOfDefault,
               },
             ];
@@ -439,6 +439,7 @@ describe('CustomerService', () => {
             const mockSalesforceResponse = [
               {
                 ...createLegacyCustomerWithNoUrn[0],
+                customerType: DTFSCustomerDto.customerType,
                 probabilityOfDefault: DTFSCustomerDto.probabilityOfDefault,
               },
             ];
@@ -514,6 +515,7 @@ describe('CustomerService', () => {
             response: [
               {
                 ...createLegacyCustomerWithNoUrn[0],
+                customerType: customerWithPod.customerType,
               },
             ],
           },
@@ -524,6 +526,7 @@ describe('CustomerService', () => {
             response: [
               {
                 ...createLegacyCustomerWithNoUrn[0],
+                customerType: customerWithoutPod.customerType,
                 probabilityOfDefault: undefined,
               },
             ],
@@ -535,6 +538,7 @@ describe('CustomerService', () => {
             response: [
               {
                 ...createNewCustomerWithUrn[0],
+                customerType: customerWithFullPayload.customerType,
               },
             ],
           },
@@ -594,6 +598,7 @@ describe('CustomerService', () => {
             response: [
               {
                 ...createLegacyCustomerWithNoUrn[0],
+                customerType: customerWithPod.customerType,
                 partyUrn: null,
               },
             ],
@@ -605,6 +610,7 @@ describe('CustomerService', () => {
             response: [
               {
                 ...createLegacyCustomerWithNoUrn[0],
+                customerType: customerWithoutPod.customerType,
                 probabilityOfDefault: undefined,
                 partyUrn: null,
               },
@@ -617,6 +623,7 @@ describe('CustomerService', () => {
             response: [
               {
                 ...createNewCustomerWithUrn[0],
+                customerType: customerWithFullPayload.customerType,
                 partyUrn: null,
               },
             ],
