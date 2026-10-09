@@ -39,7 +39,6 @@ const salesForceDate = salesforceFormattedCurrentDate();
 const basePayload = {
   companyRegistrationNumber,
   companyName,
-  // customerType,
 };
 
 const customerWithPod: DTFSCustomerDto = {
