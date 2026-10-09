@@ -4,7 +4,7 @@ export type GetCustomersInformaticaResponseItem = {
   companyRegNo: string;
   creditClassificationDate?: string;
   creditClassificationStatus?: string;
-  customerType: string;
+  customerType?: string;
   isLegacyRecord: boolean;
   name: string;
   partyUrn: string;

@@ -37,7 +37,7 @@ export class CustomersService {
       companyRegNo: customerInInformatica.companyRegNo,
       creditClassificationDate: customerInInformatica.creditClassificationDate,
       creditClassificationStatus: customerInInformatica.creditClassificationStatus,
-      customerType: customerInInformatica.customerType,
+      customerType: customerInInformatica.customerType || null,
       isLegacyRecord: customerInInformatica.isLegacyRecord,
       name: customerInInformatica.name,
       partyUrn: customerInInformatica.partyUrn,
@@ -226,7 +226,6 @@ export class CustomersService {
       CCM_Citizenship_Class__c: dtfsCustomerDto.ukEntity,
       CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
       CCM_Credit_Risk_Rating_Date__c: salesForceDate,
-      CCM_Customer_Type__c: dtfsCustomerDto.customerType,
       CCM_Industry__c: dtfsCustomerDto.ukefIndustryName,
       CCM_Industry_Group__c: dtfsCustomerDto.ukefSectorName,
       CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
@@ -240,6 +239,10 @@ export class CustomersService {
       Name: dtfsCustomerDto.companyName,
       Party_URN__c: partyUrn,
     };
+
+    if (dtfsCustomerDto.customerType) {
+      createCustomerDto.CCM_Customer_Type__c = dtfsCustomerDto.customerType;
+    }
 
     const salesforceCreateCustomerResponse: CreateCustomerSalesforceResponseDto = await this.salesforceService.createCustomer(createCustomerDto);
 
