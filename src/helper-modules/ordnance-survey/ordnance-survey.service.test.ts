@@ -1,10 +1,10 @@
+import { AxiosError } from 'axios';
+import { when } from 'jest-when';
+import { of, throwError } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { EXAMPLES } from '@ukef/constants';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
-import { AxiosError } from 'axios';
-import { when } from 'jest-when';
-import { of, throwError } from 'rxjs';
 
 import expectedResponseData from './examples/example-response-for-search-places-v1-postcode.json';
 import noResultsResponseData from './examples/example-response-for-search-places-v1-postcode-no-results.json';

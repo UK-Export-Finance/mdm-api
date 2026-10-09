@@ -1,7 +1,7 @@
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
+import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
 
 import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { OdsService } from './ods.service';
@@ -28,25 +28,25 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
     service = new OdsService(odsStoredProcedureService, mockLogger);
   });
 
-  const mockStoredProcedureOutput = `{
-    "message": "${STORED_PROCEDURE.SUCCESS}",
-    "status": "${STORED_PROCEDURE.SUCCESS}",
-    "total_result_count": 2,
-    "results": [
-      {
-        "business_centre_code": "${EXAMPLES.BUSINESS_CENTRE.CODE}",
-        "non_working_day_name": "${EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME}",
-        "non_working_day_date": "${EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME}"
-      },
-      {
-        "business_centre_code": "${EXAMPLES.BUSINESS_CENTRE.CODE}",
-        "non_working_day_name": "${EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME}",
-        "non_working_day_date": "${EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME}"
-      }
-    ]
-  }`;
-
   beforeEach(() => {
+    const mockStoredProcedureOutput = `{
+      "message": "${STORED_PROCEDURE.SUCCESS}",
+      "status": "${STORED_PROCEDURE.SUCCESS}",
+      "total_result_count": 2,
+      "results": [
+        {
+          "business_centre_code": "${EXAMPLES.BUSINESS_CENTRE.CODE}",
+          "non_working_day_name": "${EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME}",
+          "non_working_day_date": "${EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME}"
+        },
+        {
+          "business_centre_code": "${EXAMPLES.BUSINESS_CENTRE.CODE}",
+          "non_working_day_name": "${EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME}",
+          "non_working_day_date": "${EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME}"
+        }
+      ]
+    }`;
+
     jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
   });
 

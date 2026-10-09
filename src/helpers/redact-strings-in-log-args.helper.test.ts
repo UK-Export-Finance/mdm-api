@@ -20,18 +20,18 @@ describe('redactStringsInLogArgs', () => {
 
     const args = [
       {
-        message: message,
+        message,
         stack: message,
         originalError: {
-          message: message,
+          message,
           stack: message,
           safe: 'Nothing sensitive',
         },
         driverError: {
-          message: message,
+          message,
           stack: message,
           originalError: {
-            message: message,
+            message,
             stack: message,
             safe: 'Nothing sensitive',
           },

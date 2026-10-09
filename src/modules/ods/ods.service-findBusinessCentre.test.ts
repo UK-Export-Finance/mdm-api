@@ -1,8 +1,8 @@
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
-import { mapBusinessCentre } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
+import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
+import { mapBusinessCentre } from '@ukef/helpers';
 
 import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { OdsService } from './ods.service';
@@ -29,21 +29,21 @@ describe('OdsService - findBusinessCentre', () => {
     service = new OdsService(odsStoredProcedureService, mockLogger);
   });
 
-  const mockStoredProcedureOutput = `{
-    "message": "${STORED_PROCEDURE.SUCCESS}",
-    "status": "${STORED_PROCEDURE.SUCCESS}",
-    "total_result_count": 1,
-    "results": [
-      {
-        "business_centre_code": "${EXAMPLES.BUSINESS_CENTRE.CODE}",
-        "business_centre_name": "${EXAMPLES.BUSINESS_CENTRE.NAME}",
-        "business_centre_type_description": "${EXAMPLES.BUSINESS_CENTRE.DESCRIPTION}",
-        "business_centre_active_flag": ${EXAMPLES.BUSINESS_CENTRE.IS_ACTIVE}
-      }
-    ]
-  }`;
-
   beforeEach(() => {
+    const mockStoredProcedureOutput = `{
+      "message": "${STORED_PROCEDURE.SUCCESS}",
+      "status": "${STORED_PROCEDURE.SUCCESS}",
+      "total_result_count": 1,
+      "results": [
+        {
+          "business_centre_code": "${EXAMPLES.BUSINESS_CENTRE.CODE}",
+          "business_centre_name": "${EXAMPLES.BUSINESS_CENTRE.NAME}",
+          "business_centre_type_description": "${EXAMPLES.BUSINESS_CENTRE.DESCRIPTION}",
+          "business_centre_active_flag": ${EXAMPLES.BUSINESS_CENTRE.IS_ACTIVE}
+        }
+      ]
+    }`;
+
     jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
   });
 

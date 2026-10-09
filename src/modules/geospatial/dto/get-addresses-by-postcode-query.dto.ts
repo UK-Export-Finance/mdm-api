@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { EXAMPLES, GEOSPATIAL } from '@ukef/constants';
 import { IsString, Matches, MaxLength, MinLength } from 'class-validator';
+import { EXAMPLES, GEOSPATIAL } from '@ukef/constants';
 
 export class GetAddressesByPostcodeQueryDto {
   @ApiProperty({

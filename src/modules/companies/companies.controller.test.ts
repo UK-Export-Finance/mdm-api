@@ -1,6 +1,6 @@
+import { resetAllWhenMocks, when } from 'jest-when';
 import { GetCompanyGenerator } from '@ukef-test/support/generator/get-company-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
-import { resetAllWhenMocks, when } from 'jest-when';
 
 import { CompaniesController } from './companies.controller';
 import { CompaniesService } from './companies.service';

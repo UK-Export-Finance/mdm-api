@@ -1,7 +1,7 @@
 import { InternalServerErrorException } from '@nestjs/common';
-import { mapObligationSubtypesWithProductCode } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
+import { mapObligationSubtypesWithProductCode } from '@ukef/helpers';
 
 import { OdsObligationSubtypeService } from './ods-obligation-subtype.service';
 import { OdsProductConfigService } from './ods-product-config.service';

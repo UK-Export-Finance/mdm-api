@@ -1,7 +1,9 @@
 import { registerAs } from '@nestjs/config';
 import * as dotenv from 'dotenv';
+
 dotenv.config();
-export default registerAs(
+
+export const DatabaseConfig = registerAs(
   'database',
   (): Record<string, any> => ({
     mssql_mdm: {

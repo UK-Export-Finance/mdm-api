@@ -9,8 +9,8 @@ import {
 import { PinoLogger } from 'nestjs-pino';
 import { NotifyClient } from 'notifications-node-client';
 
-import { convertStringToBuffer } from '../../helpers';
-import { PostEmailsRequestDto } from '../../modules/emails/dto/post-emails-request.dto';
+import { convertStringToBuffer } from '@ukef/helpers';
+import { PostEmailsRequestDto } from '@ukef/modules/emails/dto/post-emails-request.dto';
 import { PostEmailsResponseDto } from './dto/post-emails-response.dto';
 
 @Injectable()
@@ -52,6 +52,7 @@ export class GovukNotifyService {
       .then((response: any) => response)
       .catch((err) => {
         this.logger.error(err);
+
         if (err?.response?.data?.errors[0].message) {
           switch (err.response.data.status_code) {
             case 400:

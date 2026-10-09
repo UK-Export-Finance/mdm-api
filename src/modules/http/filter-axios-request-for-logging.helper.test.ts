@@ -1,5 +1,5 @@
-import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { AxiosRequestConfig } from 'axios';
+import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 
 import { filterAxiosRequestForLogging } from './filter-axios-request-for-logging.helper';
 import { BODY_LOG_KEY, HEADERS_LOG_KEY } from './http.constants';

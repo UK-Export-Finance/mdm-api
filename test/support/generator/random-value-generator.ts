@@ -1,10 +1,10 @@
 import { Chance } from 'chance';
 
-interface Enum {
-  [key: number | string]: string | number;
-}
+type Enum = Record<number | string, string | number>;
+
 export class RandomValueGenerator {
   private static readonly seed = 0;
+
   private readonly chance: Chance.Chance;
 
   constructor() {
@@ -65,7 +65,7 @@ export class RandomValueGenerator {
     const min = 0;
     // Fixed is for number of decimal places.
     const fixed = options && options.fixed ? options.fixed : 2;
-    return options && options.max ? this.chance.floating({ min, fixed: fixed, max: options.max }) : this.chance.floating({ min, fixed: fixed });
+    return options && options.max ? this.chance.floating({ min, fixed, max: options.max }) : this.chance.floating({ min, fixed });
   }
 
   /**

@@ -19,17 +19,19 @@ export class GeospatialService {
 
     response.results.forEach((item) => {
       // Item can have key DPA or LPI, so we get data dynamically, even if we expect key to always be DPA.
-      const item_data = item[Object.keys(item)[0]];
+      const itemData = item[Object.keys(item)[0]];
+
       // Filter out empty values and join values with single space.
-      const addressLine1 = [item_data.BUILDING_NAME, item_data.BUILDING_NUMBER, item_data.THOROUGHFARE_NAME].filter(Boolean).join(' ');
+      const addressLine1 = [itemData.BUILDING_NAME, itemData.BUILDING_NUMBER, itemData.THOROUGHFARE_NAME].filter(Boolean).join(' ');
+
       addresses.push({
-        organisationName: item_data.ORGANISATION_NAME || null,
+        organisationName: itemData.ORGANISATION_NAME || null,
         addressLine1,
-        addressLine2: item_data.DEPENDENT_LOCALITY || null,
+        addressLine2: itemData.DEPENDENT_LOCALITY || null,
         addressLine3: null,
-        locality: item_data.POST_TOWN || null,
-        postalCode: item_data.POSTCODE || null,
-        country: ENUMS.GEOSPATIAL_COUNTRIES[item_data.COUNTRY_CODE] || null,
+        locality: itemData.POST_TOWN || null,
+        postalCode: itemData.POSTCODE || null,
+        country: ENUMS.GEOSPATIAL_COUNTRIES[itemData.COUNTRY_CODE] || null,
       });
     });
 

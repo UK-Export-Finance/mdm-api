@@ -1,8 +1,8 @@
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
-import { mapAccrualFrequency } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
+import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
+import { mapAccrualFrequency } from '@ukef/helpers';
 
 import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { OdsAccrualsService } from './ods-accruals.service';
@@ -29,23 +29,23 @@ describe('OdsAccrualsService - findAccrualFrequency', () => {
     service = new OdsAccrualsService(odsStoredProcedureService, mockLogger);
   });
 
-  const mockStoredProcedureOutput = `{
-    "message": "${STORED_PROCEDURE.SUCCESS}",
-    "status": "${STORED_PROCEDURE.SUCCESS}",
-    "total_result_count": 1,
-    "results": [
-      {
-        "code": "${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.code}",
-        "name": "${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.name}",
-        "orderId": ${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.orderId},
-        "frequencyNumberOfUnits": ${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.frequencyNumberOfUnits},
-        "frequencyUnits": "${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.frequencyUnits}",
-        "frequencyActive": ${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.frequencyActive}
-      }
-    ]
-  }`;
-
   beforeEach(() => {
+    const mockStoredProcedureOutput = `{
+      "message": "${STORED_PROCEDURE.SUCCESS}",
+      "status": "${STORED_PROCEDURE.SUCCESS}",
+      "total_result_count": 1,
+      "results": [
+        {
+          "code": "${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.code}",
+          "name": "${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.name}",
+          "orderId": ${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.orderId},
+          "frequencyNumberOfUnits": ${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.frequencyNumberOfUnits},
+          "frequencyUnits": "${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.frequencyUnits}",
+          "frequencyActive": ${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.frequencyActive}
+        }
+      ]
+    }`;
+
     jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
   });
 

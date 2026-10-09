@@ -1,10 +1,10 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
-import { AUTH } from '@ukef/constants';
 import { HeaderAPIKeyStrategy } from 'passport-headerapikey';
+import { AUTH } from '@ukef/constants';
 
-import { AuthService } from '../auth.service';
+import { AuthService } from '@ukef/modules/auth/auth.service';
 
 @Injectable()
 /**

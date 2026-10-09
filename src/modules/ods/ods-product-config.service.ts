@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { PinoLogger } from 'nestjs-pino';
 import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
 import { isStoredProcedureResultEmpty } from '@ukef/helpers';
-import { PinoLogger } from 'nestjs-pino';
 
 import { GetProductConfigOdsResponse, ODS_ENTITIES, OdsStoredProcedureOutputBody } from './dto';
 import { OdsStoredProcedureService } from './ods-stored-procedure.service';
@@ -27,15 +27,15 @@ export class OdsProductConfigService {
       this.logger.info('Finding product config in ODS %s', productType);
 
       if (productType === ALL_REQUIRED_INSURANCE.productType) {
-        return ALL_REQUIRED_INSURANCE as unknown as GetProductConfigOdsResponse;
+        return ALL_REQUIRED_INSURANCE;
       }
 
       if (productType === ALL_REQUIRED_GUARANTEE.productType) {
-        return ALL_REQUIRED_GUARANTEE as unknown as GetProductConfigOdsResponse;
+        return ALL_REQUIRED_GUARANTEE;
       }
 
       if (productType === ALL_DISABLED.productType) {
-        return ALL_DISABLED as unknown as GetProductConfigOdsResponse;
+        return ALL_DISABLED;
       }
 
       const storedProcedureInput = this.odsStoredProcedureService.createInput({

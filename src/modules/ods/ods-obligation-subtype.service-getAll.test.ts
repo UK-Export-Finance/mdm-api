@@ -1,7 +1,7 @@
 import { InternalServerErrorException } from '@nestjs/common';
-import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
+import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
 
 import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { OdsObligationSubtypeService } from './ods-obligation-subtype.service';
@@ -32,27 +32,27 @@ describe('OdsObligationSubtypeService - getAll', () => {
     service = new OdsObligationSubtypeService(odsStoredProcedureService, odsProductConfigService, mockLogger);
   });
 
-  const mockStoredProcedureOutput = `{
-    "message": "${STORED_PROCEDURE.SUCCESS}",
-    "status": "${STORED_PROCEDURE.SUCCESS}",
-    "total_result_count": 2,
-    "results": [
-      {
-        "code": "${EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.code}",
-        "name": "${EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.name}",
-        "balanceCategory": "${EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.balanceCategory}",
-        "obligationSubtypeActive": ${EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.obligationSubtypeActive}
-      },
-      {
-        "code": "${EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.code}",
-        "name": "${EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.name}",
-        "balanceCategory": "${EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.balanceCategory}",
-        "obligationSubtypeActive": ${EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.obligationSubtypeActive}
-      }
-    ]
-  }`;
-
   beforeEach(() => {
+    const mockStoredProcedureOutput = `{
+      "message": "${STORED_PROCEDURE.SUCCESS}",
+      "status": "${STORED_PROCEDURE.SUCCESS}",
+      "total_result_count": 2,
+      "results": [
+        {
+          "code": "${EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.code}",
+          "name": "${EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.name}",
+          "balanceCategory": "${EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.balanceCategory}",
+          "obligationSubtypeActive": ${EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.obligationSubtypeActive}
+        },
+        {
+          "code": "${EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.code}",
+          "name": "${EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.name}",
+          "balanceCategory": "${EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.balanceCategory}",
+          "obligationSubtypeActive": ${EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.obligationSubtypeActive}
+        }
+      ]
+    }`;
+
     jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
   });
 

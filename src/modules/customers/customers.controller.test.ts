@@ -1,11 +1,11 @@
 import { BadRequestException } from '@nestjs/common';
+import { validate } from 'class-validator';
+import { Response } from 'express';
+import { when } from 'jest-when';
 import { ENUMS, EXAMPLES } from '@ukef/constants';
 import { salesforceFormattedCurrentDate } from '@ukef/helpers/date-formatter.helper';
 import { GetCustomersGenerator } from '@ukef-test/support/generator/get-customers-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
-import { validate } from 'class-validator';
-import { Response } from 'express';
-import { when } from 'jest-when';
 
 import { CustomersController } from './customers.controller';
 import { CustomersService } from './customers.service';
@@ -220,12 +220,13 @@ describe('CustomersController', () => {
 
     it('calls service method if the request is valid', async () => {
       const query = { companyRegistrationNumber: '12345678' };
-      const duns_number = '56785678';
-      when(customersServiceGetDunAndBradstreetNumber).calledWith(query.companyRegistrationNumber).mockResolvedValueOnce(duns_number);
+      const mockDunsNumber = '56785678';
+
+      when(customersServiceGetDunAndBradstreetNumber).calledWith(query.companyRegistrationNumber).mockResolvedValueOnce(mockDunsNumber);
 
       const response = await controller.getDunAndBradstreetNumber(query);
 
-      expect(response).toEqual(duns_number);
+      expect(response).toEqual(mockDunsNumber);
       expect(customersServiceGetDunAndBradstreetNumber).toHaveBeenCalledWith(query.companyRegistrationNumber);
     });
   });

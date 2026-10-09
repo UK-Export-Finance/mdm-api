@@ -1,14 +1,14 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { EXAMPLES } from '@ukef/constants';
-import { mapBusinessCentreNonWorkingDays, mapProductConfig } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
+import { EXAMPLES } from '@ukef/constants';
+import { mapBusinessCentreNonWorkingDays, mapProductConfig } from '@ukef/helpers';
 
-import { GetOdsBusinessCentreOdsResponseNonWorkingDayResponse } from '../ods/dto';
-import { OdsService } from '../ods/ods.service';
-import { OdsProductConfigService } from '../ods/ods-product-config.service';
-import { OdsStoredProcedureService } from '../ods/ods-stored-procedure.service';
-import { mockProductConfigs } from '../ods/test-helpers';
+import { GetOdsBusinessCentreOdsResponseNonWorkingDayResponse } from '@ukef/modules/ods/dto';
+import { OdsService } from '@ukef/modules/ods/ods.service';
+import { OdsProductConfigService } from '@ukef/modules/ods/ods-product-config.service';
+import { OdsStoredProcedureService } from '@ukef/modules/ods/ods-stored-procedure.service';
+import { mockProductConfigs } from '@ukef/modules/ods/test-helpers';
 import { DomService } from './dom.service';
 
 const mockOdsBusinessCentreOdsResponseNonWorkingDays: GetOdsBusinessCentreOdsResponseNonWorkingDayResponse[] = [

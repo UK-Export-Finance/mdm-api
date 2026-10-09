@@ -14,13 +14,13 @@ export class GetCustomersGenerator extends AbstractGenerator<CustomerValues, Gen
 
   protected generateValues(): CustomerValues {
     return {
-      companyRegNo: '0' + this.valueGenerator.stringOfNumericCharacters({ length: 7 }),
+      companyRegNo: `0${this.valueGenerator.stringOfNumericCharacters({ length: 7 })}`,
       creditClassificationDate: salesforceFormattedCurrentDate(),
       creditClassificationStatus: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
       customerType: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
       isLegacyRecord: this.valueGenerator.boolean(),
       name: this.valueGenerator.word(),
-      partyUrn: '003' + this.valueGenerator.stringOfNumericCharacters({ length: 5 }),
+      partyUrn: `003${this.valueGenerator.stringOfNumericCharacters({ length: 5 })}`,
       probabilityOfDefault: this.valueGenerator.integer({ min: 1, max: 14 }),
       riskEntity: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
       sfId: this.valueGenerator.word(),
@@ -57,9 +57,9 @@ export class GetCustomersGenerator extends AbstractGenerator<CustomerValues, Gen
       ...{ includeLegacyData: v.fallbackToLegacyData },
     }));
 
-    const informaticaPath: string = '/v1/p-sa-impl-get-account-or-legacy?' + new URLSearchParams(informaticaRequest[0] as URLSearchParams).toString();
+    const informaticaPath = `/v1/p-sa-impl-get-account-or-legacy?${new URLSearchParams(informaticaRequest[0] as URLSearchParams).toString()}`;
 
-    const mdmPath: string = '/api/v1/customers?' + new URLSearchParams(request[0] as URLSearchParams).toString();
+    const mdmPath = `/api/v1/customers?${new URLSearchParams(request[0] as URLSearchParams).toString()}`;
 
     const getCustomersResponse: GetCustomersResponse[] = values.map((v) => [
       {
@@ -91,7 +91,7 @@ export class GetCustomersGenerator extends AbstractGenerator<CustomerValues, Gen
   }
 }
 
-interface CustomerValues {
+type CustomerValues = {
   companyRegNo: string;
   creditClassificationDate: string;
   creditClassificationStatus: string;
@@ -107,16 +107,16 @@ interface CustomerValues {
   ukEntity: string;
   ukefIndustryName: string;
   ukefSectorName: string;
-}
+};
 
-interface GenerateOptions {
-  query?: { [key: string]: any };
-}
+type GenerateOptions = {
+  query?: Record<string, any>;
+};
 
-interface GenerateResult {
+type GenerateResult = {
   request: GetCustomersQueryDto[];
   informaticaRequest: GetCustomersInformaticaQueryDto[];
   informaticaPath: string;
   mdmPath: string;
   getCustomersResponse: GetCustomersResponse[];
-}
+};

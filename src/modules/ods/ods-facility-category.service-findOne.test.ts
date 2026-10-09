@@ -1,8 +1,8 @@
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
-import { mapOdsClassification } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
+import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
+import { mapOdsClassification } from '@ukef/helpers';
 
 import { ODS_ENTITIES, ODS_QUERY_PARAM_VALUES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { OdsFacilityCategoryService } from './ods-facility-category.service';
@@ -29,22 +29,22 @@ describe('OdsFacilityCategoryService - findOne', () => {
     service = new OdsFacilityCategoryService(odsStoredProcedureService, mockLogger);
   });
 
-  const mockStoredProcedureOutput = `{
-    "message": "${STORED_PROCEDURE.SUCCESS}",
-    "status": "${STORED_PROCEDURE.SUCCESS}",
-    "total_result_count": 1,
-    "results": [
-      {
-        "classification_type": "${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_type}",
-        "classification_type_code": "${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_type_code}",
-        "classification_code": "${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_code}",
-        "classification_description": "${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_description}",
-        "classification_active_flag": ${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_active_flag}
-      }
-    ]
-  }`;
-
   beforeEach(() => {
+    const mockStoredProcedureOutput = `{
+      "message": "${STORED_PROCEDURE.SUCCESS}",
+      "status": "${STORED_PROCEDURE.SUCCESS}",
+      "total_result_count": 1,
+      "results": [
+        {
+          "classification_type": "${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_type}",
+          "classification_type_code": "${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_type_code}",
+          "classification_code": "${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_code}",
+          "classification_description": "${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_description}",
+          "classification_active_flag": ${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_active_flag}
+        }
+      ]
+    }`;
+
     jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
   });
 

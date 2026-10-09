@@ -1,10 +1,10 @@
-import { EXAMPLES } from '@ukef/constants';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
+import { EXAMPLES } from '@ukef/constants';
 
-import { OdsService } from '../ods/ods.service';
-import { OdsProductConfigService } from '../ods/ods-product-config.service';
-import { OdsStoredProcedureService } from '../ods/ods-stored-procedure.service';
+import { OdsService } from '@ukef/modules/ods/ods.service';
+import { OdsProductConfigService } from '@ukef/modules/ods/ods-product-config.service';
+import { OdsStoredProcedureService } from '@ukef/modules/ods/ods-stored-procedure.service';
 import { CreditRiskRatingsService } from './credit-risk-ratings/credit-risk-ratings.service';
 import { DomController } from './dom.controller';
 import { DomService } from './dom.service';
@@ -38,7 +38,7 @@ describe('DomController', () => {
   const odsStoredProcedureService = new OdsStoredProcedureService(mockDataSource);
   const odsService = new OdsService(odsStoredProcedureService, mockLogger);
   const odsProductConfigService = new OdsProductConfigService(odsStoredProcedureService, mockLogger);
-  const domService = new DomService(odsService, odsProductConfigService, mockLogger);
+  let domService = new DomService(odsService, odsProductConfigService, mockLogger);
 
   let creditRiskRatingsServiceGetAll: jest.Mock;
   let odsServiceFindBusinessCentre: jest.Mock;

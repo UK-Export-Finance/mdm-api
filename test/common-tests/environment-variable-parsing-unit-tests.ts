@@ -1,7 +1,7 @@
 import { InvalidConfigException } from '@ukef/config/invalid-config.exception';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 
-interface Options<ConfigUnderTest> {
+type Options<ConfigUnderTest> = {
   configDirectlyFromEnvironmentVariables?: {
     configPropertyName: keyof ConfigUnderTest;
     environmentVariableName: string;
@@ -17,7 +17,7 @@ interface Options<ConfigUnderTest> {
     defaultConfigValue: number;
   }[];
   getConfig: () => ConfigUnderTest;
-}
+};
 
 export const withEnvironmentVariableParsingUnitTests = <ConfigUnderTest>({
   configDirectlyFromEnvironmentVariables,

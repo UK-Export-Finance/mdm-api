@@ -1,8 +1,8 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DATABASE_NAME, DATE } from '@ukef/constants';
 import { PinoLogger } from 'nestjs-pino';
 import { Equal, LessThanOrEqual, MoreThan, Repository } from 'typeorm';
+import { DATABASE_NAME, DATE } from '@ukef/constants';
 
 import { YieldRateEntity } from './entities/yield-rate.entity';
 
@@ -24,9 +24,11 @@ export class YieldRatesService {
       const results = await this.yieldRateRepository.find({
         where: query,
       });
+
       if (!results.length) {
         throw new NotFoundException('No Yield rates found');
       }
+
       return results;
     } catch (error) {
       if (error instanceof NotFoundException) {

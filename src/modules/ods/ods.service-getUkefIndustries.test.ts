@@ -1,8 +1,8 @@
 import { InternalServerErrorException } from '@nestjs/common';
-import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
-import { mapIndustries } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
+import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
+import { mapIndustries } from '@ukef/helpers';
 
 import { ODS_ENTITIES, ODS_QUERY_PARAM_VALUES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { OdsService } from './ods.service';
@@ -29,31 +29,31 @@ describe('OdsService - getUkefIndustries', () => {
     service = new OdsService(odsStoredProcedureService, mockLogger);
   });
 
-  const mockStoredProcedureOutput = `{
-    "message": "${STORED_PROCEDURE.SUCCESS}",
-    "status": "${STORED_PROCEDURE.SUCCESS}",
-    "total_result_count": 2,
-    "results": [
-      {
-        "industry_id": "${EXAMPLES.INDUSTRY.ID}",
-        "industry_code": "${EXAMPLES.INDUSTRY.CODE}",
-        "industry_description": "${EXAMPLES.INDUSTRY.DESCRIPTION}",
-        "industry_group_code": "${EXAMPLES.INDUSTRY.GROUP_CODE}",
-        "industry_group_description": "${EXAMPLES.INDUSTRY.GROUP_DESCRIPTION}",
-        "industry_category": "${EXAMPLES.INDUSTRY.CATEGORY}"
-      },
-      {
-        "industry_id": "${EXAMPLES.INDUSTRY.ID}",
-        "industry_code": "${EXAMPLES.INDUSTRY.CODE}",
-        "industry_description": "${EXAMPLES.INDUSTRY.DESCRIPTION}",
-        "industry_group_code": "${EXAMPLES.INDUSTRY.GROUP_CODE}",
-        "industry_group_description": "${EXAMPLES.INDUSTRY.GROUP_DESCRIPTION}",
-        "industry_category": "${EXAMPLES.INDUSTRY.CATEGORY}"
-      }
-    ]
-  }`;
-
   beforeEach(() => {
+    const mockStoredProcedureOutput = `{
+      "message": "${STORED_PROCEDURE.SUCCESS}",
+      "status": "${STORED_PROCEDURE.SUCCESS}",
+      "total_result_count": 2,
+      "results": [
+        {
+          "industry_id": "${EXAMPLES.INDUSTRY.ID}",
+          "industry_code": "${EXAMPLES.INDUSTRY.CODE}",
+          "industry_description": "${EXAMPLES.INDUSTRY.DESCRIPTION}",
+          "industry_group_code": "${EXAMPLES.INDUSTRY.GROUP_CODE}",
+          "industry_group_description": "${EXAMPLES.INDUSTRY.GROUP_DESCRIPTION}",
+          "industry_category": "${EXAMPLES.INDUSTRY.CATEGORY}"
+        },
+        {
+          "industry_id": "${EXAMPLES.INDUSTRY.ID}",
+          "industry_code": "${EXAMPLES.INDUSTRY.CODE}",
+          "industry_description": "${EXAMPLES.INDUSTRY.DESCRIPTION}",
+          "industry_group_code": "${EXAMPLES.INDUSTRY.GROUP_CODE}",
+          "industry_group_description": "${EXAMPLES.INDUSTRY.GROUP_DESCRIPTION}",
+          "industry_category": "${EXAMPLES.INDUSTRY.CATEGORY}"
+        }
+      ]
+    }`;
+
     jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
   });
 

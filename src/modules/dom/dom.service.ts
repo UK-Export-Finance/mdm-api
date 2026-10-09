@@ -1,9 +1,9 @@
 import { BadRequestException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import { mapBusinessCentreNonWorkingDays, mapProductConfig } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
+import { mapBusinessCentreNonWorkingDays, mapProductConfig } from '@ukef/helpers';
 
-import { OdsService } from '../ods/ods.service';
-import { OdsProductConfigService } from '../ods/ods-product-config.service';
+import { OdsService } from '@ukef/modules/ods/ods.service';
+import { OdsProductConfigService } from '@ukef/modules/ods/ods-product-config.service';
 import {
   FindMultipleOdsBusinessCentreOdsResponsesNonWorkingDaysResponse,
   FindMultipleProductConfigsResponse,
@@ -45,8 +45,7 @@ export class DomService {
 
       return mapBusinessCentreNonWorkingDays(nonWorkingDays, domCentreCode);
     } catch (error) {
-      const isNotFoundError =
-        error instanceof NotFoundException || error?.['status'] === HttpStatus.NOT_FOUND || error?.['statusCode'] === HttpStatus.NOT_FOUND;
+      const isNotFoundError = error instanceof NotFoundException || error?.status === HttpStatus.NOT_FOUND || error?.statusCode === HttpStatus.NOT_FOUND;
 
       if (isNotFoundError) {
         this.logger.warn('DOM business centre %s non working days not found %o', domCentreCode, error);
@@ -82,7 +81,7 @@ export class DomService {
         const centreCodesArray = centreCodes.split(',');
 
         for (const domCentreCode of centreCodesArray) {
-          mappedCentres[`${domCentreCode}`] = await this.findBusinessCentreNonWorkingDays(domCentreCode, startDate, endDate);
+          mappedCentres[domCentreCode] = await this.findBusinessCentreNonWorkingDays(domCentreCode, startDate, endDate);
         }
       }
 
@@ -140,7 +139,7 @@ export class DomService {
         const productTypesArray = productTypes.split(',');
 
         for (const productType of productTypesArray) {
-          mappedConfigs[`${productType}`] = await this.findProductConfiguration(productType);
+          mappedConfigs[productType] = await this.findProductConfiguration(productType);
         }
       }
 

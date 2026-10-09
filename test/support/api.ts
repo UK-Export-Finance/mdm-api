@@ -1,7 +1,7 @@
-import { AUTH } from '@ukef/constants';
-import { ENVIRONMENT_VARIABLES } from '@ukef-test/support/environment-variables';
 import request from 'supertest';
 import TestAgent from 'supertest/lib/agent';
+import { AUTH } from '@ukef/constants';
+import { ENVIRONMENT_VARIABLES } from '@ukef-test/support/environment-variables';
 
 import { App } from './app';
 
@@ -22,9 +22,11 @@ export class Api {
       .post(url)
       .send(body as object)
       .set(this.getValidAuthHeader());
+
     if (extraHeaders) {
       request.set(extraHeaders);
     }
+
     return request;
   }
 
@@ -60,6 +62,7 @@ export class Api {
     if (strategy) {
       return query.set({ [strategy]: key });
     }
+
     return query;
   }
 }

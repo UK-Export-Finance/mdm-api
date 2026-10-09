@@ -1,5 +1,5 @@
-import { EXAMPLES } from '@ukef/constants';
 import { DataSource, QueryRunner } from 'typeorm';
+import { EXAMPLES } from '@ukef/constants';
 
 import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { OdsStoredProcedureService } from './ods-stored-procedure.service';

@@ -1,9 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsEnum, IsOptional, Length, Matches, MaxLength, MinLength } from 'class-validator';
 import { EXAMPLES, UKEF_ID } from '@ukef/constants';
 import { ENUMS } from '@ukef/constants/enums';
 import { FallbackToLegacyDataEnum } from '@ukef/constants/enums/fallbackToLegacyData';
 import { regexToString } from '@ukef/helpers/regex.helper';
-import { IsEnum, IsOptional, Length, Matches, MaxLength, MinLength } from 'class-validator';
+
 export class GetCustomersQueryDto {
   @IsOptional()
   @ApiProperty({

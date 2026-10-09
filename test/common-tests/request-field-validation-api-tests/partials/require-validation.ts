@@ -1,7 +1,7 @@
-import { prepareModifiedRequest } from '@ukef-test/support/helpers/request-field-validation-helper';
 import request from 'supertest';
+import { prepareModifiedRequest } from '@ukef-test/support/helpers/request-field-validation-helper';
 
-export interface RequiredFieldValidationApiTestOptions<RequestBodyItem, RequestBodyItemKey extends keyof RequestBodyItem> {
+export type RequiredFieldValidationApiTestOptions<RequestBodyItem, RequestBodyItemKey extends keyof RequestBodyItem> = {
   fieldName: RequestBodyItemKey;
   required?: boolean;
   pattern?: RegExp;
@@ -12,7 +12,7 @@ export interface RequiredFieldValidationApiTestOptions<RequestBodyItem, RequestB
   validRequestBody: RequestBodyItem[] | RequestBodyItem;
   makeRequest: (body: unknown | unknown[]) => request.Test;
   givenAnyRequestBodyWouldSucceed: () => void;
-}
+};
 
 export function withRequiredFieldValidationApiTests<RequestBodyItem, RequestBodyItemKey extends keyof RequestBodyItem>({
   fieldName: fieldNameSymbol,
@@ -42,7 +42,7 @@ export function withRequiredFieldValidationApiTests<RequestBodyItem, RequestBody
           : `${fieldName} must be ${typeNameForErrorMessages}`;
 
       it(`returns a 400 response if ${fieldName} is not provided`, async () => {
-        const { [fieldNameSymbol]: _removed, ...requestWithoutTheField } = requestBodyItem;
+        const { [fieldNameSymbol]: removed, ...requestWithoutTheField } = requestBodyItem;
         const preparedRequestWithoutTheField = prepareModifiedRequest(requestIsAnArray, requestWithoutTheField);
 
         const { status, body } = await makeRequest(preparedRequestWithoutTheField);
@@ -70,7 +70,7 @@ export function withRequiredFieldValidationApiTests<RequestBodyItem, RequestBody
       });
     } else {
       it(`returns a 2xx response if ${fieldName} is not provided`, async () => {
-        const { [fieldNameSymbol]: _removed, ...requestWithField } = requestBodyItem;
+        const { [fieldNameSymbol]: removed, ...requestWithField } = requestBodyItem;
         const preparedRequestWithField = prepareModifiedRequest(requestIsAnArray, requestWithField);
 
         const { status } = await makeRequest(preparedRequestWithField);

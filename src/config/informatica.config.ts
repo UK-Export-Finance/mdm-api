@@ -3,17 +3,17 @@ import { getIntConfig } from '@ukef/helpers/get-int-config';
 
 export const KEY = 'informatica';
 
-export interface InformaticaConfig {
+export type InformaticaConfigType = {
   baseUrl: string;
   username: string;
   password: string;
   maxRedirects: number;
   timeout: number;
-}
+};
 
-export default registerAs(
+export const InformaticaConfig = registerAs(
   KEY,
-  (): InformaticaConfig => ({
+  (): InformaticaConfigType => ({
     baseUrl: process.env.APIM_INFORMATICA_URL,
     username: process.env.APIM_INFORMATICA_USERNAME,
     password: process.env.APIM_INFORMATICA_PASSWORD,

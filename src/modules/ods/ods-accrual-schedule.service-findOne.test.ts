@@ -1,8 +1,8 @@
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
-import { mapAccrualSchedule } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
+import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
+import { mapAccrualSchedule } from '@ukef/helpers';
 
 import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { OdsAccrualScheduleService } from './ods-accrual-schedule.service';
@@ -29,24 +29,24 @@ describe('OdsAccrualScheduleService - findOne', () => {
     service = new OdsAccrualScheduleService(odsStoredProcedureService, mockLogger);
   });
 
-  const mockStoredProcedureOutput = `{
-    "message": "${STORED_PROCEDURE.SUCCESS}",
-    "status": "${STORED_PROCEDURE.SUCCESS}",
-    "total_result_count": 1,
-    "results": [
-      {
-        "code": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.code}",
-        "name": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.name}",
-        "accrualRateType": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.accrualRateType}",
-        "baseBalanceCategory": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.baseBalanceCategory}",
-        "balanceCategory": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.balanceCategory}",
-        "incomeClassCode": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.incomeClassCode}",
-        "accrualScheduleTypeActive": ${EXAMPLES.ODS.ACCRUAL_SCHEDULE.accrualScheduleTypeActive}
-      }
-    ]
-  }`;
-
   beforeEach(() => {
+    const mockStoredProcedureOutput = `{
+      "message": "${STORED_PROCEDURE.SUCCESS}",
+      "status": "${STORED_PROCEDURE.SUCCESS}",
+      "total_result_count": 1,
+      "results": [
+        {
+          "code": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.code}",
+          "name": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.name}",
+          "accrualRateType": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.accrualRateType}",
+          "baseBalanceCategory": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.baseBalanceCategory}",
+          "balanceCategory": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.balanceCategory}",
+          "incomeClassCode": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.incomeClassCode}",
+          "accrualScheduleTypeActive": ${EXAMPLES.ODS.ACCRUAL_SCHEDULE.accrualScheduleTypeActive}
+        }
+      ]
+    }`;
+
     jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
   });
 

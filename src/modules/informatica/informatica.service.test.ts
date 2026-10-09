@@ -1,10 +1,10 @@
 import { HttpService } from '@nestjs/axios';
 import { NotFoundException } from '@nestjs/common';
-import { ENUMS } from '@ukef/constants';
-import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { AxiosError } from 'axios';
 import { when } from 'jest-when';
 import { of, throwError } from 'rxjs';
+import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
+import { ENUMS } from '@ukef/constants';
 
 import { GetCustomersInformaticaQueryDto } from './dto/get-customers-informatica-query.dto';
 import { InformaticaException } from './exception/informatica.exception';
@@ -24,16 +24,16 @@ describe('InformaticaService', () => {
     service = new InformaticaService(httpService);
   });
 
-  const partyUrn = '003' + valueGenerator.stringOfNumericCharacters({ length: 5 });
-  const companyRegNo = '0' + valueGenerator.stringOfNumericCharacters({ length: 7 });
+  const partyUrn = `003${valueGenerator.stringOfNumericCharacters({ length: 5 })}`;
+  const companyRegNo = `0${valueGenerator.stringOfNumericCharacters({ length: 7 })}`;
   const name = valueGenerator.word();
   const customerBasePath = '/v1/p-sa-impl-get-account-or-legacy';
   const expectedResponse = [
     {
-      partyUrn: partyUrn,
-      name: name,
+      partyUrn,
+      name,
       sfId: valueGenerator.word(),
-      companyRegNo: companyRegNo,
+      companyRegNo,
       type: null,
       subtype: null,
       isLegacyRecord: valueGenerator.boolean(),

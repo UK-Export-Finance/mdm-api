@@ -2,16 +2,16 @@ import { registerAs } from '@nestjs/config';
 import { COMPANIES_HOUSE } from '@ukef/constants';
 import { getIntConfig } from '@ukef/helpers/get-int-config';
 
-export interface CompaniesHouseConfig {
+export type CompaniesHouseConfigType = {
   baseUrl: string;
   key: string;
   maxRedirects: number;
   timeout: number;
-}
+};
 
-export default registerAs(
+export const CompaniesHouseConfig = registerAs(
   COMPANIES_HOUSE.CONFIG.KEY,
-  (): CompaniesHouseConfig => ({
+  (): CompaniesHouseConfigType => ({
     baseUrl: process.env.COMPANIES_HOUSE_URL,
     key: process.env.COMPANIES_HOUSE_KEY,
     maxRedirects: getIntConfig(process.env.COMPANIES_HOUSE_MAX_REDIRECTS, 5),

@@ -1,8 +1,9 @@
 import { registerAs } from '@nestjs/config';
 import * as dotenv from 'dotenv';
+
 dotenv.config();
 
-export default registerAs(
+export const DocConfig = registerAs(
   'doc',
   (): Record<string, any> => ({
     name: process.env.DOC_NAME || 'MDM API Specification',

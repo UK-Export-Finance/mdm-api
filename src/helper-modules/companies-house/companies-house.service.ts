@@ -16,6 +16,7 @@ import { createWrapCompaniesHouseHttpGetErrorCallback } from './wrap-companies-h
 @Injectable()
 export class CompaniesHouseService {
   private readonly httpClient: HttpClient;
+
   private readonly key: string;
 
   constructor(httpService: HttpService, configService: ConfigService) {

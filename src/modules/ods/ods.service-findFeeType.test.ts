@@ -1,8 +1,8 @@
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
-import { mapFeeType } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
+import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
+import { mapFeeType } from '@ukef/helpers';
 
 import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { OdsService } from './ods.service';
@@ -29,27 +29,27 @@ describe('OdsService - findFeeType', () => {
     service = new OdsService(odsStoredProcedureService, mockLogger);
   });
 
-  const mockStoredProcedureOutput = `{
-    "message": "${STORED_PROCEDURE.SUCCESS}",
-    "status": "${STORED_PROCEDURE.SUCCESS}",
-    "total_result_count": 1,
-    "results": [
-      {
-        "feeType": "${EXAMPLES.ODS.CONFIGURATION_FEE.feeType}",
-        "name": "${EXAMPLES.ODS.CONFIGURATION_FEE.name}",
-        "feeTypeClassification": "${EXAMPLES.ODS.CONFIGURATION_FEE.feeTypeClassification}",
-        "feeTypeExpenseIncome": "${EXAMPLES.ODS.CONFIGURATION_FEE.feeTypeExpenseIncome}",
-        "feeTypeActive": ${EXAMPLES.ODS.CONFIGURATION_FEE.feeTypeActive},
-        "balanceCategory": "${EXAMPLES.ODS.CONFIGURATION_FEE.balanceCategory}",
-        "nonFacilityCurrencySettlement": ${EXAMPLES.ODS.CONFIGURATION_FEE.nonFacilityCurrencySettlement},
-        "feeTypeCappedBaseBalanceIndicator": ${EXAMPLES.ODS.CONFIGURATION_FEE.feeTypeCappedBaseBalanceIndicator},
-        "feeEffectiveDateDefault": "${EXAMPLES.ODS.CONFIGURATION_FEE.feeEffectiveDateDefault}",
-        "feeMaturityDateDefault": "${EXAMPLES.ODS.CONFIGURATION_FEE.feeMaturityDateDefault}"
-      }
-    ]
-  }`;
-
   beforeEach(() => {
+    const mockStoredProcedureOutput = `{
+      "message": "${STORED_PROCEDURE.SUCCESS}",
+      "status": "${STORED_PROCEDURE.SUCCESS}",
+      "total_result_count": 1,
+      "results": [
+        {
+          "feeType": "${EXAMPLES.ODS.CONFIGURATION_FEE.feeType}",
+          "name": "${EXAMPLES.ODS.CONFIGURATION_FEE.name}",
+          "feeTypeClassification": "${EXAMPLES.ODS.CONFIGURATION_FEE.feeTypeClassification}",
+          "feeTypeExpenseIncome": "${EXAMPLES.ODS.CONFIGURATION_FEE.feeTypeExpenseIncome}",
+          "feeTypeActive": ${EXAMPLES.ODS.CONFIGURATION_FEE.feeTypeActive},
+          "balanceCategory": "${EXAMPLES.ODS.CONFIGURATION_FEE.balanceCategory}",
+          "nonFacilityCurrencySettlement": ${EXAMPLES.ODS.CONFIGURATION_FEE.nonFacilityCurrencySettlement},
+          "feeTypeCappedBaseBalanceIndicator": ${EXAMPLES.ODS.CONFIGURATION_FEE.feeTypeCappedBaseBalanceIndicator},
+          "feeEffectiveDateDefault": "${EXAMPLES.ODS.CONFIGURATION_FEE.feeEffectiveDateDefault}",
+          "feeMaturityDateDefault": "${EXAMPLES.ODS.CONFIGURATION_FEE.feeMaturityDateDefault}"
+        }
+      ]
+    }`;
+
     jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
   });
 

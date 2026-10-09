@@ -3,8 +3,8 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpClient } from '@ukef/modules/http/http.client';
 
-import { KEY, SalesforceConfig } from '../../config/salesforce.config';
-import { CreateCustomerDto } from '../customers/dto/create-customer.dto';
+import { KEY, SalesforceConfig } from '@ukef/config/salesforce.config';
+import { CreateCustomerDto } from '@ukef/modules/customers/dto/create-customer.dto';
 import { CreateCustomerSalesforceResponseDto } from './dto/create-customer-salesforce-response.dto';
 import { customerAlreadyExistsSalesforceError } from './known-errors';
 import { createWrapSalesforceHttpGetErrorCallback } from './wrap-salesforce-http-error-callback';
@@ -12,10 +12,15 @@ import { createWrapSalesforceHttpGetErrorCallback } from './wrap-salesforce-http
 @Injectable()
 export class SalesforceService {
   private readonly httpClient: HttpClient;
+
   private readonly client_id: string;
+
   private readonly client_secret: string;
+
   private readonly username: string;
+
   private readonly password: string;
+
   private readonly access_url: string;
 
   constructor(httpService: HttpService, configService: ConfigService) {
@@ -40,12 +45,13 @@ export class SalesforceService {
    */
   async createCustomer(createCustomerDto: CreateCustomerDto): Promise<CreateCustomerSalesforceResponseDto> {
     const path = '/sobjects/Account';
-    const access_token = await this.getAccessToken();
+    const accessToken = await this.getAccessToken();
+
     const { data } = await this.httpClient.post<CreateCustomerDto, CreateCustomerSalesforceResponseDto>({
       path,
       body: createCustomerDto,
       headers: {
-        Authorization: 'Bearer ' + access_token,
+        Authorization: `Bearer ${accessToken}`,
       },
       onError: createWrapSalesforceHttpGetErrorCallback({
         messageForUnknownError: `Failed to create customer in Salesforce`,

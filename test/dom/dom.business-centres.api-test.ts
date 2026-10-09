@@ -1,5 +1,5 @@
 import { HttpStatus } from '@nestjs/common';
-import AppConfig from '@ukef/config/app.config';
+import { AppConfig } from '@ukef/config/app.config';
 import { EXAMPLES } from '@ukef/constants';
 import { Api } from '@ukef-test/support/api';
 
@@ -380,7 +380,7 @@ describe('/dom - business centres', () => {
     describe('when no query params are provided', () => {
       it(`should return ${HttpStatus.BAD_REQUEST} with validation errors`, async () => {
         // Arrange
-        const url = `${baseUrl}`;
+        const url = baseUrl;
 
         // Act
         const { status, body } = await api.get(url);

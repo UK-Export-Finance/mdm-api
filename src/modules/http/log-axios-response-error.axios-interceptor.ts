@@ -5,14 +5,6 @@ import { filterAxiosResponseForLogging } from './filter-axios-response-for-loggi
 import { INCOMING_RESPONSE_LOG_KEY } from './http.constants';
 import { AxiosResponseErrorInterceptor } from './type/axios-response-error-interceptor.type';
 
-export const logAxiosResponseErrorWith =
-  (logger: PinoLogger): AxiosResponseErrorInterceptor =>
-  (error: AxiosError) => {
-    const logInput = buildAxiosResponseLogInput(error);
-    logger.warn(logInput.object, logInput.message);
-    return Promise.reject(error);
-  };
-
 const buildAxiosResponseLogInput = (error: AxiosError): { object: unknown; message: string } => {
   const responseFromServer = error.response;
   const receivedResponseFromServer = !!responseFromServer;
@@ -23,3 +15,11 @@ const buildAxiosResponseLogInput = (error: AxiosError): { object: unknown; messa
       }
     : { object: error, message: 'A HTTP server failed to respond to our request.' };
 };
+
+export const logAxiosResponseErrorWith =
+  (logger: PinoLogger): AxiosResponseErrorInterceptor =>
+  (error: AxiosError) => {
+    const logInput = buildAxiosResponseLogInput(error);
+    logger.warn(logInput.object, logInput.message);
+    return Promise.reject(error);
+  };

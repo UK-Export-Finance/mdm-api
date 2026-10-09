@@ -1,17 +1,17 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { HttpStatusCode } from 'axios';
+import { Response } from 'express';
 import { EXAMPLES } from '@ukef/constants';
 import { DunAndBradstreetService } from '@ukef/helper-modules/dun-and-bradstreet/dun-and-bradstreet.service';
 import { salesforceFormattedCurrentDate } from '@ukef/helpers/date-formatter.helper';
 import { GetCustomersInformaticaQueryDto } from '@ukef/modules/informatica/dto/get-customers-informatica-query.dto';
 import { InformaticaService } from '@ukef/modules/informatica/informatica.service';
 import { SalesforceService } from '@ukef/modules/salesforce/salesforce.service';
-import { HttpStatusCode } from 'axios';
-import { Response } from 'express';
 
-import { CreateUkefIdDto } from '../numbers/dto/create-ukef-id.dto';
-import { UkefId } from '../numbers/entities/ukef-id.entity';
-import { NumbersService } from '../numbers/numbers.service';
-import { CreateCustomerSalesforceResponseDto } from '../salesforce/dto/create-customer-salesforce-response.dto';
+import { CreateUkefIdDto } from '@ukef/modules/numbers/dto/create-ukef-id.dto';
+import { UkefId } from '@ukef/modules/numbers/entities/ukef-id.entity';
+import { NumbersService } from '@ukef/modules/numbers/numbers.service';
+import { CreateCustomerSalesforceResponseDto } from '@ukef/modules/salesforce/dto/create-customer-salesforce-response.dto';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
 import { GetCustomersResponse, GetCustomersResponseItem } from './dto/get-customers-response.dto';
@@ -84,9 +84,9 @@ export class CustomersService {
       // If the customer does exist in Informatica
       if (existingCustomersInInformatica?.[0]) {
         return await this.handleInformaticaResponse(res, DTFSCustomerDto, existingCustomersInInformatica);
-      } else {
-        throw new InternalServerErrorException();
       }
+
+      throw new InternalServerErrorException();
     } catch (error) {
       // If the customer does not exist in Informatica
       if (error instanceof NotFoundException) {
@@ -131,7 +131,9 @@ export class CustomersService {
           }),
         ),
       );
-    } else if (existingCustomersInInformatica[0]?.isLegacyRecord === true) {
+    }
+
+    if (existingCustomersInInformatica[0]?.isLegacyRecord === true) {
       if (existingCustomersInInformatica[0]?.partyUrn) {
         // If the customer only exists as a legacy record in Salesforce (fetched via Informatica) and has a URN
         await this.createCustomerWithLegacyURN(res, DTFSCustomerDto, existingCustomersInInformatica);
@@ -249,9 +251,9 @@ export class CustomersService {
         creditClassificationDate: salesForceDate,
         creditClassificationStatus: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
         customerType: DTFSCustomerDto.customerType,
-        isLegacyRecord: isLegacyRecord,
+        isLegacyRecord,
         name: DTFSCustomerDto.companyName,
-        partyUrn: partyUrn,
+        partyUrn,
         probabilityOfDefault: DTFSCustomerDto.probabilityOfDefault,
         riskEntity: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
         sfId: salesforceCreateCustomerResponse?.success ? salesforceCreateCustomerResponse.id : null,

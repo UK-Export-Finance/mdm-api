@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ENUMS } from '@ukef/constants';
 import { IsDateString, IsEnum, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Length, Max, Min } from 'class-validator';
+import { ENUMS } from '@ukef/constants';
 
 export class CreatePremiumScheduleDto {
   @IsInt()

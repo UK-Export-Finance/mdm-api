@@ -11,6 +11,7 @@ import { OrdnanceSurveyException } from './exception/ordnance-survey.exception';
 @Injectable()
 export class OrdnanceSurveyService {
   private readonly httpClient: HttpClient;
+
   private readonly key: string;
 
   constructor(httpService: HttpService, configService: ConfigService) {
@@ -28,6 +29,7 @@ export class OrdnanceSurveyService {
         throw new OrdnanceSurveyException('Failed to get response from Ordnance Survey API.', error);
       },
     });
+
     return data;
   }
 }

@@ -1,6 +1,6 @@
+import { PinoLogger } from 'nestjs-pino';
 import { EXAMPLES, ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES } from '@ukef/constants';
 import { mapIndustry } from '@ukef/helpers';
-import { PinoLogger } from 'nestjs-pino';
 
 import { OdsController } from './ods.controller';
 import { OdsService } from './ods.service';
