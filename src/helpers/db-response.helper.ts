@@ -8,8 +8,11 @@ export class DbResponseHelper {
    */
   static getDbNameToApiNameMap(repository: Repository<any>): object {
     return repository.metadata.ownColumns.reduce((acc, column) => {
-      acc[column.databaseName] = column.propertyName;
-      return acc;
+      const modifiedAcc = acc;
+
+      modifiedAcc[column.databaseName] = column.propertyName;
+
+      return modifiedAcc;
     }, {});
   }
 
@@ -18,8 +21,11 @@ export class DbResponseHelper {
    */
   static getApiNameToDbNameMap(repository: Repository<any>): object {
     return repository.metadata.ownColumns.reduce((acc, column) => {
-      acc[column.propertyName] = column.databaseName;
-      return acc;
+      const modifiedAcc = acc;
+
+      modifiedAcc[column.propertyName] = column.databaseName;
+
+      return modifiedAcc;
     }, {});
   }
 
@@ -32,12 +38,14 @@ export class DbResponseHelper {
     const { propertiesMap } = repository.metadata;
     return dbResults.map((dbEntry) => {
       const renamedObject = {};
+
       Object.keys(propertiesMap).forEach((key) => {
         // key is safe because it is commint from NestJs entity class, not user input.
-        if (fieldNameMap[`${key}`]) {
-          renamedObject[`${key}`] = dbEntry[fieldNameMap[`${key}`]];
+        if (fieldNameMap[key]) {
+          renamedObject[key] = dbEntry[fieldNameMap[key]];
         }
       });
+
       return renamedObject;
     });
   }

@@ -1,4 +1,4 @@
-import { ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES } from '../ods.constant';
+import { ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES } from '@ukef/constants/ods.constant';
 import { PRODUCT_CONFIG, PRODUCT_TYPES } from './product-config.examples.constant';
 
 const BUSINESS_CENTRE = {

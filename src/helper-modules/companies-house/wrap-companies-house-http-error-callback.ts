@@ -10,7 +10,7 @@ export const createWrapCompaniesHouseHttpGetErrorCallback =
   ({ messageForUnknownError, knownErrors }: { messageForUnknownError: string; knownErrors: KnownErrors }): CompaniesHouseHttpErrorCallback =>
   (error: Error) => {
     if (error instanceof AxiosError && error?.response) {
-      knownErrors.forEach(({ checkHasError, throwError }) => checkHasError(error) && throwError(error));
+      knownErrors.forEach(({ checkHasError, throwError: throwKnownError }) => checkHasError(error) && throwKnownError(error));
     }
 
     return throwError(() => new CompaniesHouseException(messageForUnknownError, error));

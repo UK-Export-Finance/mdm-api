@@ -1,10 +1,10 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DATABASE_NAME } from '@ukef/constants';
-import { DbResponseHelper } from '@ukef/helpers/db-response.helper';
 import { Response } from 'express';
 import { PinoLogger } from 'nestjs-pino';
 import { Equal, Repository } from 'typeorm';
+import { DbResponseHelper } from '@ukef/helpers/db-response.helper';
+import { DATABASE_NAME } from '@ukef/constants';
 
 import { CreatePremiumScheduleDto } from './dto/create-premium-schedule.dto';
 import { PremiumScheduleEntity } from './entities/premium-schedule.entity';
@@ -23,9 +23,11 @@ export class PremiumSchedulesService {
         where: { facilityURN: Equal(facilityId), isActive: Equal('Y') },
         order: { period: 'ASC' },
       });
+
       if (!results.length) {
         throw new NotFoundException('Premium Schedules are not found');
       }
+
       return results;
     } catch (error) {
       if (error instanceof NotFoundException) {
@@ -73,7 +75,7 @@ export class PremiumSchedulesService {
       ]);
 
       // Set Location header.
-      res.set({ Location: '/premium/segments/' + createPremiumSchedule.facilityURN });
+      res.set({ Location: `/premium/segments/${createPremiumSchedule.facilityURN}` });
 
       // Older Mulesoft implementation return Location header and empty payload, but here we already have new segments and can return them.
       const fieldMap = DbResponseHelper.getApiNameToDbNameMap(this.premiumSchedulesRepository);
@@ -82,9 +84,11 @@ export class PremiumSchedulesService {
 
       // Transform results to match logic in old implementation.
       const transformedResults = renamedResults.map((result) => {
+        const modifiedResult = result;
+
         // Remove time part of Date field calculationDate.
-        [result.calculationDate] = result.calculationDate.toISOString().split('T');
-        return result;
+        [modifiedResult.calculationDate] = result.calculationDate.toISOString().split('T');
+        return modifiedResult;
       });
 
       return transformedResults;

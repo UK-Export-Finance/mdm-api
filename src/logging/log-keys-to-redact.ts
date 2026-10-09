@@ -1,6 +1,6 @@
 import { buildKeyToRedact } from './build-key-to-redact';
 
-export interface LogKeysToRedactOptions {
+export type LogKeysToRedactOptions = {
   redactLogs: boolean;
   clientRequest: {
     logKey: string;
@@ -25,21 +25,6 @@ export interface LogKeysToRedactOptions {
     logKey: string;
     sensitiveChildKeys: string[];
   };
-}
-
-export const logKeysToRedact = ({ redactLogs, clientRequest, outgoingRequest, incomingResponse, error, dbError }: LogKeysToRedactOptions): string[] => {
-  if (!redactLogs) {
-    return [];
-  }
-  const keys = [
-    ...getClientRequestLogKeysToRedact(clientRequest),
-    ...getOutgoingRequestLogKeysToRedact(outgoingRequest),
-    ...getIncomingResponseLogKeysToRedact(incomingResponse),
-    ...getErrorLogKeysToRedact(error),
-    ...getDbErrorLogKeysToRedact(dbError),
-  ];
-
-  return keys;
 };
 
 const getClientRequestLogKeysToRedact = ({ logKey, headersLogKey }: LogKeysToRedactOptions['clientRequest']): string[] => [
@@ -52,16 +37,14 @@ const getIncomingResponseLogKeysToRedact = ({ logKey, bodyLogKey }: LogKeysToRed
   buildKeyToRedact([logKey, bodyLogKey]),
 ];
 
-const getOutgoingRequestLogKeysToRedact = ({ logKey, headersLogKey, bodyLogKey }: LogKeysToRedactOptions['outgoingRequest']): string[] => {
-  return [
-    // We redact the outgoing request headers as they contain:
-    //  - our Basic auth details for Informatica
-    // We redact the outgoing request body as it contains:
-    //  - our Client auth details for Dun and Bradstreet and Salesforce
-    buildKeyToRedact([logKey, headersLogKey]),
-    buildKeyToRedact([logKey, bodyLogKey]),
-  ];
-};
+const getOutgoingRequestLogKeysToRedact = ({ logKey, headersLogKey, bodyLogKey }: LogKeysToRedactOptions['outgoingRequest']): string[] => [
+  // We redact the outgoing request headers as they contain:
+  //  - our Basic auth details for Informatica
+  // We redact the outgoing request body as it contains:
+  //  - our Client auth details for Dun and Bradstreet and Salesforce
+  buildKeyToRedact([logKey, headersLogKey]),
+  buildKeyToRedact([logKey, bodyLogKey]),
+];
 
 const getErrorLogKeysToRedact = ({ logKey, sensitiveChildKeys }: LogKeysToRedactOptions['error']): string[] => {
   const innerErrorKey = 'innerError';
@@ -89,4 +72,20 @@ const getDbErrorLogKeysToRedact = ({ logKey, sensitiveChildKeys }: LogKeysToReda
     buildKeyToRedact([logKey, ...innerErrorKey, childKey]),
     buildKeyToRedact([logKey, ...driverNestedErrorKey, ...innerErrorKey, childKey]),
   ]);
+};
+
+export const logKeysToRedact = ({ redactLogs, clientRequest, outgoingRequest, incomingResponse, error, dbError }: LogKeysToRedactOptions): string[] => {
+  if (!redactLogs) {
+    return [];
+  }
+
+  const keys = [
+    ...getClientRequestLogKeysToRedact(clientRequest),
+    ...getOutgoingRequestLogKeysToRedact(outgoingRequest),
+    ...getIncomingResponseLogKeysToRedact(incomingResponse),
+    ...getErrorLogKeysToRedact(error),
+    ...getDbErrorLogKeysToRedact(dbError),
+  ];
+
+  return keys;
 };

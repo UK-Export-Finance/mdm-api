@@ -1,9 +1,9 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DATABASE_NAME } from '@ukef/constants';
-import { DbResponseHelper } from '@ukef/helpers/db-response.helper';
 import { PinoLogger } from 'nestjs-pino';
 import { Repository } from 'typeorm';
+import { DATABASE_NAME } from '@ukef/constants';
+import { DbResponseHelper } from '@ukef/helpers/db-response.helper';
 
 import { MarketEntity } from './entities/market.entity';
 
@@ -21,17 +21,17 @@ export class MarketsService {
 
       if (active) {
         if (active === 'Y') {
-          results = results.filter((results: { ACTIVE_IND: string }) => results.ACTIVE_IND === 'Y');
+          results = results.filter((market: { ACTIVE_IND: string }) => market.ACTIVE_IND === 'Y');
         } else {
-          results = results.filter((results: { ACTIVE_IND: string }) => results.ACTIVE_IND !== 'Y');
+          results = results.filter((market: { ACTIVE_IND: string }) => market.ACTIVE_IND !== 'Y');
         }
       }
 
       if (search) {
         const searchLowerCase = search.toLowerCase();
         results = results.filter(
-          (results: { COUNTRY_NAME: string; ISO_CODE: string }) =>
-            results.COUNTRY_NAME.toLowerCase().indexOf(searchLowerCase) !== -1 || results.ISO_CODE.toLowerCase().indexOf(searchLowerCase) !== -1,
+          (market: { COUNTRY_NAME: string; ISO_CODE: string }) =>
+            market.COUNTRY_NAME.toLowerCase().includes(searchLowerCase) || market.ISO_CODE.toLowerCase().includes(searchLowerCase),
         );
       }
 

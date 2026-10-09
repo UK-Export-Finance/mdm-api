@@ -62,6 +62,7 @@ export class EmailsController {
     if (!govUkNotifyKey) {
       throw new BadRequestException('Header "govUkNotifyKey" is required');
     }
+
     return this.emailsService.sendEmail(govUkNotifyKey, body);
   }
 }

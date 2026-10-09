@@ -3,13 +3,13 @@ import request from 'supertest';
 import { withRequiredFieldValidationApiTests } from './partials/require-validation';
 import { withTypeFieldValidationApiTests } from './partials/type-validation';
 
-export interface ObjectFieldValidationApiTests<RequestBodyItem, RequestBodyItemKey extends keyof RequestBodyItem> {
+export type ObjectFieldValidationApiTests<RequestBodyItem, RequestBodyItemKey extends keyof RequestBodyItem> = {
   fieldName: RequestBodyItemKey;
   required?: boolean;
   validRequestBody: RequestBodyItem[] | RequestBodyItem;
   makeRequest: (body: unknown | unknown[]) => request.Test;
   givenAnyRequestBodyWouldSucceed: () => void;
-}
+};
 
 export function withObjectFieldValidationApiTests<RequestBodyItem, RequestBodyItemKey extends keyof RequestBodyItem>({
   fieldName: fieldNameSymbol,

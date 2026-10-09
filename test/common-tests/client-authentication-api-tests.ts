@@ -1,14 +1,14 @@
+import supertest from 'supertest';
 import { AUTH } from '@ukef/constants';
 import { ENVIRONMENT_VARIABLES } from '@ukef-test/support/environment-variables';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
-import supertest from 'supertest';
 
 export type IncorrectAuthArg = { headerName: string; headerValue: string };
 
-interface ClientAuthenticationTestsOptions {
+type ClientAuthenticationTestsOptions = {
   givenTheRequestWouldOtherwiseSucceed: () => void;
   makeRequestWithoutAuth: (incorrectAuth?: IncorrectAuthArg) => supertest.Test;
-}
+};
 
 export const withClientAuthenticationTests = ({ givenTheRequestWouldOtherwiseSucceed, makeRequestWithoutAuth }: ClientAuthenticationTestsOptions): void => {
   const valueGenerator = new RandomValueGenerator();

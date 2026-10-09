@@ -4,6 +4,5 @@
  * @param {any} modifiedRequest - variable to be wrapped.
  * @returns modifiedRequest or [modifiedRequest]
  */
-export const prepareModifiedRequest = (requestIsAnArray: boolean, modifiedRequest: unknown): unknown | unknown[] => {
-  return requestIsAnArray ? [modifiedRequest] : modifiedRequest;
-};
+export const prepareModifiedRequest = (requestIsAnArray: boolean, modifiedRequest: unknown): unknown | unknown[] =>
+  requestIsAnArray ? [modifiedRequest] : modifiedRequest;

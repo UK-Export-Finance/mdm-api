@@ -6,6 +6,7 @@ import { HttpModuleOptions } from './http-module-options.interface';
 import { logAxiosRequestWith } from './log-axios-request.axios-interceptor';
 import { logAxiosResponseErrorWith } from './log-axios-response-error.axios-interceptor';
 import { logAxiosResponseSuccessWith } from './log-axios-response-success.axios-interceptor';
+
 export { HttpService } from '@nestjs/axios';
 
 @Module({})

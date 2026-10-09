@@ -1,5 +1,5 @@
 import { HttpStatus } from '@nestjs/common';
-import AppConfig from '@ukef/config/app.config';
+import { AppConfig } from '@ukef/config/app.config';
 import { COMPANIES, EXAMPLES } from '@ukef/constants';
 import { Api } from '@ukef-test/support/api';
 

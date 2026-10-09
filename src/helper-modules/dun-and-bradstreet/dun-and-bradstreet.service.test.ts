@@ -1,9 +1,9 @@
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
-import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { AxiosError, HttpStatusCode } from 'axios';
 import { resetAllWhenMocks, when } from 'jest-when';
 import { of, throwError } from 'rxjs';
+import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 
 import { DunAndBradstreetService } from './dun-and-bradstreet.service';
 import { DunAndBradstreetException } from './exception/dun-and-bradstreet.exception';
@@ -15,7 +15,7 @@ describe('DunAndBradstreetService', () => {
 
   const valueGenerator = new RandomValueGenerator();
 
-  const testRegistrationNumber = '0' + valueGenerator.stringOfNumericCharacters({ length: 7 });
+  const testRegistrationNumber = `0${valueGenerator.stringOfNumericCharacters({ length: 7 })}`;
   const expectedAccessToken = 'TEST_ACCESS_TOKEN';
   const getAccessTokenMethodMock = jest
     .spyOn(DunAndBradstreetService.prototype as any, 'getAccessToken')

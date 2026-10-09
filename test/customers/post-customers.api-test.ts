@@ -1,11 +1,11 @@
+import { HttpStatusCode } from 'axios';
+import nock from 'nock';
 import { EXAMPLES } from '@ukef/constants';
 import { IncorrectAuthArg, withClientAuthenticationTests } from '@ukef-test/common-tests/client-authentication-api-tests';
 import { Api } from '@ukef-test/support/api';
 import { ENVIRONMENT_VARIABLES } from '@ukef-test/support/environment-variables';
 import { GetCustomersGenerator } from '@ukef-test/support/generator/get-customers-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
-import { HttpStatusCode } from 'axios';
-import nock from 'nock';
 
 const url = '/api/v1/customers';
 

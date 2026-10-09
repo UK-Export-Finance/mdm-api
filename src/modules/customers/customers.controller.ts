@@ -3,7 +3,7 @@ import { ApiBadRequestResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOper
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 
-import { GetCustomersInformaticaQueryDto } from '../informatica/dto/get-customers-informatica-query.dto';
+import { GetCustomersInformaticaQueryDto } from '@ukef/modules/informatica/dto/get-customers-informatica-query.dto';
 import { CustomersService } from './customers.service';
 import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
 import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
@@ -57,8 +57,8 @@ export class CustomersController {
   @ApiUnauthorizedResponse({
     description: 'Failed to get access token',
   })
-  getOrCreateCustomer(@Res() res: Response, @Body() DTFSCustomerDto: DTFSCustomerDto): Promise<GetCustomersResponse> {
-    return this.customersService.getOrCreateCustomer(res, DTFSCustomerDto);
+  getOrCreateCustomer(@Res() res: Response, @Body() dtfsCustomerDto: DTFSCustomerDto): Promise<GetCustomersResponse> {
+    return this.customersService.getOrCreateCustomer(res, dtfsCustomerDto);
   }
 
   @Get('dun-bradstreet')

@@ -38,7 +38,7 @@ describe('Numbers', () => {
     expect(postResponse.status).toBe(201);
 
     // Act - get the number
-    const getResponse = await api.get('/api/v1/numbers?type=' + postResponse.body[0].type + '&ukefId=' + postResponse.body[0].maskedId);
+    const getResponse = await api.get(`/api/v1/numbers?type=${postResponse.body[0].type}&ukefId=${postResponse.body[0].maskedId}`);
 
     // Assert
     expect(getResponse.status).toBe(200);

@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Matches } from 'class-validator';
 import { EXAMPLES, UKEF_ID } from '@ukef/constants';
 import { regexToString } from '@ukef/helpers/regex.helper';
-import { Matches } from 'class-validator';
 
 export class GetOdsDealParamDto {
   @ApiProperty({
