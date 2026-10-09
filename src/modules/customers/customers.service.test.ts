@@ -356,7 +356,7 @@ describe('CustomerService', () => {
             // Assert
             expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(
               expect.objectContaining({
-                CCM_Customer_Type__c: customerWithPod.customerType,
+                CCM_Customer_Type__c: customerWithCustomerType.customerType,
               }),
             );
 
@@ -469,7 +469,6 @@ describe('CustomerService', () => {
                 CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity,
                 CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
                 CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
-                CCM_Customer_Type__c: DTFSCustomerDto.customerType,
                 CCM_Industry__c: DTFSCustomerDto.ukefIndustryName,
                 CCM_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
                 CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
@@ -567,7 +566,6 @@ describe('CustomerService', () => {
               CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity,
               CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
               CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
-              CCM_Customer_Type__c: DTFSCustomerDto.customerType,
               CCM_Industry__c: DTFSCustomerDto.ukefIndustryName,
               CCM_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
               CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
@@ -653,7 +651,6 @@ describe('CustomerService', () => {
               CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity,
               CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
               CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
-              CCM_Customer_Type__c: DTFSCustomerDto.customerType,
               CCM_Industry__c: DTFSCustomerDto.ukefIndustryName,
               CCM_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
               CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
