@@ -1,7 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ORDNANCE_SURVEY_KEY, OrdnanceSurveyConfigType } from '@ukef/config/ordnance-survey.config';
+import { ORDNANCE_SURVEY_CONFIG_KEY, OrdnanceSurveyConfigType } from '@ukef/config/ordnance-survey.config';
 import { GEOSPATIAL } from '@ukef/constants';
 import { HttpClient } from '@ukef/modules/http/http.client';
 
@@ -16,7 +16,7 @@ export class OrdnanceSurveyService {
 
   constructor(httpService: HttpService, configService: ConfigService) {
     this.httpClient = new HttpClient(httpService);
-    const { key } = configService.get<OrdnanceSurveyConfigType>(ORDNANCE_SURVEY_KEY);
+    const { key } = configService.get<OrdnanceSurveyConfigType>(ORDNANCE_SURVEY_CONFIG_KEY);
     this.key = key;
   }
 

@@ -1,7 +1,9 @@
 import { registerAs } from '@nestjs/config';
 import { getIntConfig } from '@ukef/helpers/get-int-config';
 
-export const ORDNANCE_SURVEY_KEY = 'ordnanceSurvey';
+const KEY = 'ordnanceSurvey';
+
+export { KEY as ORDNANCE_SURVEY_CONFIG_KEY };
 
 export type OrdnanceSurveyConfigType = {
   baseUrl: string;
@@ -10,7 +12,7 @@ export type OrdnanceSurveyConfigType = {
   timeout: number;
 };
 
-export const OrdnanceSurveyConfig = registerAs(ORDNANCE_SURVEY_KEY, (): OrdnanceSurveyConfigType => ({
+export const OrdnanceSurveyConfig = registerAs(KEY, (): OrdnanceSurveyConfigType => ({
   baseUrl: process.env.ORDNANCE_SURVEY_URL,
   key: process.env.ORDNANCE_SURVEY_KEY,
   maxRedirects: getIntConfig(process.env.ORDNANCE_SURVEY_MAX_REDIRECTS, 5),

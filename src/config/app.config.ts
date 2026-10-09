@@ -26,6 +26,7 @@ export type AppConfigType = {
   port: number;
   redactLogs: boolean;
   singleLineLogFormat: boolean;
+  usePinoPrettyLogFormatter: boolean;
   versioning: {
     enable: boolean;
     prefix: string;
@@ -33,7 +34,7 @@ export type AppConfigType = {
   };
 };
 
-export const AppConfig = registerAs('app', (): Record<string, any> => {
+export const AppConfig = registerAs('app', (): AppConfigType => {
   const logLevel = process.env.LOG_LEVEL || 'info';
 
   if (!validLogLevels.includes(logLevel)) {

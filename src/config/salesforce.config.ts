@@ -1,7 +1,9 @@
 import { registerAs } from '@nestjs/config';
 import { getIntConfig } from '@ukef/helpers/get-int-config';
 
-export const SALESFORCE_KEY = 'salesforce';
+const KEY = 'salesforce';
+
+export { KEY as SALESFORCE_CONFIG_KEY };
 
 export type SalesforceConfigType = {
   baseUrl: string;
@@ -14,7 +16,7 @@ export type SalesforceConfigType = {
   timeout: number;
 };
 
-export const SalesforceConfig = registerAs(SALESFORCE_KEY, (): SalesforceConfigType => ({
+export const SalesforceConfig = registerAs(KEY, (): SalesforceConfigType => ({
   baseUrl: process.env.SALESFORCE_INSTANCE_URL,
   clientId: process.env.SALESFORCE_CLIENT_ID,
   clientSecret: process.env.SALESFORCE_CLIENT_SECRET,
