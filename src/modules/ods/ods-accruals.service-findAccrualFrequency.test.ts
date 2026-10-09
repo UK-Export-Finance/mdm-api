@@ -29,23 +29,23 @@ describe('OdsAccrualsService - findAccrualFrequency', () => {
     service = new OdsAccrualsService(odsStoredProcedureService, mockLogger);
   });
 
-  beforeEach(() => {
-    const mockStoredProcedureOutput = `{
-      "message": "${STORED_PROCEDURE.SUCCESS}",
-      "status": "${STORED_PROCEDURE.SUCCESS}",
-      "total_result_count": 1,
-      "results": [
-        {
-          "code": "${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.code}",
-          "name": "${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.name}",
-          "orderId": ${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.orderId},
-          "frequencyNumberOfUnits": ${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.frequencyNumberOfUnits},
-          "frequencyUnits": "${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.frequencyUnits}",
-          "frequencyActive": ${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.frequencyActive}
-        }
-      ]
-    }`;
+  const mockStoredProcedureOutput = `{
+    "message": "${STORED_PROCEDURE.SUCCESS}",
+    "status": "${STORED_PROCEDURE.SUCCESS}",
+    "total_result_count": 1,
+    "results": [
+      {
+        "code": "${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.code}",
+        "name": "${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.name}",
+        "orderId": ${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.orderId},
+        "frequencyNumberOfUnits": ${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.frequencyNumberOfUnits},
+        "frequencyUnits": "${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.frequencyUnits}",
+        "frequencyActive": ${EXAMPLES.ODS.CONFIGURATION_FREQUENCY.frequencyActive}
+      }
+    ]
+  }`;
 
+  beforeEach(() => {
     jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
   });
 
@@ -82,14 +82,14 @@ describe('OdsAccrualsService - findAccrualFrequency', () => {
   describe('when an accrual frequency is not found', () => {
     it('should throw an error', async () => {
       // Arrange
-      const mockStoredProcedureOutput = `{
+      const localMockStoredProcedureOutput = `{
         "message": "${STORED_PROCEDURE.SUCCESS}",
         "status": "${STORED_PROCEDURE.SUCCESS}",
         "total_result_count": 0,
         "results": []
       }`;
 
-      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
+      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(localMockStoredProcedureOutput);
 
       // Act & Assert
       const promise = service.findAccrualFrequency(EXAMPLES.ACCRUAL_FREQUENCY.CODE);
@@ -105,9 +105,9 @@ describe('OdsAccrualsService - findAccrualFrequency', () => {
   describe(`when the response from ODS does not have status as ${STORED_PROCEDURE.SUCCESS}`, () => {
     it('should throw an error', async () => {
       // Arrange
-      const mockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
+      const localMockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
 
-      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
+      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(localMockStoredProcedureOutput);
 
       // Act
       const promise = service.findAccrualFrequency(EXAMPLES.ACCRUAL_FREQUENCY.CODE);
@@ -127,9 +127,9 @@ describe('OdsAccrualsService - findAccrualFrequency', () => {
   describe('when the method goes into the catch handler', () => {
     it('should throw an error', async () => {
       // Arrange
-      const mockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
+      const localMockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
 
-      jest.spyOn(odsStoredProcedureService, 'call').mockRejectedValue(mockStoredProcedureOutput);
+      jest.spyOn(odsStoredProcedureService, 'call').mockRejectedValue(localMockStoredProcedureOutput);
 
       // Act
       const promise = service.findAccrualFrequency(EXAMPLES.ACCRUAL_FREQUENCY.CODE);
@@ -139,7 +139,7 @@ describe('OdsAccrualsService - findAccrualFrequency', () => {
 
       await expect(promise).rejects.toMatchObject({
         message: `Error finding accrual frequency ${EXAMPLES.ACCRUAL_FREQUENCY.CODE} in ODS`,
-        cause: mockStoredProcedureOutput,
+        cause: localMockStoredProcedureOutput,
       });
     });
   });

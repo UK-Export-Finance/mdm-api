@@ -438,8 +438,8 @@ describe('CustomerService', () => {
             const mockSalesforceResponse = [
               {
                 ...createLegacyCustomerWithNoUrn[0],
-                customerType: DTFSCustomerDto.customerType,
-                probabilityOfDefault: DTFSCustomerDto.probabilityOfDefault,
+                customerType: dtfsCustomerDto.customerType,
+                probabilityOfDefault: dtfsCustomerDto.probabilityOfDefault,
               },
             ];
 
@@ -468,8 +468,8 @@ describe('CustomerService', () => {
                 CCM_Citizenship_Class__c: dtfsCustomerDto.ukEntity,
                 CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
                 CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
-                CCM_Industry__c: DTFSCustomerDto.ukefIndustryName,
-                CCM_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
+                CCM_Industry__c: dtfsCustomerDto.ukefIndustryName,
+                CCM_Industry_Group__c: dtfsCustomerDto.ukefSectorName,
                 CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
                 CCM_Primary_Industry__c: dtfsCustomerDto.ukefIndustryName,
                 CCM_Primary_Industry_Group__c: dtfsCustomerDto.ukefSectorName,
@@ -565,8 +565,8 @@ describe('CustomerService', () => {
               CCM_Citizenship_Class__c: dtfsCustomerDto.ukEntity,
               CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
               CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
-              CCM_Industry__c: DTFSCustomerDto.ukefIndustryName,
-              CCM_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
+              CCM_Industry__c: dtfsCustomerDto.ukefIndustryName,
+              CCM_Industry_Group__c: dtfsCustomerDto.ukefSectorName,
               CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
               CCM_Primary_Industry__c: dtfsCustomerDto.ukefIndustryName,
               CCM_Primary_Industry_Group__c: dtfsCustomerDto.ukefSectorName,
@@ -650,8 +650,8 @@ describe('CustomerService', () => {
               CCM_Citizenship_Class__c: dtfsCustomerDto.ukEntity,
               CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
               CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
-              CCM_Industry__c: DTFSCustomerDto.ukefIndustryName,
-              CCM_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
+              CCM_Industry__c: dtfsCustomerDto.ukefIndustryName,
+              CCM_Industry_Group__c: dtfsCustomerDto.ukefSectorName,
               CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
               CCM_Primary_Industry__c: dtfsCustomerDto.ukefIndustryName,
               CCM_Primary_Industry_Group__c: dtfsCustomerDto.ukefSectorName,

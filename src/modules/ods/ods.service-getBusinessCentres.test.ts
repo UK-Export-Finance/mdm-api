@@ -29,27 +29,27 @@ describe('OdsService - getBusinessCentres', () => {
     service = new OdsService(odsStoredProcedureService, mockLogger);
   });
 
-  beforeEach(() => {
-    const mockStoredProcedureOutput = `{
-      "message": "${STORED_PROCEDURE.SUCCESS}",
-      "status": "${STORED_PROCEDURE.SUCCESS}",
-      "total_result_count": 2,
-      "results": [
-        {
-          "business_centre_code": "${EXAMPLES.BUSINESS_CENTRE.CODE}",
-          "business_centre_name": "${EXAMPLES.BUSINESS_CENTRE.NAME}",
-          "business_centre_type_description": "${EXAMPLES.BUSINESS_CENTRE.DESCRIPTION}",
-          "business_centre_active_flag": ${EXAMPLES.BUSINESS_CENTRE.IS_ACTIVE}
-        },
-        {
-          "business_centre_code": "${EXAMPLES.BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.CODE}",
-          "business_centre_name": "${EXAMPLES.BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.NAME}",
-          "business_centre_type_description": "${EXAMPLES.BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.DESCRIPTION}",
-          "business_centre_active_flag": ${EXAMPLES.BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.IS_ACTIVE}
-        }
-      ]
-    }`;
+  const mockStoredProcedureOutput = `{
+    "message": "${STORED_PROCEDURE.SUCCESS}",
+    "status": "${STORED_PROCEDURE.SUCCESS}",
+    "total_result_count": 2,
+    "results": [
+      {
+        "business_centre_code": "${EXAMPLES.BUSINESS_CENTRE.CODE}",
+        "business_centre_name": "${EXAMPLES.BUSINESS_CENTRE.NAME}",
+        "business_centre_type_description": "${EXAMPLES.BUSINESS_CENTRE.DESCRIPTION}",
+        "business_centre_active_flag": ${EXAMPLES.BUSINESS_CENTRE.IS_ACTIVE}
+      },
+      {
+        "business_centre_code": "${EXAMPLES.BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.CODE}",
+        "business_centre_name": "${EXAMPLES.BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.NAME}",
+        "business_centre_type_description": "${EXAMPLES.BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.DESCRIPTION}",
+        "business_centre_active_flag": ${EXAMPLES.BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.IS_ACTIVE}
+      }
+    ]
+  }`;
 
+  beforeEach(() => {
     jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
   });
 
@@ -81,9 +81,9 @@ describe('OdsService - getBusinessCentres', () => {
   describe(`when the response from ODS does not have status as ${STORED_PROCEDURE.SUCCESS}`, () => {
     it('should throw an error', async () => {
       // Arrange
-      const mockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
+      const localMockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
 
-      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
+      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(localMockStoredProcedureOutput);
 
       // Act & Assert
       const promise = service.getBusinessCentres();
@@ -99,9 +99,9 @@ describe('OdsService - getBusinessCentres', () => {
   describe('when the method goes into the catch handler', () => {
     it('should throw an error', async () => {
       // Arrange
-      const mockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
+      const localMockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
 
-      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
+      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(localMockStoredProcedureOutput);
 
       // Act & Assert
       const promise = service.getBusinessCentres();

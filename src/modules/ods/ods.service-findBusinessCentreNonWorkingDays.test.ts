@@ -28,25 +28,25 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
     service = new OdsService(odsStoredProcedureService, mockLogger);
   });
 
-  beforeEach(() => {
-    const mockStoredProcedureOutput = `{
-      "message": "${STORED_PROCEDURE.SUCCESS}",
-      "status": "${STORED_PROCEDURE.SUCCESS}",
-      "total_result_count": 2,
-      "results": [
-        {
-          "business_centre_code": "${EXAMPLES.BUSINESS_CENTRE.CODE}",
-          "non_working_day_name": "${EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME}",
-          "non_working_day_date": "${EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME}"
-        },
-        {
-          "business_centre_code": "${EXAMPLES.BUSINESS_CENTRE.CODE}",
-          "non_working_day_name": "${EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME}",
-          "non_working_day_date": "${EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME}"
-        }
-      ]
-    }`;
+  const mockStoredProcedureOutput = `{
+    "message": "${STORED_PROCEDURE.SUCCESS}",
+    "status": "${STORED_PROCEDURE.SUCCESS}",
+    "total_result_count": 2,
+    "results": [
+      {
+        "business_centre_code": "${EXAMPLES.BUSINESS_CENTRE.CODE}",
+        "non_working_day_name": "${EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME}",
+        "non_working_day_date": "${EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME}"
+      },
+      {
+        "business_centre_code": "${EXAMPLES.BUSINESS_CENTRE.CODE}",
+        "non_working_day_name": "${EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME}",
+        "non_working_day_date": "${EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME}"
+      }
+    ]
+  }`;
 
+  beforeEach(() => {
     jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
   });
 
@@ -103,9 +103,9 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
   describe(`when the response from ODS does not have status as ${STORED_PROCEDURE.SUCCESS}`, () => {
     it('should throw an error', async () => {
       // Arrange
-      const mockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
+      const localMockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
 
-      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
+      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(localMockStoredProcedureOutput);
 
       // Act & Assert
       const promise = service.findBusinessCentreNonWorkingDays(EXAMPLES.BUSINESS_CENTRE.CODE);
@@ -121,9 +121,9 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
   describe('when the response from ODS has total_result_count as 0', () => {
     it('should throw an error', async () => {
       // Arrange
-      const mockStoredProcedureOutput = `{ "status": "${STORED_PROCEDURE.SUCCESS}", "total_result_count": 0 }`;
+      const localMockStoredProcedureOutput = `{ "status": "${STORED_PROCEDURE.SUCCESS}", "total_result_count": 0 }`;
 
-      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
+      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(localMockStoredProcedureOutput);
 
       const expected = new Error(`No business centre ${EXAMPLES.BUSINESS_CENTRE.CODE} non working days found in ODS`);
 
@@ -139,9 +139,9 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
   describe('when the method goes into the catch handler', () => {
     it('should throw an error', async () => {
       // Arrange
-      const mockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
+      const localMockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
 
-      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
+      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(localMockStoredProcedureOutput);
 
       // Act & Assert
       const promise = service.findBusinessCentreNonWorkingDays(EXAMPLES.BUSINESS_CENTRE.CODE);

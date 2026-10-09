@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { InformaticaConfig, KEY as INFORMATICA_CONFIG_KEY } from '@ukef/config/informatica.config';
+import { InformaticaConfigType, INFORMATICA_KEY } from '@ukef/config/informatica.config';
 import { HttpModule } from '@ukef/modules/http/http.module';
 
 import { InformaticaService } from './informatica.service';
@@ -11,7 +11,7 @@ import { InformaticaService } from './informatica.service';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const { baseUrl, username, password, maxRedirects, timeout } = configService.get<InformaticaConfig>(INFORMATICA_CONFIG_KEY);
+        const { baseUrl, username, password, maxRedirects, timeout } = configService.get<InformaticaConfigType>(INFORMATICA_KEY);
         return {
           baseURL: baseUrl,
           maxRedirects,

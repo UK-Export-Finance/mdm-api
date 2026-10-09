@@ -29,22 +29,22 @@ describe('OdsFacilityCategoryService - findOne', () => {
     service = new OdsFacilityCategoryService(odsStoredProcedureService, mockLogger);
   });
 
-  beforeEach(() => {
-    const mockStoredProcedureOutput = `{
-      "message": "${STORED_PROCEDURE.SUCCESS}",
-      "status": "${STORED_PROCEDURE.SUCCESS}",
-      "total_result_count": 1,
-      "results": [
-        {
-          "classification_type": "${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_type}",
-          "classification_type_code": "${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_type_code}",
-          "classification_code": "${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_code}",
-          "classification_description": "${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_description}",
-          "classification_active_flag": ${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_active_flag}
-        }
-      ]
-    }`;
+  const mockStoredProcedureOutput = `{
+    "message": "${STORED_PROCEDURE.SUCCESS}",
+    "status": "${STORED_PROCEDURE.SUCCESS}",
+    "total_result_count": 1,
+    "results": [
+      {
+        "classification_type": "${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_type}",
+        "classification_type_code": "${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_type_code}",
+        "classification_code": "${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_code}",
+        "classification_description": "${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_description}",
+        "classification_active_flag": ${EXAMPLES.ODS.FACILITY_CLASSIFICATION.classification_active_flag}
+      }
+    ]
+  }`;
 
+  beforeEach(() => {
     jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
   });
 
@@ -82,14 +82,14 @@ describe('OdsFacilityCategoryService - findOne', () => {
   describe('when a facility category is not found', () => {
     it('should throw an error', async () => {
       // Arrange
-      const mockStoredProcedureOutput = `{
+      const localMockStoredProcedureOutput = `{
         "message": "${STORED_PROCEDURE.SUCCESS}",
         "status": "${STORED_PROCEDURE.SUCCESS}",
         "total_result_count": 0,
         "results": []
       }`;
 
-      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
+      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(localMockStoredProcedureOutput);
 
       // Act & Assert
       const promise = service.findOne(EXAMPLES.FACILITY_CATEGORY.CODE);
@@ -105,9 +105,9 @@ describe('OdsFacilityCategoryService - findOne', () => {
   describe(`when the response from ODS does not have status as ${STORED_PROCEDURE.SUCCESS}`, () => {
     it('should throw an error', async () => {
       // Arrange
-      const mockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
+      const localMockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
 
-      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
+      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(localMockStoredProcedureOutput);
 
       // Act
       const promise = service.findOne(EXAMPLES.FACILITY_CATEGORY.CODE);
@@ -127,9 +127,9 @@ describe('OdsFacilityCategoryService - findOne', () => {
   describe('when the method goes into the catch handler', () => {
     it('should throw an error', async () => {
       // Arrange
-      const mockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
+      const localMockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
 
-      jest.spyOn(odsStoredProcedureService, 'call').mockRejectedValue(mockStoredProcedureOutput);
+      jest.spyOn(odsStoredProcedureService, 'call').mockRejectedValue(localMockStoredProcedureOutput);
 
       // Act
       const promise = service.findOne(EXAMPLES.FACILITY_CATEGORY.CODE);
@@ -139,7 +139,7 @@ describe('OdsFacilityCategoryService - findOne', () => {
 
       await expect(promise).rejects.toMatchObject({
         message: `Error finding facility category ${EXAMPLES.FACILITY_CATEGORY.CODE} in ODS`,
-        cause: mockStoredProcedureOutput,
+        cause: localMockStoredProcedureOutput,
       });
     });
   });

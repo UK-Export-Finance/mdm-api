@@ -29,31 +29,31 @@ describe('OdsService - getUkefIndustryCodes', () => {
     service = new OdsService(odsStoredProcedureService, mockLogger);
   });
 
-  beforeEach(() => {
-    const mockStoredProcedureOutput = `{
-      "message": "${STORED_PROCEDURE.SUCCESS}",
-      "status": "${STORED_PROCEDURE.SUCCESS}",
-      "total_result_count": 2,
-      "results": [
-        {
-          "industry_id": "${EXAMPLES.INDUSTRY.ID}",
-          "industry_code": "${EXAMPLES.INDUSTRY.CODE}",
-          "industry_description": "${EXAMPLES.INDUSTRY.DESCRIPTION}",
-          "industry_group_code": "${EXAMPLES.INDUSTRY.GROUP_CODE}",
-          "industry_group_description": "${EXAMPLES.INDUSTRY.GROUP_DESCRIPTION}",
-          "industry_category": "${EXAMPLES.INDUSTRY.CATEGORY}"
-        },
-        {
-          "industry_id": "${EXAMPLES.INDUSTRY.ID}",
-          "industry_code": "${EXAMPLES.INDUSTRY.CODE}",
-          "industry_description": "${EXAMPLES.INDUSTRY.DESCRIPTION}",
-          "industry_group_code": "${EXAMPLES.INDUSTRY.GROUP_CODE}",
-          "industry_group_description": "${EXAMPLES.INDUSTRY.GROUP_DESCRIPTION}",
-          "industry_category": "${EXAMPLES.INDUSTRY.CATEGORY}"
-        }
-      ]
-    }`;
+  const mockStoredProcedureOutput = `{
+    "message": "${STORED_PROCEDURE.SUCCESS}",
+    "status": "${STORED_PROCEDURE.SUCCESS}",
+    "total_result_count": 2,
+    "results": [
+      {
+        "industry_id": "${EXAMPLES.INDUSTRY.ID}",
+        "industry_code": "${EXAMPLES.INDUSTRY.CODE}",
+        "industry_description": "${EXAMPLES.INDUSTRY.DESCRIPTION}",
+        "industry_group_code": "${EXAMPLES.INDUSTRY.GROUP_CODE}",
+        "industry_group_description": "${EXAMPLES.INDUSTRY.GROUP_DESCRIPTION}",
+        "industry_category": "${EXAMPLES.INDUSTRY.CATEGORY}"
+      },
+      {
+        "industry_id": "${EXAMPLES.INDUSTRY.ID}",
+        "industry_code": "${EXAMPLES.INDUSTRY.CODE}",
+        "industry_description": "${EXAMPLES.INDUSTRY.DESCRIPTION}",
+        "industry_group_code": "${EXAMPLES.INDUSTRY.GROUP_CODE}",
+        "industry_group_description": "${EXAMPLES.INDUSTRY.GROUP_DESCRIPTION}",
+        "industry_category": "${EXAMPLES.INDUSTRY.CATEGORY}"
+      }
+    ]
+  }`;
 
+  beforeEach(() => {
     jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
   });
 
@@ -88,9 +88,9 @@ describe('OdsService - getUkefIndustryCodes', () => {
   describe(`when the response from ODS does not have status as ${STORED_PROCEDURE.SUCCESS}`, () => {
     it('should throw an error', async () => {
       // Arrange
-      const mockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
+      const localMockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
 
-      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
+      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(localMockStoredProcedureOutput);
 
       // Act & Assert
       const promise = service.getUkefIndustryCodes();
@@ -106,9 +106,9 @@ describe('OdsService - getUkefIndustryCodes', () => {
   describe('when the method goes into the catch handler', () => {
     it('should throw an error', async () => {
       // Arrange
-      const mockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
+      const localMockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
 
-      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
+      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(localMockStoredProcedureOutput);
 
       // Act & Assert
       const promise = service.getUkefIndustryCodes();

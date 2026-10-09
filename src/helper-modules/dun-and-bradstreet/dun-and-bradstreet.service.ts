@@ -1,7 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { DunAndBradstreetConfig } from '@ukef/config/dun-and-bradstreet.config';
+import { DunAndBradstreetConfigType } from '@ukef/config/dun-and-bradstreet.config';
 import { DUN_AND_BRADSTREET } from '@ukef/constants';
 import { HttpClient } from '@ukef/modules/http/http.client';
 
@@ -16,7 +16,7 @@ export class DunAndBradstreetService {
 
   constructor(httpService: HttpService, configService: ConfigService) {
     this.httpClient = new HttpClient(httpService);
-    const { key } = configService.get<DunAndBradstreetConfig>(DUN_AND_BRADSTREET.CONFIG.KEY);
+    const { key } = configService.get<DunAndBradstreetConfigType>(DUN_AND_BRADSTREET.CONFIG.KEY);
     this.encodedKey = key;
   }
 

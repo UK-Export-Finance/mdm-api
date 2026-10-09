@@ -1,7 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { CompaniesHouseConfig } from '@ukef/config/companies-house.config';
+import { CompaniesHouseConfigType } from '@ukef/config/companies-house.config';
 import { COMPANIES_HOUSE } from '@ukef/constants';
 import { HttpClient } from '@ukef/modules/http/http.client';
 
@@ -21,7 +21,9 @@ export class CompaniesHouseService {
 
   constructor(httpService: HttpService, configService: ConfigService) {
     this.httpClient = new HttpClient(httpService);
-    const { key } = configService.get<CompaniesHouseConfig>(COMPANIES_HOUSE.CONFIG.KEY);
+
+    const { key } = configService.get<CompaniesHouseConfigType>(COMPANIES_HOUSE.CONFIG.KEY);
+
     this.key = key;
   }
 

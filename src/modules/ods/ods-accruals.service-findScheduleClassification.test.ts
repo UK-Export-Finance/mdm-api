@@ -32,23 +32,23 @@ describe('OdsAccrualsService - findScheduleClassification', () => {
     service = new OdsAccrualsService(odsStoredProcedureService, mockLogger);
   });
 
-  beforeEach(() => {
-    const mockStoredProcedureOutput = `{
-      "message": "${STORED_PROCEDURE.SUCCESS}",
-      "status": "${STORED_PROCEDURE.SUCCESS}",
-      "total_result_count": 1,
-      "results": [
-        {
-          "classification_type": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE.classification_type}",
-          "classification_type_code": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE.classification_type_code}",
-          "classification_code": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE.classification_code}",
-          "classification_description": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE.classification_description}",
-          "classification_numeric_value": ${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE.classification_numeric_value},
-          "classification_active_flag": ${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE.classification_active_flag}
-        }
-      ]
-    }`;
+  const mockStoredProcedureOutput = `{
+    "message": "${STORED_PROCEDURE.SUCCESS}",
+    "status": "${STORED_PROCEDURE.SUCCESS}",
+    "total_result_count": 1,
+    "results": [
+      {
+        "classification_type": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE.classification_type}",
+        "classification_type_code": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE.classification_type_code}",
+        "classification_code": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE.classification_code}",
+        "classification_description": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE.classification_description}",
+        "classification_numeric_value": ${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE.classification_numeric_value},
+        "classification_active_flag": ${EXAMPLES.ODS.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE.classification_active_flag}
+      }
+    ]
+  }`;
 
+  beforeEach(() => {
     jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
   });
 
@@ -86,14 +86,14 @@ describe('OdsAccrualsService - findScheduleClassification', () => {
   describe('when an accrual schedule classification is not found', () => {
     it('should throw an error', async () => {
       // Arrange
-      const mockStoredProcedureOutput = `{
+      const localMockStoredProcedureOutput = `{
         "message": "${STORED_PROCEDURE.SUCCESS}",
         "status": "${STORED_PROCEDURE.SUCCESS}",
         "total_result_count": 0,
         "results": []
       }`;
 
-      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
+      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(localMockStoredProcedureOutput);
 
       // Act & Assert
       const promise = service.findScheduleClassification(mockRateTypeCode, mockRateCode);
@@ -109,9 +109,9 @@ describe('OdsAccrualsService - findScheduleClassification', () => {
   describe(`when the response from ODS does not have status as ${STORED_PROCEDURE.SUCCESS}`, () => {
     it('should throw an error', async () => {
       // Arrange
-      const mockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
+      const localMockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
 
-      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
+      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(localMockStoredProcedureOutput);
 
       // Act
       const promise = service.findScheduleClassification(mockRateTypeCode, mockRateCode);
@@ -131,9 +131,9 @@ describe('OdsAccrualsService - findScheduleClassification', () => {
   describe('when the method goes into the catch handler', () => {
     it('should throw an error', async () => {
       // Arrange
-      const mockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
+      const localMockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
 
-      jest.spyOn(odsStoredProcedureService, 'call').mockRejectedValue(mockStoredProcedureOutput);
+      jest.spyOn(odsStoredProcedureService, 'call').mockRejectedValue(localMockStoredProcedureOutput);
 
       // Act
       const promise = service.findScheduleClassification(mockRateTypeCode, mockRateCode);
@@ -143,7 +143,7 @@ describe('OdsAccrualsService - findScheduleClassification', () => {
 
       await expect(promise).rejects.toMatchObject({
         message: `Error finding accrual schedule classification ${mockRateTypeCode} ${mockRateCode} in ODS`,
-        cause: mockStoredProcedureOutput,
+        cause: localMockStoredProcedureOutput,
       });
     });
   });

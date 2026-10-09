@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpClient } from '@ukef/modules/http/http.client';
 
-import { KEY, SalesforceConfig } from '@ukef/config/salesforce.config';
+import { SALESFORCE_KEY, SalesforceConfigType } from '@ukef/config/salesforce.config';
 import { CreateCustomerDto } from '@ukef/modules/customers/dto/create-customer.dto';
 import { CreateCustomerSalesforceResponseDto } from './dto/create-customer-salesforce-response.dto';
 import { customerAlreadyExistsSalesforceError } from './known-errors';
@@ -24,7 +24,7 @@ export class SalesforceService {
   private readonly access_url: string;
 
   constructor(httpService: HttpService, configService: ConfigService) {
-    const { clientId, clientSecret, username, password, accessUrl } = configService.get<SalesforceConfig>(KEY);
+    const { clientId, clientSecret, username, password, accessUrl } = configService.get<SalesforceConfigType>(SALESFORCE_KEY);
     this.client_id = clientId;
     this.client_secret = clientSecret;
     this.username = username;

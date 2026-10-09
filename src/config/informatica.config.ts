@@ -1,7 +1,7 @@
 import { registerAs } from '@nestjs/config';
 import { getIntConfig } from '@ukef/helpers/get-int-config';
 
-export const KEY = 'informatica';
+export const INFORMATICA_KEY = 'informatica';
 
 export type InformaticaConfigType = {
   baseUrl: string;
@@ -11,7 +11,7 @@ export type InformaticaConfigType = {
   timeout: number;
 };
 
-export const InformaticaConfig = registerAs(KEY, (): InformaticaConfigType => ({
+export const InformaticaConfig = registerAs(INFORMATICA_KEY, (): InformaticaConfigType => ({
   baseUrl: process.env.APIM_INFORMATICA_URL,
   username: process.env.APIM_INFORMATICA_USERNAME,
   password: process.env.APIM_INFORMATICA_PASSWORD,

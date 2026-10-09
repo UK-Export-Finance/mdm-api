@@ -29,29 +29,29 @@ describe('OdsCounterpartyRoleService - getAll', () => {
     service = new OdsCounterpartyRoleService(odsStoredProcedureService, mockLogger);
   });
 
-  beforeEach(() => {
-    const mockStoredProcedureOutput = `{
-      "message": "${STORED_PROCEDURE.SUCCESS}",
-      "status": "${STORED_PROCEDURE.SUCCESS}",
-      "total_result_count": 2,
-      "results": [
-        {
-          "counterpartyRoleType": "${EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.counterpartyRoleType}",
-          "name": "${EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.name}",
-          "hasSharePercentage": ${EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.hasSharePercentage},
-          "hasAssociatedPaymentCode": ${EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.hasAssociatedPaymentCode},
-          "counterpartyRoleTypeActive": ${EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.counterpartyRoleTypeActive}
-        },
-        {
-          "counterpartyRoleType": "${EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.counterpartyRoleType}",
-          "name": "${EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.name}",
-          "hasSharePercentage": ${EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.hasSharePercentage},
-          "hasAssociatedPaymentCode": ${EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.hasAssociatedPaymentCode},
-          "counterpartyRoleTypeActive": ${EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.counterpartyRoleTypeActive}
-        }
-      ]
-    }`;
+  const mockStoredProcedureOutput = `{
+    "message": "${STORED_PROCEDURE.SUCCESS}",
+    "status": "${STORED_PROCEDURE.SUCCESS}",
+    "total_result_count": 2,
+    "results": [
+      {
+        "counterpartyRoleType": "${EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.counterpartyRoleType}",
+        "name": "${EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.name}",
+        "hasSharePercentage": ${EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.hasSharePercentage},
+        "hasAssociatedPaymentCode": ${EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.hasAssociatedPaymentCode},
+        "counterpartyRoleTypeActive": ${EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.counterpartyRoleTypeActive}
+      },
+      {
+        "counterpartyRoleType": "${EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.counterpartyRoleType}",
+        "name": "${EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.name}",
+        "hasSharePercentage": ${EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.hasSharePercentage},
+        "hasAssociatedPaymentCode": ${EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.hasAssociatedPaymentCode},
+        "counterpartyRoleTypeActive": ${EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.counterpartyRoleTypeActive}
+      }
+    ]
+  }`;
 
+  beforeEach(() => {
     jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
   });
 
@@ -83,9 +83,9 @@ describe('OdsCounterpartyRoleService - getAll', () => {
   describe(`when the response from ODS does not have status as ${STORED_PROCEDURE.SUCCESS}`, () => {
     it('should throw an error', async () => {
       // Arrange
-      const mockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
+      const localMockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
 
-      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
+      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(localMockStoredProcedureOutput);
 
       // Act & Assert
       const promise = service.getAll();
@@ -101,9 +101,9 @@ describe('OdsCounterpartyRoleService - getAll', () => {
   describe('when the method goes into the catch handler', () => {
     it('should throw an error', async () => {
       // Arrange
-      const mockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
+      const localMockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
 
-      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
+      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(localMockStoredProcedureOutput);
 
       // Act & Assert
       const promise = service.getAll();
