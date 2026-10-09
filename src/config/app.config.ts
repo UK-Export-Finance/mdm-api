@@ -31,6 +31,7 @@ export type AppConfigType = {
     enable: boolean;
     prefix: string;
     version: string;
+    prefixAndVersion: string;
   };
 };
 
