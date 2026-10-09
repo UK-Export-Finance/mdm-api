@@ -110,7 +110,7 @@ describe('CustomersController', () => {
         query: { name: EXAMPLES.CUSTOMER.NAME, companyReg: EXAMPLES.CUSTOMER.COMPANYREG, partyUrn: EXAMPLES.CUSTOMER.PARTYURN },
       },
     ])('throws BadRequestException if there is more than 1 search parameter (name, companyReg, partyUrn)', ({ query }) => {
-      const getCustomers = (query) => () => controller.getCustomers(query);
+      const getCustomers = (queryParam) => () => controller.getCustomers(queryParam);
 
       expect(getCustomers(query)).toThrow('One and just one search parameter is required');
       expect(getCustomers(query)).toThrow(BadRequestException);

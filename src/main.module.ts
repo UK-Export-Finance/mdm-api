@@ -86,5 +86,4 @@ const CONFIGS = [AppConfig, CompaniesHouseConfig, DocConfig, DatabaseConfig, Dun
   ],
   providers: [{ provide: APP_INTERCEPTOR, useClass: LoggingInterceptor }],
 })
-
 export class MainModule {}

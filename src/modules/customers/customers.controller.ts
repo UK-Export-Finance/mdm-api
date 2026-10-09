@@ -57,8 +57,8 @@ export class CustomersController {
   @ApiUnauthorizedResponse({
     description: 'Failed to get access token',
   })
-  getOrCreateCustomer(@Res() res: Response, @Body() DTFSCustomerDto: DTFSCustomerDto): Promise<GetCustomersResponse> {
-    return this.customersService.getOrCreateCustomer(res, DTFSCustomerDto);
+  getOrCreateCustomer(@Res() res: Response, @Body() dtfsCustomerDto: DTFSCustomerDto): Promise<GetCustomersResponse> {
+    return this.customersService.getOrCreateCustomer(res, dtfsCustomerDto);
   }
 
   @Get('dun-bradstreet')

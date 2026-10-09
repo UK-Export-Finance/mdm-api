@@ -33,25 +33,23 @@ export class CustomersService {
    */
   async getCustomers(backendQuery: GetCustomersInformaticaQueryDto): Promise<GetCustomersResponse> {
     const customersInInformatica = await this.informaticaService.getCustomers(backendQuery);
-    return customersInInformatica.map(
-      (customerInInformatica): GetCustomersResponseItem => ({
-        companyRegNo: customerInInformatica.companyRegNo,
-        creditClassificationDate: customerInInformatica.creditClassificationDate,
-        creditClassificationStatus: customerInInformatica.creditClassificationStatus,
-        customerType: customerInInformatica.customerType,
-        isLegacyRecord: customerInInformatica.isLegacyRecord,
-        name: customerInInformatica.name,
-        partyUrn: customerInInformatica.partyUrn,
-        probabilityOfDefault: customerInInformatica.probabilityOfDefault,
-        riskEntity: customerInInformatica.riskEntity,
-        sfId: customerInInformatica.sfId,
-        subtype: customerInInformatica.subtype,
-        type: customerInInformatica.type,
-        ukEntity: customerInInformatica.ukEntity,
-        ukefIndustryName: customerInInformatica.ukefIndustryName,
-        ukefSectorName: customerInInformatica.ukefSectorName,
-      }),
-    );
+    return customersInInformatica.map((customerInInformatica): GetCustomersResponseItem => ({
+      companyRegNo: customerInInformatica.companyRegNo,
+      creditClassificationDate: customerInInformatica.creditClassificationDate,
+      creditClassificationStatus: customerInInformatica.creditClassificationStatus,
+      customerType: customerInInformatica.customerType,
+      isLegacyRecord: customerInInformatica.isLegacyRecord,
+      name: customerInInformatica.name,
+      partyUrn: customerInInformatica.partyUrn,
+      probabilityOfDefault: customerInInformatica.probabilityOfDefault,
+      riskEntity: customerInInformatica.riskEntity,
+      sfId: customerInInformatica.sfId,
+      subtype: customerInInformatica.subtype,
+      type: customerInInformatica.type,
+      ukEntity: customerInInformatica.ukEntity,
+      ukefIndustryName: customerInInformatica.ukefIndustryName,
+      ukefSectorName: customerInInformatica.ukefSectorName,
+    }));
   }
 
   /**
@@ -69,13 +67,13 @@ export class CustomersService {
    * Retrieves or creates a customer record in the system based on the provided customer DTO.
    *
    * @param {Response} res - The HTTP response object to send as the response.
-   * @param {DTFSCustomerDto} DTFSCustomerDto - The DTO containing customer details.
+   * @param {DTFSCustomerDto} dtfsCustomerDto - The DTO containing customer details.
    * @returns {Promise<GetCustomersResponse>} A promise that resolves to the customer response items.
    * @throws {InternalServerErrorException} If the customer does not exist and cannot be created.
    */
-  async getOrCreateCustomer(res: Response, DTFSCustomerDto: DTFSCustomerDto): Promise<GetCustomersResponse> {
+  async getOrCreateCustomer(res: Response, dtfsCustomerDto: DTFSCustomerDto): Promise<GetCustomersResponse> {
     const backendQuery: GetCustomersInformaticaQueryDto = {
-      companyreg: DTFSCustomerDto.companyRegistrationNumber,
+      companyreg: dtfsCustomerDto.companyRegistrationNumber,
     };
 
     try {
@@ -83,17 +81,17 @@ export class CustomersService {
 
       // If the customer does exist in Informatica
       if (existingCustomersInInformatica?.[0]) {
-        return await this.handleInformaticaResponse(res, DTFSCustomerDto, existingCustomersInInformatica);
+        return await this.handleInformaticaResponse(res, dtfsCustomerDto, existingCustomersInInformatica);
       }
 
       throw new InternalServerErrorException();
     } catch (error) {
       // If the customer does not exist in Informatica
       if (error instanceof NotFoundException) {
-        await this.handleInformaticaCustomerNotFound(res, DTFSCustomerDto);
-      } else {
-        throw error;
+        return await this.handleInformaticaCustomerNotFound(res, dtfsCustomerDto);
       }
+
+      throw error;
     }
   }
 
@@ -101,86 +99,86 @@ export class CustomersService {
    * Handles the response when a customer is found in Informatica.
    *
    * @param {Response} res - The HTTP response object to send as the response.
-   * @param {DTFSCustomerDto} DTFSCustomerDto - The DTO containing customer details.
+   * @param {DTFSCustomerDto} dtfsCustomerDto - The DTO containing customer details.
    * @param {any[]} existingCustomersInInformatica - List of existing customers found in Informatica.
    * @returns {Promise<GetCustomersResponse>} A promise that resolves to the customer response items.
    */
-  private async handleInformaticaResponse(res, DTFSCustomerDto, existingCustomersInInformatica): Promise<GetCustomersResponse> {
+  private async handleInformaticaResponse(res, dtfsCustomerDto, existingCustomersInInformatica): Promise<GetCustomersResponse> {
     if (existingCustomersInInformatica[0]?.isLegacyRecord === false) {
       // If the customer exists as a non-legacy record in Salesforce (via Informatica)
       return res.status(HttpStatusCode.Ok).json(
-        existingCustomersInInformatica.map(
-          (customerInInformatica): GetCustomersResponseItem => ({
-            customerType: customerInInformatica.customerType,
-            partyUrn: customerInInformatica?.partyUrn,
-            name: customerInInformatica?.name,
-            sfId: customerInInformatica?.sfId,
-            companyRegNo: customerInInformatica?.companyRegNo,
-            type: customerInInformatica?.type,
-            subtype: customerInInformatica?.subtype,
-            isLegacyRecord: customerInInformatica?.isLegacyRecord,
+        existingCustomersInInformatica.map((customerInInformatica): GetCustomersResponseItem => ({
+          customerType: customerInInformatica.customerType,
+          partyUrn: customerInInformatica?.partyUrn,
+          name: customerInInformatica?.name,
+          sfId: customerInInformatica?.sfId,
+          companyRegNo: customerInInformatica?.companyRegNo,
+          type: customerInInformatica?.type,
+          subtype: customerInInformatica?.subtype,
+          isLegacyRecord: customerInInformatica?.isLegacyRecord,
 
-            // TODO [APIM-616]: Return below from Informatica
-            // probabilityOfDefault: DTFSCustomerDto?.probabilityOfDefault,
-            // ukEntity: DTFSCustomerDto?.ukEntity,
-            // ukefIndustryName: DTFSCustomerDto?.ukefIndustryName,
-            // ukefSectorName: DTFSCustomerDto?.ukefSectorName,
-            // riskEntity: DTFSCustomerDto?.riskEntity,
-            // classificationStatus: DTFSCustomerDto?.classificationStatus,
-            // classificationStatusDate: DTFSCustomerDto?.classificationStatusDate,
-          }),
-        ),
+          // TODO [APIM-616]: Return below from Informatica
+          // probabilityOfDefault: dtfsCustomerDto?.probabilityOfDefault,
+          // ukEntity: dtfsCustomerDto?.ukEntity,
+          // ukefIndustryName: dtfsCustomerDto?.ukefIndustryName,
+          // ukefSectorName: dtfsCustomerDto?.ukefSectorName,
+          // riskEntity: dtfsCustomerDto?.riskEntity,
+          // classificationStatus: dtfsCustomerDto?.classificationStatus,
+          // classificationStatusDate: dtfsCustomerDto?.classificationStatusDate,
+        })),
       );
     }
 
     if (existingCustomersInInformatica[0]?.isLegacyRecord === true) {
       if (existingCustomersInInformatica[0]?.partyUrn) {
         // If the customer only exists as a legacy record in Salesforce (fetched via Informatica) and has a URN
-        await this.createCustomerWithLegacyURN(res, DTFSCustomerDto, existingCustomersInInformatica);
-      } else {
-        // If the customer only exists as a legacy record in Salesforce (fetched via Informatica) but has no URN
-        await this.createCustomerByURN(res, DTFSCustomerDto);
+        return await this.createCustomerWithLegacyURN(res, dtfsCustomerDto, existingCustomersInInformatica);
       }
+
+      // If the customer only exists as a legacy record in Salesforce (fetched via Informatica) but has no URN
+      return await this.createCustomerByURN(res, dtfsCustomerDto);
     }
+
+    return undefined;
   }
 
   /**
    * Creates a customer record using the legacy URN from Informatica.
    *
    * @param {Response} res - The HTTP response object to send as the response.
-   * @param {DTFSCustomerDto} DTFSCustomerDto - The DTO containing customer details.
+   * @param {DTFSCustomerDto} dtfsCustomerDto - The DTO containing customer details.
    * @param {any[]} existingCustomersInInformatica - List of existing customers found in Informatica.
    * @returns {Promise<void>}
    */
-  private async createCustomerWithLegacyURN(res, DTFSCustomerDto, existingCustomersInInformatica) {
-    await this.createCustomerByURN(res, DTFSCustomerDto, existingCustomersInInformatica);
+  private async createCustomerWithLegacyURN(res, dtfsCustomerDto, existingCustomersInInformatica) {
+    return await this.createCustomerByURN(res, dtfsCustomerDto, existingCustomersInInformatica);
   }
 
   /**
    * Creates a customer record, creating a new URN as it does so.
    *
    * @param {Response} res - The HTTP response object to send as the response.
-   * @param {DTFSCustomerDto} DTFSCustomerDto - The DTO containing customer details.
+   * @param {DTFSCustomerDto} dtfsCustomerDto - The DTO containing customer details.
    * @returns {Promise<void>}
    */
-  private async handleInformaticaCustomerNotFound(res, DTFSCustomerDto) {
-    await this.createCustomerByURN(res, DTFSCustomerDto);
+  private async handleInformaticaCustomerNotFound(res, dtfsCustomerDto) {
+    return await this.createCustomerByURN(res, dtfsCustomerDto);
   }
 
   /**
    * Creates a customer record using a generated or existing URN.
    *
    * @param {Response} res - The HTTP response object to send as the response.
-   * @param {DTFSCustomerDto} DTFSCustomerDto - The DTO containing customer details.
+   * @param {DTFSCustomerDto} dtfsCustomerDto - The DTO containing customer details.
    * @param {any[] | null} existingCustomersInInformatica - List of existing customers found in Informatica or null.
    * @returns {Promise<void>}
    */
-  private async createCustomerByURN(res, DTFSCustomerDto, existingCustomersInInformatica = null) {
+  private async createCustomerByURN(res, dtfsCustomerDto, existingCustomersInInformatica = null) {
     let partyUrn: string;
     let isLegacyRecord: boolean;
 
     // TODO: replace this with a call to Salesforce's NUMGEN table once that's in place
-    const dunsNumber = await this.dunAndBradstreetService.getDunAndBradstreetNumberByRegistrationNumber(DTFSCustomerDto.companyRegistrationNumber);
+    const dunsNumber = await this.dunAndBradstreetService.getDunAndBradstreetNumberByRegistrationNumber(dtfsCustomerDto.companyRegistrationNumber);
 
     if (existingCustomersInInformatica) {
       isLegacyRecord = true;
@@ -202,21 +200,21 @@ export class CustomersService {
       }
     }
 
-    const createdCustomer = await this.createCustomerByURNAndDUNS(DTFSCustomerDto, partyUrn, dunsNumber, isLegacyRecord);
+    const createdCustomer = await this.createCustomerByURNAndDUNS(dtfsCustomerDto, partyUrn, dunsNumber, isLegacyRecord);
     return res.status(HttpStatusCode.Created).json(createdCustomer);
   }
 
   /**
    * Creates a customer record using the provided name, company registration number, URN, DUNS number, and legacy status.
    *
-   * @param {DTFSCustomerDto} DTFSCustomerDto - The DTO containing customer details.
+   * @param {DTFSCustomerDto} dtfsCustomerDto - The DTO containing customer details.
    * @param {string} partyUrn - The unique party URN for the customer.
    * @param {string} dunsNumber - The DUNS number for the customer.
    * @param {boolean} isLegacyRecord - Indicates if the record is a legacy record.
    * @returns {Promise<GetCustomersResponse>} A promise that resolves to the created customer response items.
    */
   private async createCustomerByURNAndDUNS(
-    DTFSCustomerDto: DTFSCustomerDto,
+    dtfsCustomerDto: DTFSCustomerDto,
     partyUrn: string,
     dunsNumber: string,
     isLegacyRecord: boolean,
@@ -225,21 +223,21 @@ export class CustomersService {
 
     const createCustomerDto: CreateCustomerDto = {
       CCM_Assigned_Rating__c: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
-      CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity,
+      CCM_Citizenship_Class__c: dtfsCustomerDto.ukEntity,
       CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
       CCM_Credit_Risk_Rating_Date__c: salesForceDate,
-      CCM_Customer_Type__c: DTFSCustomerDto.customerType,
-      CCM_Industry__c: DTFSCustomerDto.ukefIndustryName,
-      CCM_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
+      CCM_Customer_Type__c: dtfsCustomerDto.customerType,
+      CCM_Industry__c: dtfsCustomerDto.ukefIndustryName,
+      CCM_Industry_Group__c: dtfsCustomerDto.ukefSectorName,
       CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
-      CCM_Primary_Industry__c: DTFSCustomerDto.ukefIndustryName,
-      CCM_Primary_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
-      CCM_Probability_of_Default__c: DTFSCustomerDto.probabilityOfDefault,
+      CCM_Primary_Industry__c: dtfsCustomerDto.ukefIndustryName,
+      CCM_Primary_Industry_Group__c: dtfsCustomerDto.ukefSectorName,
+      CCM_Probability_of_Default__c: dtfsCustomerDto.probabilityOfDefault,
       CCM_Watch_List__c: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
       CCM_Watch_List_Date__c: salesForceDate,
-      Company_Registration_Number__c: DTFSCustomerDto.companyRegistrationNumber,
+      Company_Registration_Number__c: dtfsCustomerDto.companyRegistrationNumber,
       D_B_Number__c: dunsNumber,
-      Name: DTFSCustomerDto.companyName,
+      Name: dtfsCustomerDto.companyName,
       Party_URN__c: partyUrn,
     };
 
@@ -247,21 +245,21 @@ export class CustomersService {
 
     return [
       {
-        companyRegNo: DTFSCustomerDto.companyRegistrationNumber,
+        companyRegNo: dtfsCustomerDto.companyRegistrationNumber,
         creditClassificationDate: salesForceDate,
         creditClassificationStatus: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
-        customerType: DTFSCustomerDto.customerType,
+        customerType: dtfsCustomerDto.customerType,
         isLegacyRecord,
-        name: DTFSCustomerDto.companyName,
+        name: dtfsCustomerDto.companyName,
         partyUrn,
-        probabilityOfDefault: DTFSCustomerDto.probabilityOfDefault,
+        probabilityOfDefault: dtfsCustomerDto.probabilityOfDefault,
         riskEntity: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
         sfId: salesforceCreateCustomerResponse?.success ? salesforceCreateCustomerResponse.id : null,
         subtype: null,
         type: null,
-        ukefIndustryName: DTFSCustomerDto.ukefIndustryName,
-        ukefSectorName: DTFSCustomerDto.ukefSectorName,
-        ukEntity: DTFSCustomerDto.ukEntity,
+        ukefIndustryName: dtfsCustomerDto.ukefIndustryName,
+        ukefSectorName: dtfsCustomerDto.ukefSectorName,
+        ukEntity: dtfsCustomerDto.ukEntity,
       },
     ];
   }

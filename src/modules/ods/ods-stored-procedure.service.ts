@@ -52,8 +52,6 @@ export class OdsStoredProcedureService {
       );
 
       return result[0]?.output_body || null;
-    } catch (error) {
-      throw error;
     } finally {
       await queryRunner.release();
     }

@@ -3,7 +3,7 @@ import { Transform } from 'class-transformer';
 import { IsInt, IsNotEmpty, IsString, Matches, Max, Min } from 'class-validator';
 
 export class GetNumbersQueryDto {
-  @Transform(({ value }) => parseInt(value))
+  @Transform(({ value }) => parseInt(value, 10))
   @IsInt()
   @IsNotEmpty()
   @Min(1)

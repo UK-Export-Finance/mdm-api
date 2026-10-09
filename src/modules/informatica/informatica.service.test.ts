@@ -82,13 +82,13 @@ describe('InformaticaService', () => {
         query: { name: 'Company %26@/;%<>=', includeLegacyData: 'yes' },
         expectedUrlQueryPart: '?name=Company+%2526%40%2F%3B%25%3C%3E%3D&includeLegacyData=yes',
       },
-    ])('call informatica with correct and safe query parameters "$expectedUrlQueryPart"', async ({ query, expectedUrlQueryPart }) => {
-      const expectedPath = `${customerBasePath}${expectedUrlQueryPart}`;
+    ])('call informatica with correct and safe query parameters "$expectedUrlQueryPart"', async ({ query: innerQuery, expectedUrlQueryPart }) => {
+      const expectedPathForQuery = `${customerBasePath}${expectedUrlQueryPart}`;
 
-      const expectedHttpServiceGetArgs: [string, object] = [expectedPath, { headers: { 'Content-Type': 'application/json' } }];
+      const expectedHttpServiceGetArgsForQuery: [string, object] = [expectedPathForQuery, { headers: { 'Content-Type': 'application/json' } }];
 
       when(httpServiceGet)
-        .calledWith(...expectedHttpServiceGetArgs)
+        .calledWith(...expectedHttpServiceGetArgsForQuery)
         .mockReturnValueOnce(
           of({
             data: expectedResponse,
@@ -99,10 +99,10 @@ describe('InformaticaService', () => {
           }),
         );
 
-      await service.getCustomers(query);
+      await service.getCustomers(innerQuery);
 
       expect(httpServiceGet).toHaveBeenCalledTimes(1);
-      expect(httpServiceGet).toHaveBeenCalledWith(...expectedHttpServiceGetArgs);
+      expect(httpServiceGet).toHaveBeenCalledWith(...expectedHttpServiceGetArgsForQuery);
     });
 
     it('returns 404 Not Found if informatica responds with 404', async () => {

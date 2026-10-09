@@ -21,17 +21,17 @@ export class MarketsService {
 
       if (active) {
         if (active === 'Y') {
-          results = results.filter((results: { ACTIVE_IND: string }) => results.ACTIVE_IND === 'Y');
+          results = results.filter((market: { ACTIVE_IND: string }) => market.ACTIVE_IND === 'Y');
         } else {
-          results = results.filter((results: { ACTIVE_IND: string }) => results.ACTIVE_IND !== 'Y');
+          results = results.filter((market: { ACTIVE_IND: string }) => market.ACTIVE_IND !== 'Y');
         }
       }
 
       if (search) {
         const searchLowerCase = search.toLowerCase();
         results = results.filter(
-          (results: { COUNTRY_NAME: string; ISO_CODE: string }) =>
-            results.COUNTRY_NAME.toLowerCase().includes(searchLowerCase) || results.ISO_CODE.toLowerCase().includes(searchLowerCase),
+          (market: { COUNTRY_NAME: string; ISO_CODE: string }) =>
+            market.COUNTRY_NAME.toLowerCase().includes(searchLowerCase) || market.ISO_CODE.toLowerCase().includes(searchLowerCase),
         );
       }
 

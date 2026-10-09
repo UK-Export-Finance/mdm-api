@@ -78,13 +78,13 @@ describe('redactStringsInLogArgs', () => {
 
     it('replaces sensitive data in input object using regex', () => {
       // Arrange
-      const redactStrings = [{ searchValue: /(Login failed for user ').*(')/g, replaceValue: '$1[Redacted]$2' }];
+      const regexRedactStrings = [{ searchValue: /(Login failed for user ').*(')/g, replaceValue: '$1[Redacted]$2' }];
       const otherSensitiveValue = valueGenerator.word();
 
       const messageforRegex = `Connection error: Login failed for user '${otherSensitiveValue}'`;
-      const redactedMessage = `Connection error: Login failed for user '[Redacted]'`;
+      const redactedRegexMessage = `Connection error: Login failed for user '[Redacted]'`;
 
-      const args = [
+      const regexArgs = [
         {
           message: messageforRegex,
           stack: messageforRegex,
@@ -95,25 +95,25 @@ describe('redactStringsInLogArgs', () => {
       ];
 
       // Act
-      const result = redactStringsInLogArgs(true, REDACT_STRING_PATHS, redactStrings, args);
+      const result = redactStringsInLogArgs(true, REDACT_STRING_PATHS, regexRedactStrings, regexArgs);
 
       // Assert
-      const expectedResult = [
+      const expectedRegexResult = [
         {
-          message: redactedMessage,
-          stack: redactedMessage,
+          message: redactedRegexMessage,
+          stack: redactedRegexMessage,
           originalError: {
-            message: redactedMessage,
+            message: redactedRegexMessage,
           },
         },
       ];
 
-      expect(result).toStrictEqual(expectedResult);
+      expect(result).toStrictEqual(expectedRegexResult);
     });
 
     it('replaces sensitive data in different input object', () => {
       // Arrange
-      const args = [
+      const fieldArgs = [
         {
           field1: message,
           field2: {
@@ -126,7 +126,7 @@ describe('redactStringsInLogArgs', () => {
       const redactPaths = ['field1', 'field2.field3'];
 
       // Act
-      const result = redactStringsInLogArgs(true, redactPaths, redactStrings, args);
+      const result = redactStringsInLogArgs(true, redactPaths, redactStrings, fieldArgs);
 
       // Assert
       const expected = [
