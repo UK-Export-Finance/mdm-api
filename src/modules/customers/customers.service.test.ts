@@ -39,16 +39,27 @@ const salesForceDate = salesforceFormattedCurrentDate();
 const basePayload = {
   companyRegistrationNumber,
   companyName,
-  customerType,
 };
 
 const customerWithPod: DTFSCustomerDto = {
   ...basePayload,
   probabilityOfDefault,
 };
+
 const customerWithoutPod: DTFSCustomerDto = {
   ...basePayload,
 };
+
+const customerWithCustomerType: DTFSCustomerDto = {
+  ...basePayload,
+  probabilityOfDefault,
+  customerType,
+};
+
+const customerWithoutCustomerType: DTFSCustomerDto = {
+  ...basePayload,
+};
+
 const customerWithFullPayload: DTFSCustomerDto = {
   ...basePayload,
   probabilityOfDefault,
@@ -267,7 +278,7 @@ describe('CustomerService', () => {
             pod: customerWithPod.probabilityOfDefault,
           },
           {
-            DTFSCustomerDto: customerWithoutPod,
+            DTFSCustomerDto: customerWithoutCustomerType,
             pod: customerWithoutPod.probabilityOfDefault,
           },
         ])(
@@ -277,6 +288,7 @@ describe('CustomerService', () => {
             const mockSalesforceResponse = [
               {
                 ...createLegacyCustomerWithUrn[0],
+                customerType: DTFSCustomerDto.customerType,
                 probabilityOfDefault: DTFSCustomerDto.probabilityOfDefault,
               },
             ];
@@ -304,7 +316,6 @@ describe('CustomerService', () => {
                 CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity,
                 CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
                 CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
-                CCM_Customer_Type__c: DTFSCustomerDto.customerType,
                 CCM_Industry__c: DTFSCustomerDto.ukefIndustryName,
                 CCM_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
                 CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
@@ -325,6 +336,34 @@ describe('CustomerService', () => {
             expect(numbersServiceCreate).toHaveBeenCalledTimes(0);
           },
         );
+
+        describe('when customerType is provided', () => {
+          it('should call salesforceServiceCreateCustomer with the customerType', async () => {
+            // Arrange
+            when(salesforceServiceCreateCustomer).calledWith(expect.any(Object)).mockResolvedValueOnce(salesforceCreateCustomerResponse);
+            when(numbersServiceCreate).calledWith(expect.any(Object)).mockResolvedValueOnce(createUkefIdResponse);
+            when(dunAndBradstreetServiceGetDunsNumber).calledWith(expect.any(String)).mockResolvedValueOnce(dunAndBradstreetGetDunsNumberResponse);
+            when(informaticaServiceGetCustomers)
+              .calledWith({
+                companyreg: customerWithPod.companyRegistrationNumber,
+              })
+              .mockResolvedValueOnce(getCustomersResponse[0]);
+
+            // Act
+            await service.getOrCreateCustomer(mockResponseObject, customerWithCustomerType);
+
+            // Assert
+            expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(
+              expect.objectContaining({
+                CCM_Customer_Type__c: customerWithCustomerType.customerType,
+              }),
+            );
+
+            expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(1);
+            expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(1);
+            expect(numbersServiceCreate).toHaveBeenCalledTimes(0);
+          });
+        });
 
         it('throws an error if Salesforce service fails to create a customer', async () => {
           // Arrange
@@ -399,6 +438,7 @@ describe('CustomerService', () => {
             const mockSalesforceResponse = [
               {
                 ...createLegacyCustomerWithNoUrn[0],
+                customerType: DTFSCustomerDto.customerType,
                 probabilityOfDefault: DTFSCustomerDto.probabilityOfDefault,
               },
             ];
@@ -428,7 +468,6 @@ describe('CustomerService', () => {
                 CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity,
                 CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
                 CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
-                CCM_Customer_Type__c: DTFSCustomerDto.customerType,
                 CCM_Industry__c: DTFSCustomerDto.ukefIndustryName,
                 CCM_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
                 CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
@@ -474,6 +513,7 @@ describe('CustomerService', () => {
             response: [
               {
                 ...createLegacyCustomerWithNoUrn[0],
+                customerType: customerWithPod.customerType,
               },
             ],
           },
@@ -484,6 +524,7 @@ describe('CustomerService', () => {
             response: [
               {
                 ...createLegacyCustomerWithNoUrn[0],
+                customerType: customerWithoutPod.customerType,
                 probabilityOfDefault: undefined,
               },
             ],
@@ -495,6 +536,7 @@ describe('CustomerService', () => {
             response: [
               {
                 ...createNewCustomerWithUrn[0],
+                customerType: customerWithFullPayload.customerType,
               },
             ],
           },
@@ -523,7 +565,6 @@ describe('CustomerService', () => {
               CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity,
               CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
               CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
-              CCM_Customer_Type__c: DTFSCustomerDto.customerType,
               CCM_Industry__c: DTFSCustomerDto.ukefIndustryName,
               CCM_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
               CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
@@ -554,6 +595,7 @@ describe('CustomerService', () => {
             response: [
               {
                 ...createLegacyCustomerWithNoUrn[0],
+                customerType: customerWithPod.customerType,
                 partyUrn: null,
               },
             ],
@@ -565,6 +607,7 @@ describe('CustomerService', () => {
             response: [
               {
                 ...createLegacyCustomerWithNoUrn[0],
+                customerType: customerWithoutPod.customerType,
                 probabilityOfDefault: undefined,
                 partyUrn: null,
               },
@@ -577,6 +620,7 @@ describe('CustomerService', () => {
             response: [
               {
                 ...createNewCustomerWithUrn[0],
+                customerType: customerWithFullPayload.customerType,
                 partyUrn: null,
               },
             ],
@@ -606,7 +650,6 @@ describe('CustomerService', () => {
               CCM_Citizenship_Class__c: DTFSCustomerDto.ukEntity,
               CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
               CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
-              CCM_Customer_Type__c: DTFSCustomerDto.customerType,
               CCM_Industry__c: DTFSCustomerDto.ukefIndustryName,
               CCM_Industry_Group__c: DTFSCustomerDto.ukefSectorName,
               CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,

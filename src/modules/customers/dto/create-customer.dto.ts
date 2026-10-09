@@ -45,10 +45,10 @@ export class CreateCustomerDto {
     example: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
   })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @MinLength(1)
   @MaxLength(200)
-  CCM_Customer_Type__c: string;
+  CCM_Customer_Type__c?: string;
 
   @ApiProperty({
     description: 'UKEF industry identifier',
