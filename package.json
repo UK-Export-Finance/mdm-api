@@ -9,7 +9,7 @@
     "api-test": "jest --selectProjects=API",
     "audit:fix": "npm audit --fix",
     "build": "nest build -p tsconfig.build.json",
-    "housekeeping": "npm update --save --legacy-peer-deps && npm i --legacy-peer-deps && npm run type-check && npm run prettier:fix && npm run lint:fix && npm run validate:yml && npm run audit:fix && npm run spellcheck",
+    "housekeeping": "npm update --save && npm i && npm run type-check && npm run prettier:fix && npm run lint:fix && npm run validate:yml && npm run audit:fix && npm run spellcheck",
     "lint": "eslint . --ext .js,.ts",
     "lint:fix": "eslint . --ext .js,.ts --fix",
     "prettier": "prettier --no-error-on-unmatched-pattern --check **/*.{ts,js}",
