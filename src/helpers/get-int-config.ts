@@ -14,7 +14,7 @@ export const getIntConfig = (environmentVariable: string, defaultValue?: number)
     throw new InvalidConfigException(`Input environment variable type for ${environmentVariable} should be a string.`);
   }
 
-  const integer = parseInt(environmentVariable, 10);
+  const integer = Number.parseInt(environmentVariable, 10);
 
   // Check if parseInt is number, decimal base integer and input didn't have anything non-numeric.
   if (Number.isNaN(integer) || integer.toString() !== environmentVariable) {

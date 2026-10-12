@@ -40,7 +40,7 @@ export class MarketsService {
 
       const mappedResults = renamedFields.map((market: any) => ({
         ...market,
-        oecdRiskCategory: parseInt(market.oecdRiskCategory.replace(/\D/g, ''), 10),
+        oecdRiskCategory: Number.parseInt(market.oecdRiskCategory.replace(/\D/g, ''), 10),
       }));
 
       return mappedResults;
