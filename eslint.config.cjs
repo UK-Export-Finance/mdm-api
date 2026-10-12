@@ -5,9 +5,7 @@ const tsParser = require('@typescript-eslint/parser');
 const typescriptEslint = require('@typescript-eslint/eslint-plugin');
 const noRelativeImportPaths = require('eslint-plugin-no-relative-import-paths');
 const checkFile = require('eslint-plugin-check-file');
-const eslintConfigAirbnbExtended = require('eslint-config-airbnb-extended');
 
-const { configs, plugins, rules } = eslintConfigAirbnbExtended;
 const prettierConfig = require('eslint-config-prettier');
 const prettierPlugin = require('eslint-plugin-prettier');
 
@@ -31,15 +29,6 @@ module.exports = defineConfig([
     name: 'js/config',
     ...js.configs.recommended,
   },
-  plugins.stylistic,
-  plugins.importX,
-  ...configs.base.recommended,
-  rules.base.importsStrict,
-  plugins.node,
-  ...configs.node.recommended,
-  plugins.typescriptEslint,
-  ...configs.base.typescript,
-  rules.typescript.typescriptEslintStrict,
   {
     name: 'prettier/plugin/config',
     plugins: {
