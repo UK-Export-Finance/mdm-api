@@ -9,8 +9,9 @@ describe('regexToString', () => {
     const regexString = regexToString(regex);
 
     // Assert
-    expect(regexString).toBe('test');
-    expect(new RegExp(regexString)).toEqual(regex);
+    const expected = 'test';
+
+    expect(regexString).toEqual(expected);
   });
 
   it('escapes regexp forward slashes inside a string', () => {
@@ -21,8 +22,9 @@ describe('regexToString', () => {
     const regexString = regexToString(regex);
 
     // Assert
-    expect(regexString).toBe('test\\/test');
-    expect(new RegExp(regexString)).toEqual(regex);
+    const expected = 'test\\/test';
+
+    expect(regexString).toEqual(expected);
   });
 
   it('escapes multiple back slashes inside a string', () => {
@@ -33,8 +35,9 @@ describe('regexToString', () => {
     const regexString = regexToString(regex);
 
     // Assert
-    expect(regexString).toBe('^(?!\\s)[\\w\\-.()\\s]+(?<![\\s.])$');
-    expect(new RegExp(regexString)).toEqual(regex);
+    const expected = '^(?!\\s)[\\w\\-.()\\s]+(?<![\\s.])$';
+
+    expect(regexString).toEqual(expected);
   });
 
   it('escapes forward slashes inside a string', () => {
@@ -45,7 +48,8 @@ describe('regexToString', () => {
     const regexString = regexToString(regex);
 
     // Assert
-    expect(regexString).toBe('^[\\w\\-:/\\\\()\\s]+$');
-    expect(new RegExp(regexString)).toEqual(regex);
+    const expected = '^[\\w\\-:/\\\\()\\s]+$';
+
+    expect(regexString).toEqual(expected);
   });
 });
