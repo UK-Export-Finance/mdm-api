@@ -1,20 +1,35 @@
 import { get, set } from 'lodash';
 
-const redactString = (redactStrings: { searchValue: string | RegExp; replaceValue: string }[], string: string): string => {
+type RedactStringsParams = {
+  searchValue: string | RegExp;
+  replaceValue: string;
+};
+
+/**
+ * Redacts sensitive information from a string based on the provided search and replace values.
+ * @param {RedactStringsParams} redactStrings - An array of objects containing search and replace values for redaction.
+ * @param {string} string - The string to be redacted.
+ * @returns {string} The redacted string.
+ */
+const redactString = (redactStrings: RedactStringsParams[], string: string): string => {
   let safeString: string = string;
+
   redactStrings.forEach((redact) => {
     safeString = safeString.replaceAll(redact.searchValue, redact.replaceValue);
   });
+
   return safeString;
 };
 
-// This helper function is used to redact sensitive data in Error object strings.
-export const redactStringsInLogArgs = (
-  redactLogs: boolean,
-  redactPaths: string[],
-  redactStrings: { searchValue: string | RegExp; replaceValue: string }[],
-  args: any[],
-): any => {
+/**
+ * Redacts sensitive information from the provided log arguments based on the specified paths and redaction rules.
+ * @param {boolean} redactLogs - Indicates whether redaction should be applied to the log arguments.
+ * @param {string[]} redactPaths - An array of paths within the log arguments that should be redacted.
+ * @param {RedactStringsParams[]} redactStrings - An array of objects containing search and replace values for redaction.
+ * @param {any[]} args - The log arguments to be redacted.
+ * @returns {any[]} The redacted log arguments.
+ */
+export const redactStringsInLogArgs = (redactLogs: boolean, redactPaths: string[], redactStrings: RedactStringsParams[], args: any[]): any => {
   if (!redactLogs) {
     return args;
   }

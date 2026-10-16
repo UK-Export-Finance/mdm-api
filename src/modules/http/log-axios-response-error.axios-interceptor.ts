@@ -8,6 +8,7 @@ import { AxiosResponseErrorInterceptor } from './type/axios-response-error-inter
 const buildAxiosResponseLogInput = (error: AxiosError): { object: unknown; message: string } => {
   const responseFromServer = error.response;
   const receivedResponseFromServer = !!responseFromServer;
+
   return receivedResponseFromServer
     ? {
         object: { [INCOMING_RESPONSE_LOG_KEY]: filterAxiosResponseForLogging(responseFromServer) },
@@ -20,6 +21,8 @@ export const logAxiosResponseErrorWith =
   (logger: PinoLogger): AxiosResponseErrorInterceptor =>
   (error: AxiosError) => {
     const logInput = buildAxiosResponseLogInput(error);
-    logger.warn(logInput.object, logInput.message);
+
+    logger.warn(`${logInput.message} %o`, logInput.object);
+
     return Promise.reject(error);
   };

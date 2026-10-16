@@ -21,7 +21,7 @@ const main = async () => {
 
     await app.listen();
   } catch (error) {
-    logger.error('❌ An error was encountered', error instanceof Error ? error.stack : String(error));
+    logger.error('❌ An error was encountered %o', error instanceof Error ? error.stack : String(error));
   }
 };
 
