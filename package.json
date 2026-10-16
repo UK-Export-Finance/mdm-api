@@ -53,7 +53,7 @@
     "@nestjs/platform-express": "^11.1.19",
     "@nestjs/swagger": "^11.2.7",
     "@nestjs/terminus": "^11.1.1",
-    "@nestjs/typeorm": "^11.0.1",
+    "@nestjs/typeorm": "^12.0.2",
     "@types/express": "5.0.6",
     "axios": "^1.15.0",
     "class-transformer": "^0.5.1",
