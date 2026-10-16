@@ -22,7 +22,7 @@ export const logAxiosResponseErrorWith =
   (error: AxiosError) => {
     const logInput = buildAxiosResponseLogInput(error);
 
-    logger.warn(`${logInput.message} %o`, logInput.object);
+    logger.warn('%s %o', logInput.message, logInput.object);
 
     return Promise.reject(error);
   };

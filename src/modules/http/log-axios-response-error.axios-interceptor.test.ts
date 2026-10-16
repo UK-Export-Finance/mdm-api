@@ -56,7 +56,7 @@ describe('logAxiosResponseError', () => {
     it('logs the full error at warn level', async () => {
       await logAxiosResponseError(errorWithoutResponse).catch(() => {});
 
-      expect(mockLogger.warn).toHaveBeenCalledWith(errorWithoutResponse, 'A HTTP server failed to respond to our request.');
+      expect(mockLogger.warn).toHaveBeenCalledWith('%s %o', 'A HTTP server failed to respond to our request.', errorWithoutResponse);
     });
 
     it('rejects with the original error', async () => {
@@ -70,10 +70,9 @@ describe('logAxiosResponseError', () => {
     it('logs the filtered response at warn level using key INCOMING_RESPONSE_LOG_KEY', async () => {
       await logAxiosResponseError(errorWithResponse).catch(() => {});
 
-      expect(mockLogger.warn).toHaveBeenCalledWith(
-        { [INCOMING_RESPONSE_LOG_KEY]: filteredResponse },
-        'A HTTP server responded to our request with an error response.',
-      );
+      expect(mockLogger.warn).toHaveBeenCalledWith('%s %o', 'A HTTP server responded to our request with an error response.', {
+        [INCOMING_RESPONSE_LOG_KEY]: filteredResponse,
+      });
     });
 
     it('rejects with the original error', async () => {
