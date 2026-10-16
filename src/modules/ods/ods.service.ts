@@ -1,4 +1,5 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { PinoLogger } from 'nestjs-pino';
 import { COMPANIES, STORED_PROCEDURE } from '@ukef/constants';
 import {
   isStoredProcedureResultEmpty,
@@ -14,17 +15,16 @@ import { mapDomCompoundingIndices } from '@ukef/helpers/map-dom-compounding-indi
 import { mapDomCurrencies } from '@ukef/helpers/map-dom-currencies';
 import { mapDomInterestRateTickers } from '@ukef/helpers/map-dom-interest-rate-tickers';
 import { mapDomInterestRates } from '@ukef/helpers/map-dom-interest-rates';
-import { PinoLogger } from 'nestjs-pino';
 
-import { FindOdsBusinessCentreOdsResponse } from '../dom/dto';
-import { GetDomCompoundingIndexOdsResponseDto } from '../dom/dto/get-dom-compounding-index-ods-response.dto';
-import { GetDomCompoundingIndexResponseDto } from '../dom/dto/get-dom-compounding-index-response.dto';
-import { GetDomCurrencyOdsResponseDto } from '../dom/dto/get-dom-currency-ods-response.dto';
-import { GetDomCurrencyResponseDto } from '../dom/dto/get-dom-currency-response.dto';
-import { GetDomInterestRateOdsResponseDto } from '../dom/dto/get-dom-interest-rate-ods-response.dto';
-import { GetDomInterestRateResponseDto } from '../dom/dto/get-dom-interest-rate-response.dto';
-import { GetDomInterestRateTickersDomResponseDto } from '../dom/dto/get-dom-interest-rate-tickers-dom-response.dto';
-import { GetDomInterestRateTickersResponseDto } from '../dom/dto/get-dom-interest-rate-tickers-response.dto';
+import { FindOdsBusinessCentreOdsResponse } from '@ukef/modules/dom/dto';
+import { GetDomCompoundingIndexOdsResponseDto } from '@ukef/modules/dom/dto/get-dom-compounding-index-ods-response.dto';
+import { GetDomCompoundingIndexResponseDto } from '@ukef/modules/dom/dto/get-dom-compounding-index-response.dto';
+import { GetDomCurrencyOdsResponseDto } from '@ukef/modules/dom/dto/get-dom-currency-ods-response.dto';
+import { GetDomCurrencyResponseDto } from '@ukef/modules/dom/dto/get-dom-currency-response.dto';
+import { GetDomInterestRateOdsResponseDto } from '@ukef/modules/dom/dto/get-dom-interest-rate-ods-response.dto';
+import { GetDomInterestRateResponseDto } from '@ukef/modules/dom/dto/get-dom-interest-rate-response.dto';
+import { GetDomInterestRateTickersDomResponseDto } from '@ukef/modules/dom/dto/get-dom-interest-rate-tickers-dom-response.dto';
+import { GetDomInterestRateTickersResponseDto } from '@ukef/modules/dom/dto/get-dom-interest-rate-tickers-response.dto';
 import {
   GetFeeTypeOdsResponseDto,
   GetFeeTypeResponseDto,

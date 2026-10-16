@@ -67,7 +67,7 @@ export class PostEmailsGenerator extends AbstractGenerator<PostEmailsValues, Gen
   }
 }
 
-interface PostEmailsValues {
+type PostEmailsValues = {
   templateId: string;
   reference: string;
   sendTransactionId: string;
@@ -80,12 +80,12 @@ interface PostEmailsValues {
     firstName: string;
     lastName: string;
   };
-}
+};
 
 type GenerateOptions = object;
 
-interface GenerateResult {
+type GenerateResult = {
   requests: PostEmailsRequestDto[];
   mdmPath: string;
   postEmailsResponse: PostEmailsResponseDto[];
-}
+};

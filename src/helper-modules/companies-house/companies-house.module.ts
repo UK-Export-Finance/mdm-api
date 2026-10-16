@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { CompaniesHouseConfig } from '@ukef/config/companies-house.config';
+import { CompaniesHouseConfigType } from '@ukef/config/companies-house.config';
 import { COMPANIES_HOUSE } from '@ukef/constants';
 import { HttpModule } from '@ukef/modules/http/http.module';
 
@@ -12,7 +12,7 @@ import { CompaniesHouseService } from './companies-house.service';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const { baseUrl, maxRedirects, timeout } = configService.get<CompaniesHouseConfig>(COMPANIES_HOUSE.CONFIG.KEY);
+        const { baseUrl, maxRedirects, timeout } = configService.get<CompaniesHouseConfigType>(COMPANIES_HOUSE.CONFIG.KEY);
         return {
           baseURL: baseUrl,
           maxRedirects,

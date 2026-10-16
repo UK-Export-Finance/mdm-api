@@ -1,7 +1,7 @@
 import { InternalServerErrorException } from '@nestjs/common';
-import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
+import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
 
 import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { OdsProductConfigService } from './ods-product-config.service';
@@ -29,14 +29,14 @@ describe('OdsProductConfigService - getAll', () => {
     service = new OdsProductConfigService(odsStoredProcedureService, mockLogger);
   });
 
-  const mockStoredProcedureOutput = JSON.stringify({
-    message: STORED_PROCEDURE.SUCCESS,
-    status: STORED_PROCEDURE.SUCCESS,
-    total_result_count: mockProductConfigs.length,
-    results: mockProductConfigs,
-  });
-
   beforeEach(() => {
+    const mockStoredProcedureOutput = JSON.stringify({
+      message: STORED_PROCEDURE.SUCCESS,
+      status: STORED_PROCEDURE.SUCCESS,
+      total_result_count: mockProductConfigs.length,
+      results: mockProductConfigs,
+    });
+
     jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
   });
 

@@ -23,9 +23,9 @@ export const createWrapInformaticaHttpGetErrorCallback =
       if (errorString) {
         const errorStringInLowerCase = errorString.toLowerCase();
 
-        knownErrors.forEach(({ caseInsensitiveSubstringToFind, throwError }) => {
+        knownErrors.forEach(({ caseInsensitiveSubstringToFind, throwError: throwKnownError }) => {
           if (errorStringInLowerCase.includes(caseInsensitiveSubstringToFind.toLowerCase())) {
-            return throwError(error);
+            throwKnownError(error);
           }
         });
       }

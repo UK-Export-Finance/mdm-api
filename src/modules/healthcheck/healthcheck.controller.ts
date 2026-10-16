@@ -2,8 +2,8 @@ import { Controller, Get } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { HealthCheck, HealthCheckService, MemoryHealthIndicator, TypeOrmHealthIndicator } from '@nestjs/terminus';
 import { InjectDataSource } from '@nestjs/typeorm';
-import { DATABASE_NAME } from '@ukef/constants';
 import { DataSource } from 'typeorm';
+import { DATABASE_NAME } from '@ukef/constants';
 
 @ApiTags('healthcheck')
 @Controller('')

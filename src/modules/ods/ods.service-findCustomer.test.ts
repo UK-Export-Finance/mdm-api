@@ -1,7 +1,7 @@
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
+import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
 
 import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { OdsService } from './ods.service';
@@ -30,30 +30,30 @@ describe('OdsService - findCustomer', () => {
 
   const mockCustomer = { urn: EXAMPLES.CUSTOMER.PARTYURN, name: 'Mock Customer' };
 
-  const mockStoredProcedureOutput = `{
-    "query_request_id": "Test ID",
-    "message": "${STORED_PROCEDURE.SUCCESS}",
-    "status": "${STORED_PROCEDURE.SUCCESS}",
-    "total_result_count": 1,
-    "results": [
-      {
-        "customer_party_unique_reference_number": "${mockCustomer.urn}",
-        "customer_name": "${mockCustomer.name}",
-        "customer_companies_house_number": "12345678",
-        "customer_addresses": [
-          {
-            "customer_address_type": "Registered",
-            "customer_address_street": "Test Street",
-            "customer_address_postcode": "AA1 1BB",
-            "customer_address_country": "United Kingdom",
-            "customer_address_city": "Test City"
-          }
-        ]
-      }
-    ]
-  }`;
-
   beforeEach(() => {
+    const mockStoredProcedureOutput = `{
+      "query_request_id": "Test ID",
+      "message": "${STORED_PROCEDURE.SUCCESS}",
+      "status": "${STORED_PROCEDURE.SUCCESS}",
+      "total_result_count": 1,
+      "results": [
+        {
+          "customer_party_unique_reference_number": "${mockCustomer.urn}",
+          "customer_name": "${mockCustomer.name}",
+          "customer_companies_house_number": "12345678",
+          "customer_addresses": [
+            {
+              "customer_address_type": "Registered",
+              "customer_address_street": "Test Street",
+              "customer_address_postcode": "AA1 1BB",
+              "customer_address_country": "United Kingdom",
+              "customer_address_city": "Test City"
+            }
+          ]
+        }
+      ]
+    }`;
+
     jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
   });
 

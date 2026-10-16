@@ -1,7 +1,7 @@
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { COMPANIES, EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
+import { COMPANIES, EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
 
 import { GetSicCodeToUkefIndustryResponseDto } from './dto';
 import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
@@ -29,28 +29,28 @@ describe('OdsService - findUkefIndustryCodeByCompaniesHouseCode', () => {
     service = new OdsService(odsStoredProcedureService, mockLogger);
   });
 
-  const mockStoredProcedureOutput = `{
-    "message": "${STORED_PROCEDURE.SUCCESS}",
-    "status": "${STORED_PROCEDURE.SUCCESS}",
-    "total_result_count": 1,
-    "results": [
-      {
-        "sic_section_code": "${EXAMPLES.ODS.SIC_CODE_TO_UKEF_INDUSTRY.sic_section_code}",
-        "sic_section_legacy_code": "${EXAMPLES.ODS.SIC_CODE_TO_UKEF_INDUSTRY.sic_section_legacy_code}",
-        "sic_section_name": "${EXAMPLES.ODS.SIC_CODE_TO_UKEF_INDUSTRY.sic_section_name}",
-        "sic_industry_code": "${EXAMPLES.ODS.SIC_CODE_TO_UKEF_INDUSTRY.sic_industry_code}",
-        "sic_industry_description": "${EXAMPLES.ODS.SIC_CODE_TO_UKEF_INDUSTRY.sic_industry_description}",
-        "sic_industry_level": "${EXAMPLES.ODS.SIC_CODE_TO_UKEF_INDUSTRY.sic_industry_level}",
-        "sic_code_active_flag": ${EXAMPLES.ODS.SIC_CODE_TO_UKEF_INDUSTRY.sic_code_active_flag},
-        "ukef_industry_code": "${EXAMPLES.ODS.SIC_CODE_TO_UKEF_INDUSTRY.ukef_industry_code}",
-        "ukef_industry_description": "${EXAMPLES.ODS.SIC_CODE_TO_UKEF_INDUSTRY.ukef_industry_description}",
-        "ukef_sector_code": "${EXAMPLES.ODS.SIC_CODE_TO_UKEF_INDUSTRY.ukef_sector_code}",
-        "ukef_sector_description": "${EXAMPLES.ODS.SIC_CODE_TO_UKEF_INDUSTRY.ukef_sector_description}"
-      }
-    ]
-  }`;
-
   beforeEach(() => {
+    const mockStoredProcedureOutput = `{
+      "message": "${STORED_PROCEDURE.SUCCESS}",
+      "status": "${STORED_PROCEDURE.SUCCESS}",
+      "total_result_count": 1,
+      "results": [
+        {
+          "sic_section_code": "${EXAMPLES.ODS.SIC_CODE_TO_UKEF_INDUSTRY.sic_section_code}",
+          "sic_section_legacy_code": "${EXAMPLES.ODS.SIC_CODE_TO_UKEF_INDUSTRY.sic_section_legacy_code}",
+          "sic_section_name": "${EXAMPLES.ODS.SIC_CODE_TO_UKEF_INDUSTRY.sic_section_name}",
+          "sic_industry_code": "${EXAMPLES.ODS.SIC_CODE_TO_UKEF_INDUSTRY.sic_industry_code}",
+          "sic_industry_description": "${EXAMPLES.ODS.SIC_CODE_TO_UKEF_INDUSTRY.sic_industry_description}",
+          "sic_industry_level": "${EXAMPLES.ODS.SIC_CODE_TO_UKEF_INDUSTRY.sic_industry_level}",
+          "sic_code_active_flag": ${EXAMPLES.ODS.SIC_CODE_TO_UKEF_INDUSTRY.sic_code_active_flag},
+          "ukef_industry_code": "${EXAMPLES.ODS.SIC_CODE_TO_UKEF_INDUSTRY.ukef_industry_code}",
+          "ukef_industry_description": "${EXAMPLES.ODS.SIC_CODE_TO_UKEF_INDUSTRY.ukef_industry_description}",
+          "ukef_sector_code": "${EXAMPLES.ODS.SIC_CODE_TO_UKEF_INDUSTRY.ukef_sector_code}",
+          "ukef_sector_description": "${EXAMPLES.ODS.SIC_CODE_TO_UKEF_INDUSTRY.ukef_sector_description}"
+        }
+      ]
+    }`;
+
     jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
   });
 

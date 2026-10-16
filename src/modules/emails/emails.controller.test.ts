@@ -1,7 +1,7 @@
 import { BadRequestException } from '@nestjs/common';
+import { when } from 'jest-when';
 import { PostEmailsGenerator } from '@ukef-test/support/generator/post-emails-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
-import { when } from 'jest-when';
 
 import { EmailsController } from './emails.controller';
 import { EmailsService } from './emails.service';

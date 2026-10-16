@@ -1,10 +1,10 @@
+import { AxiosError } from 'axios';
+import { resetAllWhenMocks, when } from 'jest-when';
+import { of, throwError } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { GetCompanyGenerator } from '@ukef-test/support/generator/get-company-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
-import { AxiosError } from 'axios';
-import { resetAllWhenMocks, when } from 'jest-when';
-import { of, throwError } from 'rxjs';
 
 import { CompaniesHouseService } from './companies-house.service';
 import { CompaniesHouseException } from './exception/companies-house.exception';

@@ -1,9 +1,9 @@
 import { withEnvironmentVariableParsingUnitTests } from '@ukef-test/common-tests/environment-variable-parsing-unit-tests';
 
-import companiesHouseConfig, { CompaniesHouseConfig } from './companies-house.config';
+import { CompaniesHouseConfig, CompaniesHouseConfigType } from './companies-house.config';
 
 describe('companiesHouseConfig', () => {
-  const configDirectlyFromEnvironmentVariables: { configPropertyName: keyof CompaniesHouseConfig; environmentVariableName: string }[] = [
+  const configDirectlyFromEnvironmentVariables: { configPropertyName: keyof CompaniesHouseConfigType; environmentVariableName: string }[] = [
     {
       configPropertyName: 'baseUrl',
       environmentVariableName: 'COMPANIES_HOUSE_URL',
@@ -15,7 +15,7 @@ describe('companiesHouseConfig', () => {
   ];
 
   const configParsedAsIntFromEnvironmentVariablesWithDefault: {
-    configPropertyName: keyof CompaniesHouseConfig;
+    configPropertyName: keyof CompaniesHouseConfigType;
     environmentVariableName: string;
     defaultConfigValue: number;
   }[] = [
@@ -34,6 +34,6 @@ describe('companiesHouseConfig', () => {
   withEnvironmentVariableParsingUnitTests({
     configDirectlyFromEnvironmentVariables,
     configParsedAsIntFromEnvironmentVariablesWithDefault,
-    getConfig: () => companiesHouseConfig(),
+    getConfig: () => CompaniesHouseConfig(),
   });
 });

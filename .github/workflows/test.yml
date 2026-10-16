@@ -60,7 +60,7 @@ jobs:
 
       - name: Dependencies
         working-directory: ./
-        run: npm ci --legacy-peer-deps
+        run: npm ci
 
       - name: Build
         working-directory: ./
@@ -94,7 +94,7 @@ jobs:
 
       - name: Dependencies
         working-directory: ./
-        run: npm ci --legacy-peer-deps
+        run: npm ci
 
       - name: Execute
         working-directory: ./

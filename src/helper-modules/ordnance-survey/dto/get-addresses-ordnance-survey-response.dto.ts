@@ -15,11 +15,11 @@ export type GetAddressesOrdnanceSurveyResponse = {
   results?: GetAddressesOrdnanceSurveyResponseItem[];
 };
 
-interface GetAddressesOrdnanceSurveyResponseItem {
+type GetAddressesOrdnanceSurveyResponseItem = {
   DPA: GetAddressesOrdnanceSurveyResponseAddress;
-}
+};
 
-interface GetAddressesOrdnanceSurveyResponseAddress {
+type GetAddressesOrdnanceSurveyResponseAddress = {
   UPRN: string;
   UDPRN: string;
   ADDRESS: string;
@@ -53,4 +53,4 @@ interface GetAddressesOrdnanceSurveyResponseAddress {
   MATCH: number;
   MATCH_DESCRIPTION: string;
   DELIVERY_POINT_SUFFIX: string;
-}
+};

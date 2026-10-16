@@ -3,7 +3,7 @@ import { DunAndBradstreetModule } from '@ukef/helper-modules/dun-and-bradstreet/
 import { InformaticaModule } from '@ukef/modules/informatica/informatica.module';
 import { SalesforceModule } from '@ukef/modules/salesforce/salesforce.module';
 
-import { NumbersModule } from '../numbers/numbers.module';
+import { NumbersModule } from '@ukef/modules/numbers/numbers.module';
 import { CustomersController } from './customers.controller';
 import { CustomersService } from './customers.service';
 

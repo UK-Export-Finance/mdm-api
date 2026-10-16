@@ -1,9 +1,9 @@
-import { PostEmailsGenerator } from '@ukef-test/support/generator/post-emails-generator';
-import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { when } from 'jest-when';
 import { PinoLogger } from 'nestjs-pino';
+import { PostEmailsGenerator } from '@ukef-test/support/generator/post-emails-generator';
+import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 
-import { GovukNotifyService } from '../../helper-modules/govuk-notify/govuk-notify.service';
+import { GovukNotifyService } from '@ukef/helper-modules/govuk-notify/govuk-notify.service';
 import { EmailsService } from './emails.service';
 
 describe('EmailsService', () => {

@@ -1,7 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { DunAndBradstreetConfig } from '@ukef/config/dun-and-bradstreet.config';
+import { DunAndBradstreetConfigType } from '@ukef/config/dun-and-bradstreet.config';
 import { DUN_AND_BRADSTREET } from '@ukef/constants';
 import { HttpClient } from '@ukef/modules/http/http.client';
 
@@ -11,11 +11,12 @@ import { createWrapDunAndBradstreetHttpGetErrorCallback } from './wrap-dun-and-b
 @Injectable()
 export class DunAndBradstreetService {
   private readonly httpClient: HttpClient;
+
   private readonly encodedKey: string;
 
   constructor(httpService: HttpService, configService: ConfigService) {
     this.httpClient = new HttpClient(httpService);
-    const { key } = configService.get<DunAndBradstreetConfig>(DUN_AND_BRADSTREET.CONFIG.KEY);
+    const { key } = configService.get<DunAndBradstreetConfigType>(DUN_AND_BRADSTREET.CONFIG.KEY);
     this.encodedKey = key;
   }
 
@@ -26,7 +27,7 @@ export class DunAndBradstreetService {
     const { data } = await this.httpClient.get<any>({
       path,
       headers: {
-        Authorization: 'Bearer ' + accessToken,
+        Authorization: `Bearer ${accessToken}`,
       },
       onError: createWrapDunAndBradstreetHttpGetErrorCallback({
         messageForUnknownError: 'Failed to get response from Dun and Bradstreet API',
@@ -44,7 +45,7 @@ export class DunAndBradstreetService {
         grant_type: 'client_credentials',
       },
       headers: {
-        Authorization: 'Basic ' + this.encodedKey,
+        Authorization: `Basic ${this.encodedKey}`,
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       onError: createWrapDunAndBradstreetHttpGetErrorCallback({

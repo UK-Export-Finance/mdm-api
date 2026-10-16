@@ -1,6 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
-import { messageCheck, statusCheck } from '@ukef/helpers/response-status.helper';
 import { AxiosError } from 'axios';
+import { messageCheck, statusCheck } from '@ukef/helpers/response-status.helper';
 
 import { CompaniesHouseInvalidAuthorizationException } from './exception/companies-house-invalid-authorization.exception';
 import { CompaniesHouseMalformedAuthorizationHeaderException } from './exception/companies-house-malformed-authorization-header.exception';

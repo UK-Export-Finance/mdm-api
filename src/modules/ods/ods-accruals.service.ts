@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { PinoLogger } from 'nestjs-pino';
 import { OdsScheduleClassificationTypeCodes, STORED_PROCEDURE } from '@ukef/constants';
 import { isStoredProcedureResultEmpty, mapAccrualFrequencies, mapAccrualFrequency, mapOdsClassification, mapOdsClassifications } from '@ukef/helpers';
-import { PinoLogger } from 'nestjs-pino';
 
 import {
   ClassificationOdsDto,
@@ -34,7 +34,7 @@ export class OdsAccrualsService {
         entityToQuery: ODS_ENTITIES.CONFIGURATION_FREQUENCY,
         queryPageSize: 1,
         queryParameters: {
-          frequencyCode: frequencyCode,
+          frequencyCode,
         },
       });
 

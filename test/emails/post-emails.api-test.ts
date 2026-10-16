@@ -1,3 +1,6 @@
+import { AxiosError, AxiosResponse } from 'axios';
+import nock from 'nock';
+import { NotifyClient } from 'notifications-node-client';
 import { GOVUK_NOTIFY } from '@ukef/constants';
 import { IncorrectAuthArg, withClientAuthenticationTests } from '@ukef-test/common-tests/client-authentication-api-tests';
 import { withEmailFieldValidationApiTests } from '@ukef-test/common-tests/request-field-validation-api-tests/email-address-field-validation-api-tests';
@@ -6,9 +9,6 @@ import { withStringFieldValidationApiTests } from '@ukef-test/common-tests/reque
 import { Api } from '@ukef-test/support/api';
 import { PostEmailsGenerator } from '@ukef-test/support/generator/post-emails-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
-import { AxiosError, AxiosResponse } from 'axios';
-import nock from 'nock';
-import { NotifyClient } from 'notifications-node-client';
 
 describe('POST /emails', () => {
   const valueGenerator = new RandomValueGenerator();
