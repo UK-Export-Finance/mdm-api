@@ -1,12 +1,12 @@
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
-import { EXAMPLES } from '@ukef/constants';
-import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { AxiosError, HttpStatusCode } from 'axios';
 import { when } from 'jest-when';
 import { of, throwError } from 'rxjs';
+import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
+import { EXAMPLES } from '@ukef/constants';
 
-import { CreateCustomerDto } from '../customers/dto/create-customer.dto';
+import { CreateCustomerDto } from '@ukef/modules/customers/dto/create-customer.dto';
 import { SalesforceException } from './exception/salesforce.exception';
 import { SalesforceService } from './salesforce.service';
 
@@ -42,7 +42,7 @@ describe('SalesforceService', () => {
     jest.clearAllMocks();
   });
 
-  const companyRegNo = '0' + valueGenerator.stringOfNumericCharacters({ length: 7 });
+  const companyRegNo = `0${valueGenerator.stringOfNumericCharacters({ length: 7 })}`;
   const expectedAccessToken = 'TEST_ACCESS_TOKEN';
   const getAccessTokenMethodMock = jest
     .spyOn(SalesforceService.prototype as any, 'getAccessToken')
@@ -69,7 +69,7 @@ describe('SalesforceService', () => {
     const baseExpectedHttpServicePostArgs: [string, body: CreateCustomerDto, object] = [
       customerBasePath,
       baseQuery,
-      { headers: { Authorization: 'Bearer ' + expectedAccessToken } },
+      { headers: { Authorization: `Bearer ${expectedAccessToken}` } },
     ];
 
     it.each([
@@ -132,7 +132,7 @@ describe('SalesforceService', () => {
       const expectedHttpServicePostArgs: [string, body: CreateCustomerDto, object] = [
         customerBasePath,
         query,
-        { headers: { Authorization: 'Bearer ' + expectedAccessToken } },
+        { headers: { Authorization: `Bearer ${expectedAccessToken}` } },
       ];
 
       when(httpServicePost)

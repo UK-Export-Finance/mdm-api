@@ -76,7 +76,7 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
 
     const randomISO8601Date = () => this.valueGenerator.dateISO8601();
 
-    const shuffleArray = <T>(array: Array<T>) => {
+    const shuffleArray = <T>(array: T[]) => {
       for (const i of [...Array(array.length).keys()].reverse().slice(0, -1)) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[`${i}`], array[`${i}`]] = [array[`${j}`], array[`${i}`]];
@@ -261,7 +261,7 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
   }
 }
 
-interface CompanyValues {
+type CompanyValues = {
   accounts: {
     accountingReferenceDate: {
       day: string;
@@ -300,13 +300,13 @@ interface CompanyValues {
   industrySectorCode: number;
   industrySectorName: string;
   isActive: boolean;
-}
+};
 
-interface GenerateOptions {
+type GenerateOptions = {
   registrationNumber?: string;
-}
+};
 
-interface GenerateResult {
+type GenerateResult = {
   companiesHousePath: string;
   mdmPath: string;
   getCompanyCompaniesHouseResponse: GetCompanyCompaniesHouseResponse;
@@ -316,4 +316,4 @@ interface GenerateResult {
   getCompanyCompaniesHouseMalformedAuthorizationHeaderResponse: GetCompanyCompaniesHouseErrorResponse;
   getCompanyCompaniesHouseInvalidAuthorizationResponse: GetCompanyCompaniesHouseErrorResponse;
   getCompanyCompaniesHouseNotFoundResponse: GetCompanyCompaniesHouseMultipleErrorResponse;
-}
+};

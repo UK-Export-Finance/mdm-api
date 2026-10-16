@@ -1,10 +1,10 @@
+import { AxiosError } from 'axios';
+import { when } from 'jest-when';
+import { of, throwError } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { EXAMPLES } from '@ukef/constants';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
-import { AxiosError } from 'axios';
-import { when } from 'jest-when';
-import { of, throwError } from 'rxjs';
 
 import expectedResponseData from './examples/example-response-for-search-places-v1-postcode.json';
 import noResultsResponseData from './examples/example-response-for-search-places-v1-postcode-no-results.json';
@@ -62,24 +62,24 @@ describe('OrdnanceSurveyService', () => {
       },
     ])('test postcode $postcode', ({ postcode, expectedUrlQueryPart }) => {
       it('calls Ordnance Survey with the correct arguments', async () => {
-        const expectedPath = `${basePath}${expectedUrlQueryPart}&lr=EN&key=${encodeURIComponent(testKey)}`;
-        const expectedHttpServiceGetArgs: [string, object] = [expectedPath, { headers: { 'Content-Type': 'application/json' } }];
+        const expectedPathForPostcode = `${basePath}${expectedUrlQueryPart}&lr=EN&key=${encodeURIComponent(testKey)}`;
+        const expectedHttpServiceGetArgsForPostcode: [string, object] = [expectedPathForPostcode, { headers: { 'Content-Type': 'application/json' } }];
 
         when(httpServiceGet)
-          .calledWith(...expectedHttpServiceGetArgs)
+          .calledWith(...expectedHttpServiceGetArgsForPostcode)
           .mockReturnValueOnce(expectedResponse);
         await service.getAddressesByPostcode(postcode);
 
         expect(httpServiceGet).toHaveBeenCalledTimes(1);
-        expect(httpServiceGet).toHaveBeenCalledWith(...expectedHttpServiceGetArgs);
+        expect(httpServiceGet).toHaveBeenCalledWith(...expectedHttpServiceGetArgsForPostcode);
       });
 
       it('returns the results when Ordnance Survey returns a 200 with results', async () => {
-        const expectedPath = `${basePath}${expectedUrlQueryPart}&lr=EN&key=${encodeURIComponent(testKey)}`;
-        const expectedHttpServiceGetArgs: [string, object] = [expectedPath, { headers: { 'Content-Type': 'application/json' } }];
+        const expectedPathForPostcode = `${basePath}${expectedUrlQueryPart}&lr=EN&key=${encodeURIComponent(testKey)}`;
+        const expectedHttpServiceGetArgsForPostcode: [string, object] = [expectedPathForPostcode, { headers: { 'Content-Type': 'application/json' } }];
 
         when(httpServiceGet)
-          .calledWith(...expectedHttpServiceGetArgs)
+          .calledWith(...expectedHttpServiceGetArgsForPostcode)
           .mockReturnValueOnce(expectedResponse);
 
         const response = await service.getAddressesByPostcode(postcode);

@@ -2,9 +2,9 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DATABASE_NAME } from '@ukef/constants';
 
-import { OdsService } from '../ods/ods.service';
-import { OdsProductConfigService } from '../ods/ods-product-config.service';
-import { OdsStoredProcedureService } from '../ods/ods-stored-procedure.service';
+import { OdsService } from '@ukef/modules/ods/ods.service';
+import { OdsProductConfigService } from '@ukef/modules/ods/ods-product-config.service';
+import { OdsStoredProcedureService } from '@ukef/modules/ods/ods-stored-procedure.service';
 import { CreditRiskRatingsService } from './credit-risk-ratings/credit-risk-ratings.service';
 import { DomController } from './dom.controller';
 import { DomService } from './dom.service';

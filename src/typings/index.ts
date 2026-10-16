@@ -1,7 +1,7 @@
 import { OdsEntity, OdsStoredProcedureQueryParams } from '@ukef/modules/ods/dto';
 
-export interface CreateOdsStoredProcedureInputParams {
+export type CreateOdsStoredProcedureInputParams = {
   entityToQuery: OdsEntity;
   queryPageSize?: number;
   queryParameters?: OdsStoredProcedureQueryParams;
-}
+};

@@ -1,12 +1,12 @@
-import { BadRequestException, ForbiddenException, InternalServerErrorException, UnauthorizedException, UnprocessableEntityException } from '@nestjs/common';
-import { GOVUK_NOTIFY } from '@ukef/constants';
-import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { AxiosError, AxiosResponse } from 'axios';
 import { PinoLogger } from 'nestjs-pino';
 import { NotifyClient } from 'notifications-node-client';
+import { BadRequestException, ForbiddenException, InternalServerErrorException, UnauthorizedException, UnprocessableEntityException } from '@nestjs/common';
+import { GOVUK_NOTIFY } from '@ukef/constants';
+import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 
-import { convertStringToBuffer } from '../../helpers';
-import { PostEmailsRequestDto } from '../../modules/emails/dto/post-emails-request.dto';
+import { convertStringToBuffer } from '@ukef/helpers';
+import { PostEmailsRequestDto } from '@ukef/modules/emails/dto/post-emails-request.dto';
 import expectedSendEmailsResponse from './examples/example-response-for-send-emails.json';
 import { GovukNotifyService } from './govuk-notify.service';
 

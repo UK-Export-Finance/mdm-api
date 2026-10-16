@@ -1,9 +1,9 @@
 import { withEnvironmentVariableParsingUnitTests } from '@ukef-test/common-tests/environment-variable-parsing-unit-tests';
 
-import ordnanceSurveyConfig, { OrdnanceSurveyConfig } from './ordnance-survey.config';
+import { OrdnanceSurveyConfig, OrdnanceSurveyConfigType } from './ordnance-survey.config';
 
 describe('ordnanceSurveyConfig', () => {
-  const configDirectlyFromEnvironmentVariables: { configPropertyName: keyof OrdnanceSurveyConfig; environmentVariableName: string }[] = [
+  const configDirectlyFromEnvironmentVariables: { configPropertyName: keyof OrdnanceSurveyConfigType; environmentVariableName: string }[] = [
     {
       configPropertyName: 'baseUrl',
       environmentVariableName: 'ORDNANCE_SURVEY_URL',
@@ -15,7 +15,7 @@ describe('ordnanceSurveyConfig', () => {
   ];
 
   const configParsedAsIntFromEnvironmentVariablesWithDefault: {
-    configPropertyName: keyof OrdnanceSurveyConfig;
+    configPropertyName: keyof OrdnanceSurveyConfigType;
     environmentVariableName: string;
     defaultConfigValue: number;
   }[] = [
@@ -34,6 +34,6 @@ describe('ordnanceSurveyConfig', () => {
   withEnvironmentVariableParsingUnitTests({
     configDirectlyFromEnvironmentVariables,
     configParsedAsIntFromEnvironmentVariablesWithDefault,
-    getConfig: () => ordnanceSurveyConfig(),
+    getConfig: () => OrdnanceSurveyConfig(),
   });
 });

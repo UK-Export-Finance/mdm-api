@@ -40,9 +40,9 @@ export class HttpClient {
     request,
     onError,
   }: {
-    request: Observable<AxiosResponse<ResponseBody, any>>;
+    request: Observable<AxiosResponse<ResponseBody>>;
     onError: (error: Error) => ObservableInput<never>;
-  }): Promise<AxiosResponse<ResponseBody, any>> {
+  }): Promise<AxiosResponse<ResponseBody>> {
     return await lastValueFrom(request.pipe(catchError((error) => onError(error))));
   }
 }

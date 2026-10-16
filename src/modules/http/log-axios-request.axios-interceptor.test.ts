@@ -1,7 +1,7 @@
-import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { AxiosHeaders, InternalAxiosRequestConfig } from 'axios';
 import { when } from 'jest-when';
 import { PinoLogger } from 'nestjs-pino';
+import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 
 import { filterAxiosRequestForLogging } from './filter-axios-request-for-logging.helper';
 import { OUTGOING_REQUEST_LOG_KEY } from './http.constants';

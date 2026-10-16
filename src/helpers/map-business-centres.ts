@@ -1,6 +1,6 @@
 import { OdsBusinessCentreOdsResponse } from '@ukef/modules/ods/dto/get-ods-business-centre-ods-response.dto';
 
-import { FindOdsBusinessCentreOdsResponse } from '../modules/dom/dto';
+import { FindOdsBusinessCentreOdsResponse } from '@ukef/modules/dom/dto';
 import { mapBusinessCentre } from './map-business-centre';
 
 /**

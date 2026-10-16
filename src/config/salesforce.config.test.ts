@@ -1,9 +1,9 @@
 import { withEnvironmentVariableParsingUnitTests } from '@ukef-test/common-tests/environment-variable-parsing-unit-tests';
 
-import salesforceConfig, { SalesforceConfig } from './salesforce.config';
+import { SalesforceConfig, SalesforceConfigType } from './salesforce.config';
 
 describe('salesforceConfig', () => {
-  const configDirectlyFromEnvironmentVariables: { configPropertyName: keyof SalesforceConfig; environmentVariableName: string }[] = [
+  const configDirectlyFromEnvironmentVariables: { configPropertyName: keyof SalesforceConfigType; environmentVariableName: string }[] = [
     {
       configPropertyName: 'baseUrl',
       environmentVariableName: 'SALESFORCE_INSTANCE_URL',
@@ -32,7 +32,7 @@ describe('salesforceConfig', () => {
   ];
 
   const configParsedAsIntFromEnvironmentVariablesWithDefault: {
-    configPropertyName: keyof SalesforceConfig;
+    configPropertyName: keyof SalesforceConfigType;
     environmentVariableName: string;
     defaultConfigValue: number;
   }[] = [
@@ -51,6 +51,6 @@ describe('salesforceConfig', () => {
   withEnvironmentVariableParsingUnitTests({
     configDirectlyFromEnvironmentVariables,
     configParsedAsIntFromEnvironmentVariablesWithDefault,
-    getConfig: () => salesforceConfig(),
+    getConfig: () => SalesforceConfig(),
   });
 });

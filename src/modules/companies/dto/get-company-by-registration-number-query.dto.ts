@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { COMPANIES, EXAMPLES } from '@ukef/constants';
 import { Matches, MaxLength, MinLength } from 'class-validator';
+import { COMPANIES, EXAMPLES } from '@ukef/constants';
 
 export class GetCompanyByRegistrationNumberQuery {
   @ApiProperty({
