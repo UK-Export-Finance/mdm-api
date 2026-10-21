@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { NotFoundException } from '@nestjs/common';
 import { resetAllWhenMocks, when } from 'jest-when';
 import { EXAMPLES } from '@ukef/constants';
@@ -8,7 +9,7 @@ import { GeospatialController } from './geospatial.controller';
 import { GeospatialService } from './geospatial.service';
 
 describe('GeospatialController', () => {
-  let geospatialServiceGetAddressesByPostcode: jest.Mock;
+  let geospatialServiceGetAddressesByPostcode: jest.MockedFunction<GeospatialService['getAddressesByPostcode']>;
 
   let controller: GeospatialController;
 
@@ -20,7 +21,7 @@ describe('GeospatialController', () => {
   beforeEach(() => {
     resetAllWhenMocks();
     const geospatialService = new GeospatialService(null);
-    geospatialServiceGetAddressesByPostcode = jest.fn();
+    geospatialServiceGetAddressesByPostcode = jest.fn<GeospatialService['getAddressesByPostcode']>();
     geospatialService.getAddressesByPostcode = geospatialServiceGetAddressesByPostcode;
 
     controller = new GeospatialController(geospatialService);

@@ -1,8 +1,11 @@
+import { jest } from '@jest/globals';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
 import { EXAMPLES } from '@ukef/constants';
+import { mapBusinessCentres, mapProductConfig } from '@ukef/helpers';
 
 import { OdsService } from '@ukef/modules/ods/ods.service';
+import { mockProductConfigs } from '@ukef/modules/ods/test-helpers';
 import { OdsProductConfigService } from '@ukef/modules/ods/ods-product-config.service';
 import { OdsStoredProcedureService } from '@ukef/modules/ods/ods-stored-procedure.service';
 import { CreditRiskRatingsService } from './credit-risk-ratings/credit-risk-ratings.service';
@@ -11,17 +14,37 @@ import { DomService } from './dom.service';
 import { FindMultipleOdsBusinessCentreOdsResponsesNonWorkingDaysResponse, FindMultipleProductConfigsResponse } from './dto';
 
 const mockError = new Error('An error occurred');
+const mockNonWorkingDays = EXAMPLES.DOM.BUSINESS_CENTRES_NON_WORKING_DAYS.map((day) => ({
+  code: day.business_centre_code,
+  name: EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME,
+  date: day.non_working_day_date,
+}));
+const mockBusinessCentres = mapBusinessCentres(EXAMPLES.DOM.BUSINESS_CENTRES);
+const mockBusinessCentre = {
+  code: EXAMPLES.BUSINESS_CENTRE.CODE,
+  name: EXAMPLES.BUSINESS_CENTRE.NAME,
+  description: EXAMPLES.BUSINESS_CENTRE.DESCRIPTION,
+  isActive: EXAMPLES.BUSINESS_CENTRE.IS_ACTIVE,
+};
+const mockCreditRiskRatings = EXAMPLES.CREDIT_RISK_RATINGS.map((rating) => ({
+  ...rating,
+  createdAt: new Date(rating.createdAt),
+  updatedAt: new Date(rating.updatedAt),
+  effectiveFrom: new Date(rating.effectiveFrom),
+  effectiveTo: new Date(rating.effectiveTo),
+}));
+const mockDomProductConfigs = mockProductConfigs.map(mapProductConfig);
 
 const mockMultipleBusinessCentreNonWorkingDays: FindMultipleOdsBusinessCentreOdsResponsesNonWorkingDaysResponse = {
-  [EXAMPLES.BUSINESS_CENTRE.CODE]: EXAMPLES.DOM.BUSINESS_CENTRES_NON_WORKING_DAYS,
-  [EXAMPLES.BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.CODE]: EXAMPLES.DOM.BUSINESS_CENTRES_NON_WORKING_DAYS,
+  [EXAMPLES.BUSINESS_CENTRE.CODE]: mockNonWorkingDays,
+  [EXAMPLES.BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.CODE]: mockNonWorkingDays,
 };
 
-const mockFindProductConfiguration = EXAMPLES.DOM.PRODUCT_CONFIG.BIP;
+const mockFindProductConfiguration = mockDomProductConfigs[0];
 
 const mockMultipleProductConfigurations: FindMultipleProductConfigsResponse = {
-  [EXAMPLES.PRODUCT_TYPES.BIP]: EXAMPLES.DOM.PRODUCT_CONFIG.BIP,
-  [EXAMPLES.PRODUCT_TYPES.EXIP]: EXAMPLES.DOM.PRODUCT_CONFIG.EXIP,
+  [EXAMPLES.PRODUCT_TYPES.BIP]: mockDomProductConfigs[0],
+  [EXAMPLES.PRODUCT_TYPES.EXIP]: mockDomProductConfigs[1],
 };
 
 const mockProductTypesString = `${EXAMPLES.PRODUCT_TYPES.BIP},${EXAMPLES.PRODUCT_TYPES.EXIP}`;
@@ -31,7 +54,7 @@ describe('DomController', () => {
   const mockLogger = new PinoLogger({});
 
   const mockDataSource = {
-    createQueryRunner: jest.fn().mockReturnValue(mockQueryRunner),
+    createQueryRunner: jest.fn<DataSource['createQueryRunner']>().mockReturnValue(mockQueryRunner),
   } as unknown as jest.Mocked<DataSource>;
 
   const creditRiskRatingsService = new CreditRiskRatingsService(null, mockLogger);
@@ -40,56 +63,62 @@ describe('DomController', () => {
   const odsProductConfigService = new OdsProductConfigService(odsStoredProcedureService, mockLogger);
   const domService = new DomService(odsService, odsProductConfigService, mockLogger);
 
-  let creditRiskRatingsServiceGetAll: jest.Mock;
-  let odsServiceFindBusinessCentre: jest.Mock;
-  let domServiceFindBusinessCentreNonWorkingDays: jest.Mock;
-  let odsServiceGetBusinessCentres: jest.Mock;
-  let odsServiceGetInterestRateTickers: jest.Mock;
-  let odsServiceGetCurrencies: jest.Mock;
-  let domServiceFindProductConfiguration: jest.Mock;
-  let domServiceFindMultipleBusinessCentresNonWorkingDays: jest.Mock;
-  let domServiceGetProductConfigurations: jest.Mock;
-  let domServiceFindMultipleProductConfigurations: jest.Mock;
-  let domServiceGetCompoundingIndices: jest.Mock;
-  let domServiceGetInterestRates: jest.Mock;
+  let creditRiskRatingsServiceGetAll: jest.MockedFunction<CreditRiskRatingsService['getAll']>;
+  let odsServiceFindBusinessCentre: jest.MockedFunction<OdsService['findBusinessCentre']>;
+  let domServiceFindBusinessCentreNonWorkingDays: jest.MockedFunction<DomService['findBusinessCentreNonWorkingDays']>;
+  let odsServiceGetBusinessCentres: jest.MockedFunction<OdsService['getBusinessCentres']>;
+  let odsServiceGetInterestRateTickers: jest.MockedFunction<OdsService['getInterestRateTickers']>;
+  let odsServiceGetCurrencies: jest.MockedFunction<OdsService['getCurrencies']>;
+  let domServiceFindProductConfiguration: jest.MockedFunction<DomService['findProductConfiguration']>;
+  let domServiceFindMultipleBusinessCentresNonWorkingDays: jest.MockedFunction<DomService['findMultipleBusinessCentresNonWorkingDays']>;
+  let domServiceGetProductConfigurations: jest.MockedFunction<DomService['getProductConfigurations']>;
+  let domServiceFindMultipleProductConfigurations: jest.MockedFunction<DomService['findMultipleProductConfigurations']>;
+  let domServiceGetCompoundingIndices: jest.MockedFunction<DomService['getCompoundingIndices']>;
+  let domServiceGetInterestRates: jest.MockedFunction<DomService['getInterestRates']>;
 
   let controller: DomController;
 
   beforeEach(() => {
-    creditRiskRatingsServiceGetAll = jest.fn().mockReturnValueOnce(EXAMPLES.CREDIT_RISK_RATINGS);
+    creditRiskRatingsServiceGetAll = jest.fn<CreditRiskRatingsService['getAll']>().mockResolvedValueOnce(mockCreditRiskRatings);
     creditRiskRatingsService.getAll = creditRiskRatingsServiceGetAll;
 
-    odsServiceFindBusinessCentre = jest.fn().mockResolvedValueOnce(EXAMPLES.BUSINESS_CENTRE);
+    odsServiceFindBusinessCentre = jest.fn<OdsService['findBusinessCentre']>().mockResolvedValueOnce(mockBusinessCentre);
     odsService.findBusinessCentre = odsServiceFindBusinessCentre;
 
-    domServiceFindBusinessCentreNonWorkingDays = jest.fn().mockResolvedValueOnce(EXAMPLES.DOM.BUSINESS_CENTRES_NON_WORKING_DAYS);
+    domServiceFindBusinessCentreNonWorkingDays = jest.fn<DomService['findBusinessCentreNonWorkingDays']>().mockResolvedValueOnce(mockNonWorkingDays);
     domService.findBusinessCentreNonWorkingDays = domServiceFindBusinessCentreNonWorkingDays;
 
-    odsServiceGetBusinessCentres = jest.fn().mockResolvedValueOnce(EXAMPLES.DOM.BUSINESS_CENTRES);
+    odsServiceGetBusinessCentres = jest.fn<OdsService['getBusinessCentres']>().mockResolvedValueOnce(mockBusinessCentres);
     odsService.getBusinessCentres = odsServiceGetBusinessCentres;
 
-    odsServiceGetInterestRateTickers = jest.fn().mockResolvedValueOnce(EXAMPLES.DOM.INTEREST_RATE_TICKERS);
+    odsServiceGetInterestRateTickers = jest.fn<OdsService['getInterestRateTickers']>().mockResolvedValueOnce(EXAMPLES.DOM.INTEREST_RATE_TICKERS);
     odsService.getInterestRateTickers = odsServiceGetInterestRateTickers;
 
-    odsServiceGetCurrencies = jest.fn().mockResolvedValueOnce(EXAMPLES.DOM.CURRENCIES);
+    odsServiceGetCurrencies = jest.fn<OdsService['getCurrencies']>().mockResolvedValueOnce(EXAMPLES.DOM.CURRENCIES);
     odsService.getCurrencies = odsServiceGetCurrencies;
 
-    domServiceFindMultipleBusinessCentresNonWorkingDays = jest.fn().mockResolvedValueOnce(mockMultipleBusinessCentreNonWorkingDays);
+    domServiceFindMultipleBusinessCentresNonWorkingDays = jest
+      .fn<DomService['findMultipleBusinessCentresNonWorkingDays']>()
+      .mockResolvedValueOnce(mockMultipleBusinessCentreNonWorkingDays);
     domService.findMultipleBusinessCentresNonWorkingDays = domServiceFindMultipleBusinessCentresNonWorkingDays;
 
-    domServiceFindProductConfiguration = jest.fn().mockResolvedValueOnce(mockFindProductConfiguration);
+    domServiceFindProductConfiguration = jest.fn<DomService['findProductConfiguration']>().mockResolvedValueOnce(mockFindProductConfiguration);
     domService.findProductConfiguration = domServiceFindProductConfiguration;
 
-    domServiceGetProductConfigurations = jest.fn().mockResolvedValueOnce([EXAMPLES.DOM.PRODUCT_CONFIG.BIP, EXAMPLES.DOM.PRODUCT_CONFIG.EXIP]);
+    domServiceGetProductConfigurations = jest
+      .fn<DomService['getProductConfigurations']>()
+      .mockResolvedValueOnce([mockDomProductConfigs[0], mockDomProductConfigs[1]]);
     domService.getProductConfigurations = domServiceGetProductConfigurations;
 
-    domServiceFindMultipleProductConfigurations = jest.fn().mockReturnValueOnce(mockMultipleProductConfigurations);
+    domServiceFindMultipleProductConfigurations = jest
+      .fn<DomService['findMultipleProductConfigurations']>()
+      .mockResolvedValueOnce(mockMultipleProductConfigurations);
     domService.findMultipleProductConfigurations = domServiceFindMultipleProductConfigurations;
 
-    domServiceGetCompoundingIndices = jest.fn().mockResolvedValueOnce([]);
+    domServiceGetCompoundingIndices = jest.fn<DomService['getCompoundingIndices']>().mockResolvedValueOnce([]);
     domService.getCompoundingIndices = domServiceGetCompoundingIndices;
 
-    domServiceGetInterestRates = jest.fn().mockResolvedValueOnce(EXAMPLES.DOM.INTEREST_RATES);
+    domServiceGetInterestRates = jest.fn<DomService['getInterestRates']>().mockResolvedValueOnce(EXAMPLES.DOM.INTEREST_RATES);
     domService.getInterestRates = domServiceGetInterestRates;
 
     controller = new DomController(domService, odsService, creditRiskRatingsService);
@@ -109,7 +138,7 @@ describe('DomController', () => {
       const result = await controller.findBusinessCentre({ centreCode: EXAMPLES.BUSINESS_CENTRE.CODE });
 
       // Assert
-      expect(result).toEqual(EXAMPLES.BUSINESS_CENTRE);
+      expect(result).toEqual(mockBusinessCentre);
     });
 
     describe('when odsService.findBusinessCentre throws an error', () => {
@@ -117,7 +146,7 @@ describe('DomController', () => {
         // Arrange
         const localDomService = new DomService(odsService, odsProductConfigService, mockLogger);
 
-        odsService.findBusinessCentre = jest.fn().mockRejectedValueOnce(mockError);
+        odsService.findBusinessCentre = jest.fn<OdsService['findBusinessCentre']>().mockRejectedValueOnce(mockError);
 
         controller = new DomController(localDomService, odsService, creditRiskRatingsService);
 
@@ -153,7 +182,7 @@ describe('DomController', () => {
       const result = await controller.findBusinessCentreNonWorkingDays({ centreCode: EXAMPLES.BUSINESS_CENTRE.CODE }, {});
 
       // Assert
-      expect(result).toEqual(EXAMPLES.DOM.BUSINESS_CENTRES_NON_WORKING_DAYS);
+      expect(result).toEqual(mockNonWorkingDays);
     });
 
     describe('when domService.findBusinessCentreNonWorkingDays throws an error', () => {
@@ -161,7 +190,7 @@ describe('DomController', () => {
         // Arrange
         const localDomService = new DomService(odsService, odsProductConfigService, mockLogger);
 
-        localDomService.findBusinessCentreNonWorkingDays = jest.fn().mockRejectedValueOnce(mockError);
+        localDomService.findBusinessCentreNonWorkingDays = jest.fn<DomService['findBusinessCentreNonWorkingDays']>().mockRejectedValueOnce(mockError);
 
         controller = new DomController(localDomService, odsService, creditRiskRatingsService);
 
@@ -187,7 +216,7 @@ describe('DomController', () => {
       const result = await controller.getCreditRiskRatings();
 
       // Assert
-      expect(result).toEqual(EXAMPLES.CREDIT_RISK_RATINGS);
+      expect(result).toEqual(mockCreditRiskRatings);
     });
 
     describe('when creditRiskRatingsService.getAll throws an error', () => {
@@ -195,7 +224,7 @@ describe('DomController', () => {
         // Arrange
         const localDomService = new DomService(odsService, odsProductConfigService, mockLogger);
 
-        creditRiskRatingsService.getAll = jest.fn().mockRejectedValueOnce(mockError);
+        creditRiskRatingsService.getAll = jest.fn<CreditRiskRatingsService['getAll']>().mockRejectedValueOnce(mockError);
 
         controller = new DomController(localDomService, odsService, creditRiskRatingsService);
 
@@ -221,7 +250,7 @@ describe('DomController', () => {
       const result = await controller.getBusinessCentres();
 
       // Assert
-      expect(result).toEqual(EXAMPLES.DOM.BUSINESS_CENTRES);
+      expect(result).toEqual(mockBusinessCentres);
     });
 
     describe('when odsService.getBusinessCentres throws an error', () => {
@@ -229,7 +258,7 @@ describe('DomController', () => {
         // Arrange
         const localDomService = new DomService(odsService, odsProductConfigService, mockLogger);
 
-        odsService.getBusinessCentres = jest.fn().mockRejectedValueOnce(mockError);
+        odsService.getBusinessCentres = jest.fn<OdsService['getBusinessCentres']>().mockRejectedValueOnce(mockError);
 
         controller = new DomController(localDomService, odsService, creditRiskRatingsService);
 
@@ -261,7 +290,7 @@ describe('DomController', () => {
     describe('when odsService.getInterestRateTickers throws an error', () => {
       it('should throw an error', async () => {
         // Arrange
-        odsService.getInterestRateTickers = jest.fn().mockRejectedValueOnce(mockError);
+        odsService.getInterestRateTickers = jest.fn<OdsService['getInterestRateTickers']>().mockRejectedValueOnce(mockError);
 
         controller = new DomController(domService, odsService, creditRiskRatingsService);
 
@@ -297,7 +326,7 @@ describe('DomController', () => {
     describe('when domService.getCompoundingIndices throws an error', () => {
       it('should throw an error', async () => {
         const localDomService = new DomService(odsService, odsProductConfigService, mockLogger);
-        localDomService.getCompoundingIndices = jest.fn().mockRejectedValueOnce(mockError);
+        localDomService.getCompoundingIndices = jest.fn<DomService['getCompoundingIndices']>().mockRejectedValueOnce(mockError);
         controller = new DomController(localDomService, odsService, creditRiskRatingsService);
 
         const promise = controller.getCompoundingIndices(mockQuery);
@@ -327,7 +356,7 @@ describe('DomController', () => {
     describe('when odsService.getCurrencies throws an error', () => {
       it('should throw an error', async () => {
         // Arrange
-        odsService.getCurrencies = jest.fn().mockRejectedValueOnce(mockError);
+        odsService.getCurrencies = jest.fn<OdsService['getCurrencies']>().mockRejectedValueOnce(mockError);
 
         controller = new DomController(domService, odsService, creditRiskRatingsService);
 
@@ -397,7 +426,7 @@ describe('DomController', () => {
       const result = await controller.getProductConfigurations();
 
       // Assert
-      expect(result).toStrictEqual([EXAMPLES.DOM.PRODUCT_CONFIG.BIP, EXAMPLES.DOM.PRODUCT_CONFIG.EXIP]);
+      expect(result).toStrictEqual([mockDomProductConfigs[0], mockDomProductConfigs[1]]);
     });
   });
 
@@ -455,7 +484,7 @@ describe('DomController', () => {
         // Arrange
         const localDomService = new DomService(odsService, odsProductConfigService, mockLogger);
 
-        localDomService.getInterestRates = jest.fn().mockRejectedValueOnce(mockError);
+        localDomService.getInterestRates = jest.fn<DomService['getInterestRates']>().mockRejectedValueOnce(mockError);
 
         controller = new DomController(localDomService, odsService, creditRiskRatingsService);
 

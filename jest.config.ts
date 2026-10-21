@@ -1,12 +1,16 @@
-import { JestConfigWithTsJest } from 'ts-jest';
+import type { JestConfigWithTsJest } from 'ts-jest';
 
 const defaultSettings = {
   rootDir: 'test',
   extensionsToTreatAsEsm: ['.ts'],
   preset: 'ts-jest/presets/default-esm',
   testEnvironment: 'node',
+  transform: {
+    '^.+\\.tsx?$': ['ts-jest', { useESM: true, tsconfig: '<rootDir>/../tsconfig.test.json' }],
+  },
   moduleFileExtensions: ['ts', 'js', 'json', 'node'],
   moduleNameMapper: {
+    '^(\\.{1,2}/.*)\\.js$': '$1',
     '@ukef-test/(.*)': '<rootDir>/../test/$1',
     '@ukef/constants/(.*)': '<rootDir>/../src/constants/$1',
     '@ukef/config/(.*)': '<rootDir>/../src/config/$1',
@@ -24,7 +28,6 @@ const config: JestConfigWithTsJest = {
     {
       displayName: 'Unit',
       testMatch: ['**/*.test.ts'],
-      transform: { '^.+\\.(ts|tsx)?$': ['ts-jest', { useESM: true }] },
       ...defaultSettings,
       rootDir: 'src',
     },
@@ -32,7 +35,6 @@ const config: JestConfigWithTsJest = {
       displayName: 'API',
       setupFilesAfterEnv: ['./setup/override-environment-variables.ts'],
       testMatch: ['**/*.api-test.ts'],
-      transform: { '^.+\\.(ts|tsx)?$': ['ts-jest', { useESM: true }] },
       ...defaultSettings,
     },
   ],

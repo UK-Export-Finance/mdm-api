@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
@@ -24,12 +25,15 @@ const mockOdsBusinessCentreOdsResponseNonWorkingDays: GetOdsBusinessCentreOdsRes
   },
 ];
 
+const mockMappedNonWorkingDays = mapBusinessCentreNonWorkingDays(mockOdsBusinessCentreOdsResponseNonWorkingDays, EXAMPLES.BUSINESS_CENTRE.CODE);
+const mockDomProductConfigs = mockProductConfigs.map(mapProductConfig);
+
 describe('DomService', () => {
   let mockQueryRunner: jest.Mocked<QueryRunner>;
   const mockLogger = new PinoLogger({});
 
   const mockDataSource = {
-    createQueryRunner: jest.fn().mockReturnValue(mockQueryRunner),
+    createQueryRunner: jest.fn<DataSource['createQueryRunner']>().mockReturnValue(mockQueryRunner),
   } as unknown as jest.Mocked<DataSource>;
 
   const odsStoredProcedureService = new OdsStoredProcedureService(mockDataSource);
@@ -37,22 +41,24 @@ describe('DomService', () => {
   const odsService = new OdsService(odsStoredProcedureService, mockLogger);
   const odsProductConfigService = new OdsProductConfigService(odsStoredProcedureService, mockLogger);
 
-  let odsServiceFindBusinessCentreNonWorkingDays: jest.Mock;
-  let mockFindBusinessCentreNonWorkingDays: jest.Mock;
-  let mockFindProductConfiguration: jest.Mock;
-  let odsProductConfigServiceFindOne: jest.Mock;
-  let odsProductConfigServiceGetAll: jest.Mock;
+  let odsServiceFindBusinessCentreNonWorkingDays: jest.MockedFunction<OdsService['findBusinessCentreNonWorkingDays']>;
+  let mockFindBusinessCentreNonWorkingDays: jest.MockedFunction<DomService['findBusinessCentreNonWorkingDays']>;
+  let mockFindProductConfiguration: jest.MockedFunction<DomService['findProductConfiguration']>;
+  let odsProductConfigServiceFindOne: jest.MockedFunction<OdsProductConfigService['findOne']>;
+  let odsProductConfigServiceGetAll: jest.MockedFunction<OdsProductConfigService['getAll']>;
 
   let service: DomService;
 
   beforeEach(() => {
-    odsServiceFindBusinessCentreNonWorkingDays = jest.fn().mockResolvedValueOnce(mockOdsBusinessCentreOdsResponseNonWorkingDays);
+    odsServiceFindBusinessCentreNonWorkingDays = jest
+      .fn<OdsService['findBusinessCentreNonWorkingDays']>()
+      .mockResolvedValueOnce(mockOdsBusinessCentreOdsResponseNonWorkingDays);
     odsService.findBusinessCentreNonWorkingDays = odsServiceFindBusinessCentreNonWorkingDays;
 
-    odsProductConfigServiceFindOne = jest.fn().mockResolvedValue(mockProductConfigs[0]);
+    odsProductConfigServiceFindOne = jest.fn<OdsProductConfigService['findOne']>().mockResolvedValue(mockProductConfigs[0]);
     odsProductConfigService.findOne = odsProductConfigServiceFindOne;
 
-    odsProductConfigServiceGetAll = jest.fn().mockResolvedValue(mockProductConfigs);
+    odsProductConfigServiceGetAll = jest.fn<OdsProductConfigService['getAll']>().mockResolvedValue(mockProductConfigs);
     odsProductConfigService.getAll = odsProductConfigServiceGetAll;
 
     service = new DomService(odsService, odsProductConfigService, mockLogger);
@@ -104,7 +110,7 @@ describe('DomService', () => {
 
         const mockNotFoundError = new NotFoundException(`No business centre ${mockCentreCode} found in ODS`);
 
-        odsServiceFindBusinessCentreNonWorkingDays = jest.fn().mockRejectedValueOnce(mockNotFoundError);
+        odsServiceFindBusinessCentreNonWorkingDays = jest.fn<OdsService['findBusinessCentreNonWorkingDays']>().mockRejectedValueOnce(mockNotFoundError);
         odsService.findBusinessCentreNonWorkingDays = odsServiceFindBusinessCentreNonWorkingDays;
 
         service = new DomService(odsService, odsProductConfigService, mockLogger);
@@ -125,9 +131,9 @@ describe('DomService', () => {
     beforeEach(() => {
       // Arrange
       mockFindBusinessCentreNonWorkingDays = jest
-        .fn()
-        .mockResolvedValueOnce(EXAMPLES.DOM.BUSINESS_CENTRES_NON_WORKING_DAYS)
-        .mockResolvedValueOnce(EXAMPLES.DOM.BUSINESS_CENTRES_NON_WORKING_DAYS);
+        .fn<DomService['findBusinessCentreNonWorkingDays']>()
+        .mockResolvedValueOnce(mockMappedNonWorkingDays)
+        .mockResolvedValueOnce(mockMappedNonWorkingDays);
 
       service = new DomService(odsService, odsProductConfigService, mockLogger);
 
@@ -176,8 +182,8 @@ describe('DomService', () => {
 
         // Assert
         const expected = {
-          [EXAMPLES.BUSINESS_CENTRE.CODE]: EXAMPLES.DOM.BUSINESS_CENTRES_NON_WORKING_DAYS,
-          [EXAMPLES.BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.CODE]: EXAMPLES.DOM.BUSINESS_CENTRES_NON_WORKING_DAYS,
+          [EXAMPLES.BUSINESS_CENTRE.CODE]: mockMappedNonWorkingDays,
+          [EXAMPLES.BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.CODE]: mockMappedNonWorkingDays,
         };
 
         expect(response).toEqual(expected);
@@ -190,8 +196,8 @@ describe('DomService', () => {
         const mockCentreCodes = `${EXAMPLES.BUSINESS_CENTRE.CODE},INVALID CODE`;
 
         mockFindBusinessCentreNonWorkingDays = jest
-          .fn()
-          .mockResolvedValueOnce(EXAMPLES.DOM.BUSINESS_CENTRES_NON_WORKING_DAYS)
+          .fn<DomService['findBusinessCentreNonWorkingDays']>()
+          .mockResolvedValueOnce(mockMappedNonWorkingDays)
           .mockRejectedValueOnce(new NotFoundException('Mock error'));
 
         service = new DomService(odsService, odsProductConfigService, mockLogger);
@@ -217,7 +223,7 @@ describe('DomService', () => {
 
         const mockError = new NotFoundException('Mock error');
 
-        mockFindBusinessCentreNonWorkingDays = jest.fn().mockResolvedValueOnce(mockError).mockRejectedValueOnce(mockError);
+        mockFindBusinessCentreNonWorkingDays = jest.fn<DomService['findBusinessCentreNonWorkingDays']>().mockRejectedValue(mockError);
 
         service = new DomService(odsService, odsProductConfigService, mockLogger);
 
@@ -268,7 +274,9 @@ describe('DomService', () => {
         // Arrange
         const mockProductType = 'INVALID PRODUCT TYPE';
 
-        odsProductConfigServiceFindOne = jest.fn().mockRejectedValueOnce(new NotFoundException(`No product config ${mockProductType} found in ODS`));
+        odsProductConfigServiceFindOne = jest
+          .fn<OdsProductConfigService['findOne']>()
+          .mockRejectedValueOnce(new NotFoundException(`No product config ${mockProductType} found in ODS`));
         odsProductConfigService.findOne = odsProductConfigServiceFindOne;
 
         service = new DomService(odsService, odsProductConfigService, mockLogger);
@@ -284,7 +292,10 @@ describe('DomService', () => {
   describe('findMultipleProductConfigurations', () => {
     beforeEach(() => {
       // Arrange
-      mockFindProductConfiguration = jest.fn().mockResolvedValueOnce(EXAMPLES.DOM.PRODUCT_CONFIG.BIP).mockResolvedValueOnce(EXAMPLES.DOM.PRODUCT_CONFIG.EXIP);
+      mockFindProductConfiguration = jest
+        .fn<DomService['findProductConfiguration']>()
+        .mockResolvedValueOnce(mockDomProductConfigs[0])
+        .mockResolvedValueOnce(mockDomProductConfigs[1]);
 
       service = new DomService(odsService, odsProductConfigService, mockLogger);
 
@@ -301,8 +312,8 @@ describe('DomService', () => {
 
         // Assert
         const expected = {
-          [EXAMPLES.PRODUCT_TYPES.BIP]: EXAMPLES.DOM.PRODUCT_CONFIG.BIP,
-          [EXAMPLES.PRODUCT_TYPES.EXIP]: EXAMPLES.DOM.PRODUCT_CONFIG.EXIP,
+          [EXAMPLES.PRODUCT_TYPES.BIP]: mockDomProductConfigs[0],
+          [EXAMPLES.PRODUCT_TYPES.EXIP]: mockDomProductConfigs[1],
         };
 
         expect(response).toEqual(expected);
@@ -315,8 +326,8 @@ describe('DomService', () => {
         const mockProductTypes = `${EXAMPLES.PRODUCT_TYPES.BIP},INVALID CODE`;
 
         mockFindProductConfiguration = jest
-          .fn()
-          .mockResolvedValueOnce(EXAMPLES.DOM.PRODUCT_CONFIG.BIP)
+          .fn<DomService['findProductConfiguration']>()
+          .mockResolvedValueOnce(mockDomProductConfigs[0])
           .mockRejectedValueOnce(new NotFoundException('Mock error'));
 
         service = new DomService(odsService, odsProductConfigService, mockLogger);
@@ -342,7 +353,7 @@ describe('DomService', () => {
 
         const mockError = new NotFoundException('Mock error');
 
-        mockFindProductConfiguration = jest.fn().mockResolvedValueOnce(mockError).mockRejectedValueOnce(mockError);
+        mockFindProductConfiguration = jest.fn<DomService['findProductConfiguration']>().mockRejectedValue(mockError);
 
         service = new DomService(odsService, odsProductConfigService, mockLogger);
 
@@ -392,10 +403,10 @@ describe('DomService', () => {
     const [exampleInterestRate] = EXAMPLES.DOM.INTEREST_RATES;
     const mockRateCode = exampleInterestRate.code;
 
-    let odsServiceGetInterestRates: jest.Mock;
+    let odsServiceGetInterestRates: jest.MockedFunction<OdsService['getInterestRates']>;
 
     beforeEach(() => {
-      odsServiceGetInterestRates = jest.fn().mockResolvedValue(EXAMPLES.DOM.INTEREST_RATES);
+      odsServiceGetInterestRates = jest.fn<OdsService['getInterestRates']>().mockResolvedValue(EXAMPLES.DOM.INTEREST_RATES);
       odsService.getInterestRates = odsServiceGetInterestRates;
 
       service = new DomService(odsService, odsProductConfigService, mockLogger);
@@ -457,6 +468,7 @@ describe('DomService', () => {
       {
         code: mockRateCode,
         startDate: EXAMPLES.DOM.INTEREST_RATES[0].startDate,
+        indexEffectiveDate: EXAMPLES.DOM.INTEREST_RATES[0].startDate,
         endDate: EXAMPLES.DOM.INTEREST_RATES[0].endDate,
         daysActive: 1,
         rate: EXAMPLES.DOM.INTEREST_RATES[0].rate,
@@ -464,10 +476,10 @@ describe('DomService', () => {
       },
     ];
 
-    let odsServiceGetCompoundingIndices: jest.Mock;
+    let odsServiceGetCompoundingIndices: jest.MockedFunction<OdsService['getCompoundingIndices']>;
 
     beforeEach(() => {
-      odsServiceGetCompoundingIndices = jest.fn().mockResolvedValue(mockCompoundingIndices);
+      odsServiceGetCompoundingIndices = jest.fn<OdsService['getCompoundingIndices']>().mockResolvedValue(mockCompoundingIndices);
       odsService.getCompoundingIndices = odsServiceGetCompoundingIndices;
 
       service = new DomService(odsService, odsProductConfigService, mockLogger);
