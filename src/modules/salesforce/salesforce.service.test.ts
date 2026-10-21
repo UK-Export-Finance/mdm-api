@@ -289,10 +289,8 @@ describe('SalesforceService', () => {
       });
 
       it('warns when authentication returns no token without changing the existing behaviour', async () => {
-        -(
-          // Arrange
-          httpServicePost.mockReturnValueOnce(of({ data: {} })).mockReturnValueOnce(of({ data: { success: false } }))
-        );
+        // Arrange
+        httpServicePost.mockReturnValueOnce(of({ data: {} })).mockReturnValueOnce(of({ data: { success: false } }));
 
         // Act
         await service.createCustomer(customer);
