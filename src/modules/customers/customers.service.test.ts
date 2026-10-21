@@ -234,8 +234,10 @@ describe('CustomerService', () => {
     });
 
     it('logs downstream operations and successful Salesforce creation without logging the customer payload', async () => {
+      // Act
       await service.getOrCreateCustomer(mockResponseObject, customerWithFullPayload);
 
+      // Assert
       expect(logger.info).toHaveBeenCalledWith('Customer for company %s not found in Informatica; creating in Salesforce', companyRegistrationNumber);
       expect(logger.info).toHaveBeenCalledWith('Finding DUNS number for company %s in Dun and Bradstreet', companyRegistrationNumber);
       expect(logger.info).toHaveBeenCalledWith('Found DUNS number for company %s in Dun and Bradstreet', companyRegistrationNumber);
@@ -249,11 +251,14 @@ describe('CustomerService', () => {
     });
 
     it('warns when party URN generation fails and still sends the customer to Salesforce', async () => {
+      // Arrange
       const error = new InternalServerErrorException('Number generation failed');
       numbersServiceCreate.mockReset().mockRejectedValueOnce(error);
 
+      // Act
       await service.getOrCreateCustomer(mockResponseObject, customerWithPod);
 
+      // Assert
       expect(logger.warn).toHaveBeenCalledWith(
         'Error generating party URN for company %s; continuing Salesforce creation without a party URN %o',
         companyRegistrationNumber,
@@ -263,9 +268,11 @@ describe('CustomerService', () => {
     });
 
     it('logs Salesforce failures and rejects with the original error', async () => {
+      // Arrange
       const error = new Error('Salesforce failed');
       salesforceServiceCreateCustomer.mockReset().mockRejectedValueOnce(error);
 
+      // Act & Assert
       await expect(service.getOrCreateCustomer(mockResponseObject, customerWithPod)).rejects.toBe(error);
 
       expect(logger.error).toHaveBeenCalledWith('Error creating customer in Salesforce for company %s %o', companyRegistrationNumber, error);
@@ -273,20 +280,26 @@ describe('CustomerService', () => {
     });
 
     it('warns instead of logging success when Salesforce does not confirm creation', async () => {
+      // Arrange
       salesforceServiceCreateCustomer.mockReset().mockResolvedValueOnce({ ...salesforceCreateCustomerResponse, success: false });
 
+      // Act
       await service.getOrCreateCustomer(mockResponseObject, customerWithPod);
 
+      // Assert
       expect(logger.warn).toHaveBeenCalledWith('Salesforce did not confirm customer creation for company %s', companyRegistrationNumber);
       expect(logger.info).not.toHaveBeenCalledWith('Created customer in Salesforce for company %s', companyRegistrationNumber);
     });
 
     it('logs Dun and Bradstreet failures and does not send the customer to Salesforce', async () => {
+      // Arrange
       const error = new Error('Dun and Bradstreet failed');
       dunAndBradstreetServiceGetDunsNumber.mockReset().mockRejectedValueOnce(error);
 
+      // Act
       await expect(service.getOrCreateCustomer(mockResponseObject, customerWithPod)).rejects.toBe(error);
 
+      // Assert
       expect(logger.error).toHaveBeenCalledWith('Error finding DUNS number for company %s in Dun and Bradstreet %o', companyRegistrationNumber, error);
       expect(salesforceServiceCreateCustomer).not.toHaveBeenCalled();
     });

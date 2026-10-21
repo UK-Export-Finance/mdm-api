@@ -36,8 +36,11 @@ export class CustomersService {
   async getCustomers(backendQuery: GetCustomersInformaticaQueryDto): Promise<GetCustomersResponse> {
     try {
       this.logger.info('Finding customers in Informatica');
+
       const customersInInformatica = await this.informaticaService.getCustomers(backendQuery);
+
       this.logger.info('Found %s customers in Informatica', customersInInformatica.length);
+
       return customersInInformatica.map((customerInInformatica): GetCustomersResponseItem => ({
         companyRegNo: customerInInformatica.companyRegNo,
         creditClassificationDate: customerInInformatica.creditClassificationDate,
@@ -56,10 +59,10 @@ export class CustomersService {
         ukefSectorName: customerInInformatica.ukefSectorName,
       }));
     } catch (error) {
+      this.logger.error('Error finding customers in Informatica %o', error);
+
       if (error instanceof NotFoundException) {
         this.logger.warn('Customers not found in Informatica %o', error);
-      } else {
-        this.logger.error('Error finding customers in Informatica %o', error);
       }
 
       throw error;
