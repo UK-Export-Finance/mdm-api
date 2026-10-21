@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { resetAllWhenMocks, when } from 'jest-when';
+import { PinoLogger } from 'nestjs-pino';
 import { EXAMPLES } from '@ukef/constants';
 import { DunAndBradstreetService } from '@ukef/helper-modules/dun-and-bradstreet/dun-and-bradstreet.service';
 import { salesforceFormattedCurrentDate } from '@ukef/helpers/date-formatter.helper';
@@ -145,6 +146,7 @@ describe('CustomerService', () => {
   const valueGenerator = new RandomValueGenerator();
 
   let service: CustomersService;
+  let logger: PinoLogger;
 
   let informaticaServiceGetCustomers: jest.Mock;
 
@@ -171,7 +173,7 @@ describe('CustomerService', () => {
     });
     salesforceConfigService.get = salesforceConfigServiceGet;
     salesforceServiceCreateCustomer = jest.fn();
-    const salesforceService = new SalesforceService(null, salesforceConfigService);
+    const salesforceService = new SalesforceService(null, salesforceConfigService, null);
     salesforceService.createCustomer = salesforceServiceCreateCustomer;
 
     numbersServiceCreate = jest.fn();
@@ -188,7 +190,12 @@ describe('CustomerService', () => {
     resetAllWhenMocks();
     jest.clearAllMocks();
 
-    service = new CustomersService(informaticaService, salesforceService, numbersService, dunAndBradstreetService);
+    logger = new PinoLogger({});
+    logger.info = jest.fn();
+    logger.warn = jest.fn();
+    logger.error = jest.fn();
+
+    service = new CustomersService(informaticaService, salesforceService, numbersService, dunAndBradstreetService, logger);
   });
 
   describe('getCustomers', () => {
@@ -204,6 +211,84 @@ describe('CustomerService', () => {
       // Assert
       expect(response).toEqual(getCustomersResponse[0]);
       expect(informaticaServiceGetCustomers).toHaveBeenCalledTimes(1);
+      expect(logger.info).toHaveBeenCalledWith('Finding customers in Informatica');
+      expect(logger.info).toHaveBeenCalledWith('Found %s customers in Informatica', getCustomersResponse[0].length);
+    });
+
+    it('logs Informatica failures and rejects with the original error', async () => {
+      const error = new InformaticaException('Failed to get customers in Informatica');
+      informaticaServiceGetCustomers.mockRejectedValueOnce(error);
+
+      await expect(service.getCustomers(informaticaRequest[0])).rejects.toBe(error);
+
+      expect(logger.error).toHaveBeenCalledWith('Error finding customers in Informatica %o', error);
+    });
+  });
+
+  describe('customer creation logging', () => {
+    beforeEach(() => {
+      informaticaServiceGetCustomers.mockRejectedValueOnce(new NotFoundException('Customer not found.'));
+      dunAndBradstreetServiceGetDunsNumber.mockResolvedValueOnce(dunsNumber);
+      numbersServiceCreate.mockResolvedValueOnce(createUkefIdResponse);
+      salesforceServiceCreateCustomer.mockResolvedValueOnce(salesforceCreateCustomerResponse);
+    });
+
+    it('logs downstream operations and successful Salesforce creation without logging the customer payload', async () => {
+      await service.getOrCreateCustomer(mockResponseObject, customerWithFullPayload);
+
+      expect(logger.info).toHaveBeenCalledWith('Customer for company %s not found in Informatica; creating in Salesforce', companyRegistrationNumber);
+      expect(logger.info).toHaveBeenCalledWith('Finding DUNS number for company %s in Dun and Bradstreet', companyRegistrationNumber);
+      expect(logger.info).toHaveBeenCalledWith('Found DUNS number for company %s in Dun and Bradstreet', companyRegistrationNumber);
+      expect(logger.info).toHaveBeenCalledWith('Generating party URN for company %s', companyRegistrationNumber);
+      expect(logger.info).toHaveBeenCalledWith('Generated party URN for company %s', companyRegistrationNumber);
+      expect(logger.info).toHaveBeenCalledWith('Sending customer creation request to Salesforce for company %s', companyRegistrationNumber);
+      expect(logger.info).toHaveBeenCalledWith('Created customer in Salesforce for company %s', companyRegistrationNumber);
+      expect(logger.info).not.toHaveBeenCalledWith(expect.any(String), customerWithFullPayload);
+      expect(logger.warn).not.toHaveBeenCalled();
+      expect(logger.error).not.toHaveBeenCalled();
+    });
+
+    it('warns when party URN generation fails and still sends the customer to Salesforce', async () => {
+      const error = new InternalServerErrorException('Number generation failed');
+      numbersServiceCreate.mockReset().mockRejectedValueOnce(error);
+
+      await service.getOrCreateCustomer(mockResponseObject, customerWithPod);
+
+      expect(logger.warn).toHaveBeenCalledWith(
+        'Error generating party URN for company %s; continuing Salesforce creation without a party URN %o',
+        companyRegistrationNumber,
+        error,
+      );
+      expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(expect.objectContaining({ Party_URN__c: null }));
+    });
+
+    it('logs Salesforce failures and rejects with the original error', async () => {
+      const error = new Error('Salesforce failed');
+      salesforceServiceCreateCustomer.mockReset().mockRejectedValueOnce(error);
+
+      await expect(service.getOrCreateCustomer(mockResponseObject, customerWithPod)).rejects.toBe(error);
+
+      expect(logger.error).toHaveBeenCalledWith('Error creating customer in Salesforce for company %s %o', companyRegistrationNumber, error);
+      expect(logger.info).not.toHaveBeenCalledWith('Created customer in Salesforce for company %s', companyRegistrationNumber);
+    });
+
+    it('warns instead of logging success when Salesforce does not confirm creation', async () => {
+      salesforceServiceCreateCustomer.mockReset().mockResolvedValueOnce({ ...salesforceCreateCustomerResponse, success: false });
+
+      await service.getOrCreateCustomer(mockResponseObject, customerWithPod);
+
+      expect(logger.warn).toHaveBeenCalledWith('Salesforce did not confirm customer creation for company %s', companyRegistrationNumber);
+      expect(logger.info).not.toHaveBeenCalledWith('Created customer in Salesforce for company %s', companyRegistrationNumber);
+    });
+
+    it('logs Dun and Bradstreet failures and does not send the customer to Salesforce', async () => {
+      const error = new Error('Dun and Bradstreet failed');
+      dunAndBradstreetServiceGetDunsNumber.mockReset().mockRejectedValueOnce(error);
+
+      await expect(service.getOrCreateCustomer(mockResponseObject, customerWithPod)).rejects.toBe(error);
+
+      expect(logger.error).toHaveBeenCalledWith('Error finding DUNS number for company %s in Dun and Bradstreet %o', companyRegistrationNumber, error);
+      expect(salesforceServiceCreateCustomer).not.toHaveBeenCalled();
     });
   });
 
@@ -253,6 +338,7 @@ describe('CustomerService', () => {
           expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(0);
           expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(0);
           expect(numbersServiceCreate).toHaveBeenCalledTimes(0);
+          expect(logger.info).toHaveBeenCalledWith('Returning existing non-legacy Salesforce customer for company %s', companyRegistrationNumber);
         });
       });
 

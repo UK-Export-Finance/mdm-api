@@ -1,6 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { PinoLogger } from 'nestjs-pino';
 import { HttpClient } from '@ukef/modules/http/http.client';
 
 import { SALESFORCE_CONFIG_KEY, SalesforceConfigType } from '@ukef/config/salesforce.config';
@@ -23,7 +24,11 @@ export class SalesforceService {
 
   private readonly access_url: string;
 
-  constructor(httpService: HttpService, configService: ConfigService) {
+  constructor(
+    httpService: HttpService,
+    configService: ConfigService,
+    private readonly logger: PinoLogger,
+  ) {
     const { clientId, clientSecret, username, password, accessUrl } = configService.get<SalesforceConfigType>(SALESFORCE_CONFIG_KEY);
     this.client_id = clientId;
     this.client_secret = clientSecret;
@@ -47,19 +52,33 @@ export class SalesforceService {
     const path = '/sobjects/Account';
     const accessToken = await this.getAccessToken();
 
-    const { data } = await this.httpClient.post<CreateCustomerDto, CreateCustomerSalesforceResponseDto>({
-      path,
-      body: createCustomerDto,
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-      onError: createWrapSalesforceHttpGetErrorCallback({
-        messageForUnknownError: `Failed to create customer in Salesforce`,
-        knownErrors: [customerAlreadyExistsSalesforceError()],
-      }),
-    });
+    try {
+      this.logger.info('Sending customer creation request to Salesforce %s for company %s', path, createCustomerDto.Company_Registration_Number__c);
 
-    return data;
+      const { data } = await this.httpClient.post<CreateCustomerDto, CreateCustomerSalesforceResponseDto>({
+        path,
+        body: createCustomerDto,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        onError: createWrapSalesforceHttpGetErrorCallback({
+          messageForUnknownError: `Failed to create customer in Salesforce`,
+          knownErrors: [customerAlreadyExistsSalesforceError()],
+        }),
+      });
+
+      if (data?.success) {
+        this.logger.info('Salesforce confirmed customer creation for company %s', createCustomerDto.Company_Registration_Number__c);
+      } else {
+        this.logger.warn('Salesforce did not confirm customer creation for company %s', createCustomerDto.Company_Registration_Number__c);
+      }
+
+      return data;
+    } catch (error) {
+      this.logger.error('Salesforce customer creation request failed for company %s', createCustomerDto.Company_Registration_Number__c);
+
+      throw error;
+    }
   }
 
   /**
@@ -70,24 +89,39 @@ export class SalesforceService {
    * @throws Will throw an error if the Salesforce API fails to provide an access token.
    */
   private async getAccessToken(): Promise<string> {
-    const path = this.access_url;
-    const response = await this.httpClient.post<any, any>({
-      path,
-      body: {
-        grant_type: 'password',
-        client_id: this.client_id,
-        client_secret: this.client_secret,
-        username: this.username,
-        password: this.password,
-      },
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      onError: createWrapSalesforceHttpGetErrorCallback({
-        messageForUnknownError: 'Failed to get access token',
-        knownErrors: [],
-      }),
-    });
-    return response.data.access_token;
+    try {
+      this.logger.info('Requesting Salesforce access token');
+
+      const path = this.access_url;
+      const response = await this.httpClient.post<any, any>({
+        path,
+        body: {
+          grant_type: 'password',
+          client_id: this.client_id,
+          client_secret: this.client_secret,
+          username: this.username,
+          password: this.password,
+        },
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        onError: createWrapSalesforceHttpGetErrorCallback({
+          messageForUnknownError: 'Failed to get access token',
+          knownErrors: [],
+        }),
+      });
+
+      if (response.data.access_token) {
+        this.logger.info('Received Salesforce access token');
+      } else {
+        this.logger.warn('Salesforce authentication response did not include an access token');
+      }
+
+      return response.data.access_token;
+    } catch (error) {
+      this.logger.error('Failed to retrieve Salesforce access token');
+
+      throw error;
+    }
   }
 }

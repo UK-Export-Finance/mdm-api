@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { AxiosError, HttpStatusCode } from 'axios';
 import { when } from 'jest-when';
 import { of, throwError } from 'rxjs';
+import { PinoLogger } from 'nestjs-pino';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { EXAMPLES } from '@ukef/constants';
 
@@ -17,6 +18,7 @@ describe('SalesforceService', () => {
   let httpServicePost: jest.Mock;
   let configServiceGet: jest.Mock;
   let service: SalesforceService;
+  let logger: PinoLogger;
 
   beforeEach(() => {
     const httpService = new HttpService();
@@ -35,7 +37,12 @@ describe('SalesforceService', () => {
     });
     configService.get = configServiceGet;
 
-    service = new SalesforceService(httpService, configService);
+    logger = new PinoLogger({});
+    logger.info = jest.fn();
+    logger.warn = jest.fn();
+    logger.error = jest.fn();
+
+    service = new SalesforceService(httpService, configService, logger);
   });
 
   afterEach(() => {
@@ -151,6 +158,8 @@ describe('SalesforceService', () => {
       expect(getAccessTokenMethodMock).toHaveBeenCalledTimes(1);
       expect(httpServicePost).toHaveBeenCalledTimes(1);
       expect(httpServicePost).toHaveBeenCalledWith(...expectedHttpServicePostArgs);
+      expect(logger.info).toHaveBeenCalledWith('Sending customer creation request to Salesforce %s for company %s', customerBasePath, companyRegNo);
+      expect(logger.info).toHaveBeenCalledWith('Salesforce confirmed customer creation for company %s', companyRegNo);
     });
 
     it('throws a SalesforceException if the request to Salesforce fails', async () => {
@@ -163,6 +172,18 @@ describe('SalesforceService', () => {
       await expect(getCustomersPromise).rejects.toBeInstanceOf(SalesforceException);
       await expect(getCustomersPromise).rejects.toThrow('Failed to create customer in Salesforce');
       await expect(getCustomersPromise).rejects.toHaveProperty('innerError', axiosRequestError);
+      expect(logger.error).toHaveBeenCalledWith('Salesforce customer creation request failed for company %s', companyRegNo);
+      expect(logger.info).not.toHaveBeenCalledWith('Salesforce confirmed customer creation for company %s', companyRegNo);
+    });
+
+    it('warns when Salesforce does not confirm creation and preserves the response', async () => {
+      const response = { ...expectedResponse, success: false };
+      httpServicePost.mockReturnValueOnce(of({ data: response }));
+
+      await expect(service.createCustomer(baseQuery)).resolves.toEqual(response);
+
+      expect(logger.warn).toHaveBeenCalledWith('Salesforce did not confirm customer creation for company %s', companyRegNo);
+      expect(logger.info).not.toHaveBeenCalledWith('Salesforce confirmed customer creation for company %s', companyRegNo);
     });
 
     it.each([
@@ -205,6 +226,58 @@ describe('SalesforceService', () => {
 
       await expect(getCustomersPromise).rejects.toBeInstanceOf(TypeError);
       await expect(getCustomersPromise).rejects.toEqual(typeError);
+    });
+
+    describe('authentication logging', () => {
+      beforeAll(() => {
+        getAccessTokenMethodMock.mockRestore();
+      });
+
+      const customer: CreateCustomerDto = {
+        Name: 'Test customer',
+        Company_Registration_Number__c: companyRegNo,
+        CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
+        CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
+        CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
+        D_B_Number__c: '12341234',
+        Party_URN__c: '00312345',
+      };
+
+      it('logs authentication without exposing the access token or credentials', async () => {
+        httpServicePost
+          .mockReturnValueOnce(of({ data: { access_token: expectedAccessToken } }))
+          .mockReturnValueOnce(of({ data: { id: 'customer-id', success: true, errors: null } }));
+
+        await service.createCustomer(customer);
+
+        expect(logger.info).toHaveBeenCalledWith('Requesting Salesforce access token');
+        expect(logger.info).toHaveBeenCalledWith('Received Salesforce access token');
+        expect(logger.info).not.toHaveBeenCalledWith(expect.any(String), expectedAccessToken);
+        expect(logger.error).not.toHaveBeenCalled();
+      });
+
+      it('logs authentication failures without logging the HTTP error containing credentials', async () => {
+        const error = new AxiosError('Authentication failed');
+        httpServicePost.mockReturnValueOnce(throwError(() => error));
+
+        const response = service.createCustomer(customer);
+
+        await expect(response).rejects.toBeInstanceOf(SalesforceException);
+        await expect(response).rejects.toHaveProperty('innerError', error);
+        expect(logger.error).toHaveBeenCalledWith('Failed to retrieve Salesforce access token');
+        expect(logger.error).toHaveBeenCalledTimes(1);
+        expect(httpServicePost).toHaveBeenCalledTimes(1);
+        expect(logger.info).not.toHaveBeenCalledWith('Received Salesforce access token');
+      });
+
+      it('warns when authentication returns no token without changing the existing behaviour', async () => {
+        httpServicePost.mockReturnValueOnce(of({ data: {} })).mockReturnValueOnce(of({ data: { success: false } }));
+
+        await service.createCustomer(customer);
+
+        expect(logger.warn).toHaveBeenCalledWith('Salesforce authentication response did not include an access token');
+        expect(logger.info).not.toHaveBeenCalledWith('Received Salesforce access token');
+      });
     });
   });
 });

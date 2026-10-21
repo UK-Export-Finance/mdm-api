@@ -1,6 +1,7 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
+import { PinoLogger } from 'nestjs-pino';
 import { EXAMPLES } from '@ukef/constants';
 import { DunAndBradstreetService } from '@ukef/helper-modules/dun-and-bradstreet/dun-and-bradstreet.service';
 import { salesforceFormattedCurrentDate } from '@ukef/helpers/date-formatter.helper';
@@ -23,6 +24,7 @@ export class CustomersService {
     private readonly salesforceService: SalesforceService,
     private readonly numbersService: NumbersService,
     private readonly dunAndBradstreetService: DunAndBradstreetService,
+    private readonly logger: PinoLogger,
   ) {}
 
   /**
@@ -32,24 +34,36 @@ export class CustomersService {
    * @returns {Promise<GetCustomersResponse>} A promise that resolves to a list of customer response items.
    */
   async getCustomers(backendQuery: GetCustomersInformaticaQueryDto): Promise<GetCustomersResponse> {
-    const customersInInformatica = await this.informaticaService.getCustomers(backendQuery);
-    return customersInInformatica.map((customerInInformatica): GetCustomersResponseItem => ({
-      companyRegNo: customerInInformatica.companyRegNo,
-      creditClassificationDate: customerInInformatica.creditClassificationDate,
-      creditClassificationStatus: customerInInformatica.creditClassificationStatus,
-      customerType: customerInInformatica.customerType || null,
-      isLegacyRecord: customerInInformatica.isLegacyRecord,
-      name: customerInInformatica.name,
-      partyUrn: customerInInformatica.partyUrn,
-      probabilityOfDefault: customerInInformatica.probabilityOfDefault,
-      riskEntity: customerInInformatica.riskEntity,
-      sfId: customerInInformatica.sfId,
-      subtype: customerInInformatica.subtype,
-      type: customerInInformatica.type,
-      ukEntity: customerInInformatica.ukEntity,
-      ukefIndustryName: customerInInformatica.ukefIndustryName,
-      ukefSectorName: customerInInformatica.ukefSectorName,
-    }));
+    try {
+      this.logger.info('Finding customers in Informatica');
+      const customersInInformatica = await this.informaticaService.getCustomers(backendQuery);
+      this.logger.info('Found %s customers in Informatica', customersInInformatica.length);
+      return customersInInformatica.map((customerInInformatica): GetCustomersResponseItem => ({
+        companyRegNo: customerInInformatica.companyRegNo,
+        creditClassificationDate: customerInInformatica.creditClassificationDate,
+        creditClassificationStatus: customerInInformatica.creditClassificationStatus,
+        customerType: customerInInformatica.customerType || null,
+        isLegacyRecord: customerInInformatica.isLegacyRecord,
+        name: customerInInformatica.name,
+        partyUrn: customerInInformatica.partyUrn,
+        probabilityOfDefault: customerInInformatica.probabilityOfDefault,
+        riskEntity: customerInInformatica.riskEntity,
+        sfId: customerInInformatica.sfId,
+        subtype: customerInInformatica.subtype,
+        type: customerInInformatica.type,
+        ukEntity: customerInInformatica.ukEntity,
+        ukefIndustryName: customerInInformatica.ukefIndustryName,
+        ukefSectorName: customerInInformatica.ukefSectorName,
+      }));
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        this.logger.warn('Customers not found in Informatica %o', error);
+      } else {
+        this.logger.error('Error finding customers in Informatica %o', error);
+      }
+
+      throw error;
+    }
   }
 
   /**
@@ -60,7 +74,23 @@ export class CustomersService {
    */
 
   async getDunAndBradstreetNumber(registrationNumber: string): Promise<string> {
-    return await this.dunAndBradstreetService.getDunAndBradstreetNumberByRegistrationNumber(registrationNumber);
+    try {
+      this.logger.info('Finding DUNS number for company %s in Dun and Bradstreet', registrationNumber);
+
+      const dunsNumber = await this.dunAndBradstreetService.getDunAndBradstreetNumberByRegistrationNumber(registrationNumber);
+
+      this.logger.info('Found DUNS number for company %s in Dun and Bradstreet', registrationNumber);
+
+      return dunsNumber;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        this.logger.warn('DUNS number not found for company %s in Dun and Bradstreet %o', registrationNumber, error);
+      } else {
+        this.logger.error('Error finding DUNS number for company %s in Dun and Bradstreet %o', registrationNumber, error);
+      }
+
+      throw error;
+    }
   }
 
   /**
@@ -77,6 +107,8 @@ export class CustomersService {
     };
 
     try {
+      this.logger.info('Finding customer for company %s in Informatica before Salesforce creation', dtfsCustomerDto.companyRegistrationNumber);
+
       const existingCustomersInInformatica = await this.informaticaService.getCustomers(backendQuery);
 
       // If the customer does exist in Informatica
@@ -84,12 +116,18 @@ export class CustomersService {
         return await this.handleInformaticaResponse(res, dtfsCustomerDto, existingCustomersInInformatica);
       }
 
+      this.logger.error('Informatica returned no customers for company %s without a not-found response', dtfsCustomerDto.companyRegistrationNumber);
+
       throw new InternalServerErrorException();
     } catch (error) {
       // If the customer does not exist in Informatica
       if (error instanceof NotFoundException) {
+        this.logger.info('Customer for company %s not found in Informatica; creating in Salesforce', dtfsCustomerDto.companyRegistrationNumber);
+
         return await this.handleInformaticaCustomerNotFound(res, dtfsCustomerDto);
       }
+
+      this.logger.error('Error getting or creating customer for company %s %o', dtfsCustomerDto.companyRegistrationNumber, error);
 
       throw error;
     }
@@ -105,6 +143,8 @@ export class CustomersService {
    */
   private async handleInformaticaResponse(res, dtfsCustomerDto, existingCustomersInInformatica): Promise<GetCustomersResponse> {
     if (existingCustomersInInformatica[0]?.isLegacyRecord === false) {
+      this.logger.info('Returning existing non-legacy Salesforce customer for company %s', dtfsCustomerDto.companyRegistrationNumber);
+
       // If the customer exists as a non-legacy record in Salesforce (via Informatica)
       return res.status(HttpStatusCode.Ok).json(
         existingCustomersInInformatica.map((customerInInformatica): GetCustomersResponseItem => ({
@@ -131,13 +171,19 @@ export class CustomersService {
 
     if (existingCustomersInInformatica[0]?.isLegacyRecord === true) {
       if (existingCustomersInInformatica[0]?.partyUrn) {
+        this.logger.info('Creating Salesforce customer for company %s using legacy party URN', dtfsCustomerDto.companyRegistrationNumber);
+
         // If the customer only exists as a legacy record in Salesforce (fetched via Informatica) and has a URN
         return await this.createCustomerWithLegacyURN(res, dtfsCustomerDto, existingCustomersInInformatica);
       }
 
+      this.logger.info('Legacy customer for company %s has no party URN; generating one before Salesforce creation', dtfsCustomerDto.companyRegistrationNumber);
+
       // If the customer only exists as a legacy record in Salesforce (fetched via Informatica) but has no URN
       return await this.createCustomerByURN(res, dtfsCustomerDto);
     }
+
+    this.logger.warn('Informatica returned an unrecognised legacy status for company %s', dtfsCustomerDto.companyRegistrationNumber);
 
     return undefined;
   }
@@ -178,7 +224,7 @@ export class CustomersService {
     let isLegacyRecord: boolean;
 
     // TODO: replace this with a call to Salesforce's NUMGEN table once that's in place
-    const dunsNumber = await this.dunAndBradstreetService.getDunAndBradstreetNumberByRegistrationNumber(dtfsCustomerDto.companyRegistrationNumber);
+    const dunsNumber = await this.getDunAndBradstreetNumber(dtfsCustomerDto.companyRegistrationNumber);
 
     if (existingCustomersInInformatica) {
       isLegacyRecord = true;
@@ -193,9 +239,19 @@ export class CustomersService {
         },
       ];
       try {
+        this.logger.info('Generating party URN for company %s', dtfsCustomerDto.companyRegistrationNumber);
+
         const numbersServiceResponse: UkefId[] = await this.numbersService.create(createUkefIdDto);
         partyUrn = numbersServiceResponse[0].maskedId;
-      } catch {
+
+        this.logger.info('Generated party URN for company %s', dtfsCustomerDto.companyRegistrationNumber);
+      } catch (error) {
+        this.logger.warn(
+          'Error generating party URN for company %s; continuing Salesforce creation without a party URN %o',
+          dtfsCustomerDto.companyRegistrationNumber,
+          error,
+        );
+
         partyUrn = null;
       }
     }
@@ -244,7 +300,23 @@ export class CustomersService {
       createCustomerDto.CCM_Customer_Type__c = dtfsCustomerDto.customerType;
     }
 
-    const salesforceCreateCustomerResponse: CreateCustomerSalesforceResponseDto = await this.salesforceService.createCustomer(createCustomerDto);
+    let salesforceCreateCustomerResponse: CreateCustomerSalesforceResponseDto;
+
+    try {
+      this.logger.info('Sending customer creation request to Salesforce for company %s', dtfsCustomerDto.companyRegistrationNumber);
+
+      salesforceCreateCustomerResponse = await this.salesforceService.createCustomer(createCustomerDto);
+    } catch (error) {
+      this.logger.error('Error creating customer in Salesforce for company %s %o', dtfsCustomerDto.companyRegistrationNumber, error);
+
+      throw error;
+    }
+
+    if (salesforceCreateCustomerResponse?.success) {
+      this.logger.info('Created customer in Salesforce for company %s', dtfsCustomerDto.companyRegistrationNumber);
+    } else {
+      this.logger.warn('Salesforce did not confirm customer creation for company %s', dtfsCustomerDto.companyRegistrationNumber);
+    }
 
     return [
       {
