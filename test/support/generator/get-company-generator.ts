@@ -76,13 +76,6 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
 
     const randomISO8601Date = () => this.valueGenerator.dateISO8601();
 
-    const shuffleArray = <T>(array: T[]) => {
-      for (const i of [...Array(array.length).keys()].reverse().slice(0, -1)) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[`${i}`], array[`${i}`]] = [array[`${j}`], array[`${i}`]];
-      }
-    };
-
     const getCompanyCompaniesHouseResponse: GetCompanyCompaniesHouseResponse = {
       links: {
         filing_history: `/company/${registrationNumberToUse}/filing-history`,
@@ -180,7 +173,12 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
     };
 
     findSectorIndustriesResponse.push(nonMatchingIndustryClass);
-    shuffleArray(findSectorIndustriesResponse);
+
+    for (let i = findSectorIndustriesResponse.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+
+      [findSectorIndustriesResponse[i], findSectorIndustriesResponse[j]] = [findSectorIndustriesResponse[j], findSectorIndustriesResponse[i]];
+    }
 
     const industries: Industry[] = v.sicCodes.map((sicCode, index) => ({
       code: v.industrySectorCode.toString(),

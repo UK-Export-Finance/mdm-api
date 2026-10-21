@@ -40,7 +40,7 @@ export function withStringFieldValidationApiTests<RequestBodyItem, RequestBodyIt
   const requestIsAnArray = Array.isArray(validRequestBody);
   const requestBodyItem = requestIsAnArray ? validRequestBody[0] : validRequestBody;
 
-  required = required ?? true;
+  const isRequired = required ?? true;
 
   describe(`${fieldName} validation`, () => {
     beforeEach(() => {
@@ -49,7 +49,7 @@ export function withStringFieldValidationApiTests<RequestBodyItem, RequestBodyIt
 
     withRequiredFieldValidationApiTests({
       fieldName: fieldNameSymbol,
-      required,
+      required: isRequired,
       validRequestBody,
       enum: theEnum,
       makeRequest,

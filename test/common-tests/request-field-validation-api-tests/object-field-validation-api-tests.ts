@@ -20,7 +20,7 @@ export function withObjectFieldValidationApiTests<RequestBodyItem, RequestBodyIt
 }: ObjectFieldValidationApiTests<RequestBodyItem, RequestBodyItemKey>): void {
   const fieldName = fieldNameSymbol.toString();
   const typeNameForErrorMessages = 'an object';
-  required = required ?? true;
+  const isRequired = required ?? true;
 
   describe(`${fieldName} validation`, () => {
     beforeEach(() => {
@@ -29,7 +29,7 @@ export function withObjectFieldValidationApiTests<RequestBodyItem, RequestBodyIt
 
     withRequiredFieldValidationApiTests({
       fieldName: fieldNameSymbol,
-      required,
+      required: isRequired,
       validRequestBody,
       makeRequest,
       typeNameForErrorMessages,
