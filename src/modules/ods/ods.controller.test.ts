@@ -1,6 +1,7 @@
+import { jest } from '@jest/globals';
 import { PinoLogger } from 'nestjs-pino';
 import { EXAMPLES, ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES } from '@ukef/constants';
-import { mapIndustry } from '@ukef/helpers';
+import { mapAccrualSchedule, mapIndustries, mapIndustry } from '@ukef/helpers';
 
 import { OdsController } from './ods.controller';
 import { OdsService } from './ods.service';
@@ -14,36 +15,81 @@ import { OdsProductConfigService } from './ods-product-config.service';
 const mockError = new Error('An error occurred');
 
 const mockCustomerDetails = { urn: EXAMPLES.CUSTOMER.PARTYURN, name: 'Mock customer name' };
-const mockDeal = { id: EXAMPLES.DEAL.ID, name: 'Mock deal name' };
+const mockDeal = { dealId: EXAMPLES.DEAL.ID, name: 'Mock deal name', description: 'Mock deal description' };
 
-const mockUkefIndustries = [EXAMPLES.ODS.INDUSTRY, EXAMPLES.ODS.INDUSTRY];
+const mockUkefIndustries = mapIndustries([EXAMPLES.ODS.INDUSTRY, EXAMPLES.ODS.INDUSTRY]);
 const mockUkefIndustryCodes = [EXAMPLES.ODS.INDUSTRY.industry_code, EXAMPLES.ODS.INDUSTRY.industry_code];
 
 const mockMappedIndustry = mapIndustry(EXAMPLES.ODS.INDUSTRY);
 const mockUkefIndustryCode = EXAMPLES.UKEF_INDUSTRY_CODE;
 
-const mockAccrualFrequency = EXAMPLES.ACCRUAL_FREQUENCY;
+const mockAccrualFrequency = {
+  code: EXAMPLES.ACCRUAL_FREQUENCY.CODE,
+  name: EXAMPLES.ACCRUAL_FREQUENCY.NAME,
+  orderId: EXAMPLES.ACCRUAL_FREQUENCY.ORDER_ID,
+  frequencyNumberOfUnits: EXAMPLES.ACCRUAL_FREQUENCY.FREQUENCY_NUMBER_OF_UNITS,
+  frequencyUnit: EXAMPLES.ACCRUAL_FREQUENCY.FREQUENCY_UNIT,
+  isActive: EXAMPLES.ACCRUAL_FREQUENCY.IS_ACTIVE,
+};
 const mockAccrualFrequencies = [mockAccrualFrequency, mockAccrualFrequency];
 
-const mockAccrualScheduleClassification = EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION;
+const mockAccrualScheduleClassification = {
+  type: EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE.TYPE,
+  typeCode: EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE.TYPE_CODE,
+  code: EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE.CODE,
+  description: EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE.DESCRIPTION,
+  isActive: EXAMPLES.ACCRUAL_SCHEDULE_CLASSIFICATION.ADDITIONAL_RATE.IS_ACTIVE,
+};
 const mockAccrualScheduleClassifications = [mockAccrualScheduleClassification, mockAccrualScheduleClassification];
 
-const mockAccrualSchedule = EXAMPLES.ODS.ACCRUAL_SCHEDULE;
+const mockAccrualSchedule = mapAccrualSchedule(EXAMPLES.ODS.ACCRUAL_SCHEDULE);
 const mockAccrualSchedules = [mockAccrualSchedule, mockAccrualSchedule];
 
-const mockCounterpartyRole = EXAMPLES.COUNTERPARTY_ROLE;
+const mockCounterpartyRole = {
+  roleType: EXAMPLES.COUNTERPARTY_ROLE.ROLE_TYPE,
+  name: EXAMPLES.COUNTERPARTY_ROLE.NAME,
+  hasSharePercentage: EXAMPLES.COUNTERPARTY_ROLE.HAS_SHARE_PERCENTAGE,
+  hasAssociatedPaymentCode: EXAMPLES.COUNTERPARTY_ROLE.HAS_ASSOCIATED_PAYMENT_CODE,
+  isActive: EXAMPLES.COUNTERPARTY_ROLE.IS_ACTIVE,
+};
 const mockCounterpartyRoles = [mockCounterpartyRole, mockCounterpartyRole];
 
-const mockFacilityCategory = EXAMPLES.FACILITY_CATEGORY;
+const mockFacilityCategory = {
+  type: EXAMPLES.FACILITY_CATEGORY.TYPE,
+  typeCode: EXAMPLES.FACILITY_CATEGORY.TYPE_CODE,
+  code: EXAMPLES.FACILITY_CATEGORY.CODE,
+  description: EXAMPLES.FACILITY_CATEGORY.DESCRIPTION,
+  isActive: EXAMPLES.FACILITY_CATEGORY.IS_ACTIVE,
+};
 const mockFacilityCategories = [mockFacilityCategory, mockFacilityCategory];
 
-const mockFeeType = EXAMPLES.FEE_TYPE;
+const mockFeeType = {
+  feeType: EXAMPLES.FEE_TYPE.FEE_TYPE,
+  name: EXAMPLES.FEE_TYPE.NAME,
+  classification: EXAMPLES.FEE_TYPE.CLASSIFICATION,
+  expenseIncome: EXAMPLES.FEE_TYPE.EXPENSE_INCOME,
+  isActive: EXAMPLES.FEE_TYPE.IS_ACTIVE,
+  balanceCategory: EXAMPLES.FEE_TYPE.BALANCE_CATEGORY,
+  baseBalanceCategory: EXAMPLES.FEE_TYPE.BASE_BALANCE_CATEGORY,
+  nonFacilityCurrencySettlement: EXAMPLES.FEE_TYPE.NON_FACILITY_CURRENCY_SETTLEMENT,
+  cappedBaseBalance: EXAMPLES.FEE_TYPE.CAPPED_BASE_BALANCE,
+  effectiveDateDefault: EXAMPLES.FEE_TYPE.EFFECTIVE_DATE_DEFAULT,
+  maturityDateDefault: EXAMPLES.FEE_TYPE.MATURITY_DATE_DEFAULT,
+};
 const mockFeeTypes = [mockFeeType, mockFeeType];
 
-const mockObligationSubtype = EXAMPLES.OBLIGATION_SUBTYPE;
+const mockObligationSubtype = {
+  code: EXAMPLES.OBLIGATION_SUBTYPE.CODE,
+  description: EXAMPLES.OBLIGATION_SUBTYPE.DESCRIPTION,
+  balanceCategory: EXAMPLES.OBLIGATION_SUBTYPE.BALANCE_CATEGORY,
+  isActive: EXAMPLES.OBLIGATION_SUBTYPE.IS_ACTIVE,
+};
 const mockObligationSubtypes = [mockObligationSubtype, mockObligationSubtype];
 
-const mockObligationSubtypesWithProductTypes = [EXAMPLES.OBLIGATION_SUBTYPE_WITH_PRODUCT_TYPE, EXAMPLES.OBLIGATION_SUBTYPE_WITH_PRODUCT_TYPE];
+const mockObligationSubtypesWithProductTypes = [
+  { ...mockObligationSubtype, productTypeCode: EXAMPLES.OBLIGATION_SUBTYPE_WITH_PRODUCT_TYPE.productTypeCode },
+  { ...mockObligationSubtype, productTypeCode: EXAMPLES.OBLIGATION_SUBTYPE_WITH_PRODUCT_TYPE.productTypeCode },
+];
 
 describe('OdsController', () => {
   const mockLogger = new PinoLogger({});
@@ -56,96 +102,104 @@ describe('OdsController', () => {
   const odsProductConfigService = new OdsProductConfigService(null, mockLogger);
   const odsObligationSubtypeService = new OdsObligationSubtypeService(null, odsProductConfigService, mockLogger);
 
-  let odsServiceFindBusinessCentreNonWorkingDays: jest.Mock;
-  let odsServiceFindCustomer: jest.Mock;
-  let odsServiceFindDeal: jest.Mock;
-  let odsServiceGetUkefIndustries: jest.Mock;
-  let odsServiceGetUkefIndustryCodes: jest.Mock;
-  let odsServiceGetFeeTypes: jest.Mock;
-  let odsServiceFindFeeType: jest.Mock;
-  let odsAccrualsServiceGetAccrualFrequencies: jest.Mock;
-  let odsAccrualServiceFindAccrualFrequency: jest.Mock;
-  let odsAccrualsServiceGetScheduleClassifications: jest.Mock;
-  let odsAccrualsServiceFindScheduleClassification: jest.Mock;
-  let odsAccrualScheduleServiceGetAll: jest.Mock;
-  let odsAccrualScheduleServiceFindOne: jest.Mock;
-  let odsFacilityCategoryServiceGetAll: jest.Mock;
-  let odsFacilityCategoryServiceFindOne: jest.Mock;
-  let odsCounterpartyRoleServiceGetAll: jest.Mock;
-  let odsCounterpartyRoleServiceFindOne: jest.Mock;
-  let findUkefIndustry: jest.Mock;
-  let findUkefIndustryCodeByCompaniesHouseCode: jest.Mock;
-  let odsObligationSubtypeServiceGetAll: jest.Mock;
-  let odsObligationSubtypeServiceGetAllWithProductTypes: jest.Mock;
-  let odsObligationSubtypeServiceFindOne: jest.Mock;
+  let odsServiceFindBusinessCentreNonWorkingDays: jest.MockedFunction<OdsService['findBusinessCentreNonWorkingDays']>;
+  let odsServiceFindCustomer: jest.MockedFunction<OdsService['findCustomer']>;
+  let odsServiceFindDeal: jest.MockedFunction<OdsService['findDeal']>;
+  let odsServiceGetUkefIndustries: jest.MockedFunction<OdsService['getUkefIndustries']>;
+  let odsServiceGetUkefIndustryCodes: jest.MockedFunction<OdsService['getUkefIndustryCodes']>;
+  let odsServiceGetFeeTypes: jest.MockedFunction<OdsService['getFeeTypes']>;
+  let odsServiceFindFeeType: jest.MockedFunction<OdsService['findFeeType']>;
+  let odsAccrualsServiceGetAccrualFrequencies: jest.MockedFunction<OdsAccrualsService['getAccrualFrequencies']>;
+  let odsAccrualServiceFindAccrualFrequency: jest.MockedFunction<OdsAccrualsService['findAccrualFrequency']>;
+  let odsAccrualsServiceGetScheduleClassifications: jest.MockedFunction<OdsAccrualsService['getScheduleClassifications']>;
+  let odsAccrualsServiceFindScheduleClassification: jest.MockedFunction<OdsAccrualsService['findScheduleClassification']>;
+  let odsAccrualScheduleServiceGetAll: jest.MockedFunction<OdsAccrualScheduleService['getAll']>;
+  let odsAccrualScheduleServiceFindOne: jest.MockedFunction<OdsAccrualScheduleService['findOne']>;
+  let odsFacilityCategoryServiceGetAll: jest.MockedFunction<OdsFacilityCategoryService['getAll']>;
+  let odsFacilityCategoryServiceFindOne: jest.MockedFunction<OdsFacilityCategoryService['findOne']>;
+  let odsCounterpartyRoleServiceGetAll: jest.MockedFunction<OdsCounterpartyRoleService['getAll']>;
+  let odsCounterpartyRoleServiceFindOne: jest.MockedFunction<OdsCounterpartyRoleService['findOne']>;
+  let findUkefIndustry: jest.MockedFunction<OdsService['findUkefIndustry']>;
+  let findUkefIndustryCodeByCompaniesHouseCode: jest.MockedFunction<OdsService['findUkefIndustryCodeByCompaniesHouseCode']>;
+  let odsObligationSubtypeServiceGetAll: jest.MockedFunction<OdsObligationSubtypeService['getAll']>;
+  let odsObligationSubtypeServiceGetAllWithProductTypes: jest.MockedFunction<OdsObligationSubtypeService['getAllWithProductTypes']>;
+  let odsObligationSubtypeServiceFindOne: jest.MockedFunction<OdsObligationSubtypeService['findOne']>;
 
   let controller: OdsController;
 
   beforeEach(() => {
-    odsServiceFindBusinessCentreNonWorkingDays = jest.fn();
+    odsServiceFindBusinessCentreNonWorkingDays = jest.fn<OdsService['findBusinessCentreNonWorkingDays']>();
     odsService.findBusinessCentreNonWorkingDays = odsServiceFindBusinessCentreNonWorkingDays;
 
-    odsServiceFindCustomer = jest.fn().mockResolvedValueOnce(mockCustomerDetails);
+    odsServiceFindCustomer = jest.fn<OdsService['findCustomer']>().mockResolvedValueOnce(mockCustomerDetails);
     odsService.findCustomer = odsServiceFindCustomer;
 
-    odsServiceFindDeal = jest.fn().mockResolvedValueOnce(mockDeal);
+    odsServiceFindDeal = jest.fn<OdsService['findDeal']>().mockResolvedValueOnce(mockDeal);
     odsService.findDeal = odsServiceFindDeal;
 
-    odsServiceGetUkefIndustries = jest.fn().mockResolvedValueOnce(mockUkefIndustries);
+    odsServiceGetUkefIndustries = jest.fn<OdsService['getUkefIndustries']>().mockResolvedValueOnce(mockUkefIndustries);
     odsService.getUkefIndustries = odsServiceGetUkefIndustries;
 
-    odsServiceGetUkefIndustryCodes = jest.fn().mockResolvedValueOnce(mockUkefIndustryCodes);
+    odsServiceGetUkefIndustryCodes = jest.fn<OdsService['getUkefIndustryCodes']>().mockResolvedValueOnce(mockUkefIndustryCodes);
     odsService.getUkefIndustryCodes = odsServiceGetUkefIndustryCodes;
 
-    odsServiceGetFeeTypes = jest.fn().mockResolvedValueOnce(mockFeeTypes);
+    odsServiceGetFeeTypes = jest.fn<OdsService['getFeeTypes']>().mockResolvedValueOnce(mockFeeTypes);
     odsService.getFeeTypes = odsServiceGetFeeTypes;
 
-    odsServiceFindFeeType = jest.fn().mockResolvedValueOnce(mockFeeType);
+    odsServiceFindFeeType = jest.fn<OdsService['findFeeType']>().mockResolvedValueOnce(mockFeeType);
     odsService.findFeeType = odsServiceFindFeeType;
 
-    findUkefIndustry = jest.fn().mockResolvedValueOnce(mockMappedIndustry);
+    findUkefIndustry = jest.fn<OdsService['findUkefIndustry']>().mockResolvedValueOnce(mockMappedIndustry);
     odsService.findUkefIndustry = findUkefIndustry;
 
-    findUkefIndustryCodeByCompaniesHouseCode = jest.fn().mockResolvedValueOnce({ ukefIndustryCode: mockUkefIndustryCode });
+    findUkefIndustryCodeByCompaniesHouseCode = jest
+      .fn<OdsService['findUkefIndustryCodeByCompaniesHouseCode']>()
+      .mockResolvedValueOnce({ ukefIndustryCode: mockUkefIndustryCode });
     odsService.findUkefIndustryCodeByCompaniesHouseCode = findUkefIndustryCodeByCompaniesHouseCode;
 
-    odsAccrualsServiceGetAccrualFrequencies = jest.fn().mockResolvedValueOnce(mockAccrualFrequencies);
+    odsAccrualsServiceGetAccrualFrequencies = jest.fn<OdsAccrualsService['getAccrualFrequencies']>().mockResolvedValueOnce(mockAccrualFrequencies);
     odsAccrualsService.getAccrualFrequencies = odsAccrualsServiceGetAccrualFrequencies;
 
-    odsAccrualServiceFindAccrualFrequency = jest.fn().mockResolvedValueOnce(mockAccrualFrequency);
+    odsAccrualServiceFindAccrualFrequency = jest.fn<OdsAccrualsService['findAccrualFrequency']>().mockResolvedValueOnce(mockAccrualFrequency);
     odsAccrualsService.findAccrualFrequency = odsAccrualServiceFindAccrualFrequency;
 
-    odsAccrualsServiceGetScheduleClassifications = jest.fn().mockResolvedValueOnce(mockAccrualScheduleClassifications);
+    odsAccrualsServiceGetScheduleClassifications = jest
+      .fn<OdsAccrualsService['getScheduleClassifications']>()
+      .mockResolvedValueOnce(mockAccrualScheduleClassifications);
     odsAccrualsService.getScheduleClassifications = odsAccrualsServiceGetScheduleClassifications;
 
-    odsAccrualsServiceFindScheduleClassification = jest.fn().mockResolvedValueOnce(mockAccrualScheduleClassification);
+    odsAccrualsServiceFindScheduleClassification = jest
+      .fn<OdsAccrualsService['findScheduleClassification']>()
+      .mockResolvedValueOnce(mockAccrualScheduleClassification);
     odsAccrualsService.findScheduleClassification = odsAccrualsServiceFindScheduleClassification;
 
-    odsAccrualScheduleServiceGetAll = jest.fn().mockResolvedValueOnce(mockAccrualSchedules);
+    odsAccrualScheduleServiceGetAll = jest.fn<OdsAccrualScheduleService['getAll']>().mockResolvedValueOnce(mockAccrualSchedules);
     odsAccrualScheduleService.getAll = odsAccrualScheduleServiceGetAll;
 
-    odsAccrualScheduleServiceFindOne = jest.fn().mockResolvedValueOnce(mockAccrualSchedule);
+    odsAccrualScheduleServiceFindOne = jest.fn<OdsAccrualScheduleService['findOne']>().mockResolvedValueOnce(mockAccrualSchedule);
     odsAccrualScheduleService.findOne = odsAccrualScheduleServiceFindOne;
 
-    odsFacilityCategoryServiceGetAll = jest.fn().mockResolvedValueOnce(mockFacilityCategories);
+    odsFacilityCategoryServiceGetAll = jest.fn<OdsFacilityCategoryService['getAll']>().mockResolvedValueOnce(mockFacilityCategories);
     odsFacilityCategoryService.getAll = odsFacilityCategoryServiceGetAll;
 
-    odsCounterpartyRoleServiceGetAll = jest.fn().mockResolvedValueOnce(mockCounterpartyRoles);
+    odsCounterpartyRoleServiceGetAll = jest.fn<OdsCounterpartyRoleService['getAll']>().mockResolvedValueOnce(mockCounterpartyRoles);
     odsCounterpartyRoleService.getAll = odsCounterpartyRoleServiceGetAll;
 
-    odsCounterpartyRoleServiceFindOne = jest.fn().mockResolvedValueOnce(mockCounterpartyRole);
+    odsCounterpartyRoleServiceFindOne = jest.fn<OdsCounterpartyRoleService['findOne']>().mockResolvedValueOnce(mockCounterpartyRole);
     odsCounterpartyRoleService.findOne = odsCounterpartyRoleServiceFindOne;
 
-    odsFacilityCategoryServiceFindOne = jest.fn().mockResolvedValueOnce(mockFacilityCategory);
+    odsFacilityCategoryServiceFindOne = jest.fn<OdsFacilityCategoryService['findOne']>().mockResolvedValueOnce(mockFacilityCategory);
     odsFacilityCategoryService.findOne = odsFacilityCategoryServiceFindOne;
 
-    odsObligationSubtypeServiceGetAll = jest.fn().mockResolvedValueOnce(mockObligationSubtypes);
+    odsObligationSubtypeServiceGetAll = jest.fn<OdsObligationSubtypeService['getAll']>().mockResolvedValueOnce(mockObligationSubtypes);
     odsObligationSubtypeService.getAll = odsObligationSubtypeServiceGetAll;
 
-    odsObligationSubtypeServiceGetAllWithProductTypes = jest.fn().mockResolvedValueOnce(mockObligationSubtypesWithProductTypes);
+    odsObligationSubtypeServiceGetAllWithProductTypes = jest
+      .fn<OdsObligationSubtypeService['getAllWithProductTypes']>()
+      .mockResolvedValueOnce(mockObligationSubtypesWithProductTypes);
     odsObligationSubtypeService.getAllWithProductTypes = odsObligationSubtypeServiceGetAllWithProductTypes;
 
-    odsObligationSubtypeServiceFindOne = jest.fn().mockResolvedValueOnce(mockObligationSubtype);
+    odsObligationSubtypeServiceFindOne = jest.fn<OdsObligationSubtypeService['findOne']>().mockResolvedValueOnce(mockObligationSubtype);
     odsObligationSubtypeService.findOne = odsObligationSubtypeServiceFindOne;
 
     controller = new OdsController(
@@ -199,7 +253,7 @@ describe('OdsController', () => {
     describe('when odsAccrualsService.findAccrualFrequency throws an error', () => {
       it('should throw an error', async () => {
         // Arrange
-        odsAccrualsService.findAccrualFrequency = jest.fn().mockRejectedValueOnce(mockError);
+        odsAccrualsService.findAccrualFrequency = jest.fn<OdsAccrualsService['findAccrualFrequency']>().mockRejectedValueOnce(mockError);
 
         controller = new OdsController(
           odsService,
@@ -259,7 +313,7 @@ describe('OdsController', () => {
     describe('when odsAccrualScheduleService.findOne throws an error', () => {
       it('should throw an error', async () => {
         // Arrange
-        odsAccrualScheduleService.findOne = jest.fn().mockRejectedValueOnce(mockError);
+        odsAccrualScheduleService.findOne = jest.fn<OdsAccrualScheduleService['findOne']>().mockRejectedValueOnce(mockError);
 
         controller = new OdsController(
           odsService,
@@ -319,7 +373,7 @@ describe('OdsController', () => {
     describe('when odsAccrualsService.findScheduleClassification throws an error', () => {
       it('should throw an error', async () => {
         // Arrange
-        odsAccrualsService.findScheduleClassification = jest.fn().mockRejectedValueOnce(mockError);
+        odsAccrualsService.findScheduleClassification = jest.fn<OdsAccrualsService['findScheduleClassification']>().mockRejectedValueOnce(mockError);
 
         controller = new OdsController(
           odsService,
@@ -381,7 +435,7 @@ describe('OdsController', () => {
     describe('when odsAccrualsService.findScheduleClassification throws an error', () => {
       it('should throw an error', async () => {
         // Arrange
-        odsAccrualsService.findScheduleClassification = jest.fn().mockRejectedValueOnce(mockError);
+        odsAccrualsService.findScheduleClassification = jest.fn<OdsAccrualsService['findScheduleClassification']>().mockRejectedValueOnce(mockError);
 
         controller = new OdsController(
           odsService,
@@ -441,7 +495,7 @@ describe('OdsController', () => {
     describe('when odsCounterpartyRoleService.findOne throws an error', () => {
       it('should throw an error', async () => {
         // Arrange
-        odsCounterpartyRoleService.findOne = jest.fn().mockRejectedValueOnce(mockError);
+        odsCounterpartyRoleService.findOne = jest.fn<OdsCounterpartyRoleService['findOne']>().mockRejectedValueOnce(mockError);
 
         controller = new OdsController(
           odsService,
@@ -501,7 +555,7 @@ describe('OdsController', () => {
     describe('when odsFacilityCategoryService.findOne throws an error', () => {
       it('should throw an error', async () => {
         // Arrange
-        odsFacilityCategoryService.findOne = jest.fn().mockRejectedValueOnce(mockError);
+        odsFacilityCategoryService.findOne = jest.fn<OdsFacilityCategoryService['findOne']>().mockRejectedValueOnce(mockError);
 
         controller = new OdsController(
           odsService,
@@ -539,7 +593,7 @@ describe('OdsController', () => {
   });
 
   describe('findFeeType', () => {
-    const mockFeeTypeCode = mockFeeType.FEE_TYPE;
+    const mockFeeTypeCode = mockFeeType.feeType;
 
     it('should call odsService.findFeeType', async () => {
       // Act
@@ -563,7 +617,7 @@ describe('OdsController', () => {
         // Arrange
         const localOdsService = new OdsService(null, mockLogger);
 
-        localOdsService.findFeeType = jest.fn().mockRejectedValueOnce(mockError);
+        localOdsService.findFeeType = jest.fn<OdsService['findFeeType']>().mockRejectedValueOnce(mockError);
 
         controller = new OdsController(
           localOdsService,
@@ -641,7 +695,7 @@ describe('OdsController', () => {
     describe('when odsObligationSubtypeService.findOne throws an error', () => {
       it('should throw an error', async () => {
         // Arrange
-        odsObligationSubtypeService.findOne = jest.fn().mockRejectedValueOnce(mockError);
+        odsObligationSubtypeService.findOne = jest.fn<OdsObligationSubtypeService['findOne']>().mockRejectedValueOnce(mockError);
 
         controller = new OdsController(
           odsService,
@@ -686,7 +740,7 @@ describe('OdsController', () => {
         // Arrange
         const localOdsService = new OdsService(null, mockLogger);
 
-        localOdsService.findCustomer = jest.fn().mockRejectedValueOnce(mockError);
+        localOdsService.findCustomer = jest.fn<OdsService['findCustomer']>().mockRejectedValueOnce(mockError);
 
         controller = new OdsController(
           localOdsService,
@@ -728,7 +782,7 @@ describe('OdsController', () => {
         // Arrange
         const localOdsService = new OdsService(null, mockLogger);
 
-        localOdsService.findDeal = jest.fn().mockRejectedValueOnce(mockError);
+        localOdsService.findDeal = jest.fn<OdsService['findDeal']>().mockRejectedValueOnce(mockError);
 
         controller = new OdsController(
           localOdsService,
@@ -809,7 +863,7 @@ describe('OdsController', () => {
         // Arrange
         const localOdsService = new OdsService(null, mockLogger);
 
-        localOdsService.findUkefIndustry = jest.fn().mockRejectedValueOnce(mockError);
+        localOdsService.findUkefIndustry = jest.fn<OdsService['findUkefIndustry']>().mockRejectedValueOnce(mockError);
 
         controller = new OdsController(
           localOdsService,
@@ -858,7 +912,9 @@ describe('OdsController', () => {
         // Arrange
         const localOdsService = new OdsService(null, mockLogger);
 
-        localOdsService.findUkefIndustryCodeByCompaniesHouseCode = jest.fn().mockRejectedValueOnce(mockError);
+        localOdsService.findUkefIndustryCodeByCompaniesHouseCode = jest
+          .fn<OdsService['findUkefIndustryCodeByCompaniesHouseCode']>()
+          .mockRejectedValueOnce(mockError);
 
         controller = new OdsController(
           localOdsService,

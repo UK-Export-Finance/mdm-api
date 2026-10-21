@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { BadRequestException } from '@nestjs/common';
 import { validate } from 'class-validator';
 import { Response } from 'express';
@@ -14,26 +15,26 @@ import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
 import { GetCustomersResponse } from './dto/get-customers-response.dto';
 
 const mockResponseObject = {
-  json: jest.fn(),
-  status: jest.fn().mockReturnThis(),
+  json: jest.fn<Response['json']>(),
+  status: jest.fn<Response['status']>().mockReturnThis(),
 } as any as Response;
 
 describe('CustomersController', () => {
   const valueGenerator = new RandomValueGenerator();
 
-  let customersServiceGetCustomers: jest.Mock;
-  let customersServiceGetOrCreateCustomer: jest.Mock;
-  let customersServiceGetDunAndBradstreetNumber: jest.Mock;
+  let customersServiceGetCustomers: jest.MockedFunction<CustomersService['getCustomers']>;
+  let customersServiceGetOrCreateCustomer: jest.MockedFunction<CustomersService['getOrCreateCustomer']>;
+  let customersServiceGetDunAndBradstreetNumber: jest.MockedFunction<CustomersService['getDunAndBradstreetNumber']>;
 
   let controller: CustomersController;
 
   beforeEach(() => {
     const customersService = new CustomersService(null, null, null, null);
-    customersServiceGetCustomers = jest.fn();
-    customersServiceGetOrCreateCustomer = jest.fn();
+    customersServiceGetCustomers = jest.fn<CustomersService['getCustomers']>();
+    customersServiceGetOrCreateCustomer = jest.fn<CustomersService['getOrCreateCustomer']>();
     customersService.getCustomers = customersServiceGetCustomers;
     customersService.getOrCreateCustomer = customersServiceGetOrCreateCustomer;
-    customersServiceGetDunAndBradstreetNumber = jest.fn();
+    customersServiceGetDunAndBradstreetNumber = jest.fn<CustomersService['getDunAndBradstreetNumber']>();
     customersService.getDunAndBradstreetNumber = customersServiceGetDunAndBradstreetNumber;
 
     controller = new CustomersController(customersService);

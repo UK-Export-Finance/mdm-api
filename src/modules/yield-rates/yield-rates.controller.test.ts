@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { Test, TestingModule } from '@nestjs/testing';
 import Chance from 'chance';
 
@@ -18,24 +19,24 @@ describe('YieldRatesController', () => {
         {
           provide: YieldRatesService,
           useValue: {
-            find: jest.fn().mockResolvedValue([
+            find: jest.fn<YieldRatesService['find']>().mockResolvedValue([
               {
                 id: chance.natural(),
-                facilityURN: chance.natural({ min: 10000000, max: 99999999 }).toString(),
-                calculationDate: chance.word(),
-                income: chance.natural(),
-                incomePerDay: chance.word(),
-                exposure: chance.currency().code,
-                period: chance.natural(),
-                daysInPeriod: chance.word(),
-                effectiveFrom: chance.date({ string: true }),
-                effectiveTo: chance.date({ string: true }),
-                created: chance.date({ string: true }),
-                updated: chance.date({ string: true }),
-                isActive: 'Y',
+                shortName: chance.word(),
+                pxBidPrice: chance.floating(),
+                pxAskPrice: chance.floating(),
+                pxLastPrice: chance.floating(),
+                pxMidPrice: chance.floating(),
+                futureMonthYear: chance.word(),
+                sourceErrorCode: 0,
+                sourceUpdateTimestamp: '16:01:08',
+                yieldIndex: chance.word(),
+                effectiveFrom: chance.date(),
+                effectiveTo: chance.date(),
+                created: chance.date(),
+                updated: chance.date(),
               },
             ]),
-            create: jest.fn().mockResolvedValue({}),
           },
         },
       ],

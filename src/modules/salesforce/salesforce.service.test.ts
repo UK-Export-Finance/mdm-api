@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { AxiosError, HttpStatusCode } from 'axios';
@@ -13,27 +14,25 @@ import { SalesforceService } from './salesforce.service';
 describe('SalesforceService', () => {
   const valueGenerator = new RandomValueGenerator();
 
-  let httpServiceGet: jest.Mock;
-  let httpServicePost: jest.Mock;
-  let configServiceGet: jest.Mock;
+  let httpServicePost: jest.SpiedFunction<HttpService['post']>;
   let service: SalesforceService;
 
   beforeEach(() => {
     const httpService = new HttpService();
-    httpServiceGet = jest.fn();
-    httpService.get = httpServiceGet;
-    httpServicePost = jest.fn();
-    httpService.post = httpServicePost;
+
+    jest.spyOn(httpService, 'get').mockReset();
+
+    httpServicePost = jest.spyOn(httpService, 'post').mockReset();
 
     const configService = new ConfigService();
-    configServiceGet = jest.fn().mockReturnValue({
+
+    jest.spyOn(configService, 'get').mockReset().mockReturnValue({
       clientId: 'TEST_CLIENT_ID',
       clientSecret: 'TEST_CLIENT_SECRET',
       username: 'TEST_USERNAME',
       password: 'TEST_PASSWORD',
       accessUrl: 'TEST_ACCESS_URL',
     });
-    configService.get = configServiceGet;
 
     service = new SalesforceService(httpService, configService);
   });
