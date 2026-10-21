@@ -140,20 +140,24 @@ describe('GovukNotifyService', () => {
       {
         exceptionClass: BadRequestException,
         status: 400,
+        error: 'Bad Request',
       },
       {
         exceptionClass: UnauthorizedException,
         status: 401,
+        error: 'Unauthorized',
       },
       {
         exceptionClass: ForbiddenException,
         status: 403,
+        error: 'Forbidden',
       },
       {
         exceptionClass: InternalServerErrorException,
         status: 500,
+        error: 'Internal Server Error',
       },
-    ])('throws exception $exceptionName for unexpected $status', async ({ exceptionClass, status }) => {
+    ])('throws $error exception for unexpected $status', async ({ exceptionClass, status, error }) => {
       const notifyError = generateNotifyError(status, errorMessage);
       jest.mocked(sendEmailMethodMock).mockImplementation(() => Promise.reject(notifyError));
 
@@ -164,7 +168,7 @@ describe('GovukNotifyService', () => {
       await expect(resultPromise).rejects.toThrow(errorMessage);
       await expect(resultPromise).rejects.toHaveProperty('status', status);
       await expect(resultPromise).rejects.toHaveProperty('cause', notifyError);
-      await expect(resultPromise).rejects.toHaveProperty('response', { message: errorMessage, statusCode: status });
+      await expect(resultPromise).rejects.toHaveProperty('response', { message: errorMessage, statusCode: status, error });
       expect(loggerError).toHaveBeenCalledTimes(1);
       expect(loggerError).toHaveBeenCalledWith(notifyError);
     });
