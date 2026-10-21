@@ -1,14 +1,14 @@
-import { prepareModifiedRequest } from '@ukef-test/support/helpers/request-field-validation-helper';
 import request from 'supertest';
+import { prepareModifiedRequest } from '@ukef-test/support/helpers/request-field-validation-helper';
 
-export interface TypeFieldValidationApiTestOptions<RequestBodyItem, RequestBodyItemKey extends keyof RequestBodyItem> {
+export type TypeFieldValidationApiTestOptions<RequestBodyItem, RequestBodyItemKey extends keyof RequestBodyItem> = {
   fieldName: RequestBodyItemKey;
   enum?: any;
   typeNameForErrorMessages: string;
   validRequestBody: RequestBodyItem[] | RequestBodyItem;
   makeRequest: (body: unknown | unknown[]) => request.Test;
   givenAnyRequestBodyWouldSucceed: () => void;
-}
+};
 
 export function withTypeFieldValidationApiTests<RequestBodyItem, RequestBodyItemKey extends keyof RequestBodyItem>({
   fieldName: fieldNameSymbol,

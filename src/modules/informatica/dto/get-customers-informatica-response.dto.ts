@@ -1,6 +1,6 @@
 export type GetCustomersInformaticaResponse = GetCustomersInformaticaResponseItem[];
 
-export interface GetCustomersInformaticaResponseItem {
+export type GetCustomersInformaticaResponseItem = {
   companyRegNo: string;
   creditClassificationDate?: string;
   creditClassificationStatus?: string;
@@ -16,4 +16,4 @@ export interface GetCustomersInformaticaResponseItem {
   ukEntity?: string;
   ukefIndustryName?: string;
   ukefSectorName?: string;
-}
+};

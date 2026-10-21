@@ -1,15 +1,16 @@
 import { INestApplication, ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import compression from 'compression';
+import express from 'express';
+import { Logger } from 'nestjs-pino';
 import { ApiKeyAuthGuard } from '@ukef/auth/guard/api-key.guard';
 import { GOVUK_NOTIFY } from '@ukef/constants';
 import { TransformInterceptor } from '@ukef/helpers';
 import { SwaggerDocs } from '@ukef/swagger';
-import compression from 'compression';
-import express from 'express';
-import { Logger } from 'nestjs-pino';
 
 export class App {
   private readonly configService: ConfigService;
+
   public readonly port: number;
 
   constructor(protected readonly app: INestApplication) {

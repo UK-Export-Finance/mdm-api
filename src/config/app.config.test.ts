@@ -1,13 +1,17 @@
 import { APPLICATION, AUTH } from '@ukef/constants';
 import { withEnvironmentVariableParsingUnitTests } from '@ukef-test/common-tests/environment-variable-parsing-unit-tests';
 
-import appConfig, { AppConfig } from './app.config';
+import { AppConfig, AppConfigType } from './app.config';
 import { InvalidConfigException } from './invalid-config.exception';
 
 const { VERSION_PREFIX } = APPLICATION;
 
 describe('appConfig', () => {
   let originalProcessEnv: NodeJS.ProcessEnv;
+
+  const replaceEnvironmentVariables = (newEnvVariables: Record<string, string>): void => {
+    process.env = newEnvVariables;
+  };
 
   beforeEach(() => {
     originalProcessEnv = process.env;
@@ -23,7 +27,7 @@ describe('appConfig', () => {
 
       replaceEnvironmentVariables({ API_KEY: mockApiKey });
 
-      const config = appConfig();
+      const config = AppConfig();
 
       expect(config.apiKey).toBe(mockApiKey);
     });
@@ -31,7 +35,7 @@ describe('appConfig', () => {
 
   describe('apiKeyStrategy', () => {
     it('should return the API_KEY_STRATEGY_HEADER environment variable', () => {
-      const config = appConfig();
+      const config = AppConfig();
 
       expect(config.apiKeyStrategy).toBe(AUTH.STRATEGY);
     });
@@ -44,7 +48,7 @@ describe('appConfig', () => {
           LOG_LEVEL: 'not-a-real-log-level',
         });
 
-        const gettingTheAppConfig = () => appConfig();
+        const gettingTheAppConfig = () => AppConfig();
 
         expect(gettingTheAppConfig).toThrow(InvalidConfigException);
 
@@ -58,7 +62,7 @@ describe('appConfig', () => {
           LOG_LEVEL: undefined,
         });
 
-        const config = appConfig();
+        const config = AppConfig();
 
         expect(config.logLevel).toBe('info');
       });
@@ -70,7 +74,7 @@ describe('appConfig', () => {
           LOG_LEVEL: '',
         });
 
-        const config = appConfig();
+        const config = AppConfig();
 
         expect(config.logLevel).toBe('info');
       });
@@ -103,7 +107,7 @@ describe('appConfig', () => {
         LOG_LEVEL,
       });
 
-      const config = appConfig();
+      const config = AppConfig();
 
       expect(config.logLevel).toBe(LOG_LEVEL);
     });
@@ -118,7 +122,7 @@ describe('appConfig', () => {
         HTTP_VERSION: mockHttpVersion,
       });
 
-      const config = appConfig();
+      const config = AppConfig();
 
       const expected = {
         enable: false,
@@ -136,7 +140,7 @@ describe('appConfig', () => {
           HTTP_VERSIONING_ENABLE: 'true',
         });
 
-        const config = appConfig();
+        const config = AppConfig();
 
         expect(config.versioning.enable).toBe(true);
       });
@@ -150,7 +154,7 @@ describe('appConfig', () => {
           HTTP_VERSION: mockHttpVersion,
         });
 
-        const config = appConfig();
+        const config = AppConfig();
 
         expect(config.versioning.version).toBe(mockHttpVersion);
       });
@@ -160,7 +164,7 @@ describe('appConfig', () => {
           HTTP_VERSION: mockHttpVersion,
         });
 
-        const config = appConfig();
+        const config = AppConfig();
 
         const expected = `${VERSION_PREFIX}${mockHttpVersion}`;
 
@@ -177,7 +181,7 @@ describe('appConfig', () => {
         DOM_ODS_HTTP_VERSION: mockHttpVersion,
       });
 
-      const config = appConfig();
+      const config = AppConfig();
 
       const expected = {
         enable: false,
@@ -190,12 +194,8 @@ describe('appConfig', () => {
     });
   });
 
-  const replaceEnvironmentVariables = (newEnvVariables: Record<string, string>): void => {
-    process.env = newEnvVariables;
-  };
-
   const configParsedBooleanFromEnvironmentVariablesWithDefault: {
-    configPropertyName: keyof AppConfig;
+    configPropertyName: keyof AppConfigType;
     environmentVariableName: string;
     defaultConfigValue: boolean;
   }[] = [
@@ -212,7 +212,7 @@ describe('appConfig', () => {
   ];
 
   const configParsedAsIntFromEnvironmentVariablesWithDefault: {
-    configPropertyName: keyof AppConfig;
+    configPropertyName: keyof AppConfigType;
     environmentVariableName: string;
     defaultConfigValue: number;
   }[] = [
@@ -226,6 +226,6 @@ describe('appConfig', () => {
   withEnvironmentVariableParsingUnitTests({
     configParsedBooleanFromEnvironmentVariablesWithDefault,
     configParsedAsIntFromEnvironmentVariablesWithDefault,
-    getConfig: () => appConfig(),
+    getConfig: () => AppConfig(),
   });
 });

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { EXAMPLES } from '@ukef/constants';
 import { IsString, MaxLength, MinLength } from 'class-validator';
+import { EXAMPLES } from '@ukef/constants';
 
 export class FindDomProductConfigsParam {
   @ApiProperty({

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ENUMS } from '@ukef/constants';
 import { IsDateString, IsEnum, IsString, MaxLength } from 'class-validator';
+import { ENUMS } from '@ukef/constants';
 
 export class GetExposurePeriodQueryDto {
   @IsDateString({ strict: true })

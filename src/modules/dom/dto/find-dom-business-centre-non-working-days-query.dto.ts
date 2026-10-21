@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BUSINESS_CENTRE, EXAMPLES } from '@ukef/constants';
 import { IsDateString, IsOptional, MaxLength, MinLength } from 'class-validator';
+import { BUSINESS_CENTRE, EXAMPLES } from '@ukef/constants';
 
 export class FindOdsBusinessCentreOdsResponseNonWorkingDaysQueryDto {
   @IsDateString({ strict: true })

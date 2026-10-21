@@ -1,8 +1,8 @@
 import { NotFoundException } from '@nestjs/common';
+import { resetAllWhenMocks, when } from 'jest-when';
 import { EXAMPLES } from '@ukef/constants';
 import { GetGeospatialAddressesGenerator } from '@ukef-test/support/generator/get-geospatial-addresses-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
-import { resetAllWhenMocks, when } from 'jest-when';
 
 import { GeospatialController } from './geospatial.controller';
 import { GeospatialService } from './geospatial.service';

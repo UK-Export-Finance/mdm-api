@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { EXAMPLES, GOVUK_NOTIFY } from '@ukef/constants';
 import { IsEmail, IsNotEmpty, IsObject, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+import { EXAMPLES, GOVUK_NOTIFY } from '@ukef/constants';
 
 export class PostEmailsRequestDto {
   @IsString()
@@ -35,7 +35,7 @@ export class PostEmailsRequestDto {
     required: false,
     nullable: true,
   })
-  readonly personalisation?: { [key: string]: string | number } | null;
+  readonly personalisation?: Record<string, string | number> | null;
 
   @IsString()
   @IsOptional()

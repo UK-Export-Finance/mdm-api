@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DATABASE_NAME } from '@ukef/constants';
 import { PinoLogger } from 'nestjs-pino';
 import { Repository } from 'typeorm';
+import { DATABASE_NAME } from '@ukef/constants';
 
 import { CreateUkefIdDto } from './dto/create-ukef-id.dto';
 import { UkefId } from './entities/ukef-id.entity';
@@ -17,15 +17,15 @@ export class NumbersService {
 
   async create(createUkefIdDto: CreateUkefIdDto[]): Promise<UkefId[]> {
     // TODO: new IDs of type 1 and 2 could be checked if they are used in ACBS. ACBS might be down, but generation still should work.
-    const activeRequests = createUkefIdDto.map((createNumber) => {
-      return this.numberRepository
+    const activeRequests = createUkefIdDto.map((createNumber) =>
+      this.numberRepository
         .query('sp_NUMBER_GENERATOR @0, @1, @2', [createNumber.numberTypeId, createNumber.requestingSystem, createNumber.createdBy])
         .then((postNumberGeneratorResponse) => {
           const ukefIdString = postNumberGeneratorResponse[0].NBR_GENERATED;
 
           return this.findOne(createNumber.numberTypeId, ukefIdString);
-        });
-    });
+        }),
+    );
 
     const newIds = await Promise.all(activeRequests);
     const sortedNewIds = this.sortIds(newIds);
@@ -36,6 +36,7 @@ export class NumbersService {
   async findOne(type: number, ukefIdString: string): Promise<UkefId> {
     try {
       const dbNumber = await this.numberRepository.query('USP_STP_GET_AUTONUMBER @0, @1', [type, ukefIdString]);
+
       if (!dbNumber.length) {
         throw new NotFoundException('UKEF ID is not found');
       }
@@ -80,8 +81,11 @@ export class NumbersService {
 
     // Keep result objects order, but ensure field maskedId is sorted.
     newUkefIds.forEach((newId) => {
-      newId['maskedId'] = sortednewIdsByType[newId['type']].shift();
-      sortedIds.push(newId);
+      const modifiedId = newId;
+
+      modifiedId.maskedId = sortednewIdsByType[newId.type].shift();
+
+      sortedIds.push(modifiedId);
     });
 
     return sortedIds;
@@ -92,9 +96,11 @@ export class NumbersService {
    */
   sortGroupedByTypeIds(newIdsByType: unknown): unknown {
     return Object.entries(newIdsByType).reduce((acc, typeWithIds) => {
-      acc[typeWithIds[0]] = typeWithIds[1].sort();
+      const modifiedAcc = acc;
 
-      return acc;
+      modifiedAcc[typeWithIds[0]] = typeWithIds[1].sort();
+
+      return modifiedAcc;
     }, Object.create(null));
   }
 
@@ -102,11 +108,13 @@ export class NumbersService {
    * Helper to group ids by type, so they can be sorted.
    */
   groupIdsByType(newUkefIds: UkefId[]): unknown {
-    return newUkefIds.reduce(function (acc, newUkefId) {
-      acc[newUkefId.type] = acc[newUkefId.type] || []; //Reasign or initialize
-      acc[newUkefId.type].push(newUkefId.maskedId);
+    return newUkefIds.reduce((acc, newUkefId) => {
+      const modifiedAcc = acc;
 
-      return acc;
+      modifiedAcc[newUkefId.type] = acc[newUkefId.type] || []; // Reasign or initialize
+      modifiedAcc[newUkefId.type].push(newUkefId.maskedId);
+
+      return modifiedAcc;
     }, Object.create(null));
   }
 }

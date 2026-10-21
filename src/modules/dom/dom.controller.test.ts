@@ -1,10 +1,10 @@
-import { EXAMPLES } from '@ukef/constants';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
+import { EXAMPLES } from '@ukef/constants';
 
-import { OdsService } from '../ods/ods.service';
-import { OdsProductConfigService } from '../ods/ods-product-config.service';
-import { OdsStoredProcedureService } from '../ods/ods-stored-procedure.service';
+import { OdsService } from '@ukef/modules/ods/ods.service';
+import { OdsProductConfigService } from '@ukef/modules/ods/ods-product-config.service';
+import { OdsStoredProcedureService } from '@ukef/modules/ods/ods-stored-procedure.service';
 import { CreditRiskRatingsService } from './credit-risk-ratings/credit-risk-ratings.service';
 import { DomController } from './dom.controller';
 import { DomService } from './dom.service';
@@ -115,11 +115,11 @@ describe('DomController', () => {
     describe('when odsService.findBusinessCentre throws an error', () => {
       it('should throw an error', async () => {
         // Arrange
-        const domService = new DomService(odsService, odsProductConfigService, mockLogger);
+        const localDomService = new DomService(odsService, odsProductConfigService, mockLogger);
 
         odsService.findBusinessCentre = jest.fn().mockRejectedValueOnce(mockError);
 
-        controller = new DomController(domService, odsService, creditRiskRatingsService);
+        controller = new DomController(localDomService, odsService, creditRiskRatingsService);
 
         // Act & Assert
         const promise = controller.findBusinessCentre({ centreCode: EXAMPLES.BUSINESS_CENTRE.CODE });
@@ -159,11 +159,11 @@ describe('DomController', () => {
     describe('when domService.findBusinessCentreNonWorkingDays throws an error', () => {
       it('should throw an error', async () => {
         // Arrange
-        const domService = new DomService(odsService, odsProductConfigService, mockLogger);
+        const localDomService = new DomService(odsService, odsProductConfigService, mockLogger);
 
-        domService.findBusinessCentreNonWorkingDays = jest.fn().mockRejectedValueOnce(mockError);
+        localDomService.findBusinessCentreNonWorkingDays = jest.fn().mockRejectedValueOnce(mockError);
 
-        controller = new DomController(domService, odsService, creditRiskRatingsService);
+        controller = new DomController(localDomService, odsService, creditRiskRatingsService);
 
         // Act & Assert
         const promise = controller.findBusinessCentreNonWorkingDays({ centreCode: EXAMPLES.BUSINESS_CENTRE.CODE }, {});
@@ -193,11 +193,11 @@ describe('DomController', () => {
     describe('when creditRiskRatingsService.getAll throws an error', () => {
       it('should throw an error', async () => {
         // Arrange
-        const domService = new DomService(odsService, odsProductConfigService, mockLogger);
+        const localDomService = new DomService(odsService, odsProductConfigService, mockLogger);
 
         creditRiskRatingsService.getAll = jest.fn().mockRejectedValueOnce(mockError);
 
-        controller = new DomController(domService, odsService, creditRiskRatingsService);
+        controller = new DomController(localDomService, odsService, creditRiskRatingsService);
 
         // Act & Assert
         const promise = controller.getCreditRiskRatings();
@@ -227,11 +227,11 @@ describe('DomController', () => {
     describe('when odsService.getBusinessCentres throws an error', () => {
       it('should throw an error', async () => {
         // Arrange
-        const domService = new DomService(odsService, odsProductConfigService, mockLogger);
+        const localDomService = new DomService(odsService, odsProductConfigService, mockLogger);
 
         odsService.getBusinessCentres = jest.fn().mockRejectedValueOnce(mockError);
 
-        controller = new DomController(domService, odsService, creditRiskRatingsService);
+        controller = new DomController(localDomService, odsService, creditRiskRatingsService);
 
         // Act & Assert
         const promise = controller.getBusinessCentres();
@@ -296,9 +296,9 @@ describe('DomController', () => {
 
     describe('when domService.getCompoundingIndices throws an error', () => {
       it('should throw an error', async () => {
-        const domService = new DomService(odsService, odsProductConfigService, mockLogger);
-        domService.getCompoundingIndices = jest.fn().mockRejectedValueOnce(mockError);
-        controller = new DomController(domService, odsService, creditRiskRatingsService);
+        const localDomService = new DomService(odsService, odsProductConfigService, mockLogger);
+        localDomService.getCompoundingIndices = jest.fn().mockRejectedValueOnce(mockError);
+        controller = new DomController(localDomService, odsService, creditRiskRatingsService);
 
         const promise = controller.getCompoundingIndices(mockQuery);
 
@@ -453,11 +453,11 @@ describe('DomController', () => {
     describe('when domService.getInterestRates throws an error', () => {
       it('should throw an error', async () => {
         // Arrange
-        const domService = new DomService(odsService, odsProductConfigService, mockLogger);
+        const localDomService = new DomService(odsService, odsProductConfigService, mockLogger);
 
-        domService.getInterestRates = jest.fn().mockRejectedValueOnce(mockError);
+        localDomService.getInterestRates = jest.fn().mockRejectedValueOnce(mockError);
 
-        controller = new DomController(domService, odsService, creditRiskRatingsService);
+        controller = new DomController(localDomService, odsService, creditRiskRatingsService);
 
         // Act & Assert
         const promise = controller.getInterestRates(mockQuery);

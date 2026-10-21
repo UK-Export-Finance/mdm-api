@@ -1,9 +1,9 @@
 import { withEnvironmentVariableParsingUnitTests } from '@ukef-test/common-tests/environment-variable-parsing-unit-tests';
 
-import informaticaConfig, { InformaticaConfig } from './informatica.config';
+import { InformaticaConfig, InformaticaConfigType } from './informatica.config';
 
 describe('informaticaConfig', () => {
-  const configDirectlyFromEnvironmentVariables: { configPropertyName: keyof InformaticaConfig; environmentVariableName: string }[] = [
+  const configDirectlyFromEnvironmentVariables: { configPropertyName: keyof InformaticaConfigType; environmentVariableName: string }[] = [
     {
       configPropertyName: 'baseUrl',
       environmentVariableName: 'APIM_INFORMATICA_URL',
@@ -19,7 +19,7 @@ describe('informaticaConfig', () => {
   ];
 
   const configParsedAsIntFromEnvironmentVariablesWithDefault: {
-    configPropertyName: keyof InformaticaConfig;
+    configPropertyName: keyof InformaticaConfigType;
     environmentVariableName: string;
     defaultConfigValue: number;
   }[] = [
@@ -38,6 +38,6 @@ describe('informaticaConfig', () => {
   withEnvironmentVariableParsingUnitTests({
     configDirectlyFromEnvironmentVariables,
     configParsedAsIntFromEnvironmentVariablesWithDefault,
-    getConfig: () => informaticaConfig(),
+    getConfig: () => InformaticaConfig(),
   });
 });
