@@ -45,11 +45,13 @@ const basePayload = {
 
 const customerWithPod: DTFSCustomerDto = {
   ...basePayload,
+  customerType,
   probabilityOfDefault,
 };
 
 const customerWithoutPod: DTFSCustomerDto = {
   ...basePayload,
+  customerType,
 };
 
 const customerWithCustomerType: DTFSCustomerDto = {
@@ -58,17 +60,21 @@ const customerWithCustomerType: DTFSCustomerDto = {
   customerType,
 };
 
+// customerType is required by the DTO; an empty string represents "not provided" so the service's truthy check still treats it as absent.
 const customerWithoutCustomerType: DTFSCustomerDto = {
   ...basePayload,
+  customerType: '',
 };
 
 const customerWithFullPayload: DTFSCustomerDto = {
   ...basePayload,
+  customerType,
   probabilityOfDefault,
   ukEntity: EXAMPLES.CUSTOMER.UK_ENTITY,
   ukefIndustryName: EXAMPLES.CUSTOMER.UK_INDUSTRY_NAME,
   ukefSectorName: EXAMPLES.CUSTOMER.UK_INDUSTRY_SECTOR_NAME,
 };
+
 
 // Responses
 const salesforceCreateCustomerResponse: CreateCustomerSalesforceResponseDto = {

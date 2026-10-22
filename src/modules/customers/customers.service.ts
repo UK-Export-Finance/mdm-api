@@ -150,16 +150,26 @@ export class CustomersService {
 
       // If the customer exists as a non-legacy record in Salesforce (via Informatica)
       const responseBody: GetCustomersResponse = existingCustomersInInformatica.map((customerInInformatica): GetCustomersResponseItem => ({
-        customerType: customerInInformatica.customerType,
-        partyUrn: customerInInformatica?.partyUrn,
-        name: customerInInformatica?.name,
-        sfId: customerInInformatica?.sfId,
         companyRegNo: customerInInformatica?.companyRegNo,
-        type: customerInInformatica?.type,
-        subtype: customerInInformatica?.subtype,
+        creditClassificationDate: customerInInformatica?.creditClassificationDate,
+        creditClassificationStatus: customerInInformatica?.creditClassificationStatus,
+        customerType: customerInInformatica?.customerType,
         isLegacyRecord: customerInInformatica?.isLegacyRecord,
-
-        // TODO APIM-616: Return below from Informatica
+        name: customerInInformatica?.name,
+        partyUrn: customerInInformatica?.partyUrn,
+        probabilityOfDefault: customerInInformatica?.probabilityOfDefault,
+        riskEntity: customerInInformatica?.riskEntity,
+        sfId: customerInInformatica?.sfId,
+        subtype: customerInInformatica?.subtype,
+        type: customerInInformatica?.type,
+        ukEntity: customerInInformatica?.ukEntity,
+        ukefIndustryName: customerInInformatica?.ukefIndustryName,
+        ukefSectorName: customerInInformatica?.ukefSectorName,
+        /**
+         * TODO APIM-616:
+         * If the fields below do not return successfully from Informatica,
+         * fallback to using the values from the DTO.
+         */
         // probabilityOfDefault: dtfsCustomerDto?.probabilityOfDefault,
         // ukEntity: dtfsCustomerDto?.ukEntity,
         // ukefIndustryName: dtfsCustomerDto?.ukefIndustryName,

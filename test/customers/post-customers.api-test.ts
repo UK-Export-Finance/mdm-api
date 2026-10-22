@@ -1,6 +1,8 @@
 import { HttpStatusCode } from 'axios';
 import nock from 'nock';
 import { EXAMPLES } from '@ukef/constants';
+import { salesforceFormattedCurrentDate } from '@ukef/helpers/date-formatter.helper';
+import { GetCustomersInformaticaResponseItem } from '@ukef/modules/informatica/dto/get-customers-informatica-response.dto';
 import { IncorrectAuthArg, withClientAuthenticationTests } from '@ukef-test/common-tests/client-authentication-api-tests';
 import { Api } from '@ukef-test/support/api';
 import { ENVIRONMENT_VARIABLES } from '@ukef-test/support/environment-variables';
@@ -159,8 +161,6 @@ describe('POST /customers', () => {
     query: { companyReg: EXAMPLES.CUSTOMER.COMPANYREG },
   });
 
-  requestToGetCustomers(`/v1/p-sa-impl-get-account-or-legacy?companyreg=${EXAMPLES.CUSTOMER.COMPANYREG}`).reply(HttpStatusCode.Ok, getCustomersResponse[0]);
-
   beforeAll(async () => {
     api = await Api.create();
   });
@@ -198,6 +198,8 @@ describe('POST /customers', () => {
       ukefSectorName: EXAMPLES.CUSTOMER.UK_INDUSTRY_SECTOR_NAME,
     };
 
+    requestToGetCustomers(`/v1/p-sa-impl-get-account-or-legacy?companyreg=${EXAMPLES.CUSTOMER.COMPANYREG}`).reply(HttpStatusCode.Ok, getCustomersResponse[0]);
+
     // Act
     const { status, body } = await api.post(url, payload);
 
@@ -224,5 +226,86 @@ describe('POST /customers', () => {
     expect(customer).toHaveProperty('ukEntity');
     expect(customer).toHaveProperty('ukefIndustryName');
     expect(customer).toHaveProperty('ukefSectorName');
+  });
+
+  it(`should return ${HttpStatusCode.Created} for a correct payload, when creating a new customer in Salesforce using an existing legacy party URN`, async () => {
+    // Arrange
+    const legacyCompanyRegistrationNumber = '07654321';
+
+    const payload = {
+      companyRegistrationNumber: legacyCompanyRegistrationNumber,
+      companyName: EXAMPLES.CUSTOMER.NAME,
+      customerType: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
+      probabilityOfDefault: EXAMPLES.CUSTOMER.PROBABILITY_OF_DEFAULT,
+      ukEntity: EXAMPLES.CUSTOMER.UK_ENTITY,
+      ukefIndustryName: EXAMPLES.CUSTOMER.UK_INDUSTRY_NAME,
+      ukefSectorName: EXAMPLES.CUSTOMER.UK_INDUSTRY_SECTOR_NAME,
+    };
+
+    const existingLegacyCustomer: GetCustomersInformaticaResponseItem[] = [
+      {
+        companyRegNo: legacyCompanyRegistrationNumber,
+        isLegacyRecord: true,
+        name: EXAMPLES.CUSTOMER.NAME,
+        partyUrn: EXAMPLES.CUSTOMER.PARTYURN,
+        sfId: EXAMPLES.CUSTOMER.SALESFORCE_ID,
+        subtype: null,
+        type: null,
+      },
+    ];
+
+    requestToGetCustomers(`/v1/p-sa-impl-get-account-or-legacy?companyreg=${legacyCompanyRegistrationNumber}`).reply(HttpStatusCode.Ok, existingLegacyCustomer);
+
+    /**
+     * Dun & Bradstreet is always consulted for a DUNS number before creating a customer in Salesforce, even when an
+     * existing legacy party URN means the Numbers service does not need to be called to generate a new one.
+     */
+    nock(ENVIRONMENT_VARIABLES.DUN_AND_BRADSTREET_URL).post('/v3/token').reply(HttpStatusCode.Ok, { access_token: 'test-dun-and-bradstreet-access-token' });
+
+    nock(ENVIRONMENT_VARIABLES.DUN_AND_BRADSTREET_URL)
+      .get(`/v1/match/cleanseMatch?countryISOAlpha2Code=GB&registrationNumber=${legacyCompanyRegistrationNumber}`)
+      .reply(HttpStatusCode.Ok, { matchCandidates: [{ organization: { duns: EXAMPLES.CUSTOMER.DNB_NUMBER } }] });
+
+    /**
+     * Salesforce's access token endpoint is configured as a standalone absolute URL (rather than a path relative to
+     * Salesforce's base URL), so the mock is scoped to its own origin and path.
+     */
+    const salesforceAccessUrl = new URL(ENVIRONMENT_VARIABLES.SALESFORCE_ACCESS_URL);
+    nock(salesforceAccessUrl.origin)
+      .post(`${salesforceAccessUrl.pathname}${salesforceAccessUrl.search}`)
+      .reply(HttpStatusCode.Ok, { access_token: 'test-salesforce-access-token' });
+
+    nock(ENVIRONMENT_VARIABLES.SALESFORCE_INSTANCE_URL)
+      .post('/sobjects/Account')
+      .reply(HttpStatusCode.Ok, { id: EXAMPLES.CUSTOMER.SALESFORCE_ID, success: true, errors: [] });
+
+    // Act
+    const { status, body } = await api.post(url, payload);
+
+    // Assert
+    expect(status).toBe(HttpStatusCode.Created);
+    expect(body).toHaveLength(1);
+
+    const expected = [
+      {
+        companyRegNo: legacyCompanyRegistrationNumber,
+        creditClassificationDate: salesforceFormattedCurrentDate(),
+        creditClassificationStatus: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
+        customerType: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
+        isLegacyRecord: true,
+        name: EXAMPLES.CUSTOMER.NAME,
+        partyUrn: EXAMPLES.CUSTOMER.PARTYURN,
+        probabilityOfDefault: EXAMPLES.CUSTOMER.PROBABILITY_OF_DEFAULT,
+        riskEntity: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
+        sfId: EXAMPLES.CUSTOMER.SALESFORCE_ID,
+        subtype: null,
+        type: null,
+        ukEntity: EXAMPLES.CUSTOMER.UK_ENTITY,
+        ukefIndustryName: EXAMPLES.CUSTOMER.UK_INDUSTRY_NAME,
+        ukefSectorName: EXAMPLES.CUSTOMER.UK_INDUSTRY_SECTOR_NAME,
+      }
+    ];
+
+    expect(body).toEqual(expected);
   });
 });
