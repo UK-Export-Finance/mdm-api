@@ -29,9 +29,9 @@ export class DTFSCustomerDto {
     example: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
   })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @MaxLength(200)
-  customerType: string;
+  customerType?: string;
 
   @ApiProperty({
     description: 'Probability of default',
