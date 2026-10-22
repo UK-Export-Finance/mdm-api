@@ -394,9 +394,11 @@ describe('CustomerService', () => {
             .mockResolvedValueOnce(getInformaticaCustomersResponse[0]);
 
           // Act
-          await service.getOrCreateCustomer(mockResponseObject, dtfsCustomerDto);
+          const response = await service.getOrCreateCustomer(mockResponseObject, dtfsCustomerDto);
 
           // Assert
+          expect(response).toEqual(getInformaticaCustomersResponse[0]);
+
           expect(mockResponseObject.json).toHaveBeenCalledTimes(1);
           expect(mockResponseObject.json).toHaveBeenCalledWith(getInformaticaCustomersResponse[0]);
           expect(mockResponseObject.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
@@ -455,9 +457,11 @@ describe('CustomerService', () => {
               .mockResolvedValueOnce(getCustomersResponse[0]);
 
             // Act
-            await service.getOrCreateCustomer(mockResponseObject, dtfsCustomerDto);
+            const response = await service.getOrCreateCustomer(mockResponseObject, dtfsCustomerDto);
 
             // Assert
+            expect(response).toEqual(mockSalesforceResponse);
+
             expect(mockResponseObject.json).toHaveBeenCalledTimes(1);
             expect(mockResponseObject.json).toHaveBeenCalledWith(mockSalesforceResponse);
             expect(mockResponseObject.status).toHaveBeenCalledWith(HttpStatusCode.Created);
@@ -605,9 +609,11 @@ describe('CustomerService', () => {
               .mockResolvedValueOnce(getCustomersResponse[0]);
 
             // Act
-            await service.getOrCreateCustomer(mockResponseObject, dtfsCustomerDto);
+            const response = await service.getOrCreateCustomer(mockResponseObject, dtfsCustomerDto);
 
             // Assert
+            expect(response).toEqual(mockSalesforceResponse);
+
             expect(mockResponseObject.json).toHaveBeenCalledTimes(1);
             expect(mockResponseObject.json).toHaveBeenCalledWith(mockSalesforceResponse);
             expect(mockResponseObject.status).toHaveBeenCalledWith(HttpStatusCode.Created);
@@ -704,9 +710,11 @@ describe('CustomerService', () => {
             .mockRejectedValueOnce(new NotFoundException('Customer not found.'));
 
           // Act
-          await service.getOrCreateCustomer(mockResponseObject, dtfsCustomerDto);
+          const result = await service.getOrCreateCustomer(mockResponseObject, dtfsCustomerDto);
 
           // Assert
+          expect(result).toEqual(response);
+
           expect(mockResponseObject.json).toHaveBeenCalledTimes(1);
           expect(mockResponseObject.json).toHaveBeenCalledWith(response);
           expect(mockResponseObject.status).toHaveBeenCalledWith(HttpStatusCode.Created);
@@ -789,9 +797,11 @@ describe('CustomerService', () => {
             .mockRejectedValueOnce(new NotFoundException('Customer not found.'));
 
           // Act
-          await service.getOrCreateCustomer(mockResponseObject, dtfsCustomerDto);
+          const result = await service.getOrCreateCustomer(mockResponseObject, dtfsCustomerDto);
 
           // Assert
+          expect(result).toEqual(response);
+
           expect(mockResponseObject.json).toHaveBeenCalledTimes(1);
           expect(mockResponseObject.json).toHaveBeenCalledWith(response);
           expect(mockResponseObject.status).toHaveBeenCalledWith(HttpStatusCode.Created);

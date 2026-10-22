@@ -149,27 +149,34 @@ export class CustomersService {
       this.logger.info('Returning existing non-legacy Salesforce customer for company %s', dtfsCustomerDto.companyRegistrationNumber);
 
       // If the customer exists as a non-legacy record in Salesforce (via Informatica)
-      return res.status(HttpStatusCode.Ok).json(
-        existingCustomersInInformatica.map((customerInInformatica): GetCustomersResponseItem => ({
-          customerType: customerInInformatica.customerType,
-          partyUrn: customerInInformatica?.partyUrn,
-          name: customerInInformatica?.name,
-          sfId: customerInInformatica?.sfId,
-          companyRegNo: customerInInformatica?.companyRegNo,
-          type: customerInInformatica?.type,
-          subtype: customerInInformatica?.subtype,
-          isLegacyRecord: customerInInformatica?.isLegacyRecord,
+      const responseBody: GetCustomersResponse = existingCustomersInInformatica.map((customerInInformatica): GetCustomersResponseItem => ({
+        customerType: customerInInformatica.customerType,
+        partyUrn: customerInInformatica?.partyUrn,
+        name: customerInInformatica?.name,
+        sfId: customerInInformatica?.sfId,
+        companyRegNo: customerInInformatica?.companyRegNo,
+        type: customerInInformatica?.type,
+        subtype: customerInInformatica?.subtype,
+        isLegacyRecord: customerInInformatica?.isLegacyRecord,
 
-          // TODO [APIM-616]: Return below from Informatica
-          // probabilityOfDefault: dtfsCustomerDto?.probabilityOfDefault,
-          // ukEntity: dtfsCustomerDto?.ukEntity,
-          // ukefIndustryName: dtfsCustomerDto?.ukefIndustryName,
-          // ukefSectorName: dtfsCustomerDto?.ukefSectorName,
-          // riskEntity: dtfsCustomerDto?.riskEntity,
-          // classificationStatus: dtfsCustomerDto?.classificationStatus,
-          // classificationStatusDate: dtfsCustomerDto?.classificationStatusDate,
-        })),
-      );
+        // TODO APIM-616: Return below from Informatica
+        // probabilityOfDefault: dtfsCustomerDto?.probabilityOfDefault,
+        // ukEntity: dtfsCustomerDto?.ukEntity,
+        // ukefIndustryName: dtfsCustomerDto?.ukefIndustryName,
+        // ukefSectorName: dtfsCustomerDto?.ukefSectorName,
+        // riskEntity: dtfsCustomerDto?.riskEntity,
+        // classificationStatus: dtfsCustomerDto?.classificationStatus,
+        // classificationStatusDate: dtfsCustomerDto?.classificationStatusDate,
+      }));
+
+      /**
+       * Send the response with the appropriate status code and response body.
+       * Do NOT use return res.status().json( ...).
+       * The response body should be returned separately, so the NestJS global interceptor can handle it.
+       * Otherwise, the global interceptor throws an error due to the response being sent directly.
+       */
+      res.status(HttpStatusCode.Ok).json(responseBody);
+      return responseBody;
     }
 
     if (existingCustomersInInformatica[0]?.isLegacyRecord === true) {
@@ -259,7 +266,16 @@ export class CustomersService {
     }
 
     const createdCustomer = await this.createCustomerByURNAndDUNS(dtfsCustomerDto, partyUrn, dunsNumber, isLegacyRecord);
-    return res.status(HttpStatusCode.Created).json(createdCustomer);
+
+    /**
+     * Send the response with the appropriate status code and response body.
+     * Do NOT use return res.status().json( ...).
+     * The response body should be returned separately, so the NestJS global interceptor can handle it.
+     * Otherwise, the global interceptor throws an error due to the response being sent directly.
+     */
+    res.status(HttpStatusCode.Created).json(createdCustomer);
+
+    return createdCustomer;
   }
 
   /**
