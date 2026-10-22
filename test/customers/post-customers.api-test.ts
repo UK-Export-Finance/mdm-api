@@ -246,6 +246,7 @@ describe('POST /customers', () => {
      * Salesforce's base URL), so the mock is scoped to its own origin and path.
      */
     const salesforceAccessUrl = new URL(ENVIRONMENT_VARIABLES.SALESFORCE_ACCESS_URL);
+
     nock(salesforceAccessUrl.origin)
       .post(`${salesforceAccessUrl.pathname}${salesforceAccessUrl.search}`)
       .reply(HttpStatusCode.Ok, { access_token: 'test-salesforce-access-token' });
@@ -278,7 +279,7 @@ describe('POST /customers', () => {
         ukEntity: EXAMPLES.CUSTOMER.UK_ENTITY,
         ukefIndustryName: EXAMPLES.CUSTOMER.UK_INDUSTRY_NAME,
         ukefSectorName: EXAMPLES.CUSTOMER.UK_INDUSTRY_SECTOR_NAME,
-      }
+      },
     ];
 
     expect(body).toEqual(expected);
