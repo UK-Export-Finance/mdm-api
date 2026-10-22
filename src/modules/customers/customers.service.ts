@@ -59,10 +59,10 @@ export class CustomersService {
         ukefSectorName: customerInInformatica.ukefSectorName,
       }));
     } catch (error) {
-      this.logger.error('Error finding customers in Informatica %o', error);
-
       if (error instanceof NotFoundException) {
-        this.logger.warn('Customers not found in Informatica %o', error);
+        this.logger.warn('Customers not found in Informatica');
+      } else {
+        this.logger.error('Error finding customers in Informatica');
       }
 
       throw error;
@@ -87,9 +87,9 @@ export class CustomersService {
       return dunsNumber;
     } catch (error) {
       if (error instanceof NotFoundException) {
-        this.logger.warn('DUNS number not found for company %s in Dun and Bradstreet %o', registrationNumber, error);
+        this.logger.warn('DUNS number not found for company %s in Dun and Bradstreet', registrationNumber);
       } else {
-        this.logger.error('Error finding DUNS number for company %s in Dun and Bradstreet %o', registrationNumber, error);
+        this.logger.error('Error finding DUNS number for company %s in Dun and Bradstreet', registrationNumber);
       }
 
       throw error;
@@ -130,7 +130,7 @@ export class CustomersService {
         return await this.handleInformaticaCustomerNotFound(res, dtfsCustomerDto);
       }
 
-      this.logger.error('Error getting or creating customer for company %s %o', dtfsCustomerDto.companyRegistrationNumber, error);
+      this.logger.error('Error getting or creating customer for company %s', dtfsCustomerDto.companyRegistrationNumber);
 
       throw error;
     }
@@ -250,9 +250,8 @@ export class CustomersService {
         this.logger.info('Generated party URN for company %s', dtfsCustomerDto.companyRegistrationNumber);
       } catch (error) {
         this.logger.warn(
-          'Error generating party URN for company %s; continuing Salesforce creation without a party URN %o',
+          'Error generating party URN for company %s; continuing Salesforce creation without a party URN',
           dtfsCustomerDto.companyRegistrationNumber,
-          error,
         );
 
         partyUrn = null;
@@ -310,7 +309,7 @@ export class CustomersService {
 
       salesforceCreateCustomerResponse = await this.salesforceService.createCustomer(createCustomerDto);
     } catch (error) {
-      this.logger.error('Error creating customer in Salesforce for company %s %o', dtfsCustomerDto.companyRegistrationNumber, error);
+      this.logger.error('Error creating customer in Salesforce for company %s', dtfsCustomerDto.companyRegistrationNumber);
 
       throw error;
     }

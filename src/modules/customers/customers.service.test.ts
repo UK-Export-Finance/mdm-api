@@ -4,6 +4,7 @@ import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { resetAllWhenMocks, when } from 'jest-when';
 import { PinoLogger } from 'nestjs-pino';
+import * as util from 'util';
 import { EXAMPLES } from '@ukef/constants';
 import { DunAndBradstreetService } from '@ukef/helper-modules/dun-and-bradstreet/dun-and-bradstreet.service';
 import { salesforceFormattedCurrentDate } from '@ukef/helpers/date-formatter.helper';
@@ -221,7 +222,60 @@ describe('CustomerService', () => {
 
       await expect(service.getCustomers(informaticaRequest[0])).rejects.toBe(error);
 
-      expect(logger.error).toHaveBeenCalledWith('Error finding customers in Informatica %o', error);
+      expect(logger.error).toHaveBeenCalledWith('Error finding customers in Informatica');
+    });
+  });
+
+  describe('logging of credential-bearing downstream errors', () => {
+    const secret = 'SECRET_CREDENTIAL_VALUE';
+    const { informaticaRequest } = new GetCustomersGenerator(valueGenerator).generate({ numberToGenerate: 1 });
+
+    const createCredentialBearingError = () => {
+      const error = new Error('Downstream failed') as Error & { config: object; serverName: string };
+      error.config = { data: `client_secret=${secret}`, headers: { Authorization: `Bearer ${secret}` } };
+      error.serverName = secret;
+
+      return error;
+    };
+
+    const loggedOutput = () =>
+      [logger.info, logger.warn, logger.error]
+        .flatMap((method) => (method as jest.Mock).mock.calls)
+        .map((call) => util.format(...(call as [string, ...unknown[]])))
+        .join('\n');
+
+    it('does not emit secrets when Informatica fails', async () => {
+      // Arrange
+      informaticaServiceGetCustomers.mockRejectedValueOnce(createCredentialBearingError());
+
+      // Act & Assert
+      await expect(service.getCustomers(informaticaRequest[0])).rejects.toThrow('Downstream failed');
+
+      expect(loggedOutput()).not.toContain(secret);
+    });
+
+    it('does not emit secrets when Dun and Bradstreet fails', async () => {
+      // Arrange
+      dunAndBradstreetServiceGetDunsNumber.mockRejectedValueOnce(createCredentialBearingError());
+
+      // Act & Assert
+      await expect(service.getDunAndBradstreetNumber(companyRegistrationNumber)).rejects.toThrow('Downstream failed');
+
+      expect(loggedOutput()).not.toContain(secret);
+    });
+
+    it('does not emit secrets when Salesforce, number generation or the outer flow fails', async () => {
+      // Arrange
+      informaticaServiceGetCustomers.mockRejectedValueOnce(new NotFoundException('Customer not found.'));
+      dunAndBradstreetServiceGetDunsNumber.mockResolvedValueOnce(dunsNumber);
+      numbersServiceCreate.mockRejectedValueOnce(createCredentialBearingError());
+      salesforceServiceCreateCustomer.mockRejectedValueOnce(createCredentialBearingError());
+
+      // Act & Assert
+      await expect(service.getOrCreateCustomer(mockResponseObject, customerWithPod)).rejects.toThrow('Downstream failed');
+
+      expect(logger.error).toHaveBeenCalled();
+      expect(loggedOutput()).not.toContain(secret);
     });
   });
 
@@ -260,9 +314,8 @@ describe('CustomerService', () => {
 
       // Assert
       expect(logger.warn).toHaveBeenCalledWith(
-        'Error generating party URN for company %s; continuing Salesforce creation without a party URN %o',
+        'Error generating party URN for company %s; continuing Salesforce creation without a party URN',
         companyRegistrationNumber,
-        error,
       );
       expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(expect.objectContaining({ Party_URN__c: null }));
     });
@@ -275,7 +328,7 @@ describe('CustomerService', () => {
       // Act & Assert
       await expect(service.getOrCreateCustomer(mockResponseObject, customerWithPod)).rejects.toBe(error);
 
-      expect(logger.error).toHaveBeenCalledWith('Error creating customer in Salesforce for company %s %o', companyRegistrationNumber, error);
+      expect(logger.error).toHaveBeenCalledWith('Error creating customer in Salesforce for company %s', companyRegistrationNumber);
       expect(logger.info).not.toHaveBeenCalledWith('Created customer in Salesforce for company %s', companyRegistrationNumber);
     });
 
@@ -300,7 +353,7 @@ describe('CustomerService', () => {
       await expect(service.getOrCreateCustomer(mockResponseObject, customerWithPod)).rejects.toBe(error);
 
       // Assert
-      expect(logger.error).toHaveBeenCalledWith('Error finding DUNS number for company %s in Dun and Bradstreet %o', companyRegistrationNumber, error);
+      expect(logger.error).toHaveBeenCalledWith('Error finding DUNS number for company %s in Dun and Bradstreet', companyRegistrationNumber);
       expect(salesforceServiceCreateCustomer).not.toHaveBeenCalled();
     });
   });
