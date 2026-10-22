@@ -227,7 +227,7 @@ describe('CustomerService', () => {
   });
 
   describe('logging of credential-bearing downstream errors', () => {
-    const secret = 'SECRET_CREDENTIAL_VALUE';
+    const secret = valueGenerator.string({ length: 20 });
     const { informaticaRequest } = new GetCustomersGenerator(valueGenerator).generate({ numberToGenerate: 1 });
 
     const createCredentialBearingError = () => {
