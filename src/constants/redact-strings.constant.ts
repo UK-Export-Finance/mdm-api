@@ -3,4 +3,13 @@ export const REDACT_STRINGS = [
   { searchValue: process.env.DATABASE_USERNAME, replaceValue: '[Redacted]' },
   { searchValue: process.env.DATABASE_PASSWORD, replaceValue: '[Redacted]' },
   { searchValue: process.env.DATABASE_HOST, replaceValue: '[RedactedDomain]' },
+  { searchValue: process.env.APIM_INFORMATICA_USERNAME, replaceValue: '[Redacted]' },
+  { searchValue: process.env.APIM_INFORMATICA_PASSWORD, replaceValue: '[Redacted]' },
+  { searchValue: process.env.SALESFORCE_USERNAME, replaceValue: '[Redacted]' },
+  { searchValue: process.env.SALESFORCE_PASSWORD, replaceValue: '[Redacted]' },
+  { searchValue: process.env.SALESFORCE_CLIENT_ID, replaceValue: '[Redacted]' },
+  { searchValue: process.env.SALESFORCE_CLIENT_SECRET, replaceValue: '[Redacted]' },
+  { searchValue: process.env.ORDNANCE_SURVEY_KEY, replaceValue: '[Redacted]' },
+  { searchValue: process.env.COMPANIES_HOUSE_KEY, replaceValue: '[Redacted]' },
+  { searchValue: process.env.DUN_AND_BRADSTREET_KEY, replaceValue: '[Redacted]' },
 ];
