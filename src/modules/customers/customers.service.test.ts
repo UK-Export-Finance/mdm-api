@@ -70,7 +70,6 @@ const customerWithFullPayload: DTFSCustomerDto = {
   ukefSectorName: EXAMPLES.CUSTOMER.UK_INDUSTRY_SECTOR_NAME,
 };
 
-
 // Responses
 const salesforceCreateCustomerResponse: CreateCustomerSalesforceResponseDto = {
   id: 'customer-id',
