@@ -25,7 +25,7 @@ export const withEmailFieldValidationApiTests = <RequestBodyItem, RequestBodyIte
   const requestBodyItem = requestIsAnArray ? validRequestBody[0] : validRequestBody;
   const fieldName = fieldNameSymbol.toString();
   const typeNameForErrorMessages = 'an email';
-  required = required ?? true;
+  const isRequired = required ?? true;
 
   describe(`${fieldName} validation`, () => {
     beforeEach(() => {
@@ -87,7 +87,7 @@ export const withEmailFieldValidationApiTests = <RequestBodyItem, RequestBodyIte
 
     withRequiredFieldValidationApiTests({
       fieldName: fieldNameSymbol,
-      required,
+      required: isRequired,
       validRequestBody,
       makeRequest,
       typeNameForErrorMessages,
