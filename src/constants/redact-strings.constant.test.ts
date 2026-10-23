@@ -21,7 +21,7 @@ describe('REDACT_STRINGS', () => {
     rmSync(temporaryDirectory, { recursive: true, force: true });
   });
 
-  it('redacts credentials that are only supplied via `.env`, and not already present in process.env when this module is first imported', async () => {
+  it('should redact credentials that are only supplied via `.env`, and not already present in process.env when this module is first imported', async () => {
     // Arrange
     /**
      * Simulate the real-world scenario this file's `dotenv.config()` call guards against: the credential is not
