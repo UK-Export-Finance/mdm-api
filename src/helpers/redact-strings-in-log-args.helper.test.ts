@@ -141,5 +141,25 @@ describe('redactStringsInLogArgs', () => {
 
       expect(result).toStrictEqual(expected);
     });
+
+    it('fully redacts a longer secret even when a shorter secret is a substring of it', () => {
+      // Arrange
+      const username = 'service-user';
+      const password = `${username}-Mock!`;
+
+      const overlappingRedactStrings = [
+        { searchValue: username, replaceValue: '[Redacted]' },
+        { searchValue: password, replaceValue: '[Redacted]' },
+      ];
+
+      const overlappingMessage = `username: ${username}, password: ${password}`;
+      const overlappingArgs = [{ message: overlappingMessage }];
+
+      // Act
+      const result = redactStringsInLogArgs(true, ['message'], overlappingRedactStrings, overlappingArgs);
+
+      // Assert
+      expect(result).toStrictEqual([{ message: 'username: [Redacted], password: [Redacted]' }]);
+    });
   });
 });
