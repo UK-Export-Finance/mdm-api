@@ -159,6 +159,43 @@ describe('CustomerService', () => {
   let dunAndBradstreetConfigServiceGet: jest.Mock;
   let dunAndBradstreetServiceGetDunsNumber: jest.Mock;
 
+  /**
+   * Asserts the response `getOrCreateCustomer` resolved with, and the status code it set via `res.status(...)`.
+   * Centralising this keeps the two response-handling expectations consistent across every success-path test,
+   * instead of duplicating (and risking drift of) the same pair of assertions at each call site.
+   */
+  const expectSuccessfulResponse = (result: unknown, expectedBody: unknown, expectedStatusCode: HttpStatusCode) => {
+    expect(result).toEqual(expectedBody);
+    expect(mockResponseObject.status).toHaveBeenCalledWith(expectedStatusCode);
+  };
+
+  /**
+   * Asserts the Salesforce customer-creation payload built from a `DTFSCustomerDto`. Only `Party_URN__c` varies
+   * between the "legacy URN", "legacy with no URN", and "new customer" scenarios, so it's the only parameter.
+   */
+  const expectSalesforceCustomerCreationRequest = (dtfsCustomerDto: DTFSCustomerDto, partyUrn: string | null) => {
+    expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(
+      expect.objectContaining({
+        CCM_Assigned_Rating__c: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
+        CCM_Citizenship_Class__c: dtfsCustomerDto.ukEntity,
+        CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
+        CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
+        CCM_Industry__c: dtfsCustomerDto.ukefIndustryName,
+        CCM_Industry_Group__c: dtfsCustomerDto.ukefSectorName,
+        CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
+        CCM_Primary_Industry__c: dtfsCustomerDto.ukefIndustryName,
+        CCM_Primary_Industry_Group__c: dtfsCustomerDto.ukefSectorName,
+        CCM_Probability_of_Default__c: dtfsCustomerDto.probabilityOfDefault,
+        CCM_Watch_List__c: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
+        CCM_Watch_List_Date__c: salesForceDate,
+        Company_Registration_Number__c: dtfsCustomerDto.companyRegistrationNumber,
+        D_B_Number__c: 'TEST DUNS_NUMBER',
+        Name: dtfsCustomerDto.companyName,
+        Party_URN__c: partyUrn,
+      }),
+    );
+  };
+
   beforeEach(() => {
     informaticaServiceGetCustomers = jest.fn();
     const informaticaService = new InformaticaService(null);
@@ -397,9 +434,7 @@ describe('CustomerService', () => {
           const response = await service.getOrCreateCustomer(mockResponseObject, dtfsCustomerDto);
 
           // Assert
-          expect(response).toEqual(getInformaticaCustomersResponse[0]);
-
-          expect(mockResponseObject.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
+          expectSuccessfulResponse(response, getInformaticaCustomersResponse[0], HttpStatusCode.Ok);
 
           expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(0);
           expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(0);
@@ -458,30 +493,9 @@ describe('CustomerService', () => {
             const response = await service.getOrCreateCustomer(mockResponseObject, dtfsCustomerDto);
 
             // Assert
-            expect(response).toEqual(mockSalesforceResponse);
+            expectSuccessfulResponse(response, mockSalesforceResponse, HttpStatusCode.Created);
 
-            expect(mockResponseObject.status).toHaveBeenCalledWith(HttpStatusCode.Created);
-
-            expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(
-              expect.objectContaining({
-                CCM_Assigned_Rating__c: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
-                CCM_Citizenship_Class__c: dtfsCustomerDto.ukEntity,
-                CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
-                CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
-                CCM_Industry__c: dtfsCustomerDto.ukefIndustryName,
-                CCM_Industry_Group__c: dtfsCustomerDto.ukefSectorName,
-                CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
-                CCM_Primary_Industry__c: dtfsCustomerDto.ukefIndustryName,
-                CCM_Primary_Industry_Group__c: dtfsCustomerDto.ukefSectorName,
-                CCM_Probability_of_Default__c: dtfsCustomerDto.probabilityOfDefault,
-                CCM_Watch_List__c: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
-                CCM_Watch_List_Date__c: salesForceDate,
-                Company_Registration_Number__c: dtfsCustomerDto.companyRegistrationNumber,
-                D_B_Number__c: 'TEST DUNS_NUMBER',
-                Name: dtfsCustomerDto.companyName,
-                Party_URN__c: 'SOME_LEGACY_URN',
-              }),
-            );
+            expectSalesforceCustomerCreationRequest(dtfsCustomerDto, 'SOME_LEGACY_URN');
 
             expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(1);
             expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(1);
@@ -608,32 +622,11 @@ describe('CustomerService', () => {
             const response = await service.getOrCreateCustomer(mockResponseObject, dtfsCustomerDto);
 
             // Assert
-            expect(response).toEqual(mockSalesforceResponse);
-
-            expect(mockResponseObject.status).toHaveBeenCalledWith(HttpStatusCode.Created);
+            expectSuccessfulResponse(response, mockSalesforceResponse, HttpStatusCode.Created);
 
             expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledWith(dtfsCustomerDto.companyRegistrationNumber);
 
-            expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(
-              expect.objectContaining({
-                CCM_Assigned_Rating__c: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
-                CCM_Citizenship_Class__c: dtfsCustomerDto.ukEntity,
-                CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
-                CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
-                CCM_Industry__c: dtfsCustomerDto.ukefIndustryName,
-                CCM_Industry_Group__c: dtfsCustomerDto.ukefSectorName,
-                CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
-                CCM_Primary_Industry__c: dtfsCustomerDto.ukefIndustryName,
-                CCM_Primary_Industry_Group__c: dtfsCustomerDto.ukefSectorName,
-                CCM_Probability_of_Default__c: dtfsCustomerDto.probabilityOfDefault,
-                CCM_Watch_List__c: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
-                CCM_Watch_List_Date__c: salesForceDate,
-                Company_Registration_Number__c: dtfsCustomerDto.companyRegistrationNumber,
-                D_B_Number__c: 'TEST DUNS_NUMBER',
-                Name: dtfsCustomerDto.companyName,
-                Party_URN__c: 'TEST PARTY_URN',
-              }),
-            );
+            expectSalesforceCustomerCreationRequest(dtfsCustomerDto, 'TEST PARTY_URN');
 
             expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(1);
             expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(1);
@@ -707,30 +700,9 @@ describe('CustomerService', () => {
           const result = await service.getOrCreateCustomer(mockResponseObject, dtfsCustomerDto);
 
           // Assert
-          expect(result).toEqual(response);
+          expectSuccessfulResponse(result, response, HttpStatusCode.Created);
 
-          expect(mockResponseObject.status).toHaveBeenCalledWith(HttpStatusCode.Created);
-
-          expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(
-            expect.objectContaining({
-              CCM_Assigned_Rating__c: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
-              CCM_Citizenship_Class__c: dtfsCustomerDto.ukEntity,
-              CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
-              CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
-              CCM_Industry__c: dtfsCustomerDto.ukefIndustryName,
-              CCM_Industry_Group__c: dtfsCustomerDto.ukefSectorName,
-              CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
-              CCM_Primary_Industry__c: dtfsCustomerDto.ukefIndustryName,
-              CCM_Primary_Industry_Group__c: dtfsCustomerDto.ukefSectorName,
-              CCM_Probability_of_Default__c: dtfsCustomerDto.probabilityOfDefault,
-              CCM_Watch_List__c: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
-              CCM_Watch_List_Date__c: salesForceDate,
-              Company_Registration_Number__c: dtfsCustomerDto.companyRegistrationNumber,
-              D_B_Number__c: 'TEST DUNS_NUMBER',
-              Name: dtfsCustomerDto.companyName,
-              Party_URN__c: 'TEST PARTY_URN',
-            }),
-          );
+          expectSalesforceCustomerCreationRequest(dtfsCustomerDto, 'TEST PARTY_URN');
 
           expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(1);
           expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(1);
@@ -792,30 +764,9 @@ describe('CustomerService', () => {
           const result = await service.getOrCreateCustomer(mockResponseObject, dtfsCustomerDto);
 
           // Assert
-          expect(result).toEqual(response);
+          expectSuccessfulResponse(result, response, HttpStatusCode.Created);
 
-          expect(mockResponseObject.status).toHaveBeenCalledWith(HttpStatusCode.Created);
-
-          expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(
-            expect.objectContaining({
-              CCM_Assigned_Rating__c: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
-              CCM_Citizenship_Class__c: dtfsCustomerDto.ukEntity,
-              CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
-              CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
-              CCM_Industry__c: dtfsCustomerDto.ukefIndustryName,
-              CCM_Industry_Group__c: dtfsCustomerDto.ukefSectorName,
-              CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
-              CCM_Primary_Industry__c: dtfsCustomerDto.ukefIndustryName,
-              CCM_Primary_Industry_Group__c: dtfsCustomerDto.ukefSectorName,
-              CCM_Probability_of_Default__c: dtfsCustomerDto.probabilityOfDefault,
-              CCM_Watch_List__c: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
-              CCM_Watch_List_Date__c: salesForceDate,
-              Company_Registration_Number__c: dtfsCustomerDto.companyRegistrationNumber,
-              D_B_Number__c: 'TEST DUNS_NUMBER',
-              Name: dtfsCustomerDto.companyName,
-              Party_URN__c: null,
-            }),
-          );
+          expectSalesforceCustomerCreationRequest(dtfsCustomerDto, null);
 
           expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(1);
           expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(1);

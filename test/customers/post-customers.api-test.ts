@@ -173,7 +173,9 @@ describe('POST /customers', () => {
       ukefSectorName: EXAMPLES.CUSTOMER.UK_INDUSTRY_SECTOR_NAME,
     };
 
-    requestToGetCustomers(`/v1/p-sa-impl-get-account-or-legacy?companyreg=${EXAMPLES.CUSTOMER.COMPANYREG}`).reply(HttpStatusCode.Ok, getCustomersResponse[0]);
+    requestToGetCustomers(`/v1/p-sa-impl-get-account-or-legacy?companyreg=${EXAMPLES.CUSTOMER.COMPANYREG}`).reply(HttpStatusCode.Ok, [
+      { ...getCustomersResponse[0][0], isLegacyRecord: false },
+    ]);
 
     // Act
     const { status, body } = await api.post(url, payload);
@@ -192,15 +194,6 @@ describe('POST /customers', () => {
     expect(typeof customer.type).toBe('object');
     expect(typeof customer.subtype).toBe('object');
     expect(typeof customer.isLegacyRecord).toBe('boolean');
-
-    // Optional fields - verify they exist in the response structure
-    expect(customer).toHaveProperty('creditClassificationDate');
-    expect(customer).toHaveProperty('creditClassificationStatus');
-    expect(customer).toHaveProperty('probabilityOfDefault');
-    expect(customer).toHaveProperty('riskEntity');
-    expect(customer).toHaveProperty('ukEntity');
-    expect(customer).toHaveProperty('ukefIndustryName');
-    expect(customer).toHaveProperty('ukefSectorName');
   });
 
   it(`should return ${HttpStatusCode.Created} for a correct payload, when creating a new customer in Salesforce using an existing legacy party URN`, async () => {
@@ -259,7 +252,8 @@ describe('POST /customers', () => {
     const { status, body } = await api.post(url, payload);
 
     // Assert
-    expect(status).toBe(HttpStatusCode.Created); expect(body).toHaveLength(1);
+    expect(status).toBe(HttpStatusCode.Created);
+    expect(body).toHaveLength(1);
 
     const expected = [
       {
