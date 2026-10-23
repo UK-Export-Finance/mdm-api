@@ -399,8 +399,6 @@ describe('CustomerService', () => {
           // Assert
           expect(response).toEqual(getInformaticaCustomersResponse[0]);
 
-          expect(mockResponseObject.json).toHaveBeenCalledTimes(1);
-          expect(mockResponseObject.json).toHaveBeenCalledWith(getInformaticaCustomersResponse[0]);
           expect(mockResponseObject.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
 
           expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(0);
@@ -462,8 +460,6 @@ describe('CustomerService', () => {
             // Assert
             expect(response).toEqual(mockSalesforceResponse);
 
-            expect(mockResponseObject.json).toHaveBeenCalledTimes(1);
-            expect(mockResponseObject.json).toHaveBeenCalledWith(mockSalesforceResponse);
             expect(mockResponseObject.status).toHaveBeenCalledWith(HttpStatusCode.Created);
 
             expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(
@@ -614,8 +610,6 @@ describe('CustomerService', () => {
             // Assert
             expect(response).toEqual(mockSalesforceResponse);
 
-            expect(mockResponseObject.json).toHaveBeenCalledTimes(1);
-            expect(mockResponseObject.json).toHaveBeenCalledWith(mockSalesforceResponse);
             expect(mockResponseObject.status).toHaveBeenCalledWith(HttpStatusCode.Created);
 
             expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledWith(dtfsCustomerDto.companyRegistrationNumber);
@@ -715,8 +709,6 @@ describe('CustomerService', () => {
           // Assert
           expect(result).toEqual(response);
 
-          expect(mockResponseObject.json).toHaveBeenCalledTimes(1);
-          expect(mockResponseObject.json).toHaveBeenCalledWith(response);
           expect(mockResponseObject.status).toHaveBeenCalledWith(HttpStatusCode.Created);
 
           expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(
@@ -802,8 +794,6 @@ describe('CustomerService', () => {
           // Assert
           expect(result).toEqual(response);
 
-          expect(mockResponseObject.json).toHaveBeenCalledTimes(1);
-          expect(mockResponseObject.json).toHaveBeenCalledWith(response);
           expect(mockResponseObject.status).toHaveBeenCalledWith(HttpStatusCode.Created);
 
           expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(

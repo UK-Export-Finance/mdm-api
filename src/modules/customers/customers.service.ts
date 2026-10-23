@@ -174,12 +174,13 @@ export class CustomersService {
       }));
 
       /**
-       * Send the response with the appropriate status code and response body.
-       * Do NOT use return res.status().json( ...).
-       * The response body should be returned separately, so the NestJS global interceptor can handle it.
-       * Otherwise, the global interceptor throws an error due to the response being sent directly.
+       * The controller injects `res` with `@Res({ passthrough: true })`, so Nest still sends the response itself.
+       * Only set the status code here and return the plain body — never call `res.json(...)` manually.
+       * Returning the result of `res.json(...)` (or calling it directly) hands Nest's global interceptor the
+       * Express response object instead of plain data, which crashes with "this.removeListener is not a function"
+       * when it tries to serialise it.
        */
-      res.status(HttpStatusCode.Ok).json(responseBody);
+      res.status(HttpStatusCode.Ok);
       return responseBody;
     }
 
@@ -272,12 +273,13 @@ export class CustomersService {
     const createdCustomer = await this.createCustomerByURNAndDUNS(dtfsCustomerDto, partyUrn, dunsNumber, isLegacyRecord);
 
     /**
-     * Send the response with the appropriate status code and response body.
-     * Do NOT use return res.status().json( ...).
-     * The response body should be returned separately, so the NestJS global interceptor can handle it.
-     * Otherwise, the global interceptor throws an error due to the response being sent directly.
+     * The controller injects `res` with `@Res({ passthrough: true })`, so Nest still sends the response itself.
+     * Only set the status code here and return the plain body — never call `res.json(...)` manually.
+     * Returning the result of `res.json(...)` (or calling it directly) hands Nest's global interceptor the
+     * Express response object instead of plain data, which crashes with "this.removeListener is not a function"
+     * when it tries to serialise it.
      */
-    res.status(HttpStatusCode.Created).json(createdCustomer);
+    res.status(HttpStatusCode.Created);
 
     return createdCustomer;
   }

@@ -259,8 +259,7 @@ describe('POST /customers', () => {
     const { status, body } = await api.post(url, payload);
 
     // Assert
-    expect(status).toBe(HttpStatusCode.Created);
-    expect(body).toHaveLength(1);
+    expect(status).toBe(HttpStatusCode.Created); expect(body).toHaveLength(1);
 
     const expected = [
       {
