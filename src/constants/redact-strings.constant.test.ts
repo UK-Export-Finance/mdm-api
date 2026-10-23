@@ -38,11 +38,17 @@ describe('REDACT_STRINGS', () => {
     process.env = {};
     process.chdir(temporaryDirectory);
 
+    /**
+     * A fresh dynamic import (after `jest.resetModules()`) re-executes the module's top-level code, including its
+     * `dotenv.config()` call and the construction of `REDACT_STRINGS`, exactly as happens on application start-up.
+     * `dotenv.config()` resolves `.env` relative to `process.cwd()`, which now points at the temporary directory.
+     * The `.js` extension is required here (even though the source file is `.ts`): under the project's `nodenext`
+     * module resolution, a dynamic `import()` is always resolved using Node's ESM algorithm, which requires explicit
+     * extensions; `ts-jest`'s ESM support then maps this `.js` specifier back to the `.ts` source file at test time.
+     */
+
     // Act
-    // A fresh dynamic import (after `jest.resetModules()`) re-executes the module's top-level code, including its
-    // `dotenv.config()` call and the construction of `REDACT_STRINGS`, exactly as happens on application start-up.
-    // `dotenv.config()` resolves `.env` relative to `process.cwd()`, which now points at the temporary directory.
-    const { REDACT_STRINGS } = await import('./redact-strings.constant');
+    const { REDACT_STRINGS } = await import('./redact-strings.constant.js');
 
     // Assert
     expect(REDACT_STRINGS).toContainEqual({ searchValue: credentialOnlyAvailableViaDotenv, replaceValue: '[Redacted]' });

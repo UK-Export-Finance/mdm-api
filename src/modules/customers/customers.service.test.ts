@@ -163,8 +163,13 @@ describe('CustomerService', () => {
    * Asserts the response `getOrCreateCustomer` resolved with, and the status code it set via `res.status(...)`.
    * Centralising this keeps the two response-handling expectations consistent across every success-path test,
    * instead of duplicating (and risking drift of) the same pair of assertions at each call site.
+   *
+   * `(typeof HttpStatusCode)[keyof typeof HttpStatusCode]` is used instead of `HttpStatusCode` as the parameter
+   * type because, under this project's `nodenext` module resolution, a static `import` resolves axios's
+   * `require`-conditioned (`.d.cts`) types, which only expose `HttpStatusCode` as a value (via `export =`), not
+   * as a type.
    */
-  const expectSuccessfulResponse = (result: unknown, expectedBody: unknown, expectedStatusCode: HttpStatusCode) => {
+  const expectSuccessfulResponse = (result: unknown, expectedBody: unknown, expectedStatusCode: (typeof HttpStatusCode)[keyof typeof HttpStatusCode]) => {
     expect(result).toEqual(expectedBody);
     expect(mockResponseObject.status).toHaveBeenCalledWith(expectedStatusCode);
   };
