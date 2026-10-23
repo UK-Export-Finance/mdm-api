@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.60.1](https://github.com/UK-Export-Finance/mdm-api/compare/v1.60.0...v1.60.1) (2026-10-23)
+
+
+### Bug Fixes
+
+* **APIM-704:** informatica, customer service response handling ([#1928](https://github.com/UK-Export-Finance/mdm-api/issues/1928)) ([940b8af](https://github.com/UK-Export-Finance/mdm-api/commit/940b8af4a87a03bdef12313ba7c9588fe80cb297))
+
 ## [1.60.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.59.1...v1.60.0) (2026-10-05)
 
 
