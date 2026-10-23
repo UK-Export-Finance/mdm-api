@@ -8,7 +8,7 @@ import * as dotenv from 'dotenv';
  */
 dotenv.config();
 
-export const REDACT_STRINGS = [
+const STRINGS = [
   { searchValue: /(Login failed for user ').*(')/g, replaceValue: '$1[Redacted]$2' },
   { searchValue: process.env.DATABASE_USERNAME, replaceValue: '[Redacted]' },
   { searchValue: process.env.DATABASE_PASSWORD, replaceValue: '[Redacted]' },
@@ -23,3 +23,8 @@ export const REDACT_STRINGS = [
   { searchValue: process.env.COMPANIES_HOUSE_KEY, replaceValue: '[Redacted]' },
   { searchValue: process.env.DUN_AND_BRADSTREET_KEY, replaceValue: '[Redacted]' },
 ];
+
+/**
+ * Filter the strings so that empty or unset values do not become empty string search patterns.
+ */
+export const REDACT_STRINGS = STRINGS.filter(({ searchValue }) => searchValue instanceof RegExp || (typeof searchValue === 'string' && searchValue.length > 0));
