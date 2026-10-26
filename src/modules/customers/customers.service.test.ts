@@ -4,6 +4,8 @@ import { ConfigService } from '@nestjs/config';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { resetAllWhenMocks, when } from 'jest-when';
+import { PinoLogger } from 'nestjs-pino';
+import * as util from 'util';
 import { EXAMPLES } from '@ukef/constants';
 import { DunAndBradstreetService } from '@ukef/helper-modules/dun-and-bradstreet/dun-and-bradstreet.service';
 import { salesforceFormattedCurrentDate } from '@ukef/helpers/date-formatter.helper';
@@ -144,6 +146,7 @@ describe('CustomerService', () => {
   const valueGenerator = new RandomValueGenerator();
 
   let service: CustomersService;
+  let logger: PinoLogger;
 
   let informaticaServiceGetCustomers: jest.MockedFunction<InformaticaService['getCustomers']>;
 
@@ -152,6 +155,48 @@ describe('CustomerService', () => {
   let numbersServiceCreate: jest.MockedFunction<NumbersService['create']>;
 
   let dunAndBradstreetServiceGetDunsNumber: jest.MockedFunction<DunAndBradstreetService['getDunAndBradstreetNumberByRegistrationNumber']>;
+
+  /**
+   * Asserts the response `getOrCreateCustomer` resolved with, and the status code it set via `res.status(...)`.
+   * Centralising this keeps the two response-handling expectations consistent across every success-path test,
+   * instead of duplicating (and risking drift of) the same pair of assertions at each call site.
+   *
+   * `(typeof HttpStatusCode)[keyof typeof HttpStatusCode]` is used instead of `HttpStatusCode` as the parameter
+   * type because, under this project's `nodenext` module resolution, a static `import` resolves axios's
+   * `require`-conditioned (`.d.cts`) types, which only expose `HttpStatusCode` as a value (via `export =`), not
+   * as a type.
+   */
+  const expectSuccessfulResponse = (result: unknown, expectedBody: unknown, expectedStatusCode: (typeof HttpStatusCode)[keyof typeof HttpStatusCode]) => {
+    expect(result).toEqual(expectedBody);
+    expect(mockResponseObject.status).toHaveBeenCalledWith(expectedStatusCode);
+  };
+
+  /**
+   * Asserts the Salesforce customer-creation payload built from a `DTFSCustomerDto`. Only `Party_URN__c` varies
+   * between the "legacy URN", "legacy with no URN", and "new customer" scenarios, so it's the only parameter.
+   */
+  const expectSalesforceCustomerCreationRequest = (dtfsCustomerDto: DTFSCustomerDto, partyUrn: string | null) => {
+    expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(
+      expect.objectContaining({
+        CCM_Assigned_Rating__c: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
+        CCM_Citizenship_Class__c: dtfsCustomerDto.ukEntity,
+        CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
+        CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
+        CCM_Industry__c: dtfsCustomerDto.ukefIndustryName,
+        CCM_Industry_Group__c: dtfsCustomerDto.ukefSectorName,
+        CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
+        CCM_Primary_Industry__c: dtfsCustomerDto.ukefIndustryName,
+        CCM_Primary_Industry_Group__c: dtfsCustomerDto.ukefSectorName,
+        CCM_Probability_of_Default__c: dtfsCustomerDto.probabilityOfDefault,
+        CCM_Watch_List__c: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
+        CCM_Watch_List_Date__c: salesForceDate,
+        Company_Registration_Number__c: dtfsCustomerDto.companyRegistrationNumber,
+        D_B_Number__c: 'TEST DUNS_NUMBER',
+        Name: dtfsCustomerDto.companyName,
+        Party_URN__c: partyUrn,
+      }),
+    );
+  };
 
   beforeEach(() => {
     informaticaServiceGetCustomers = jest.fn<InformaticaService['getCustomers']>();
@@ -167,8 +212,9 @@ describe('CustomerService', () => {
       password: 'TEST_PASSWORD',
       accessUrl: 'TEST_ACCESS_URL',
     });
+
     salesforceServiceCreateCustomer = jest.fn<SalesforceService['createCustomer']>();
-    const salesforceService = new SalesforceService(null, salesforceConfigService);
+    const salesforceService = new SalesforceService(null, salesforceConfigService, null);
     salesforceService.createCustomer = salesforceServiceCreateCustomer;
 
     numbersServiceCreate = jest.fn<NumbersService['create']>();
@@ -185,7 +231,12 @@ describe('CustomerService', () => {
     resetAllWhenMocks();
     jest.clearAllMocks();
 
-    service = new CustomersService(informaticaService, salesforceService, numbersService, dunAndBradstreetService);
+    logger = new PinoLogger({});
+    logger.info = jest.fn();
+    logger.warn = jest.fn();
+    logger.error = jest.fn();
+
+    service = new CustomersService(informaticaService, salesforceService, numbersService, dunAndBradstreetService, logger);
   });
 
   describe('getCustomers', () => {
@@ -201,6 +252,149 @@ describe('CustomerService', () => {
       // Assert
       expect(response).toEqual(getCustomersResponse[0]);
       expect(informaticaServiceGetCustomers).toHaveBeenCalledTimes(1);
+      expect(logger.info).toHaveBeenCalledWith('Finding customers in Informatica');
+      expect(logger.info).toHaveBeenCalledWith('Found %s customers in Informatica', getCustomersResponse[0].length);
+    });
+
+    it('logs Informatica failures and rejects with the original error', async () => {
+      const error = new InformaticaException('Failed to get customers in Informatica');
+      informaticaServiceGetCustomers.mockRejectedValueOnce(error);
+
+      await expect(service.getCustomers(informaticaRequest[0])).rejects.toBe(error);
+
+      expect(logger.error).toHaveBeenCalledWith('Error finding customers in Informatica');
+    });
+  });
+
+  describe('logging of credential-bearing downstream errors', () => {
+    const secret = valueGenerator.string({ length: 20 });
+    const { informaticaRequest } = new GetCustomersGenerator(valueGenerator).generate({ numberToGenerate: 1 });
+
+    const createCredentialBearingError = () => {
+      const error = new Error('Downstream failed') as Error & { config: object; serverName: string };
+      error.config = { data: `client_secret=${secret}`, headers: { Authorization: `Bearer ${secret}` } };
+      error.serverName = secret;
+
+      return error;
+    };
+
+    const loggedOutput = () =>
+      [logger.info, logger.warn, logger.error]
+        .flatMap((method) => (method as jest.Mock).mock.calls)
+        .map((call) => util.format(...(call as [string, ...unknown[]])))
+        .join('\n');
+
+    it('does not emit secrets when Informatica fails', async () => {
+      // Arrange
+      informaticaServiceGetCustomers.mockRejectedValueOnce(createCredentialBearingError());
+
+      // Act & Assert
+      await expect(service.getCustomers(informaticaRequest[0])).rejects.toThrow('Downstream failed');
+
+      expect(loggedOutput()).not.toContain(secret);
+    });
+
+    it('does not emit secrets when Dun and Bradstreet fails', async () => {
+      // Arrange
+      dunAndBradstreetServiceGetDunsNumber.mockRejectedValueOnce(createCredentialBearingError());
+
+      // Act & Assert
+      await expect(service.getDunAndBradstreetNumber(companyRegistrationNumber)).rejects.toThrow('Downstream failed');
+
+      expect(loggedOutput()).not.toContain(secret);
+    });
+
+    it('does not emit secrets when Salesforce, number generation or the outer flow fails', async () => {
+      // Arrange
+      informaticaServiceGetCustomers.mockRejectedValueOnce(new NotFoundException('Customer not found.'));
+      dunAndBradstreetServiceGetDunsNumber.mockResolvedValueOnce(dunsNumber);
+      numbersServiceCreate.mockRejectedValueOnce(createCredentialBearingError());
+      salesforceServiceCreateCustomer.mockRejectedValueOnce(createCredentialBearingError());
+
+      // Act & Assert
+      await expect(service.getOrCreateCustomer(mockResponseObject, customerWithPod)).rejects.toThrow('Downstream failed');
+
+      expect(logger.error).toHaveBeenCalled();
+      expect(loggedOutput()).not.toContain(secret);
+    });
+  });
+
+  describe('customer creation logging', () => {
+    beforeEach(() => {
+      informaticaServiceGetCustomers.mockRejectedValueOnce(new NotFoundException('Customer not found.'));
+      dunAndBradstreetServiceGetDunsNumber.mockResolvedValueOnce(dunsNumber);
+      numbersServiceCreate.mockResolvedValueOnce(createUkefIdResponse);
+      salesforceServiceCreateCustomer.mockResolvedValueOnce(salesforceCreateCustomerResponse);
+    });
+
+    it('logs downstream operations and successful Salesforce creation without logging the customer payload', async () => {
+      // Act
+      await service.getOrCreateCustomer(mockResponseObject, customerWithFullPayload);
+
+      // Assert
+      expect(logger.info).toHaveBeenCalledWith('Customer for company %s not found in Informatica; creating in Salesforce', companyRegistrationNumber);
+      expect(logger.info).toHaveBeenCalledWith('Finding DUNS number for company %s in Dun and Bradstreet', companyRegistrationNumber);
+      expect(logger.info).toHaveBeenCalledWith('Found DUNS number for company %s in Dun and Bradstreet', companyRegistrationNumber);
+      expect(logger.info).toHaveBeenCalledWith('Generating party URN for company %s', companyRegistrationNumber);
+      expect(logger.info).toHaveBeenCalledWith('Generated party URN for company %s', companyRegistrationNumber);
+      expect(logger.info).toHaveBeenCalledWith('Sending customer creation request to Salesforce for company %s', companyRegistrationNumber);
+      expect(logger.info).toHaveBeenCalledWith('Created customer in Salesforce for company %s', companyRegistrationNumber);
+      expect(logger.info).not.toHaveBeenCalledWith(expect.any(String), customerWithFullPayload);
+      expect(logger.warn).not.toHaveBeenCalled();
+      expect(logger.error).not.toHaveBeenCalled();
+    });
+
+    it('warns when party URN generation fails and still sends the customer to Salesforce', async () => {
+      // Arrange
+      const error = new InternalServerErrorException('Number generation failed');
+      numbersServiceCreate.mockReset().mockRejectedValueOnce(error);
+
+      // Act
+      await service.getOrCreateCustomer(mockResponseObject, customerWithPod);
+
+      // Assert
+      expect(logger.warn).toHaveBeenCalledWith(
+        'Error generating party URN for company %s; continuing Salesforce creation without a party URN',
+        companyRegistrationNumber,
+      );
+      expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(expect.objectContaining({ Party_URN__c: null }));
+    });
+
+    it('logs Salesforce failures and rejects with the original error', async () => {
+      // Arrange
+      const error = new Error('Salesforce failed');
+      salesforceServiceCreateCustomer.mockReset().mockRejectedValueOnce(error);
+
+      // Act & Assert
+      await expect(service.getOrCreateCustomer(mockResponseObject, customerWithPod)).rejects.toBe(error);
+
+      expect(logger.error).toHaveBeenCalledWith('Error creating customer in Salesforce for company %s', companyRegistrationNumber);
+      expect(logger.info).not.toHaveBeenCalledWith('Created customer in Salesforce for company %s', companyRegistrationNumber);
+    });
+
+    it('warns instead of logging success when Salesforce does not confirm creation', async () => {
+      // Arrange
+      salesforceServiceCreateCustomer.mockReset().mockResolvedValueOnce({ ...salesforceCreateCustomerResponse, success: false });
+
+      // Act
+      await service.getOrCreateCustomer(mockResponseObject, customerWithPod);
+
+      // Assert
+      expect(logger.warn).toHaveBeenCalledWith('Salesforce did not confirm customer creation for company %s', companyRegistrationNumber);
+      expect(logger.info).not.toHaveBeenCalledWith('Created customer in Salesforce for company %s', companyRegistrationNumber);
+    });
+
+    it('logs Dun and Bradstreet failures and does not send the customer to Salesforce', async () => {
+      // Arrange
+      const error = new Error('Dun and Bradstreet failed');
+      dunAndBradstreetServiceGetDunsNumber.mockReset().mockRejectedValueOnce(error);
+
+      // Act
+      await expect(service.getOrCreateCustomer(mockResponseObject, customerWithPod)).rejects.toBe(error);
+
+      // Assert
+      expect(logger.error).toHaveBeenCalledWith('Error finding DUNS number for company %s in Dun and Bradstreet', companyRegistrationNumber);
+      expect(salesforceServiceCreateCustomer).not.toHaveBeenCalled();
     });
   });
 
@@ -240,16 +434,15 @@ describe('CustomerService', () => {
             .mockResolvedValueOnce(getInformaticaCustomersResponse[0]);
 
           // Act
-          await service.getOrCreateCustomer(mockResponseObject, dtfsCustomerDto);
+          const response = await service.getOrCreateCustomer(mockResponseObject, dtfsCustomerDto);
 
           // Assert
-          expect(mockResponseObject.json).toHaveBeenCalledTimes(1);
-          expect(mockResponseObject.json).toHaveBeenCalledWith(getInformaticaCustomersResponse[0]);
-          expect(mockResponseObject.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
+          expectSuccessfulResponse(response, getInformaticaCustomersResponse[0], HttpStatusCode.Ok);
 
           expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(0);
           expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(0);
           expect(numbersServiceCreate).toHaveBeenCalledTimes(0);
+          expect(logger.info).toHaveBeenCalledWith('Returning existing non-legacy Salesforce customer for company %s', companyRegistrationNumber);
         });
       });
 
@@ -300,33 +493,12 @@ describe('CustomerService', () => {
               .mockResolvedValueOnce(getCustomersResponse[0]);
 
             // Act
-            await service.getOrCreateCustomer(mockResponseObject, dtfsCustomerDto);
+            const response = await service.getOrCreateCustomer(mockResponseObject, dtfsCustomerDto);
 
             // Assert
-            expect(mockResponseObject.json).toHaveBeenCalledTimes(1);
-            expect(mockResponseObject.json).toHaveBeenCalledWith(mockSalesforceResponse);
-            expect(mockResponseObject.status).toHaveBeenCalledWith(HttpStatusCode.Created);
+            expectSuccessfulResponse(response, mockSalesforceResponse, HttpStatusCode.Created);
 
-            expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(
-              expect.objectContaining({
-                CCM_Assigned_Rating__c: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
-                CCM_Citizenship_Class__c: dtfsCustomerDto.ukEntity,
-                CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
-                CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
-                CCM_Industry__c: dtfsCustomerDto.ukefIndustryName,
-                CCM_Industry_Group__c: dtfsCustomerDto.ukefSectorName,
-                CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
-                CCM_Primary_Industry__c: dtfsCustomerDto.ukefIndustryName,
-                CCM_Primary_Industry_Group__c: dtfsCustomerDto.ukefSectorName,
-                CCM_Probability_of_Default__c: dtfsCustomerDto.probabilityOfDefault,
-                CCM_Watch_List__c: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
-                CCM_Watch_List_Date__c: salesForceDate,
-                Company_Registration_Number__c: dtfsCustomerDto.companyRegistrationNumber,
-                D_B_Number__c: 'TEST DUNS_NUMBER',
-                Name: dtfsCustomerDto.companyName,
-                Party_URN__c: 'SOME_LEGACY_URN',
-              }),
-            );
+            expectSalesforceCustomerCreationRequest(dtfsCustomerDto, 'SOME_LEGACY_URN');
 
             expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(1);
             expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(1);
@@ -450,35 +622,14 @@ describe('CustomerService', () => {
               .mockResolvedValueOnce(getCustomersResponse[0]);
 
             // Act
-            await service.getOrCreateCustomer(mockResponseObject, dtfsCustomerDto);
+            const response = await service.getOrCreateCustomer(mockResponseObject, dtfsCustomerDto);
 
             // Assert
-            expect(mockResponseObject.json).toHaveBeenCalledTimes(1);
-            expect(mockResponseObject.json).toHaveBeenCalledWith(mockSalesforceResponse);
-            expect(mockResponseObject.status).toHaveBeenCalledWith(HttpStatusCode.Created);
+            expectSuccessfulResponse(response, mockSalesforceResponse, HttpStatusCode.Created);
 
             expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledWith(dtfsCustomerDto.companyRegistrationNumber);
 
-            expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(
-              expect.objectContaining({
-                CCM_Assigned_Rating__c: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
-                CCM_Citizenship_Class__c: dtfsCustomerDto.ukEntity,
-                CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
-                CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
-                CCM_Industry__c: dtfsCustomerDto.ukefIndustryName,
-                CCM_Industry_Group__c: dtfsCustomerDto.ukefSectorName,
-                CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
-                CCM_Primary_Industry__c: dtfsCustomerDto.ukefIndustryName,
-                CCM_Primary_Industry_Group__c: dtfsCustomerDto.ukefSectorName,
-                CCM_Probability_of_Default__c: dtfsCustomerDto.probabilityOfDefault,
-                CCM_Watch_List__c: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
-                CCM_Watch_List_Date__c: salesForceDate,
-                Company_Registration_Number__c: dtfsCustomerDto.companyRegistrationNumber,
-                D_B_Number__c: 'TEST DUNS_NUMBER',
-                Name: dtfsCustomerDto.companyName,
-                Party_URN__c: 'TEST PARTY_URN',
-              }),
-            );
+            expectSalesforceCustomerCreationRequest(dtfsCustomerDto, 'TEST PARTY_URN');
 
             expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(1);
             expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(1);
@@ -549,33 +700,12 @@ describe('CustomerService', () => {
             .mockRejectedValueOnce(new NotFoundException('Customer not found.'));
 
           // Act
-          await service.getOrCreateCustomer(mockResponseObject, dtfsCustomerDto);
+          const result = await service.getOrCreateCustomer(mockResponseObject, dtfsCustomerDto);
 
           // Assert
-          expect(mockResponseObject.json).toHaveBeenCalledTimes(1);
-          expect(mockResponseObject.json).toHaveBeenCalledWith(response);
-          expect(mockResponseObject.status).toHaveBeenCalledWith(HttpStatusCode.Created);
+          expectSuccessfulResponse(result, response, HttpStatusCode.Created);
 
-          expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(
-            expect.objectContaining({
-              CCM_Assigned_Rating__c: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
-              CCM_Citizenship_Class__c: dtfsCustomerDto.ukEntity,
-              CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
-              CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
-              CCM_Industry__c: dtfsCustomerDto.ukefIndustryName,
-              CCM_Industry_Group__c: dtfsCustomerDto.ukefSectorName,
-              CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
-              CCM_Primary_Industry__c: dtfsCustomerDto.ukefIndustryName,
-              CCM_Primary_Industry_Group__c: dtfsCustomerDto.ukefSectorName,
-              CCM_Probability_of_Default__c: dtfsCustomerDto.probabilityOfDefault,
-              CCM_Watch_List__c: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
-              CCM_Watch_List_Date__c: salesForceDate,
-              Company_Registration_Number__c: dtfsCustomerDto.companyRegistrationNumber,
-              D_B_Number__c: 'TEST DUNS_NUMBER',
-              Name: dtfsCustomerDto.companyName,
-              Party_URN__c: 'TEST PARTY_URN',
-            }),
-          );
+          expectSalesforceCustomerCreationRequest(dtfsCustomerDto, 'TEST PARTY_URN');
 
           expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(1);
           expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(1);
@@ -634,33 +764,12 @@ describe('CustomerService', () => {
             .mockRejectedValueOnce(new NotFoundException('Customer not found.'));
 
           // Act
-          await service.getOrCreateCustomer(mockResponseObject, dtfsCustomerDto);
+          const result = await service.getOrCreateCustomer(mockResponseObject, dtfsCustomerDto);
 
           // Assert
-          expect(mockResponseObject.json).toHaveBeenCalledTimes(1);
-          expect(mockResponseObject.json).toHaveBeenCalledWith(response);
-          expect(mockResponseObject.status).toHaveBeenCalledWith(HttpStatusCode.Created);
+          expectSuccessfulResponse(result, response, HttpStatusCode.Created);
 
-          expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(
-            expect.objectContaining({
-              CCM_Assigned_Rating__c: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
-              CCM_Citizenship_Class__c: dtfsCustomerDto.ukEntity,
-              CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
-              CCM_Credit_Risk_Rating_Date__c: salesforceFormattedCurrentDate(),
-              CCM_Industry__c: dtfsCustomerDto.ukefIndustryName,
-              CCM_Industry_Group__c: dtfsCustomerDto.ukefSectorName,
-              CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
-              CCM_Primary_Industry__c: dtfsCustomerDto.ukefIndustryName,
-              CCM_Primary_Industry_Group__c: dtfsCustomerDto.ukefSectorName,
-              CCM_Probability_of_Default__c: dtfsCustomerDto.probabilityOfDefault,
-              CCM_Watch_List__c: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
-              CCM_Watch_List_Date__c: salesForceDate,
-              Company_Registration_Number__c: dtfsCustomerDto.companyRegistrationNumber,
-              D_B_Number__c: 'TEST DUNS_NUMBER',
-              Name: dtfsCustomerDto.companyName,
-              Party_URN__c: null,
-            }),
-          );
+          expectSalesforceCustomerCreationRequest(dtfsCustomerDto, null);
 
           expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(1);
           expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(1);

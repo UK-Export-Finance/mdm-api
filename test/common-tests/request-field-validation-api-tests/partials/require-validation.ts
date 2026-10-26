@@ -28,14 +28,14 @@ export function withRequiredFieldValidationApiTests<RequestBodyItem, RequestBody
   const requestIsAnArray = Array.isArray(validRequestBody);
   const requestBodyItem = requestIsAnArray ? validRequestBody[0] : validRequestBody;
 
-  required = required ?? true;
+  const isRequired = required ?? true;
 
   beforeEach(() => {
     givenAnyRequestBodyWouldSucceed();
   });
 
   describe(`${fieldName} is required validation`, () => {
-    if (required) {
+    if (isRequired) {
       const expectedRequiredFieldError =
         theEnum && generateFieldValueThatDoesNotMatchEnum
           ? `${fieldName} must be one of the following values: ${Object.values(theEnum).join(', ')}`
