@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { Test, TestingModule } from '@nestjs/testing';
 import Chance from 'chance';
 
@@ -18,7 +19,7 @@ describe('InterestRatesController', () => {
         {
           provide: InterestRatesService,
           useValue: {
-            findAll: jest.fn().mockResolvedValue([
+            findAll: jest.fn<InterestRatesService['findAll']>().mockResolvedValue([
               {
                 id: chance.natural(),
                 category: chance.word(),
@@ -28,10 +29,10 @@ describe('InterestRatesController', () => {
                 currency: chance.currency().code,
                 interestRate: chance.natural(),
                 bukKey: chance.word(),
-                effectiveFrom: chance.date({ string: true }),
-                effectiveTo: chance.date({ string: true }),
-                created: chance.date({ string: true }),
-                updated: chance.date({ string: true }),
+                effectiveFrom: chance.date(),
+                effectiveTo: chance.date(),
+                created: chance.date(),
+                updated: chance.date(),
               },
             ]),
           },

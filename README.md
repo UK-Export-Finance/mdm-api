@@ -107,6 +107,23 @@ $ npm run api-test
 $ DEBUG=nock.* npm run api-test
 ```
 
+Tests run as native ES modules using Jest's `--experimental-vm-modules` runtime and `tsconfig.test.json`.
+The application build continues to use its existing module format.
+
+Import the Jest runtime in each file that uses it and type mocks against the functions they replace:
+
+```typescript
+import { jest } from '@jest/globals';
+
+const getCustomers = jest.fn<InformaticaService['getCustomers']>();
+```
+
+Use typed `jest.spyOn` calls for generic or overloaded methods, and `mockResolvedValue` for asynchronous return values.
+
+ES module mocks are not hoisted. Register them with `jest.unstable_mockModule`, then dynamically import the module under test in an asynchronous
+`beforeAll` hook. Use `.js` extensions in relative dynamic imports; Jest maps these to the TypeScript sources.
+CommonJS dependencies can still use `jest.mock`, but must also be imported after registering their mocks.
+
 ### Snapshot
 
 If you have made any changes to a request or response DTO, then you must update the snapshot please.

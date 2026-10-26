@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { HttpService } from '@nestjs/axios';
 import { NotFoundException } from '@nestjs/common';
 import { AxiosError } from 'axios';
@@ -13,13 +14,13 @@ import { InformaticaService } from './informatica.service';
 describe('InformaticaService', () => {
   const valueGenerator = new RandomValueGenerator();
 
-  let httpServiceGet: jest.Mock;
+  let httpServiceGet: jest.SpiedFunction<HttpService['get']>;
   let service: InformaticaService;
 
   beforeEach(() => {
     const httpService = new HttpService();
-    httpServiceGet = jest.fn();
-    httpService.get = httpServiceGet;
+
+    httpServiceGet = jest.spyOn(httpService, 'get').mockReset();
 
     service = new InformaticaService(httpService);
   });

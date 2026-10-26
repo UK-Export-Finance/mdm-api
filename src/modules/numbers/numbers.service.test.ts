@@ -1,9 +1,11 @@
+import { jest } from '@jest/globals';
 import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 import { PinoLogger } from 'nestjs-pino';
 import { Repository } from 'typeorm';
 
 import { NumbersService } from './numbers.service';
+import { UkefId } from './entities/ukef-id.entity';
 
 describe('NumbersService', () => {
   let service: NumbersService;
@@ -120,12 +122,8 @@ describe('NumbersService', () => {
     99: ['99 - 1'],
   };
 
-  type MockType<T> = {
-    [P in keyof T]?: jest.Mock<object>;
-  };
-
-  const repositoryMockFactory: () => MockType<Repository<any>> = jest.fn(() => ({
-    findOne: jest.fn((entity) => entity),
+  const repositoryMockFactory = jest.fn(() => ({
+    findOne: jest.fn<Repository<UkefId>['findOne']>(),
   }));
 
   beforeAll(async () => {

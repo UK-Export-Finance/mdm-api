@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { AxiosError, HttpStatusCode } from 'axios';
@@ -9,8 +10,7 @@ import { DunAndBradstreetService } from './dun-and-bradstreet.service';
 import { DunAndBradstreetException } from './exception/dun-and-bradstreet.exception';
 
 describe('DunAndBradstreetService', () => {
-  let httpServiceGet: jest.Mock;
-  let configServiceGet: jest.Mock;
+  let httpServiceGet: jest.SpiedFunction<HttpService['get']>;
   let service: DunAndBradstreetService;
 
   const valueGenerator = new RandomValueGenerator();
@@ -52,12 +52,12 @@ describe('DunAndBradstreetService', () => {
 
   beforeAll(() => {
     const httpService = new HttpService();
-    httpServiceGet = jest.fn();
-    httpService.get = httpServiceGet;
+
+    httpServiceGet = jest.spyOn(httpService, 'get').mockReset();
 
     const configService = new ConfigService();
-    configServiceGet = jest.fn().mockReturnValue({ key: 'TEST API_KEY' });
-    configService.get = configServiceGet;
+
+    jest.spyOn(configService, 'get').mockReset().mockReturnValue({ key: 'TEST API_KEY' });
 
     service = new DunAndBradstreetService(httpService, configService);
   });

@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpStatusCode } from 'axios';
@@ -21,11 +22,9 @@ import { CreateCustomerSalesforceResponseDto } from '@ukef/modules/salesforce/dt
 import { CustomersService } from './customers.service';
 import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
 
-jest.mock('@ukef/modules/informatica/informatica.service');
-
 const mockResponseObject = {
-  json: jest.fn(),
-  status: jest.fn().mockReturnThis(),
+  json: jest.fn<Response['json']>(),
+  status: jest.fn<Response['status']>().mockReturnThis(),
 } as any as Response;
 
 // Test constants
@@ -149,15 +148,13 @@ describe('CustomerService', () => {
   let service: CustomersService;
   let logger: PinoLogger;
 
-  let informaticaServiceGetCustomers: jest.Mock;
+  let informaticaServiceGetCustomers: jest.MockedFunction<InformaticaService['getCustomers']>;
 
-  let salesforceConfigServiceGet: jest.Mock;
-  let salesforceServiceCreateCustomer: jest.Mock;
+  let salesforceServiceCreateCustomer: jest.MockedFunction<SalesforceService['createCustomer']>;
 
-  let numbersServiceCreate: jest.Mock;
+  let numbersServiceCreate: jest.MockedFunction<NumbersService['create']>;
 
-  let dunAndBradstreetConfigServiceGet: jest.Mock;
-  let dunAndBradstreetServiceGetDunsNumber: jest.Mock;
+  let dunAndBradstreetServiceGetDunsNumber: jest.MockedFunction<DunAndBradstreetService['getDunAndBradstreetNumberByRegistrationNumber']>;
 
   /**
    * Asserts the response `getOrCreateCustomer` resolved with, and the status code it set via `res.status(...)`.
@@ -202,31 +199,32 @@ describe('CustomerService', () => {
   };
 
   beforeEach(() => {
-    informaticaServiceGetCustomers = jest.fn();
+    informaticaServiceGetCustomers = jest.fn<InformaticaService['getCustomers']>();
     const informaticaService = new InformaticaService(null);
     informaticaService.getCustomers = informaticaServiceGetCustomers;
 
     const salesforceConfigService = new ConfigService();
-    salesforceConfigServiceGet = jest.fn().mockReturnValue({
+
+    jest.spyOn(salesforceConfigService, 'get').mockReset().mockReturnValue({
       clientId: 'TEST_CLIENT_ID',
       clientSecret: 'TEST_CLIENT_SECRET',
       username: 'TEST_USERNAME',
       password: 'TEST_PASSWORD',
       accessUrl: 'TEST_ACCESS_URL',
     });
-    salesforceConfigService.get = salesforceConfigServiceGet;
-    salesforceServiceCreateCustomer = jest.fn();
+
+    salesforceServiceCreateCustomer = jest.fn<SalesforceService['createCustomer']>();
     const salesforceService = new SalesforceService(null, salesforceConfigService, null);
     salesforceService.createCustomer = salesforceServiceCreateCustomer;
 
-    numbersServiceCreate = jest.fn();
+    numbersServiceCreate = jest.fn<NumbersService['create']>();
     const numbersService = new NumbersService(null, null);
     numbersService.create = numbersServiceCreate;
 
     const dunAndBradstreetConfigService = new ConfigService();
-    dunAndBradstreetConfigServiceGet = jest.fn().mockReturnValue({ key: 'TEST_KEY' });
-    dunAndBradstreetConfigService.get = dunAndBradstreetConfigServiceGet;
-    dunAndBradstreetServiceGetDunsNumber = jest.fn();
+
+    jest.spyOn(dunAndBradstreetConfigService, 'get').mockReset().mockReturnValue({ key: 'TEST_KEY' });
+    dunAndBradstreetServiceGetDunsNumber = jest.fn<DunAndBradstreetService['getDunAndBradstreetNumberByRegistrationNumber']>();
     const dunAndBradstreetService = new DunAndBradstreetService(null, dunAndBradstreetConfigService);
     dunAndBradstreetService.getDunAndBradstreetNumberByRegistrationNumber = dunAndBradstreetServiceGetDunsNumber;
 
