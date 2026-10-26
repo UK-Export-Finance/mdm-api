@@ -322,17 +322,19 @@ describe('Numbers', () => {
 
     // Go through results, group by type and validate the order.
     body.reduce((previousValues, newUkefId) => {
+      const modifiedPreviousValues = previousValues;
+
       if (!previousValues[newUkefId.type]) {
         // First call for this type, initialize.
-        previousValues[newUkefId.type] = '';
+        modifiedPreviousValues[newUkefId.type] = '';
       }
 
       // Comparing two strings
-      expect(previousValues[newUkefId.type] < newUkefId.maskedId).toBeTruthy();
+      expect(modifiedPreviousValues[newUkefId.type] < newUkefId.maskedId).toBeTruthy();
 
-      previousValues[newUkefId.type] = newUkefId.maskedId;
+      modifiedPreviousValues[newUkefId.type] = newUkefId.maskedId;
 
-      return previousValues;
+      return modifiedPreviousValues;
     }, Object.create(null));
   });
 });
