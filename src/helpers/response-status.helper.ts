@@ -18,17 +18,19 @@ export const statusCheck = ({ error, status }: { error: Error; status: HttpStatu
  * @returns - Returns true if the error response contains the search string, otherwise false.
  */
 export const messageCheck = ({ error, search }: { error: Error; search: string }): boolean => {
-  if (!isAxiosError(error) || !error?.response?.data) {
+  if (!isAxiosError(error) || !error.response?.data) {
     return false;
   }
 
   let message: string;
 
-  if (typeof error?.response?.data?.error === 'string') {
+  if (typeof error.response.data?.error === 'string') {
     message = error.response.data.error;
-  } else if (error?.response?.data?.errors?.[0] && typeof error?.response?.data?.errors?.[0]?.error === 'string') {
+  } else if (error.response.data?.errors?.[0] && typeof error.response.data?.errors?.[0]?.error === 'string') {
     message = error.response.data.errors[0].error;
   }
 
-  return message.toLowerCase().includes(search.toLowerCase()) ?? false;
+  const returnValue = message.toLowerCase().includes(search.toLowerCase());
+
+  return returnValue;
 };

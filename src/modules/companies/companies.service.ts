@@ -21,7 +21,7 @@ export class CompaniesService {
       const company: GetCompanyCompaniesHouseResponse = await this.companiesHouseService.getCompanyByRegistrationNumber(registrationNumber);
       this.validateCompanyIsUkCompany(company, registrationNumber);
 
-      const industryClasses: SectorIndustryEntity[] = await this.sectorIndustriesService.find(null, null);
+      const industryClasses: SectorIndustryEntity[] = await this.sectorIndustriesService.find();
 
       const mappedCompany = this.mapCompany(company, industryClasses);
 
@@ -40,7 +40,7 @@ export class CompaniesService {
   }
 
   private validateCompanyIsUkCompany(company: GetCompanyCompaniesHouseResponse, registrationNumber: string): never | undefined {
-    if (company.type?.includes('oversea')) {
+    if (company.type.includes('oversea')) {
       throw new CompaniesOverseasCompanyException(
         `Company with registration number ${registrationNumber} is an overseas company. UKEF can only process applications from companies based in the UK.`,
       );
@@ -54,20 +54,20 @@ export class CompaniesService {
       accounts: {
         accountingReferenceDate: company.accounts.accounting_reference_date,
         lastAccounts: {
-          madeUpTo: company.accounts.last_accounts?.made_up_to,
-          periodEndOn: company.accounts.last_accounts?.period_end_on,
-          periodStartOn: company.accounts.last_accounts?.period_start_on,
-          type: company.accounts.last_accounts?.period_start_on,
+          madeUpTo: company.accounts.last_accounts.made_up_to,
+          periodEndOn: company.accounts.last_accounts.period_end_on,
+          periodStartOn: company.accounts.last_accounts.period_start_on,
+          type: company.accounts.last_accounts.period_start_on,
         },
         nextAccounts: {
-          dueOn: company.accounts.next_accounts?.due_on,
-          overdue: company.accounts.next_accounts?.overdue,
-          periodEndOn: company.accounts.next_accounts?.period_end_on,
-          periodStartOn: company.accounts.next_accounts?.period_start_on,
+          dueOn: company.accounts.next_accounts.due_on,
+          overdue: company.accounts.next_accounts.overdue,
+          periodEndOn: company.accounts.next_accounts.period_end_on,
+          periodStartOn: company.accounts.next_accounts.period_start_on,
         },
-        nextDue: company.accounts?.next_due,
-        nextMadeUpTo: company.accounts?.next_made_up_to,
-        overdue: company.accounts?.overdue,
+        nextDue: company.accounts.next_due,
+        nextMadeUpTo: company.accounts.next_made_up_to,
+        overdue: company.accounts.overdue,
       },
       companiesHouseRegistrationNumber: company.company_number,
       companyName: company.company_name,
@@ -92,7 +92,7 @@ export class CompaniesService {
   private mapSicCodes(sicCodes: string[], industryClasses: SectorIndustryEntity[]): Industry[] {
     const industries = [];
 
-    sicCodes?.forEach((sicCode) => {
+    sicCodes.forEach((sicCode) => {
       industryClasses.forEach((industryClass) => {
         if (sicCode === industryClass.ukefIndustryId) {
           industries.push({

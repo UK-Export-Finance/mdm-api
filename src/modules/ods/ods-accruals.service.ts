@@ -42,7 +42,7 @@ export class OdsAccrualsService {
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
-      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+      if (storedProcedureJson.status !== STORED_PROCEDURE.SUCCESS) {
         this.logger.error('Error finding accrual frequency %s from ODS stored procedure, output %o', frequencyCode, storedProcedureResult);
 
         throw new Error(`Error finding accrual frequency ${frequencyCode} from ODS stored procedure`);
@@ -85,7 +85,7 @@ export class OdsAccrualsService {
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
-      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+      if (storedProcedureJson.status !== STORED_PROCEDURE.SUCCESS) {
         this.logger.error('Error getting accrual frequencies from ODS stored procedure, output %o', storedProcedureResult);
 
         throw new InternalServerErrorException('Error getting accrual frequencies from ODS stored procedure');
@@ -130,7 +130,7 @@ export class OdsAccrualsService {
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
-      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+      if (storedProcedureJson.status !== STORED_PROCEDURE.SUCCESS) {
         this.logger.error(
           'Error finding accrual schedule classification %s %s from ODS stored procedure, output %o',
           classificationTypeCode,
@@ -184,7 +184,7 @@ export class OdsAccrualsService {
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
-      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+      if (storedProcedureJson.status !== STORED_PROCEDURE.SUCCESS) {
         this.logger.error(
           'Error getting accrual schedule classifications from ODS stored procedure %s, output %o',
           classificationTypeCode,

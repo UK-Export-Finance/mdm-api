@@ -48,7 +48,7 @@ export class OdsProductConfigService {
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
-      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+      if (storedProcedureJson.status !== STORED_PROCEDURE.SUCCESS) {
         this.logger.error('Error finding product config %s from ODS stored procedure, output %o', productType, storedProcedureResult);
 
         throw new Error(`Error finding product config ${productType} from ODS stored procedure`);
@@ -89,7 +89,7 @@ export class OdsProductConfigService {
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
-      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+      if (storedProcedureJson.status !== STORED_PROCEDURE.SUCCESS) {
         this.logger.error('Error getting product configs from ODS stored procedure, output %o', storedProcedureResult);
 
         throw new InternalServerErrorException('Error getting product configs from ODS stored procedure');

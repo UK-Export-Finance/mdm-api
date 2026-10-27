@@ -67,7 +67,7 @@ export class SalesforceService {
         }),
       });
 
-      if (data?.success) {
+      if (data.success) {
         this.logger.info('Salesforce confirmed customer creation for company %s', createCustomerDto.Company_Registration_Number__c);
       } else {
         this.logger.warn('Salesforce did not confirm customer creation for company %s', createCustomerDto.Company_Registration_Number__c);

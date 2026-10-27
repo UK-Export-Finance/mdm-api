@@ -45,7 +45,7 @@ export class CustomersService {
         companyRegNo: customerInInformatica.companyRegNo,
         creditClassificationDate: customerInInformatica.creditClassificationDate,
         creditClassificationStatus: customerInInformatica.creditClassificationStatus,
-        customerType: customerInInformatica.customerType || null,
+        customerType: customerInInformatica.customerType ?? null,
         isLegacyRecord: customerInInformatica.isLegacyRecord,
         name: customerInInformatica.name,
         partyUrn: customerInInformatica.partyUrn,
@@ -115,7 +115,7 @@ export class CustomersService {
       const existingCustomersInInformatica = await this.informaticaService.getCustomers(backendQuery);
 
       // If the customer does exist in Informatica
-      if (existingCustomersInInformatica?.[0]) {
+      if (existingCustomersInInformatica[0]) {
         return await this.handleInformaticaResponse(res, dtfsCustomerDto, existingCustomersInInformatica);
       }
 
@@ -144,7 +144,7 @@ export class CustomersService {
    * @param {any[]} existingCustomersInInformatica - List of existing customers found in Informatica.
    * @returns {Promise<GetCustomersResponse>} A promise that resolves to the customer response items.
    */
-  private async handleInformaticaResponse(res, dtfsCustomerDto, existingCustomersInInformatica): Promise<GetCustomersResponse> {
+  private async handleInformaticaResponse(res, dtfsCustomerDto, existingCustomersInInformatica): Promise<GetCustomersResponse | undefined> {
     if (existingCustomersInInformatica[0]?.isLegacyRecord === false) {
       this.logger.info('Returning existing non-legacy Salesforce customer for company %s', dtfsCustomerDto.companyRegistrationNumber);
 

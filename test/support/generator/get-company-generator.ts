@@ -68,7 +68,7 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
 
   protected transformRawValuesToGeneratedValues(values: CompanyValues[], { registrationNumber }: GenerateOptions): GenerateResult {
     const [v] = values;
-    const registrationNumberToUse = registrationNumber || v.companiesHouseRegistrationNumber;
+    const registrationNumberToUse = registrationNumber ?? v.companiesHouseRegistrationNumber;
 
     const companiesHousePath = `/company/${registrationNumberToUse}`;
 

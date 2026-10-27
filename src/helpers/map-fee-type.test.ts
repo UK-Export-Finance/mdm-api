@@ -1,5 +1,4 @@
 import { EXAMPLES } from '@ukef/constants';
-
 import { mapFeeType } from './map-fee-type';
 
 describe('mapFeeType', () => {

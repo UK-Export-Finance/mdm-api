@@ -11,5 +11,5 @@ export const isStoredProcedureResultEmpty = (storedProcedureJson?: OdsStoredProc
     return true;
   }
 
-  return storedProcedureJson?.total_result_count === 0;
+  return storedProcedureJson.total_result_count === 0;
 };

@@ -51,7 +51,7 @@ export class OdsStoredProcedureService {
         [JSON.stringify(storedProcedureInput)],
       );
 
-      return result[0]?.output_body || null;
+      return result[0]?.output_body ?? null;
     } finally {
       await queryRunner.release();
     }

@@ -35,11 +35,11 @@ export class GovukNotifyService {
     // We create new client for each request because govUkNotifyKey (auth key) might be different.
     const notifyClient = new NotifyClient(govUkNotifyKey);
 
-    const reference = postEmailsRequest.reference || `${postEmailsRequest.templateId}-${Date.now()}`;
+    const reference = postEmailsRequest.reference ?? `${postEmailsRequest.templateId}-${Date.now()}`;
 
     const { personalisation } = postEmailsRequest;
 
-    if (personalisation?.file) {
+    if (personalisation.file) {
       const buffer = convertStringToBuffer(personalisation.file.toString());
       personalisation.linkToFile = notifyClient.prepareUpload(buffer, { confirmEmailBeforeDownload: true }).file;
     }
