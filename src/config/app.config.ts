@@ -36,7 +36,7 @@ export type AppConfigType = {
 };
 
 export const AppConfig = registerAs('app', (): AppConfigType => {
-  const logLevel = String(process.env.LOG_LEVEL);
+  const logLevel = process.env.LOG_LEVEL!;
 
   if (!validLogLevels.includes(logLevel)) {
     throw new InvalidConfigException(`LOG_LEVEL must be one of ${validLogLevels} or not specified.`);
