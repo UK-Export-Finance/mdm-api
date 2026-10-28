@@ -1,5 +1,5 @@
 import { PinoLogger } from 'nestjs-pino';
-import { DataSource, QueryRunner, Repository } from 'typeorm';
+import { DataSource, QueryRunner } from 'typeorm';
 import { EXAMPLES } from '@ukef/constants';
 
 import { OdsService } from '@ukef/modules/ods/ods.service';
@@ -9,7 +9,6 @@ import { CreditRiskRatingsService } from './credit-risk-ratings/credit-risk-rati
 import { DomController } from './dom.controller';
 import { DomService } from './dom.service';
 import { FindMultipleOdsBusinessCentreOdsResponsesNonWorkingDaysResponse, FindMultipleProductConfigsResponse } from './dto';
-import { CreditRiskRatingEntity } from './entities/credit-risk-rating.entity';
 
 const mockError = new Error('An error occurred');
 
@@ -35,7 +34,7 @@ describe('DomController', () => {
     createQueryRunner: jest.fn().mockReturnValue(mockQueryRunner),
   } as unknown as jest.Mocked<DataSource>;
 
-  const creditRiskRatingsService = new CreditRiskRatingsService(null as unknown as Repository<CreditRiskRatingEntity>, mockLogger);
+  const creditRiskRatingsService = {} as jest.Mocked<CreditRiskRatingsService>;
   const odsStoredProcedureService = new OdsStoredProcedureService(mockDataSource);
   const odsService = new OdsService(odsStoredProcedureService, mockLogger);
   const odsProductConfigService = new OdsProductConfigService(odsStoredProcedureService, mockLogger);

@@ -1,7 +1,6 @@
 import { NotFoundException } from '@nestjs/common';
 import { resetAllWhenMocks, when } from 'jest-when';
 import { EXAMPLES } from '@ukef/constants';
-import { OrdnanceSurveyService } from '@ukef/helper-modules/ordnance-survey/ordnance-survey.service';
 import { GetGeospatialAddressesGenerator } from '@ukef-test/support/generator/get-geospatial-addresses-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 
@@ -20,7 +19,7 @@ describe('GeospatialController', () => {
 
   beforeEach(() => {
     resetAllWhenMocks();
-    const geospatialService = new GeospatialService(null as unknown as OrdnanceSurveyService);
+    const geospatialService = {} as jest.Mocked<GeospatialService>;
     geospatialServiceGetAddressesByPostcode = jest.fn();
     geospatialService.getAddressesByPostcode = geospatialServiceGetAddressesByPostcode;
 

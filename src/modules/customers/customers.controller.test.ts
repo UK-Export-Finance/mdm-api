@@ -2,13 +2,8 @@ import { BadRequestException } from '@nestjs/common';
 import { validate } from 'class-validator';
 import { Response } from 'express';
 import { when } from 'jest-when';
-import { PinoLogger } from 'nestjs-pino';
 import { ENUMS, EXAMPLES } from '@ukef/constants';
-import { DunAndBradstreetService } from '@ukef/helper-modules/dun-and-bradstreet/dun-and-bradstreet.service';
 import { salesforceFormattedCurrentDate } from '@ukef/helpers/date-formatter.helper';
-import { InformaticaService } from '@ukef/modules/informatica/informatica.service';
-import { NumbersService } from '@ukef/modules/numbers/numbers.service';
-import { SalesforceService } from '@ukef/modules/salesforce/salesforce.service';
 import { GetCustomersGenerator } from '@ukef-test/support/generator/get-customers-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 
@@ -33,13 +28,7 @@ describe('CustomersController', () => {
   let controller: CustomersController;
 
   beforeEach(() => {
-    const customersService = new CustomersService(
-      null as unknown as InformaticaService,
-      null as unknown as SalesforceService,
-      null as unknown as NumbersService,
-      null as unknown as DunAndBradstreetService,
-      null as unknown as PinoLogger,
-    );
+    const customersService = {} as jest.Mocked<CustomersService>;
     customersServiceGetCustomers = jest.fn();
     customersServiceGetOrCreateCustomer = jest.fn();
     customersService.getCustomers = customersServiceGetCustomers;

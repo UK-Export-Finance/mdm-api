@@ -1,6 +1,4 @@
 import { resetAllWhenMocks, when } from 'jest-when';
-import { CompaniesHouseService } from '@ukef/helper-modules/companies-house/companies-house.service';
-import { SectorIndustriesService } from '@ukef/modules/sector-industries/sector-industries.service';
 import { GetCompanyGenerator } from '@ukef-test/support/generator/get-company-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 
@@ -21,7 +19,7 @@ describe('CompaniesController', () => {
   });
 
   beforeAll(() => {
-    const companiesService = new CompaniesService(null as unknown as CompaniesHouseService, null as unknown as SectorIndustriesService);
+    const companiesService = {} as jest.Mocked<CompaniesService>;
     companiesServiceGetCompanyByRegistrationNumber = jest.fn();
     companiesService.getCompanyByRegistrationNumber = companiesServiceGetCompanyByRegistrationNumber;
 

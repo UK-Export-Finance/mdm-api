@@ -1,6 +1,4 @@
 import { NotFoundException } from '@nestjs/common';
-import { HttpService } from '@nestjs/axios';
-import { ConfigService } from '@nestjs/config';
 import { resetAllWhenMocks, when } from 'jest-when';
 import { OrdnanceSurveyService } from '@ukef/helper-modules/ordnance-survey/ordnance-survey.service';
 import { GetGeospatialAddressesGenerator } from '@ukef-test/support/generator/get-geospatial-addresses-generator';
@@ -14,16 +12,11 @@ describe('GeospatialService', () => {
   const valueGenerator = new RandomValueGenerator();
 
   let service: GeospatialService;
-  let configServiceGet: jest.Mock;
   let ordnanceSurveyServiceGetAddressesByPostcode: jest.Mock;
 
   beforeEach(() => {
-    const configService = new ConfigService();
-    configServiceGet = jest.fn().mockReturnValue({ key: valueGenerator.word() });
-    configService.get = configServiceGet;
-
+    const ordnanceSurveyService = {} as jest.Mocked<OrdnanceSurveyService>;
     ordnanceSurveyServiceGetAddressesByPostcode = jest.fn();
-    const ordnanceSurveyService = new OrdnanceSurveyService(null as unknown as HttpService, configService);
     ordnanceSurveyService.getAddressesByPostcode = ordnanceSurveyServiceGetAddressesByPostcode;
     resetAllWhenMocks();
 

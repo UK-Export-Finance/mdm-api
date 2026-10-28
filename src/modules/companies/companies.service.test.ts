@@ -1,9 +1,5 @@
 import { NotFoundException, UnprocessableEntityException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { HttpService } from '@nestjs/axios';
 import { resetAllWhenMocks, when } from 'jest-when';
-import { PinoLogger } from 'nestjs-pino';
-import { Repository } from 'typeorm';
 import { CompaniesHouseService } from '@ukef/helper-modules/companies-house/companies-house.service';
 import { CompaniesHouseException } from '@ukef/helper-modules/companies-house/exception/companies-house.exception';
 import { CompaniesHouseInvalidAuthorizationException } from '@ukef/helper-modules/companies-house/exception/companies-house-invalid-authorization.exception';
@@ -12,14 +8,12 @@ import { CompaniesHouseNotFoundException } from '@ukef/helper-modules/companies-
 import { GetCompanyGenerator } from '@ukef-test/support/generator/get-company-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 
-import { SectorIndustryEntity } from '@ukef/modules/sector-industries/entities/sector-industry.entity';
 import { SectorIndustriesService } from '@ukef/modules/sector-industries/sector-industries.service';
 import { CompaniesService } from './companies.service';
 import { GetCompanyResponse } from './dto/get-company-response.dto';
 import { CompaniesOverseasCompanyException } from './exception/companies-overseas-company-exception.exception';
 
 describe('CompaniesService', () => {
-  let configServiceGet: jest.Mock;
   let companiesHouseServiceGetCompanyByRegistrationNumber: jest.Mock;
   let sectorIndustriesServiceFind: jest.Mock;
   let service: CompaniesService;
@@ -35,16 +29,12 @@ describe('CompaniesService', () => {
     });
 
   beforeAll(() => {
-    const configService = new ConfigService();
-    configServiceGet = jest.fn().mockReturnValue({ key: valueGenerator.word() });
-    configService.get = configServiceGet;
-
     companiesHouseServiceGetCompanyByRegistrationNumber = jest.fn();
-    const companiesHouseService = new CompaniesHouseService(null as unknown as HttpService, configService);
+    const companiesHouseService = {} as jest.Mocked<CompaniesHouseService>;
     companiesHouseService.getCompanyByRegistrationNumber = companiesHouseServiceGetCompanyByRegistrationNumber;
 
     sectorIndustriesServiceFind = jest.fn();
-    const sectorIndustriesService = new SectorIndustriesService(null as unknown as Repository<SectorIndustryEntity>, null as unknown as PinoLogger);
+    const sectorIndustriesService = {} as jest.Mocked<SectorIndustriesService>;
     sectorIndustriesService.find = sectorIndustriesServiceFind;
 
     service = new CompaniesService(companiesHouseService, sectorIndustriesService);
