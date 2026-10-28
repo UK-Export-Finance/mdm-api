@@ -234,7 +234,7 @@ export class CustomersService {
    * @param {any[] | null} existingCustomersInInformatica - List of existing customers found in Informatica or null.
    * @returns {Promise<void>}
    */
-  private async createCustomerByURN(res, dtfsCustomerDto, existingCustomersInInformatica = null) {
+  private async createCustomerByURN(res, dtfsCustomerDto, existingCustomersInInformatica: any[] | null = null) {
     let partyUrn: string;
     let isLegacyRecord: boolean;
 
@@ -336,7 +336,7 @@ export class CustomersService {
       throw error;
     }
 
-    if (salesforceCreateCustomerResponse?.success) {
+    if (salesforceCreateCustomerResponse.success) {
       this.logger.info('Created customer in Salesforce for company %s', dtfsCustomerDto.companyRegistrationNumber);
     } else {
       this.logger.warn('Salesforce did not confirm customer creation for company %s', dtfsCustomerDto.companyRegistrationNumber);
@@ -353,7 +353,7 @@ export class CustomersService {
         partyUrn,
         probabilityOfDefault: dtfsCustomerDto.probabilityOfDefault,
         riskEntity: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
-        sfId: salesforceCreateCustomerResponse?.success ? salesforceCreateCustomerResponse.id : null,
+        sfId: salesforceCreateCustomerResponse.success ? salesforceCreateCustomerResponse.id : null,
         subtype: null,
         type: null,
         ukefIndustryName: dtfsCustomerDto.ukefIndustryName,

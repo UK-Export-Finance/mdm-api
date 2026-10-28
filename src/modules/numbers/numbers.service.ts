@@ -111,7 +111,7 @@ export class NumbersService {
     return newUkefIds.reduce((acc, newUkefId) => {
       const modifiedAcc = acc;
 
-      modifiedAcc[newUkefId.type] = acc[newUkefId.type] || []; // Reasign or initialize
+      modifiedAcc[newUkefId.type] = acc[newUkefId.type] ?? []; // Reasign or initialize
       modifiedAcc[newUkefId.type].push(newUkefId.maskedId);
 
       return modifiedAcc;

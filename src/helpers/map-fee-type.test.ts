@@ -17,7 +17,7 @@ describe('mapFeeType', () => {
       expenseIncome: mockFeeType.feeTypeExpenseIncome,
       isActive: mockFeeType.feeTypeActive,
       balanceCategory: mockFeeType.balanceCategory,
-      baseBalanceCategory: mockFeeType.baseBalanceCategory ?? null,
+      baseBalanceCategory: mockFeeType.baseBalanceCategory,
       nonFacilityCurrencySettlement: mockFeeType.nonFacilityCurrencySettlement,
       cappedBaseBalance: mockFeeType.feeTypeCappedBaseBalanceIndicator,
       effectiveDateDefault: mockFeeType.feeEffectiveDateDefault,
