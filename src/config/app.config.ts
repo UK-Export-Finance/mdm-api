@@ -36,7 +36,7 @@ export type AppConfigType = {
 };
 
 export const AppConfig = registerAs('app', (): AppConfigType => {
-  const logLevel = process.env.LOG_LEVEL ?? 'info';
+  const logLevel = String(process.env.LOG_LEVEL);
 
   if (!validLogLevels.includes(logLevel)) {
     throw new InvalidConfigException(`LOG_LEVEL must be one of ${validLogLevels} or not specified.`);
@@ -71,7 +71,7 @@ export const AppConfig = registerAs('app', (): AppConfigType => {
     apiKeyStrategy: AUTH.STRATEGY,
     env: NODE_ENV!,
     globalPrefix: '/api',
-    logLevel: process.env.LOG_LEVEL ?? 'info',
+    logLevel,
     name: NAME,
     domOdsVersioning,
     port: getIntConfig(process.env.HTTP_PORT, 3003),
