@@ -1,4 +1,5 @@
 import { NotFoundException } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { resetAllWhenMocks, when } from 'jest-when';
 import { OrdnanceSurveyService } from '@ukef/helper-modules/ordnance-survey/ordnance-survey.service';
@@ -22,7 +23,7 @@ describe('GeospatialService', () => {
     configService.get = configServiceGet;
 
     ordnanceSurveyServiceGetAddressesByPostcode = jest.fn();
-    const ordnanceSurveyService = new OrdnanceSurveyService(null, configService);
+    const ordnanceSurveyService = new OrdnanceSurveyService(null as unknown as HttpService, configService);
     ordnanceSurveyService.getAddressesByPostcode = ordnanceSurveyServiceGetAddressesByPostcode;
     resetAllWhenMocks();
 
@@ -39,7 +40,7 @@ describe('GeospatialService', () => {
     } = new GetGeospatialAddressesGenerator(valueGenerator).generate({
       numberToGenerate: 1,
     });
-    const postcode = getAddressesByPostcodeResponse[0][0].postalCode;
+    const postcode = getAddressesByPostcodeResponse[0][0].postalCode as string;
 
     it('returns a single address from the backend service', async () => {
       when(ordnanceSurveyServiceGetAddressesByPostcode).calledWith(postcode).mockResolvedValueOnce(getAddressesOrdnanceSurveyResponse[0]);
@@ -68,8 +69,8 @@ describe('GeospatialService', () => {
 
     it('returns addressLine1 formatted correctly even if middle value is missing', async () => {
       const [modifiedOrdnanceSurveyResponse] = structuredClone(getAddressesOrdnanceSurveyResponse);
-      modifiedOrdnanceSurveyResponse.results[0].DPA.BUILDING_NUMBER = null;
-      const address = modifiedOrdnanceSurveyResponse.results[0].DPA;
+      modifiedOrdnanceSurveyResponse.results![0].DPA.BUILDING_NUMBER = undefined;
+      const address = modifiedOrdnanceSurveyResponse.results![0].DPA;
       when(ordnanceSurveyServiceGetAddressesByPostcode).calledWith(postcode).mockResolvedValueOnce(modifiedOrdnanceSurveyResponse);
 
       const response = await service.getAddressesByPostcode(postcode);

@@ -11,5 +11,5 @@ export class GetOdsUkefIndustryCodeParamDto {
   @IsNumberString()
   @MinLength(COMPANIES.INDUSTRY_CODE.LEGACY_LENGTH)
   @MaxLength(COMPANIES.INDUSTRY_CODE.MODERN_LENGTH)
-  public companiesHouseIndustryCode: string;
+  public companiesHouseIndustryCode!: string;
 }

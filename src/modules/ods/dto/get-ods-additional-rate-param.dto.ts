@@ -9,5 +9,5 @@ export class GetOdsAdditionalRateParamDto {
     description: 'Unique additional rate code',
   })
   @IsString()
-  public rateCode: string;
+  public rateCode!: string;
 }

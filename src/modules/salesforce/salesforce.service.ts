@@ -29,7 +29,7 @@ export class SalesforceService {
     configService: ConfigService,
     private readonly logger: PinoLogger,
   ) {
-    const { clientId, clientSecret, username, password, accessUrl } = configService.get<SalesforceConfigType>(SALESFORCE_CONFIG_KEY);
+    const { clientId, clientSecret, username, password, accessUrl } = configService.getOrThrow<SalesforceConfigType>(SALESFORCE_CONFIG_KEY);
     this.client_id = clientId;
     this.client_secret = clientSecret;
     this.username = username;

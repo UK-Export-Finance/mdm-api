@@ -10,24 +10,24 @@ export class GetDomCurrencyResponseDto {
     description: 'The code of the currency',
     example: EXAMPLES.DOM.CURRENCIES[0].code,
   })
-  readonly code: string;
+  readonly code!: string;
 
   @ApiProperty({
     description: 'The name of the currency',
     example: EXAMPLES.DOM.CURRENCIES[0].name,
   })
-  readonly name: string;
+  readonly name!: string;
 
   @ApiProperty({
     description: 'The number of decimal places for the currency',
     example: EXAMPLES.DOM.CURRENCIES[0].decimalPlaces,
   })
-  readonly decimalPlaces: number;
+  readonly decimalPlaces!: number;
 
   @ApiProperty({
     description: 'The code of the rate setting calendar, or null if not provided',
     example: EXAMPLES.DOM.CURRENCIES[0].calendarCode,
     nullable: true,
   })
-  readonly calendarCode: string | null;
+  readonly calendarCode!: string | null;
 }

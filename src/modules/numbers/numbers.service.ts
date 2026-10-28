@@ -75,7 +75,7 @@ export class NumbersService {
    * Helper to sort new ids
    */
   sortIds(newUkefIds: UkefId[]): UkefId[] {
-    const sortedIds = [];
+    const sortedIds: UkefId[] = [];
     const newIdsByType = this.groupIdsByType(newUkefIds);
     const sortednewIdsByType = this.sortGroupedByTypeIds(newIdsByType);
 
@@ -83,7 +83,7 @@ export class NumbersService {
     newUkefIds.forEach((newId) => {
       const modifiedId = newId;
 
-      modifiedId.maskedId = sortednewIdsByType[newId.type].shift();
+      modifiedId.maskedId = sortednewIdsByType[newId.type].shift() as string;
 
       sortedIds.push(modifiedId);
     });
@@ -94,11 +94,11 @@ export class NumbersService {
   /**
    * Helper to sort new Ids inside type array.
    */
-  sortGroupedByTypeIds(newIdsByType: unknown): unknown {
-    return Object.entries(newIdsByType).reduce((acc, typeWithIds) => {
+  sortGroupedByTypeIds(newIdsByType: Record<number, string[]>): Record<number, string[]> {
+    return Object.entries(newIdsByType).reduce<Record<number, string[]>>((acc, typeWithIds) => {
       const modifiedAcc = acc;
 
-      modifiedAcc[typeWithIds[0]] = typeWithIds[1].sort();
+      modifiedAcc[Number(typeWithIds[0])] = typeWithIds[1].sort();
 
       return modifiedAcc;
     }, Object.create(null));
@@ -107,8 +107,8 @@ export class NumbersService {
   /**
    * Helper to group ids by type, so they can be sorted.
    */
-  groupIdsByType(newUkefIds: UkefId[]): unknown {
-    return newUkefIds.reduce((acc, newUkefId) => {
+  groupIdsByType(newUkefIds: UkefId[]): Record<number, string[]> {
+    return newUkefIds.reduce<Record<number, string[]>>((acc, newUkefId) => {
       const modifiedAcc = acc;
 
       modifiedAcc[newUkefId.type] = acc[newUkefId.type] ?? []; // Reasign or initialize

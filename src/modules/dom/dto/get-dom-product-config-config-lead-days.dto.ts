@@ -6,17 +6,17 @@ export class GetDomProductConfigConfigLeadDays {
     description: "The product's 'lead days - repayments'",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.leadDays.repayments,
   })
-  readonly repayments: number;
+  readonly repayments!: number;
 
   @ApiProperty({
     description: "The product's 'lead days - interest accruals'",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.leadDays.interestAccruals,
   })
-  readonly interestAccruals: number;
+  readonly interestAccruals!: number;
 
   @ApiProperty({
     description: "The product's 'lead days - accruing fees'",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.leadDays.accruingFees,
   })
-  readonly accruingFees: number;
+  readonly accruingFees!: number;
 }

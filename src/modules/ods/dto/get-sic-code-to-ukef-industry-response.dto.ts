@@ -6,5 +6,5 @@ export class GetSicCodeToUkefIndustryResponseDto {
     description: 'UKEF industry code',
     example: EXAMPLES.INDUSTRY.CODE,
   })
-  readonly ukefIndustryCode: string;
+  readonly ukefIndustryCode!: string;
 }

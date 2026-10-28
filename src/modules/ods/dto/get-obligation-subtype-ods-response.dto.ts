@@ -6,23 +6,23 @@ export class GetObligationSubtypeOdsResponseDto {
     description: 'Obligation subtype code',
     example: EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.code,
   })
-  readonly code: string;
+  readonly code!: string;
 
   @ApiProperty({
     description: 'Obligation subtype name',
     example: EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.name,
   })
-  readonly name: string;
+  readonly name!: string;
 
   @ApiProperty({
     description: 'Obligation subtype balance category',
     example: EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.balanceCategory,
   })
-  readonly balanceCategory: string;
+  readonly balanceCategory!: string;
 
   @ApiProperty({
     description: 'Obligation subtype active',
     example: EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.obligationSubtypeActive,
   })
-  readonly obligationSubtypeActive: boolean;
+  readonly obligationSubtypeActive!: boolean;
 }

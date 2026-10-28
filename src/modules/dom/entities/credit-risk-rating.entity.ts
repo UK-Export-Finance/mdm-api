@@ -10,29 +10,29 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 export class CreditRiskRatingEntity {
   @PrimaryGeneratedColumn({ name: 'ID' })
   @ApiProperty({ example: 1 })
-  id: number;
+  id!: number;
 
   @Column({ name: 'CREDIT_RISK_RATING_ID' })
   @ApiProperty({ example: 1 })
-  name: number;
+  name!: number;
 
   @Column({ name: 'CREDIT_RISK_RATING_DESCRIPTION' })
   @ApiProperty({ example: 'AA+', description: 'Credit risk rating description' })
-  description: string;
+  description!: string;
 
   @Column({ name: 'DATE_CREATED_DATETIME', type: 'timestamp' })
   @ApiProperty({ example: '2017-03-06T16:20:17.000Z' })
-  createdAt: Date;
+  createdAt!: Date;
 
   @Column({ name: 'DATE_LAST_UPDATED_DATETIME', type: 'timestamp' })
   @ApiProperty({ example: '2017-03-06T16:20:17.000Z' })
-  updatedAt: Date;
+  updatedAt!: Date;
 
   @Column({ name: 'EFFECTIVE_FROM_DATETIME', type: 'timestamp' })
   @ApiProperty({ example: '2017-03-06T10:44:47.000Z' })
-  effectiveFrom: Date;
+  effectiveFrom!: Date;
 
   @Column({ name: 'EFFECTIVE_TO_DATETIME', type: 'timestamp' })
   @ApiProperty({ example: '9999-03-0 216T16:20:17.000Z' })
-  effectiveTo: Date;
+  effectiveTo!: Date;
 }

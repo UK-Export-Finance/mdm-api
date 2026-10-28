@@ -47,7 +47,7 @@ describe('POST /emails', () => {
         ],
       },
     } as AxiosResponse;
-    return new AxiosError(`Request failed with status code ${status}`, status.toString(), null, null, response);
+    return new AxiosError(`Request failed with status code ${status}`, status.toString(), undefined, null, response);
   };
 
   beforeAll(async () => {

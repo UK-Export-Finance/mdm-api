@@ -16,7 +16,7 @@ export class DunAndBradstreetService {
 
   constructor(httpService: HttpService, configService: ConfigService) {
     this.httpClient = new HttpClient(httpService);
-    const { key } = configService.get<DunAndBradstreetConfigType>(DUN_AND_BRADSTREET.CONFIG.KEY);
+    const { key } = configService.getOrThrow<DunAndBradstreetConfigType>(DUN_AND_BRADSTREET.CONFIG.KEY);
     this.encodedKey = key;
   }
 

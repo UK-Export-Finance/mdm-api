@@ -80,11 +80,11 @@ describe('isStoredProcedureResultEmpty', () => {
 
   it('should return false when total_result_count is undefined', () => {
     // Arrange
-    const storedProcedureJson: OdsStoredProcedureOutputBody = {
+    const storedProcedureJson = {
       ...mockBaseJson,
       total_result_count: undefined,
       results: [],
-    };
+    } as unknown as OdsStoredProcedureOutputBody;
 
     // Act
     const result = isStoredProcedureResultEmpty(storedProcedureJson);

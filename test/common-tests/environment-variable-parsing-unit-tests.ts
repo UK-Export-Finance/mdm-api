@@ -11,7 +11,7 @@ type Options<ConfigUnderTest> = {
     environmentVariableName: string;
     defaultConfigValue: boolean;
   }[];
-  configParsedAsIntFromEnvironmentVariablesWithDefault?: {
+  configParsedAsIntFromEnvironmentVariablesWithDefault: {
     configPropertyName: keyof ConfigUnderTest;
     environmentVariableName: string;
     defaultConfigValue: number;

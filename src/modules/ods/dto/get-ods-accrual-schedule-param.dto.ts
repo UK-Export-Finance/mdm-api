@@ -9,5 +9,5 @@ export class GetOdsAccrualScheduleParamDto {
     description: 'Unique accrual schedule code',
   })
   @IsString()
-  public scheduleCode: string;
+  public scheduleCode!: string;
 }

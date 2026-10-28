@@ -1,4 +1,6 @@
 import { EXAMPLES } from '@ukef/constants';
+import { GetFeeTypeOdsResponseDto } from '@ukef/modules/ods/dto';
+
 import { mapFeeType } from './map-fee-type';
 
 describe('mapFeeType', () => {
@@ -33,7 +35,7 @@ describe('mapFeeType', () => {
       ...EXAMPLES.ODS.CONFIGURATION_FEE,
       feeEffectiveDateDefault: undefined,
       feeMaturityDateDefault: null,
-    };
+    } as unknown as GetFeeTypeOdsResponseDto;
 
     // Act
     const result = mapFeeType(mockFeeType);

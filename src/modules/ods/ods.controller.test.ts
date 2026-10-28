@@ -10,6 +10,7 @@ import { OdsCounterpartyRoleService } from './ods-counterparty-role.service';
 import { OdsFacilityCategoryService } from './ods-facility-category.service';
 import { OdsObligationSubtypeService } from './ods-obligation-subtype.service';
 import { OdsProductConfigService } from './ods-product-config.service';
+import { OdsStoredProcedureService } from './ods-stored-procedure.service';
 
 const mockError = new Error('An error occurred');
 
@@ -48,13 +49,13 @@ const mockObligationSubtypesWithProductTypes = [EXAMPLES.OBLIGATION_SUBTYPE_WITH
 describe('OdsController', () => {
   const mockLogger = new PinoLogger({});
 
-  const odsService = new OdsService(null, mockLogger);
-  const odsAccrualsService = new OdsAccrualsService(null, mockLogger);
-  const odsAccrualScheduleService = new OdsAccrualScheduleService(null, mockLogger);
-  const odsFacilityCategoryService = new OdsFacilityCategoryService(null, mockLogger);
-  const odsCounterpartyRoleService = new OdsCounterpartyRoleService(null, mockLogger);
-  const odsProductConfigService = new OdsProductConfigService(null, mockLogger);
-  const odsObligationSubtypeService = new OdsObligationSubtypeService(null, odsProductConfigService, mockLogger);
+  const odsService = new OdsService(null as unknown as OdsStoredProcedureService, mockLogger);
+  const odsAccrualsService = new OdsAccrualsService(null as unknown as OdsStoredProcedureService, mockLogger);
+  const odsAccrualScheduleService = new OdsAccrualScheduleService(null as unknown as OdsStoredProcedureService, mockLogger);
+  const odsFacilityCategoryService = new OdsFacilityCategoryService(null as unknown as OdsStoredProcedureService, mockLogger);
+  const odsCounterpartyRoleService = new OdsCounterpartyRoleService(null as unknown as OdsStoredProcedureService, mockLogger);
+  const odsProductConfigService = new OdsProductConfigService(null as unknown as OdsStoredProcedureService, mockLogger);
+  const odsObligationSubtypeService = new OdsObligationSubtypeService(null as unknown as OdsStoredProcedureService, odsProductConfigService, mockLogger);
 
   let odsServiceFindBusinessCentreNonWorkingDays: jest.Mock;
   let odsServiceFindCustomer: jest.Mock;
@@ -561,7 +562,7 @@ describe('OdsController', () => {
     describe('when odsService.findFeeType throws an error', () => {
       it('should throw an error', async () => {
         // Arrange
-        const localOdsService = new OdsService(null, mockLogger);
+        const localOdsService = new OdsService(null as unknown as OdsStoredProcedureService, mockLogger);
 
         localOdsService.findFeeType = jest.fn().mockRejectedValueOnce(mockError);
 
@@ -684,7 +685,7 @@ describe('OdsController', () => {
     describe('when odsService.findCustomer throws an error', () => {
       it('should throw an error', async () => {
         // Arrange
-        const localOdsService = new OdsService(null, mockLogger);
+        const localOdsService = new OdsService(null as unknown as OdsStoredProcedureService, mockLogger);
 
         localOdsService.findCustomer = jest.fn().mockRejectedValueOnce(mockError);
 
@@ -726,7 +727,7 @@ describe('OdsController', () => {
     describe('when odsService.findDeal throws an error', () => {
       it('should throw an error', async () => {
         // Arrange
-        const localOdsService = new OdsService(null, mockLogger);
+        const localOdsService = new OdsService(null as unknown as OdsStoredProcedureService, mockLogger);
 
         localOdsService.findDeal = jest.fn().mockRejectedValueOnce(mockError);
 
@@ -807,7 +808,7 @@ describe('OdsController', () => {
     describe('when odsService.findUkefIndustry throws an error', () => {
       it('should throw an error', async () => {
         // Arrange
-        const localOdsService = new OdsService(null, mockLogger);
+        const localOdsService = new OdsService(null as unknown as OdsStoredProcedureService, mockLogger);
 
         localOdsService.findUkefIndustry = jest.fn().mockRejectedValueOnce(mockError);
 
@@ -856,7 +857,7 @@ describe('OdsController', () => {
     describe('when odsService.findUkefIndustryCodeByCompaniesHouseCode throws an error', () => {
       it('should throw an error', async () => {
         // Arrange
-        const localOdsService = new OdsService(null, mockLogger);
+        const localOdsService = new OdsService(null as unknown as OdsStoredProcedureService, mockLogger);
 
         localOdsService.findUkefIndustryCodeByCompaniesHouseCode = jest.fn().mockRejectedValueOnce(mockError);
 

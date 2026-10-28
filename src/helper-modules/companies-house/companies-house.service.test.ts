@@ -1,4 +1,4 @@
-import { AxiosError } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import { resetAllWhenMocks, when } from 'jest-when';
 import { of, throwError } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
@@ -98,7 +98,7 @@ describe('CompaniesHouseService', () => {
         statusText: 'Bad Request',
         config: undefined,
         headers: undefined,
-      };
+      } as unknown as AxiosResponse;
 
       when(httpServiceGet)
         .calledWith(...expectedHttpServiceGetArguments)
@@ -119,7 +119,7 @@ describe('CompaniesHouseService', () => {
         statusText: 'Unauthorized',
         config: undefined,
         headers: undefined,
-      };
+      } as unknown as AxiosResponse;
 
       when(httpServiceGet)
         .calledWith(...expectedHttpServiceGetArguments)
@@ -140,7 +140,7 @@ describe('CompaniesHouseService', () => {
         statusText: 'Not Found',
         config: undefined,
         headers: undefined,
-      };
+      } as unknown as AxiosResponse;
 
       when(httpServiceGet)
         .calledWith(...expectedHttpServiceGetArguments)

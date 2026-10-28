@@ -6,11 +6,11 @@ export class GetDomProductConfigAccrualSchedule {
     description: "The product's 'accrual schedule - code'",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.accrualSchedules[0].code,
   })
-  readonly code: string;
+  readonly code!: string;
 
   @ApiProperty({
     description: "The product's 'accrual schedule - cash indicator'",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.accrualSchedules[0].cashIndicator,
   })
-  readonly cashIndicator: boolean;
+  readonly cashIndicator!: boolean;
 }

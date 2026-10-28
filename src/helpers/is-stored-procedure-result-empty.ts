@@ -6,7 +6,7 @@ import { OdsStoredProcedureOutputBody } from '@ukef/modules/ods/dto/ods-payloads
  * @param storedProcedureJson The JSON output from the ODS stored procedure
  * @returns {boolean} True if the stored procedure result is empty or not provided, false otherwise
  */
-export const isStoredProcedureResultEmpty = (storedProcedureJson?: OdsStoredProcedureOutputBody): boolean => {
+export const isStoredProcedureResultEmpty = (storedProcedureJson?: OdsStoredProcedureOutputBody | null): boolean => {
   if (!storedProcedureJson) {
     return true;
   }

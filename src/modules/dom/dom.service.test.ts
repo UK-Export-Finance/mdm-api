@@ -25,7 +25,7 @@ const mockOdsBusinessCentreOdsResponseNonWorkingDays: GetOdsBusinessCentreOdsRes
 ];
 
 describe('DomService', () => {
-  let mockQueryRunner: jest.Mocked<QueryRunner>;
+  let mockQueryRunner!: jest.Mocked<QueryRunner>;
   const mockLogger = new PinoLogger({});
 
   const mockDataSource = {

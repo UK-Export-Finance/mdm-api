@@ -9,7 +9,7 @@ const { VERSION_PREFIX } = APPLICATION;
 describe('appConfig', () => {
   let originalProcessEnv: NodeJS.ProcessEnv;
 
-  const replaceEnvironmentVariables = (newEnvVariables: Record<string, string>): void => {
+  const replaceEnvironmentVariables = (newEnvVariables: Record<string, string | undefined>): void => {
     process.env = newEnvVariables;
   };
 

@@ -12,7 +12,7 @@ import { CompaniesHouseService } from './companies-house.service';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const { baseUrl, maxRedirects, timeout } = configService.get<CompaniesHouseConfigType>(COMPANIES_HOUSE.CONFIG.KEY);
+        const { baseUrl, maxRedirects, timeout } = configService.getOrThrow<CompaniesHouseConfigType>(COMPANIES_HOUSE.CONFIG.KEY);
         return {
           baseURL: baseUrl,
           maxRedirects,

@@ -90,7 +90,7 @@ export class CompaniesService {
   }
 
   private mapSicCodes(sicCodes: string[] | undefined, industryClasses: SectorIndustryEntity[]): Industry[] {
-    const industries = [];
+    const industries: Industry[] = [];
 
     sicCodes?.forEach((sicCode) => {
       industryClasses.forEach((industryClass) => {

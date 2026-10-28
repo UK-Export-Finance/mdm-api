@@ -42,7 +42,7 @@ describe('AuthService', () => {
 
   it.each(invalidKeys)('should return `false` when API Key is %s', (key) => {
     // Act
-    const result = authService.validateApiKey(key);
+    const result = authService.validateApiKey(key as string);
 
     // Assert
     expect(result).toBe(false);
@@ -50,7 +50,7 @@ describe('AuthService', () => {
 
   it('should return `true` when API Key is valid', () => {
     // Act
-    const result = authService.validateApiKey(API_KEY);
+    const result = authService.validateApiKey(API_KEY as string);
 
     // Assert
     expect(result).toBe(true);
@@ -131,7 +131,7 @@ describe('ApiKeyStrategy', () => {
   describe('validate', () => {
     it('should return true for valid API key', () => {
       // Act
-      const result = strategy.validate(API_KEY);
+      const result = strategy.validate(API_KEY as string);
 
       // Assert
       expect(result).toBe(true);

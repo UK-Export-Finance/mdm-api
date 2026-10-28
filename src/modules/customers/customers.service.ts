@@ -144,7 +144,7 @@ export class CustomersService {
    * @param {any[]} existingCustomersInInformatica - List of existing customers found in Informatica.
    * @returns {Promise<GetCustomersResponse>} A promise that resolves to the customer response items.
    */
-  private async handleInformaticaResponse(res, dtfsCustomerDto, existingCustomersInInformatica): Promise<GetCustomersResponse | undefined> {
+  private async handleInformaticaResponse(res, dtfsCustomerDto, existingCustomersInInformatica): Promise<GetCustomersResponse> {
     if (existingCustomersInInformatica[0]?.isLegacyRecord === false) {
       this.logger.info('Returning existing non-legacy Salesforce customer for company %s', dtfsCustomerDto.companyRegistrationNumber);
 
@@ -200,7 +200,7 @@ export class CustomersService {
 
     this.logger.warn('Informatica returned an unrecognised legacy status for company %s', dtfsCustomerDto.companyRegistrationNumber);
 
-    return undefined;
+    throw new InternalServerErrorException();
   }
 
   /**
@@ -235,7 +235,7 @@ export class CustomersService {
    * @returns {Promise<void>}
    */
   private async createCustomerByURN(res, dtfsCustomerDto, existingCustomersInInformatica: any[] | null = null) {
-    let partyUrn: string;
+    let partyUrn: string | null;
     let isLegacyRecord: boolean;
 
     // TODO: replace this with a call to Salesforce's NUMGEN table once that's in place
@@ -288,14 +288,14 @@ export class CustomersService {
    * Creates a customer record using the provided name, company registration number, URN, DUNS number, and legacy status.
    *
    * @param {DTFSCustomerDto} dtfsCustomerDto - The DTO containing customer details.
-   * @param {string} partyUrn - The unique party URN for the customer.
+   * @param {string | null} partyUrn - The unique party URN for the customer.
    * @param {string} dunsNumber - The DUNS number for the customer.
    * @param {boolean} isLegacyRecord - Indicates if the record is a legacy record.
    * @returns {Promise<GetCustomersResponse>} A promise that resolves to the created customer response items.
    */
   private async createCustomerByURNAndDUNS(
     dtfsCustomerDto: DTFSCustomerDto,
-    partyUrn: string,
+    partyUrn: string | null,
     dunsNumber: string,
     isLegacyRecord: boolean,
   ): Promise<GetCustomersResponse> {

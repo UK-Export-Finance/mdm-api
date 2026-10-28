@@ -1,10 +1,12 @@
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { resetAllWhenMocks, when } from 'jest-when';
 import { PinoLogger } from 'nestjs-pino';
 import * as util from 'util';
+import { Repository } from 'typeorm';
 import { EXAMPLES } from '@ukef/constants';
 import { DunAndBradstreetService } from '@ukef/helper-modules/dun-and-bradstreet/dun-and-bradstreet.service';
 import { salesforceFormattedCurrentDate } from '@ukef/helpers/date-formatter.helper';
@@ -77,7 +79,9 @@ const salesforceCreateCustomerResponse: CreateCustomerSalesforceResponseDto = {
   success: true,
 };
 
-const createUkefIdResponse: UkefId[] = [{ maskedId: 'TEST PARTY_URN', type: null, createdBy: null, createdDatetime: null, requestingSystem: null }];
+const createUkefIdResponse = [
+  { maskedId: 'TEST PARTY_URN', type: null, createdBy: null, createdDatetime: null, requestingSystem: null },
+] as unknown as UkefId[];
 const dunAndBradstreetGetDunsNumberResponse = 'TEST DUNS_NUMBER';
 
 // Legacy Salesforce customer which has a party URN
@@ -203,7 +207,7 @@ describe('CustomerService', () => {
 
   beforeEach(() => {
     informaticaServiceGetCustomers = jest.fn();
-    const informaticaService = new InformaticaService(null);
+    const informaticaService = new InformaticaService(null as unknown as HttpService);
     informaticaService.getCustomers = informaticaServiceGetCustomers;
 
     const salesforceConfigService = new ConfigService();
@@ -216,18 +220,18 @@ describe('CustomerService', () => {
     });
     salesforceConfigService.get = salesforceConfigServiceGet;
     salesforceServiceCreateCustomer = jest.fn();
-    const salesforceService = new SalesforceService(null, salesforceConfigService, null);
+    const salesforceService = new SalesforceService(null as unknown as HttpService, salesforceConfigService, null as unknown as PinoLogger);
     salesforceService.createCustomer = salesforceServiceCreateCustomer;
 
     numbersServiceCreate = jest.fn();
-    const numbersService = new NumbersService(null, null);
+    const numbersService = new NumbersService(null as unknown as Repository<UkefId>, null as unknown as PinoLogger);
     numbersService.create = numbersServiceCreate;
 
     const dunAndBradstreetConfigService = new ConfigService();
     dunAndBradstreetConfigServiceGet = jest.fn().mockReturnValue({ key: 'TEST_KEY' });
     dunAndBradstreetConfigService.get = dunAndBradstreetConfigServiceGet;
     dunAndBradstreetServiceGetDunsNumber = jest.fn();
-    const dunAndBradstreetService = new DunAndBradstreetService(null, dunAndBradstreetConfigService);
+    const dunAndBradstreetService = new DunAndBradstreetService(null as unknown as HttpService, dunAndBradstreetConfigService);
     dunAndBradstreetService.getDunAndBradstreetNumberByRegistrationNumber = dunAndBradstreetServiceGetDunsNumber;
 
     resetAllWhenMocks();

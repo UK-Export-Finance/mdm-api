@@ -10,7 +10,7 @@ export class GeospatialService {
   constructor(private readonly ordnanceSurveyService: OrdnanceSurveyService) {}
 
   async getAddressesByPostcode(postcode: string): Promise<GetAddressesResponse> {
-    const addresses = [];
+    const addresses: GetAddressesResponse = [];
     const response: GetAddressesOrdnanceSurveyResponse = await this.ordnanceSurveyService.getAddressesByPostcode(postcode);
 
     if (!response.results?.length) {

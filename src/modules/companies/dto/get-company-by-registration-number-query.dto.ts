@@ -13,5 +13,5 @@ export class GetCompanyByRegistrationNumberQuery {
   @MinLength(8)
   @MaxLength(8)
   @Matches(COMPANIES.REGEX.COMPANIES_HOUSE_REGISTRATION_NUMBER)
-  public registrationNumber: string;
+  public registrationNumber!: string;
 }

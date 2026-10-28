@@ -9,5 +9,5 @@ export class GetOdsAccrualFrequencyParamDto {
     description: 'Unique accrual frequency code',
   })
   @IsString()
-  public frequencyCode: string;
+  public frequencyCode!: string;
 }

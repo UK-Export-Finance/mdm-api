@@ -1,7 +1,7 @@
 class AccountsReferenceDate {
-  day: string;
+  day!: string;
 
-  month: string;
+  month!: string;
 }
 
 class AccountsLastAccounts {
@@ -61,27 +61,27 @@ class RegisteredAddress {
 }
 
 export class GetCompanyResponse {
-  accounts: Accounts;
+  accounts!: Accounts;
 
-  companiesHouseRegistrationNumber: string;
+  companiesHouseRegistrationNumber!: string;
 
-  companyName: string;
+  companyName!: string;
 
-  dateOfCreation: string;
+  dateOfCreation!: string;
 
-  registeredAddress: RegisteredAddress;
+  registeredAddress!: RegisteredAddress;
 
-  industries: Industry[];
+  industries!: Industry[];
 
-  isActive: boolean;
+  isActive!: boolean;
 }
 
 export class Industry {
-  code: string;
+  code!: string;
 
-  name: string;
+  name!: string;
 
-  class: {
+  class!: {
     code: string;
     name: string;
   };

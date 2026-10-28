@@ -10,7 +10,7 @@ export class GetCustomersResponseItem {
     description: 'The Companies House registration number',
     example: EXAMPLES.CUSTOMER.COMPANYREG,
   })
-  readonly companyRegNo: string | null;
+  readonly companyRegNo!: string | null;
 
   @ApiProperty({
     description: 'Credit Classification Status Date (dd/mm/yyyy)',
@@ -35,19 +35,19 @@ export class GetCustomersResponseItem {
     description: 'False for Salesforce account record, True for legacy Party DB record',
     example: EXAMPLES.CUSTOMER.SALESFORCE_IS_LEGACY,
   })
-  readonly isLegacyRecord: boolean;
+  readonly isLegacyRecord!: boolean;
 
   @ApiProperty({
     description: 'Customer company name',
     example: EXAMPLES.CUSTOMER.NAME,
   })
-  readonly name: string;
+  readonly name!: string;
 
   @ApiProperty({
     description: 'The unique UKEF ID of the customer',
     example: EXAMPLES.CUSTOMER.PARTYURN,
   })
-  readonly partyUrn: string | null;
+  readonly partyUrn!: string | null;
 
   @ApiProperty({
     description: 'Probability of default of the company',
@@ -65,21 +65,21 @@ export class GetCustomersResponseItem {
     description: 'The unique Salesforce ID',
     example: EXAMPLES.CUSTOMER.SALESFORCE_ID,
   })
-  readonly sfId: string | null;
+  readonly sfId!: string | null;
 
   @ApiProperty({
     description: 'Customer company subtype',
     example: EXAMPLES.CUSTOMER.SALESFORCE_SUBTYPE,
     enum: CustomerCompanySubtypesEnum,
   })
-  readonly subtype: string | null;
+  readonly subtype!: string | null;
 
   @ApiProperty({
     description: 'Customer company type',
     example: EXAMPLES.CUSTOMER.SALESFORCE_TYPE,
     enum: CustomerTypesEnum,
   })
-  readonly type: string | null;
+  readonly type!: string | null;
 
   @ApiProperty({
     description: 'Whether the company is UK based or not',

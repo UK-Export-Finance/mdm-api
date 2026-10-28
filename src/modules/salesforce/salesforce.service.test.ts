@@ -232,7 +232,7 @@ describe('SalesforceService', () => {
     ])('throws a TypeError if the request is malformed', async (malformedQuery) => {
       // Arrange
       const typeError = new TypeError("Cannot read properties of undefined (reading 'pipe')");
-      const getCustomersPromise = service.createCustomer(malformedQuery);
+      const getCustomersPromise = service.createCustomer(malformedQuery as unknown as CreateCustomerDto);
 
       // Act & Assert
       await expect(getCustomersPromise).rejects.toBeInstanceOf(TypeError);

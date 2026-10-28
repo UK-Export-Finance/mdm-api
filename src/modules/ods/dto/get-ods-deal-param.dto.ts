@@ -11,5 +11,5 @@ export class GetOdsDealParamDto {
     pattern: regexToString(UKEF_ID.MAIN_ID.TEN_DIGIT_REGEX),
   })
   @Matches(UKEF_ID.MAIN_ID.TEN_DIGIT_REGEX)
-  public id: string;
+  public id!: string;
 }

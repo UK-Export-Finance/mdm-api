@@ -1,5 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 import { when } from 'jest-when';
+import { GovukNotifyService } from '@ukef/helper-modules/govuk-notify/govuk-notify.service';
 import { PostEmailsGenerator } from '@ukef-test/support/generator/post-emails-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 
@@ -15,7 +16,7 @@ describe('EmailsController', () => {
     numberToGenerate: 1,
   });
 
-  const emailsService = new EmailsService(null);
+  const emailsService = new EmailsService(null as unknown as GovukNotifyService);
   const emailsServiceSendEmail = jest.fn();
   emailsService.sendEmail = emailsServiceSendEmail;
 
@@ -38,7 +39,7 @@ describe('EmailsController', () => {
     });
 
     it('throws BadRequestException exception if header govUkNotifyKey is missing', () => {
-      const runTest = () => () => controller.postEmail(null, request);
+      const runTest = () => () => controller.postEmail(null as unknown as string, request);
 
       expect(runTest()).toThrow(BadRequestException);
       expect(runTest()).toThrow('Header "govUkNotifyKey" is required');

@@ -107,8 +107,8 @@ type CustomerValues = {
   probabilityOfDefault: number;
   riskEntity: string;
   sfId: string;
-  subtype: string;
-  type: string;
+  subtype: string | null;
+  type: string | null;
   ukEntity: string;
   ukefIndustryName: string;
   ukefSectorName: string;

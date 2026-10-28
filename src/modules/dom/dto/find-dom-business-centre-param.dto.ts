@@ -9,5 +9,5 @@ export class FindOdsBusinessCentreOdsResponseParamDto {
     description: 'Unique business centre code',
   })
   @IsString()
-  public centreCode: string;
+  public centreCode!: string;
 }

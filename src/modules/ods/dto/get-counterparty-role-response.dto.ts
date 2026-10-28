@@ -6,29 +6,29 @@ export class GetCounterpartyRoleResponseDto {
     description: 'Counterparty role type',
     example: EXAMPLES.COUNTERPARTY_ROLE.ROLE_TYPE,
   })
-  readonly roleType: string;
+  readonly roleType!: string;
 
   @ApiProperty({
     description: 'Counterparty role name',
     example: EXAMPLES.COUNTERPARTY_ROLE.NAME,
   })
-  readonly name: string;
+  readonly name!: string;
 
   @ApiProperty({
     description: 'Counterparty role has share percentage flag',
     example: EXAMPLES.COUNTERPARTY_ROLE.HAS_SHARE_PERCENTAGE,
   })
-  readonly hasSharePercentage: boolean;
+  readonly hasSharePercentage!: boolean;
 
   @ApiProperty({
     description: 'Counterparty role has associated payment code',
     example: EXAMPLES.COUNTERPARTY_ROLE.HAS_ASSOCIATED_PAYMENT_CODE,
   })
-  readonly hasAssociatedPaymentCode: boolean;
+  readonly hasAssociatedPaymentCode!: boolean;
 
   @ApiProperty({
     description: 'Counterparty role active flag',
     example: EXAMPLES.COUNTERPARTY_ROLE.IS_ACTIVE,
   })
-  readonly isActive: boolean;
+  readonly isActive!: boolean;
 }

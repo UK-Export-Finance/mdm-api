@@ -9,5 +9,5 @@ export class GetPremiumScheduleParamDto {
     description: 'UKEF ID for Facility, but without 00 at beginning',
   })
   @Matches(/^\d{8,10}$/)
-  public facilityId: string;
+  public facilityId!: string;
 }
