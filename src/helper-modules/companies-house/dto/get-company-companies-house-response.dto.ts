@@ -40,7 +40,7 @@ export type GetCompanyCompaniesHouseResponse = {
   has_charges: boolean;
   has_insolvency_history: boolean;
   jurisdiction: string;
-  registered_office_address: {
+  registered_office_address?: {
     organisation_name?: string;
     address_line_1: string;
     address_line_2?: string;
