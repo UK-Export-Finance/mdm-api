@@ -6,17 +6,17 @@ export class GetOdsBusinessCentreOdsResponseNonWorkingDayResponse {
     description: 'Business centre code',
     example: EXAMPLES.BUSINESS_CENTRE.CODE,
   })
-  readonly business_centre_code: string;
+  readonly business_centre_code!: string;
 
   @ApiProperty({
     description: 'Non working day name',
     example: EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.NAME,
   })
-  readonly non_working_day_name: string;
+  readonly non_working_day_name!: string;
 
   @ApiProperty({
     description: 'Non working day date',
     example: EXAMPLES.BUSINESS_CENTRE.NON_WORKING_DAY.DATE,
   })
-  readonly non_working_day_date: string;
+  readonly non_working_day_date!: string;
 }

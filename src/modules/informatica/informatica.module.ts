@@ -11,7 +11,7 @@ import { InformaticaService } from './informatica.service';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const { baseUrl, username, password, maxRedirects, timeout } = configService.get<InformaticaConfigType>(INFORMATICA_CONFIG_KEY);
+        const { baseUrl, username, password, maxRedirects, timeout } = configService.getOrThrow<InformaticaConfigType>(INFORMATICA_CONFIG_KEY);
         return {
           baseURL: baseUrl,
           maxRedirects,

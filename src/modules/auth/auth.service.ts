@@ -15,7 +15,7 @@ export class AuthService {
    * @returns True if the API key is valid, otherwise false.
    */
   validateApiKey(providedKey: string): boolean {
-    const apiKey: string = this.configService.get<string>('app.apiKey');
+    const apiKey: string | undefined = this.configService.get<string>('app.apiKey');
 
     if (!apiKey || !providedKey) {
       return false;

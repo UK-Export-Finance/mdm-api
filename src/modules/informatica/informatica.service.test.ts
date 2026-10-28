@@ -1,6 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { NotFoundException } from '@nestjs/common';
-import { AxiosError } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import { when } from 'jest-when';
 import { of, throwError } from 'rxjs';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
@@ -106,7 +106,7 @@ describe('InformaticaService', () => {
     });
 
     it('returns 404 Not Found if informatica responds with 404', async () => {
-      const notFoundError = new AxiosError(null, null, null, null, {
+      const notFoundError = new AxiosError(undefined, undefined, undefined, null, {
         status: 404,
         statusText: 'Not Found',
         headers: null,
@@ -121,7 +121,7 @@ describe('InformaticaService', () => {
             },
           },
         ],
-      });
+      } as unknown as AxiosResponse);
 
       when(httpServiceGet)
         .calledWith(...expectedHttpServiceGetArgs)

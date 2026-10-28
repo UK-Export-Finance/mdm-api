@@ -9,5 +9,5 @@ export class GetOdsObligationSubtypeParamDto {
     description: 'Unique obligation subtype code',
   })
   @IsString()
-  public subtypeCode: string;
+  public subtypeCode!: string;
 }

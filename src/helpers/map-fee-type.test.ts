@@ -1,4 +1,5 @@
 import { EXAMPLES } from '@ukef/constants';
+import { GetFeeTypeOdsResponseDto } from '@ukef/modules/ods/dto';
 
 import { mapFeeType } from './map-fee-type';
 
@@ -18,7 +19,7 @@ describe('mapFeeType', () => {
       expenseIncome: mockFeeType.feeTypeExpenseIncome,
       isActive: mockFeeType.feeTypeActive,
       balanceCategory: mockFeeType.balanceCategory,
-      baseBalanceCategory: mockFeeType.baseBalanceCategory ?? null,
+      baseBalanceCategory: mockFeeType.baseBalanceCategory,
       nonFacilityCurrencySettlement: mockFeeType.nonFacilityCurrencySettlement,
       cappedBaseBalance: mockFeeType.feeTypeCappedBaseBalanceIndicator,
       effectiveDateDefault: mockFeeType.feeEffectiveDateDefault,
@@ -34,7 +35,7 @@ describe('mapFeeType', () => {
       ...EXAMPLES.ODS.CONFIGURATION_FEE,
       feeEffectiveDateDefault: undefined,
       feeMaturityDateDefault: null,
-    };
+    } as unknown as GetFeeTypeOdsResponseDto;
 
     // Act
     const result = mapFeeType(mockFeeType);

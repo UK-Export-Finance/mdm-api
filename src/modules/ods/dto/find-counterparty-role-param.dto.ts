@@ -9,5 +9,5 @@ export class FindCounterpartyRoleParamDto {
     description: 'Unique counterparty role type',
   })
   @IsString()
-  public roleType: string;
+  public roleType!: string;
 }

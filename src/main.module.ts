@@ -45,11 +45,11 @@ const CONFIGS = [AppConfig, CompaniesHouseConfig, DocConfig, DatabaseConfig, Dun
           },
           hooks: {
             logMethod(inputArgs: any[], method) {
-              return method.apply(this, redactStringsInLogArgs(config.get<boolean>('app.redactLogs'), REDACT_STRING_PATHS, REDACT_STRINGS, inputArgs));
+              return method.apply(this, redactStringsInLogArgs(config.getOrThrow<boolean>('app.redactLogs'), REDACT_STRING_PATHS, REDACT_STRINGS, inputArgs));
             },
           },
           redact: logKeysToRedact({
-            redactLogs: config.get<boolean>('app.redactLogs'),
+            redactLogs: config.getOrThrow<boolean>('app.redactLogs'),
             clientRequest: {
               logKey: CLIENT_REQUEST_LOG_KEY,
               headersLogKey: HEADERS_LOG_KEY,

@@ -9,5 +9,5 @@ export class FindOdsIndustryParamDto {
     description: 'Unique UKEF industry code',
   })
   @IsString()
-  public industryCode: string;
+  public industryCode!: string;
 }

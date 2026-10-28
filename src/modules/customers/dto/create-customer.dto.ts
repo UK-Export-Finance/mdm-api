@@ -29,7 +29,7 @@ export class CreateCustomerDto {
   })
   @IsString()
   @IsNotEmpty()
-  CCM_Credit_Risk_Rating__c: string;
+  CCM_Credit_Risk_Rating__c!: string;
 
   @ApiProperty({
     description: 'Credit risk rating date (YYYY-MM-DD)',
@@ -38,7 +38,7 @@ export class CreateCustomerDto {
   @IsString()
   @Length(10)
   @IsNotEmpty()
-  CCM_Credit_Risk_Rating_Date__c: string;
+  CCM_Credit_Risk_Rating_Date__c!: string;
 
   @ApiProperty({
     description: 'Customer type',
@@ -78,7 +78,7 @@ export class CreateCustomerDto {
   @IsNotEmpty()
   @Min(0)
   @Max(100)
-  CCM_Loss_Given_Default__c: number;
+  CCM_Loss_Given_Default__c!: number;
 
   @ApiProperty({
     description: 'UKEF primary industry identifier',
@@ -139,7 +139,7 @@ export class CreateCustomerDto {
   @IsNotEmpty()
   @MinLength(8)
   @MaxLength(10)
-  Company_Registration_Number__c: string;
+  Company_Registration_Number__c!: string;
 
   @ApiProperty({
     description: 'D&B number',
@@ -148,7 +148,7 @@ export class CreateCustomerDto {
   @IsString()
   @IsNotEmpty()
   @Length(9)
-  D_B_Number__c: string;
+  D_B_Number__c!: string;
 
   @ApiProperty({
     description: 'Account name',
@@ -156,7 +156,7 @@ export class CreateCustomerDto {
   })
   @IsString()
   @IsNotEmpty()
-  Name: string;
+  Name!: string;
 
   @ApiProperty({
     description: 'Party URN',
@@ -165,5 +165,5 @@ export class CreateCustomerDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(10)
-  Party_URN__c: string;
+  Party_URN__c!: string | null;
 }

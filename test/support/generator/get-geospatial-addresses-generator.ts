@@ -26,17 +26,17 @@ export class GetGeospatialAddressesGenerator extends AbstractGenerator<AddressVa
   }
 
   protected transformRawValuesToGeneratedValues(values: AddressValues[], { postcode, key }: GenerateOptions): GenerateResult {
-    const useKey = key || this.valueGenerator.string();
+    const useKey = key ?? this.valueGenerator.string();
 
-    const requests: GetAddressesByPostcodeQueryDto[] = values.map((v) => ({ postcode: postcode || v.POSTCODE }));
+    const requests: GetAddressesByPostcodeQueryDto[] = values.map((v) => ({ postcode: postcode ?? v.POSTCODE }));
 
     const ordnanceSurveyPaths: string[] = values.map((v) => {
-      const usePostcode = postcode || v.POSTCODE;
+      const usePostcode = postcode ?? v.POSTCODE;
       return `/search/places/v1/postcode?postcode=${encodeURIComponent(usePostcode)}&lr=${GEOSPATIAL.DEFAULT.RESULT_LANGUAGE}&key=${encodeURIComponent(useKey)}`;
     });
 
     const mdmPaths: string[] = values.map((v) => {
-      const usePostcode = postcode || v.POSTCODE;
+      const usePostcode = postcode ?? v.POSTCODE;
       return `/api/v1/geospatial/addresses/postcode?postcode=${usePostcode}`;
     });
 

@@ -16,7 +16,7 @@ export class OrdnanceSurveyService {
 
   constructor(httpService: HttpService, configService: ConfigService) {
     this.httpClient = new HttpClient(httpService);
-    const { key } = configService.get<OrdnanceSurveyConfigType>(ORDNANCE_SURVEY_CONFIG_KEY);
+    const { key } = configService.getOrThrow<OrdnanceSurveyConfigType>(ORDNANCE_SURVEY_CONFIG_KEY);
     this.key = key;
   }
 

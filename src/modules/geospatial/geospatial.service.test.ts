@@ -1,5 +1,4 @@
 import { NotFoundException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { resetAllWhenMocks, when } from 'jest-when';
 import { OrdnanceSurveyService } from '@ukef/helper-modules/ordnance-survey/ordnance-survey.service';
 import { GetGeospatialAddressesGenerator } from '@ukef-test/support/generator/get-geospatial-addresses-generator';
@@ -13,16 +12,11 @@ describe('GeospatialService', () => {
   const valueGenerator = new RandomValueGenerator();
 
   let service: GeospatialService;
-  let configServiceGet: jest.Mock;
   let ordnanceSurveyServiceGetAddressesByPostcode: jest.Mock;
 
   beforeEach(() => {
-    const configService = new ConfigService();
-    configServiceGet = jest.fn().mockReturnValue({ key: valueGenerator.word() });
-    configService.get = configServiceGet;
-
+    const ordnanceSurveyService = {} as jest.Mocked<OrdnanceSurveyService>;
     ordnanceSurveyServiceGetAddressesByPostcode = jest.fn();
-    const ordnanceSurveyService = new OrdnanceSurveyService(null, configService);
     ordnanceSurveyService.getAddressesByPostcode = ordnanceSurveyServiceGetAddressesByPostcode;
     resetAllWhenMocks();
 
@@ -39,7 +33,7 @@ describe('GeospatialService', () => {
     } = new GetGeospatialAddressesGenerator(valueGenerator).generate({
       numberToGenerate: 1,
     });
-    const postcode = getAddressesByPostcodeResponse[0][0].postalCode;
+    const postcode = getAddressesByPostcodeResponse[0][0].postalCode as string;
 
     it('returns a single address from the backend service', async () => {
       when(ordnanceSurveyServiceGetAddressesByPostcode).calledWith(postcode).mockResolvedValueOnce(getAddressesOrdnanceSurveyResponse[0]);
@@ -58,7 +52,7 @@ describe('GeospatialService', () => {
     });
 
     it('throws NotFoundException in case of empty backend response', async () => {
-      when(ordnanceSurveyServiceGetAddressesByPostcode).calledWith(postcode).mockResolvedValueOnce(getAddressesOrdnanceSurveyEmptyResponse[0]);
+      when(ordnanceSurveyServiceGetAddressesByPostcode).calledWith(postcode).mockResolvedValueOnce(getAddressesOrdnanceSurveyEmptyResponse);
 
       const responsePromise = service.getAddressesByPostcode(postcode);
 
@@ -68,8 +62,8 @@ describe('GeospatialService', () => {
 
     it('returns addressLine1 formatted correctly even if middle value is missing', async () => {
       const [modifiedOrdnanceSurveyResponse] = structuredClone(getAddressesOrdnanceSurveyResponse);
-      modifiedOrdnanceSurveyResponse.results[0].DPA.BUILDING_NUMBER = null;
-      const address = modifiedOrdnanceSurveyResponse.results[0].DPA;
+      modifiedOrdnanceSurveyResponse.results![0].DPA.BUILDING_NUMBER = undefined;
+      const address = modifiedOrdnanceSurveyResponse.results![0].DPA;
       when(ordnanceSurveyServiceGetAddressesByPostcode).calledWith(postcode).mockResolvedValueOnce(modifiedOrdnanceSurveyResponse);
 
       const response = await service.getAddressesByPostcode(postcode);

@@ -15,7 +15,7 @@ describe('EmailsController', () => {
     numberToGenerate: 1,
   });
 
-  const emailsService = new EmailsService(null);
+  const emailsService = {} as jest.Mocked<EmailsService>;
   const emailsServiceSendEmail = jest.fn();
   emailsService.sendEmail = emailsServiceSendEmail;
 
@@ -38,7 +38,7 @@ describe('EmailsController', () => {
     });
 
     it('throws BadRequestException exception if header govUkNotifyKey is missing', () => {
-      const runTest = () => () => controller.postEmail(null, request);
+      const runTest = () => () => controller.postEmail(null as unknown as string, request);
 
       expect(runTest()).toThrow(BadRequestException);
       expect(runTest()).toThrow('Header "govUkNotifyKey" is required');

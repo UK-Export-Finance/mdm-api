@@ -49,16 +49,16 @@ export const mapProductConfig = (odsProductConfig: GetProductConfigOdsResponse):
       bankRate: NOT_APPLICABLE,
       repaymentType: odsProductConfig.configuration.repaymentType,
       fees: {
-        creation: conf?.fees?.creation ?? OPTIONAL,
-        inLife: conf?.fees?.inLife ?? OPTIONAL,
+        creation: conf?.fees.creation ?? OPTIONAL,
+        inLife: conf?.fees.inLife ?? OPTIONAL,
       },
       obligations: {
-        creation: conf?.obligations?.creation ?? OPTIONAL,
-        inLife: conf?.obligations?.inLife ?? OPTIONAL,
+        creation: conf?.obligations.creation ?? OPTIONAL,
+        inLife: conf?.obligations.inLife ?? OPTIONAL,
       },
       reinsurance: {
-        creation: conf?.reinsurance?.creation ?? OPTIONAL,
-        inLife: conf?.reinsurance?.inLife ?? OPTIONAL,
+        creation: conf?.reinsurance.creation ?? OPTIONAL,
+        inLife: conf?.reinsurance.inLife ?? OPTIONAL,
       },
       leadDays: odsProductConfig.configuration.leadDays,
     },

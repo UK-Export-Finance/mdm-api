@@ -5,15 +5,15 @@ export class CreateCustomerSalesforceResponseDto {
   @ApiProperty({ description: 'id' })
   @IsString()
   @IsNotEmpty()
-  id: string;
+  id!: string;
 
   @ApiProperty({ description: 'errors' })
   @IsArray()
   @IsNotEmpty()
-  errors: any[];
+  errors!: any[] | null;
 
   @ApiProperty({ description: 'success' })
   @IsBoolean()
   @IsNotEmpty()
-  success: boolean;
+  success!: boolean;
 }

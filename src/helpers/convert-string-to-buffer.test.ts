@@ -60,6 +60,6 @@ describe('convertStringToBuffer', () => {
 
   it('should throw an error for a non-string buffer', () => {
     // Act & Assert
-    expect(() => convertStringToBuffer(null)).toThrow("Cannot read properties of null (reading 'replace')");
+    expect(() => convertStringToBuffer(null as unknown as string)).toThrow("Cannot read properties of null (reading 'replace')");
   });
 });

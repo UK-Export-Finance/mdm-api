@@ -9,32 +9,32 @@ export class GetDomProductConfigResponse {
     description: 'The product type',
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.productType,
   })
-  readonly productType: string;
+  readonly productType!: string;
 
   @ApiProperty({
     description: 'The product name',
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.name,
   })
-  readonly name: string;
+  readonly name!: string;
 
   @ApiProperty({
     description: 'The product short name',
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.shortName,
   })
-  readonly shortName: string;
+  readonly shortName!: string;
 
   @ApiProperty({
     description: "The product's configuration",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration,
   })
-  readonly configuration: GetDomProductConfigConfig;
+  readonly configuration!: GetDomProductConfigConfig;
 
   @ApiProperty({
     description: "The product's additional rates",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.additionalRates,
     isArray: true,
   })
-  readonly additionalRates: string[];
+  readonly additionalRates!: string[];
 
   @ApiProperty({
     description: "The product's accrual schedule",
@@ -42,48 +42,48 @@ export class GetDomProductConfigResponse {
     type: () => GetDomProductConfigAccrualSchedule,
     isArray: true,
   })
-  readonly accrualSchedules: GetDomProductConfigAccrualSchedule[];
+  readonly accrualSchedules!: GetDomProductConfigAccrualSchedule[];
 
   @ApiProperty({
     description: "The product's base rates",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.baseRates,
     isArray: true,
   })
-  readonly baseRates: string[];
+  readonly baseRates!: string[];
 
   @ApiProperty({
     description: "The product's counterparty role types",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.counterpartyRoleTypes,
   })
-  readonly counterpartyRoleTypes: string[];
+  readonly counterpartyRoleTypes!: string[];
 
   @ApiProperty({
     description: "The product's facility category subtypes",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.facilityCategoryTypes,
   })
-  readonly facilityCategoryTypes: string[];
+  readonly facilityCategoryTypes!: string[];
 
   @ApiProperty({
     description: "The product's fee types",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.feeTypes,
   })
-  readonly feeTypes: string[];
+  readonly feeTypes!: string[];
 
   @ApiProperty({
     description: "The product's obligation subtypes",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.obligationSubtypes,
   })
-  readonly obligationSubtypes: string[];
+  readonly obligationSubtypes!: string[];
 
   @ApiProperty({
     description: 'The UKEF accounts that the product is in',
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.account,
   })
-  readonly account: string[];
+  readonly account!: string[];
 
   @ApiProperty({
     description: 'Whether the product is available to create new facilities',
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.productActive,
   })
-  readonly productActive: boolean;
+  readonly productActive!: boolean;
 }

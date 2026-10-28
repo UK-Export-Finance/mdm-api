@@ -47,7 +47,12 @@ export class GetCustomersGenerator extends AbstractGenerator<CustomerValues, Gen
         searchParam = { name: v.name };
       }
 
-      return { ...searchParam, ...{ fallbackToLegacyData: query.fallbackToLegacyData ? query.fallbackToLegacyData : ENUMS.FALLBACK_TO_LEGACY_DATA.YES } };
+      return {
+        ...searchParam,
+        ...{
+          fallbackToLegacyData: query.fallbackToLegacyData ?? ENUMS.FALLBACK_TO_LEGACY_DATA.YES,
+        },
+      };
     });
 
     const informaticaRequest: GetCustomersInformaticaQueryDto[] = request.map((v) => ({
@@ -102,8 +107,8 @@ type CustomerValues = {
   probabilityOfDefault: number;
   riskEntity: string;
   sfId: string;
-  subtype: string;
-  type: string;
+  subtype: string | null;
+  type: string | null;
   ukEntity: string;
   ukefIndustryName: string;
   ukefSectorName: string;

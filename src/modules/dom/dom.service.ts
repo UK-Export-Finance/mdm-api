@@ -48,7 +48,7 @@ export class DomService {
       const errorWithStatus = error as { status?: number; statusCode?: number };
 
       const isNotFoundError =
-        error instanceof NotFoundException || errorWithStatus?.status === HttpStatus.NOT_FOUND || errorWithStatus?.statusCode === HttpStatus.NOT_FOUND;
+        error instanceof NotFoundException || errorWithStatus.status === HttpStatus.NOT_FOUND || errorWithStatus.statusCode === HttpStatus.NOT_FOUND;
 
       if (isNotFoundError) {
         this.logger.warn('DOM business centre %s non working days not found %o', domCentreCode, error);

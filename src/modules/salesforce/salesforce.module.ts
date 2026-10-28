@@ -12,7 +12,7 @@ import { SalesforceService } from './salesforce.service';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         const { baseUrl, clientId, clientSecret, username, password, accessUrl, maxRedirects, timeout } =
-          configService.get<SalesforceConfigType>(SALESFORCE_CONFIG_KEY);
+          configService.getOrThrow<SalesforceConfigType>(SALESFORCE_CONFIG_KEY);
         return {
           baseURL: baseUrl,
           clientId,

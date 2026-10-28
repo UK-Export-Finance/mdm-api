@@ -9,7 +9,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @UseInterceptors(ClassSerializerInterceptor)
 export class SectorIndustryEntity {
   @PrimaryGeneratedColumn({ name: 'ID' })
-  id: number;
+  id!: number;
 
   @Column({
     name: 'Code',
@@ -19,7 +19,7 @@ export class SectorIndustryEntity {
     },
   })
   @ApiProperty({ example: 1001 })
-  ukefSectorId: number;
+  ukefSectorId!: number;
 
   @Column({
     name: 'Sector',
@@ -29,11 +29,11 @@ export class SectorIndustryEntity {
     },
   })
   @ApiProperty({ example: 'Agriculture, Forestry and Fishing' })
-  ukefSectorName: string;
+  ukefSectorName!: string;
 
   @Column({ name: 'InternalNo' })
   @ApiProperty({ example: null, description: 'Currently all values are null' })
-  internalNo: number;
+  internalNo!: number | null;
 
   @Column({
     name: 'Code1',
@@ -43,7 +43,7 @@ export class SectorIndustryEntity {
     },
   })
   @ApiProperty({ example: '01140' })
-  ukefIndustryId: string;
+  ukefIndustryId!: string;
 
   @Column({
     name: 'Class',
@@ -53,7 +53,7 @@ export class SectorIndustryEntity {
     },
   })
   @ApiProperty({ example: 'Growing of rice' })
-  ukefIndustryName: string;
+  ukefIndustryName!: string;
 
   @Column({
     name: 'SECTOR_ID',
@@ -63,11 +63,11 @@ export class SectorIndustryEntity {
     },
   })
   @ApiProperty({ example: '03' })
-  acbsSectorId: string;
+  acbsSectorId!: string;
 
   @Column({ name: 'SECTOR_NAME' })
   @ApiProperty({ example: 'CIVIL: AGRICULTURE, HORTICULTURE & FISHERIES' })
-  acbsSectorName: string;
+  acbsSectorName!: string;
 
   @Column({
     name: 'INDUSTRY_ID',
@@ -77,25 +77,25 @@ export class SectorIndustryEntity {
     },
   })
   @ApiProperty({ example: '0301' })
-  acbsIndustryId: string;
+  acbsIndustryId!: string;
 
   @Column({ name: 'INDUSTRY_DESC' })
   @ApiProperty({ example: 'AGRICULTURE, HORTICULTURE & FISHERIES' })
-  acbsIndustryName: string;
+  acbsIndustryName!: string;
 
   @Column({ name: 'DATE_CREATED_DATETIME' })
   @ApiProperty({ example: '2010-03-15T16:20:16.870Z' })
-  created: Date;
+  created!: Date;
 
   @Column({ name: 'DATE_LAST_UPDATED_DATETIME', type: 'timestamp' })
   @ApiProperty({ example: '2010-03-15T16:20:16.867Z' })
-  updated: Date;
+  updated!: Date;
 
   @Column({ name: 'EFFECTIVE_FROM_DATETIME', type: 'timestamp' })
   @ApiProperty({ example: '2010-03-15T16:20:16.870Z' })
-  effectiveFrom: Date;
+  effectiveFrom!: Date;
 
   @Column({ name: 'EFFECTIVE_TO_DATETIME', type: 'timestamp' })
   @ApiProperty({ example: '9999-12-31T00:00:00.000Z' })
-  effectiveTo: Date;
+  effectiveTo!: Date;
 }

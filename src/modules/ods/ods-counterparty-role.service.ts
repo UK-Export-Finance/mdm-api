@@ -35,7 +35,7 @@ export class OdsCounterpartyRoleService {
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
-      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+      if (storedProcedureJson.status !== STORED_PROCEDURE.SUCCESS) {
         this.logger.error('Error finding counterparty role %s from ODS stored procedure, output %o', roleType, storedProcedureResult);
 
         throw new Error(`Error finding counterparty role ${roleType} from ODS stored procedure`);
@@ -78,7 +78,7 @@ export class OdsCounterpartyRoleService {
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
-      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+      if (storedProcedureJson.status !== STORED_PROCEDURE.SUCCESS) {
         this.logger.error('Error getting counterparty roles from ODS stored procedure, output %o', storedProcedureResult);
 
         throw new InternalServerErrorException('Error getting counterparty roles from ODS stored procedure');

@@ -10,10 +10,10 @@ export class GeospatialService {
   constructor(private readonly ordnanceSurveyService: OrdnanceSurveyService) {}
 
   async getAddressesByPostcode(postcode: string): Promise<GetAddressesResponse> {
-    const addresses = [];
+    const addresses: GetAddressesResponse = [];
     const response: GetAddressesOrdnanceSurveyResponse = await this.ordnanceSurveyService.getAddressesByPostcode(postcode);
 
-    if (!response?.results?.length) {
+    if (!response.results?.length) {
       throw new NotFoundException('No addresses found');
     }
 
@@ -25,13 +25,13 @@ export class GeospatialService {
       const addressLine1 = [itemData.BUILDING_NAME, itemData.BUILDING_NUMBER, itemData.THOROUGHFARE_NAME].filter(Boolean).join(' ');
 
       addresses.push({
-        organisationName: itemData.ORGANISATION_NAME || null,
+        organisationName: itemData.ORGANISATION_NAME ?? null,
         addressLine1,
-        addressLine2: itemData.DEPENDENT_LOCALITY || null,
+        addressLine2: itemData.DEPENDENT_LOCALITY ?? null,
         addressLine3: null,
-        locality: itemData.POST_TOWN || null,
-        postalCode: itemData.POSTCODE || null,
-        country: ENUMS.GEOSPATIAL_COUNTRIES[itemData.COUNTRY_CODE] || null,
+        locality: itemData.POST_TOWN ?? null,
+        postalCode: itemData.POSTCODE ?? null,
+        country: ENUMS.GEOSPATIAL_COUNTRIES[itemData.COUNTRY_CODE] ?? null,
       });
     });
 

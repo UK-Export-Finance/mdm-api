@@ -27,14 +27,14 @@ const mockMultipleProductConfigurations: FindMultipleProductConfigsResponse = {
 const mockProductTypesString = `${EXAMPLES.PRODUCT_TYPES.BIP},${EXAMPLES.PRODUCT_TYPES.EXIP}`;
 
 describe('DomController', () => {
-  let mockQueryRunner: jest.Mocked<QueryRunner>;
+  let mockQueryRunner!: jest.Mocked<QueryRunner>;
   const mockLogger = new PinoLogger({});
 
   const mockDataSource = {
     createQueryRunner: jest.fn().mockReturnValue(mockQueryRunner),
   } as unknown as jest.Mocked<DataSource>;
 
-  const creditRiskRatingsService = new CreditRiskRatingsService(null, mockLogger);
+  const creditRiskRatingsService = {} as jest.Mocked<CreditRiskRatingsService>;
   const odsStoredProcedureService = new OdsStoredProcedureService(mockDataSource);
   const odsService = new OdsService(odsStoredProcedureService, mockLogger);
   const odsProductConfigService = new OdsProductConfigService(odsStoredProcedureService, mockLogger);

@@ -9,7 +9,7 @@ type CompaniesHouseHttpErrorCallback = (error: Error) => ObservableInput<never>;
 export const createWrapCompaniesHouseHttpGetErrorCallback =
   ({ messageForUnknownError, knownErrors }: { messageForUnknownError: string; knownErrors: KnownErrors }): CompaniesHouseHttpErrorCallback =>
   (error: Error) => {
-    if (error instanceof AxiosError && error?.response) {
+    if (error instanceof AxiosError && error.response) {
       knownErrors.forEach(({ checkHasError, throwError: throwKnownError }) => checkHasError(error) && throwKnownError(error));
     }
 

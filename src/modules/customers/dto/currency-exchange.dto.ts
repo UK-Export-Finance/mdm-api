@@ -7,14 +7,14 @@ export class GetCurrencyExchangeDto {
     description: 'Source currency for exchange rate - Use ISO 3 alpha currency code standard. Only GBP and USD currencies are supported',
   })
   @IsISO4217CurrencyCode()
-  readonly source: string;
+  readonly source!: string;
 
   @ApiProperty({
     example: 'AED',
     description: 'Target currency for exchange rate - Use ISO 3 alpha currency code standard',
   })
   @IsISO4217CurrencyCode()
-  readonly target: string;
+  readonly target!: string;
 
   @ApiProperty({
     required: false,
@@ -23,5 +23,5 @@ export class GetCurrencyExchangeDto {
   })
   @IsDateString()
   @IsOptional()
-  readonly exchangeRateDate: string;
+  readonly exchangeRateDate!: string;
 }

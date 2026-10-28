@@ -34,7 +34,7 @@ export class ApiKeyStrategy extends PassportStrategy(HeaderAPIKeyStrategy, AUTH.
     private readonly authService: AuthService,
     private readonly configService: ConfigService,
   ) {
-    const headerKeyApiKeyStrategy: string = configService.get<string>('app.apiKeyStrategy');
+    const headerKeyApiKeyStrategy: string = configService.getOrThrow<string>('app.apiKeyStrategy');
 
     super({ header: headerKeyApiKeyStrategy, prefix: '' }, false);
   }
