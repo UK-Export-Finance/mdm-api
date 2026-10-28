@@ -28,7 +28,7 @@ export class GetGeospatialAddressesGenerator extends AbstractGenerator<AddressVa
   protected transformRawValuesToGeneratedValues(values: AddressValues[], { postcode, key }: GenerateOptions): GenerateResult {
     const useKey = key ?? this.valueGenerator.string();
 
-    const requests: GetAddressesByPostcodeQueryDto[] = values.map((v) => ({ postcode: postcode || v.POSTCODE }));
+    const requests: GetAddressesByPostcodeQueryDto[] = values.map((v) => ({ postcode: postcode ?? v.POSTCODE }));
 
     const ordnanceSurveyPaths: string[] = values.map((v) => {
       const usePostcode = postcode ?? v.POSTCODE;

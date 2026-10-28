@@ -40,7 +40,7 @@ export class CompaniesService {
   }
 
   private validateCompanyIsUkCompany(company: GetCompanyCompaniesHouseResponse, registrationNumber: string): never | undefined {
-    if (company.type.includes('oversea')) {
+    if (company.type?.includes('oversea')) {
       throw new CompaniesOverseasCompanyException(
         `Company with registration number ${registrationNumber} is an overseas company. UKEF can only process applications from companies based in the UK.`,
       );
@@ -54,16 +54,16 @@ export class CompaniesService {
       accounts: {
         accountingReferenceDate: company.accounts.accounting_reference_date,
         lastAccounts: {
-          madeUpTo: company.accounts.last_accounts.made_up_to,
-          periodEndOn: company.accounts.last_accounts.period_end_on,
-          periodStartOn: company.accounts.last_accounts.period_start_on,
-          type: company.accounts.last_accounts.period_start_on,
+          madeUpTo: company.accounts.last_accounts?.made_up_to,
+          periodEndOn: company.accounts.last_accounts?.period_end_on,
+          periodStartOn: company.accounts.last_accounts?.period_start_on,
+          type: company.accounts.last_accounts?.period_start_on,
         },
         nextAccounts: {
-          dueOn: company.accounts.next_accounts.due_on,
-          overdue: company.accounts.next_accounts.overdue,
-          periodEndOn: company.accounts.next_accounts.period_end_on,
-          periodStartOn: company.accounts.next_accounts.period_start_on,
+          dueOn: company.accounts.next_accounts?.due_on,
+          overdue: company.accounts.next_accounts?.overdue,
+          periodEndOn: company.accounts.next_accounts?.period_end_on,
+          periodStartOn: company.accounts.next_accounts?.period_start_on,
         },
         nextDue: company.accounts.next_due,
         nextMadeUpTo: company.accounts.next_made_up_to,
@@ -73,26 +73,26 @@ export class CompaniesService {
       companyName: company.company_name,
       dateOfCreation: company.date_of_creation,
       registeredAddress: {
-        organisationName: address?.organisation_name,
-        addressLine1: address?.address_line_1,
-        addressLine2: address?.address_line_2,
-        addressLine3: address?.address_line_3,
-        careOf: address?.care_of,
-        country: address?.country,
-        locality: address?.locality,
-        postalCode: address?.postal_code,
-        premises: address?.premises,
-        region: address?.region,
+        organisationName: address.organisation_name,
+        addressLine1: address.address_line_1,
+        addressLine2: address.address_line_2,
+        addressLine3: address.address_line_3,
+        careOf: address.care_of,
+        country: address.country,
+        locality: address.locality,
+        postalCode: address.postal_code,
+        premises: address.premises,
+        region: address.region,
       },
       industries: this.mapSicCodes(company.sic_codes, industryClasses),
-      isActive: company?.company_status === COMPANIES.STATUS.ACTIVE,
+      isActive: company.company_status === COMPANIES.STATUS.ACTIVE,
     };
   }
 
-  private mapSicCodes(sicCodes: string[], industryClasses: SectorIndustryEntity[]): Industry[] {
+  private mapSicCodes(sicCodes: string[] | undefined, industryClasses: SectorIndustryEntity[]): Industry[] {
     const industries = [];
 
-    sicCodes.forEach((sicCode) => {
+    sicCodes?.forEach((sicCode) => {
       industryClasses.forEach((industryClass) => {
         if (sicCode === industryClass.ukefIndustryId) {
           industries.push({

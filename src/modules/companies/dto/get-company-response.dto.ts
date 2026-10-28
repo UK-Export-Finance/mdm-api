@@ -5,13 +5,13 @@ class AccountsReferenceDate {
 }
 
 class AccountsLastAccounts {
-  madeUpTo: string;
+  madeUpTo?: string;
 
-  periodEndOn: string;
+  periodEndOn?: string;
 
-  periodStartOn: string;
+  periodStartOn?: string;
 
-  type: string;
+  type?: string;
 }
 
 class AccountsNextAccounts {

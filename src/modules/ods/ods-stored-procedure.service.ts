@@ -35,9 +35,10 @@ export class OdsStoredProcedureService {
    * Calls the ODS stored procedure with the input provided and returns the output of it
    * @param {OdsStoredProcedureInput} storedProcedureInput The input parameter of the stored procedure
    *
-   * @returns {Promise<OdsStoredProcedureOutput>} The result of the stored procedure
+   * @returns {Promise<string>} The result of the stored procedure
+   * @throws {Error} If the stored procedure does not return an output body
    */
-  async call(storedProcedureInput: OdsStoredProcedureInput): Promise<string | null> {
+  async call(storedProcedureInput: OdsStoredProcedureInput): Promise<string> {
     const queryRunner = this.odsDataSource.createQueryRunner();
 
     try {
@@ -51,7 +52,13 @@ export class OdsStoredProcedureService {
         [JSON.stringify(storedProcedureInput)],
       );
 
-      return result[0]?.output_body ?? null;
+      const outputBody: string | undefined = result[0]?.output_body;
+
+      if (!outputBody) {
+        throw new Error('ODS stored procedure did not return an output body');
+      }
+
+      return outputBody;
     } finally {
       await queryRunner.release();
     }

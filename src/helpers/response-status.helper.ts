@@ -22,7 +22,7 @@ export const messageCheck = ({ error, search }: { error: Error; search: string }
     return false;
   }
 
-  let message: string;
+  let message: string | undefined;
 
   if (typeof error.response.data?.error === 'string') {
     message = error.response.data.error;
@@ -30,7 +30,9 @@ export const messageCheck = ({ error, search }: { error: Error; search: string }
     message = error.response.data.errors[0].error;
   }
 
-  const returnValue = message.toLowerCase().includes(search.toLowerCase());
+  if (typeof message !== 'string') {
+    return false;
+  }
 
-  return returnValue;
+  return message.toLowerCase().includes(search.toLowerCase());
 };

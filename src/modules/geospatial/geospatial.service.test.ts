@@ -58,7 +58,7 @@ describe('GeospatialService', () => {
     });
 
     it('throws NotFoundException in case of empty backend response', async () => {
-      when(ordnanceSurveyServiceGetAddressesByPostcode).calledWith(postcode).mockResolvedValueOnce(getAddressesOrdnanceSurveyEmptyResponse[0]);
+      when(ordnanceSurveyServiceGetAddressesByPostcode).calledWith(postcode).mockResolvedValueOnce(getAddressesOrdnanceSurveyEmptyResponse);
 
       const responsePromise = service.getAddressesByPostcode(postcode);
 
