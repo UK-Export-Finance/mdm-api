@@ -54,6 +54,55 @@ export class CustomersService {
   }
 
   /**
+   * Retrieves a list of customers from Informatica based on the provided query.
+   *
+   * @param {GetCustomersInformaticaQueryDto} backendQuery - The query parameters for fetching customers from Informatica.
+   * @returns {Promise<GetCustomersResponse>} A promise that resolves to a list of customer response items.
+   */
+  async getCustomersDirect(backendQuery: GetCustomersInformaticaQueryDto): Promise<GetCustomersResponse> {
+    const salesforceGetCustomerResponse: GetCustomersResponse = await this.salesforceService.getCustomers(backendQuery);
+
+    return salesforceGetCustomerResponse;
+    // return [
+    //   {
+    //     partyUrn: partyUrn,
+    //     name: DTFSCustomerDto.companyName,
+    //     sfId: salesforceCreateCustomerResponse?.success ? salesforceCreateCustomerResponse.id : null,
+    //     companyRegNo: DTFSCustomerDto.companyRegistrationNumber,
+    //     type: null,
+    //     subtype: null,
+    //     isLegacyRecord: isLegacyRecord,
+    //     probabilityOfDefault: DTFSCustomerDto.probabilityOfDefault,
+    //     ukEntity: DTFSCustomerDto.ukEntity,
+    //     ukefIndustryName: DTFSCustomerDto.ukefIndustryName,
+    //     ukefSectorName: DTFSCustomerDto.ukefSectorName,
+    //     riskEntity: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
+    //     creditClassificationStatus: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
+    //     creditClassificationDate: salesForceDate,
+    //   },
+    // ];
+
+    // return customersInInformatica.map(
+    //   (customerInInformatica): GetCustomersResponseItem => ({
+    //     partyUrn: customerInInformatica.partyUrn,
+    //     name: customerInInformatica.name,
+    //     sfId: customerInInformatica.sfId,
+    //     companyRegNo: customerInInformatica.companyRegNo,
+    //     probabilityOfDefault: customerInInformatica.probabilityOfDefault,
+    //     ukEntity: customerInInformatica.ukEntity,
+    //     ukefIndustryName: customerInInformatica.ukefIndustryName,
+    //     ukefSectorName: customerInInformatica.ukefSectorName,
+    //     type: customerInInformatica.type,
+    //     subtype: customerInInformatica.subtype,
+    //     isLegacyRecord: customerInInformatica.isLegacyRecord,
+    //     riskEntity: customerInInformatica.riskEntity,
+    //     creditClassificationStatus: customerInInformatica.creditClassificationStatus,
+    //     creditClassificationDate: customerInInformatica.creditClassificationDate,
+    //   }),
+    // );
+  }
+
+  /**
    * Retrieves the Dun & Bradstreet (DUNS) number for a customer by its registration number.
    *
    * @param {string} registrationNumber - The company registration number.

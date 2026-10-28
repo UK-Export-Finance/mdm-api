@@ -38,6 +38,29 @@ export class CustomersController {
     return this.customersService.getCustomers(backendQuery);
   }
 
+  @Get('direct')
+  @ApiOperation({
+    summary: 'Get customers from Salesforce directly',
+  })
+  @ApiResponse({
+    status: HttpStatusCode.Ok,
+    description: 'Customers matching search parameters',
+    type: [GetCustomersResponseItem],
+  })
+  @ApiNotFoundResponse({
+    description: 'Customer not found',
+  })
+  getCustomersDirect(@Query() query: GetCustomersQueryDto): Promise<GetCustomersResponse> {
+    this.ensureOneIsNotEmpty(query.companyReg, query.name, query.partyUrn);
+    const backendQuery: GetCustomersInformaticaQueryDto = {
+      ...(query.companyReg ? { companyreg: query.companyReg } : {}),
+      ...(query.name ? { name: query.name } : {}),
+      ...(query.partyUrn ? { partyUrn: query.partyUrn } : {}),
+      ...{ includeLegacyData: query.fallbackToLegacyData },
+    };
+    return this.customersService.getCustomersDirect(backendQuery);
+  }
+
   @Post()
   @ApiOperation({
     summary: 'Get a customer in Salesforce, or create one if it does not exist',
