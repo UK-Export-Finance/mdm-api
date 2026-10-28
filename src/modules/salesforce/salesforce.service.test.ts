@@ -29,8 +29,6 @@ describe('SalesforceService', () => {
     configServiceGet = jest.fn().mockReturnValue({
       clientId: 'TEST_CLIENT_ID',
       clientSecret: 'TEST_CLIENT_SECRET',
-      username: 'TEST_USERNAME',
-      password: 'TEST_PASSWORD',
       accessUrl: 'TEST_ACCESS_URL',
     });
     configService.get = configServiceGet;
