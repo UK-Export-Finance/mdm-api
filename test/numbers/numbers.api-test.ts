@@ -273,13 +273,13 @@ describe('Numbers', () => {
     expect(status).toBe(201);
     expect(body).toHaveLength(4);
 
-    body.forEach((responseUkefIdRecord, i) => {
+    body.forEach((responseUkefIdRecord, index) => {
       expect(responseUkefIdRecord.id).toBeDefined();
       expect(responseUkefIdRecord.maskedId).toMatch(/^\d*$/);
-      expect(responseUkefIdRecord.type).toEqual(payload[`${i}`].numberTypeId);
-      expect(responseUkefIdRecord.createdBy).toEqual(payload[`${i}`].createdBy);
+      expect(responseUkefIdRecord.type).toEqual(payload[`${index}`].numberTypeId);
+      expect(responseUkefIdRecord.createdBy).toEqual(payload[`${index}`].createdBy);
       expect(responseUkefIdRecord.createdDatetime).toBeDefined();
-      expect(responseUkefIdRecord.requestingSystem).toEqual(payload[`${i}`].requestingSystem);
+      expect(responseUkefIdRecord.requestingSystem).toEqual(payload[`${index}`].requestingSystem);
     });
   });
 

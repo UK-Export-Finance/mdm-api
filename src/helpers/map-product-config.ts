@@ -19,7 +19,8 @@ const OPTIONAL = 'OPTIONAL';
  * and may be removed in future
  */
 export const mapProductConfig = (odsProductConfig: GetProductConfigOdsResponse): GetDomProductConfigResponse => {
-  const override = PRODUCT_CONFIG_OVERRIDES.find((c) => c.productType === odsProductConfig.productType);
+  const override = PRODUCT_CONFIG_OVERRIDES.find((config) => config.productType === odsProductConfig.productType);
+
   const conf = override?.configuration;
 
   return {

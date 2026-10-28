@@ -29,30 +29,30 @@ export class PostEmailsGenerator extends AbstractGenerator<PostEmailsValues, Gen
   }
 
   protected transformRawValuesToGeneratedValues(values: PostEmailsValues[], _options: GenerateOptions): GenerateResult {
-    const requests: PostEmailsRequestDto[] = values.map((v) => ({
-      templateId: v.templateId,
-      sendToEmailAddress: v.toEmail,
-      personalisation: v.personalisation,
+    const requests: PostEmailsRequestDto[] = values.map((email) => ({
+      templateId: email.templateId,
+      sendToEmailAddress: email.toEmail,
+      personalisation: email.personalisation,
     }));
 
     const mdmPath = '/api/v1/emails';
     const govUkDomain = this.valueGenerator.httpsUrl();
 
-    const postEmailsResponse: PostEmailsResponseDto[] = values.map((v: PostEmailsValues) => ({
+    const postEmailsResponse: PostEmailsResponseDto[] = values.map((email: PostEmailsValues) => ({
       status: 201,
       data: {
         content: {
-          body: v.emailBody,
-          from_email: v.fromEmail,
-          subject: v.emailSubject,
+          body: email.emailBody,
+          from_email: email.fromEmail,
+          subject: email.emailSubject,
           unsubscribe_link: null,
         },
-        id: v.sendTransactionId,
-        reference: v.reference,
+        id: email.sendTransactionId,
+        reference: email.reference,
         scheduled_for: null,
         template: {
-          id: v.templateId,
-          uri: `${govUkDomain}/services/${v.serviceId}'/templates/${v.templateId}`,
+          id: email.templateId,
+          uri: `${govUkDomain}/services/${email.serviceId}'/templates/${email.templateId}`,
           version: 24,
         },
         uri: `${govUkDomain}/v2/notifications/${v.sendTransactionId}`,
