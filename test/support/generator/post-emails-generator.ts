@@ -55,7 +55,7 @@ export class PostEmailsGenerator extends AbstractGenerator<PostEmailsValues, Gen
           uri: `${govUkDomain}/services/${email.serviceId}'/templates/${email.templateId}`,
           version: 24,
         },
-        uri: `${govUkDomain}/v2/notifications/${v.sendTransactionId}`,
+        uri: `${govUkDomain}/v2/notifications/${email.sendTransactionId}`,
       },
     }));
 

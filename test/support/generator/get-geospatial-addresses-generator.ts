@@ -90,7 +90,7 @@ export class GetGeospatialAddressesGenerator extends AbstractGenerator<AddressVa
             CLASSIFICATION_CODE_DESCRIPTION: 'test',
             LOCAL_CUSTODIAN_CODE: 12345,
             LOCAL_CUSTODIAN_CODE_DESCRIPTION: 'test',
-            COUNTRY_CODE: v.COUNTRY_CODE,
+            COUNTRY_CODE: address.COUNTRY_CODE,
             COUNTRY_CODE_DESCRIPTION: 'test',
             POSTAL_ADDRESS_CODE: 'test',
             POSTAL_ADDRESS_CODE_DESCRIPTION: 'test',
