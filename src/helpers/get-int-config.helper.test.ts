@@ -1,4 +1,5 @@
 import { InvalidConfigException } from '@ukef/config/invalid-config.exception';
+import { REGEX } from '@ukef/constants';
 
 import { getIntConfig } from './get-int-config';
 
@@ -30,7 +31,7 @@ describe('getIntConfig', () => {
 
   describe('throws an InvalidConfigException if environment variable type is not string', () => {
     // Arrange
-    it.each([12, true, null, false, /.*/, {}, [], 0xff, 0b101])(
+    it.each([12, true, null, false, REGEX.TEST.ANY_VALUE, {}, [], 0xff, 0b101])(
       'throws InvalidConfigException for "%s" because environment variable type is not string',
       (value) => {
         // Act

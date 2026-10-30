@@ -1,3 +1,5 @@
+import { REGEX } from '@ukef/constants/regex';
+
 /**
  * Converts a string representation of a buffer to an actual Buffer object.
  *
@@ -10,7 +12,7 @@
  */
 export const convertStringToBuffer = (data: string): Buffer => {
   // Remove buffer string characters
-  const hexString = data.replace('<Buffer ', '').replace('>', '').replace(/\s+/g, '');
+  const hexString = data.replace('<Buffer ', '').replace('>', '').replace(REGEX.WHITESPACE, '');
 
   // Convert string to Buffer
   return Buffer.from(hexString, 'hex');

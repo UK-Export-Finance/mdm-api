@@ -1,5 +1,7 @@
 import * as dotenv from 'dotenv';
 
+import { REGEX } from './regex/index';
+
 /**
  * Load `.env` before reading `process.env` below. `src/config/index.ts` imports `app.config.ts` first, which pulls
  * in the full `@ukef/constants` barrel (including this file) before `database.config.ts`/`doc.config.ts` get a
@@ -9,7 +11,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 const STRINGS = [
-  { searchValue: /(Login failed for user ').*(')/g, replaceValue: '$1[Redacted]$2' },
+  { searchValue: REGEX.LOGIN_FAILED, replaceValue: '$1[Redacted]$2' },
   { searchValue: process.env.DATABASE_USERNAME, replaceValue: '[Redacted]' },
   { searchValue: process.env.DATABASE_PASSWORD, replaceValue: '[Redacted]' },
   { searchValue: process.env.DATABASE_HOST, replaceValue: '[RedactedDomain]' },
