@@ -1,5 +1,5 @@
 import { DataSource, QueryRunner } from 'typeorm';
-import { EXAMPLES } from '@ukef/constants';
+import { EXAMPLES, REGEX } from '@ukef/constants';
 
 import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { OdsStoredProcedureService } from './ods-stored-procedure.service';
@@ -86,9 +86,7 @@ describe('OdsStoredProcedureService', () => {
       expect(mockDataSource.createQueryRunner).toHaveBeenCalledTimes(1);
 
       expect(mockQueryRunner.query).toHaveBeenCalledWith(
-        expect.stringMatching(
-          /DECLARE @output_body NVARCHAR\(MAX\);\s*EXEC t_apim\.sp_ODS_query @input_body=@0, @output_body=@output_body OUTPUT;\s*SELECT @output_body as output_body\s*/,
-        ),
+        expect.stringMatching(REGEX.TEST.ODS_STORED_PROCEDURE_QUERY),
         [JSON.stringify(mockInput)],
       );
 

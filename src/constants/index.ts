@@ -16,11 +16,12 @@
  * 12) GOV.UK Notify
  * 13) ODS
  * 14) Products
- * 15) Strings to redact
- * 16) Strings paths to redact
- * 17) Stored procedures
- * 18) UKEF ID
- * 19) UKEF industry code
+ * 15) Regex
+ * 16) Strings to redact
+ * 17) Strings paths to redact
+ * 18) Stored procedures
+ * 19) UKEF ID
+ * 20) UKEF industry code
  */
 
 export * from './application.constant';
@@ -37,6 +38,7 @@ export * from './geospatial.constant';
 export * from './govuk-notify.constant';
 export * from './ods.constant';
 export * from './products.constant';
+export * from './regex/index';
 export * from './redact-strings.constant';
 export * from './redact-strings-paths.constant';
 export * from './stored-procedure.constant';

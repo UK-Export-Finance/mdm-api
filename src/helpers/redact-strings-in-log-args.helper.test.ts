@@ -1,4 +1,4 @@
-import { REDACT_STRING_PATHS } from '@ukef/constants';
+import { REDACT_STRING_PATHS, REGEX } from '@ukef/constants';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 
 import { redactStringsInLogArgs } from './redact-strings-in-log-args.helper';
@@ -78,7 +78,7 @@ describe('redactStringsInLogArgs', () => {
 
     it('replaces sensitive data in input object using regex', () => {
       // Arrange
-      const regexRedactStrings = [{ searchValue: /(Login failed for user ').*(')/g, replaceValue: '$1[Redacted]$2' }];
+      const regexRedactStrings = [{ searchValue: REGEX.LOGIN_FAILED, replaceValue: '$1[Redacted]$2' }];
       const otherSensitiveValue = valueGenerator.word();
 
       const messageforRegex = `Connection error: Login failed for user '${otherSensitiveValue}'`;
