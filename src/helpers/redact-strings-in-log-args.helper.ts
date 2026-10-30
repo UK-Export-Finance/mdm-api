@@ -18,10 +18,10 @@ const redactString = (redactStrings: RedactStringsParams[], string: string): str
    * Longest literal values first, so a shorter secret that is a substring of a longer one (e.g. a username within a
    * password) does not get redacted before the longer rule has a chance to match the still-intact longer secret.
    */
-  const prioritisedRedactStrings = [...redactStrings].sort((a, b) => {
+  const prioritisedRedactStrings = [...redactStrings].sort((previous, next) => {
     const lengthOf = (searchValue: string | RegExp): number => (typeof searchValue === 'string' ? searchValue.length : 0);
 
-    return lengthOf(b.searchValue) - lengthOf(a.searchValue);
+    return lengthOf(next.searchValue) - lengthOf(previous.searchValue);
   });
 
   prioritisedRedactStrings.forEach((redact) => {
