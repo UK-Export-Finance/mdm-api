@@ -97,6 +97,11 @@ describe('POST /emails', () => {
         reference: expect.stringMatching(REGEX.TEST.EMAIL_REFERENCE_PATTERN),
       }),
     );
+
+    const { reference } = sendEmailMethodMock.mock.calls[0][2];
+
+    expect(reference?.startsWith(`${request.templateId}-`)).toBe(true);
+    expect(reference?.slice(request.templateId.length + 1)).toMatch(REGEX.TEST.NUMERIC_VALUE);
   });
 
   it('calls NotifyClient.sendEmail with custom reference', async () => {
