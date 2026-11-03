@@ -85,10 +85,7 @@ describe('OdsStoredProcedureService', () => {
       // Assert
       expect(mockDataSource.createQueryRunner).toHaveBeenCalledTimes(1);
 
-      expect(mockQueryRunner.query).toHaveBeenCalledWith(
-        expect.stringMatching(REGEX.TEST.ODS_STORED_PROCEDURE_QUERY),
-        [JSON.stringify(mockInput)],
-      );
+      expect(mockQueryRunner.query).toHaveBeenCalledWith(expect.stringMatching(REGEX.TEST.ODS_STORED_PROCEDURE_QUERY), [JSON.stringify(mockInput)]);
 
       expect(result).toEqual(mockOutputBody);
 

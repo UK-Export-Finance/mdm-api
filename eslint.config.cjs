@@ -242,7 +242,7 @@ module.exports = defineConfig([
 
   // Restrict usage of regular expressions outside of src/constants
   {
-    files: ['**/src/**/*.ts'],
+    files: ['**/src/**/*.ts', 'test/**/*.ts'],
     ignores: ['src/constants/regex/**/*.ts'],
     rules: {
       'no-restricted-syntax': [
@@ -252,7 +252,7 @@ module.exports = defineConfig([
           message: 'Regular expressions must be defined in src/constants/regex.',
         },
         {
-          selector: 'NewExpression[callee.name="RegExp"]',
+          selector: 'NewExpression[callee.name="RegExp"], CallExpression[callee.name="RegExp"]',
           message: 'Regular expressions must be defined in src/constants/regex.',
         },
       ],

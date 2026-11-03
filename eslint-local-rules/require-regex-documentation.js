@@ -15,31 +15,16 @@ module.exports = {
     const sourceCode = context.sourceCode;
 
     /**
-     * Check if a node is a regex pattern assignment
+     * Check if a node is a RegExp constructor call (new or direct)
      */
-    function isRegexAssignment(initNode) {
-      if (!initNode) {
+    function isRegExpConstructor(node) {
+      if (!node) {
         return false;
       }
 
-      // Direct regex literal: /pattern/
-      if (initNode.type === 'Literal' && initNode.regex) {
-        return true;
-      }
-
-      // RegExp constructor: new RegExp(...)
-      if (initNode.type === 'NewExpression' && initNode.callee.type === 'Identifier' && initNode.callee.name === 'RegExp') {
-        return true;
-      }
-
-      // Arrow function returning RegExp: () => new RegExp(...)
-      if (
-        initNode.type === 'ArrowFunctionExpression' &&
-        initNode.body &&
-        ((initNode.body.type === 'NewExpression' && initNode.body.callee.type === 'Identifier' && initNode.body.callee.name === 'RegExp') ||
-          (initNode.body.type === 'Literal' && initNode.body.regex))
-      ) {
-        return true;
+      // new RegExp(...) or RegExp(...)
+      if (node.callee && node.callee.type === 'Identifier' && node.callee.name === 'RegExp') {
+        return node.type === 'NewExpression' || node.type === 'CallExpression';
       }
 
       return false;
@@ -72,22 +57,109 @@ module.exports = {
       return comments.some((comment) => comment.type === 'Block' && comment.value.startsWith('*'));
     }
 
-    return {
-      VariableDeclarator(node) {
-        // Check if this is a regex assignment
-        if (!isRegexAssignment(node.init)) {
-          return;
+    /**
+     * Check if a property has JSDoc comment (checks comments before the property)
+     */
+    function hasPropertyJsDoc(propertyNode) {
+      const comments = sourceCode.getCommentsBefore(propertyNode);
+      return comments.some((comment) => comment.type === 'Block' && comment.value.startsWith('*'));
+    }
+
+    /**
+     * Find the top-level variable declaration or property node that owns a regex node
+     */
+    function findOwningDeclaration(node) {
+      let current = node;
+
+      while (current) {
+        const parent = current.parent;
+
+        // Stop at VariableDeclarator
+        if (parent && parent.type === 'VariableDeclarator') {
+          return parent;
         }
 
-        // Get the parent node for comment checking
-        const commentParent = getCommentParent(node);
+        // Stop at Property
+        if (parent && parent.type === 'Property') {
+          return parent;
+        }
 
-        // Report if no JSDoc found
+        // Stop at ExportNamedDeclaration or ExportDefaultDeclaration
+        if (parent && (parent.type === 'ExportNamedDeclaration' || parent.type === 'ExportDefaultDeclaration')) {
+          return parent;
+        }
+
+        // Skip through ArrayExpression, ArrowFunctionExpression body, and BlockStatement
+        if (
+          parent &&
+          (parent.type === 'ArrayExpression' ||
+            (parent.type === 'ArrowFunctionExpression' && parent.body) ||
+            parent.type === 'BlockStatement' ||
+            parent.type === 'ReturnStatement')
+        ) {
+          current = parent;
+        } else {
+          break;
+        }
+      }
+
+      return null;
+    }
+
+    /**
+     * Check if a regex node (literal or constructor) has documentation
+     */
+    function reportUndocumentedRegex(node) {
+      const owningDecl = findOwningDeclaration(node);
+
+      if (!owningDecl) {
+        return;
+      }
+
+      // For VariableDeclarator, check the comment parent
+      if (owningDecl.type === 'VariableDeclarator') {
+        const commentParent = getCommentParent(owningDecl);
+
         if (!hasJsDoc(commentParent)) {
           context.report({
             node,
             messageId: 'missingRegexDoc',
           });
+        }
+
+        return;
+      }
+
+      // For Property, check directly
+      if (owningDecl.type === 'Property') {
+        if (!hasPropertyJsDoc(owningDecl)) {
+          context.report({
+            node,
+            messageId: 'missingRegexDoc',
+          });
+        }
+      }
+    }
+
+    return {
+      Literal(node) {
+        // Check for regex literals: /pattern/
+        if (node.regex) {
+          reportUndocumentedRegex(node);
+        }
+      },
+
+      CallExpression(node) {
+        // Check for RegExp(...) constructor calls
+        if (isRegExpConstructor(node)) {
+          reportUndocumentedRegex(node);
+        }
+      },
+
+      NewExpression(node) {
+        // Check for new RegExp(...) constructor calls
+        if (isRegExpConstructor(node)) {
+          reportUndocumentedRegex(node);
         }
       },
     };
