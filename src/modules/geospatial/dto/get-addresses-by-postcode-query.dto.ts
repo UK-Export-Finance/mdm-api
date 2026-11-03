@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, Matches, MaxLength, MinLength } from 'class-validator';
-import { EXAMPLES, GEOSPATIAL } from '@ukef/constants';
+import { EXAMPLES, REGEX } from '@ukef/constants';
 
 export class GetAddressesByPostcodeQueryDto {
   @ApiProperty({
@@ -8,11 +8,11 @@ export class GetAddressesByPostcodeQueryDto {
     description: 'Postcode to search for',
     minLength: 5,
     maxLength: 8,
-    pattern: GEOSPATIAL.REGEX.UK_POSTCODE.source,
+    pattern: REGEX.UK_POSTCODE.source,
   })
   @IsString()
   @MinLength(5)
   @MaxLength(8)
-  @Matches(GEOSPATIAL.REGEX.UK_POSTCODE)
+  @Matches(REGEX.UK_POSTCODE)
   public postcode: string;
 }

@@ -1,9 +1,11 @@
+import { REGEX } from '@ukef/constants';
+
 import { regexToString } from './regex.helper';
 
 describe('regexToString', () => {
   it('replaces the leading and trailing forward slashes with an empty string', () => {
     // Arrange
-    const regex = /test/;
+    const regex = REGEX.TEST.SIMPLE_WORD;
 
     // Act
     const regexString = regexToString(regex);
@@ -16,7 +18,7 @@ describe('regexToString', () => {
 
   it('escapes regexp forward slashes inside a string', () => {
     // Arrange
-    const regex = /test\/test/;
+    const regex = REGEX.TEST.WORD_WITH_ESCAPED_FORWARD_SLASH;
 
     // Act
     const regexString = regexToString(regex);
@@ -29,7 +31,7 @@ describe('regexToString', () => {
 
   it('escapes multiple back slashes inside a string', () => {
     // Arrange
-    const regex = /^(?!\s)[\w\-.()\s]+(?<![\s.])$/;
+    const regex = REGEX.TEST.NAME_VALIDATION_PATTERN;
 
     // Act
     const regexString = regexToString(regex);
@@ -42,7 +44,7 @@ describe('regexToString', () => {
 
   it('escapes forward slashes inside a string', () => {
     // Arrange
-    const regex = /^[\w\-:/\\()\s]+$/;
+    const regex = REGEX.TEST.PATH_VALIDATION_PATTERN;
 
     // Act
     const regexString = regexToString(regex);
