@@ -1,6 +1,6 @@
 import type { JestConfigWithTsJest } from 'ts-jest';
 
-const defaultSettings = {
+const defaultSettings: JestConfigWithTsJest = {
   rootDir: 'test',
   extensionsToTreatAsEsm: ['.ts'],
   preset: 'ts-jest/presets/default-esm',
