@@ -38,7 +38,8 @@ describe('EmailsController', () => {
     });
 
     it('throws BadRequestException exception if header govUkNotifyKey is missing', () => {
-      const runTest = () => () => controller.postEmail(null as unknown as string, request);
+      const missingGovUkNotifyKey = null as unknown as string;
+      const runTest = () => () => controller.postEmail(missingGovUkNotifyKey, request);
 
       expect(runTest()).toThrow(BadRequestException);
       expect(runTest()).toThrow('Header "govUkNotifyKey" is required');
