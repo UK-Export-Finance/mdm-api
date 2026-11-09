@@ -8,7 +8,7 @@ import * as dotenv from 'dotenv';
  */
 dotenv.config();
 
-const STRINGS = [
+const STRINGS: { searchValue: string | RegExp | undefined; replaceValue: string }[] = [
   { searchValue: /(Login failed for user ').*(')/g, replaceValue: '$1[Redacted]$2' },
   { searchValue: process.env.DATABASE_USERNAME, replaceValue: '[Redacted]' },
   { searchValue: process.env.DATABASE_PASSWORD, replaceValue: '[Redacted]' },
