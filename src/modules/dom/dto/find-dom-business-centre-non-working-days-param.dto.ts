@@ -9,7 +9,7 @@ export class FindOdsBusinessCentreOdsResponseNonWorkingDaysParamDto {
     description: 'Unique business centre code',
   })
   @IsString()
-  public centreCode: string;
+  public centreCode!: string;
 
   @IsDateString({ strict: true })
   @MinLength(BUSINESS_CENTRE.DATE_QUERY_PARAM.MIN_LENGTH)

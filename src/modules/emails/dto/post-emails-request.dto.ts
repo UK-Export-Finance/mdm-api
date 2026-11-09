@@ -15,7 +15,7 @@ export class PostEmailsRequestDto {
     minLength: GOVUK_NOTIFY.FIELD_LENGTHS.TEMPLATE_ID,
     maxLength: GOVUK_NOTIFY.FIELD_LENGTHS.TEMPLATE_ID,
   })
-  readonly templateId: string;
+  readonly templateId!: string;
 
   @IsEmail()
   @IsNotEmpty()
@@ -25,7 +25,7 @@ export class PostEmailsRequestDto {
     required: true,
     nullable: false,
   })
-  readonly sendToEmailAddress: string;
+  readonly sendToEmailAddress!: string;
 
   @IsObject()
   @IsOptional()

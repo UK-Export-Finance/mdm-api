@@ -20,9 +20,13 @@ export class ConsoleLoggerWithRedact extends ConsoleLogger {
     }
 
     if (typeof stack === 'string') {
+      let redactedStack: string = stack;
+
       this.stringPatternsToRedact.forEach((redact) => {
-        cleanStack = cleanStack.replace(redact.searchValue, redact.replaceValue);
+        redactedStack = redactedStack.replace(redact.searchValue, redact.replaceValue);
       });
+
+      cleanStack = redactedStack;
     }
 
     super.error(cleanMessage, cleanStack, context);

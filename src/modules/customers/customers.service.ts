@@ -45,7 +45,7 @@ export class CustomersService {
         companyRegNo: customerInInformatica.companyRegNo,
         creditClassificationDate: customerInInformatica.creditClassificationDate,
         creditClassificationStatus: customerInInformatica.creditClassificationStatus,
-        customerType: customerInInformatica.customerType || null,
+        customerType: customerInInformatica.customerType ?? null,
         isLegacyRecord: customerInInformatica.isLegacyRecord,
         name: customerInInformatica.name,
         partyUrn: customerInInformatica.partyUrn,
@@ -115,7 +115,7 @@ export class CustomersService {
       const existingCustomersInInformatica = await this.informaticaService.getCustomers(backendQuery);
 
       // If the customer does exist in Informatica
-      if (existingCustomersInInformatica?.[0]) {
+      if (existingCustomersInInformatica[0]) {
         return await this.handleInformaticaResponse(res, dtfsCustomerDto, existingCustomersInInformatica);
       }
 
@@ -200,7 +200,7 @@ export class CustomersService {
 
     this.logger.warn('Informatica returned an unrecognised legacy status for company %s', dtfsCustomerDto.companyRegistrationNumber);
 
-    return undefined;
+    throw new InternalServerErrorException();
   }
 
   /**
@@ -234,8 +234,8 @@ export class CustomersService {
    * @param {any[] | null} existingCustomersInInformatica - List of existing customers found in Informatica or null.
    * @returns {Promise<void>}
    */
-  private async createCustomerByURN(res, dtfsCustomerDto, existingCustomersInInformatica = null) {
-    let partyUrn: string;
+  private async createCustomerByURN(res, dtfsCustomerDto, existingCustomersInInformatica: any[] | null = null) {
+    let partyUrn: string | null;
     let isLegacyRecord: boolean;
 
     // TODO: replace this with a call to Salesforce's NUMGEN table once that's in place
@@ -288,14 +288,14 @@ export class CustomersService {
    * Creates a customer record using the provided name, company registration number, URN, DUNS number, and legacy status.
    *
    * @param {DTFSCustomerDto} dtfsCustomerDto - The DTO containing customer details.
-   * @param {string} partyUrn - The unique party URN for the customer.
+   * @param {string | null} partyUrn - The unique party URN for the customer.
    * @param {string} dunsNumber - The DUNS number for the customer.
    * @param {boolean} isLegacyRecord - Indicates if the record is a legacy record.
    * @returns {Promise<GetCustomersResponse>} A promise that resolves to the created customer response items.
    */
   private async createCustomerByURNAndDUNS(
     dtfsCustomerDto: DTFSCustomerDto,
-    partyUrn: string,
+    partyUrn: string | null,
     dunsNumber: string,
     isLegacyRecord: boolean,
   ): Promise<GetCustomersResponse> {
@@ -336,7 +336,7 @@ export class CustomersService {
       throw error;
     }
 
-    if (salesforceCreateCustomerResponse?.success) {
+    if (salesforceCreateCustomerResponse.success) {
       this.logger.info('Created customer in Salesforce for company %s', dtfsCustomerDto.companyRegistrationNumber);
     } else {
       this.logger.warn('Salesforce did not confirm customer creation for company %s', dtfsCustomerDto.companyRegistrationNumber);
@@ -353,7 +353,7 @@ export class CustomersService {
         partyUrn,
         probabilityOfDefault: dtfsCustomerDto.probabilityOfDefault,
         riskEntity: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
-        sfId: salesforceCreateCustomerResponse?.success ? salesforceCreateCustomerResponse.id : null,
+        sfId: salesforceCreateCustomerResponse.success ? salesforceCreateCustomerResponse.id : null,
         subtype: null,
         type: null,
         ukefIndustryName: dtfsCustomerDto.ukefIndustryName,

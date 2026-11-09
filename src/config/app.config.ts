@@ -36,16 +36,16 @@ export type AppConfigType = {
 };
 
 export const AppConfig = registerAs('app', (): AppConfigType => {
-  const logLevel = process.env.LOG_LEVEL || 'info';
+  const logLevel = process.env.LOG_LEVEL!;
 
   if (!validLogLevels.includes(logLevel)) {
-    throw new InvalidConfigException(`LOG_LEVEL must be one of ${validLogLevels} or not specified.`);
+    throw new InvalidConfigException(`LOG_LEVEL must be one of ${validLogLevels} or not specified. Received ${logLevel}`);
   }
 
   /**
    * APIM MDM versioning for MDM endpoints
    */
-  const mdmVersion = process.env.HTTP_VERSION || '1';
+  const mdmVersion = process.env.HTTP_VERSION ?? '1';
 
   const mdmVersioning = {
     enable: process.env.HTTP_VERSIONING_ENABLE === 'true',
@@ -57,7 +57,7 @@ export const AppConfig = registerAs('app', (): AppConfigType => {
   /**
    * APIM MDM versioning for DOM and ODS endpoints
    */
-  const domOdsVersion = process.env.DOM_ODS_HTTP_VERSION;
+  const domOdsVersion = process.env.DOM_ODS_HTTP_VERSION!;
 
   const domOdsVersioning = {
     enable: process.env.HTTP_VERSIONING_ENABLE === 'true',
@@ -67,11 +67,11 @@ export const AppConfig = registerAs('app', (): AppConfigType => {
   };
 
   return {
-    apiKey: process.env.API_KEY,
+    apiKey: process.env.API_KEY!,
     apiKeyStrategy: AUTH.STRATEGY,
-    env: NODE_ENV,
+    env: NODE_ENV!,
     globalPrefix: '/api',
-    logLevel: process.env.LOG_LEVEL || 'info',
+    logLevel,
     name: NAME,
     domOdsVersioning,
     port: getIntConfig(process.env.HTTP_PORT, 3003),

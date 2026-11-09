@@ -36,7 +36,7 @@ export class OdsFacilityCategoryService {
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
-      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+      if (storedProcedureJson.status !== STORED_PROCEDURE.SUCCESS) {
         this.logger.error('Error finding facility category %s from ODS stored procedure, output %o', categoryCode, storedProcedureResult);
 
         throw new Error(`Error finding facility category ${categoryCode} from ODS stored procedure`);
@@ -82,7 +82,7 @@ export class OdsFacilityCategoryService {
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
-      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+      if (storedProcedureJson.status !== STORED_PROCEDURE.SUCCESS) {
         this.logger.error('Error getting facility categories from ODS stored procedure, output %o', storedProcedureResult);
 
         throw new InternalServerErrorException('Error getting facility categories from ODS stored procedure');

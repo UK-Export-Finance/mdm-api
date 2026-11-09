@@ -13,8 +13,8 @@ export type OrdnanceSurveyConfigType = {
 };
 
 export const OrdnanceSurveyConfig = registerAs(KEY, (): OrdnanceSurveyConfigType => ({
-  baseUrl: process.env.ORDNANCE_SURVEY_URL,
-  key: process.env.ORDNANCE_SURVEY_KEY,
+  baseUrl: process.env.ORDNANCE_SURVEY_URL!,
+  key: process.env.ORDNANCE_SURVEY_KEY!,
   maxRedirects: getIntConfig(process.env.ORDNANCE_SURVEY_MAX_REDIRECTS, 5),
   timeout: getIntConfig(process.env.ORDNANCE_SURVEY_TIMEOUT, 30000), // in milliseconds
 }));

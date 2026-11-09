@@ -1,6 +1,6 @@
 import { Api } from '@ukef-test/support/api';
 
-import { TEST_CONSTANTS } from '../test-constants';
+import { TEST_CONSTANTS } from '@ukef-test/test-constants';
 
 describe('Markets', () => {
   let api: Api;

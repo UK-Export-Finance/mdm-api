@@ -6,19 +6,19 @@ export class PostEmailsResponseDataContent {
     example: EXAMPLES.GOVUK_NOTIFY.EMAIL_BODY,
     description: 'Email body',
   })
-  public body: string;
+  public body!: string;
 
   @ApiProperty({
     example: EXAMPLES.GOVUK_NOTIFY.FROM_EMAIL,
     description: "Sender's email address",
   })
-  public from_email: string;
+  public from_email!: string;
 
   @ApiProperty({
     example: EXAMPLES.GOVUK_NOTIFY.EMAIL_SUBJECT,
     description: 'Email subject line',
   })
-  public subject: string;
+  public subject!: string;
 
   @ApiProperty({
     example: null,
@@ -26,7 +26,7 @@ export class PostEmailsResponseDataContent {
     nullable: true,
     required: false,
   })
-  public unsubscribe_link: string | null;
+  public unsubscribe_link!: string | null;
 }
 
 export class PostEmailsResponseDataTemplate {
@@ -34,36 +34,36 @@ export class PostEmailsResponseDataTemplate {
     example: EXAMPLES.GOVUK_NOTIFY.TEMPLATE_ID,
     description: "Notify's template id",
   })
-  public id: string;
+  public id!: string;
 
   @ApiProperty({
     example: EXAMPLES.GOVUK_NOTIFY.TEMPLATE_URI,
     description: "Notify's URL to get more information about template",
   })
-  public uri: string;
+  public uri!: string;
 
   @ApiProperty({
     example: 5,
     description: "Notify's template version",
   })
-  public version: number;
+  public version!: number;
 }
 
 export class PostEmailsResponseData {
   @ApiProperty({ type: PostEmailsResponseDataContent })
-  public content: PostEmailsResponseDataContent;
+  public content!: PostEmailsResponseDataContent;
 
   @ApiProperty({
     example: EXAMPLES.GOVUK_NOTIFY.RESPONSE_ID,
     description: "Notify's transaction id",
   })
-  public id: string;
+  public id!: string;
 
   @ApiProperty({
     example: EXAMPLES.GOVUK_NOTIFY.REFERENCE,
     description: 'Reference that was sent to GOV.UK Notify',
   })
-  public reference: string;
+  public reference!: string;
 
   @ApiProperty({
     example: null,
@@ -71,16 +71,16 @@ export class PostEmailsResponseData {
     nullable: true,
     required: false,
   })
-  public scheduled_for: string | null;
+  public scheduled_for!: string | null;
 
   @ApiProperty({ type: PostEmailsResponseDataTemplate })
-  public template: PostEmailsResponseDataTemplate;
+  public template!: PostEmailsResponseDataTemplate;
 
   @ApiProperty({
     example: EXAMPLES.GOVUK_NOTIFY.RESPONSE_URI,
     description: "Notify's URL to get more information about this transaction",
   })
-  public uri: string;
+  public uri!: string;
 }
 
 export class PostEmailsResponseDto {
@@ -88,8 +88,8 @@ export class PostEmailsResponseDto {
     example: 201,
     description: 'Http status code',
   })
-  status: number;
+  status!: number;
 
   @ApiProperty({ type: PostEmailsResponseData })
-  data: PostEmailsResponseData;
+  data!: PostEmailsResponseData;
 }

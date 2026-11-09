@@ -114,5 +114,22 @@ describe('OdsStoredProcedureService', () => {
       expect(mockDataSource.createQueryRunner).toHaveBeenCalledTimes(1);
       expect(mockQueryRunner.release).toHaveBeenCalledTimes(1);
     });
+
+    it('throws an error if the stored procedure does not return an output body', async () => {
+      // Arrange
+      const mockInput: OdsStoredProcedureInput = service.createInput({
+        entityToQuery: ODS_ENTITIES.CUSTOMER,
+        queryParameters: { customer_party_unique_reference_number: EXAMPLES.CUSTOMER.PARTYURN },
+      });
+
+      mockQueryRunner.query.mockResolvedValue([{ output_body: null }]);
+
+      // Act & Assert
+      const promise = service.call(mockInput);
+
+      await expect(promise).rejects.toThrow('ODS stored procedure did not return an output body');
+
+      expect(mockQueryRunner.release).toHaveBeenCalledTimes(1);
+    });
   });
 });

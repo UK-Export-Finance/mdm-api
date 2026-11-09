@@ -44,7 +44,7 @@ export class OdsObligationSubtypeService {
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
-      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+      if (storedProcedureJson.status !== STORED_PROCEDURE.SUCCESS) {
         this.logger.error('Error finding obligation subtype %s from ODS stored procedure, output %o', subtypeCode, storedProcedureResult);
 
         throw new Error(`Error finding obligation subtype ${subtypeCode} from ODS stored procedure`);
@@ -87,7 +87,7 @@ export class OdsObligationSubtypeService {
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
-      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+      if (storedProcedureJson.status !== STORED_PROCEDURE.SUCCESS) {
         this.logger.error('Error getting obligation subtypes from ODS stored procedure, output %o', storedProcedureResult);
 
         throw new InternalServerErrorException('Error getting obligation subtypes from ODS stored procedure');

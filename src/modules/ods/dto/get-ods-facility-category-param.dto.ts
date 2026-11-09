@@ -9,5 +9,5 @@ export class GetOdsFacilityCategoryParamDto {
     description: 'Unique facility category code',
   })
   @IsString()
-  public categoryCode: string;
+  public categoryCode!: string;
 }

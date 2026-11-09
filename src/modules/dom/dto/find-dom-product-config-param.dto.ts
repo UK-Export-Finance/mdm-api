@@ -9,5 +9,5 @@ export class FindDomProductConfigParamDto {
     description: 'Unique product type',
   })
   @IsString()
-  public productType: string;
+  public productType!: string;
 }

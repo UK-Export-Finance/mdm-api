@@ -8,5 +8,5 @@ export class GetAccrualScheduleResponseDto extends GetAccrualScheduleBaseDto {
     description: 'Accrual schedule active flag',
     example: EXAMPLES.ACCRUAL_SCHEDULE.IS_ACTIVE,
   })
-  readonly isActive: boolean;
+  readonly isActive!: boolean;
 }

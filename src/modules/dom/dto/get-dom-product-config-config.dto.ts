@@ -11,149 +11,149 @@ export class GetDomProductConfigConfig {
     description: "The product's 'commitment date' requirement",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.commitmentDate,
   })
-  readonly commitmentDate: string;
+  readonly commitmentDate!: string;
 
   @ApiProperty({
     description: "The product's 'issued date' requirement",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.issuedDate,
   })
-  readonly issuedDate: string;
+  readonly issuedDate!: string;
 
   @ApiProperty({
     description: "The product's 'effective date' requirement",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.effectiveDate,
   })
-  readonly effectiveDate: string;
+  readonly effectiveDate!: string;
 
   @ApiProperty({
     description: "The product's 'availability end date' requirement",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.availabilityEndDate,
   })
-  readonly availabilityEndDate: string;
+  readonly availabilityEndDate!: string;
 
   @ApiProperty({
     description: "The product's 'expiry date' requirement",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.expiryDate,
   })
-  readonly expiryDate: string;
+  readonly expiryDate!: string;
 
   @ApiProperty({
     description: "The product's 'credit type' requirement",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.creditType,
   })
-  readonly creditType: string;
+  readonly creditType!: string;
 
   @ApiProperty({
     description: "The product's 'instrument type'",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.instrumentType,
   })
-  readonly instrumentType: string;
+  readonly instrumentType!: string;
 
   @ApiProperty({
     description: "The product's 'participations' requirement",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.participations,
   })
-  readonly participations: string;
+  readonly participations!: string;
 
   @ApiProperty({
     description: "The product's 'scheduled repayments' requirement",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.scheduledRepayments,
   })
-  readonly scheduledRepayments: string;
+  readonly scheduledRepayments!: string;
 
   @ApiProperty({
     description: "The product's 'non cash obligations' requirement",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.nonCashObligations,
   })
-  readonly nonCashObligations: string;
+  readonly nonCashObligations!: string;
 
   @ApiProperty({
     description: "The product's 'cash obligations' requirement",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.cashObligations,
   })
-  readonly cashObligations: string;
+  readonly cashObligations!: string;
 
   @ApiProperty({
     description: "The product's 'accrual schedule' requirement",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.accrualSchedule,
   })
-  readonly accrualSchedule: string;
+  readonly accrualSchedule!: string;
 
   @ApiProperty({
     description: "The product's 'PIM owner' requirement",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.pimOwner,
   })
-  readonly pimOwner: string;
+  readonly pimOwner!: string;
 
   @ApiProperty({
     description: "The product's 'risk rating' requirement",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.riskRating,
   })
-  readonly riskRating: string;
+  readonly riskRating!: string;
 
   @ApiProperty({
     description: "The product's 'pre credit period' requirement",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.preCreditPeriod,
   })
-  readonly preCreditPeriod: string;
+  readonly preCreditPeriod!: string;
 
   @ApiProperty({
     description: "The product's 'credit period' requirement",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.creditPeriod,
   })
-  readonly creditPeriod: string;
+  readonly creditPeriod!: string;
 
   @ApiProperty({
     description: "The product's 'loss given default' requirement",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.lossGivenDefault,
   })
-  readonly lossGivenDefault: string;
+  readonly lossGivenDefault!: string;
 
   @ApiProperty({
     description: "The product's 'provision rate' requirement",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.provisionRate,
   })
-  readonly provisionRate: string;
+  readonly provisionRate!: string;
 
   @ApiProperty({
     description: "The product's 'forecast year' requirement",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.forecastYear,
   })
-  readonly forecastYear: string;
+  readonly forecastYear!: string;
 
   @ApiProperty({
     description: "The product's 'bank rate' requirement",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.bankRate,
   })
-  readonly bankRate: string;
+  readonly bankRate!: string;
 
   @ApiProperty({
     description: "The product's 'fees'",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.fees,
   })
-  readonly fees: GetDomProductConfigConfigFees;
+  readonly fees!: GetDomProductConfigConfigFees;
 
   @ApiProperty({
     description: "The product's 'obligations'",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.obligations,
   })
-  readonly obligations: GetDomProductConfigConfigObligations;
+  readonly obligations!: GetDomProductConfigConfigObligations;
 
   @ApiProperty({
     description: "The product's 'reinsurance'",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.reinsurance,
   })
-  readonly reinsurance: GetDomProductConfigConfigReinsurance;
+  readonly reinsurance!: GetDomProductConfigConfigReinsurance;
 
   @ApiProperty({
     description: "The product's 'lead days'",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.leadDays,
   })
-  readonly leadDays: GetDomProductConfigConfigLeadDays;
+  readonly leadDays!: GetDomProductConfigConfigLeadDays;
 
   @ApiProperty({
     description: 'The repayment type of the product, Bullet or Scheduled',
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.repaymentType,
   })
-  readonly repaymentType: string;
+  readonly repaymentType!: string;
 }

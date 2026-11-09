@@ -12,7 +12,7 @@ export class MarketsQueryDto {
     description: 'Optional filtering by field "active". If parameter is not provided result will include active and not active markets',
     enum: QueryParamActiveEnum,
   })
-  public active: string;
+  public active!: string;
 
   @IsOptional()
   @ApiProperty({
@@ -20,5 +20,5 @@ export class MarketsQueryDto {
     example: 'korea',
     description: 'Optional filtering by fields "marketName" or "isoCode". Partial matches are allowed and search is not case sensitive',
   })
-  public search: string;
+  public search!: string;
 }

@@ -6,17 +6,17 @@ export class CreateUkefIdDto {
   @IsNotEmpty()
   @Max(9)
   @ApiProperty({ example: 1 })
-  readonly numberTypeId: number;
+  readonly numberTypeId!: number;
 
   @IsString()
   @IsNotEmpty()
   @MaxLength(60)
   @ApiProperty({ example: 'ECGD\\jsmith', description: 'User if it is known' })
-  readonly createdBy: string;
+  readonly createdBy!: string;
 
   @IsString()
   @IsNotEmpty()
   @MaxLength(60)
   @ApiProperty({ example: 'NodeJs/App' })
-  readonly requestingSystem: string;
+  readonly requestingSystem!: string;
 }

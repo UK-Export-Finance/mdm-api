@@ -21,7 +21,7 @@ export class CompaniesService {
       const company: GetCompanyCompaniesHouseResponse = await this.companiesHouseService.getCompanyByRegistrationNumber(registrationNumber);
       this.validateCompanyIsUkCompany(company, registrationNumber);
 
-      const industryClasses: SectorIndustryEntity[] = await this.sectorIndustriesService.find(null, null);
+      const industryClasses: SectorIndustryEntity[] = await this.sectorIndustriesService.find();
 
       const mappedCompany = this.mapCompany(company, industryClasses);
 
@@ -65,9 +65,9 @@ export class CompaniesService {
           periodEndOn: company.accounts.next_accounts?.period_end_on,
           periodStartOn: company.accounts.next_accounts?.period_start_on,
         },
-        nextDue: company.accounts?.next_due,
-        nextMadeUpTo: company.accounts?.next_made_up_to,
-        overdue: company.accounts?.overdue,
+        nextDue: company.accounts.next_due,
+        nextMadeUpTo: company.accounts.next_made_up_to,
+        overdue: company.accounts.overdue,
       },
       companiesHouseRegistrationNumber: company.company_number,
       companyName: company.company_name,
@@ -85,12 +85,12 @@ export class CompaniesService {
         region: address?.region,
       },
       industries: this.mapSicCodes(company.sic_codes, industryClasses),
-      isActive: company?.company_status === COMPANIES.STATUS.ACTIVE,
+      isActive: company.company_status === COMPANIES.STATUS.ACTIVE,
     };
   }
 
-  private mapSicCodes(sicCodes: string[], industryClasses: SectorIndustryEntity[]): Industry[] {
-    const industries = [];
+  private mapSicCodes(sicCodes: string[] | undefined, industryClasses: SectorIndustryEntity[]): Industry[] {
+    const industries: Industry[] = [];
 
     sicCodes?.forEach((sicCode) => {
       industryClasses.forEach((industryClass) => {

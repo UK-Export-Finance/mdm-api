@@ -22,7 +22,7 @@ export class CompaniesHouseService {
   constructor(httpService: HttpService, configService: ConfigService) {
     this.httpClient = new HttpClient(httpService);
 
-    const { key } = configService.get<CompaniesHouseConfigType>(COMPANIES_HOUSE.CONFIG.KEY);
+    const { key } = configService.getOrThrow<CompaniesHouseConfigType>(COMPANIES_HOUSE.CONFIG.KEY);
 
     this.key = key;
   }

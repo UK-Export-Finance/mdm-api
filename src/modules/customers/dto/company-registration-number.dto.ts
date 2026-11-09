@@ -11,5 +11,5 @@ export class CompanyRegistrationNumberDto {
   @IsNotEmpty()
   @MinLength(8)
   @MaxLength(10)
-  companyRegistrationNumber: string;
+  companyRegistrationNumber!: string;
 }

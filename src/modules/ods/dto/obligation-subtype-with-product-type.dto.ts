@@ -8,5 +8,5 @@ export class ObligationSubtypeWithProductTypeDto extends GetObligationSubtypeRes
     description: 'The product type code',
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.productType,
   })
-  readonly productTypeCode: string;
+  readonly productTypeCode!: string;
 }

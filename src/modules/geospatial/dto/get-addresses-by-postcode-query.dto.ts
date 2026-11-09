@@ -14,5 +14,5 @@ export class GetAddressesByPostcodeQueryDto {
   @MinLength(5)
   @MaxLength(8)
   @Matches(GEOSPATIAL.REGEX.UK_POSTCODE)
-  public postcode: string;
+  public postcode!: string;
 }

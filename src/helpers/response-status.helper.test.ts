@@ -182,6 +182,27 @@ describe('messageCheck', () => {
     expect(result).toBe(false);
   });
 
+  it('should return false when error response data does not contain a recognisable error message', () => {
+    // Arrange
+    const error = {
+      response: {
+        data: {
+          type: 'ch:service',
+        },
+      },
+      status: 400,
+      statusText: 'Bad Request',
+      name: 'Error',
+      message: 'Error',
+    } as Error;
+
+    // Act
+    const result = messageCheck({ error, search: 'Invalid Authorization header' });
+
+    // Assert
+    expect(result).toBe(false);
+  });
+
   it('should return false when error response does not contain data', () => {
     // Arrange
     const error = {

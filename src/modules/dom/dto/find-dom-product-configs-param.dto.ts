@@ -11,5 +11,5 @@ export class FindDomProductConfigsParam {
   @IsString()
   @MinLength(3)
   @MaxLength(30)
-  public productTypes: string;
+  public productTypes!: string;
 }

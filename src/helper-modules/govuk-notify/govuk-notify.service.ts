@@ -35,7 +35,7 @@ export class GovukNotifyService {
     // We create new client for each request because govUkNotifyKey (auth key) might be different.
     const notifyClient = new NotifyClient(govUkNotifyKey);
 
-    const reference = postEmailsRequest.reference || `${postEmailsRequest.templateId}-${Date.now()}`;
+    const reference = postEmailsRequest.reference ?? `${postEmailsRequest.templateId}-${Date.now()}`;
 
     const { personalisation } = postEmailsRequest;
 

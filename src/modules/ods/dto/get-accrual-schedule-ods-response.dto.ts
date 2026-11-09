@@ -8,5 +8,5 @@ export class GetAccrualScheduleOdsResponseDto extends GetAccrualScheduleBaseDto 
     description: 'Accrual schedule type active flag',
     example: EXAMPLES.ODS.ACCRUAL_SCHEDULE.accrualScheduleTypeActive,
   })
-  readonly accrualScheduleTypeActive: boolean;
+  readonly accrualScheduleTypeActive!: boolean;
 }

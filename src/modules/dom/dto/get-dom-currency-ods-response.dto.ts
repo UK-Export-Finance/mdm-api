@@ -9,25 +9,25 @@ export class GetDomCurrencyOdsResponseDto {
     description: 'The code of the currency',
     example: EXAMPLES.ODS.CURRENCIES[0].currency_code,
   })
-  readonly currency_code: string;
+  readonly currency_code!: string;
 
   @ApiProperty({
     description: 'The ISO code of the currency',
     example: EXAMPLES.ODS.CURRENCIES[0].currency_iso_code,
   })
-  readonly currency_iso_code: string;
+  readonly currency_iso_code!: string;
 
   @ApiProperty({
     description: 'The name of the currency',
     example: EXAMPLES.ODS.CURRENCIES[0].currency_name,
   })
-  readonly currency_name: string;
+  readonly currency_name!: string;
 
   @ApiProperty({
     description: 'The number of decimal places for the currency',
     example: EXAMPLES.ODS.CURRENCIES[0].currency_decimal_place,
   })
-  readonly currency_decimal_place: number;
+  readonly currency_decimal_place!: number;
 
   @ApiProperty({
     description: 'The code of the rate setting calendar',
@@ -41,5 +41,5 @@ export class GetDomCurrencyOdsResponseDto {
     description: 'Whether the currency is active',
     example: EXAMPLES.ODS.CURRENCIES[0].currency_active_flag,
   })
-  readonly currency_active_flag: boolean;
+  readonly currency_active_flag!: boolean;
 }

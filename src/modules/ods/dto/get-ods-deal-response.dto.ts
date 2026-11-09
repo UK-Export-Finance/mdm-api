@@ -6,17 +6,17 @@ export class GetOdsDealResponse {
     description: 'Unique UKEF deal ID',
     example: EXAMPLES.DEAL.ID,
   })
-  readonly dealId: string;
+  readonly dealId!: string;
 
   @ApiProperty({
     description: 'Deal name',
     example: EXAMPLES.DEAL.NAME,
   })
-  readonly name: string;
+  readonly name!: string;
 
   @ApiProperty({
     description: 'Deal description',
     example: EXAMPLES.DEAL.DESCRIPTION,
   })
-  readonly description: string;
+  readonly description!: string;
 }

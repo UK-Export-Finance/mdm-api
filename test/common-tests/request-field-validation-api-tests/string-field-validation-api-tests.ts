@@ -81,7 +81,7 @@ export function withStringFieldValidationApiTests<RequestBodyItem, RequestBodyIt
       });
 
       it(`returns a 2xx response if ${fieldName} has ${minLength} characters`, async () => {
-        const requestWithValidField = { ...requestBodyItem, [fieldNameSymbol]: generateFieldValueOfLength(minLength) };
+        const requestWithValidField = { ...requestBodyItem, [fieldNameSymbol]: generateFieldValueOfLength!(minLength) };
         const preparedRequestWithValidField = prepareModifiedRequest(requestIsAnArray, requestWithValidField);
 
         const { status } = await makeRequest(preparedRequestWithValidField);
@@ -92,7 +92,7 @@ export function withStringFieldValidationApiTests<RequestBodyItem, RequestBodyIt
 
       if (minLength > 1) {
         it(`returns a 400 response if ${fieldName} has fewer than ${minLength} characters`, async () => {
-          const requestWithTooShortField = { ...requestBodyItem, [fieldNameSymbol]: generateFieldValueOfLength(minLength - 1) };
+          const requestWithTooShortField = { ...requestBodyItem, [fieldNameSymbol]: generateFieldValueOfLength!(minLength - 1) };
           const preparedRequestWithTooShortField = prepareModifiedRequest(requestIsAnArray, requestWithTooShortField);
 
           const { status, body } = await makeRequest(preparedRequestWithTooShortField);
@@ -118,7 +118,7 @@ export function withStringFieldValidationApiTests<RequestBodyItem, RequestBodyIt
 
     if (minLength !== maxLength) {
       it(`returns a 2xx response if ${fieldName} has ${maxLength} characters`, async () => {
-        const requestWithValidField = { ...requestBodyItem, [fieldNameSymbol]: generateFieldValueOfLength(maxLength) };
+        const requestWithValidField = { ...requestBodyItem, [fieldNameSymbol]: generateFieldValueOfLength!(maxLength) };
         const preparedRequestWithValidField = prepareModifiedRequest(requestIsAnArray, requestWithValidField);
 
         const { status } = await makeRequest(preparedRequestWithValidField);
@@ -130,7 +130,7 @@ export function withStringFieldValidationApiTests<RequestBodyItem, RequestBodyIt
 
     if (maxLength) {
       it(`returns a 400 response if ${fieldName} has more than ${maxLength} characters`, async () => {
-        const requestWithTooLongField = { ...requestBodyItem, [fieldNameSymbol]: generateFieldValueOfLength(maxLength + 1) };
+        const requestWithTooLongField = { ...requestBodyItem, [fieldNameSymbol]: generateFieldValueOfLength!(maxLength + 1) };
         const preparedRequestWithTooLongField = prepareModifiedRequest(requestIsAnArray, requestWithTooLongField);
 
         const { status, body } = await makeRequest(preparedRequestWithTooLongField);
@@ -191,9 +191,9 @@ const getMinAndMaxLengthFromOptions = ({
   lengthOption?: number;
   theEnum?: any;
 }): { minLength: number; maxLength: number } => {
-  const isLengthDefined = lengthOption || lengthOption === 0;
-  const isMinLengthDefined = minLengthOption || minLengthOption === 0;
-  const isMaxLengthDefined = maxLengthOption || maxLengthOption === 0;
+  const isLengthDefined = lengthOption !== undefined;
+  const isMinLengthDefined = minLengthOption !== undefined;
+  const isMaxLengthDefined = maxLengthOption !== undefined;
 
   if (isLengthDefined) {
     if (isMinLengthDefined) {
@@ -215,7 +215,7 @@ const getMinAndMaxLengthFromOptions = ({
   }
 
   return {
-    minLength: minLengthOption,
-    maxLength: maxLengthOption,
+    minLength: minLengthOption as number,
+    maxLength: maxLengthOption as number,
   };
 };

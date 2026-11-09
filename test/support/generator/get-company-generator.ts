@@ -68,7 +68,7 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
 
   protected transformRawValuesToGeneratedValues(values: CompanyValues[], { registrationNumber }: GenerateOptions): GenerateResult {
     const [company] = values;
-    const registrationNumberToUse = registrationNumber || company.companiesHouseRegistrationNumber;
+    const registrationNumberToUse = registrationNumber ?? company.companiesHouseRegistrationNumber;
 
     const companiesHousePath = `/company/${registrationNumberToUse}`;
 
@@ -246,7 +246,7 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
       type: 'ch:service',
     };
 
-    const getCompanyCompaniesHouseNotFoundResponse: GetCompanyCompaniesHouseMultipleErrorResponse = undefined;
+    const getCompanyCompaniesHouseNotFoundResponse: GetCompanyCompaniesHouseMultipleErrorResponse | undefined = undefined;
 
     return {
       companiesHousePath,
@@ -316,5 +316,5 @@ type GenerateResult = {
   getCompanyCompaniesHouseOverseasCompanyResponse: GetCompanyCompaniesHouseResponse;
   getCompanyCompaniesHouseMalformedAuthorizationHeaderResponse: GetCompanyCompaniesHouseErrorResponse;
   getCompanyCompaniesHouseInvalidAuthorizationResponse: GetCompanyCompaniesHouseErrorResponse;
-  getCompanyCompaniesHouseNotFoundResponse: GetCompanyCompaniesHouseMultipleErrorResponse;
+  getCompanyCompaniesHouseNotFoundResponse: GetCompanyCompaniesHouseMultipleErrorResponse | undefined;
 };

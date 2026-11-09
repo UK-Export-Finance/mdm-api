@@ -9,5 +9,5 @@ export class GetOdsFeeTypeParamDto {
     description: 'Unique fee type code',
   })
   @IsString()
-  public feeTypeCode: string;
+  public feeTypeCode!: string;
 }

@@ -6,38 +6,38 @@ export class GetFeeTypeOdsResponseDto {
     description: 'Fee type code',
     example: EXAMPLES.ODS.CONFIGURATION_FEE.feeType,
   })
-  readonly feeType: string;
+  readonly feeType!: string;
 
   @ApiProperty({
     description: 'Fee type name',
     example: EXAMPLES.ODS.CONFIGURATION_FEE.name,
   })
-  readonly name: string;
+  readonly name!: string;
 
   @ApiProperty({
     description: 'Fee type classification',
     example: EXAMPLES.ODS.CONFIGURATION_FEE.feeTypeClassification,
   })
-  readonly feeTypeClassification: string;
+  readonly feeTypeClassification!: string;
 
   @ApiProperty({
     description: 'Fee type expense/income',
     example: EXAMPLES.ODS.CONFIGURATION_FEE.feeTypeExpenseIncome,
   })
-  readonly feeTypeExpenseIncome: string;
+  readonly feeTypeExpenseIncome!: string;
 
   @ApiProperty({
     description: 'Fee type active flag',
     example: EXAMPLES.ODS.CONFIGURATION_FEE.feeTypeActive,
   })
-  readonly feeTypeActive: boolean;
+  readonly feeTypeActive!: boolean;
 
   @ApiProperty({
     description: 'Balance category',
     example: EXAMPLES.ODS.CONFIGURATION_FEE.balanceCategory,
     nullable: true,
   })
-  readonly balanceCategory: string | null;
+  readonly balanceCategory!: string | null;
 
   @ApiProperty({
     description: 'Base balance category',
@@ -50,25 +50,25 @@ export class GetFeeTypeOdsResponseDto {
     description: 'Non-facility currency settlement flag',
     example: EXAMPLES.ODS.CONFIGURATION_FEE.nonFacilityCurrencySettlement,
   })
-  readonly nonFacilityCurrencySettlement: boolean;
+  readonly nonFacilityCurrencySettlement!: boolean;
 
   @ApiProperty({
     description: 'If the base balance upon which the fee accrues should be capped',
     example: EXAMPLES.ODS.CONFIGURATION_FEE.feeTypeCappedBaseBalanceIndicator,
   })
-  readonly feeTypeCappedBaseBalanceIndicator: boolean;
+  readonly feeTypeCappedBaseBalanceIndicator!: boolean;
 
   @ApiProperty({
     description: 'What the effective date of the fee should default to if not specified',
     example: EXAMPLES.ODS.CONFIGURATION_FEE.feeEffectiveDateDefault,
     nullable: true,
   })
-  readonly feeEffectiveDateDefault: string | null;
+  readonly feeEffectiveDateDefault!: string | null;
 
   @ApiProperty({
     description: 'What the maturity date of the fee should default to if not specified',
     example: EXAMPLES.ODS.CONFIGURATION_FEE.feeMaturityDateDefault,
     nullable: true,
   })
-  readonly feeMaturityDateDefault: string | null;
+  readonly feeMaturityDateDefault!: string | null;
 }

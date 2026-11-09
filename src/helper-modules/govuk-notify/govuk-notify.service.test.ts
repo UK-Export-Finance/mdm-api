@@ -71,7 +71,7 @@ describe('GovukNotifyService', () => {
           ],
         },
       } as AxiosResponse;
-      return new AxiosError(`Request failed with status code ${status}`, status.toString(), null, null, response);
+      return new AxiosError(`Request failed with status code ${status}`, status.toString(), undefined, null, response);
     };
 
     it('calls GOV.UK Notify client constructor with the correct argument', async () => {
@@ -98,7 +98,7 @@ describe('GovukNotifyService', () => {
           reference,
           file: filePersonalisation.file,
         };
-        const buffer = convertStringToBuffer(mockParams.file);
+        const buffer = convertStringToBuffer(mockParams.file!);
 
         // Act
         await service.sendEmail(govUkNotifyKey, mockParams);

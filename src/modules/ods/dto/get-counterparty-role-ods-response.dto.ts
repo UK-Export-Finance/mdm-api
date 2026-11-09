@@ -6,29 +6,29 @@ export class GetCounterpartyRoleOdsResponseDto {
     description: 'Counterparty role type',
     example: EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.counterpartyRoleType,
   })
-  readonly counterpartyRoleType: string;
+  readonly counterpartyRoleType!: string;
 
   @ApiProperty({
     description: 'Counterparty role name',
     example: EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.name,
   })
-  readonly name: string;
+  readonly name!: string;
 
   @ApiProperty({
     description: 'Counterparty role has share percentage flag',
     example: EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.hasSharePercentage,
   })
-  readonly hasSharePercentage: boolean;
+  readonly hasSharePercentage!: boolean;
 
   @ApiProperty({
     description: 'Counterparty role has associated payment code',
     example: EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.hasAssociatedPaymentCode,
   })
-  readonly hasAssociatedPaymentCode: boolean;
+  readonly hasAssociatedPaymentCode!: boolean;
 
   @ApiProperty({
     description: 'Counterparty role active flag',
     example: EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.counterpartyRoleTypeActive,
   })
-  readonly counterpartyRoleTypeActive: boolean;
+  readonly counterpartyRoleTypeActive!: boolean;
 }

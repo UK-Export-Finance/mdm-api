@@ -11,7 +11,7 @@ export class GetOdsBusinessCentreOdsResponsesNonWorkingDaysParamDto {
   @IsString()
   @MinLength(BUSINESS_CENTRE.CODE_PARAM.MIN_LENGTH)
   @MaxLength(BUSINESS_CENTRE.CODE_PARAM.MAX_LENGTH)
-  public centreCodes: string;
+  public centreCodes!: string;
 
   @IsDateString({ strict: true })
   @MinLength(BUSINESS_CENTRE.DATE_QUERY_PARAM.MIN_LENGTH)

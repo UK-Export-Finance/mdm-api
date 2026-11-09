@@ -59,7 +59,10 @@ describe('convertStringToBuffer', () => {
   });
 
   it('should throw an error for a non-string buffer', () => {
+    // Arrange
+    const nonStringBuffer = null as unknown as string;
+
     // Act & Assert
-    expect(() => convertStringToBuffer(null)).toThrow("Cannot read properties of null (reading 'replace')");
+    expect(() => convertStringToBuffer(nonStringBuffer)).toThrow("Cannot read properties of null (reading 'replace')");
   });
 });

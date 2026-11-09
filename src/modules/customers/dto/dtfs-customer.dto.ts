@@ -14,7 +14,7 @@ export class DTFSCustomerDto {
   @IsNotEmpty()
   @MinLength(8)
   @MaxLength(10)
-  companyRegistrationNumber: string;
+  companyRegistrationNumber!: string;
 
   @ApiProperty({
     description: 'Company name',
@@ -22,7 +22,7 @@ export class DTFSCustomerDto {
   })
   @IsString()
   @IsNotEmpty()
-  companyName: string;
+  companyName!: string;
 
   @ApiProperty({
     description: 'Salesforce customer type',

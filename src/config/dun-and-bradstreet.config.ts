@@ -10,8 +10,8 @@ export type DunAndBradstreetConfigType = {
 };
 
 export const DunAndBradstreetConfig = registerAs(DUN_AND_BRADSTREET.CONFIG.KEY, (): DunAndBradstreetConfigType => ({
-  baseUrl: process.env.DUN_AND_BRADSTREET_URL,
-  key: process.env.DUN_AND_BRADSTREET_KEY,
+  baseUrl: process.env.DUN_AND_BRADSTREET_URL!,
+  key: process.env.DUN_AND_BRADSTREET_KEY!,
   maxRedirects: getIntConfig(process.env.DUN_AND_BRADSTREET_MAX_REDIRECTS, 5),
   timeout: getIntConfig(process.env.DUN_AND_BRADSTREET_TIMEOUT, 30000),
 }));

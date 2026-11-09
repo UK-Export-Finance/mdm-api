@@ -14,7 +14,7 @@ export class SectorIndustriesService {
     private readonly logger: PinoLogger,
   ) {}
 
-  async find(ukefSectorId: string, ukefIndustryId: string): Promise<SectorIndustryEntity[]> {
+  async find(ukefSectorId?: string, ukefIndustryId?: string): Promise<SectorIndustryEntity[]> {
     try {
       let query: object = { effectiveTo: Equal(new Date(DATE.MAXIMUM_LIMIT)) };
 

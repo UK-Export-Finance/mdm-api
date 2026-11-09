@@ -16,21 +16,21 @@ export class UkefId {
 
   @Column({ name: 'DEAL_FACILITY_ID_MASK' })
   @ApiProperty({ example: '0030570680', description: 'UKEF ID' })
-  maskedId: string;
+  maskedId!: string;
 
   @Column({ name: 'NBR_TYPE_ID' })
   @ApiProperty({ example: 1 })
-  type: number;
+  type!: number;
 
   @Column({ name: 'CREATED_BY_USER' })
   @ApiProperty({ example: 'ECGD\\jsmith', description: 'User if it is known' })
-  createdBy: string;
+  createdBy!: string;
 
   @Column({ name: 'CREATED_DATETIME' })
   @ApiProperty({ example: '2021-11-30T09:44:04.15Z', description: 'Created timestamp' })
-  createdDatetime: Date;
+  createdDatetime!: Date;
 
   @Column({ name: 'REQUESTING_SYSTEM' })
   @ApiProperty({ example: 'NodeJs/App' })
-  requestingSystem: string;
+  requestingSystem!: string;
 }

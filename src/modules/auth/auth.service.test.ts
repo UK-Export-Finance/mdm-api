@@ -2,6 +2,7 @@ import { UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { Test, TestingModule } from '@nestjs/testing';
+import { AUTH } from '@ukef/constants';
 import Chance from 'chance';
 import dotenv from 'dotenv';
 
@@ -22,7 +23,13 @@ describe('AuthService', () => {
     const app: TestingModule = await Test.createTestingModule({
       imports: [PassportModule],
       providers: [AuthService, ApiKeyStrategy, ConfigService],
-    }).compile();
+    })
+      .overrideProvider(ConfigService)
+      .useValue({
+        get: jest.fn().mockReturnValue(API_KEY),
+        getOrThrow: jest.fn().mockReturnValue(AUTH.STRATEGY),
+      })
+      .compile();
 
     authService = app.get<AuthService>(AuthService);
   });
@@ -42,7 +49,7 @@ describe('AuthService', () => {
 
   it.each(invalidKeys)('should return `false` when API Key is %s', (key) => {
     // Act
-    const result = authService.validateApiKey(key);
+    const result = authService.validateApiKey(key as string);
 
     // Assert
     expect(result).toBe(false);
@@ -50,7 +57,7 @@ describe('AuthService', () => {
 
   it('should return `true` when API Key is valid', () => {
     // Act
-    const result = authService.validateApiKey(API_KEY);
+    const result = authService.validateApiKey(API_KEY as string);
 
     // Assert
     expect(result).toBe(true);
@@ -122,6 +129,7 @@ describe('ApiKeyStrategy', () => {
   beforeEach(() => {
     configService = {
       get: jest.fn().mockReturnValue(API_KEY),
+      getOrThrow: jest.fn().mockReturnValue(AUTH.STRATEGY),
     } as any;
 
     authService = new AuthService(configService);
@@ -131,13 +139,13 @@ describe('ApiKeyStrategy', () => {
   describe('validate', () => {
     it('should return true for valid API key', () => {
       // Act
-      const result = strategy.validate(API_KEY);
+      const result = strategy.validate(API_KEY as string);
 
       // Assert
       expect(result).toBe(true);
-      expect(configService.get).toHaveBeenCalledWith('app.apiKeyStrategy');
+      expect(configService.getOrThrow).toHaveBeenCalledWith('app.apiKeyStrategy');
       expect(configService.get).toHaveBeenCalledWith('app.apiKey');
-      expect(configService.get).toHaveBeenCalledTimes(2);
+      expect(configService.get).toHaveBeenCalledTimes(1);
     });
 
     it('should throw UnauthorizedException when the provided API key is invalid', () => {
@@ -146,9 +154,9 @@ describe('ApiKeyStrategy', () => {
 
       // Assert
       expect(() => strategy.validate('invalid-key')).toThrow(error);
-      expect(configService.get).toHaveBeenCalledWith('app.apiKeyStrategy');
+      expect(configService.getOrThrow).toHaveBeenCalledWith('app.apiKeyStrategy');
       expect(configService.get).toHaveBeenCalledWith('app.apiKey');
-      expect(configService.get).toHaveBeenCalledTimes(2);
+      expect(configService.get).toHaveBeenCalledTimes(1);
     });
   });
 });

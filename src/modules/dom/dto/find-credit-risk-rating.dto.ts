@@ -7,40 +7,40 @@ export class FindCreditRiskRatingDto {
     description: 'Credit risk rating ID',
   })
   @IsString()
-  readonly id: string;
+  readonly id!: string;
 
   @ApiProperty({
     example: 'A++',
     description: 'Credit risk rating description',
   })
   @IsString()
-  readonly description: string;
+  readonly description!: string;
 
   @ApiProperty({
     example: '2017-03-06T16:43:47.000Z',
     description: 'Credit risk rating created at',
   })
   @IsDateString()
-  readonly createdAt: string;
+  readonly createdAt!: string;
 
   @ApiProperty({
     example: '2017-03-06T16:43:47.000Z',
     description: 'Credit risk rating updated at',
   })
   @IsDateString()
-  readonly updatedAt: string;
+  readonly updatedAt!: string;
 
   @ApiProperty({
     example: '2017-03-06T10:44:47.000Z',
     description: 'Credit risk rating effective from',
   })
   @IsDateString()
-  readonly effectiveFrom: string;
+  readonly effectiveFrom!: string;
 
   @ApiProperty({
     example: '9999-03-0 216T16:20:17.000Z',
     description: 'Credit risk rating effective to',
   })
   @IsDateString()
-  readonly effectiveTo: string;
+  readonly effectiveTo!: string;
 }

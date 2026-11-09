@@ -11,5 +11,5 @@ export class GetOdsCustomerParamDto {
     pattern: regexToString(UKEF_ID.PARTY_ID.REGEX),
   })
   @Matches(UKEF_ID.PARTY_ID.REGEX)
-  public urn: string;
+  public urn!: string;
 }

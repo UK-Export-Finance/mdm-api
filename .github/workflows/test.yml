@@ -41,6 +41,9 @@ jobs:
     needs: setup
     env:
       FF_GIFT_ENABLED: 'true'
+      LOG_LEVEL: ${{ vars.LOG_LEVEL }}
+      DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
+      DATABASE_ODS_PORT: ${{ secrets.DATABASE_ODS_PORT }}
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
@@ -75,6 +78,8 @@ jobs:
   unit-tests:
     name: Unit 👷
     needs: setup
+    env:
+      LOG_LEVEL: ${{ vars.LOG_LEVEL }}
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest

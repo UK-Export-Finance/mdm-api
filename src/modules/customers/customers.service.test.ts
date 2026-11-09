@@ -1,5 +1,4 @@
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { resetAllWhenMocks, when } from 'jest-when';
@@ -77,7 +76,9 @@ const salesforceCreateCustomerResponse: CreateCustomerSalesforceResponseDto = {
   success: true,
 };
 
-const createUkefIdResponse: UkefId[] = [{ maskedId: 'TEST PARTY_URN', type: null, createdBy: null, createdDatetime: null, requestingSystem: null }];
+const createUkefIdResponse = [
+  { maskedId: 'TEST PARTY_URN', type: null, createdBy: null, createdDatetime: null, requestingSystem: null },
+] as unknown as UkefId[];
 const dunAndBradstreetGetDunsNumberResponse = 'TEST DUNS_NUMBER';
 
 // Legacy Salesforce customer which has a party URN
@@ -151,12 +152,10 @@ describe('CustomerService', () => {
 
   let informaticaServiceGetCustomers: jest.Mock;
 
-  let salesforceConfigServiceGet: jest.Mock;
   let salesforceServiceCreateCustomer: jest.Mock;
 
   let numbersServiceCreate: jest.Mock;
 
-  let dunAndBradstreetConfigServiceGet: jest.Mock;
   let dunAndBradstreetServiceGetDunsNumber: jest.Mock;
 
   /**
@@ -203,31 +202,19 @@ describe('CustomerService', () => {
 
   beforeEach(() => {
     informaticaServiceGetCustomers = jest.fn();
-    const informaticaService = new InformaticaService(null);
+    const informaticaService = {} as jest.Mocked<InformaticaService>;
     informaticaService.getCustomers = informaticaServiceGetCustomers;
 
-    const salesforceConfigService = new ConfigService();
-    salesforceConfigServiceGet = jest.fn().mockReturnValue({
-      clientId: 'TEST_CLIENT_ID',
-      clientSecret: 'TEST_CLIENT_SECRET',
-      username: 'TEST_USERNAME',
-      password: 'TEST_PASSWORD',
-      accessUrl: 'TEST_ACCESS_URL',
-    });
-    salesforceConfigService.get = salesforceConfigServiceGet;
     salesforceServiceCreateCustomer = jest.fn();
-    const salesforceService = new SalesforceService(null, salesforceConfigService, null);
+    const salesforceService = {} as jest.Mocked<SalesforceService>;
     salesforceService.createCustomer = salesforceServiceCreateCustomer;
 
     numbersServiceCreate = jest.fn();
-    const numbersService = new NumbersService(null, null);
+    const numbersService = {} as jest.Mocked<NumbersService>;
     numbersService.create = numbersServiceCreate;
 
-    const dunAndBradstreetConfigService = new ConfigService();
-    dunAndBradstreetConfigServiceGet = jest.fn().mockReturnValue({ key: 'TEST_KEY' });
-    dunAndBradstreetConfigService.get = dunAndBradstreetConfigServiceGet;
     dunAndBradstreetServiceGetDunsNumber = jest.fn();
-    const dunAndBradstreetService = new DunAndBradstreetService(null, dunAndBradstreetConfigService);
+    const dunAndBradstreetService = {} as jest.Mocked<DunAndBradstreetService>;
     dunAndBradstreetService.getDunAndBradstreetNumberByRegistrationNumber = dunAndBradstreetServiceGetDunsNumber;
 
     resetAllWhenMocks();

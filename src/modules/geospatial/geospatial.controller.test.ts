@@ -19,7 +19,7 @@ describe('GeospatialController', () => {
 
   beforeEach(() => {
     resetAllWhenMocks();
-    const geospatialService = new GeospatialService(null);
+    const geospatialService = {} as jest.Mocked<GeospatialService>;
     geospatialServiceGetAddressesByPostcode = jest.fn();
     geospatialService.getAddressesByPostcode = geospatialServiceGetAddressesByPostcode;
 

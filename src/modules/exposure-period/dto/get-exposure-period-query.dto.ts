@@ -9,7 +9,7 @@ export class GetExposurePeriodQueryDto {
     example: '2017-07-04',
     description: 'Guarantee commencement date for a facility',
   })
-  public startdate: string;
+  public startdate!: string;
 
   @IsDateString({ strict: true })
   @MaxLength(10, { message: '$property should use format YYYY-MM-DD' })
@@ -17,10 +17,10 @@ export class GetExposurePeriodQueryDto {
     example: '2018-07-04',
     description: 'Guarantee expiry date for a facility',
   })
-  public enddate: string;
+  public enddate!: string;
 
   @IsString()
   @IsEnum(ENUMS.PRODUCTS)
   @ApiProperty({ example: 'EW', description: 'Two products are accepted: EW and BS' })
-  public productgroup: string;
+  public productgroup!: string;
 }

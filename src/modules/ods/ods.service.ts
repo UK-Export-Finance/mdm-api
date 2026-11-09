@@ -71,7 +71,7 @@ export class OdsService {
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
-      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+      if (storedProcedureJson.status !== STORED_PROCEDURE.SUCCESS) {
         this.logger.error('Error finding customer %s from ODS stored procedure, output %o', uniqueReferenceNumber, storedProcedureResult);
 
         throw new InternalServerErrorException(`Error finding customer ${uniqueReferenceNumber} from ODS stored procedure`);
@@ -123,7 +123,7 @@ export class OdsService {
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
-      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+      if (storedProcedureJson.status !== STORED_PROCEDURE.SUCCESS) {
         this.logger.error('Error finding deal %s from ODS stored procedure, output %o', id, storedProcedureResult);
 
         throw new InternalServerErrorException(`Error finding deal ${id} from ODS stored procedure`);
@@ -172,7 +172,7 @@ export class OdsService {
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
-      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+      if (storedProcedureJson.status !== STORED_PROCEDURE.SUCCESS) {
         this.logger.error('Error getting business centres from ODS stored procedure, output %o', storedProcedureResult);
 
         throw new InternalServerErrorException('Error getting business centres from ODS stored procedure');
@@ -212,7 +212,7 @@ export class OdsService {
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
-      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+      if (storedProcedureJson.status !== STORED_PROCEDURE.SUCCESS) {
         this.logger.error('Error finding business centre %s from ODS stored procedure, output %o', centreCode, storedProcedureResult);
 
         throw new InternalServerErrorException(`Error finding business centre ${centreCode} from ODS stored procedure`);
@@ -269,7 +269,7 @@ export class OdsService {
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
-      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+      if (storedProcedureJson.status !== STORED_PROCEDURE.SUCCESS) {
         this.logger.error('Error finding business centre %s non working days from ODS stored procedure, output %o', centreCode, storedProcedureResult);
 
         throw new InternalServerErrorException(`Error finding business centre ${centreCode} non working days from ODS stored procedure`);
@@ -317,7 +317,7 @@ export class OdsService {
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
-      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+      if (storedProcedureJson.status !== STORED_PROCEDURE.SUCCESS) {
         this.logger.error('Error finding fee type %s from ODS stored procedure, output %o', feeTypeCode, storedProcedureResult);
 
         throw new Error(`Error finding fee type ${feeTypeCode} from ODS stored procedure`);
@@ -360,7 +360,7 @@ export class OdsService {
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
-      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+      if (storedProcedureJson.status !== STORED_PROCEDURE.SUCCESS) {
         this.logger.error('Error getting fee types from ODS stored procedure, output %o', storedProcedureResult);
 
         throw new InternalServerErrorException('Error getting fee types from ODS stored procedure');
@@ -401,7 +401,7 @@ export class OdsService {
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
-      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+      if (storedProcedureJson.status !== STORED_PROCEDURE.SUCCESS) {
         this.logger.error('Error finding UKEF industry %s from ODS stored procedure, output %o', industryCode, storedProcedureResult);
 
         throw new Error(`Error finding UKEF industry ${industryCode} from ODS stored procedure`);
@@ -447,7 +447,7 @@ export class OdsService {
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
-      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+      if (storedProcedureJson.status !== STORED_PROCEDURE.SUCCESS) {
         this.logger.error('Error getting UKEF industries from ODS stored procedure, output %o', storedProcedureResult);
 
         throw new InternalServerErrorException('Error getting UKEF industries from ODS stored procedure');
@@ -485,7 +485,7 @@ export class OdsService {
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
-      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+      if (storedProcedureJson.status !== STORED_PROCEDURE.SUCCESS) {
         this.logger.error('Error getting UKEF industry codes from ODS stored procedure, output %o', storedProcedureResult);
 
         throw new InternalServerErrorException('Error getting UKEF industry codes from ODS stored procedure');
@@ -535,7 +535,7 @@ export class OdsService {
 
       const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
 
-      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+      if (storedProcedureJson.status !== STORED_PROCEDURE.SUCCESS) {
         this.logger.error(
           'Error finding UKEF industry code by Companies House industry code %s in ODS stored procedure, output %o',
           industryCode,
@@ -584,7 +584,7 @@ export class OdsService {
 
       const storedProcedureJson: OdsStoredProcedureOutputBody<GetDomInterestRateTickersDomResponseDto[]> = JSON.parse(storedProcedureResult);
 
-      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+      if (storedProcedureJson.status !== STORED_PROCEDURE.SUCCESS) {
         this.logger.error('Error getting interest rate tickers from ODS stored procedure, output %o', storedProcedureResult);
 
         throw new Error('Error getting interest rate tickers from ODS stored procedure');
@@ -616,7 +616,7 @@ export class OdsService {
 
       const storedProcedureJson: OdsStoredProcedureOutputBody<GetDomCurrencyOdsResponseDto[]> = JSON.parse(storedProcedureResult);
 
-      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+      if (storedProcedureJson.status !== STORED_PROCEDURE.SUCCESS) {
         this.logger.error('Error getting currencies from ODS stored procedure, output %o', storedProcedureResult);
 
         throw new Error('Error getting currencies from ODS stored procedure');
@@ -656,13 +656,13 @@ export class OdsService {
 
       const storedProcedureJson: OdsStoredProcedureOutputBody<GetDomInterestRateOdsResponseDto[]> = JSON.parse(storedProcedureResult);
 
-      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+      if (storedProcedureJson.status !== STORED_PROCEDURE.SUCCESS) {
         this.logger.error('Error getting interest rates for %s from ODS stored procedure, output %o', rateCode, storedProcedureResult);
 
         throw new Error(`Error getting interest rates for ${rateCode} from ODS stored procedure`);
       }
 
-      if (isStoredProcedureResultEmpty(storedProcedureJson) || storedProcedureJson?.results === undefined) {
+      if (isStoredProcedureResultEmpty(storedProcedureJson)) {
         this.logger.error('Error getting interest rates for %s from ODS stored procedure - empty/undefined, output %o', rateCode, storedProcedureResult);
 
         return [];
@@ -701,13 +701,13 @@ export class OdsService {
       const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
       const storedProcedureJson: OdsStoredProcedureOutputBody<GetDomCompoundingIndexOdsResponseDto[]> = JSON.parse(storedProcedureResult);
 
-      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+      if (storedProcedureJson.status !== STORED_PROCEDURE.SUCCESS) {
         this.logger.error('Error getting compounding indices for %s from ODS stored procedure, output %o', rateCode, storedProcedureResult);
 
         throw new Error(`Error getting compounding indices for ${rateCode} from ODS stored procedure`);
       }
 
-      if (isStoredProcedureResultEmpty(storedProcedureJson) || storedProcedureJson?.results === undefined) {
+      if (isStoredProcedureResultEmpty(storedProcedureJson)) {
         this.logger.error('Error getting compounding indices for %s from ODS stored procedure - empty/undefined, output %o', rateCode, storedProcedureResult);
 
         return [];

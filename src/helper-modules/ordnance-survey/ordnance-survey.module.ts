@@ -11,7 +11,7 @@ import { OrdnanceSurveyService } from './ordnance-survey.service';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const { baseUrl: baseURL, maxRedirects, timeout } = configService.get<OrdnanceSurveyConfigType>(ORDNANCE_SURVEY_CONFIG_KEY);
+        const { baseUrl: baseURL, maxRedirects, timeout } = configService.getOrThrow<OrdnanceSurveyConfigType>(ORDNANCE_SURVEY_CONFIG_KEY);
         return {
           baseURL,
           maxRedirects,

@@ -9,7 +9,7 @@ export class GetDomInterestRateQueryDto {
     example: EXAMPLES.DOM.INTEREST_RATES[0].code,
     description: 'The code of the interest rate ticker',
   })
-  public rateCode: string;
+  public rateCode!: string;
 
   @IsDateString({ strict: true })
   @MinLength(10)
@@ -29,5 +29,5 @@ export class GetDomInterestRateQueryDto {
     example: EXAMPLES.DATE_END,
     description: 'The end date (inclusive) to retrieve interest rates until',
   })
-  public endDate: string;
+  public endDate!: string;
 }

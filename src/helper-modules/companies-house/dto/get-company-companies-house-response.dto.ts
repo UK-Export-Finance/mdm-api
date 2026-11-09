@@ -6,7 +6,7 @@ export type GetCompanyCompaniesHouseResponse = {
     officers: string;
   };
   accounts: {
-    last_accounts: {
+    last_accounts?: {
       period_end_on: string;
       type: string;
       made_up_to: string;
@@ -19,7 +19,7 @@ export type GetCompanyCompaniesHouseResponse = {
     overdue?: boolean;
     next_made_up_to?: string;
     next_due?: string;
-    next_accounts: {
+    next_accounts?: {
       period_start_on?: string;
       due_on?: string;
       period_end_on?: string;
@@ -40,7 +40,7 @@ export type GetCompanyCompaniesHouseResponse = {
   has_charges: boolean;
   has_insolvency_history: boolean;
   jurisdiction: string;
-  registered_office_address: {
+  registered_office_address?: {
     organisation_name?: string;
     address_line_1: string;
     address_line_2?: string;
@@ -53,8 +53,8 @@ export type GetCompanyCompaniesHouseResponse = {
     region?: string;
   };
   registered_office_is_in_dispute: boolean;
-  sic_codes: string[];
-  type: string;
+  sic_codes?: string[];
+  type?: string;
   undeliverable_registered_office_address: boolean;
   has_super_secure_pscs: boolean;
   can_file: boolean;
