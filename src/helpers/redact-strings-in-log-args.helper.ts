@@ -1,6 +1,4 @@
-import lodash from 'lodash';
-
-const { get, set } = lodash;
+import { get, set } from 'lodash';
 
 type RedactStringsParams = {
   searchValue: string | RegExp;
