@@ -1,7 +1,7 @@
 import { jest } from '@jest/globals';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
-import { AxiosError, HttpStatusCode } from 'axios';
+import { AxiosError, AxiosResponse, HttpStatusCode } from 'axios';
 import { when } from 'jest-when';
 import { of, throwError } from 'rxjs';
 import { PinoLogger } from 'nestjs-pino';
@@ -185,7 +185,7 @@ describe('SalesforceService', () => {
     it('warns when Salesforce does not confirm creation and preserves the response', async () => {
       // Arrange
       const response = { ...expectedResponse, success: false };
-      httpServicePost.mockReturnValueOnce(of({ data: response }));
+      httpServicePost.mockReturnValueOnce(of({ data: response } as AxiosResponse));
 
       // Act & Assert
       await expect(service.createCustomer(baseQuery)).resolves.toEqual(response);
@@ -256,8 +256,8 @@ describe('SalesforceService', () => {
       it('logs authentication without exposing the access token or credentials', async () => {
         // Arrange
         httpServicePost
-          .mockReturnValueOnce(of({ data: { access_token: expectedAccessToken } }))
-          .mockReturnValueOnce(of({ data: { id: 'customer-id', success: true, errors: null } }));
+          .mockReturnValueOnce(of({ data: { access_token: expectedAccessToken } } as AxiosResponse))
+          .mockReturnValueOnce(of({ data: { id: 'customer-id', success: true, errors: null } } as AxiosResponse));
 
         // Act
         await service.createCustomer(customer);
@@ -289,7 +289,7 @@ describe('SalesforceService', () => {
 
       it('warns when authentication returns no token without changing the existing behaviour', async () => {
         // Arrange
-        httpServicePost.mockReturnValueOnce(of({ data: {} })).mockReturnValueOnce(of({ data: { success: false } }));
+        httpServicePost.mockReturnValueOnce(of({ data: {} } as AxiosResponse)).mockReturnValueOnce(of({ data: { success: false } } as AxiosResponse));
 
         // Act
         await service.createCustomer(customer);
