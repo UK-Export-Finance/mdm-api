@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { resetAllWhenMocks, when } from 'jest-when';
@@ -7,21 +8,18 @@ import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-
 
 import { GeospatialService } from './geospatial.service';
 
-jest.mock('@ukef/modules/informatica/informatica.service');
-
 describe('GeospatialService', () => {
   const valueGenerator = new RandomValueGenerator();
 
   let service: GeospatialService;
-  let configServiceGet: jest.Mock;
-  let ordnanceSurveyServiceGetAddressesByPostcode: jest.Mock;
+  let ordnanceSurveyServiceGetAddressesByPostcode: jest.MockedFunction<OrdnanceSurveyService['getAddressesByPostcode']>;
 
   beforeEach(() => {
     const configService = new ConfigService();
-    configServiceGet = jest.fn().mockReturnValue({ key: valueGenerator.word() });
-    configService.get = configServiceGet;
 
-    ordnanceSurveyServiceGetAddressesByPostcode = jest.fn();
+    jest.spyOn(configService, 'get').mockReset().mockReturnValue({ key: valueGenerator.word() });
+
+    ordnanceSurveyServiceGetAddressesByPostcode = jest.fn<OrdnanceSurveyService['getAddressesByPostcode']>();
     const ordnanceSurveyService = new OrdnanceSurveyService(null, configService);
     ordnanceSurveyService.getAddressesByPostcode = ordnanceSurveyServiceGetAddressesByPostcode;
     resetAllWhenMocks();

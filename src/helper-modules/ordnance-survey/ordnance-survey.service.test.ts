@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { AxiosError } from 'axios';
 import { when } from 'jest-when';
 import { of, throwError } from 'rxjs';
@@ -14,8 +15,7 @@ import { OrdnanceSurveyService } from './ordnance-survey.service';
 describe('OrdnanceSurveyService', () => {
   const valueGenerator = new RandomValueGenerator();
 
-  let httpServiceGet: jest.Mock;
-  let configServiceGet: jest.Mock;
+  let httpServiceGet: jest.SpiedFunction<HttpService['get']>;
   let service: OrdnanceSurveyService;
 
   const testPostcode = EXAMPLES.GEOSPATIAL.ENGLISH_POSTCODE;
@@ -33,11 +33,10 @@ describe('OrdnanceSurveyService', () => {
   beforeEach(() => {
     const httpService = new HttpService();
     const configService = new ConfigService();
-    httpServiceGet = jest.fn();
-    httpService.get = httpServiceGet;
 
-    configServiceGet = jest.fn().mockReturnValue({ key: testKey });
-    configService.get = configServiceGet;
+    httpServiceGet = jest.spyOn(httpService, 'get').mockReset();
+
+    jest.spyOn(configService, 'get').mockReset().mockReturnValue({ key: testKey });
 
     service = new OrdnanceSurveyService(httpService, configService);
   });

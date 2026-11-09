@@ -1,6 +1,7 @@
+import { jest } from '@jest/globals';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
-import { AxiosError, HttpStatusCode } from 'axios';
+import { AxiosError, AxiosResponse, HttpStatusCode } from 'axios';
 import { when } from 'jest-when';
 import { of, throwError } from 'rxjs';
 import { PinoLogger } from 'nestjs-pino';
@@ -14,28 +15,26 @@ import { SalesforceService } from './salesforce.service';
 describe('SalesforceService', () => {
   const valueGenerator = new RandomValueGenerator();
 
-  let httpServiceGet: jest.Mock;
-  let httpServicePost: jest.Mock;
-  let configServiceGet: jest.Mock;
+  let httpServicePost: jest.SpiedFunction<HttpService['post']>;
   let service: SalesforceService;
   let logger: PinoLogger;
 
   beforeEach(() => {
     const httpService = new HttpService();
-    httpServiceGet = jest.fn();
-    httpService.get = httpServiceGet;
-    httpServicePost = jest.fn();
-    httpService.post = httpServicePost;
+
+    jest.spyOn(httpService, 'get').mockReset();
+
+    httpServicePost = jest.spyOn(httpService, 'post').mockReset();
 
     const configService = new ConfigService();
-    configServiceGet = jest.fn().mockReturnValue({
+
+    jest.spyOn(configService, 'get').mockReset().mockReturnValue({
       clientId: 'TEST_CLIENT_ID',
       clientSecret: 'TEST_CLIENT_SECRET',
       username: 'TEST_USERNAME',
       password: 'TEST_PASSWORD',
       accessUrl: 'TEST_ACCESS_URL',
     });
-    configService.get = configServiceGet;
 
     logger = new PinoLogger({});
     logger.info = jest.fn();
@@ -186,7 +185,7 @@ describe('SalesforceService', () => {
     it('warns when Salesforce does not confirm creation and preserves the response', async () => {
       // Arrange
       const response = { ...expectedResponse, success: false };
-      httpServicePost.mockReturnValueOnce(of({ data: response }));
+      httpServicePost.mockReturnValueOnce(of({ data: response } as AxiosResponse));
 
       // Act & Assert
       await expect(service.createCustomer(baseQuery)).resolves.toEqual(response);
@@ -257,8 +256,8 @@ describe('SalesforceService', () => {
       it('logs authentication without exposing the access token or credentials', async () => {
         // Arrange
         httpServicePost
-          .mockReturnValueOnce(of({ data: { access_token: expectedAccessToken } }))
-          .mockReturnValueOnce(of({ data: { id: 'customer-id', success: true, errors: null } }));
+          .mockReturnValueOnce(of({ data: { access_token: expectedAccessToken } } as AxiosResponse))
+          .mockReturnValueOnce(of({ data: { id: 'customer-id', success: true, errors: null } } as AxiosResponse));
 
         // Act
         await service.createCustomer(customer);
@@ -290,7 +289,7 @@ describe('SalesforceService', () => {
 
       it('warns when authentication returns no token without changing the existing behaviour', async () => {
         // Arrange
-        httpServicePost.mockReturnValueOnce(of({ data: {} })).mockReturnValueOnce(of({ data: { success: false } }));
+        httpServicePost.mockReturnValueOnce(of({ data: {} } as AxiosResponse)).mockReturnValueOnce(of({ data: { success: false } } as AxiosResponse));
 
         // Act
         await service.createCustomer(customer);

@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { DataSource, QueryRunner } from 'typeorm';
 import { EXAMPLES } from '@ukef/constants';
 
@@ -13,12 +14,12 @@ describe('OdsStoredProcedureService', () => {
 
   beforeEach(() => {
     mockQueryRunner = {
-      query: jest.fn(),
-      release: jest.fn(),
+      query: jest.fn<QueryRunner['query']>(),
+      release: jest.fn<QueryRunner['release']>(),
     } as unknown as jest.Mocked<QueryRunner>;
 
     mockDataSource = {
-      createQueryRunner: jest.fn().mockReturnValue(mockQueryRunner),
+      createQueryRunner: jest.fn<DataSource['createQueryRunner']>().mockReturnValue(mockQueryRunner),
     } as unknown as jest.Mocked<DataSource>;
 
     service = new OdsStoredProcedureService(mockDataSource);

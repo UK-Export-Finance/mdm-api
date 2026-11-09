@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { resetAllWhenMocks, when } from 'jest-when';
 import { GetCompanyGenerator } from '@ukef-test/support/generator/get-company-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
@@ -6,7 +7,7 @@ import { CompaniesController } from './companies.controller';
 import { CompaniesService } from './companies.service';
 
 describe('CompaniesController', () => {
-  let companiesServiceGetCompanyByRegistrationNumber: jest.Mock;
+  let companiesServiceGetCompanyByRegistrationNumber: jest.MockedFunction<CompaniesService['getCompanyByRegistrationNumber']>;
   let controller: CompaniesController;
 
   const valueGenerator = new RandomValueGenerator();
@@ -20,7 +21,7 @@ describe('CompaniesController', () => {
 
   beforeAll(() => {
     const companiesService = new CompaniesService(null, null);
-    companiesServiceGetCompanyByRegistrationNumber = jest.fn();
+    companiesServiceGetCompanyByRegistrationNumber = jest.fn<CompaniesService['getCompanyByRegistrationNumber']>();
     companiesService.getCompanyByRegistrationNumber = companiesServiceGetCompanyByRegistrationNumber;
 
     controller = new CompaniesController(companiesService);
@@ -32,7 +33,7 @@ describe('CompaniesController', () => {
 
   describe('getCompanyByRegistrationNumber', () => {
     it('calls getCompanyByRegistrationNumber on the CompaniesService with the registration number', async () => {
-      when(companiesServiceGetCompanyByRegistrationNumber).calledWith(testRegistrationNumber).mockReturnValueOnce(getCompanyResponse);
+      when(companiesServiceGetCompanyByRegistrationNumber).calledWith(testRegistrationNumber).mockResolvedValueOnce(getCompanyResponse);
 
       await controller.getCompanyByRegistrationNumber({ registrationNumber: testRegistrationNumber });
 
@@ -41,7 +42,7 @@ describe('CompaniesController', () => {
     });
 
     it('returns the company from the service', async () => {
-      when(companiesServiceGetCompanyByRegistrationNumber).calledWith(testRegistrationNumber).mockReturnValueOnce(getCompanyResponse);
+      when(companiesServiceGetCompanyByRegistrationNumber).calledWith(testRegistrationNumber).mockResolvedValueOnce(getCompanyResponse);
 
       const response = await controller.getCompanyByRegistrationNumber({ registrationNumber: testRegistrationNumber });
 

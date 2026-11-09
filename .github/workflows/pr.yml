@@ -1,7 +1,7 @@
 # This YAML configuration defines a GitHub Actions workflow named "PR" designed to analyse pull requests
 # for staleness and take action accordingly.
 #
-# Identify: Uses the actions/stale@v5 action with parameters to mark pull requests as stale if
+# Identify: Uses the actions/stale@v11 action with parameters to mark pull requests as stale if
 # they have been inactive for a certain number of days and close them if they exceed another threshold.
 # This workflow helps maintain the health of the pull request queue by identifying and managing stale pull requests automatically.
 #
@@ -43,7 +43,7 @@ jobs:
 
     steps:
       - name: Identify
-        uses: actions/stale@v10
+        uses: actions/stale@v11
         with:
           days-before-pr-stale: ${{ vars.STALE_PR_DAYS }}
           stale-pr-message: 'Pull request marked as stale due to inactivity.'
