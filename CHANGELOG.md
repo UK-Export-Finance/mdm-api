@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.61.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.60.1...v1.61.0) (2026-11-09)
+
+
+### Features
+
+* **APIM-722:** product config - example edg product ([#1934](https://github.com/UK-Export-Finance/mdm-api/issues/1934)) ([02a4819](https://github.com/UK-Export-Finance/mdm-api/commit/02a48193285ca04a58981341419821717a9acf7e))
+
 ## [1.60.1](https://github.com/UK-Export-Finance/mdm-api/compare/v1.60.0...v1.60.1) (2026-10-23)
 
 
