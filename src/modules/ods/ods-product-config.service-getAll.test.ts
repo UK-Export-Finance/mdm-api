@@ -63,6 +63,7 @@ describe('OdsProductConfigService - getAll', () => {
       EXAMPLES.DOM.PRODUCT_CONFIG.ALL_REQUIRED_INSURANCE,
       EXAMPLES.DOM.PRODUCT_CONFIG.ALL_REQUIRED_GUARANTEE,
       EXAMPLES.DOM.PRODUCT_CONFIG.ALL_DISABLED,
+      EXAMPLES.DOM.PRODUCT_CONFIG.EDG,
     ];
 
     expect(result).toEqual(expected);

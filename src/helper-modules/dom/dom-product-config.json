@@ -105,6 +105,27 @@
     }
   },
   {
+    "productType": "PRT006",
+    "configuration": {
+      "issuedDate": "REQUIRED",
+      "effectiveDate": "OPTIONAL",
+      "availabilityEndDate": "REQUIRED",
+      "expiryDate": "REQUIRED",
+      "fees": {
+        "creation": "OPTIONAL",
+        "inLife": "OPTIONAL"
+      },
+      "obligations": {
+        "creation": "OPTIONAL",
+        "inLife": "OPTIONAL"
+      },
+      "reinsurance": {
+        "creation": "OPTIONAL",
+        "inLife": "OPTIONAL"
+      }
+    }
+  },
+  {
     "productType": "PRT009",
     "configuration": {
       "issuedDate": "REQUIRED",
