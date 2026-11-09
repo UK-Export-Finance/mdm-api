@@ -5,6 +5,10 @@
   "description": "Master Data Management API",
   "license": "MIT",
   "author": "UKEF",
+  "overrides": {
+    "glob": "14.0.2",
+    "test-exclude": "8.0.0"
+  },
   "scripts": {
     "api-test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --selectProjects=API",
     "audit:fix": "npm audit --fix",
