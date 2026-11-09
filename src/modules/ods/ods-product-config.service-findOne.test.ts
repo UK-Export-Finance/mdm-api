@@ -182,4 +182,22 @@ describe('OdsProductConfigService - findOne', () => {
       expect(odsStoredProcedureService.call).not.toHaveBeenCalled();
     });
   });
+
+  describe('when the productType matches EDG', () => {
+    it('should return the hardcoded EDG config', async () => {
+      // Act
+      const result = await service.findOne(EXAMPLES.DOM.PRODUCT_CONFIG.EDG.productType);
+
+      // Assert
+      expect(result).toEqual(EXAMPLES.DOM.PRODUCT_CONFIG.EDG);
+    });
+
+    it('should NOT call odsStoredProcedureService.call', async () => {
+      // Act
+      await service.findOne(EXAMPLES.DOM.PRODUCT_CONFIG.EDG.productType);
+
+      // Assert
+      expect(odsStoredProcedureService.call).not.toHaveBeenCalled();
+    });
+  });
 });

@@ -6,7 +6,7 @@ import { isStoredProcedureResultEmpty } from '@ukef/helpers';
 import { GetProductConfigOdsResponse, ODS_ENTITIES, OdsStoredProcedureOutputBody } from './dto';
 import { OdsStoredProcedureService } from './ods-stored-procedure.service';
 
-const { ALL_REQUIRED_INSURANCE, ALL_REQUIRED_GUARANTEE, ALL_DISABLED } = EXAMPLES.DOM.PRODUCT_CONFIG;
+const { ALL_REQUIRED_INSURANCE, ALL_REQUIRED_GUARANTEE, ALL_DISABLED, EDG } = EXAMPLES.DOM.PRODUCT_CONFIG;
 
 @Injectable()
 export class OdsProductConfigService {
@@ -36,6 +36,10 @@ export class OdsProductConfigService {
 
       if (productType === ALL_DISABLED.productType) {
         return ALL_DISABLED;
+      }
+
+      if (productType === EDG.productType) {
+        return EDG;
       }
 
       const storedProcedureInput = this.odsStoredProcedureService.createInput({
@@ -102,6 +106,7 @@ export class OdsProductConfigService {
         EXAMPLES.DOM.PRODUCT_CONFIG.ALL_REQUIRED_INSURANCE,
         EXAMPLES.DOM.PRODUCT_CONFIG.ALL_REQUIRED_GUARANTEE,
         EXAMPLES.DOM.PRODUCT_CONFIG.ALL_DISABLED,
+        EXAMPLES.DOM.PRODUCT_CONFIG.EDG,
       ] as GetProductConfigOdsResponse[];
     } catch (error) {
       this.logger.error('Error getting product configs from ODS %o', error);
