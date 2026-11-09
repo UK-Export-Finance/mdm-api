@@ -2,6 +2,7 @@ import { UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { Test, TestingModule } from '@nestjs/testing';
+import { AUTH } from '@ukef/constants';
 import Chance from 'chance';
 import dotenv from 'dotenv';
 
@@ -22,7 +23,13 @@ describe('AuthService', () => {
     const app: TestingModule = await Test.createTestingModule({
       imports: [PassportModule],
       providers: [AuthService, ApiKeyStrategy, ConfigService],
-    }).compile();
+    })
+      .overrideProvider(ConfigService)
+      .useValue({
+        get: jest.fn().mockReturnValue(API_KEY),
+        getOrThrow: jest.fn().mockReturnValue(AUTH.STRATEGY),
+      })
+      .compile();
 
     authService = app.get<AuthService>(AuthService);
   });
@@ -122,6 +129,7 @@ describe('ApiKeyStrategy', () => {
   beforeEach(() => {
     configService = {
       get: jest.fn().mockReturnValue(API_KEY),
+      getOrThrow: jest.fn().mockReturnValue(AUTH.STRATEGY),
     } as any;
 
     authService = new AuthService(configService);
@@ -135,9 +143,9 @@ describe('ApiKeyStrategy', () => {
 
       // Assert
       expect(result).toBe(true);
-      expect(configService.get).toHaveBeenCalledWith('app.apiKeyStrategy');
+      expect(configService.getOrThrow).toHaveBeenCalledWith('app.apiKeyStrategy');
       expect(configService.get).toHaveBeenCalledWith('app.apiKey');
-      expect(configService.get).toHaveBeenCalledTimes(2);
+      expect(configService.get).toHaveBeenCalledTimes(1);
     });
 
     it('should throw UnauthorizedException when the provided API key is invalid', () => {
@@ -146,9 +154,9 @@ describe('ApiKeyStrategy', () => {
 
       // Assert
       expect(() => strategy.validate('invalid-key')).toThrow(error);
-      expect(configService.get).toHaveBeenCalledWith('app.apiKeyStrategy');
+      expect(configService.getOrThrow).toHaveBeenCalledWith('app.apiKeyStrategy');
       expect(configService.get).toHaveBeenCalledWith('app.apiKey');
-      expect(configService.get).toHaveBeenCalledTimes(2);
+      expect(configService.get).toHaveBeenCalledTimes(1);
     });
   });
 });

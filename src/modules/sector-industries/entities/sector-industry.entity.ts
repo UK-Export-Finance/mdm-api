@@ -31,7 +31,7 @@ export class SectorIndustryEntity {
   @ApiProperty({ example: 'Agriculture, Forestry and Fishing' })
   ukefSectorName!: string;
 
-  @Column({ name: 'InternalNo' })
+  @Column({ name: 'InternalNo', type: 'int', nullable: true })
   @ApiProperty({ example: null, description: 'Currently all values are null' })
   internalNo!: number | null;
 
