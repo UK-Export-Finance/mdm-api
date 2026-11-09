@@ -1,6 +1,7 @@
 import { mkdtempSync, rmSync, writeFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
+import { jest } from '@jest/globals';
 
 describe('REDACT_STRINGS', () => {
   const environmentVariableName = 'APIM_INFORMATICA_PASSWORD';
@@ -40,7 +41,7 @@ describe('REDACT_STRINGS', () => {
     process.chdir(temporaryDirectory);
 
     // Act: load the module afresh after jest.resetModules().
-    const { REDACT_STRINGS } = jest.requireActual('./redact-strings.constant');
+    const { REDACT_STRINGS } = await import('./redact-strings.constant.js');
 
     // Assert
     expect(REDACT_STRINGS).toContainEqual({ searchValue: credentialOnlyAvailableViaDotenv, replaceValue: '[Redacted]' });
