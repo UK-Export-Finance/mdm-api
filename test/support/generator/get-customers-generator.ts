@@ -36,7 +36,7 @@ export class GetCustomersGenerator extends AbstractGenerator<CustomerValues, Gen
     values: CustomerValues[],
     { query = { fallbackToLegacyData: ENUMS.FALLBACK_TO_LEGACY_DATA.YES } }: GenerateOptions,
   ): GenerateResult {
-    const request: GetCustomersQueryDto[] = values.map((v) => {
+    const request: GetCustomersQueryDto[] = values.map((customer) => {
       let searchParam = {
         ...(query.companyReg ? { companyReg: query.companyReg } : {}),
         ...(query.name ? { name: query.name } : {}),
@@ -44,40 +44,42 @@ export class GetCustomersGenerator extends AbstractGenerator<CustomerValues, Gen
       };
 
       if (Object.keys(searchParam).length === 0) {
-        searchParam = { name: v.name };
+        searchParam = {
+          name: customer.name,
+        };
       }
 
       return { ...searchParam, ...{ fallbackToLegacyData: query.fallbackToLegacyData ? query.fallbackToLegacyData : ENUMS.FALLBACK_TO_LEGACY_DATA.YES } };
     });
 
-    const informaticaRequest: GetCustomersInformaticaQueryDto[] = request.map((v) => ({
-      ...(v.companyReg ? { companyreg: v.companyReg } : {}),
-      ...(v.name ? { name: v.name } : {}),
-      ...(v.partyUrn ? { partyUrn: v.partyUrn } : {}),
-      ...{ includeLegacyData: v.fallbackToLegacyData },
+    const informaticaRequest: GetCustomersInformaticaQueryDto[] = request.map((customer) => ({
+      ...(customer.companyReg ? { companyreg: customer.companyReg } : {}),
+      ...(customer.name ? { name: customer.name } : {}),
+      ...(customer.partyUrn ? { partyUrn: customer.partyUrn } : {}),
+      ...{ includeLegacyData: customer.fallbackToLegacyData },
     }));
 
     const informaticaPath = `/v1/p-sa-impl-get-account-or-legacy?${new URLSearchParams(informaticaRequest[0] as URLSearchParams).toString()}`;
 
     const mdmPath = `/api/v1/customers?${new URLSearchParams(request[0] as URLSearchParams).toString()}`;
 
-    const getCustomersResponse: GetCustomersResponse[] = values.map((v) => [
+    const getCustomersResponse: GetCustomersResponse[] = values.map((customer) => [
       {
-        companyRegNo: v.companyRegNo,
-        creditClassificationDate: v.creditClassificationDate,
+        companyRegNo: customer.companyRegNo,
+        creditClassificationDate: customer.creditClassificationDate,
         creditClassificationStatus: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
-        customerType: v.customerType,
-        isLegacyRecord: v.isLegacyRecord,
-        name: v.name,
-        partyUrn: v.partyUrn,
-        probabilityOfDefault: v.probabilityOfDefault,
+        customerType: customer.customerType,
+        isLegacyRecord: customer.isLegacyRecord,
+        name: customer.name,
+        partyUrn: customer.partyUrn,
+        probabilityOfDefault: customer.probabilityOfDefault,
         riskEntity: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
-        sfId: v.sfId,
-        subtype: v.subtype,
-        type: v.type,
-        ukEntity: v.ukEntity,
-        ukefIndustryName: v.ukefIndustryName,
-        ukefSectorName: v.ukefSectorName,
+        sfId: customer.sfId,
+        subtype: customer.subtype,
+        type: customer.type,
+        ukEntity: customer.ukEntity,
+        ukefIndustryName: customer.ukefIndustryName,
+        ukefSectorName: customer.ukefSectorName,
       },
     ]);
 

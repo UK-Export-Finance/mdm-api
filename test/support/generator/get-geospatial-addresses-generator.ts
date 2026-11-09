@@ -28,33 +28,33 @@ export class GetGeospatialAddressesGenerator extends AbstractGenerator<AddressVa
   protected transformRawValuesToGeneratedValues(values: AddressValues[], { postcode, key }: GenerateOptions): GenerateResult {
     const useKey = key || this.valueGenerator.string();
 
-    const requests: GetAddressesByPostcodeQueryDto[] = values.map((v) => ({ postcode: postcode || v.POSTCODE }));
+    const requests: GetAddressesByPostcodeQueryDto[] = values.map((address) => ({ postcode: postcode || address.POSTCODE }));
 
-    const ordnanceSurveyPaths: string[] = values.map((v) => {
-      const usePostcode = postcode || v.POSTCODE;
+    const ordnanceSurveyPaths: string[] = values.map((value) => {
+      const usePostcode = postcode || value.POSTCODE;
       return `/search/places/v1/postcode?postcode=${encodeURIComponent(usePostcode)}&lr=${GEOSPATIAL.DEFAULT.RESULT_LANGUAGE}&key=${encodeURIComponent(useKey)}`;
     });
 
-    const mdmPaths: string[] = values.map((v) => {
-      const usePostcode = postcode || v.POSTCODE;
+    const mdmPaths: string[] = values.map((value) => {
+      const usePostcode = postcode || value.POSTCODE;
       return `/api/v1/geospatial/addresses/postcode?postcode=${usePostcode}`;
     });
 
-    const getAddressesByPostcodeResponse: GetAddressesResponse[] = values.map((v) => [
+    const getAddressesByPostcodeResponse: GetAddressesResponse[] = values.map((address) => [
       {
-        organisationName: v.ORGANISATION_NAME,
-        addressLine1: `${v.BUILDING_NAME} ${v.BUILDING_NUMBER} ${v.THOROUGHFARE_NAME}`,
-        addressLine2: v.DEPENDENT_LOCALITY,
+        organisationName: address.ORGANISATION_NAME,
+        addressLine1: `${address.BUILDING_NAME} ${address.BUILDING_NUMBER} ${address.THOROUGHFARE_NAME}`,
+        addressLine2: address.DEPENDENT_LOCALITY,
         addressLine3: null,
-        locality: v.POST_TOWN || null,
-        postalCode: v.POSTCODE || null,
-        country: ENUMS.GEOSPATIAL_COUNTRIES[v.COUNTRY_CODE],
+        locality: address.POST_TOWN || null,
+        postalCode: address.POSTCODE || null,
+        country: ENUMS.GEOSPATIAL_COUNTRIES[address.COUNTRY_CODE],
       },
     ]);
 
     const getAddressesByPostcodeMultipleResponse = getAddressesByPostcodeResponse.map((response) => response[0]);
 
-    const getAddressesOrdnanceSurveyResponse: GetAddressesOrdnanceSurveyResponse[] = values.map((v) => ({
+    const getAddressesOrdnanceSurveyResponse: GetAddressesOrdnanceSurveyResponse[] = values.map((address) => ({
       header: {
         uri: 'test',
         query: 'test',
@@ -74,13 +74,13 @@ export class GetGeospatialAddressesGenerator extends AbstractGenerator<AddressVa
             UPRN: 'test',
             UDPRN: 'test',
             ADDRESS: 'test',
-            BUILDING_NAME: v.BUILDING_NAME,
-            BUILDING_NUMBER: v.BUILDING_NUMBER,
-            ORGANISATION_NAME: v.ORGANISATION_NAME,
-            DEPENDENT_LOCALITY: v.DEPENDENT_LOCALITY,
-            THOROUGHFARE_NAME: v.THOROUGHFARE_NAME,
-            POST_TOWN: v.POST_TOWN,
-            POSTCODE: v.POSTCODE,
+            BUILDING_NAME: address.BUILDING_NAME,
+            BUILDING_NUMBER: address.BUILDING_NUMBER,
+            ORGANISATION_NAME: address.ORGANISATION_NAME,
+            DEPENDENT_LOCALITY: address.DEPENDENT_LOCALITY,
+            THOROUGHFARE_NAME: address.THOROUGHFARE_NAME,
+            POST_TOWN: address.POST_TOWN,
+            POSTCODE: address.POSTCODE,
             RPC: 'test',
             X_COORDINATE: 12345,
             Y_COORDINATE: 12345,
@@ -90,7 +90,7 @@ export class GetGeospatialAddressesGenerator extends AbstractGenerator<AddressVa
             CLASSIFICATION_CODE_DESCRIPTION: 'test',
             LOCAL_CUSTODIAN_CODE: 12345,
             LOCAL_CUSTODIAN_CODE_DESCRIPTION: 'test',
-            COUNTRY_CODE: v.COUNTRY_CODE,
+            COUNTRY_CODE: address.COUNTRY_CODE,
             COUNTRY_CODE_DESCRIPTION: 'test',
             POSTAL_ADDRESS_CODE: 'test',
             POSTAL_ADDRESS_CODE_DESCRIPTION: 'test',
@@ -123,18 +123,18 @@ export class GetGeospatialAddressesGenerator extends AbstractGenerator<AddressVa
         lastupdate: 'test',
         output_srs: 'test',
       },
-      results: values.map((v) => ({
+      results: values.map((address) => ({
         DPA: {
           UPRN: 'test',
           UDPRN: 'test',
           ADDRESS: 'test',
-          BUILDING_NAME: v.BUILDING_NAME,
-          BUILDING_NUMBER: v.BUILDING_NUMBER,
-          ORGANISATION_NAME: v.ORGANISATION_NAME,
-          DEPENDENT_LOCALITY: v.DEPENDENT_LOCALITY,
-          THOROUGHFARE_NAME: v.THOROUGHFARE_NAME,
-          POST_TOWN: v.POST_TOWN,
-          POSTCODE: v.POSTCODE,
+          BUILDING_NAME: address.BUILDING_NAME,
+          BUILDING_NUMBER: address.BUILDING_NUMBER,
+          ORGANISATION_NAME: address.ORGANISATION_NAME,
+          DEPENDENT_LOCALITY: address.DEPENDENT_LOCALITY,
+          THOROUGHFARE_NAME: address.THOROUGHFARE_NAME,
+          POST_TOWN: address.POST_TOWN,
+          POSTCODE: address.POSTCODE,
           RPC: 'test',
           X_COORDINATE: 12345,
           Y_COORDINATE: 12345,
@@ -144,7 +144,7 @@ export class GetGeospatialAddressesGenerator extends AbstractGenerator<AddressVa
           CLASSIFICATION_CODE_DESCRIPTION: 'test',
           LOCAL_CUSTODIAN_CODE: 12345,
           LOCAL_CUSTODIAN_CODE_DESCRIPTION: 'test',
-          COUNTRY_CODE: v.COUNTRY_CODE,
+          COUNTRY_CODE: address.COUNTRY_CODE,
           COUNTRY_CODE_DESCRIPTION: 'test',
           POSTAL_ADDRESS_CODE: 'test',
           POSTAL_ADDRESS_CODE_DESCRIPTION: 'test',

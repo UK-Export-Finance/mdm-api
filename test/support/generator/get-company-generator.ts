@@ -67,8 +67,8 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
   }
 
   protected transformRawValuesToGeneratedValues(values: CompanyValues[], { registrationNumber }: GenerateOptions): GenerateResult {
-    const [v] = values;
-    const registrationNumberToUse = registrationNumber || v.companiesHouseRegistrationNumber;
+    const [company] = values;
+    const registrationNumberToUse = registrationNumber || company.companiesHouseRegistrationNumber;
 
     const companiesHousePath = `/company/${registrationNumberToUse}`;
 
@@ -85,26 +85,26 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
       },
       accounts: {
         last_accounts: {
-          period_end_on: v.accounts.lastAccounts.periodEndOn,
-          type: v.accounts.lastAccounts.type,
-          made_up_to: v.accounts.lastAccounts.madeUpTo,
-          period_start_on: v.accounts.lastAccounts.periodStartOn,
+          period_end_on: company.accounts.lastAccounts.periodEndOn,
+          type: company.accounts.lastAccounts.type,
+          made_up_to: company.accounts.lastAccounts.madeUpTo,
+          period_start_on: company.accounts.lastAccounts.periodStartOn,
         },
         accounting_reference_date: {
-          month: v.accounts.accountingReferenceDate.month,
-          day: v.accounts.accountingReferenceDate.day,
+          month: company.accounts.accountingReferenceDate.month,
+          day: company.accounts.accountingReferenceDate.day,
         },
         next_accounts: {
-          period_start_on: v.accounts.nextAccounts.periodStartOn,
-          due_on: v.accounts.nextAccounts.dueOn,
-          period_end_on: v.accounts.nextAccounts.periodEndOn,
-          overdue: v.accounts.nextAccounts.overdue,
+          period_start_on: company.accounts.nextAccounts.periodStartOn,
+          due_on: company.accounts.nextAccounts.dueOn,
+          period_end_on: company.accounts.nextAccounts.periodEndOn,
+          overdue: company.accounts.nextAccounts.overdue,
         },
-        overdue: v.accounts.overdue,
-        next_made_up_to: v.accounts.nextMadeUpTo,
-        next_due: v.accounts.nextDue,
+        overdue: company.accounts.overdue,
+        next_made_up_to: company.accounts.nextMadeUpTo,
+        next_due: company.accounts.nextDue,
       },
-      company_name: v.companyName,
+      company_name: company.companyName,
       company_number: registrationNumberToUse,
       company_status: 'active',
       confirmation_statement: {
@@ -113,38 +113,38 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
         overdue: false,
         last_made_up_to: randomISO8601Date(),
       },
-      date_of_creation: v.dateOfCreation,
+      date_of_creation: company.dateOfCreation,
       etag: this.valueGenerator.stringOfNumericCharacters({ length: 40 }),
       has_charges: false,
       has_insolvency_history: false,
       jurisdiction: this.valueGenerator.word(),
       registered_office_address: {
-        organisation_name: v.companyName,
-        address_line_1: `${v.buildingName} ${v.buildingNumber} ${v.thoroughfareName}`,
-        address_line_2: v.buildingNumber,
-        address_line_3: v.thoroughfareName,
-        care_of: v.careOf,
-        locality: v.locality,
-        postal_code: v.postalCode,
-        premises: v.premises,
-        region: v.region,
-        country: v.country,
+        organisation_name: company.companyName,
+        address_line_1: `${company.buildingName} ${company.buildingNumber} ${company.thoroughfareName}`,
+        address_line_2: company.buildingNumber,
+        address_line_3: company.thoroughfareName,
+        care_of: company.careOf,
+        locality: company.locality,
+        postal_code: company.postalCode,
+        premises: company.premises,
+        region: company.region,
+        country: company.country,
       },
       registered_office_is_in_dispute: false,
-      sic_codes: v.sicCodes,
+      sic_codes: company.sicCodes,
       type: 'ltd',
       undeliverable_registered_office_address: false,
       has_super_secure_pscs: false,
       can_file: true,
     };
 
-    const findSectorIndustriesResponse: SectorIndustryEntity[] = v.sicCodes.map((sicCode, index) => ({
+    const findSectorIndustriesResponse: SectorIndustryEntity[] = company.sicCodes.map((sicCode, index) => ({
       id: this.valueGenerator.integer({ min: 1, max: 1000 }),
-      ukefSectorId: v.industrySectorCode,
-      ukefSectorName: v.industrySectorName,
+      ukefSectorId: company.industrySectorCode,
+      ukefSectorName: company.industrySectorName,
       internalNo: null,
       ukefIndustryId: sicCode,
-      ukefIndustryName: v.industryClassNames[`${index}`],
+      ukefIndustryName: company.industryClassNames[`${index}`],
       acbsSectorId: this.valueGenerator.stringOfNumericCharacters({ length: 2 }),
       acbsSectorName: this.valueGenerator.sentence({ words: 5 }),
       acbsIndustryId: this.valueGenerator.stringOfNumericCharacters({ length: 2 }),
@@ -174,60 +174,63 @@ export class GetCompanyGenerator extends AbstractGenerator<CompanyValues, Genera
 
     findSectorIndustriesResponse.push(nonMatchingIndustryClass);
 
-    for (let i = findSectorIndustriesResponse.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
+    for (let index = findSectorIndustriesResponse.length - 1; index > 0; index--) {
+      const randomIndex = Math.floor(Math.random() * (index + 1));
 
-      [findSectorIndustriesResponse[i], findSectorIndustriesResponse[j]] = [findSectorIndustriesResponse[j], findSectorIndustriesResponse[i]];
+      [findSectorIndustriesResponse[index], findSectorIndustriesResponse[randomIndex]] = [
+        findSectorIndustriesResponse[randomIndex],
+        findSectorIndustriesResponse[index],
+      ];
     }
 
-    const industries: Industry[] = v.sicCodes.map((sicCode, index) => ({
-      code: v.industrySectorCode.toString(),
-      name: v.industrySectorName,
+    const industries: Industry[] = company.sicCodes.map((sicCode, index) => ({
+      code: company.industrySectorCode.toString(),
+      name: company.industrySectorName,
       class: {
         code: sicCode,
-        name: v.industryClassNames[`${index}`],
+        name: company.industryClassNames[`${index}`],
       },
     }));
 
     const getCompanyResponse: GetCompanyResponse = {
       accounts: {
         accountingReferenceDate: {
-          month: v.accounts.accountingReferenceDate.month,
-          day: v.accounts.accountingReferenceDate.day,
+          month: company.accounts.accountingReferenceDate.month,
+          day: company.accounts.accountingReferenceDate.day,
         },
         lastAccounts: {
-          periodEndOn: v.accounts.lastAccounts.periodEndOn,
-          type: v.accounts.lastAccounts.type,
-          madeUpTo: v.accounts.lastAccounts.madeUpTo,
-          periodStartOn: v.accounts.lastAccounts.periodStartOn,
+          periodEndOn: company.accounts.lastAccounts.periodEndOn,
+          type: company.accounts.lastAccounts.type,
+          madeUpTo: company.accounts.lastAccounts.madeUpTo,
+          periodStartOn: company.accounts.lastAccounts.periodStartOn,
         },
         nextAccounts: {
-          periodStartOn: v.accounts.nextAccounts.periodStartOn,
-          dueOn: v.accounts.nextAccounts.dueOn,
-          periodEndOn: v.accounts.nextAccounts.periodEndOn,
-          overdue: v.accounts.nextAccounts.overdue,
+          periodStartOn: company.accounts.nextAccounts.periodStartOn,
+          dueOn: company.accounts.nextAccounts.dueOn,
+          periodEndOn: company.accounts.nextAccounts.periodEndOn,
+          overdue: company.accounts.nextAccounts.overdue,
         },
-        nextDue: v.accounts.nextDue,
-        nextMadeUpTo: v.accounts.nextMadeUpTo,
-        overdue: v.accounts.overdue,
+        nextDue: company.accounts.nextDue,
+        nextMadeUpTo: company.accounts.nextMadeUpTo,
+        overdue: company.accounts.overdue,
       },
       companiesHouseRegistrationNumber: registrationNumberToUse,
-      companyName: v.companyName,
-      dateOfCreation: v.dateOfCreation,
+      companyName: company.companyName,
+      dateOfCreation: company.dateOfCreation,
       registeredAddress: {
-        organisationName: v.companyName,
-        addressLine1: `${v.buildingName} ${v.buildingNumber} ${v.thoroughfareName}`,
-        addressLine2: v.buildingNumber,
-        addressLine3: v.thoroughfareName,
-        careOf: v.careOf,
-        locality: v.locality,
-        postalCode: v.postalCode,
-        premises: v.premises,
-        region: v.region,
-        country: v.country,
+        organisationName: company.companyName,
+        addressLine1: `${company.buildingName} ${company.buildingNumber} ${company.thoroughfareName}`,
+        addressLine2: company.buildingNumber,
+        addressLine3: company.thoroughfareName,
+        careOf: company.careOf,
+        locality: company.locality,
+        postalCode: company.postalCode,
+        premises: company.premises,
+        region: company.region,
+        country: company.country,
       },
       industries,
-      isActive: v.isActive,
+      isActive: company.isActive,
     };
 
     const getCompanyCompaniesHouseOverseasCompanyResponse = structuredClone(getCompanyCompaniesHouseResponse);
