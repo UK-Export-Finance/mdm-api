@@ -120,8 +120,8 @@
         "inLife": "OPTIONAL"
       },
       "reinsurance": {
-        "creation": "NOT_APPLICABLE",
-        "inLife": "NOT_APPLICABLE"
+        "creation": "OPTIONAL",
+        "inLife": "OPTIONAL"
       }
     }
   },
