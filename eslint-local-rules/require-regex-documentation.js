@@ -46,23 +46,49 @@ module.exports = {
     }
 
     /**
-     * Check if node has JSDoc comment
+     * Check if a JSDoc comment is immediately preceding the target node
      */
-    function hasJsDoc(commentParent) {
-      if (!commentParent) {
-        return false;
+    function getImmediatelyPrecedingJsDoc(targetNode) {
+      const comments = sourceCode.getCommentsBefore(targetNode);
+
+      if (comments.length === 0) {
+        return null;
       }
 
-      const comments = sourceCode.getCommentsBefore(commentParent);
-      return comments.some((comment) => comment.type === 'Block' && comment.value.startsWith('*'));
+      // Get the last (most recent) comment before the target node
+      const lastComment = comments[comments.length - 1];
+
+      // Check if it's a JSDoc block comment
+      if (lastComment.type !== 'Block' || !lastComment.value.startsWith('*')) {
+        return null;
+      }
+
+      // Verify the comment is immediately adjacent (no tokens between comment and declaration)
+      // by checking if any other tokens exist between the comment and the target node
+      const tokensAfterComment = sourceCode.getTokensAfter(lastComment, {
+        includeComments: false,
+        count: 1,
+      });
+
+      if (tokensAfterComment.length > 0 && tokensAfterComment[0].range[0] === targetNode.range[0]) {
+        return lastComment;
+      }
+
+      return null;
     }
 
     /**
-     * Check if a property has JSDoc comment (checks comments before the property)
+     * Check if node has JSDoc comment immediately preceding it
+     */
+    function hasJsDoc(commentParent) {
+      return getImmediatelyPrecedingJsDoc(commentParent) !== null;
+    }
+
+    /**
+     * Check if a property has JSDoc comment immediately preceding it
      */
     function hasPropertyJsDoc(propertyNode) {
-      const comments = sourceCode.getCommentsBefore(propertyNode);
-      return comments.some((comment) => comment.type === 'Block' && comment.value.startsWith('*'));
+      return getImmediatelyPrecedingJsDoc(propertyNode) !== null;
     }
 
     /**
@@ -120,7 +146,7 @@ module.exports = {
       if (owningDecl.type === 'VariableDeclarator') {
         const commentParent = getCommentParent(owningDecl);
 
-        if (!hasJsDoc(commentParent)) {
+        if (!commentParent || !hasJsDoc(commentParent)) {
           context.report({
             node,
             messageId: 'missingRegexDoc',

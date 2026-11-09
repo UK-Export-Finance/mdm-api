@@ -188,6 +188,37 @@ const FOUR_DIGIT_UKEF_SECTOR_ID = /^\d{4}$/;
  */
 const FIVE_DIGIT_UKEF_INDUSTRY_ID = /^\d{5}$/;
 
+/**
+ * Buffer Prefix - Matches the "<Buffer " prefix in string representations of buffers.
+ *
+ * Used for removing the "<Buffer " prefix when converting string representations of buffers
+ * to actual Buffer objects (e.g., "<Buffer 68 65 6c 6c 6f>" → "68656c6c6f").
+ * - Uses global flag to replace all occurrences (though typically only one per string)
+ *
+ * Examples:
+ * - Input: `<Buffer 68 65 6c 6c 6f>` → `68 65 6c 6c 6f>` ✓
+ *
+ * Does not match:
+ * - `Buffer 68 65 6c 6c 6f` (missing opening angle bracket)
+ * - `<buffer 68 65 6c 6c 6f>` (lowercase)
+ */
+const BUFFER_PREFIX = /<Buffer /g;
+
+/**
+ * Buffer Suffix - Matches the ">" suffix in string representations of buffers.
+ *
+ * Used for removing the ">" suffix when converting string representations of buffers
+ * to actual Buffer objects (e.g., "<Buffer 68 65 6c 6c 6f>" → "68656c6c6f").
+ * - Uses global flag to replace all occurrences (though typically only one per string)
+ *
+ * Examples:
+ * - Input: `68 65 6c 6c 6f>` → `68 65 6c 6c 6f` ✓
+ *
+ * Does not match:
+ * - `68 65 6c 6c 6f` (missing closing angle bracket)
+ */
+const BUFFER_SUFFIX = />/g;
+
 export const REGEX = {
   COMPANIES_HOUSE_REGISTRATION_NUMBER,
   UK_POSTCODE,
@@ -199,5 +230,7 @@ export const REGEX = {
   EIGHT_TO_TEN_DIGIT_UKEF_ID,
   FOUR_DIGIT_UKEF_SECTOR_ID,
   FIVE_DIGIT_UKEF_INDUSTRY_ID,
+  BUFFER_PREFIX,
+  BUFFER_SUFFIX,
   TEST,
 };

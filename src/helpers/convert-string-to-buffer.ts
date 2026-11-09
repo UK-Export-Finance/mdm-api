@@ -12,7 +12,7 @@ import { REGEX } from '@ukef/constants/regex';
  */
 export const convertStringToBuffer = (data: string): Buffer => {
   // Remove buffer string characters
-  const hexString = data.replace('<Buffer ', '').replace('>', '').replace(REGEX.WHITESPACE, '');
+  const hexString = data.replace(REGEX.BUFFER_PREFIX, '').replace(REGEX.BUFFER_SUFFIX, '').replace(REGEX.WHITESPACE, '');
 
   // Convert string to Buffer
   return Buffer.from(hexString, 'hex');
