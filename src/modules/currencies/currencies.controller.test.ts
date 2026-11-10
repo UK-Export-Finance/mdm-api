@@ -1,8 +1,11 @@
+import { jest } from '@jest/globals';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { CurrenciesController } from './currencies.controller';
 import { CurrenciesService } from './currencies.service';
 import { GetCurrencyExchangeDto } from './dto';
+import { CurrencyEntity } from './entities/currency.entity';
+import { CurrencyExchangeEntity } from './entities/currency-exchange.entity';
 
 describe('CurrenciesController', () => {
   let currencyController: CurrenciesController;
@@ -16,9 +19,9 @@ describe('CurrenciesController', () => {
         {
           provide: CurrenciesService,
           useValue: {
-            findAll: jest.fn().mockResolvedValue([{}]),
-            findOne: jest.fn().mockResolvedValue([{}]),
-            findExchangeRate: jest.fn().mockResolvedValue([{}]),
+            findAll: jest.fn<CurrenciesService['findAll']>().mockResolvedValue([new CurrencyEntity()]),
+            findOne: jest.fn<CurrenciesService['findOne']>().mockResolvedValue([new CurrencyEntity()]),
+            findExchangeRate: jest.fn<CurrenciesService['findExchangeRate']>().mockResolvedValue([new CurrencyExchangeEntity()]),
           },
         },
       ],

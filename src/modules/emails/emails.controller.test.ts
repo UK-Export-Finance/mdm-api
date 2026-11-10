@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { BadRequestException } from '@nestjs/common';
 import { when } from 'jest-when';
 import { PostEmailsGenerator } from '@ukef-test/support/generator/post-emails-generator';
@@ -16,7 +17,7 @@ describe('EmailsController', () => {
   });
 
   const emailsService = new EmailsService(null);
-  const emailsServiceSendEmail = jest.fn();
+  const emailsServiceSendEmail = jest.fn<EmailsService['sendEmail']>();
   emailsService.sendEmail = emailsServiceSendEmail;
 
   const controller = new EmailsController(emailsService);

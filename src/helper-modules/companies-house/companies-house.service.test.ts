@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { AxiosError } from 'axios';
 import { resetAllWhenMocks, when } from 'jest-when';
 import { of, throwError } from 'rxjs';
@@ -13,8 +14,7 @@ import { CompaniesHouseMalformedAuthorizationHeaderException } from './exception
 import { CompaniesHouseNotFoundException } from './exception/companies-house-not-found.exception';
 
 describe('CompaniesHouseService', () => {
-  let httpServiceGet: jest.Mock;
-  let configServiceGet: jest.Mock;
+  let httpServiceGet: jest.SpiedFunction<HttpService['get']>;
   let service: CompaniesHouseService;
 
   const valueGenerator = new RandomValueGenerator();
@@ -54,12 +54,12 @@ describe('CompaniesHouseService', () => {
 
   beforeAll(() => {
     const httpService = new HttpService();
-    httpServiceGet = jest.fn();
-    httpService.get = httpServiceGet;
+
+    httpServiceGet = jest.spyOn(httpService, 'get').mockReset();
 
     const configService = new ConfigService();
-    configServiceGet = jest.fn().mockReturnValue({ key: testKey });
-    configService.get = configServiceGet;
+
+    jest.spyOn(configService, 'get').mockReset().mockReturnValue({ key: testKey });
 
     service = new CompaniesHouseService(httpService, configService);
   });

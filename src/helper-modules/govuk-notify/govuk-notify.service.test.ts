@@ -1,6 +1,7 @@
+import { jest } from '@jest/globals';
 import { AxiosError, AxiosResponse } from 'axios';
 import { PinoLogger } from 'nestjs-pino';
-import { NotifyClient } from 'notifications-node-client';
+import type { NotifyClient as NotifyClientType } from 'notifications-node-client';
 import { BadRequestException, ForbiddenException, InternalServerErrorException, UnauthorizedException, UnprocessableEntityException } from '@nestjs/common';
 import { GOVUK_NOTIFY } from '@ukef/constants';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
@@ -8,13 +9,17 @@ import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-
 import { convertStringToBuffer } from '@ukef/helpers';
 import { PostEmailsRequestDto } from '@ukef/modules/emails/dto/post-emails-request.dto';
 import expectedSendEmailsResponse from './examples/example-response-for-send-emails.json';
-import { GovukNotifyService } from './govuk-notify.service';
+import type { GovukNotifyService } from './govuk-notify.service';
 
 jest.mock('notifications-node-client');
 
 describe('GovukNotifyService', () => {
+  let NotifyClient: typeof NotifyClientType;
+  let sendEmailMethodMock: jest.SpiedFunction<NotifyClientType['sendEmail']>;
+  let prepareUploadMethodMock: jest.SpiedFunction<NotifyClientType['prepareUpload']>;
+  let service: GovukNotifyService;
   const valueGenerator = new RandomValueGenerator();
-  const loggerError = jest.fn();
+  const loggerError = jest.fn<PinoLogger['error']>();
 
   const govUkNotifyKey = valueGenerator.string({ length: 10 });
   const sendToEmailAddress = valueGenerator.email();
@@ -46,13 +51,16 @@ describe('GovukNotifyService', () => {
     retention_period: null,
   };
 
-  const sendEmailMethodMock = jest.spyOn(NotifyClient.prototype, 'sendEmail').mockImplementation(() => Promise.resolve(mockSendEmailResponse));
-
-  const prepareUploadMethodMock = jest.spyOn(NotifyClient.prototype, 'prepareUpload').mockImplementation(() => mockPrepareUploadResponse);
-
   const logger = new PinoLogger({});
   logger.error = loggerError;
-  const service = new GovukNotifyService(logger);
+
+  beforeAll(async () => {
+    ({ NotifyClient } = await import('notifications-node-client'));
+    sendEmailMethodMock = jest.spyOn(NotifyClient.prototype, 'sendEmail').mockImplementation(() => Promise.resolve(mockSendEmailResponse));
+    prepareUploadMethodMock = jest.spyOn(NotifyClient.prototype, 'prepareUpload').mockImplementation(() => mockPrepareUploadResponse);
+    const { GovukNotifyService } = await import('./govuk-notify.service.js');
+    service = new GovukNotifyService(logger);
+  });
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -132,20 +140,24 @@ describe('GovukNotifyService', () => {
       {
         exceptionClass: BadRequestException,
         status: 400,
+        error: 'Bad Request',
       },
       {
         exceptionClass: UnauthorizedException,
         status: 401,
+        error: 'Unauthorized',
       },
       {
         exceptionClass: ForbiddenException,
         status: 403,
+        error: 'Forbidden',
       },
       {
         exceptionClass: InternalServerErrorException,
         status: 500,
+        error: 'Internal Server Error',
       },
-    ])('throws exception $exceptionName for unexpected $status', async ({ exceptionClass, status }) => {
+    ])('throws $error exception for unexpected $status', async ({ exceptionClass, status, error }) => {
       const notifyError = generateNotifyError(status, errorMessage);
       jest.mocked(sendEmailMethodMock).mockImplementation(() => Promise.reject(notifyError));
 
@@ -156,7 +168,7 @@ describe('GovukNotifyService', () => {
       await expect(resultPromise).rejects.toThrow(errorMessage);
       await expect(resultPromise).rejects.toHaveProperty('status', status);
       await expect(resultPromise).rejects.toHaveProperty('cause', notifyError);
-      await expect(resultPromise).rejects.toHaveProperty('response', { message: errorMessage, statusCode: status });
+      await expect(resultPromise).rejects.toHaveProperty('response', { message: errorMessage, statusCode: status, error });
       expect(loggerError).toHaveBeenCalledTimes(1);
       expect(loggerError).toHaveBeenCalledWith(notifyError);
     });

@@ -1,4 +1,5 @@
-import { AxiosRequestConfig } from 'axios';
+import { jest } from '@jest/globals';
+import { AxiosRequestConfig, AxiosRequestTransformer, AxiosResponseTransformer } from 'axios';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 
 import { filterAxiosRequestForLogging } from './filter-axios-request-for-logging.helper';
@@ -24,8 +25,8 @@ describe('filterAxiosRequestForLogging', () => {
     url,
     method,
     data,
-    transformRequest: jest.fn(),
-    transformResponse: jest.fn(),
+    transformRequest: jest.fn<AxiosRequestTransformer>(),
+    transformResponse: jest.fn<AxiosResponseTransformer>(),
   };
 
   it('returns only the timeout, headers, maxRedirects, baseURL, url, method, and data of the request, using BODY_LOG_KEY and HEADERS_LOG_KEY', () => {
