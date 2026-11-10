@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
@@ -20,12 +21,12 @@ describe('OdsProductConfigService - findOne', () => {
 
   beforeEach(() => {
     mockQueryRunner = {
-      query: jest.fn(),
-      release: jest.fn(),
+      query: jest.fn<QueryRunner['query']>(),
+      release: jest.fn<QueryRunner['release']>(),
     } as unknown as jest.Mocked<QueryRunner>;
 
     mockDataSource = {
-      createQueryRunner: jest.fn().mockReturnValue(mockQueryRunner),
+      createQueryRunner: jest.fn<DataSource['createQueryRunner']>().mockReturnValue(mockQueryRunner),
     } as unknown as jest.Mocked<DataSource>;
 
     odsStoredProcedureService = new OdsStoredProcedureService(mockDataSource);
@@ -177,6 +178,24 @@ describe('OdsProductConfigService - findOne', () => {
     it('should NOT call odsStoredProcedureService.call', async () => {
       // Act
       await service.findOne(EXAMPLES.DOM.PRODUCT_CONFIG.ALL_DISABLED.productType);
+
+      // Assert
+      expect(odsStoredProcedureService.call).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('when the productType matches EDG', () => {
+    it('should return the hardcoded EDG config', async () => {
+      // Act
+      const result = await service.findOne(EXAMPLES.DOM.PRODUCT_CONFIG.EDG.productType);
+
+      // Assert
+      expect(result).toEqual(EXAMPLES.DOM.PRODUCT_CONFIG.EDG);
+    });
+
+    it('should NOT call odsStoredProcedureService.call', async () => {
+      // Act
+      await service.findOne(EXAMPLES.DOM.PRODUCT_CONFIG.EDG.productType);
 
       // Assert
       expect(odsStoredProcedureService.call).not.toHaveBeenCalled();

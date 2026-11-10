@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { Test, TestingModule } from '@nestjs/testing';
 import Chance from 'chance';
 
@@ -19,11 +20,9 @@ describe('ConstantsController', () => {
         {
           provide: ExposurePeriodService,
           useValue: {
-            calculate: jest.fn().mockResolvedValue([
-              {
-                exposurePeriod: chance.integer(),
-              },
-            ]),
+            calculate: jest.fn<ExposurePeriodService['calculate']>().mockResolvedValue({
+              exposurePeriod: chance.integer(),
+            }),
           },
         },
       ],

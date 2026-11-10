@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { InternalServerErrorException } from '@nestjs/common';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
@@ -19,12 +20,12 @@ describe('OdsAccrualsService - getScheduleClassifications', () => {
 
   beforeEach(() => {
     mockQueryRunner = {
-      query: jest.fn(),
-      release: jest.fn(),
+      query: jest.fn<QueryRunner['query']>(),
+      release: jest.fn<QueryRunner['release']>(),
     } as unknown as jest.Mocked<QueryRunner>;
 
     mockDataSource = {
-      createQueryRunner: jest.fn().mockReturnValue(mockQueryRunner),
+      createQueryRunner: jest.fn<DataSource['createQueryRunner']>().mockReturnValue(mockQueryRunner),
     } as unknown as jest.Mocked<DataSource>;
 
     odsStoredProcedureService = new OdsStoredProcedureService(mockDataSource);
