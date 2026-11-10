@@ -13,7 +13,6 @@ import { InformaticaService } from '@ukef/modules/informatica/informatica.servic
 import { SalesforceService } from '@ukef/modules/salesforce/salesforce.service';
 import { GetCustomersGenerator } from '@ukef-test/support/generator/get-customers-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
-
 import { GetCustomersInformaticaResponseItem } from '@ukef/modules/informatica/dto/get-customers-informatica-response.dto';
 import { InformaticaException } from '@ukef/modules/informatica/exception/informatica.exception';
 import { UkefId } from '@ukef/modules/numbers/entities/ukef-id.entity';

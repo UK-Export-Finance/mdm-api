@@ -1,14 +1,15 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PinoLogger } from 'nestjs-pino';
 import { HttpClient } from '@ukef/modules/http/http.client';
 
 import { SALESFORCE_CONFIG_KEY, SalesforceConfigType } from '@ukef/config/salesforce.config';
 import { CreateCustomerDto } from '@ukef/modules/customers/dto/create-customer.dto';
-import { GetCustomersResponse } from '@ukef/modules/customers/dto/get-customers-response.dto';
-import { GetCustomersInformaticaQueryDto } from '@ukef/modules/informatica/dto/get-customers-informatica-query.dto';
+import { GetCustomersQueryDto } from '@ukef/modules/customers/dto/get-customers-query.dto';
 import { CreateCustomerSalesforceResponseDto } from './dto/create-customer-salesforce-response.dto';
+import { GetSalesforceAccountResponseDto } from './dto/get-salesforce-account-response.dto';
+import { GetSalesforceLegacyAccountResponseDto } from './dto/get-salesforce-legacy-account-response.dto';
 import { customerAlreadyExistsSalesforceError } from './known-errors';
 import { createWrapSalesforceHttpGetErrorCallback } from './wrap-salesforce-http-error-callback';
 
@@ -35,50 +36,86 @@ export class SalesforceService {
     this.httpClient = new HttpClient(httpService);
   }
 
-  async getCustomers(backendQuery: GetCustomersInformaticaQueryDto): Promise<GetCustomersResponse> {
-    console.log('backendQuery', backendQuery);
-    const path = '/sobjects/Account';
-    const access_token = await this.getAccessToken();
-    const { data } = await this.httpClient.get<any>({
-      path,
-      headers: {
-        Authorization: 'Bearer ' + access_token,
-      },
-      onError: createWrapSalesforceHttpGetErrorCallback({
-        messageForUnknownError: `Failed to get customer in Salesforce`,
-        knownErrors: [],
-      }),
+  /**
+   * Searches customers using AND-combined filters, with partial matching for names.
+   *
+   * @param {GetCustomersQueryDto} query - The query parameters for search conditions
+   * @returns {Promise<GetCustomersResponse>} A promise that resolves to a list of customer response items
+   */
+  async getCustomers(query: GetCustomersQueryDto): Promise<GetSalesforceAccountResponseDto[]> {
+    const conditions = [
+      { field: 'Company_Registration_Number__c', value: query.companyReg },
+      { field: 'Party_URN__c', value: query.partyUrn },
+      { field: 'Name', value: query.name },
+    ].flatMap(({ field, value }) => {
+      if (!value) {
+        return [];
+      }
+
+      const safeValue = this.sanitizeSalesforceSoqlInput(value);
+      return [field === 'Name' ? `${field} LIKE '%${safeValue}%'` : `${field} = '${safeValue}'`];
     });
 
-    return data;
-  }
+    if (conditions.length === 0) {
+      throw new BadRequestException('At least one search parameter is required');
+    }
 
-  async getCustomers2(backendQuery: GetCustomersInformaticaQueryDto): Promise<GetCustomersResponse> {
-    console.log('backendQuery', backendQuery);
-
-    const search = (backendQuery.partyUrn ?? '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
-    // const soql = `SELECT Id, Name, Owner.id, Owner.Name, Account_Type__c, Account_Sub_Type__c,
-    //   createdby.username, createdby.id, createdby.name,
-    //   BillingStreet, BillingCity, BillingState, BillingCountry, BillingPostalcode,
-    //   Company_Registered_Name__c, Company_Registration_Number__c, Registered_City__c, Registered_Country__c,
-    //   Registered_County_State_Province__c, Region__c, Sub_region__c, Registered_Street__c, national_international__c,
-    //   Party_URN__c, Parent.Name, Website,
-    //   SME_Type__c, Sic, Turnover__c, CreatedDate
-    //   FROM Account
-    //   WHERE Party_URN__c = '${search}'
-    //   LIMIT 100`;
-
-    const soql = `SELECT *
+    const soql = `SELECT FIELDS(ALL)
       FROM Account
-      WHERE Party_URN__c = '${search}'
+      WHERE ${conditions.join(' AND ')}
       LIMIT 100`;
 
-    return this.runSoql(soql);
+    return (await this.runSoql(soql))['records'];
   }
 
-  async runSoql(soql: string): Promise<GetCustomersResponse> {
-    console.log('soql', soql);
+  /**
+   * Searches legacy customers using AND-combined filters, with partial matching for names.
+   *
+   * @param {GetCustomersQueryDto} query - The query parameters for search conditions
+   * @returns {Promise<GetCustomersResponse>} A promise that resolves to a list of legacy customer response items
+   */
+  async getLegacyCustomers(query: GetCustomersQueryDto): Promise<GetSalesforceLegacyAccountResponseDto[]> {
+    const conditions = [
+      { field: 'M2_1_MCD_Company_Reg_Number__c', value: query.companyReg },
+      { field: 'M2_1_MCD_Party_URN__c', value: query.partyUrn },
+      { field: 'M2_1_MCD_Party_Name__c', value: query.name },
+    ].flatMap(({ field, value }) => {
+      if (!value) {
+        return [];
+      }
 
+      const safeValue = this.sanitizeSalesforceSoqlInput(value);
+      return [field === 'M2_1_MCD_Party_Name__c' ? `${field} LIKE '%${safeValue}%'` : `${field} = '${safeValue}'`];
+    });
+
+    if (conditions.length === 0) {
+      throw new BadRequestException('At least one search parameter is required');
+    }
+
+    const soql = `SELECT FIELDS(ALL)
+      FROM M2_1_MCD_Legacy_Data_Party__c
+      WHERE ${conditions.join(' AND ')}
+      LIMIT 200`;
+
+    return (await this.runSoql(soql))['records'];
+  }
+
+  /**
+   * Sanitize SOQL input to prevent injection, escaping backslashes and single quotes
+   * @param value - The input string to sanitize for SOQL.
+   * @returns The sanitized string safe for use in SOQL queries.
+   */
+  private sanitizeSalesforceSoqlInput(value: string): string {
+    return value.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+  }
+
+  /**
+   * Executes a Salesforce SOQL query and returns the response.
+   *
+   * @param soql - Salesforce query to run
+   * @returns Salesforce response.
+   */
+  async runSoql(soql: string): Promise<unknown> {
     const path = `/query?q=${encodeURIComponent(soql)}`;
     const access_token = await this.getAccessToken();
     const { data } = await this.httpClient.get<any>({

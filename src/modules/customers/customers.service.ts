@@ -3,6 +3,7 @@ import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { PinoLogger } from 'nestjs-pino';
 import { EXAMPLES } from '@ukef/constants';
+import { FallbackToLegacyDataEnum } from '@ukef/constants/enums/fallbackToLegacyData';
 import { DunAndBradstreetService } from '@ukef/helper-modules/dun-and-bradstreet/dun-and-bradstreet.service';
 import { salesforceFormattedCurrentDate } from '@ukef/helpers/date-formatter.helper';
 import { GetCustomersInformaticaQueryDto } from '@ukef/modules/informatica/dto/get-customers-informatica-query.dto';
@@ -15,6 +16,7 @@ import { NumbersService } from '@ukef/modules/numbers/numbers.service';
 import { CreateCustomerSalesforceResponseDto } from '@ukef/modules/salesforce/dto/create-customer-salesforce-response.dto';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
+import { GetCustomersQueryDto } from './dto/get-customers-query.dto';
 import { GetCustomersResponse, GetCustomersResponseItem } from './dto/get-customers-response.dto';
 
 @Injectable()
@@ -34,88 +36,101 @@ export class CustomersService {
    * @returns {Promise<GetCustomersResponse>} A promise that resolves to a list of customer response items.
    */
   async getCustomers(backendQuery: GetCustomersInformaticaQueryDto): Promise<GetCustomersResponse> {
-    try {
-      this.logger.info('Finding customers in Informatica');
+    const customersInInformatica = await this.informaticaService.getCustomers(backendQuery);
 
-      const customersInInformatica = await this.informaticaService.getCustomers(backendQuery);
-
-      this.logger.info('Found %s customers in Informatica', customersInInformatica.length);
-
-      return customersInInformatica.map((customerInInformatica): GetCustomersResponseItem => ({
-        companyRegNo: customerInInformatica.companyRegNo,
-        creditClassificationDate: customerInInformatica.creditClassificationDate,
-        creditClassificationStatus: customerInInformatica.creditClassificationStatus,
-        customerType: customerInInformatica.customerType || null,
-        isLegacyRecord: customerInInformatica.isLegacyRecord,
-        name: customerInInformatica.name,
+    return customersInInformatica.map(
+      (customerInInformatica): GetCustomersResponseItem => ({
         partyUrn: customerInInformatica.partyUrn,
+        name: customerInInformatica.name,
+        sfId: customerInInformatica.sfId,
+        companyRegNo: customerInInformatica.companyRegNo,
+        customerType: customerInInformatica.customerType || null,
         probabilityOfDefault: customerInInformatica.probabilityOfDefault,
         riskEntity: customerInInformatica.riskEntity,
-        sfId: customerInInformatica.sfId,
         subtype: customerInInformatica.subtype,
         type: customerInInformatica.type,
         ukEntity: customerInInformatica.ukEntity,
         ukefIndustryName: customerInInformatica.ukefIndustryName,
         ukefSectorName: customerInInformatica.ukefSectorName,
-      }));
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        this.logger.warn('Customers not found in Informatica');
-      } else {
-        this.logger.error('Error finding customers in Informatica');
-      }
+        creditClassificationStatus: customerInInformatica.creditClassificationStatus,
+        creditClassificationDate: customerInInformatica.creditClassificationDate,
+        isLegacyRecord: customerInInformatica.isLegacyRecord,
+      }),
+    );
+  }
 
-      throw error;
+  /**
+   * Retrieves a list of customers from Salesforce based on the provided query.
+   *
+   * @param {GetCustomersQueryDto} query - The query parameters for fetching customers from Salesforce.
+   * @returns {Promise<GetCustomersResponse>} A promise that resolves to a list of customer response items.
+   */
+  async getCustomersDirect(query: GetCustomersQueryDto): Promise<GetCustomersResponse> {
+    switch (query.fallbackToLegacyData) {
+      case 'yes':
+        const accounts = await this.getSalesforceAccounts(query);
+        return accounts.length ? accounts : this.getSalesforceLegacyAccounts(query);
+      case 'no':
+        return this.getSalesforceAccounts(query);
+      case 'legacy-only':
+        return this.getSalesforceLegacyAccounts(query);
+      default:
+        throw new Error(`Invalid value for fallbackToLegacyData: ${query.fallbackToLegacyData}`);
     }
   }
 
   /**
-   * Retrieves a list of customers from Informatica based on the provided query.
+   * Retrieves a list of Salesforce accounts based on the provided query.
    *
-   * @param {GetCustomersInformaticaQueryDto} backendQuery - The query parameters for fetching customers from Informatica.
-   * @returns {Promise<GetCustomersResponse>} A promise that resolves to a list of customer response items.
+   * @param {GetCustomersQueryDto} query - The query parameters for fetching a list of Salesforce accounts.
+   * @returns {Promise<GetCustomersResponse>} A promise that resolves to a list of account response items.
    */
-  async getCustomersDirect(backendQuery: GetCustomersInformaticaQueryDto): Promise<GetCustomersResponse> {
-    const salesforceGetCustomerResponse: GetCustomersResponse = await this.salesforceService.getCustomers(backendQuery);
+  private async getSalesforceAccounts(query: GetCustomersQueryDto): Promise<GetCustomersResponse> {
+    const salesforceGetCustomersResponse = await this.salesforceService.getCustomers(query);
 
-    return salesforceGetCustomerResponse;
-    // return [
-    //   {
-    //     partyUrn: partyUrn,
-    //     name: DTFSCustomerDto.companyName,
-    //     sfId: salesforceCreateCustomerResponse?.success ? salesforceCreateCustomerResponse.id : null,
-    //     companyRegNo: DTFSCustomerDto.companyRegistrationNumber,
-    //     type: null,
-    //     subtype: null,
-    //     isLegacyRecord: isLegacyRecord,
-    //     probabilityOfDefault: DTFSCustomerDto.probabilityOfDefault,
-    //     ukEntity: DTFSCustomerDto.ukEntity,
-    //     ukefIndustryName: DTFSCustomerDto.ukefIndustryName,
-    //     ukefSectorName: DTFSCustomerDto.ukefSectorName,
-    //     riskEntity: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
-    //     creditClassificationStatus: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
-    //     creditClassificationDate: salesForceDate,
-    //   },
-    // ];
+    return salesforceGetCustomersResponse.map((customerInSalesforce) => ({
+      partyUrn: customerInSalesforce.Party_URN__c,
+      name: customerInSalesforce.Name,
+      sfId: customerInSalesforce.Id,
+      companyRegNo: customerInSalesforce.Company_Registration_Number__c,
+      probabilityOfDefault: customerInSalesforce.CCM_Probability_of_Default__c,
+      ukEntity: customerInSalesforce.CCM_Citizenship_Class__c,
+      ukefIndustryName: customerInSalesforce.CCM_Industry__c,
+      ukefSectorName: customerInSalesforce.CCM_Industry_Group__c,
+      type: customerInSalesforce.Account_Type__c,
+      subtype: customerInSalesforce.Account_Sub_Type__c,
+      isLegacyRecord: false,
+      riskEntity: customerInSalesforce.CCM_Risk_Entity__c,
+      creditClassificationStatus: customerInSalesforce.CCM_Credit_Risk_Rating__c,
+      creditClassificationDate: customerInSalesforce.CCM_Credit_Risk_Rating_Date__c,
+    }));
+  }
 
-    // return customersInInformatica.map(
-    //   (customerInInformatica): GetCustomersResponseItem => ({
-    //     partyUrn: customerInInformatica.partyUrn,
-    //     name: customerInInformatica.name,
-    //     sfId: customerInInformatica.sfId,
-    //     companyRegNo: customerInInformatica.companyRegNo,
-    //     probabilityOfDefault: customerInInformatica.probabilityOfDefault,
-    //     ukEntity: customerInInformatica.ukEntity,
-    //     ukefIndustryName: customerInInformatica.ukefIndustryName,
-    //     ukefSectorName: customerInInformatica.ukefSectorName,
-    //     type: customerInInformatica.type,
-    //     subtype: customerInInformatica.subtype,
-    //     isLegacyRecord: customerInInformatica.isLegacyRecord,
-    //     riskEntity: customerInInformatica.riskEntity,
-    //     creditClassificationStatus: customerInInformatica.creditClassificationStatus,
-    //     creditClassificationDate: customerInInformatica.creditClassificationDate,
-    //   }),
-    // );
+  /**
+   * Retrieves a list of Salesforce accounts based on the provided query.
+   *
+   * @param {GetCustomersQueryDto} query - The query parameters for fetching a list of Salesforce accounts.
+   * @returns {Promise<GetCustomersResponse>} A promise that resolves to a list of account response items.
+   */
+  private async getSalesforceLegacyAccounts(query: GetCustomersQueryDto): Promise<GetCustomersResponse> {
+    const salesforceGetCustomersResponse = await this.salesforceService.getLegacyCustomers(query);
+
+    return salesforceGetCustomersResponse.map((customerInSalesforce) => ({
+      partyUrn: customerInSalesforce.M2_1_MCD_Party_URN__c,
+      name: customerInSalesforce.M2_1_MCD_Party_Name__c,
+      sfId: customerInSalesforce.Id,
+      companyRegNo: customerInSalesforce.M2_1_MCD_Company_Reg_Number__c,
+      probabilityOfDefault: null,
+      ukEntity: customerInSalesforce.M2_1_MCD_UK_or_Overseas__c,
+      ukefIndustryName: null,
+      ukefSectorName: null,
+      type: customerInSalesforce.M2_1_MCD_Party_Type__c,
+      subtype: customerInSalesforce.M2_1_MCD_Party_Sub_Type__c,
+      isLegacyRecord: true,
+      riskEntity: null,
+      creditClassificationStatus: null,
+      creditClassificationDate: null,
+    }));
   }
 
   /**
@@ -153,19 +168,21 @@ export class CustomersService {
    * @returns {Promise<GetCustomersResponse>} A promise that resolves to the customer response items.
    * @throws {InternalServerErrorException} If the customer does not exist and cannot be created.
    */
-  async getOrCreateCustomer(res: Response, dtfsCustomerDto: DTFSCustomerDto): Promise<GetCustomersResponse> {
-    const backendQuery: GetCustomersInformaticaQueryDto = {
-      companyreg: dtfsCustomerDto.companyRegistrationNumber,
+  async getOrCreateCustomer(res: Response, DTFSCustomerDto: DTFSCustomerDto): Promise<GetCustomersResponse> {
+    const query: GetCustomersQueryDto = {
+      companyReg: DTFSCustomerDto.companyRegistrationNumber,
+      fallbackToLegacyData: FallbackToLegacyDataEnum.YES,
     };
 
     try {
-      this.logger.info('Finding customer for company %s in Informatica before Salesforce creation', dtfsCustomerDto.companyRegistrationNumber);
-
-      const existingCustomersInInformatica = await this.informaticaService.getCustomers(backendQuery);
+      const existingCustomers = await this.salesforceService.getCustomers(query);
 
       // If the customer does exist in Informatica
-      if (existingCustomersInInformatica?.[0]) {
-        return await this.handleInformaticaResponse(res, dtfsCustomerDto, existingCustomersInInformatica);
+      if (existingCustomers?.[0]) {
+        // TODO 707: rename handleInformaticaResponse to handleExistingCustomerSalesforceResponse
+        return await this.handleInformaticaResponse(res, DTFSCustomerDto, existingCustomers);
+      } else {
+        throw new InternalServerErrorException();
       }
 
       this.logger.error('Informatica returned no customers for company %s without a not-found response', dtfsCustomerDto.companyRegistrationNumber);
