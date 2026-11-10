@@ -303,7 +303,9 @@ describe('SalesforceService', () => {
         const getAccessTokenSpy = jest.spyOn(service as any, 'getAccessToken');
         const createdCustomer = { id: 'customer-id', success: true, errors: null };
 
-        httpServicePost.mockReturnValueOnce(of({ data: { access_token: returnedAccessToken } })).mockReturnValueOnce(of({ data: createdCustomer }));
+        httpServicePost
+          .mockReturnValueOnce(of({ data: { access_token: returnedAccessToken } } as AxiosResponse))
+          .mockReturnValueOnce(of({ data: createdCustomer } as AxiosResponse));
 
         // Act
         const response = await service.createCustomer(customer);
