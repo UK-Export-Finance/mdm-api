@@ -10,6 +10,9 @@ RUN rm -rf /var/cache/apk/*
 
 WORKDIR /app
 
+# ESLint local rules must be copied before npm ci
+COPY --chown=node:node eslint-local-rules ./eslint-local-rules
+
 # NPM
 COPY --chown=node:node package.json .
 COPY --chown=node:node package-lock.json .

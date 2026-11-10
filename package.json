@@ -5,10 +5,9 @@
   "description": "Master Data Management API",
   "license": "MIT",
   "author": "UKEF",
-  "overrides": {
-    "glob": "14.0.2",
-    "test-exclude": "8.0.0"
-  },
+  "workspaces": [
+    "eslint-local-rules"
+  ],
   "scripts": {
     "api-test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --selectProjects=API",
     "audit:fix": "npm audit --fix",
@@ -47,6 +46,10 @@
     "**/*": [
       "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color"
     ]
+  },
+  "overrides": {
+    "glob": "14.0.2",
+    "test-exclude": "8.0.0"
   },
   "dependencies": {
     "@nestjs/axios": "12.0.1",
@@ -101,6 +104,7 @@
     "@types/supertest": "7.2.1",
     "@typescript-eslint/eslint-plugin": "8.59.2",
     "@typescript-eslint/parser": "8.59.2",
+    "@ukef/eslint-local-rules": "1.0.0",
     "chance": "1.1.13",
     "cspell": "10.3.6",
     "eslint": "9.39.4",

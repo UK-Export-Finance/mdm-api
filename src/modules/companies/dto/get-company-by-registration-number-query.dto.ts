@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Matches, MaxLength, MinLength } from 'class-validator';
-import { COMPANIES, EXAMPLES } from '@ukef/constants';
+import { EXAMPLES, REGEX } from '@ukef/constants';
 
 export class GetCompanyByRegistrationNumberQuery {
   @ApiProperty({
@@ -8,10 +8,10 @@ export class GetCompanyByRegistrationNumberQuery {
     example: EXAMPLES.COMPANIES_HOUSE_REGISTRATION_NUMBER,
     minLength: 8,
     maxLength: 8,
-    pattern: COMPANIES.REGEX.COMPANIES_HOUSE_REGISTRATION_NUMBER.source,
+    pattern: REGEX.COMPANIES_HOUSE_REGISTRATION_NUMBER.source,
   })
   @MinLength(8)
   @MaxLength(8)
-  @Matches(COMPANIES.REGEX.COMPANIES_HOUSE_REGISTRATION_NUMBER)
+  @Matches(REGEX.COMPANIES_HOUSE_REGISTRATION_NUMBER)
   public registrationNumber: string;
 }

@@ -1,3 +1,4 @@
+import { REGEX } from '@ukef/constants';
 import { Api } from '@ukef-test/support/api';
 
 describe('Numbers', () => {
@@ -123,7 +124,7 @@ describe('Numbers', () => {
     expect(status).toBe(201);
     expect(body).toHaveLength(1);
     expect(body[0].id).toBeDefined();
-    expect(body[0].maskedId).toMatch(/^\d*$/);
+    expect(body[0].maskedId).toMatch(REGEX.TEST.NUMERIC_VALUE);
     expect(body[0].type).toBe(1);
     expect(body[0].createdBy).toBe('Jest');
     expect(body[0].createdDatetime).toBeDefined();
@@ -147,7 +148,7 @@ describe('Numbers', () => {
     expect(status).toBe(201);
     expect(body).toHaveLength(1);
     expect(body[0].id).toBeDefined();
-    expect(body[0].maskedId).toMatch(/^\d*$/);
+    expect(body[0].maskedId).toMatch(REGEX.TEST.NUMERIC_VALUE);
     expect(body[0].type).toBe(1);
     expect(body[0].createdBy).toBe('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mau');
     expect(body[0].createdDatetime).toBeDefined();
@@ -275,7 +276,7 @@ describe('Numbers', () => {
 
     body.forEach((responseUkefIdRecord, index) => {
       expect(responseUkefIdRecord.id).toBeDefined();
-      expect(responseUkefIdRecord.maskedId).toMatch(/^\d*$/);
+      expect(responseUkefIdRecord.maskedId).toMatch(REGEX.TEST.NUMERIC_VALUE);
       expect(responseUkefIdRecord.type).toEqual(payload[`${index}`].numberTypeId);
       expect(responseUkefIdRecord.createdBy).toEqual(payload[`${index}`].createdBy);
       expect(responseUkefIdRecord.createdDatetime).toBeDefined();
