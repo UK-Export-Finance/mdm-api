@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.61.1](https://github.com/UK-Export-Finance/mdm-api/compare/v1.61.0...v1.61.1) (2026-11-11)
+
+
+### Bug Fixes
+
+* **APIM-724:** dockerfile node version ([#1939](https://github.com/UK-Export-Finance/mdm-api/issues/1939)) ([bbfa9c9](https://github.com/UK-Export-Finance/mdm-api/commit/bbfa9c9f3da2832143f6702e61fe10abbbc04f9e))
+
 ## [1.61.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.60.1...v1.61.0) (2026-11-09)
 
 
