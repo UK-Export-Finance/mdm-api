@@ -115,7 +115,7 @@ export class SalesforceService {
    * @param soql - Salesforce query to run
    * @returns Salesforce response.
    */
-  async runSoql(soql: string): Promise<unknown> {
+  private async runSoql(soql: string): Promise<unknown> {
     const path = `/query?q=${encodeURIComponent(soql)}`;
     const access_token = await this.getAccessToken();
     const { data } = await this.httpClient.get<any>({

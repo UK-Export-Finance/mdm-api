@@ -1,34 +1,21 @@
 import { jest } from '@jest/globals';
 import { HttpService } from '@nestjs/axios';
+import { BadRequestException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { AxiosError, AxiosResponse, HttpStatusCode } from 'axios';
-import { when } from 'jest-when';
-import { of, throwError } from 'rxjs';
-import { PinoLogger } from 'nestjs-pino';
-import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
-import { EXAMPLES } from '@ukef/constants';
 
-import { CreateCustomerDto } from '@ukef/modules/customers/dto/create-customer.dto';
+import { GetCustomersQueryDto } from '../customers/dto/get-customers-query.dto';
 import { SalesforceException } from './exception/salesforce.exception';
 import { SalesforceService } from './salesforce.service';
+import { PinoLogger } from 'nestjs-pino';
 
 describe('SalesforceService', () => {
-  const valueGenerator = new RandomValueGenerator();
-
-  let httpServicePost: jest.SpiedFunction<HttpService['post']>;
   let service: SalesforceService;
   let logger: PinoLogger;
 
   beforeEach(() => {
     const httpService = new HttpService();
-
-    jest.spyOn(httpService, 'get').mockReset();
-
-    httpServicePost = jest.spyOn(httpService, 'post').mockReset();
-
     const configService = new ConfigService();
-
-    jest.spyOn(configService, 'get').mockReset().mockReturnValue({
+    jest.spyOn(configService, 'get').mockReturnValue({
       clientId: 'TEST_CLIENT_ID',
       clientSecret: 'TEST_CLIENT_SECRET',
       accessUrl: 'TEST_ACCESS_URL',
@@ -43,197 +30,123 @@ describe('SalesforceService', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    jest.restoreAllMocks();
   });
 
-  const companyRegNo = `0${valueGenerator.stringOfNumericCharacters({ length: 7 })}`;
-  const expectedAccessToken = 'TEST_ACCESS_TOKEN';
-  const getAccessTokenMethodMock = jest
-    .spyOn(SalesforceService.prototype as any, 'getAccessToken')
-    .mockImplementation(() => Promise.resolve(expectedAccessToken));
+  const searchMethods = [
+    {
+      method: 'getCustomers' as const,
+      objectName: 'Account',
+      companyField: 'Company_Registration_Number__c',
+      partyField: 'Party_URN__c',
+      nameField: 'Name',
+      limit: 100,
+    },
+    {
+      method: 'getLegacyCustomers' as const,
+      objectName: 'M2_1_MCD_Legacy_Data_Party__c',
+      companyField: 'M2_1_MCD_Company_Reg_Number__c',
+      partyField: 'M2_1_MCD_Party_URN__c',
+      nameField: 'M2_1_MCD_Party_Name__c',
+      limit: 200,
+    },
+  ];
 
-  describe('createCustomer', () => {
-    const customerBasePath = '/sobjects/Account';
-    const expectedResponse = {
-      id: '1234asdf',
-      errors: null,
-      success: true,
-    };
-    const baseQuery = {
-      Name: companyRegNo,
-      Party_URN__c: '00312345',
-      D_B_Number__c: '12341234',
-      Company_Registration_Number__c: companyRegNo,
-      CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
-      CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
-      CCM_Customer_Type__c: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
-      CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
-      CCM_Probability_of_Default__c: 3,
-    };
-    const baseExpectedHttpServicePostArgs: [string, body: CreateCustomerDto, object] = [
-      customerBasePath,
-      baseQuery,
-      { headers: { Authorization: `Bearer ${expectedAccessToken}` } },
-    ];
+  const queries: { query: GetCustomersQueryDto; where: string }[] = [
+    {
+      query: { companyReg: '01234567' },
+      where: "Company_Registration_Number__c = '01234567'",
+    },
+    { query: { partyUrn: '00312345' }, where: "Party_URN__c = '00312345'" },
+    { query: { name: 'Example' }, where: "Name LIKE '%Example%'" },
+    {
+      query: { companyReg: '01234567', partyUrn: '00312345', name: 'Example' },
+      where: "Company_Registration_Number__c = '01234567' AND Party_URN__c = '00312345' AND Name LIKE '%Example%'",
+    },
+    {
+      query: { companyReg: "reg\\'number", partyUrn: "urn\\'value", name: "O'Brien\\Company" },
+      where: "Company_Registration_Number__c = 'reg\\\\\\'number' AND Party_URN__c = 'urn\\\\\\'value' AND Name LIKE '%O\\'Brien\\\\Company%'",
+    },
+    { query: { companyReg: '', partyUrn: '00312345' }, where: "Party_URN__c = '00312345'" },
+  ];
 
+  describe.each(searchMethods)('$method', ({ method, objectName, companyField, partyField, nameField, limit }) => {
+    const search = (query: GetCustomersQueryDto) => (method === 'getCustomers' ? service.getCustomers(query) : service.getLegacyCustomers(query));
+    const methodQueries = queries.map(({ query, where }) => ({
+      query,
+      where: where
+        .replace('Company_Registration_Number__c', companyField)
+        .replace('Party_URN__c', partyField)
+        .replace(/\bName\b/g, nameField),
+    }));
+
+    it.each(methodQueries)('builds a SOQL query for $where', async ({ query, where }) => {
+      const records = [{ Id: 'customer-id' }];
+      const runSoqlMock = jest.spyOn(service as any, 'runSoql').mockResolvedValue({ records });
+
+      const result = await search(query);
+
+      expect(runSoqlMock).toHaveBeenCalledTimes(1);
+      expect(runSoqlMock).toHaveBeenCalledWith(`SELECT FIELDS(ALL)
+      FROM ${objectName}
+      WHERE ${where}
+      LIMIT ${limit}`);
+      expect(result).toBe(records);
+    });
+
+    it.each([{}, { companyReg: '', partyUrn: '', name: undefined }])('rejects a query without search parameters: %j', async (query) => {
+      const runSoqlMock = jest.spyOn(service as any, 'runSoql');
+
+      await expect(search(query)).rejects.toBeInstanceOf(BadRequestException);
+      await expect(search(query)).rejects.toThrow('At least one search parameter is required');
+      expect(runSoqlMock).not.toHaveBeenCalled();
+    });
+
+    it('propagates SOQL query errors', async () => {
+      const error = new SalesforceException('Failed to get customer in Salesforce');
+      jest.spyOn(service as any, 'runSoql').mockRejectedValue(error);
+
+      await expect(search({ partyUrn: '00312345' })).rejects.toBe(error);
+    });
+  });
+
+  describe('runSoql', () => {
+    it('requests the encoded query with a bearer token and returns the response data', async () => {
+      const accessToken = 'TEST_ACCESS_TOKEN';
+      const records = [{ Id: 'customer-id' }];
+      const soql = "SELECT Id FROM Account WHERE Name = 'Example & Co'";
+      const getAccessTokenMock = jest.spyOn(service as any, 'getAccessToken').mockResolvedValue(accessToken);
+      const httpClientGetMock = jest.fn().mockResolvedValue({ data: { records } });
+      (service as any).httpClient.get = httpClientGetMock;
+
+      const result = await (service as any).runSoql(soql);
+
+      expect(getAccessTokenMock).toHaveBeenCalledTimes(1);
+      expect(httpClientGetMock).toHaveBeenCalledWith({
+        path: `/query?q=${encodeURIComponent(soql)}`,
+        headers: { Authorization: `Bearer ${accessToken}` },
+        onError: expect.any(Function),
+      });
+      expect(result).toEqual({ records });
+    });
+
+    it('propagates HTTP client errors', async () => {
+      const error = new SalesforceException('Failed to get customer in Salesforce');
+      jest.spyOn(service as any, 'getAccessToken').mockResolvedValue('TEST_ACCESS_TOKEN');
+      (service as any).httpClient.get = jest.fn().mockRejectedValue(error);
+
+      await expect((service as any).runSoql('SELECT Id FROM Account')).rejects.toBe(error);
+    });
+  });
+
+  describe('sanitizeSalesforceSoqlInput', () => {
     it.each([
-      baseQuery,
-      {
-        Name: companyRegNo,
-        Party_URN__c: '00312345',
-        D_B_Number__c: '12341234',
-        Company_Registration_Number__c: companyRegNo,
-        CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
-        CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
-        CCM_Customer_Type__c: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
-        CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
-        CCM_Probability_of_Default__c: 0.0,
-      },
-      {
-        Name: companyRegNo,
-        Party_URN__c: '00312345',
-        D_B_Number__c: '12341234',
-        Company_Registration_Number__c: companyRegNo,
-        CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
-        CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
-        CCM_Customer_Type__c: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
-        CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
-        CCM_Probability_of_Default__c: undefined,
-      },
-      {
-        Name: companyRegNo,
-        Party_URN__c: '00312345',
-        D_B_Number__c: '12341234',
-        Company_Registration_Number__c: companyRegNo,
-        CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
-        CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
-        CCM_Customer_Type__c: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
-        CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
-      },
-      {
-        Name: companyRegNo,
-        Party_URN__c: '00312345',
-        D_B_Number__c: '12341234',
-        Company_Registration_Number__c: companyRegNo,
-        CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
-        CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
-        CCM_Customer_Type__c: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
-        CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
-        CCM_Probability_of_Default__c: 100.0,
-      },
-      {
-        Name: companyRegNo,
-        Party_URN__c: '00312345',
-        D_B_Number__c: '12341234',
-        Company_Registration_Number__c: companyRegNo,
-        CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
-        CCM_Credit_Risk_Rating__c: 'A+++',
-        CCM_Customer_Type__c: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
-        CCM_Loss_Given_Default__c: 100,
-        CCM_Probability_of_Default__c: 14.1,
-      },
-    ])('sends a POST to the Salesforce /sobjects/Account endpoint with the specified request', async (query) => {
-      // Arrange
-      const expectedHttpServicePostArgs: [string, body: CreateCustomerDto, object] = [
-        customerBasePath,
-        query,
-        { headers: { Authorization: `Bearer ${expectedAccessToken}` } },
-      ];
-
-      when(httpServicePost)
-        .calledWith(...expectedHttpServicePostArgs)
-        .mockReturnValueOnce(
-          of({
-            data: expectedResponse,
-            status: HttpStatusCode.Created,
-            statusText: 'OK',
-            config: undefined,
-            headers: undefined,
-          }),
-        );
-
-      // Act
-      await service.createCustomer(query);
-
-      // Assert
-      expect(getAccessTokenMethodMock).toHaveBeenCalledTimes(1);
-      expect(httpServicePost).toHaveBeenCalledTimes(1);
-      expect(httpServicePost).toHaveBeenCalledWith(...expectedHttpServicePostArgs);
-      expect(logger.info).toHaveBeenCalledWith('Sending customer creation request to Salesforce %s for company %s', customerBasePath, companyRegNo);
-      expect(logger.info).toHaveBeenCalledWith('Salesforce confirmed customer creation for company %s', companyRegNo);
-    });
-
-    it('throws a SalesforceException if the request to Salesforce fails', async () => {
-      // Arrange
-      const axiosRequestError = new AxiosError();
-      when(httpServicePost)
-        .calledWith(...baseExpectedHttpServicePostArgs)
-        .mockReturnValueOnce(throwError(() => axiosRequestError));
-
-      const getCustomersPromise = service.createCustomer(baseQuery);
-
-      // Act & Assert
-      await expect(getCustomersPromise).rejects.toBeInstanceOf(SalesforceException);
-      await expect(getCustomersPromise).rejects.toThrow('Failed to create customer in Salesforce');
-      await expect(getCustomersPromise).rejects.toHaveProperty('innerError', axiosRequestError);
-      expect(logger.error).toHaveBeenCalledWith('Salesforce customer creation request failed for company %s', companyRegNo);
-      expect(logger.info).not.toHaveBeenCalledWith('Salesforce confirmed customer creation for company %s', companyRegNo);
-    });
-
-    it('warns when Salesforce does not confirm creation and preserves the response', async () => {
-      // Arrange
-      const response = { ...expectedResponse, success: false };
-      httpServicePost.mockReturnValueOnce(of({ data: response } as AxiosResponse));
-
-      // Act & Assert
-      await expect(service.createCustomer(baseQuery)).resolves.toEqual(response);
-
-      expect(logger.warn).toHaveBeenCalledWith('Salesforce did not confirm customer creation for company %s', companyRegNo);
-      expect(logger.info).not.toHaveBeenCalledWith('Salesforce confirmed customer creation for company %s', companyRegNo);
-    });
-
-    it.each([
-      {
-        Name: companyRegNo,
-        Party_URN__c: null,
-        D_B_Number__c: null,
-        Company_Registration_Number__c: '12341234',
-        CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
-        CCM_Credit_Risk_Rating__c: null,
-        CCM_Customer_Type__c: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
-        CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
-        CCM_Probability_of_Default__c: null,
-      },
-      {
-        Name: companyRegNo,
-        Party_URN__c: null,
-        D_B_Number__c: null,
-        Company_Registration_Number__c: '12341234',
-        CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
-        CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
-        CCM_Customer_Type__c: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
-        CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
-        CCM_Probability_of_Default__c: 101,
-      },
-      {
-        Name: companyRegNo,
-        Party_URN__c: null,
-        D_B_Number__c: null,
-        Company_Registration_Number__c: '12341234',
-        CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
-        CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
-        CCM_Customer_Type__c: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
-        CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
-        CCM_Probability_of_Default__c: -1,
-      },
-    ])('throws a TypeError if the request is malformed', async (malformedQuery) => {
-      // Arrange
-      const typeError = new TypeError("Cannot read properties of undefined (reading 'pipe')");
-      const getCustomersPromise = service.createCustomer(malformedQuery);
-
-      // Act & Assert
-      await expect(getCustomersPromise).rejects.toBeInstanceOf(TypeError);
-      await expect(getCustomersPromise).rejects.toEqual(typeError);
+      { input: 'Example Company', expected: 'Example Company' },
+      { input: "O'Brien", expected: "O\\'Brien" },
+      { input: 'North\\South', expected: 'North\\\\South' },
+      { input: "O'Brien\\Company", expected: "O\\'Brien\\\\Company" },
+    ])('escapes SOQL special characters in $input', ({ input, expected }) => {
+      expect((service as any).sanitizeSalesforceSoqlInput(input)).toBe(expected);
     });
 
     describe('authentication logging', () => {
