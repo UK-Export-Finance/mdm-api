@@ -71,7 +71,7 @@ describe('POST /customers - Salesforce authentication', () => {
         salesforceAuthRequestBody = typeof body === 'string' ? body : new URLSearchParams(body).toString();
         return true;
       })
-      .matchHeader('content-type', /^application\/x-www-form-urlencoded/)
+      .matchHeader('content-type', 'application/x-www-form-urlencoded')
       .reply(HttpStatusCode.Ok, { access_token: salesforceAccessToken });
 
     const salesforceCreateAccountRequest = nock(ENVIRONMENT_VARIABLES.SALESFORCE_INSTANCE_URL)
