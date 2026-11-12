@@ -41,7 +41,9 @@ export class GovukNotifyService {
 
     if (personalisation?.file) {
       const { file, ...personalisationWithoutFile } = personalisation;
+
       const buffer = convertStringToBuffer(file.toString());
+
       personalisation = {
         ...personalisationWithoutFile,
         /**
