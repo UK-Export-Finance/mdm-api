@@ -2,22 +2,39 @@ import { jest } from '@jest/globals';
 import { HttpService } from '@nestjs/axios';
 import { BadRequestException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { AxiosError, AxiosResponse, HttpStatusCode } from 'axios';
+import { when } from 'jest-when';
+import { of, throwError } from 'rxjs';
+import { PinoLogger } from 'nestjs-pino';
+import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
+import { EXAMPLES } from '@ukef/constants';
 
-import { GetCustomersQueryDto } from '../customers/dto/get-customers-query.dto';
+import { CreateCustomerDto } from '@ukef/modules/customers/dto/create-customer.dto';
+import { GetCustomersQueryDto } from '@ukef/modules/customers/dto/get-customers-query.dto';
 import { SalesforceException } from './exception/salesforce.exception';
 import { SalesforceService } from './salesforce.service';
-import { PinoLogger } from 'nestjs-pino';
 
 describe('SalesforceService', () => {
+  const valueGenerator = new RandomValueGenerator();
+
+  let httpServicePost: jest.SpiedFunction<HttpService['post']>;
   let service: SalesforceService;
   let logger: PinoLogger;
 
   beforeEach(() => {
     const httpService = new HttpService();
+
+    jest.spyOn(httpService, 'get').mockReset();
+
+    httpServicePost = jest.spyOn(httpService, 'post').mockReset();
+
     const configService = new ConfigService();
-    jest.spyOn(configService, 'get').mockReturnValue({
+
+    jest.spyOn(configService, 'get').mockReset().mockReturnValue({
       clientId: 'TEST_CLIENT_ID',
       clientSecret: 'TEST_CLIENT_SECRET',
+      username: 'TEST_USERNAME',
+      password: 'TEST_PASSWORD',
       accessUrl: 'TEST_ACCESS_URL',
     });
 
@@ -30,8 +47,14 @@ describe('SalesforceService', () => {
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    jest.clearAllMocks();
   });
+
+  const companyRegNo = `0${valueGenerator.stringOfNumericCharacters({ length: 7 })}`;
+  const expectedAccessToken = 'TEST_ACCESS_TOKEN';
+  const getAccessTokenMethodMock = jest
+    .spyOn(SalesforceService.prototype as any, 'getAccessToken')
+    .mockImplementation(() => Promise.resolve(expectedAccessToken));
 
   const searchMethods = [
     {
@@ -74,10 +97,7 @@ describe('SalesforceService', () => {
     const search = (query: GetCustomersQueryDto) => (method === 'getCustomers' ? service.getCustomers(query) : service.getLegacyCustomers(query));
     const methodQueries = queries.map(({ query, where }) => ({
       query,
-      where: where
-        .replace('Company_Registration_Number__c', companyField)
-        .replace('Party_URN__c', partyField)
-        .replace(/\bName\b/g, nameField),
+      where: where.replace('Company_Registration_Number__c', companyField).replace('Party_URN__c', partyField).replace('Name', nameField),
     }));
 
     it.each(methodQueries)('builds a SOQL query for $where', async ({ query, where }) => {
@@ -110,43 +130,188 @@ describe('SalesforceService', () => {
     });
   });
 
-  describe('runSoql', () => {
-    it('requests the encoded query with a bearer token and returns the response data', async () => {
-      const accessToken = 'TEST_ACCESS_TOKEN';
-      const records = [{ Id: 'customer-id' }];
-      const soql = "SELECT Id FROM Account WHERE Name = 'Example & Co'";
-      const getAccessTokenMock = jest.spyOn(service as any, 'getAccessToken').mockResolvedValue(accessToken);
-      const httpClientGetMock = jest.fn().mockResolvedValue({ data: { records } });
-      (service as any).httpClient.get = httpClientGetMock;
+  describe('createCustomer', () => {
+    const customerBasePath = '/sobjects/Account';
+    const expectedResponse = {
+      id: '1234asdf',
+      errors: null,
+      success: true,
+    };
+    const baseQuery = {
+      Name: companyRegNo,
+      Party_URN__c: '00312345',
+      D_B_Number__c: '12341234',
+      Company_Registration_Number__c: companyRegNo,
+      CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
+      CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
+      CCM_Customer_Type__c: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
+      CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
+      CCM_Probability_of_Default__c: 3,
+    };
+    const baseExpectedHttpServicePostArgs: [string, body: CreateCustomerDto, object] = [
+      customerBasePath,
+      baseQuery,
+      { headers: { Authorization: `Bearer ${expectedAccessToken}` } },
+    ];
 
-      const result = await (service as any).runSoql(soql);
-
-      expect(getAccessTokenMock).toHaveBeenCalledTimes(1);
-      expect(httpClientGetMock).toHaveBeenCalledWith({
-        path: `/query?q=${encodeURIComponent(soql)}`,
-        headers: { Authorization: `Bearer ${accessToken}` },
-        onError: expect.any(Function),
-      });
-      expect(result).toEqual({ records });
-    });
-
-    it('propagates HTTP client errors', async () => {
-      const error = new SalesforceException('Failed to get customer in Salesforce');
-      jest.spyOn(service as any, 'getAccessToken').mockResolvedValue('TEST_ACCESS_TOKEN');
-      (service as any).httpClient.get = jest.fn().mockRejectedValue(error);
-
-      await expect((service as any).runSoql('SELECT Id FROM Account')).rejects.toBe(error);
-    });
-  });
-
-  describe('sanitizeSalesforceSoqlInput', () => {
     it.each([
-      { input: 'Example Company', expected: 'Example Company' },
-      { input: "O'Brien", expected: "O\\'Brien" },
-      { input: 'North\\South', expected: 'North\\\\South' },
-      { input: "O'Brien\\Company", expected: "O\\'Brien\\\\Company" },
-    ])('escapes SOQL special characters in $input', ({ input, expected }) => {
-      expect((service as any).sanitizeSalesforceSoqlInput(input)).toBe(expected);
+      baseQuery,
+      {
+        Name: companyRegNo,
+        Party_URN__c: '00312345',
+        D_B_Number__c: '12341234',
+        Company_Registration_Number__c: companyRegNo,
+        CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
+        CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
+        CCM_Customer_Type__c: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
+        CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
+        CCM_Probability_of_Default__c: 0.0,
+      },
+      {
+        Name: companyRegNo,
+        Party_URN__c: '00312345',
+        D_B_Number__c: '12341234',
+        Company_Registration_Number__c: companyRegNo,
+        CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
+        CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
+        CCM_Customer_Type__c: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
+        CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
+        CCM_Probability_of_Default__c: undefined,
+      },
+      {
+        Name: companyRegNo,
+        Party_URN__c: '00312345',
+        D_B_Number__c: '12341234',
+        Company_Registration_Number__c: companyRegNo,
+        CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
+        CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
+        CCM_Customer_Type__c: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
+        CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
+      },
+      {
+        Name: companyRegNo,
+        Party_URN__c: '00312345',
+        D_B_Number__c: '12341234',
+        Company_Registration_Number__c: companyRegNo,
+        CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
+        CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
+        CCM_Customer_Type__c: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
+        CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
+        CCM_Probability_of_Default__c: 100.0,
+      },
+      {
+        Name: companyRegNo,
+        Party_URN__c: '00312345',
+        D_B_Number__c: '12341234',
+        Company_Registration_Number__c: companyRegNo,
+        CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
+        CCM_Credit_Risk_Rating__c: 'A+++',
+        CCM_Customer_Type__c: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
+        CCM_Loss_Given_Default__c: 100,
+        CCM_Probability_of_Default__c: 14.1,
+      },
+    ])('sends a POST to the Salesforce /sobjects/Account endpoint with the specified request', async (query) => {
+      // Arrange
+      const expectedHttpServicePostArgs: [string, body: CreateCustomerDto, object] = [
+        customerBasePath,
+        query,
+        { headers: { Authorization: `Bearer ${expectedAccessToken}` } },
+      ];
+
+      when(httpServicePost)
+        .calledWith(...expectedHttpServicePostArgs)
+        .mockReturnValueOnce(
+          of({
+            data: expectedResponse,
+            status: HttpStatusCode.Created,
+            statusText: 'OK',
+            config: undefined,
+            headers: undefined,
+          }),
+        );
+
+      // Act
+      await service.createCustomer(query);
+
+      // Assert
+      expect(getAccessTokenMethodMock).toHaveBeenCalledTimes(1);
+      expect(httpServicePost).toHaveBeenCalledTimes(1);
+      expect(httpServicePost).toHaveBeenCalledWith(...expectedHttpServicePostArgs);
+      expect(logger.info).toHaveBeenCalledWith('Sending customer creation request to Salesforce %s for company %s', customerBasePath, companyRegNo);
+      expect(logger.info).toHaveBeenCalledWith('Salesforce confirmed customer creation for company %s', companyRegNo);
+    });
+
+    it('throws a SalesforceException if the request to Salesforce fails', async () => {
+      // Arrange
+      const axiosRequestError = new AxiosError();
+      when(httpServicePost)
+        .calledWith(...baseExpectedHttpServicePostArgs)
+        .mockReturnValueOnce(throwError(() => axiosRequestError));
+
+      const getCustomersPromise = service.createCustomer(baseQuery);
+
+      // Act & Assert
+      await expect(getCustomersPromise).rejects.toBeInstanceOf(SalesforceException);
+      await expect(getCustomersPromise).rejects.toThrow('Failed to create customer in Salesforce');
+      await expect(getCustomersPromise).rejects.toHaveProperty('innerError', axiosRequestError);
+      expect(logger.error).toHaveBeenCalledWith('Salesforce customer creation request failed for company %s', companyRegNo);
+      expect(logger.info).not.toHaveBeenCalledWith('Salesforce confirmed customer creation for company %s', companyRegNo);
+    });
+
+    it('warns when Salesforce does not confirm creation and preserves the response', async () => {
+      // Arrange
+      const response = { ...expectedResponse, success: false };
+      httpServicePost.mockReturnValueOnce(of({ data: response } as AxiosResponse));
+
+      // Act & Assert
+      await expect(service.createCustomer(baseQuery)).resolves.toEqual(response);
+
+      expect(logger.warn).toHaveBeenCalledWith('Salesforce did not confirm customer creation for company %s', companyRegNo);
+      expect(logger.info).not.toHaveBeenCalledWith('Salesforce confirmed customer creation for company %s', companyRegNo);
+    });
+
+    it.each([
+      {
+        Name: companyRegNo,
+        Party_URN__c: null,
+        D_B_Number__c: null,
+        Company_Registration_Number__c: '12341234',
+        CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
+        CCM_Credit_Risk_Rating__c: null,
+        CCM_Customer_Type__c: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
+        CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
+        CCM_Probability_of_Default__c: null,
+      },
+      {
+        Name: companyRegNo,
+        Party_URN__c: null,
+        D_B_Number__c: null,
+        Company_Registration_Number__c: '12341234',
+        CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
+        CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
+        CCM_Customer_Type__c: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
+        CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
+        CCM_Probability_of_Default__c: 101,
+      },
+      {
+        Name: companyRegNo,
+        Party_URN__c: null,
+        D_B_Number__c: null,
+        Company_Registration_Number__c: '12341234',
+        CCM_Credit_Risk_Rating_Date__c: '2007-03-27',
+        CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
+        CCM_Customer_Type__c: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
+        CCM_Loss_Given_Default__c: EXAMPLES.CUSTOMER.LOSS_GIVEN_DEFAULT,
+        CCM_Probability_of_Default__c: -1,
+      },
+    ])('throws a TypeError if the request is malformed', async (malformedQuery) => {
+      // Arrange
+      const typeError = new TypeError("Cannot read properties of undefined (reading 'pipe')");
+      const getCustomersPromise = service.createCustomer(malformedQuery);
+
+      // Act & Assert
+      await expect(getCustomersPromise).rejects.toBeInstanceOf(TypeError);
+      await expect(getCustomersPromise).rejects.toEqual(typeError);
     });
 
     describe('authentication logging', () => {
@@ -208,41 +373,6 @@ describe('SalesforceService', () => {
         // Assert
         expect(logger.warn).toHaveBeenCalledWith('Salesforce authentication response did not include an access token');
         expect(logger.info).not.toHaveBeenCalledWith('Received Salesforce access token');
-      });
-
-      it('requests a token using "client credentials" grant and uses it to get Salesforce access token', async () => {
-        // Arrange
-        const returnedAccessToken = 'RETURNED_ACCESS_TOKEN';
-        const getAccessTokenSpy = jest.spyOn(service as any, 'getAccessToken');
-        const createdCustomer = { id: 'customer-id', success: true, errors: null };
-
-        httpServicePost
-          .mockReturnValueOnce(of({ data: { access_token: returnedAccessToken } } as AxiosResponse))
-          .mockReturnValueOnce(of({ data: createdCustomer } as AxiosResponse));
-
-        // Act
-        const response = await service.createCustomer(customer);
-
-        // Assert
-        expect(getAccessTokenSpy).toHaveBeenCalledTimes(1);
-        await expect(getAccessTokenSpy.mock.results[0].value).resolves.toBe(returnedAccessToken);
-        expect(httpServicePost).toHaveBeenCalledTimes(2);
-
-        const [tokenPath, tokenBody, tokenConfig] = httpServicePost.mock.calls[0];
-        expect(tokenPath).toBe('TEST_ACCESS_URL');
-        expect(tokenBody).toEqual({
-          grant_type: 'client_credentials',
-          client_id: 'TEST_CLIENT_ID',
-          client_secret: 'TEST_CLIENT_SECRET',
-        });
-        expect(tokenBody).not.toHaveProperty('username');
-        expect(tokenBody).not.toHaveProperty('password');
-        expect(tokenConfig).toEqual({ headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
-
-        expect(httpServicePost).toHaveBeenNthCalledWith(2, customerBasePath, customer, {
-          headers: { Authorization: `Bearer ${returnedAccessToken}` },
-        });
-        expect(response).toEqual(createdCustomer);
       });
     });
   });

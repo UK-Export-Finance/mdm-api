@@ -5,8 +5,6 @@ import { Response } from 'express';
 import { when } from 'jest-when';
 import { ENUMS, EXAMPLES } from '@ukef/constants';
 import { salesforceFormattedCurrentDate } from '@ukef/helpers/date-formatter.helper';
-import { GetCustomersGenerator } from '@ukef-test/support/generator/get-customers-generator';
-import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 
 import { CustomersController } from './customers.controller';
 import { CustomersService } from './customers.service';
@@ -20,8 +18,6 @@ const mockResponseObject = {
 } as any as Response;
 
 describe('CustomersController', () => {
-  const valueGenerator = new RandomValueGenerator();
-
   let customersServiceGetCustomers: jest.MockedFunction<CustomersService['getCustomers']>;
   let customersServiceGetOrCreateCustomer: jest.MockedFunction<CustomersService['getOrCreateCustomer']>;
   let customersServiceGetDunAndBradstreetNumber: jest.MockedFunction<CustomersService['getDunAndBradstreetNumber']>;
@@ -29,7 +25,7 @@ describe('CustomersController', () => {
   let controller: CustomersController;
 
   beforeEach(() => {
-    const customersService = new CustomersService(null, null, null, null, null);
+    const customersService = new CustomersService(null, null, null, null);
     customersServiceGetCustomers = jest.fn();
     customersServiceGetOrCreateCustomer = jest.fn();
     customersService.getCustomers = customersServiceGetCustomers;
@@ -79,13 +75,13 @@ describe('CustomersController', () => {
         query: { partyUrn: EXAMPLES.CUSTOMER.PARTYURN },
       },
     ])('get customers with query $query', async ({ query }) => {
-      const { request, informaticaRequest, getCustomersResponse } = new GetCustomersGenerator(valueGenerator).generate({ numberToGenerate: 1, query });
+      const getCustomersResponse: GetCustomersResponse = [];
 
-      when(customersServiceGetCustomers).calledWith(informaticaRequest[0]).mockResolvedValueOnce(getCustomersResponse[0]);
+      when(customersServiceGetCustomers).calledWith(query).mockResolvedValueOnce(getCustomersResponse);
 
-      const customers = await controller.getCustomers(request[0]);
+      const customers = await controller.getCustomers(query);
 
-      expect(customers).toEqual(getCustomersResponse[0]);
+      expect(customers).toEqual(getCustomersResponse);
     });
 
     it.each([

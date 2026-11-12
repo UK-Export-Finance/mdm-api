@@ -2,15 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggerModule } from 'nestjs-pino';
-import {
-  AppConfig,
-  CompaniesHouseConfig,
-  DocConfig,
-  DatabaseConfig,
-  DunAndBradstreetConfig,
-  OrdnanceSurveyConfig,
-  SalesforceConfig,
-} from '@ukef/config';
+import { AppConfig, CompaniesHouseConfig, DocConfig, DatabaseConfig, DunAndBradstreetConfig, OrdnanceSurveyConfig, SalesforceConfig } from '@ukef/config';
 import { BODY_LOG_KEY, CLIENT_REQUEST_LOG_KEY, HEADERS_LOG_KEY, INCOMING_RESPONSE_LOG_KEY, OUTGOING_REQUEST_LOG_KEY } from '@ukef/modules/http/http.constants';
 import { MdmModule } from '@ukef/modules/mdm.module';
 

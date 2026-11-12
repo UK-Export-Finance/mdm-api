@@ -106,7 +106,7 @@ export class SalesforceService {
    * @returns The sanitized string safe for use in SOQL queries.
    */
   private sanitizeSalesforceSoqlInput(value: string): string {
-    return value.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+    return value.replaceAll('\\', '\\\\').replaceAll(`'`, `\\'`);
   }
 
   /**
@@ -117,11 +117,11 @@ export class SalesforceService {
    */
   private async runSoql(soql: string): Promise<unknown> {
     const path = `/query?q=${encodeURIComponent(soql)}`;
-    const access_token = await this.getAccessToken();
+    const accessToken = await this.getAccessToken();
     const { data } = await this.httpClient.get<any>({
       path,
       headers: {
-        Authorization: 'Bearer ' + access_token,
+        Authorization: 'Bearer ' + accessToken,
       },
       onError: createWrapSalesforceHttpGetErrorCallback({
         messageForUnknownError: `Failed to get customer in Salesforce`,

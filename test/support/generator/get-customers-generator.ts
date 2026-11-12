@@ -2,7 +2,6 @@ import { ENUMS, EXAMPLES } from '@ukef/constants';
 import { salesforceFormattedCurrentDate } from '@ukef/helpers/date-formatter.helper';
 import { GetCustomersQueryDto } from '@ukef/modules/customers/dto/get-customers-query.dto';
 import { GetCustomersResponse } from '@ukef/modules/customers/dto/get-customers-response.dto';
-import { GetCustomersInformaticaQueryDto } from '@ukef/modules/informatica/dto/get-customers-informatica-query.dto';
 
 import { AbstractGenerator } from './abstract-generator';
 import { RandomValueGenerator } from './random-value-generator';
