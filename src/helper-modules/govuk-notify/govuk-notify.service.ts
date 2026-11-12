@@ -37,11 +37,20 @@ export class GovukNotifyService {
 
     const reference = postEmailsRequest.reference || `${postEmailsRequest.templateId}-${Date.now()}`;
 
-    const { personalisation } = postEmailsRequest;
+    let { personalisation } = postEmailsRequest;
 
     if (personalisation?.file) {
-      const buffer = convertStringToBuffer(personalisation.file.toString());
-      personalisation.linkToFile = notifyClient.prepareUpload(buffer, { confirmEmailBeforeDownload: true }).file;
+      const { file, ...personalisationWithoutFile } = personalisation;
+      const buffer = convertStringToBuffer(file.toString());
+      personalisation = {
+        ...personalisationWithoutFile,
+        /**
+         * The whole object returned by prepareUpload (not just the `file` property) must be passed as the
+         * personalisation value. GOV.UK Notify uses this structure to recognise it as a document upload
+         * and replace it with a secure download link when the email is rendered.
+         */
+        linkToFile: notifyClient.prepareUpload(buffer, { confirmEmailBeforeDownload: true }),
+      };
     }
 
     const notifyResponse = await notifyClient

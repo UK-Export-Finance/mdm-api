@@ -35,7 +35,7 @@ export class PostEmailsRequestDto {
     required: false,
     nullable: true,
   })
-  readonly personalisation?: Record<string, string | number> | null;
+  readonly personalisation?: Record<string, string | number | object> | null;
 
   @IsString()
   @IsOptional()
