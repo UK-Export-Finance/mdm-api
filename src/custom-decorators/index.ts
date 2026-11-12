@@ -32,3 +32,34 @@ export function ExactLength(length: number, options?: ValidationOptions) {
     });
   };
 }
+
+/**
+ * Custom decorator that validates the optional `file` property nested within a personalisation
+ * object. The rest of the object is left untouched so arbitrary template variables are still
+ * accepted.
+ * @param {ValidationOptions} options - Validation options
+ * @returns A property decorator function
+ * @throws {Error} If `file` is present and is not a non-empty string
+ */
+export function IsValidPersonalisationFile(options?: ValidationOptions) {
+  return function (object: object, propertyName: string) {
+    registerDecorator({
+      name: 'IsValidPersonalisationFile',
+      target: object.constructor,
+      propertyName,
+      options,
+      validator: {
+        validate(value: any) {
+          if (value?.file === undefined) {
+            return true;
+          }
+
+          return typeof value.file === 'string' && value.file.length > 0;
+        },
+        defaultMessage(args: ValidationArguments) {
+          return `${args.property}.file must be a non-empty string`;
+        },
+      },
+    });
+  };
+}
