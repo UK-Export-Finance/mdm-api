@@ -6,9 +6,5 @@ export const UKEF_ID = {
       QA: '0040',
       PROD: '0020',
     },
-    TEN_DIGIT_REGEX: /^00\d{8}$/,
-  },
-  PARTY_ID: {
-    REGEX: /^\d{8}$/,
   },
 };

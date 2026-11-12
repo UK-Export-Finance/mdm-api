@@ -1401,7 +1401,14 @@ components:
           type: object
           example:
             firstName: John
-          description: All variables for email template
+            file: >-
+              <Buffer 43 31 2c 43 32 2c 43 33 0a 41 2c 42 2c 43 0a 44 2c 45 2c
+              46 0a 31 2c 32 2c 33 0a 34 2c 35 2c 36 0a>
+          description: >-
+            All variables for email template. Include an optional \`file\`
+            property to have GOV.UK Notify generate a secure download link,
+            which replaces the \`((linkToFile))\` placeholder in the template. The
+            file size must be smaller than 2mb.
           nullable: true
         reference:
           type: string
@@ -1410,16 +1417,6 @@ components:
           nullable: true
           minLength: 1
           maxLength: 400
-        file:
-          type: string
-          example: >-
-            <Buffer 43 31 2c 43 32 2c 43 33 0a 41 2c 42 2c 43 0a 44 2c 45 2c 46
-            0a 31 2c 32 2c 33 0a 34 2c 35 2c 36 0a>
-          description: >-
-            File for GovNotify to consume and generate a link to download with
-            supported file types. The file size must be smaller than 2mb
-          nullable: true
-          minLength: 1
       required:
         - templateId
         - sendToEmailAddress
