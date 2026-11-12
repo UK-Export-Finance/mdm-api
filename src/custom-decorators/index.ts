@@ -50,7 +50,7 @@ export function IsValidPersonalisationFile(options?: ValidationOptions) {
       options,
       validator: {
         validate(value: any) {
-          if (value === null || value === undefined || value.file === undefined) {
+          if (value?.file === undefined) {
             return true;
           }
 
