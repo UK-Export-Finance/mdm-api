@@ -8,7 +8,6 @@ import {
   DocConfig,
   DatabaseConfig,
   DunAndBradstreetConfig,
-  InformaticaConfig,
   OrdnanceSurveyConfig,
   SalesforceConfig,
 } from '@ukef/config';
@@ -20,7 +19,7 @@ import { redactStringsInLogArgs } from './helpers/redact-strings-in-log-args.hel
 import { logKeysToRedact } from './logging/log-keys-to-redact';
 import { LoggingInterceptor } from './logging/logging-interceptor.helper';
 
-const CONFIGS = [AppConfig, CompaniesHouseConfig, DocConfig, DatabaseConfig, DunAndBradstreetConfig, InformaticaConfig, OrdnanceSurveyConfig, SalesforceConfig];
+const CONFIGS = [AppConfig, CompaniesHouseConfig, DocConfig, DatabaseConfig, DunAndBradstreetConfig, OrdnanceSurveyConfig, SalesforceConfig];
 
 @Module({
   imports: [
@@ -66,10 +65,7 @@ const CONFIGS = [AppConfig, CompaniesHouseConfig, DocConfig, DatabaseConfig, Dun
             },
             error: {
               logKey: 'err',
-              sensitiveChildKeys: [
-                // The `config` has basic authentication details for Informatica.
-                'config',
-              ],
+              sensitiveChildKeys: [],
             },
             dbError: {
               logKey: 'err',

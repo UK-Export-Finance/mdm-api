@@ -6,8 +6,6 @@ import { EXAMPLES } from '@ukef/constants';
 import { FallbackToLegacyDataEnum } from '@ukef/constants/enums/fallbackToLegacyData';
 import { DunAndBradstreetService } from '@ukef/helper-modules/dun-and-bradstreet/dun-and-bradstreet.service';
 import { salesforceFormattedCurrentDate } from '@ukef/helpers/date-formatter.helper';
-import { GetCustomersInformaticaQueryDto } from '@ukef/modules/informatica/dto/get-customers-informatica-query.dto';
-import { InformaticaService } from '@ukef/modules/informatica/informatica.service';
 import { SalesforceService } from '@ukef/modules/salesforce/salesforce.service';
 
 import { CreateUkefIdDto } from '@ukef/modules/numbers/dto/create-ukef-id.dto';
@@ -25,7 +23,6 @@ import { GetSalesforceLegacyAccountResponseDto } from '../salesforce/dto/get-sal
 @Injectable()
 export class CustomersService {
   constructor(
-    private readonly informaticaService: InformaticaService,
     private readonly salesforceService: SalesforceService,
     private readonly numbersService: NumbersService,
     private readonly dunAndBradstreetService: DunAndBradstreetService,
@@ -33,42 +30,12 @@ export class CustomersService {
   ) {}
 
   /**
-   * Retrieves a list of customers from Informatica based on the provided query.
-   *
-   * @param {GetCustomersInformaticaQueryDto} backendQuery - The query parameters for fetching customers from Informatica.
-   * @returns {Promise<GetCustomersResponse>} A promise that resolves to a list of customer response items.
-   */
-  async getCustomers(backendQuery: GetCustomersInformaticaQueryDto): Promise<GetCustomersResponse> {
-    const customersInInformatica = await this.informaticaService.getCustomers(backendQuery);
-
-    return customersInInformatica.map(
-      (customerInInformatica): GetCustomersResponseItem => ({
-        partyUrn: customerInInformatica.partyUrn,
-        name: customerInInformatica.name,
-        sfId: customerInInformatica.sfId,
-        companyRegNo: customerInInformatica.companyRegNo,
-        customerType: customerInInformatica.customerType || null,
-        probabilityOfDefault: customerInInformatica.probabilityOfDefault,
-        riskEntity: customerInInformatica.riskEntity,
-        subtype: customerInInformatica.subtype,
-        type: customerInInformatica.type,
-        ukEntity: customerInInformatica.ukEntity,
-        ukefIndustryName: customerInInformatica.ukefIndustryName,
-        ukefSectorName: customerInInformatica.ukefSectorName,
-        creditClassificationStatus: customerInInformatica.creditClassificationStatus,
-        creditClassificationDate: customerInInformatica.creditClassificationDate,
-        isLegacyRecord: customerInInformatica.isLegacyRecord,
-      }),
-    );
-  }
-
-  /**
    * Retrieves a list of customers from Salesforce based on the provided query.
    *
    * @param {GetCustomersQueryDto} query - The query parameters for fetching customers from Salesforce.
    * @returns {Promise<GetCustomersResponse>} A promise that resolves to a list of customer response items.
    */
-  async getCustomersDirect(query: GetCustomersQueryDto): Promise<GetCustomersResponse> {
+  async getCustomers(query: GetCustomersQueryDto): Promise<GetCustomersResponse> {
     switch (query.fallbackToLegacyData) {
       case 'yes':
         const accounts = await this.getSalesforceAccounts(query);
@@ -186,22 +153,22 @@ export class CustomersService {
     };
 
     try {
-      const existingCustomers = await this.getCustomersDirect(query);
+      const existingCustomers = await this.getCustomers(query);
 
-      // If the customer does exist in Informatica
+      // If the customer does exist in Salesforce
       if (existingCustomers?.[0]) {
         return await this.handleExistingCustomerSalesforceResponse(res, dtfsCustomerDto, existingCustomers);
       } else {
         throw new InternalServerErrorException();
       }
 
-      this.logger.error('Informatica returned no customers for company %s without a not-found response', dtfsCustomerDto.companyRegistrationNumber);
+      this.logger.error('Salesforce returned no customers for company %s without a not-found response', dtfsCustomerDto.companyRegistrationNumber);
 
       throw new InternalServerErrorException();
     } catch (error) {
       // If the customer does not exist in Salesforce
       if (error instanceof NotFoundException) {
-        this.logger.info('Customer for company %s not found in Informatica; creating in Salesforce', dtfsCustomerDto.companyRegistrationNumber);
+        this.logger.info('Customer for company %s not found in Salesforce; creating in Salesforce', dtfsCustomerDto.companyRegistrationNumber);
 
         return await this.handleSalesforceCustomerNotFound(res, dtfsCustomerDto);
       } else {
@@ -215,11 +182,11 @@ export class CustomersService {
   }
 
   /**
-   * Handles the response when a customer is found in Informatica.
+   * Handles the response when a customer is found in Salesforce.
    *
    * @param {Response} res - The HTTP response object to send as the response.
    * @param {DTFSCustomerDto} dtfsCustomerDto - The DTO containing customer details.
-   * @param {any[]} existingCustomers - List of existing customers found in Informatica.
+   * @param {any[]} existingCustomers - List of existing customers found in Salesforce.
    * @returns {Promise<GetCustomersResponse>} A promise that resolves to the customer response items.
    */
   private async handleExistingCustomerSalesforceResponse(res, dtfsCustomerDto, existingCustomers): Promise<GetCustomersResponse> {
@@ -246,7 +213,7 @@ export class CustomersService {
       return await this.createCustomerByURN(res, dtfsCustomerDto);
     }
 
-    this.logger.warn('Informatica returned an unrecognised legacy status for company %s', dtfsCustomerDto.companyRegistrationNumber);
+    this.logger.warn('Salesforce returned an unrecognised legacy status for company %s', dtfsCustomerDto.companyRegistrationNumber);
 
     return undefined;
   }
@@ -279,19 +246,19 @@ export class CustomersService {
    *
    * @param {Response} res - The HTTP response object to send as the response.
    * @param {DTFSCustomerDto} dtfsCustomerDto - The DTO containing customer details.
-   * @param {any[] | null} existingCustomersInInformatica - List of existing customers found in Informatica or null.
+   * @param {any[] | null} existingCustomers - List of existing customers found in Salesforce or null.
    * @returns {Promise<void>}
    */
-  private async createCustomerByURN(res, dtfsCustomerDto, existingCustomersInInformatica = null) {
+  private async createCustomerByURN(res, dtfsCustomerDto, existingCustomers = null) {
     let partyUrn: string;
     let isLegacyRecord: boolean;
 
     // TODO: replace this with a call to Salesforce's NUMGEN table once that's in place
     const dunsNumber = await this.getDunAndBradstreetNumber(dtfsCustomerDto.companyRegistrationNumber);
 
-    if (existingCustomersInInformatica) {
+    if (existingCustomers) {
       isLegacyRecord = true;
-      [{ partyUrn }] = existingCustomersInInformatica;
+      [{ partyUrn }] = existingCustomers;
     } else {
       isLegacyRecord = false;
       const createUkefIdDto: CreateUkefIdDto[] = [

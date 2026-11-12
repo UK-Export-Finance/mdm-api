@@ -52,14 +52,14 @@ export class GetCustomersGenerator extends AbstractGenerator<CustomerValues, Gen
       return { ...searchParam, ...{ fallbackToLegacyData: query.fallbackToLegacyData ? query.fallbackToLegacyData : ENUMS.FALLBACK_TO_LEGACY_DATA.YES } };
     });
 
-    const informaticaRequest: GetCustomersInformaticaQueryDto[] = request.map((customer) => ({
+    const salesforceSqolTodo: string[] = request.map((customer) => ({
       ...(customer.companyReg ? { companyreg: customer.companyReg } : {}),
       ...(customer.name ? { name: customer.name } : {}),
       ...(customer.partyUrn ? { partyUrn: customer.partyUrn } : {}),
       ...{ includeLegacyData: customer.fallbackToLegacyData },
     }));
 
-    const informaticaPath = `/v1/p-sa-impl-get-account-or-legacy?${new URLSearchParams(informaticaRequest[0] as URLSearchParams).toString()}`;
+    const informaticaPath = `/query?q=$${encodeURIComponent(salesforceSqolTodo[0])}`;
 
     const mdmPath = `/api/v1/customers?${new URLSearchParams(request[0] as URLSearchParams).toString()}`;
 

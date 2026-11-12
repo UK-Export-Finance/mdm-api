@@ -115,7 +115,7 @@ Import the Jest runtime in each file that uses it and type mocks against the fun
 ```typescript
 import { jest } from '@jest/globals';
 
-const getCustomers = jest.fn<InformaticaService['getCustomers']>();
+const getCustomers = jest.fn<SalesforceService['getCustomers']>();
 ```
 
 Use typed `jest.spyOn` calls for generic or overloaded methods, and `mockResolvedValue` for asynchronous return values.

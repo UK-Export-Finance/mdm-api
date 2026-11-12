@@ -2,8 +2,6 @@ import { BadRequestException, Body, Controller, Get, Post, Query, Res } from '@n
 import { ApiBadRequestResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOperation, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
-
-import { GetCustomersInformaticaQueryDto } from '@ukef/modules/informatica/dto/get-customers-informatica-query.dto';
 import { CustomersService } from './customers.service';
 import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
 import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
@@ -17,7 +15,7 @@ export class CustomersController {
 
   @Get()
   @ApiOperation({
-    summary: 'Get customers from Salesforce via Informatica',
+    summary: 'Get customers from Salesforce directly',
   })
   @ApiResponse({
     status: HttpStatusCode.Ok,
@@ -29,30 +27,7 @@ export class CustomersController {
   })
   getCustomers(@Query() query: GetCustomersQueryDto): Promise<GetCustomersResponse> {
     this.ensureOneIsNotEmpty(query.companyReg, query.name, query.partyUrn);
-    const backendQuery: GetCustomersInformaticaQueryDto = {
-      ...(query.companyReg ? { companyreg: query.companyReg } : {}),
-      ...(query.name ? { name: query.name } : {}),
-      ...(query.partyUrn ? { partyUrn: query.partyUrn } : {}),
-      ...{ includeLegacyData: query.fallbackToLegacyData },
-    };
-    return this.customersService.getCustomers(backendQuery);
-  }
-
-  @Get('direct')
-  @ApiOperation({
-    summary: 'Get customers from Salesforce directly',
-  })
-  @ApiResponse({
-    status: HttpStatusCode.Ok,
-    description: 'Customers matching search parameters',
-    type: [GetCustomersResponseItem],
-  })
-  @ApiNotFoundResponse({
-    description: 'Customer not found',
-  })
-  getCustomersDirect(@Query() query: GetCustomersQueryDto): Promise<GetCustomersResponse> {
-    this.ensureOneIsNotEmpty(query.companyReg, query.name, query.partyUrn);
-    return this.customersService.getCustomersDirect(query);
+    return this.customersService.getCustomers(query);
   }
 
   @Post()
