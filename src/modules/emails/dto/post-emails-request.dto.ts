@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsObject, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 import { EXAMPLES, GOVUK_NOTIFY } from '@ukef/constants';
+import { IsValidPersonalisationFile } from '@ukef/custom-decorators';
 
 export class PostEmailsRequestDto {
   @IsString()
@@ -29,13 +30,14 @@ export class PostEmailsRequestDto {
 
   @IsObject()
   @IsOptional()
+  @IsValidPersonalisationFile()
   @ApiProperty({
-    example: { firstName: EXAMPLES.GOVUK_NOTIFY.FIRST_NAME },
-    description: 'All variables for email template',
+    example: { firstName: EXAMPLES.GOVUK_NOTIFY.FIRST_NAME, file: EXAMPLES.GOVUK_NOTIFY.FILE },
+    description: `All variables for email template. Include an optional \`file\` property to have GOV.UK Notify generate a secure download link, which replaces the \`((linkToFile))\` placeholder in the template. The file size must be smaller than ${GOVUK_NOTIFY.FILE.SIZE.MAX}.`,
     required: false,
     nullable: true,
   })
-  readonly personalisation?: Record<string, string | number | object> | null;
+  readonly personalisation?: Personalisation | null;
 
   @IsString()
   @IsOptional()
@@ -50,16 +52,9 @@ export class PostEmailsRequestDto {
     maxLength: 400,
   })
   readonly reference?: string | null;
-
-  @IsString()
-  @IsOptional()
-  @MinLength(1)
-  @ApiProperty({
-    example: EXAMPLES.GOVUK_NOTIFY.FILE,
-    description: `File for GovNotify to consume and generate a link to download with supported file types. The file size must be smaller than ${GOVUK_NOTIFY.FILE.SIZE.MAX}`,
-    required: false,
-    nullable: true,
-    minLength: 1,
-  })
-  readonly file?: string | null;
 }
+
+export type Personalisation = Record<string, string | number | object> & {
+  /** File for GOV.UK Notify to consume and convert into a secure `linkToFile` download link. */
+  file?: string;
+};

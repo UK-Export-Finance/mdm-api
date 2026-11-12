@@ -109,9 +109,8 @@ describe('GovukNotifyService', () => {
           templateId,
           personalisation: filePersonalisation,
           reference,
-          file: filePersonalisation.file,
         };
-        const buffer = convertStringToBuffer(mockParams.file);
+        const buffer = convertStringToBuffer(filePersonalisation.file);
 
         // Act
         await service.sendEmail(govUkNotifyKey, mockParams);

@@ -119,6 +119,29 @@ describe('POST /emails', () => {
     });
   });
 
+  it('calls NotifyClient.sendEmail with a linkToFile and no raw file property when personalisation.file is provided', async () => {
+    // Arrange
+    const file = valueGenerator.string({ length: 20 });
+    const personalisationWithFile = { ...request.personalisation, file };
+
+    // Act
+    await api.post(mdmPath, { ...request, personalisation: personalisationWithFile }, { govUkNotifyKey });
+
+    // Assert
+    const [, , { personalisation: sentPersonalisation }] = sendEmailMethodMock.mock.calls[0];
+
+    expect(sentPersonalisation).not.toHaveProperty('file');
+    expect(sentPersonalisation).toMatchObject({
+      ...request.personalisation,
+      linkToFile: {
+        file: expect.any(String),
+        filename: null,
+        confirm_email_before_download: true,
+        retention_period: null,
+      },
+    });
+  });
+
   it('returns a 400 response if header `govUkNotifyKey` is missing', async () => {
     // Act
     const { status, body } = await api.post(mdmPath, request);
@@ -258,6 +281,23 @@ describe('POST /emails', () => {
       givenAnyRequestBodyWouldSucceed: () => {
         jest.spyOn(NotifyClient.prototype, 'sendEmail').mockImplementation(() => Promise.resolve(mockNotifySendEmailResponse));
       },
+    });
+
+    it('returns a 400 response if personalisation.file is an empty string', async () => {
+      // Arrange
+      jest.spyOn(NotifyClient.prototype, 'sendEmail').mockImplementation(() => Promise.resolve(mockNotifySendEmailResponse));
+      const invalidRequest = { ...request, personalisation: { ...request.personalisation, file: '' } };
+
+      // Act
+      const { status, body } = await api.post(mdmPath, invalidRequest, { govUkNotifyKey });
+
+      // Assert
+      expect(status).toBe(400);
+      expect(body).toMatchObject({
+        statusCode: 400,
+        error: 'Bad Request',
+        message: expect.arrayContaining([expect.stringContaining('personalisation.file must be a non-empty string')]),
+      });
     });
   });
 });
