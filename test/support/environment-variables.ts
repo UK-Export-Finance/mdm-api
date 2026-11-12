@@ -36,8 +36,6 @@ export const ENVIRONMENT_VARIABLES = Object.freeze({
   SALESFORCE_INSTANCE_URL: valueGenerator.httpsUrl(),
   SALESFORCE_CLIENT_ID: valueGenerator.word(),
   SALESFORCE_CLIENT_SECRET: valueGenerator.word(),
-  SALESFORCE_USERNAME: valueGenerator.word(),
-  SALESFORCE_PASSWORD: valueGenerator.word(),
   SALESFORCE_ACCESS_URL: valueGenerator.httpsUrl(),
   SALESFORCE_MAX_REDIRECTS: 0,
   SALESFORCE_TIMEOUT: 5000,
