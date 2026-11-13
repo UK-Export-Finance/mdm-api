@@ -18,14 +18,6 @@ describe('salesforceConfig', () => {
       environmentVariableName: 'SALESFORCE_CLIENT_SECRET',
     },
     {
-      configPropertyName: 'username',
-      environmentVariableName: 'SALESFORCE_USERNAME',
-    },
-    {
-      configPropertyName: 'password',
-      environmentVariableName: 'SALESFORCE_PASSWORD',
-    },
-    {
       configPropertyName: 'accessUrl',
       environmentVariableName: 'SALESFORCE_ACCESS_URL',
     },

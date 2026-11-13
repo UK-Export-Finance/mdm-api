@@ -18,10 +18,6 @@ export class SalesforceService {
 
   private readonly client_secret: string;
 
-  private readonly username: string;
-
-  private readonly password: string;
-
   private readonly access_url: string;
 
   constructor(
@@ -29,11 +25,9 @@ export class SalesforceService {
     configService: ConfigService,
     private readonly logger: PinoLogger,
   ) {
-    const { clientId, clientSecret, username, password, accessUrl } = configService.get<SalesforceConfigType>(SALESFORCE_CONFIG_KEY);
+    const { clientId, clientSecret, accessUrl } = configService.get<SalesforceConfigType>(SALESFORCE_CONFIG_KEY);
     this.client_id = clientId;
     this.client_secret = clientSecret;
-    this.username = username;
-    this.password = password;
     this.access_url = accessUrl;
 
     this.httpClient = new HttpClient(httpService);
@@ -96,11 +90,9 @@ export class SalesforceService {
       const response = await this.httpClient.post<any, any>({
         path,
         body: {
-          grant_type: 'password',
+          grant_type: 'client_credentials',
           client_id: this.client_id,
           client_secret: this.client_secret,
-          username: this.username,
-          password: this.password,
         },
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
