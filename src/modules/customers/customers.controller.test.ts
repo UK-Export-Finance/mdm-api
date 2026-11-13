@@ -5,6 +5,8 @@ import { Response } from 'express';
 import { when } from 'jest-when';
 import { ENUMS, EXAMPLES } from '@ukef/constants';
 import { salesforceFormattedCurrentDate } from '@ukef/helpers/date-formatter.helper';
+import { GetCustomersGenerator } from '@ukef-test/support/generator/get-customers-generator';
+import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 
 import { CustomersController } from './customers.controller';
 import { CustomersService } from './customers.service';
@@ -75,7 +77,7 @@ describe('CustomersController', () => {
         query: { partyUrn: EXAMPLES.CUSTOMER.PARTYURN },
       },
     ])('get customers with query $query', async ({ query }) => {
-      const getCustomersResponse: GetCustomersResponse = [];
+      const { getCustomersResponse } = new GetCustomersGenerator(new RandomValueGenerator()).generate({ numberToGenerate: 1 });
 
       when(customersServiceGetCustomers).calledWith(query).mockResolvedValueOnce(getCustomersResponse);
 

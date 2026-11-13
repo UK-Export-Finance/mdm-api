@@ -12,13 +12,12 @@ import { CreateUkefIdDto } from '@ukef/modules/numbers/dto/create-ukef-id.dto';
 import { UkefId } from '@ukef/modules/numbers/entities/ukef-id.entity';
 import { NumbersService } from '@ukef/modules/numbers/numbers.service';
 import { CreateCustomerSalesforceResponseDto } from '@ukef/modules/salesforce/dto/create-customer-salesforce-response.dto';
+import { GetSalesforceAccountResponseDto } from '@ukef/modules/salesforce/dto/get-salesforce-account-response.dto';
+import { GetSalesforceLegacyAccountResponseDto } from '@ukef/modules/salesforce/dto/get-salesforce-legacy-account-response.dto';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
 import { GetCustomersQueryDto } from './dto/get-customers-query.dto';
-import { GetCustomersResponse, GetCustomersResponseItem } from './dto/get-customers-response.dto';
-import { map } from 'lodash';
-import { GetSalesforceAccountResponseDto } from '../salesforce/dto/get-salesforce-account-response.dto';
-import { GetSalesforceLegacyAccountResponseDto } from '../salesforce/dto/get-salesforce-legacy-account-response.dto';
+import { GetCustomersResponse } from './dto/get-customers-response.dto';
 
 @Injectable()
 export class CustomersService {
@@ -39,11 +38,11 @@ export class CustomersService {
     switch (query.fallbackToLegacyData) {
       case 'yes':
         const accounts = await this.getSalesforceAccounts(query);
-        return accounts.length ? accounts : this.getSalesforceLegacyAccounts(query);
+        return accounts.length ? accounts : await this.getSalesforceLegacyAccounts(query);
       case 'no':
-        return this.getSalesforceAccounts(query);
+        return await this.getSalesforceAccounts(query);
       case 'legacy-only':
-        return this.getSalesforceLegacyAccounts(query);
+        return await this.getSalesforceLegacyAccounts(query);
       default:
         throw new Error(`Invalid value for fallbackToLegacyData: ${query.fallbackToLegacyData}`);
     }
@@ -158,8 +157,6 @@ export class CustomersService {
       // If the customer does exist in Salesforce
       if (existingCustomers?.[0]) {
         return await this.handleExistingCustomerSalesforceResponse(res, dtfsCustomerDto, existingCustomers);
-      } else {
-        throw new InternalServerErrorException();
       }
 
       this.logger.error('Salesforce returned no customers for company %s without a not-found response', dtfsCustomerDto.companyRegistrationNumber);
@@ -171,8 +168,6 @@ export class CustomersService {
         this.logger.info('Customer for company %s not found in Salesforce; creating in Salesforce', dtfsCustomerDto.companyRegistrationNumber);
 
         return await this.handleSalesforceCustomerNotFound(res, dtfsCustomerDto);
-      } else {
-        throw error;
       }
 
       this.logger.error('Error getting or creating customer for company %s', dtfsCustomerDto.companyRegistrationNumber);
@@ -196,8 +191,6 @@ export class CustomersService {
       // If the customer exists as a non-legacy record in Salesforce
       return res.status(HttpStatusCode.Ok).json(existingCustomers);
     }
-
-
 
     if (existingCustomers[0]?.isLegacyRecord === true) {
       if (existingCustomers[0]?.partyUrn) {

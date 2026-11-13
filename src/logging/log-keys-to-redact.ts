@@ -42,7 +42,7 @@ const getOutgoingRequestLogKeysToRedact = ({ logKey, headersLogKey, bodyLogKey }
   //  - Authorization header for Companies House, Dun and Bradstreet and other
   // We redact the outgoing request body as it contains:
   //  - our Client auth details for Dun and Bradstreet and Salesforce
-  buildKeyToRedact([logKey, headersLogKey]), // TODO cleanup
+  buildKeyToRedact([logKey, headersLogKey]),
   buildKeyToRedact([logKey, bodyLogKey]),
 ];
 

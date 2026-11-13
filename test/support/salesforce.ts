@@ -40,16 +40,19 @@ export const setSalesforceTestEnvironment = (): (() => void) => {
     } else {
       process.env.SALESFORCE_INSTANCE_URL = originalInstanceUrl;
     }
+
     if (originalClientId === undefined) {
       delete process.env.SALESFORCE_CLIENT_ID;
     } else {
       process.env.SALESFORCE_CLIENT_ID = originalClientId;
     }
+
     if (originalClientSecret === undefined) {
       delete process.env.SALESFORCE_CLIENT_SECRET;
     } else {
       process.env.SALESFORCE_CLIENT_SECRET = originalClientSecret;
     }
+
     if (originalAccessUrl === undefined) {
       delete process.env.SALESFORCE_ACCESS_URL;
     } else {

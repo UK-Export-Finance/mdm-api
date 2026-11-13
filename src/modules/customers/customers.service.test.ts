@@ -11,8 +11,7 @@ import { FallbackToLegacyDataEnum } from '@ukef/constants/enums/fallbackToLegacy
 import { DunAndBradstreetService } from '@ukef/helper-modules/dun-and-bradstreet/dun-and-bradstreet.service';
 import { salesforceFormattedCurrentDate } from '@ukef/helpers/date-formatter.helper';
 import { SalesforceService } from '@ukef/modules/salesforce/salesforce.service';
-import { GetSalesforceAccountResponseDto } from '@ukef/modules/salesforce/dto/get-salesforce-account-response.dto';
-import { GetSalesforceLegacyAccountResponseDto } from '@ukef/modules/salesforce/dto/get-salesforce-legacy-account-response.dto';
+import { GetCustomersGenerator } from '@ukef-test/support/generator/get-customers-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { UkefId } from '@ukef/modules/numbers/entities/ukef-id.entity';
 import { NumbersService } from '@ukef/modules/numbers/numbers.service';
@@ -41,6 +40,16 @@ const basePayload = {
   companyRegistrationNumber,
   companyName,
 };
+
+const {
+  getSalesforceCustomers: [salesforceAccount],
+  getSalesforceLegacyCustomers: [legacySalesforceAccount],
+  getCustomersResponse: [mappedSalesforceCustomer],
+  getLegacyCustomersResponse: [mappedLegacySalesforceCustomer],
+} = new GetCustomersGenerator(new RandomValueGenerator()).generate({
+  numberToGenerate: 1,
+  query: { companyReg: companyRegistrationNumber },
+});
 
 const customerWithPod: DTFSCustomerDto = {
   ...basePayload,
@@ -79,11 +88,11 @@ const salesforceCreateCustomerResponse: CreateCustomerSalesforceResponseDto = {
 const createUkefIdResponse: UkefId[] = [{ maskedId: 'TEST PARTY_URN', type: null, createdBy: null, createdDatetime: null, requestingSystem: null }];
 const dunAndBradstreetGetDunsNumberResponse = 'TEST DUNS_NUMBER';
 
-// Legacy Salesforce customer which has a party URN
+// Salesforce legacy customer which has a party URN
 const createLegacyCustomerWithUrn: GetCustomersResponseItem[] = [
   {
     customerType,
-    partyUrn: 'SOME_LEGACY_URN',
+    partyUrn: legacySalesforceAccount.M2_1_MCD_Party_URN__c,
     name: companyName,
     sfId: 'customer-id',
     companyRegNo: companyRegistrationNumber,
@@ -100,7 +109,7 @@ const createLegacyCustomerWithUrn: GetCustomersResponseItem[] = [
   },
 ];
 
-// Legacy Salesforce customer which has URN generated
+// Salesforce legacy customer which has URN generated
 const createLegacyCustomerWithNoUrn: GetCustomersResponseItem[] = [
   {
     customerType,
@@ -141,66 +150,6 @@ const createNewCustomerWithUrn: GetCustomersResponseItem[] = [
     creditClassificationDate: salesForceDate,
   },
 ];
-
-const salesforceAccount: GetSalesforceAccountResponseDto = {
-  Id: 'customer-id',
-  Name: companyName,
-  Party_URN__c: '00312345',
-  Company_Registration_Number__c: companyRegistrationNumber,
-  CCM_Probability_of_Default__c: probabilityOfDefault,
-  CCM_Citizenship_Class__c: EXAMPLES.CUSTOMER.UK_ENTITY,
-  CCM_Industry__c: EXAMPLES.CUSTOMER.UK_INDUSTRY_NAME,
-  CCM_Industry_Group__c: EXAMPLES.CUSTOMER.UK_INDUSTRY_SECTOR_NAME,
-  Account_Type__c: null,
-  Account_Sub_Type__c: null,
-  CCM_Risk_Entity__c: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
-  CCM_Credit_Risk_Rating__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING,
-  CCM_Credit_Risk_Rating_Date__c: salesForceDate,
-} as GetSalesforceAccountResponseDto;
-
-const legacySalesforceAccount: GetSalesforceLegacyAccountResponseDto = {
-  Id: 'legacy-customer-id',
-  M2_1_MCD_Party_URN__c: 'SOME_LEGACY_URN',
-  M2_1_MCD_Party_Name__c: companyName,
-  M2_1_MCD_Company_Reg_Number__c: companyRegistrationNumber,
-  M2_1_MCD_UK_or_Overseas__c: EXAMPLES.CUSTOMER.UK_ENTITY,
-  M2_1_MCD_Party_Type__c: null,
-  M2_1_MCD_Party_Sub_Type__c: null,
-} as GetSalesforceLegacyAccountResponseDto;
-
-const mappedSalesforceCustomer: GetCustomersResponseItem = {
-  partyUrn: salesforceAccount.Party_URN__c,
-  name: salesforceAccount.Name,
-  sfId: salesforceAccount.Id,
-  companyRegNo: salesforceAccount.Company_Registration_Number__c,
-  probabilityOfDefault: salesforceAccount.CCM_Probability_of_Default__c,
-  ukEntity: salesforceAccount.CCM_Citizenship_Class__c,
-  ukefIndustryName: salesforceAccount.CCM_Industry__c,
-  ukefSectorName: salesforceAccount.CCM_Industry_Group__c,
-  type: salesforceAccount.Account_Type__c,
-  subtype: salesforceAccount.Account_Sub_Type__c,
-  isLegacyRecord: false,
-  riskEntity: salesforceAccount.CCM_Risk_Entity__c,
-  creditClassificationStatus: salesforceAccount.CCM_Credit_Risk_Rating__c,
-  creditClassificationDate: salesforceAccount.CCM_Credit_Risk_Rating_Date__c,
-};
-
-const mappedLegacySalesforceCustomer: GetCustomersResponseItem = {
-  partyUrn: legacySalesforceAccount.M2_1_MCD_Party_URN__c,
-  name: legacySalesforceAccount.M2_1_MCD_Party_Name__c,
-  sfId: legacySalesforceAccount.Id,
-  companyRegNo: legacySalesforceAccount.M2_1_MCD_Company_Reg_Number__c,
-  probabilityOfDefault: null,
-  ukEntity: legacySalesforceAccount.M2_1_MCD_UK_or_Overseas__c,
-  ukefIndustryName: null,
-  ukefSectorName: null,
-  type: legacySalesforceAccount.M2_1_MCD_Party_Type__c,
-  subtype: legacySalesforceAccount.M2_1_MCD_Party_Sub_Type__c,
-  isLegacyRecord: true,
-  riskEntity: null,
-  creditClassificationStatus: null,
-  creditClassificationDate: null,
-};
 
 const queryForCustomer = (customer: DTFSCustomerDto): GetCustomersQueryDto => ({
   companyReg: customer.companyRegistrationNumber,
@@ -547,7 +496,7 @@ describe('CustomerService', () => {
             // Assert
             expectSuccessfulResponse(response, mockSalesforceResponse, HttpStatusCode.Created);
 
-            expectSalesforceCustomerCreationRequest(dtfsCustomerDto, 'SOME_LEGACY_URN');
+            expectSalesforceCustomerCreationRequest(dtfsCustomerDto, legacySalesforceAccount.M2_1_MCD_Party_URN__c);
 
             expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(1);
             expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(1);

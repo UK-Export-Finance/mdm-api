@@ -57,7 +57,8 @@ const CONFIGS = [AppConfig, CompaniesHouseConfig, DocConfig, DatabaseConfig, Dun
             },
             error: {
               logKey: 'err',
-              sensitiveChildKeys: [],
+              // The `config` can have authentication details for all services
+              sensitiveChildKeys: ['config'],
             },
             dbError: {
               logKey: 'err',
