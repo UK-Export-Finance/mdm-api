@@ -17,7 +17,7 @@ import { GetSalesforceLegacyAccountResponseDto } from '@ukef/modules/salesforce/
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
 import { GetCustomersQueryDto } from './dto/get-customers-query.dto';
-import { GetCustomersResponse } from './dto/get-customers-response.dto';
+import { GetCustomersResponse, GetCustomersResponseItem } from './dto/get-customers-response.dto';
 
 @Injectable()
 export class CustomersService {
@@ -60,12 +60,19 @@ export class CustomersService {
     return salesforceGetCustomersResponse.map(this.mapCustomerInSalesforceToResponse);
   }
 
-  private mapCustomerInSalesforceToResponse(customer: GetSalesforceAccountResponseDto) {
+  /**
+   * Maps a Salesforce account response item to the customer response format.
+   *
+   * @param customer The Salesforce account response item to be mapped.
+   * @returns The mapped customer response item.
+   */
+  private mapCustomerInSalesforceToResponse(customer: GetSalesforceAccountResponseDto): GetCustomersResponseItem {
     return {
       partyUrn: customer.Party_URN__c,
       name: customer.Name,
       sfId: customer.Id,
       companyRegNo: customer.Company_Registration_Number__c,
+      customerType: customer.CCM_Customer_Type__c,
       probabilityOfDefault: customer.CCM_Probability_of_Default__c,
       ukEntity: customer.CCM_Citizenship_Class__c,
       ukefIndustryName: customer.CCM_Industry__c,
@@ -91,12 +98,19 @@ export class CustomersService {
     return salesforceGetCustomersResponse.map(this.mapLegacyCustomerInSalesforceToResponse);
   }
 
-  private mapLegacyCustomerInSalesforceToResponse(customer: GetSalesforceLegacyAccountResponseDto) {
+  /**
+   * Maps a Salesforce legacy account response item to the customer response format.
+   *
+   * @param customer The Salesforce legacy account response item to be mapped.
+   * @returns The mapped customer response item.
+   */
+  private mapLegacyCustomerInSalesforceToResponse(customer: GetSalesforceLegacyAccountResponseDto): GetCustomersResponseItem {
     return {
       partyUrn: customer.M2_1_MCD_Party_URN__c,
       name: customer.M2_1_MCD_Party_Name__c,
       sfId: customer.Id,
       companyRegNo: customer.M2_1_MCD_Company_Reg_Number__c,
+      customerType: null,
       probabilityOfDefault: null,
       ukEntity: customer.M2_1_MCD_UK_or_Overseas__c,
       ukefIndustryName: null,
@@ -189,7 +203,8 @@ export class CustomersService {
       this.logger.info('Salesforce customer exists, returning existing customer records');
 
       // If the customer exists as a non-legacy record in Salesforce
-      return res.status(HttpStatusCode.Ok).json(existingCustomers);
+      res.status(HttpStatusCode.Ok);
+      return existingCustomers;
     }
 
     if (existingCustomers[0]?.isLegacyRecord === true) {

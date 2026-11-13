@@ -15,7 +15,7 @@ export class CustomersController {
 
   @Get()
   @ApiOperation({
-    summary: 'Get customers from Salesforce directly',
+    summary: 'Get customers from Salesforce',
   })
   @ApiResponse({
     status: HttpStatusCode.Ok,

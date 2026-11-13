@@ -33,8 +33,6 @@ describe('SalesforceService', () => {
     jest.spyOn(configService, 'get').mockReset().mockReturnValue({
       clientId: 'TEST_CLIENT_ID',
       clientSecret: 'TEST_CLIENT_SECRET',
-      username: 'TEST_USERNAME',
-      password: 'TEST_PASSWORD',
       accessUrl: 'TEST_ACCESS_URL',
     });
 
@@ -87,8 +85,8 @@ describe('SalesforceService', () => {
       where: "Company_Registration_Number__c = '01234567' AND Party_URN__c = '00312345' AND Name LIKE '%Example%'",
     },
     {
-      query: { companyReg: "reg\\'number", partyUrn: "urn\\'value", name: "O'Brien\\Company" },
-      where: "Company_Registration_Number__c = 'reg\\\\\\'number' AND Party_URN__c = 'urn\\\\\\'value' AND Name LIKE '%O\\'Brien\\\\Company%'",
+      query: { companyReg: "reg\\'number", partyUrn: "urn\\'value", name: "O'Brayen\\Company" },
+      where: "Company_Registration_Number__c = 'reg\\\\\\'number' AND Party_URN__c = 'urn\\\\\\'value' AND Name LIKE '%O\\'Brayen\\\\Company%'",
     },
     { query: { companyReg: '', partyUrn: '00312345' }, where: "Party_URN__c = '00312345'" },
   ];

@@ -47,6 +47,15 @@ const invalidPayloads = [
     payload: {
       companyRegistrationNumber: EXAMPLES.CUSTOMER.COMPANYREG,
       companyName: EXAMPLES.CUSTOMER.NAME,
+      customerType: 'a'.repeat(201),
+    },
+    message: ['customerType must be shorter than or equal to 200 characters'],
+  },
+  {
+    payload: {
+      companyRegistrationNumber: EXAMPLES.CUSTOMER.COMPANYREG,
+      companyName: EXAMPLES.CUSTOMER.NAME,
+      customerType: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
       probabilityOfDefault: '',
     },
     message: [
@@ -60,6 +69,7 @@ const invalidPayloads = [
     payload: {
       companyRegistrationNumber: EXAMPLES.CUSTOMER.COMPANYREG,
       companyName: EXAMPLES.CUSTOMER.NAME,
+      customerType: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
       probabilityOfDefault: 101,
     },
     message: ['probabilityOfDefault must not be greater than 100'],
@@ -68,6 +78,7 @@ const invalidPayloads = [
     payload: {
       companyRegistrationNumber: EXAMPLES.CUSTOMER.COMPANYREG,
       companyName: EXAMPLES.CUSTOMER.NAME,
+      customerType: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
       probabilityOfDefault: EXAMPLES.CUSTOMER.PROBABILITY_OF_DEFAULT,
       ukEntity: '',
     },
@@ -77,6 +88,7 @@ const invalidPayloads = [
     payload: {
       companyRegistrationNumber: EXAMPLES.CUSTOMER.COMPANYREG,
       companyName: EXAMPLES.CUSTOMER.NAME,
+      customerType: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
       probabilityOfDefault: EXAMPLES.CUSTOMER.PROBABILITY_OF_DEFAULT,
       ukEntity: 'False',
     },
@@ -86,6 +98,7 @@ const invalidPayloads = [
     payload: {
       companyRegistrationNumber: EXAMPLES.CUSTOMER.COMPANYREG,
       companyName: EXAMPLES.CUSTOMER.NAME,
+      customerType: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
       probabilityOfDefault: EXAMPLES.CUSTOMER.PROBABILITY_OF_DEFAULT,
       ukEntity: EXAMPLES.CUSTOMER.UK_ENTITY,
       ukefIndustryName: '',
@@ -96,6 +109,7 @@ const invalidPayloads = [
     payload: {
       companyRegistrationNumber: EXAMPLES.CUSTOMER.COMPANYREG,
       companyName: EXAMPLES.CUSTOMER.NAME,
+      customerType: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
       probabilityOfDefault: EXAMPLES.CUSTOMER.PROBABILITY_OF_DEFAULT,
       ukEntity: EXAMPLES.CUSTOMER.UK_ENTITY,
       ukefIndustryName: EXAMPLES.CUSTOMER.UK_INDUSTRY_NAME,
