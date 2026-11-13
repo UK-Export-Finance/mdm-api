@@ -71,7 +71,7 @@ const invalidPayloads = [
       probabilityOfDefault: EXAMPLES.CUSTOMER.PROBABILITY_OF_DEFAULT,
       ukEntity: '',
     },
-    message: ['ukEntity must be longer than or equal to 1 characters', 'ukEntity should not be empty'],
+    message: ['ukEntity should not be empty'],
   },
   {
     payload: {
@@ -90,7 +90,7 @@ const invalidPayloads = [
       ukEntity: EXAMPLES.CUSTOMER.UK_ENTITY,
       ukefIndustryName: '',
     },
-    message: ['ukefIndustryName must be longer than or equal to 1 characters', 'ukefIndustryName should not be empty'],
+    message: ['ukefIndustryName should not be empty'],
   },
   {
     payload: {
@@ -101,7 +101,7 @@ const invalidPayloads = [
       ukefIndustryName: EXAMPLES.CUSTOMER.UK_INDUSTRY_NAME,
       ukefSectorName: '',
     },
-    message: ['ukefSectorName must be longer than or equal to 1 characters', 'ukefSectorName should not be empty'],
+    message: ['ukefSectorName should not be empty'],
   },
 ];
 
@@ -166,17 +166,22 @@ describe('POST /customers', () => {
     // Following response is sent when the customer exist
     expect(status).toBe(HttpStatusCode.Ok);
     expect(body).toHaveLength(1);
-    console.log('body');
-    console.log(body);
-    expect(body).toBe([
+    expect(body).toStrictEqual([
       {
         partyUrn: '00302069',
-        name: 'Testing Systems Ltd',
+        name: 'Mock name',
         sfId: '000A000000a1BBbCDE',
         companyRegNo: '06012345',
+        probabilityOfDefault: 14.1,
+        ukEntity: 'Yes',
+        ukefIndustryName: 'AGRICULTURE, HORTICULTURE & FISHERIES',
+        ukefSectorName: 'CIVIL: AGRICULTURE, HORTICULTURE & FISHERIES',
         type: 'Association',
         subtype: 'Alternative Finance Provider',
         isLegacyRecord: false,
+        riskEntity: 'Corporate',
+        creditClassificationStatus: 'Good',
+        creditClassificationDate: '1989-09-20',
       },
     ]);
     expect(nock.isDone()).toBe(true);

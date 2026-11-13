@@ -1,10 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { EXAMPLES } from '@ukef/constants';
 
 export class SalesforceLegacyAccountAttributesDto {
-  @ApiProperty({ example: 'M2_1_MCD_Legacy_Data_Party__c' })
+  @ApiProperty({ example: EXAMPLES.SALESFORCE_LEGACY_ACCOUNT.ATTRIBUTES.TYPE })
   type: string;
 
-  @ApiProperty({ example: '/services/data/v53.0/sobjects/M2_1_MCD_Legacy_Data_Party__c/a0J3L000001qmOuUAI' })
+  @ApiProperty({ example: EXAMPLES.SALESFORCE_LEGACY_ACCOUNT.ATTRIBUTES.URL })
   url: string;
 }
 
@@ -12,34 +13,34 @@ export class GetSalesforceLegacyAccountResponseDto {
   @ApiProperty({ type: SalesforceLegacyAccountAttributesDto })
   attributes: SalesforceLegacyAccountAttributesDto;
 
-  @ApiProperty({ example: 'a0J3L000001qmOuUAI' })
+  @ApiProperty({ example: EXAMPLES.CUSTOMER.SALESFORCE_ID })
   Id: string;
 
-  @ApiProperty({ example: '0056700000Ax3PUAAZ' })
+  @ApiProperty({ example: EXAMPLES.SALESFORCE_LEGACY_ACCOUNT.OWNER_ID })
   OwnerId: string;
 
-  @ApiProperty({ example: false })
+  @ApiProperty({ example: EXAMPLES.SALESFORCE_LEGACY_ACCOUNT.IS_DELETED })
   IsDeleted: boolean;
 
-  @ApiProperty({ example: 'LD-25202' })
+  @ApiProperty({ example: EXAMPLES.SALESFORCE_LEGACY_ACCOUNT.NAME })
   Name: string;
 
-  @ApiProperty({ example: 'GBP' })
+  @ApiProperty({ example: EXAMPLES.SALESFORCE_LEGACY_ACCOUNT.CURRENCY_ISO_CODE })
   CurrencyIsoCode: string;
 
-  @ApiProperty({ example: '2023-11-11T12:14:58.000+0000' })
+  @ApiProperty({ example: EXAMPLES.SALESFORCE_LEGACY_ACCOUNT.CREATED_DATE })
   CreatedDate: string;
 
-  @ApiProperty({ example: '0056700000Ax3PUAAZ' })
+  @ApiProperty({ example: EXAMPLES.SALESFORCE_LEGACY_ACCOUNT.CREATED_BY_ID })
   CreatedById: string;
 
-  @ApiProperty({ example: '2023-11-11T12:14:59.000+0000' })
+  @ApiProperty({ example: EXAMPLES.SALESFORCE_LEGACY_ACCOUNT.LAST_MODIFIED_DATE })
   LastModifiedDate: string;
 
-  @ApiProperty({ example: '0056700000Ax3PUAAZ' })
+  @ApiProperty({ example: EXAMPLES.SALESFORCE_LEGACY_ACCOUNT.LAST_MODIFIED_BY_ID })
   LastModifiedById: string;
 
-  @ApiProperty({ example: '2023-11-11T12:15:01.000+0000' })
+  @ApiProperty({ example: EXAMPLES.SALESFORCE_LEGACY_ACCOUNT.SYSTEM_MODSTAMP })
   SystemModstamp: string;
 
   @ApiProperty({ nullable: true, example: null })
@@ -54,7 +55,7 @@ export class GetSalesforceLegacyAccountResponseDto {
   @ApiProperty({ nullable: true, example: null })
   Account__c: string | null;
 
-  @ApiProperty({ nullable: true, example: '0013L00000LZiAtQAL' })
+  @ApiProperty({ nullable: true, example: EXAMPLES.SALESFORCE_LEGACY_ACCOUNT.ACCOUNT_ID })
   M2_1_MCD_Account_ID__c: string | null;
 
   @ApiProperty({ nullable: true, example: null })
@@ -96,7 +97,7 @@ export class GetSalesforceLegacyAccountResponseDto {
   @ApiProperty({ nullable: true, example: null })
   M2_1_MCD_Company_Reg_Name__c: string | null;
 
-  @ApiProperty({ nullable: true, example: null })
+  @ApiProperty({ nullable: true, example: EXAMPLES.CUSTOMER.COMPANYREG })
   M2_1_MCD_Company_Reg_Number__c: string | null;
 
   @ApiProperty({ nullable: true, example: null })
@@ -129,7 +130,7 @@ export class GetSalesforceLegacyAccountResponseDto {
   @ApiProperty({ nullable: true, example: null })
   M2_1_MCD_HQ_City__c: string | null;
 
-  @ApiProperty({ nullable: true, example: 'Turkey' })
+  @ApiProperty({ nullable: true, example: EXAMPLES.SALESFORCE_LEGACY_ACCOUNT.HQ_COUNTRY })
   M2_1_MCD_HQ_Country__c: string | null;
 
   @ApiProperty({ nullable: true, example: null })
@@ -144,25 +145,25 @@ export class GetSalesforceLegacyAccountResponseDto {
   @ApiProperty({ nullable: true, example: null })
   M2_1_MCD_Oseas_Company_Reg_Number__c: string | null;
 
-  @ApiProperty({ nullable: true, example: 'test_stp_4' })
+  @ApiProperty({ nullable: true, example: EXAMPLES.CUSTOMER.NAME })
   M2_1_MCD_Party_Name__c: string | null;
 
   @ApiProperty({ nullable: true, example: null })
   M2_1_MCD_Party_SME__c: string | null;
 
-  @ApiProperty({ nullable: true, example: 'Duplicate' })
+  @ApiProperty({ nullable: true, example: EXAMPLES.SALESFORCE_LEGACY_ACCOUNT.PARTY_STATUS })
   M2_1_MCD_Party_Status__c: string | null;
 
-  @ApiProperty({ nullable: true, example: null })
+  @ApiProperty({ nullable: true, example: EXAMPLES.CUSTOMER.SALESFORCE_SUBTYPE })
   M2_1_MCD_Party_Sub_Type__c: string | null;
 
-  @ApiProperty({ nullable: true, example: null })
+  @ApiProperty({ nullable: true, example: EXAMPLES.CUSTOMER.SALESFORCE_TYPE })
   M2_1_MCD_Party_Type__c: string | null;
 
-  @ApiProperty({ nullable: true, example: '00325130' })
+  @ApiProperty({ nullable: true, example: EXAMPLES.CUSTOMER.PARTYURN })
   M2_1_MCD_Party_URN__c: string | null;
 
-  @ApiProperty({ nullable: true, example: null })
+  @ApiProperty({ nullable: true, example: EXAMPLES.CUSTOMER.UK_ENTITY })
   M2_1_MCD_UK_or_Overseas__c: string | null;
 
   @ApiProperty({ nullable: true, example: null })

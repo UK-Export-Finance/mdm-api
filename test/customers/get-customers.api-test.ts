@@ -5,11 +5,11 @@ import { accountSoql, legacySoql, mockSalesforceQuery, SALESFORCE_ACCOUNT_RECORD
 import { HttpStatusCode } from 'axios';
 import nock from 'nock';
 
-describe('GET /customers/direct', () => {
+describe('GET /customers', () => {
   let api: Api;
   let restoreSalesforceEnvironment: () => void;
 
-  const endpoint = '/api/v1/customers/direct';
+  const endpoint = '/api/v1/customers';
 
   const legacyRecord = {
     Id: 'LEGACY_CUSTOMER_ID',
@@ -63,7 +63,7 @@ describe('GET /customers/direct', () => {
     },
     makeRequestWithoutAuth: (incorrectAuth?: IncorrectAuthArg) =>
       api.getWithoutAuth(
-        getDirectPath({ companyReg: EXAMPLES.CUSTOMER.COMPANYREG, fallbackToLegacyData: 'no' }),
+        getPath({ companyReg: EXAMPLES.CUSTOMER.COMPANYREG, fallbackToLegacyData: 'no' }),
         incorrectAuth?.headerName,
         incorrectAuth?.headerValue,
       ),
@@ -74,7 +74,7 @@ describe('GET /customers/direct', () => {
       it('returns matching Account records when fallback is disabled', async () => {
         mockSalesforceQuery(accountSoql(accountWhere), [SALESFORCE_ACCOUNT_RECORD]);
 
-        const { status, body } = await api.get(getDirectPath({ ...query, fallbackToLegacyData: 'no' }));
+        const { status, body } = await api.get(getPath({ ...query, fallbackToLegacyData: 'no' }));
 
         expect(status).toBe(HttpStatusCode.Ok);
         expect(body).toMatchObject([
@@ -91,7 +91,7 @@ describe('GET /customers/direct', () => {
       it('returns matching legacy records when legacy-only is selected', async () => {
         mockSalesforceQuery(legacySoql(legacyWhere), [legacyRecord]);
 
-        const { status, body } = await api.get(getDirectPath({ ...query, fallbackToLegacyData: 'legacy-only' }));
+        const { status, body } = await api.get(getPath({ ...query, fallbackToLegacyData: 'legacy-only' }));
 
         expect(status).toBe(HttpStatusCode.Ok);
         expect(body).toMatchObject([
@@ -115,7 +115,7 @@ describe('GET /customers/direct', () => {
     it('uses Account results for yes and does not query legacy records when Account matches', async () => {
       mockSalesforceQuery(accountSoql(accountWhere), [SALESFORCE_ACCOUNT_RECORD]);
 
-      const { status, body } = await api.get(getDirectPath({ ...query, fallbackToLegacyData: 'yes' }));
+      const { status, body } = await api.get(getPath({ ...query, fallbackToLegacyData: 'yes' }));
 
       expect(status).toBe(HttpStatusCode.Ok);
       expect(body).toMatchObject([{ isLegacyRecord: false }]);
@@ -126,7 +126,7 @@ describe('GET /customers/direct', () => {
       mockSalesforceQuery(accountSoql(accountWhere), []);
       mockSalesforceQuery(legacySoql(legacyWhere), [legacyRecord]);
 
-      const { status, body } = await api.get(getDirectPath({ ...query, fallbackToLegacyData: 'yes' }));
+      const { status, body } = await api.get(getPath({ ...query, fallbackToLegacyData: 'yes' }));
 
       expect(status).toBe(HttpStatusCode.Ok);
       expect(body).toMatchObject([{ isLegacyRecord: true }]);
@@ -136,7 +136,7 @@ describe('GET /customers/direct', () => {
     it('does not query legacy records for no when Account has no matches', async () => {
       mockSalesforceQuery(accountSoql(accountWhere), []);
 
-      const { status, body } = await api.get(getDirectPath({ ...query, fallbackToLegacyData: 'no' }));
+      const { status, body } = await api.get(getPath({ ...query, fallbackToLegacyData: 'no' }));
 
       expect(status).toBe(HttpStatusCode.Ok);
       expect(body).toStrictEqual([]);
@@ -152,7 +152,7 @@ describe('GET /customers/direct', () => {
         query: { companyReg: EXAMPLES.CUSTOMER.COMPANYREG, partyUrn: EXAMPLES.CUSTOMER.PARTYURN },
       },
     ])('returns 400 for $description', async ({ query }) => {
-      const { status, body } = await api.get(getDirectPath(query));
+      const { status, body } = await api.get(getPath(query));
 
       expect(status).toBe(HttpStatusCode.BadRequest);
       expect(body).toMatchObject({
@@ -163,7 +163,7 @@ describe('GET /customers/direct', () => {
     });
 
     it('returns 400 for an unsupported fallback option', async () => {
-      const { status, body } = await api.get(getDirectPath({ companyReg: EXAMPLES.CUSTOMER.COMPANYREG, fallbackToLegacyData: 'invalid' }));
+      const { status, body } = await api.get(getPath({ companyReg: EXAMPLES.CUSTOMER.COMPANYREG, fallbackToLegacyData: 'invalid' }));
 
       expect(status).toBe(HttpStatusCode.BadRequest);
       expect(body).toMatchObject({ error: 'Bad Request', statusCode: HttpStatusCode.BadRequest });
@@ -171,5 +171,5 @@ describe('GET /customers/direct', () => {
     });
   });
 
-  const getDirectPath = (query: Record<string, string>): string => `${endpoint}?${new URLSearchParams(query).toString()}`;
+  const getPath = (query: Record<string, string>): string => `${endpoint}?${new URLSearchParams(query).toString()}`;
 });
