@@ -102,8 +102,8 @@
     "@types/lodash": "4.17.25",
     "@types/node": "26.6.4",
     "@types/supertest": "7.2.1",
-    "@typescript-eslint/eslint-plugin": "8.59.2",
-    "@typescript-eslint/parser": "8.59.2",
+    "@typescript-eslint/eslint-plugin": "8.72.2",
+    "@typescript-eslint/parser": "8.72.2",
     "@ukef/eslint-local-rules": "1.0.0",
     "chance": "1.1.13",
     "cspell": "10.4.1",
@@ -127,7 +127,7 @@
     "supertest": "7.3.1",
     "ts-loader": "9.6.2",
     "ts-node": "10.9.2",
-    "typescript-eslint": "8.71.0",
+    "typescript-eslint": "8.72.2",
     "yaml-lint": "1.7.0"
   },
   "engines": {
