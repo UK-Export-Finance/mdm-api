@@ -1,12 +1,15 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PinoLogger } from 'nestjs-pino';
 import { HttpClient } from '@ukef/modules/http/http.client';
 
 import { SALESFORCE_CONFIG_KEY, SalesforceConfigType } from '@ukef/config/salesforce.config';
 import { CreateCustomerDto } from '@ukef/modules/customers/dto/create-customer.dto';
+import { GetCustomersQueryDto } from '@ukef/modules/customers/dto/get-customers-query.dto';
 import { CreateCustomerSalesforceResponseDto } from './dto/create-customer-salesforce-response.dto';
+import { GetSalesforceAccountResponseDto } from './dto/get-salesforce-account-response.dto';
+import { GetSalesforceLegacyAccountResponseDto } from './dto/get-salesforce-legacy-account-response.dto';
 import { customerAlreadyExistsSalesforceError } from './known-errors';
 import { createWrapSalesforceHttpGetErrorCallback } from './wrap-salesforce-http-error-callback';
 
@@ -18,10 +21,6 @@ export class SalesforceService {
 
   private readonly client_secret: string;
 
-  private readonly username: string;
-
-  private readonly password: string;
-
   private readonly access_url: string;
 
   constructor(
@@ -29,14 +28,108 @@ export class SalesforceService {
     configService: ConfigService,
     private readonly logger: PinoLogger,
   ) {
-    const { clientId, clientSecret, username, password, accessUrl } = configService.get<SalesforceConfigType>(SALESFORCE_CONFIG_KEY);
+    const { clientId, clientSecret, accessUrl } = configService.get<SalesforceConfigType>(SALESFORCE_CONFIG_KEY);
     this.client_id = clientId;
     this.client_secret = clientSecret;
-    this.username = username;
-    this.password = password;
     this.access_url = accessUrl;
 
     this.httpClient = new HttpClient(httpService);
+  }
+
+  /**
+   * Searches customers using AND-combined filters, with partial matching for names.
+   *
+   * @param {GetCustomersQueryDto} query - The query parameters for search conditions
+   * @returns {Promise<GetCustomersResponse>} A promise that resolves to a list of customer response items
+   */
+  async getCustomers(query: GetCustomersQueryDto): Promise<GetSalesforceAccountResponseDto[]> {
+    const conditions = [
+      { field: 'Company_Registration_Number__c', value: query.companyReg },
+      { field: 'Party_URN__c', value: query.partyUrn },
+      { field: 'Name', value: query.name },
+    ].flatMap(({ field, value }) => {
+      if (!value) {
+        return [];
+      }
+
+      const safeValue = this.sanitizeSalesforceSoqlInput(value);
+      return [field === 'Name' ? `${field} LIKE '%${safeValue}%'` : `${field} = '${safeValue}'`];
+    });
+
+    if (conditions.length === 0) {
+      throw new BadRequestException('At least one search parameter is required');
+    }
+
+    const soql = `SELECT FIELDS(ALL)
+      FROM Account
+      WHERE ${conditions.join(' AND ')}
+      LIMIT 100`;
+
+    return (await this.runSoql(soql))['records'];
+  }
+
+  /**
+   * Searches legacy customers using AND-combined filters, with partial matching for names.
+   *
+   * @param {GetCustomersQueryDto} query - The query parameters for search conditions
+   * @returns {Promise<GetCustomersResponse>} A promise that resolves to a list of legacy customer response items
+   */
+  async getLegacyCustomers(query: GetCustomersQueryDto): Promise<GetSalesforceLegacyAccountResponseDto[]> {
+    const conditions = [
+      { field: 'M2_1_MCD_Company_Reg_Number__c', value: query.companyReg },
+      { field: 'M2_1_MCD_Party_URN__c', value: query.partyUrn },
+      { field: 'M2_1_MCD_Party_Name__c', value: query.name },
+    ].flatMap(({ field, value }) => {
+      if (!value) {
+        return [];
+      }
+
+      const safeValue = this.sanitizeSalesforceSoqlInput(value);
+      return [field === 'M2_1_MCD_Party_Name__c' ? `${field} LIKE '%${safeValue}%'` : `${field} = '${safeValue}'`];
+    });
+
+    if (conditions.length === 0) {
+      throw new BadRequestException('At least one search parameter is required');
+    }
+
+    const soql = `SELECT FIELDS(ALL)
+      FROM M2_1_MCD_Legacy_Data_Party__c
+      WHERE ${conditions.join(' AND ')}
+      LIMIT 200`;
+
+    return (await this.runSoql(soql))['records'];
+  }
+
+  /**
+   * Sanitize SOQL input to prevent injection, escaping backslashes and single quotes
+   * @param value - The input string to sanitize for SOQL.
+   * @returns The sanitized string safe for use in SOQL queries.
+   */
+  private sanitizeSalesforceSoqlInput(value: string): string {
+    return value.replaceAll('\\', '\\\\').replaceAll(`'`, `\\'`);
+  }
+
+  /**
+   * Executes a Salesforce SOQL query and returns the response.
+   *
+   * @param soql - Salesforce query to run
+   * @returns Salesforce response.
+   */
+  private async runSoql(soql: string): Promise<unknown> {
+    const path = `/query?q=${encodeURIComponent(soql)}`;
+    const accessToken = await this.getAccessToken();
+    const { data } = await this.httpClient.get<any>({
+      path,
+      headers: {
+        Authorization: 'Bearer ' + accessToken,
+      },
+      onError: createWrapSalesforceHttpGetErrorCallback({
+        messageForUnknownError: `Failed to get customer in Salesforce`,
+        knownErrors: [],
+      }),
+    });
+
+    return data;
   }
 
   /**
@@ -96,11 +189,9 @@ export class SalesforceService {
       const response = await this.httpClient.post<any, any>({
         path,
         body: {
-          grant_type: 'password',
+          grant_type: 'client_credentials',
           client_id: this.client_id,
           client_secret: this.client_secret,
-          username: this.username,
-          password: this.password,
         },
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',

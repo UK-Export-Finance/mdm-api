@@ -1,5 +1,6 @@
 import { jest } from '@jest/globals';
 import { HttpService } from '@nestjs/axios';
+import { BadRequestException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AxiosError, AxiosResponse, HttpStatusCode } from 'axios';
 import { when } from 'jest-when';
@@ -9,6 +10,7 @@ import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-
 import { EXAMPLES } from '@ukef/constants';
 
 import { CreateCustomerDto } from '@ukef/modules/customers/dto/create-customer.dto';
+import { GetCustomersQueryDto } from '@ukef/modules/customers/dto/get-customers-query.dto';
 import { SalesforceException } from './exception/salesforce.exception';
 import { SalesforceService } from './salesforce.service';
 
@@ -53,6 +55,80 @@ describe('SalesforceService', () => {
   const getAccessTokenMethodMock = jest
     .spyOn(SalesforceService.prototype as any, 'getAccessToken')
     .mockImplementation(() => Promise.resolve(expectedAccessToken));
+
+  const searchMethods = [
+    {
+      method: 'getCustomers' as const,
+      objectName: 'Account',
+      companyField: 'Company_Registration_Number__c',
+      partyField: 'Party_URN__c',
+      nameField: 'Name',
+      limit: 100,
+    },
+    {
+      method: 'getLegacyCustomers' as const,
+      objectName: 'M2_1_MCD_Legacy_Data_Party__c',
+      companyField: 'M2_1_MCD_Company_Reg_Number__c',
+      partyField: 'M2_1_MCD_Party_URN__c',
+      nameField: 'M2_1_MCD_Party_Name__c',
+      limit: 200,
+    },
+  ];
+
+  const queries: { query: GetCustomersQueryDto; where: string }[] = [
+    {
+      query: { companyReg: '01234567' },
+      where: "Company_Registration_Number__c = '01234567'",
+    },
+    { query: { partyUrn: '00312345' }, where: "Party_URN__c = '00312345'" },
+    { query: { name: 'Example' }, where: "Name LIKE '%Example%'" },
+    {
+      query: { companyReg: '01234567', partyUrn: '00312345', name: 'Example' },
+      where: "Company_Registration_Number__c = '01234567' AND Party_URN__c = '00312345' AND Name LIKE '%Example%'",
+    },
+    {
+      query: { companyReg: "reg\\'number", partyUrn: "urn\\'value", name: "O'Brien\\Company" },
+      where: "Company_Registration_Number__c = 'reg\\\\\\'number' AND Party_URN__c = 'urn\\\\\\'value' AND Name LIKE '%O\\'Brien\\\\Company%'",
+    },
+    { query: { companyReg: '', partyUrn: '00312345' }, where: "Party_URN__c = '00312345'" },
+  ];
+
+  describe.each(searchMethods)('$method', ({ method, objectName, companyField, partyField, nameField, limit }) => {
+    const search = (query: GetCustomersQueryDto) => (method === 'getCustomers' ? service.getCustomers(query) : service.getLegacyCustomers(query));
+    const methodQueries = queries.map(({ query, where }) => ({
+      query,
+      where: where.replace('Company_Registration_Number__c', companyField).replace('Party_URN__c', partyField).replace('Name', nameField),
+    }));
+
+    it.each(methodQueries)('builds a SOQL query for $where', async ({ query, where }) => {
+      const records = [{ Id: 'customer-id' }];
+      const runSoqlMock = jest.spyOn(service as any, 'runSoql').mockResolvedValue({ records });
+
+      const result = await search(query);
+
+      expect(runSoqlMock).toHaveBeenCalledTimes(1);
+      expect(runSoqlMock).toHaveBeenCalledWith(`SELECT FIELDS(ALL)
+      FROM ${objectName}
+      WHERE ${where}
+      LIMIT ${limit}`);
+      expect(result).toBe(records);
+    });
+
+    it.each([{}, { companyReg: '', partyUrn: '', name: undefined }])('rejects a query without search parameters: %j', async (query) => {
+      const runSoqlMock = jest.spyOn(service as any, 'runSoql');
+
+      await expect(search(query)).rejects.toBeInstanceOf(BadRequestException);
+      await expect(search(query)).rejects.toThrow('At least one search parameter is required');
+      expect(runSoqlMock).not.toHaveBeenCalled();
+    });
+
+    it('propagates SOQL query errors', async () => {
+      const error = new SalesforceException('Failed to get customer in Salesforce');
+      jest.spyOn(service as any, 'runSoql').mockRejectedValue(error);
+
+      await expect(search({ partyUrn: '00312345' })).rejects.toBe(error);
+    });
+  });
 
   describe('createCustomer', () => {
     const customerBasePath = '/sobjects/Account';

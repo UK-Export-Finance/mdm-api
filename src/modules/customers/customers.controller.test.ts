@@ -20,8 +20,6 @@ const mockResponseObject = {
 } as any as Response;
 
 describe('CustomersController', () => {
-  const valueGenerator = new RandomValueGenerator();
-
   let customersServiceGetCustomers: jest.MockedFunction<CustomersService['getCustomers']>;
   let customersServiceGetOrCreateCustomer: jest.MockedFunction<CustomersService['getOrCreateCustomer']>;
   let customersServiceGetDunAndBradstreetNumber: jest.MockedFunction<CustomersService['getDunAndBradstreetNumber']>;
@@ -29,7 +27,7 @@ describe('CustomersController', () => {
   let controller: CustomersController;
 
   beforeEach(() => {
-    const customersService = new CustomersService(null, null, null, null, null);
+    const customersService = new CustomersService(null, null, null, null);
     customersServiceGetCustomers = jest.fn();
     customersServiceGetOrCreateCustomer = jest.fn();
     customersService.getCustomers = customersServiceGetCustomers;
@@ -79,13 +77,13 @@ describe('CustomersController', () => {
         query: { partyUrn: EXAMPLES.CUSTOMER.PARTYURN },
       },
     ])('get customers with query $query', async ({ query }) => {
-      const { request, informaticaRequest, getCustomersResponse } = new GetCustomersGenerator(valueGenerator).generate({ numberToGenerate: 1, query });
+      const { getCustomersResponse } = new GetCustomersGenerator(new RandomValueGenerator()).generate({ numberToGenerate: 1 });
 
-      when(customersServiceGetCustomers).calledWith(informaticaRequest[0]).mockResolvedValueOnce(getCustomersResponse[0]);
+      when(customersServiceGetCustomers).calledWith(query).mockResolvedValueOnce(getCustomersResponse);
 
-      const customers = await controller.getCustomers(request[0]);
+      const customers = await controller.getCustomers(query);
 
-      expect(customers).toEqual(getCustomersResponse[0]);
+      expect(customers).toEqual(getCustomersResponse);
     });
 
     it.each([
