@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { PinoLogger } from 'nestjs-pino';
@@ -173,17 +173,10 @@ export class CustomersService {
         return await this.handleExistingCustomerSalesforceResponse(res, dtfsCustomerDto, existingCustomers);
       }
 
-      this.logger.error('Salesforce returned no customers for company %s without a not-found response', dtfsCustomerDto.companyRegistrationNumber);
+      this.logger.info('Customer for company %s not found; creating in Salesforce', dtfsCustomerDto.companyRegistrationNumber);
 
-      throw new InternalServerErrorException();
+      return await this.createCustomerByURN(res, dtfsCustomerDto);
     } catch (error) {
-      // If the customer does not exist in Salesforce
-      if (error instanceof NotFoundException) {
-        this.logger.info('Customer for company %s not found in Salesforce; creating in Salesforce', dtfsCustomerDto.companyRegistrationNumber);
-
-        return await this.handleSalesforceCustomerNotFound(res, dtfsCustomerDto);
-      }
-
       this.logger.error('Error getting or creating customer for company %s', dtfsCustomerDto.companyRegistrationNumber);
 
       throw error;
@@ -236,17 +229,6 @@ export class CustomersService {
    */
   private async createCustomerWithLegacyURN(res, DTFSCustomerDto, existingCustomers) {
     return await this.createCustomerByURN(res, DTFSCustomerDto, existingCustomers);
-  }
-
-  /**
-   * Creates a customer record, creating a new URN as it does so.
-   *
-   * @param {Response} res - The HTTP response object to send as the response.
-   * @param {DTFSCustomerDto} dtfsCustomerDto - The DTO containing customer details.
-   * @returns {Promise<void>}
-   */
-  private async handleSalesforceCustomerNotFound(res, DTFSCustomerDto) {
-    return await this.createCustomerByURN(res, DTFSCustomerDto);
   }
 
   /**
