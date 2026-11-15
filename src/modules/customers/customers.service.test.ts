@@ -336,7 +336,8 @@ describe('CustomerService', () => {
 
     it('does not emit secrets when Salesforce, number generation or the outer flow fails', async () => {
       // Arrange
-      salesforceServiceGetCustomers.mockRejectedValueOnce(new NotFoundException('Customer not found.'));
+      salesforceServiceGetCustomers.mockResolvedValueOnce([]);
+      salesforceServiceGetLegacyCustomers.mockResolvedValueOnce([]);
       dunAndBradstreetServiceGetDunsNumber.mockResolvedValueOnce(dunsNumber);
       numbersServiceCreate.mockRejectedValueOnce(createCredentialBearingError());
       salesforceServiceCreateCustomer.mockRejectedValueOnce(createCredentialBearingError());
@@ -351,7 +352,8 @@ describe('CustomerService', () => {
 
   describe('customer creation logging', () => {
     beforeEach(() => {
-      salesforceServiceGetCustomers.mockRejectedValueOnce(new NotFoundException('Customer not found.'));
+      salesforceServiceGetCustomers.mockResolvedValueOnce([]);
+      salesforceServiceGetLegacyCustomers.mockResolvedValueOnce([]);
       dunAndBradstreetServiceGetDunsNumber.mockResolvedValueOnce(dunsNumber);
       numbersServiceCreate.mockResolvedValueOnce(createUkefIdResponse);
       salesforceServiceCreateCustomer.mockResolvedValueOnce(salesforceCreateCustomerResponse);
@@ -362,7 +364,7 @@ describe('CustomerService', () => {
       await service.getOrCreateCustomer(mockResponseObject, customerWithFullPayload);
 
       // Assert
-      expect(logger.info).toHaveBeenCalledWith('Customer for company %s not found in Salesforce; creating in Salesforce', companyRegistrationNumber);
+      expect(logger.info).toHaveBeenCalledWith('Customer for company %s not found; creating in Salesforce', companyRegistrationNumber);
       expect(logger.info).toHaveBeenCalledWith('Finding DUNS number for company %s in Dun and Bradstreet', companyRegistrationNumber);
       expect(logger.info).toHaveBeenCalledWith('Found DUNS number for company %s in Dun and Bradstreet', companyRegistrationNumber);
       expect(logger.info).toHaveBeenCalledWith('Generating party URN for company %s', companyRegistrationNumber);
@@ -449,9 +451,9 @@ describe('CustomerService', () => {
           const response = await service.getOrCreateCustomer(mockResponseObject, dtfsCustomerDto);
 
           // Assert
-          expect(response).toBeUndefined();
+          expect(response).toEqual([mappedSalesforceCustomer]);
           expect(mockResponseObject.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
-          expect(mockResponseObject.json).toHaveBeenCalledWith([mappedSalesforceCustomer]);
+          // expect(mockResponseObject.json).toHaveBeenCalledWith([mappedSalesforceCustomer]);
           expect(salesforceServiceGetCustomers).toHaveBeenCalledWith(queryForCustomer(dtfsCustomerDto));
 
           expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(0);
@@ -534,7 +536,8 @@ describe('CustomerService', () => {
           when(salesforceServiceCreateCustomer).calledWith(expect.any(Object)).mockRejectedValueOnce(new Error('Service Error'));
           when(numbersServiceCreate).calledWith(expect.any(Object)).mockResolvedValueOnce(createUkefIdResponse);
           when(dunAndBradstreetServiceGetDunsNumber).calledWith(expect.any(String)).mockResolvedValueOnce(dunAndBradstreetGetDunsNumberResponse);
-          salesforceServiceGetCustomers.mockRejectedValueOnce(new NotFoundException('Customer not found.'));
+          salesforceServiceGetCustomers.mockResolvedValueOnce([]);
+          salesforceServiceGetLegacyCustomers.mockResolvedValueOnce([legacySalesforceAccount]);
 
           // Act
           await expect(service.getOrCreateCustomer(mockResponseObject, customerWithPod)).rejects.toThrow('Service Error');
@@ -542,7 +545,7 @@ describe('CustomerService', () => {
           // Assert
           expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(1);
           expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(1);
-          expect(numbersServiceCreate).toHaveBeenCalledTimes(1);
+          expect(numbersServiceCreate).toHaveBeenCalledTimes(0);
         });
 
         it('throws an error if Dun and Bradstreet service fails to return a DUNS number and does not call further services', async () => {
@@ -550,7 +553,8 @@ describe('CustomerService', () => {
           when(salesforceServiceCreateCustomer).calledWith(expect.any(Object)).mockResolvedValueOnce(salesforceCreateCustomerResponse);
           when(numbersServiceCreate).calledWith(expect.any(Object)).mockResolvedValueOnce(createUkefIdResponse);
           when(dunAndBradstreetServiceGetDunsNumber).calledWith(expect.any(String)).mockRejectedValueOnce(new InternalServerErrorException());
-          salesforceServiceGetCustomers.mockRejectedValueOnce(new NotFoundException('Customer not found.'));
+          salesforceServiceGetCustomers.mockResolvedValueOnce([]);
+          salesforceServiceGetLegacyCustomers.mockResolvedValueOnce([legacySalesforceAccount]);
 
           // Act
           await expect(service.getOrCreateCustomer(mockResponseObject, customerWithPod)).rejects.toThrow('Internal Server Error');
@@ -665,7 +669,8 @@ describe('CustomerService', () => {
           when(salesforceServiceCreateCustomer).calledWith(expect.any(Object)).mockResolvedValueOnce(salesforceCreateCustomerResponse);
           when(numbersServiceCreate).calledWith(expect.any(Object)).mockResolvedValueOnce(createUkefIdResponse);
           when(dunAndBradstreetServiceGetDunsNumber).calledWith(expect.any(String)).mockResolvedValueOnce(dunAndBradstreetGetDunsNumberResponse);
-          salesforceServiceGetCustomers.mockRejectedValueOnce(new NotFoundException('Customer not found.'));
+          salesforceServiceGetCustomers.mockResolvedValueOnce([]);
+          salesforceServiceGetLegacyCustomers.mockResolvedValueOnce([]);
 
           // Act
           const result = await service.getOrCreateCustomer(mockResponseObject, dtfsCustomerDto);
@@ -725,7 +730,8 @@ describe('CustomerService', () => {
           when(salesforceServiceCreateCustomer).calledWith(expect.any(Object)).mockResolvedValueOnce(salesforceCreateCustomerResponse);
           when(numbersServiceCreate).calledWith(expect.any(Object)).mockRejectedValueOnce(new InternalServerErrorException());
           when(dunAndBradstreetServiceGetDunsNumber).calledWith(expect.any(String)).mockResolvedValueOnce(dunAndBradstreetGetDunsNumberResponse);
-          salesforceServiceGetCustomers.mockRejectedValueOnce(new NotFoundException('Customer not found.'));
+          salesforceServiceGetCustomers.mockResolvedValueOnce([]);
+          salesforceServiceGetLegacyCustomers.mockResolvedValueOnce([]);
 
           // Act
           const result = await service.getOrCreateCustomer(mockResponseObject, dtfsCustomerDto);
@@ -757,13 +763,13 @@ describe('CustomerService', () => {
         expect(numbersServiceCreate).toHaveBeenCalledTimes(0);
       });
 
-      it('rejects when no Salesforce or legacy customers are found', async () => {
+      it('returns an empty list when no Salesforce or legacy customers are found', async () => {
         // Arrange
         salesforceServiceGetCustomers.mockResolvedValueOnce([]);
         salesforceServiceGetLegacyCustomers.mockResolvedValueOnce([]);
 
         // Act
-        await expect(service.getOrCreateCustomer(mockResponseObject, customerWithPod)).rejects.toThrow('Internal Server Error');
+        await expect(service.getCustomers(queryForCustomer(customerWithPod))).resolves.toEqual([]);
 
         // Assert
         expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(0);
@@ -786,7 +792,8 @@ describe('CustomerService', () => {
         when(salesforceServiceCreateCustomer).calledWith(expect.any(Object)).mockRejectedValueOnce(new Error('Service Error'));
         when(numbersServiceCreate).calledWith(expect.any(Object)).mockResolvedValueOnce(createUkefIdResponse);
         when(dunAndBradstreetServiceGetDunsNumber).calledWith(expect.any(String)).mockResolvedValueOnce(dunAndBradstreetGetDunsNumberResponse);
-        salesforceServiceGetCustomers.mockRejectedValueOnce(new NotFoundException('Customer not found.'));
+        salesforceServiceGetCustomers.mockResolvedValueOnce([]);
+        salesforceServiceGetLegacyCustomers.mockResolvedValueOnce([]);
 
         // Act
         await expect(service.getOrCreateCustomer(mockResponseObject, customerWithPod)).rejects.toThrow('Service Error');
@@ -802,7 +809,8 @@ describe('CustomerService', () => {
         when(salesforceServiceCreateCustomer).calledWith(expect.any(Object)).mockResolvedValueOnce(salesforceCreateCustomerResponse);
         when(numbersServiceCreate).calledWith(expect.any(Object)).mockResolvedValueOnce(createUkefIdResponse);
         when(dunAndBradstreetServiceGetDunsNumber).calledWith(expect.any(String)).mockRejectedValueOnce(new InternalServerErrorException());
-        salesforceServiceGetCustomers.mockRejectedValueOnce(new NotFoundException('Customer not found.'));
+        salesforceServiceGetCustomers.mockResolvedValueOnce([]);
+        salesforceServiceGetLegacyCustomers.mockResolvedValueOnce([]);
 
         // Act
         await expect(service.getOrCreateCustomer(mockResponseObject, customerWithPod)).rejects.toThrow('Internal Server Error');

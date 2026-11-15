@@ -80,9 +80,9 @@ export class CustomersService {
       type: customer.Account_Type__c,
       subtype: customer.Account_Sub_Type__c,
       isLegacyRecord: false,
-      riskEntity: customer.CCM_Risk_Entity__c,
-      creditClassificationStatus: customer.CCM_Credit_Risk_Rating__c,
-      creditClassificationDate: customer.CCM_Credit_Risk_Rating_Date__c,
+      riskEntity: customer.CCM_Assigned_Rating__c,
+      creditClassificationStatus: customer.CCM_Watch_List__c,
+      creditClassificationDate: customer.CCM_Watch_List_Date__c,
     };
   }
 
