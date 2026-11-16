@@ -1,11 +1,14 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { PinoLogger } from 'nestjs-pino';
 import { CompaniesHouseConfigType } from '@ukef/config/companies-house.config';
 import { COMPANIES_HOUSE } from '@ukef/constants';
+import { sanitizeErrorForLogging } from '@ukef/helpers/sanitize-error-for-logging.helper';
 import { HttpClient } from '@ukef/modules/http/http.client';
 
 import { GetCompanyCompaniesHouseResponse } from './dto/get-company-companies-house-response.dto';
+import { CompaniesHouseNotFoundException } from './exception/companies-house-not-found.exception';
 import {
   getCompanyInvalidAuthorizationKnownCompaniesHouseError,
   getCompanyMalformedAuthorizationHeaderKnownCompaniesHouseError,
@@ -19,7 +22,11 @@ export class CompaniesHouseService {
 
   private readonly key: string;
 
-  constructor(httpService: HttpService, configService: ConfigService) {
+  constructor(
+    httpService: HttpService,
+    configService: ConfigService,
+    private readonly logger: PinoLogger,
+  ) {
     this.httpClient = new HttpClient(httpService);
 
     const { key } = configService.get<CompaniesHouseConfigType>(COMPANIES_HOUSE.CONFIG.KEY);
@@ -27,25 +34,42 @@ export class CompaniesHouseService {
     this.key = key;
   }
 
+  /**
+   * Get company details from the Companies House API by registration number.
+   * @param {string} registrationNumber - The registration number of the company to retrieve.
+   * @returns {Promise<GetCompanyCompaniesHouseResponse>} The response from the Companies House API containing the company details.
+   */
   async getCompanyByRegistrationNumber(registrationNumber: string): Promise<GetCompanyCompaniesHouseResponse> {
     const path = `/company/${registrationNumber}`;
     const encodedKey = Buffer.from(this.key).toString('base64');
 
-    const { data } = await this.httpClient.get<GetCompanyCompaniesHouseResponse>({
-      path,
-      headers: {
-        Authorization: `Basic ${encodedKey}`,
-      },
-      onError: createWrapCompaniesHouseHttpGetErrorCallback({
-        messageForUnknownError: 'Failed to get response from Companies House API.',
-        knownErrors: [
-          getCompanyMalformedAuthorizationHeaderKnownCompaniesHouseError(),
-          getCompanyInvalidAuthorizationKnownCompaniesHouseError(),
-          getCompanyNotFoundKnownCompaniesHouseError(registrationNumber),
-        ],
-      }),
-    });
+    try {
+      this.logger.info('Getting Companies House company %s', registrationNumber);
 
-    return data;
+      const { data } = await this.httpClient.get<GetCompanyCompaniesHouseResponse>({
+        path,
+        headers: {
+          Authorization: `Basic ${encodedKey}`,
+        },
+        onError: createWrapCompaniesHouseHttpGetErrorCallback({
+          messageForUnknownError: 'Failed to get response from Companies House API.',
+          knownErrors: [
+            getCompanyMalformedAuthorizationHeaderKnownCompaniesHouseError(),
+            getCompanyInvalidAuthorizationKnownCompaniesHouseError(),
+            getCompanyNotFoundKnownCompaniesHouseError(registrationNumber),
+          ],
+        }),
+      });
+
+      return data;
+    } catch (error) {
+      if (error instanceof CompaniesHouseNotFoundException) {
+        this.logger.warn('Companies House company %s not found %o', registrationNumber, sanitizeErrorForLogging(error));
+      } else {
+        this.logger.error('Error getting Companies House company %s %o', registrationNumber, sanitizeErrorForLogging(error));
+      }
+
+      throw error;
+    }
   }
 }
