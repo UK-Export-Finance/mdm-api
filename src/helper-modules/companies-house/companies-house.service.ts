@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { PinoLogger } from 'nestjs-pino';
 import { CompaniesHouseConfigType } from '@ukef/config/companies-house.config';
 import { COMPANIES_HOUSE } from '@ukef/constants';
+import { sanitizeErrorForLogging } from '@ukef/helpers/sanitize-error-for-logging.helper';
 import { HttpClient } from '@ukef/modules/http/http.client';
 
 import { GetCompanyCompaniesHouseResponse } from './dto/get-company-companies-house-response.dto';
@@ -63,9 +64,9 @@ export class CompaniesHouseService {
       return data;
     } catch (error) {
       if (error instanceof CompaniesHouseNotFoundException) {
-        this.logger.info('Companies House company %s not found %o', registrationNumber, error);
+        this.logger.warn('Companies House company %s not found %o', registrationNumber, sanitizeErrorForLogging(error));
       } else {
-        this.logger.error('Error getting Companies House company %s %o', registrationNumber, error);
+        this.logger.error('Error getting Companies House company %s %o', registrationNumber, sanitizeErrorForLogging(error));
       }
 
       throw error;

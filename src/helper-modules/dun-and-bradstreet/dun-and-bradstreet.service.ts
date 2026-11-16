@@ -4,8 +4,10 @@ import { ConfigService } from '@nestjs/config';
 import { PinoLogger } from 'nestjs-pino';
 import { DunAndBradstreetConfigType } from '@ukef/config/dun-and-bradstreet.config';
 import { DUN_AND_BRADSTREET } from '@ukef/constants';
+import { sanitizeErrorForLogging } from '@ukef/helpers/sanitize-error-for-logging.helper';
 import { HttpClient } from '@ukef/modules/http/http.client';
 
+import { DunAndBradstreetException } from './exception/dun-and-bradstreet.exception';
 import { getDunAndBradstreetNumberByRegistrationNumberNotFoundError } from './known-errors';
 import { createWrapDunAndBradstreetHttpGetErrorCallback } from './wrap-dun-and-bradstreet-http-error-callback';
 
@@ -43,12 +45,18 @@ export class DunAndBradstreetService {
         }),
       });
 
-      return data?.matchCandidates[0]?.organization?.duns;
+      const dunsNumber = data?.matchCandidates?.[0]?.organization?.duns;
+
+      if (!dunsNumber) {
+        throw new DunAndBradstreetException(`Dun and Bradstreet response for company ${registrationNumber} did not include a usable DUNS number.`);
+      }
+
+      return dunsNumber;
     } catch (error) {
       if (error instanceof NotFoundException) {
-        this.logger.warn('Dun and Bradstreet number for company %s not found %o', registrationNumber, error);
+        this.logger.warn('Dun and Bradstreet number for company %s not found %o', registrationNumber, sanitizeErrorForLogging(error));
       } else {
-        this.logger.error('Error getting Dun and Bradstreet number for company %s %o', registrationNumber, error);
+        this.logger.error('Error getting Dun and Bradstreet number for company %s %o', registrationNumber, sanitizeErrorForLogging(error));
       }
 
       throw error;
@@ -76,13 +84,15 @@ export class DunAndBradstreetService {
         }),
       });
 
-      if (!response.data.access_token) {
-        this.logger.warn('Dun and Bradstreet authentication response did not include an access token');
+      const accessToken = response.data?.access_token;
+
+      if (!accessToken) {
+        throw new DunAndBradstreetException('Dun and Bradstreet authentication response did not include an access token.');
       }
 
-      return response.data.access_token;
+      return accessToken;
     } catch (error) {
-      this.logger.error('Failed to retrieve Dun and Bradstreet access token %o', error);
+      this.logger.error('Failed to retrieve Dun and Bradstreet access token %o', sanitizeErrorForLogging(error));
 
       throw error;
     }
