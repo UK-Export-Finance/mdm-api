@@ -4,6 +4,7 @@ import { resetAllWhenMocks, when } from 'jest-when';
 import { of, throwError } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
+import { PinoLogger } from 'nestjs-pino';
 import { GetCompanyGenerator } from '@ukef-test/support/generator/get-company-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 
@@ -61,7 +62,12 @@ describe('CompaniesHouseService', () => {
 
     jest.spyOn(configService, 'get').mockReset().mockReturnValue({ key: testKey });
 
-    service = new CompaniesHouseService(httpService, configService);
+    const logger = new PinoLogger({});
+    logger.info = jest.fn();
+    logger.warn = jest.fn();
+    logger.error = jest.fn();
+
+    service = new CompaniesHouseService(httpService, configService, logger);
   });
 
   beforeEach(() => {
@@ -69,29 +75,37 @@ describe('CompaniesHouseService', () => {
   });
 
   describe('getCompanyByRegistrationNumber', () => {
-    it('calls the Companies House API with the correct arguments', async () => {
+    it('should call the Companies House API with the correct arguments', async () => {
+      // Arrange
       when(httpServiceGet)
         .calledWith(...expectedHttpServiceGetArguments)
         .mockReturnValueOnce(expectedHttpServiceGetResponse);
 
+      // Act
       await service.getCompanyByRegistrationNumber(testRegistrationNumber);
 
+      // Assert
       expect(httpServiceGet).toHaveBeenCalledTimes(1);
       expect(httpServiceGet).toHaveBeenCalledWith(...expectedHttpServiceGetArguments);
     });
 
-    it('returns the results when the Companies House API returns a 200 response with results', async () => {
+    it('should return the results when the Companies House API returns a 200 response with results', async () => {
+      // Arrange
       when(httpServiceGet)
         .calledWith(...expectedHttpServiceGetArguments)
         .mockReturnValueOnce(expectedHttpServiceGetResponse);
 
+      // Act
       const response = await service.getCompanyByRegistrationNumber(testRegistrationNumber);
 
+      // Assert
       expect(response).toBe(getCompanyCompaniesHouseResponse);
     });
 
-    it(`throws a CompaniesHouseMalformedAuthorizationHeaderException when the Companies House API returns a 400 response containing the error string 'Invalid Authorization header'`, async () => {
+    it(`should throw a CompaniesHouseMalformedAuthorizationHeaderException when the Companies House API returns a 400 response containing the error string 'Invalid Authorization header'`, async () => {
+      // Arrange
       const axiosError = new AxiosError();
+
       axiosError.response = {
         data: getCompanyCompaniesHouseMalformedAuthorizationHeaderResponse,
         status: 400,
@@ -104,6 +118,7 @@ describe('CompaniesHouseService', () => {
         .calledWith(...expectedHttpServiceGetArguments)
         .mockReturnValueOnce(throwError(() => axiosError));
 
+      // Act & Assert
       const getCompanyPromise = service.getCompanyByRegistrationNumber(testRegistrationNumber);
 
       await expect(getCompanyPromise).rejects.toBeInstanceOf(CompaniesHouseMalformedAuthorizationHeaderException);
@@ -111,8 +126,10 @@ describe('CompaniesHouseService', () => {
       await expect(getCompanyPromise).rejects.toHaveProperty('innerError', axiosError);
     });
 
-    it(`throws a CompaniesHouseInvalidAuthorizationException when the Companies House API returns a 401 response containing the error string 'Invalid Authorization'`, async () => {
+    it(`should throw a CompaniesHouseInvalidAuthorizationException when the Companies House API returns a 401 response containing the error string 'Invalid Authorization'`, async () => {
+      // Arrange
       const axiosError = new AxiosError();
+
       axiosError.response = {
         data: getCompanyCompaniesHouseInvalidAuthorizationResponse,
         status: 401,
@@ -125,6 +142,7 @@ describe('CompaniesHouseService', () => {
         .calledWith(...expectedHttpServiceGetArguments)
         .mockReturnValueOnce(throwError(() => axiosError));
 
+      // Act & Assert
       const getCompanyPromise = service.getCompanyByRegistrationNumber(testRegistrationNumber);
 
       await expect(getCompanyPromise).rejects.toBeInstanceOf(CompaniesHouseInvalidAuthorizationException);
@@ -132,8 +150,10 @@ describe('CompaniesHouseService', () => {
       await expect(getCompanyPromise).rejects.toHaveProperty('innerError', axiosError);
     });
 
-    it(`throws a CompaniesHouseNotFoundException when the Companies House API returns a 404 response status'`, async () => {
+    it(`should throw a CompaniesHouseNotFoundException when the Companies House API returns a 404 response status'`, async () => {
+      // Arrange
       const axiosError = new AxiosError();
+
       axiosError.response = {
         data: getCompanyCompaniesHouseNotFoundResponse,
         status: 404,
@@ -146,6 +166,7 @@ describe('CompaniesHouseService', () => {
         .calledWith(...expectedHttpServiceGetArguments)
         .mockReturnValueOnce(throwError(() => axiosError));
 
+      // Act & Assert
       const getCompanyPromise = service.getCompanyByRegistrationNumber(testRegistrationNumber);
 
       await expect(getCompanyPromise).rejects.toBeInstanceOf(CompaniesHouseNotFoundException);
@@ -153,12 +174,15 @@ describe('CompaniesHouseService', () => {
       await expect(getCompanyPromise).rejects.toHaveProperty('innerError', axiosError);
     });
 
-    it('throws a CompaniesHouseException if the Companies House API returns an unknown error response', async () => {
+    it('should throw a CompaniesHouseException if the Companies House API returns an unknown error response', async () => {
+      // Arrange
       const axiosError = new AxiosError();
+
       when(httpServiceGet)
         .calledWith(...expectedHttpServiceGetArguments)
         .mockReturnValueOnce(throwError(() => axiosError));
 
+      // Act & Assert
       const getCompanyPromise = service.getCompanyByRegistrationNumber(testRegistrationNumber);
 
       await expect(getCompanyPromise).rejects.toBeInstanceOf(CompaniesHouseException);

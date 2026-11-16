@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { AxiosError, HttpStatusCode } from 'axios';
 import { resetAllWhenMocks, when } from 'jest-when';
 import { of, throwError } from 'rxjs';
+import { PinoLogger } from 'nestjs-pino';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 
 import { DunAndBradstreetService } from './dun-and-bradstreet.service';
@@ -59,7 +60,12 @@ describe('DunAndBradstreetService', () => {
 
     jest.spyOn(configService, 'get').mockReset().mockReturnValue({ key: 'TEST API_KEY' });
 
-    service = new DunAndBradstreetService(httpService, configService);
+    const logger = new PinoLogger({});
+    logger.info = jest.fn();
+    logger.warn = jest.fn();
+    logger.error = jest.fn();
+
+    service = new DunAndBradstreetService(httpService, configService, logger);
   });
 
   beforeEach(() => {
@@ -71,37 +77,47 @@ describe('DunAndBradstreetService', () => {
   });
 
   describe('getDunAndBradstreetNumberByRegistrationNumber', () => {
-    it('calls the Dun and Bradstreet API with the correct arguments', async () => {
+    it('should call the Dun and Bradstreet API with the correct arguments', async () => {
+      // Arrange
       when(httpServiceGet)
         .calledWith(...expectedHttpServiceGetArguments)
         .mockReturnValueOnce(expectedHttpServiceGetResponse);
 
+      // Act
       await service.getDunAndBradstreetNumberByRegistrationNumber(testRegistrationNumber);
 
+      // Assert
       expect(getAccessTokenMethodMock).toHaveBeenCalledTimes(1);
       expect(httpServiceGet).toHaveBeenCalledTimes(1);
       expect(httpServiceGet).toHaveBeenCalledWith(...expectedHttpServiceGetArguments);
     });
 
-    it('returns the results when the Dun and Bradstreet API returns a 200 response with results', async () => {
+    it('should return the results when the Dun and Bradstreet API returns a 200 response with results', async () => {
+      // Arrange
       when(httpServiceGet)
         .calledWith(...expectedHttpServiceGetArguments)
         .mockReturnValueOnce(expectedHttpServiceGetResponse);
 
+      // Act
       const response = await service.getDunAndBradstreetNumberByRegistrationNumber(testRegistrationNumber);
 
+      // Assert
       expect(getAccessTokenMethodMock).toHaveBeenCalledTimes(1);
       expect(response).toBe(expectedDunsNumber);
     });
 
-    it('throws a DunAndBradstreetException if the Dun and Bradstreet API returns an unknown error response', async () => {
+    it('should throw a DunAndBradstreetException if the Dun and Bradstreet API returns an unknown error response', async () => {
+      // Arrange
       const axiosError = new AxiosError();
+
       when(httpServiceGet)
         .calledWith(...expectedHttpServiceGetArguments)
         .mockReturnValueOnce(throwError(() => axiosError));
 
+      // Act
       const getDunsNumberPromise = service.getDunAndBradstreetNumberByRegistrationNumber(testRegistrationNumber);
 
+      // Assert
       expect(getAccessTokenMethodMock).toHaveBeenCalledTimes(1);
       await expect(getDunsNumberPromise).rejects.toBeInstanceOf(DunAndBradstreetException);
       await expect(getDunsNumberPromise).rejects.toThrow('Failed to get response from Dun and Bradstreet API');
