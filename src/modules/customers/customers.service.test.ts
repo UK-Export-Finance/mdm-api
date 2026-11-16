@@ -453,7 +453,6 @@ describe('CustomerService', () => {
           // Assert
           expect(response).toEqual([mappedSalesforceCustomer]);
           expect(mockResponseObject.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
-          // expect(mockResponseObject.json).toHaveBeenCalledWith([mappedSalesforceCustomer]);
           expect(salesforceServiceGetCustomers).toHaveBeenCalledWith(queryForCustomer(dtfsCustomerDto));
 
           expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(0);
@@ -761,6 +760,21 @@ describe('CustomerService', () => {
         expect(salesforceServiceCreateCustomer).toHaveBeenCalledTimes(0);
         expect(dunAndBradstreetServiceGetDunsNumber).toHaveBeenCalledTimes(0);
         expect(numbersServiceCreate).toHaveBeenCalledTimes(0);
+      });
+
+      it('throws when a Salesforce customer response has no legacy status', async () => {
+        // Arrange
+        const { isLegacyRecord, ...customerWithoutLegacyStatus } = mappedSalesforceCustomer;
+        void isLegacyRecord;
+        jest.spyOn(service, 'getCustomers').mockResolvedValueOnce([customerWithoutLegacyStatus as GetCustomersResponseItem]);
+
+        // Act & Assert
+        await expect(service.getOrCreateCustomer(mockResponseObject, customerWithPod)).rejects.toThrow('Salesforce returned an unrecognised legacy status');
+
+        expect(logger.warn).toHaveBeenCalledWith('Salesforce returned an unrecognised legacy status for company %s', companyRegistrationNumber);
+        expect(salesforceServiceCreateCustomer).not.toHaveBeenCalled();
+        expect(dunAndBradstreetServiceGetDunsNumber).not.toHaveBeenCalled();
+        expect(numbersServiceCreate).not.toHaveBeenCalled();
       });
 
       it('returns an empty list when no Salesforce or legacy customers are found', async () => {

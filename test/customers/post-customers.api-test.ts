@@ -193,7 +193,7 @@ describe('POST /customers', () => {
         type: 'Association',
         subtype: 'Alternative Finance Provider',
         isLegacyRecord: false,
-        riskEntity: 'Corporate',
+        riskEntity: 'Yes',
         creditClassificationStatus: 'Good',
         creditClassificationDate: '1989-09-20',
       },

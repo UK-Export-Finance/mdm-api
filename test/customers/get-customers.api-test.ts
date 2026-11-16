@@ -133,13 +133,34 @@ describe('GET /customers', () => {
       expect(nock.isDone()).toBe(true);
     });
 
-    it('does not query legacy records for no when Account has no matches', async () => {
+    it(`returns ${HttpStatusCode.NotFound} for no when Account has no matches and does not query legacy records`, async () => {
       mockSalesforceQuery(accountSoql(accountWhere), []);
 
       const { status, body } = await api.get(getPath({ ...query, fallbackToLegacyData: 'no' }));
 
-      expect(status).toBe(HttpStatusCode.Ok);
-      expect(body).toStrictEqual([]);
+      expect(status).toBe(HttpStatusCode.NotFound);
+      expect(body).toStrictEqual({ message: 'Customer not found.', error: 'Not Found', statusCode: 404 });
+      expect(nock.isDone()).toBe(true);
+    });
+
+    it(`returns ${HttpStatusCode.NotFound} for yes when Account and legacy records have no matches`, async () => {
+      mockSalesforceQuery(accountSoql(accountWhere), []);
+      mockSalesforceQuery(legacySoql(legacyWhere), []);
+
+      const { status, body } = await api.get(getPath({ ...query, fallbackToLegacyData: 'yes' }));
+
+      expect(status).toBe(HttpStatusCode.NotFound);
+      expect(body).toStrictEqual({ message: 'Customer not found.', error: 'Not Found', statusCode: 404 });
+      expect(nock.isDone()).toBe(true);
+    });
+
+    it(`returns ${HttpStatusCode.NotFound} for legacy-only when legacy records have no matches`, async () => {
+      mockSalesforceQuery(legacySoql(legacyWhere), []);
+
+      const { status, body } = await api.get(getPath({ ...query, fallbackToLegacyData: 'legacy-only' }));
+
+      expect(status).toBe(HttpStatusCode.NotFound);
+      expect(body).toStrictEqual({ message: 'Customer not found.', error: 'Not Found', statusCode: 404 });
       expect(nock.isDone()).toBe(true);
     });
   });

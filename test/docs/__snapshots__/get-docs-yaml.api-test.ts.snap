@@ -203,7 +203,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/GetCustomersResponseItem'
         '404':
-          description: Customer not found
+          description: Customer not found.
       summary: Get customers from Salesforce
       tags:
         - customers

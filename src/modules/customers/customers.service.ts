@@ -216,7 +216,7 @@ export class CustomersService {
 
     this.logger.warn('Salesforce returned an unrecognised legacy status for company %s', dtfsCustomerDto.companyRegistrationNumber);
 
-    return undefined;
+    throw new Error(`Salesforce returned an unrecognised legacy status for company %s: ${dtfsCustomerDto.companyRegistrationNumber}`);
   }
 
   /**

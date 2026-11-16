@@ -108,11 +108,11 @@ describe('CustomersController', () => {
       {
         query: { name: EXAMPLES.CUSTOMER.NAME, companyReg: EXAMPLES.CUSTOMER.COMPANYREG, partyUrn: EXAMPLES.CUSTOMER.PARTYURN },
       },
-    ])('throws BadRequestException if there is more than 1 search parameter (name, companyReg, partyUrn)', ({ query }) => {
-      const getCustomers = (queryParam) => () => controller.getCustomers(queryParam);
+    ])('rejects with BadRequestException unless exactly 1 search parameter (name, companyReg, partyUrn) is provided', async ({ query }) => {
+      const getCustomers = controller.getCustomers(query);
 
-      expect(getCustomers(query)).toThrow('One and just one search parameter is required');
-      expect(getCustomers(query)).toThrow(BadRequestException);
+      await expect(getCustomers).rejects.toThrow('One and just one search parameter is required');
+      await expect(getCustomers).rejects.toThrow(BadRequestException);
     });
   });
 

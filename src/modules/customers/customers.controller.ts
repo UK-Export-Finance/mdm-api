@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Post, Query, Res } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, NotFoundException, Post, Query, Res } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOperation, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
@@ -23,11 +23,17 @@ export class CustomersController {
     type: [GetCustomersResponseItem],
   })
   @ApiNotFoundResponse({
-    description: 'Customer not found',
+    description: 'Customer not found.',
   })
-  getCustomers(@Query() query: GetCustomersQueryDto): Promise<GetCustomersResponse> {
+  async getCustomers(@Query() query: GetCustomersQueryDto): Promise<GetCustomersResponse> {
     this.ensureOneIsNotEmpty(query.companyReg, query.name, query.partyUrn);
-    return this.customersService.getCustomers(query);
+    const customers = await this.customersService.getCustomers(query);
+
+    if (!customers.length) {
+      throw new NotFoundException('Customer not found.');
+    }
+
+    return customers;
   }
 
   @Post()
