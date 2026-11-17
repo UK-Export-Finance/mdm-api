@@ -61,12 +61,16 @@ export const setSalesforceTestEnvironment = (): (() => void) => {
   };
 };
 
-export const accountSoql = (where: string): string => `SELECT FIELDS(ALL)
+export const accountSoql = (
+  where: string,
+): string => `SELECT Id, Name, Party_URN__c, Company_Registration_Number__c, CCM_Customer_Type__c, CCM_Probability_of_Default__c, CCM_Citizenship_Class__c, CCM_Industry__c, CCM_Industry_Group__c, Account_Type__c, Account_Sub_Type__c, CCM_Assigned_Rating__c, CCM_Watch_List__c, CCM_Watch_List_Date__c
       FROM Account
       WHERE ${where}
       LIMIT 100`;
 
-export const legacySoql = (where: string): string => `SELECT FIELDS(ALL)
+export const legacySoql = (
+  where: string,
+): string => `SELECT Id, M2_1_MCD_Party_URN__c, M2_1_MCD_Party_Name__c, M2_1_MCD_Company_Reg_Number__c, M2_1_MCD_UK_or_Overseas__c, M2_1_MCD_Party_Type__c, M2_1_MCD_Party_Sub_Type__c
       FROM M2_1_MCD_Legacy_Data_Party__c
       WHERE ${where}
       LIMIT 200`;

@@ -16,20 +16,20 @@ export class GetCustomersResponseItem {
     description: 'Credit Classification Status Date (dd/mm/yyyy)',
     example: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_DATE,
   })
-  readonly creditClassificationDate?: string;
+  readonly creditClassificationDate: string | null;
 
   @ApiProperty({
     description: 'Credit classification status',
     example: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
   })
-  readonly creditClassificationStatus?: string;
+  readonly creditClassificationStatus: string | null;
 
   @ApiProperty({
     description: 'Customer type',
     example: EXAMPLES.CUSTOMER.SALESFORCE_TYPE,
     enum: CustomerTypesEnum,
   })
-  readonly customerType?: string | null;
+  readonly customerType: string | null;
 
   @ApiProperty({
     description: 'False for Salesforce account record, True for legacy Party DB record',
@@ -53,13 +53,13 @@ export class GetCustomersResponseItem {
     description: 'Probability of default of the company',
     example: EXAMPLES.CUSTOMER.PROBABILITY_OF_DEFAULT,
   })
-  readonly probabilityOfDefault?: number;
+  readonly probabilityOfDefault: number;
 
   @ApiProperty({
     description: 'Risk entity',
     example: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
   })
-  readonly riskEntity?: string;
+  readonly riskEntity: string;
 
   @ApiProperty({
     description: 'The unique Salesforce ID',
@@ -85,17 +85,17 @@ export class GetCustomersResponseItem {
     description: 'Whether the company is UK based or not',
     example: EXAMPLES.CUSTOMER.UK_ENTITY,
   })
-  readonly ukEntity?: string;
+  readonly ukEntity: string | null;
 
   @ApiProperty({
     description: 'UKEF industry identifier code',
     example: EXAMPLES.CUSTOMER.UK_INDUSTRY_NAME,
   })
-  readonly ukefIndustryName?: string;
+  readonly ukefIndustryName: string | null;
 
   @ApiProperty({
     description: 'UKEF industry sector identifier code',
     example: EXAMPLES.CUSTOMER.UK_INDUSTRY_SECTOR_NAME,
   })
-  readonly ukefSectorName?: string;
+  readonly ukefSectorName: string | null;
 }
