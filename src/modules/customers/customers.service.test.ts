@@ -225,7 +225,7 @@ describe('CustomerService', () => {
 
     jest.spyOn(dunAndBradstreetConfigService, 'get').mockReset().mockReturnValue({ key: 'TEST_KEY' });
     dunAndBradstreetServiceGetDunsNumber = jest.fn<DunAndBradstreetService['getDunAndBradstreetNumberByRegistrationNumber']>();
-    const dunAndBradstreetService = new DunAndBradstreetService(null, dunAndBradstreetConfigService);
+    const dunAndBradstreetService = new DunAndBradstreetService(null, dunAndBradstreetConfigService, null);
     dunAndBradstreetService.getDunAndBradstreetNumberByRegistrationNumber = dunAndBradstreetServiceGetDunsNumber;
 
     resetAllWhenMocks();
@@ -242,7 +242,7 @@ describe('CustomerService', () => {
   describe('getCustomers', () => {
     const { informaticaRequest, getCustomersResponse } = new GetCustomersGenerator(valueGenerator).generate({ numberToGenerate: 1 });
 
-    it('returns customers from the service', async () => {
+    it('should return customers from the service', async () => {
       // Arrange
       when(informaticaServiceGetCustomers).calledWith(informaticaRequest[0]).mockResolvedValueOnce(getCustomersResponse[0]);
 
@@ -256,7 +256,7 @@ describe('CustomerService', () => {
       expect(logger.info).toHaveBeenCalledWith('Found %s customers in Informatica', getCustomersResponse[0].length);
     });
 
-    it('logs Informatica failures and rejects with the original error', async () => {
+    it('should log Informatica failures and rejects with the original error', async () => {
       const error = new InformaticaException('Failed to get customers in Informatica');
       informaticaServiceGetCustomers.mockRejectedValueOnce(error);
 
@@ -284,7 +284,7 @@ describe('CustomerService', () => {
         .map((call) => util.format(...(call as [string, ...unknown[]])))
         .join('\n');
 
-    it('does not emit secrets when Informatica fails', async () => {
+    it('should NOT emit secrets when Informatica fails', async () => {
       // Arrange
       informaticaServiceGetCustomers.mockRejectedValueOnce(createCredentialBearingError());
 
@@ -294,7 +294,7 @@ describe('CustomerService', () => {
       expect(loggedOutput()).not.toContain(secret);
     });
 
-    it('does not emit secrets when Dun and Bradstreet fails', async () => {
+    it('should NOT emit secrets when Dun and Bradstreet fails', async () => {
       // Arrange
       dunAndBradstreetServiceGetDunsNumber.mockRejectedValueOnce(createCredentialBearingError());
 
@@ -304,7 +304,7 @@ describe('CustomerService', () => {
       expect(loggedOutput()).not.toContain(secret);
     });
 
-    it('does not emit secrets when Salesforce, number generation or the outer flow fails', async () => {
+    it('should NOT emit secrets when Salesforce, number generation or the outer flow fails', async () => {
       // Arrange
       informaticaServiceGetCustomers.mockRejectedValueOnce(new NotFoundException('Customer not found.'));
       dunAndBradstreetServiceGetDunsNumber.mockResolvedValueOnce(dunsNumber);
@@ -327,7 +327,7 @@ describe('CustomerService', () => {
       salesforceServiceCreateCustomer.mockResolvedValueOnce(salesforceCreateCustomerResponse);
     });
 
-    it('logs downstream operations and successful Salesforce creation without logging the customer payload', async () => {
+    it('should log downstream operations and successful Salesforce creation without logging the customer payload', async () => {
       // Act
       await service.getOrCreateCustomer(mockResponseObject, customerWithFullPayload);
 
@@ -344,7 +344,7 @@ describe('CustomerService', () => {
       expect(logger.error).not.toHaveBeenCalled();
     });
 
-    it('warns when party URN generation fails and still sends the customer to Salesforce', async () => {
+    it('should warn when party URN generation fails and still sends the customer to Salesforce', async () => {
       // Arrange
       const error = new InternalServerErrorException('Number generation failed');
       numbersServiceCreate.mockReset().mockRejectedValueOnce(error);
@@ -360,7 +360,7 @@ describe('CustomerService', () => {
       expect(salesforceServiceCreateCustomer).toHaveBeenCalledWith(expect.objectContaining({ Party_URN__c: null }));
     });
 
-    it('logs Salesforce failures and rejects with the original error', async () => {
+    it('should log Salesforce failures and rejects with the original error', async () => {
       // Arrange
       const error = new Error('Salesforce failed');
       salesforceServiceCreateCustomer.mockReset().mockRejectedValueOnce(error);
@@ -372,7 +372,7 @@ describe('CustomerService', () => {
       expect(logger.info).not.toHaveBeenCalledWith('Created customer in Salesforce for company %s', companyRegistrationNumber);
     });
 
-    it('warns instead of logging success when Salesforce does not confirm creation', async () => {
+    it('should warn instead of logging success when Salesforce does not confirm creation', async () => {
       // Arrange
       salesforceServiceCreateCustomer.mockReset().mockResolvedValueOnce({ ...salesforceCreateCustomerResponse, success: false });
 
@@ -384,7 +384,7 @@ describe('CustomerService', () => {
       expect(logger.info).not.toHaveBeenCalledWith('Created customer in Salesforce for company %s', companyRegistrationNumber);
     });
 
-    it('logs Dun and Bradstreet failures and does not send the customer to Salesforce', async () => {
+    it('should log Dun and Bradstreet failures and does not send the customer to Salesforce', async () => {
       // Arrange
       const error = new Error('Dun and Bradstreet failed');
       dunAndBradstreetServiceGetDunsNumber.mockReset().mockRejectedValueOnce(error);
@@ -472,7 +472,7 @@ describe('CustomerService', () => {
             pod: customerWithoutPod.probabilityOfDefault,
           },
         ])(
-          'should creates a new customer using the legacy URN and returns the response if there are no errors when when PoD is `$pod`',
+          'should create a new customer using the legacy URN and returns the response if there are no errors when when PoD is `$pod`',
           async ({ DTFSCustomerDto: dtfsCustomerDto }) => {
             // Arrange
             const mockSalesforceResponse = [
@@ -534,7 +534,7 @@ describe('CustomerService', () => {
           });
         });
 
-        it('throws an error if Salesforce service fails to create a customer', async () => {
+        it('should throw an error if Salesforce service fails to create a customer', async () => {
           // Arrange
           when(salesforceServiceCreateCustomer).calledWith(expect.any(Object)).mockRejectedValueOnce(new Error('Service Error'));
           when(numbersServiceCreate).calledWith(expect.any(Object)).mockResolvedValueOnce(createUkefIdResponse);
@@ -554,7 +554,7 @@ describe('CustomerService', () => {
           expect(numbersServiceCreate).toHaveBeenCalledTimes(1);
         });
 
-        it('throws an error if Dun and Bradstreet service fails to return a DUNS number and does not call further services', async () => {
+        it('should throw an error if Dun and Bradstreet service fails to return a DUNS number and does not call further services', async () => {
           // Arrange
           when(salesforceServiceCreateCustomer).calledWith(expect.any(Object)).mockResolvedValueOnce(salesforceCreateCustomerResponse);
           when(numbersServiceCreate).calledWith(expect.any(Object)).mockResolvedValueOnce(createUkefIdResponse);
@@ -601,7 +601,7 @@ describe('CustomerService', () => {
             pod: customerWithoutPod.probabilityOfDefault,
           },
         ])(
-          'should creates a new customer without a URN and returns the response if there are no errors when when PoD is `$pod`',
+          'should create a new customer without a URN and returns the response if there are no errors when when PoD is `$pod`',
           async ({ DTFSCustomerDto: dtfsCustomerDto }) => {
             // Arrange
             const mockSalesforceResponse = [
@@ -637,7 +637,7 @@ describe('CustomerService', () => {
           },
         );
 
-        it('returns duns number for the registration number', async () => {
+        it('should return duns number for the registration number', async () => {
           // Arrange
           when(dunAndBradstreetServiceGetDunsNumber).calledWith(companyRegistrationNumber).mockResolvedValueOnce(dunsNumber);
 
@@ -688,7 +688,7 @@ describe('CustomerService', () => {
               },
             ],
           },
-        ])('should creates a new customer returns the response if there are no errors', async ({ DTFSCustomerDto: dtfsCustomerDto, response }) => {
+        ])('should create a new customer returns the response if there are no errors', async ({ DTFSCustomerDto: dtfsCustomerDto, response }) => {
           // Arrange
           when(salesforceServiceCreateCustomer).calledWith(expect.any(Object)).mockResolvedValueOnce(salesforceCreateCustomerResponse);
           when(numbersServiceCreate).calledWith(expect.any(Object)).mockResolvedValueOnce(createUkefIdResponse);
@@ -752,7 +752,7 @@ describe('CustomerService', () => {
               },
             ],
           },
-        ])('should creates a new customer returns the response if there are no errors', async ({ DTFSCustomerDto: dtfsCustomerDto, response }) => {
+        ])('should create a new customer returns the response if there are no errors', async ({ DTFSCustomerDto: dtfsCustomerDto, response }) => {
           // Arrange
           when(salesforceServiceCreateCustomer).calledWith(expect.any(Object)).mockResolvedValueOnce(salesforceCreateCustomerResponse);
           when(numbersServiceCreate).calledWith(expect.any(Object)).mockRejectedValueOnce(new InternalServerErrorException());
@@ -779,7 +779,7 @@ describe('CustomerService', () => {
     });
 
     describe('exceptions', () => {
-      it('should throws an error if there is an InformaticaException', async () => {
+      it('should throw an error if there is an InformaticaException', async () => {
         // Arrange
         when(informaticaServiceGetCustomers)
           .calledWith({
@@ -796,7 +796,7 @@ describe('CustomerService', () => {
         expect(numbersServiceCreate).toHaveBeenCalledTimes(0);
       });
 
-      it('should throws an error if the Informatica response does not contain valid customers', async () => {
+      it('should throw an error if the Informatica response does not contain valid customers', async () => {
         // Arrange
         when(informaticaServiceGetCustomers)
           .calledWith({
@@ -813,7 +813,7 @@ describe('CustomerService', () => {
         expect(numbersServiceCreate).toHaveBeenCalledTimes(0);
       });
 
-      it('should throws an error if Salesforce service fails to create a customer', async () => {
+      it('should throw an error if Salesforce service fails to create a customer', async () => {
         // Arrange
         when(salesforceServiceCreateCustomer).calledWith(expect.any(Object)).mockRejectedValueOnce(new Error('Service Error'));
         when(numbersServiceCreate).calledWith(expect.any(Object)).mockResolvedValueOnce(createUkefIdResponse);
@@ -833,7 +833,7 @@ describe('CustomerService', () => {
         expect(numbersServiceCreate).toHaveBeenCalledTimes(1);
       });
 
-      it('should throws an error if Dun and Bradstreet service fails to return a DUNS number and does not call further services', async () => {
+      it('should throw an error if Dun and Bradstreet service fails to return a DUNS number and does not call further services', async () => {
         // Arrange
         when(salesforceServiceCreateCustomer).calledWith(expect.any(Object)).mockResolvedValueOnce(salesforceCreateCustomerResponse);
         when(numbersServiceCreate).calledWith(expect.any(Object)).mockResolvedValueOnce(createUkefIdResponse);
@@ -853,7 +853,7 @@ describe('CustomerService', () => {
         expect(numbersServiceCreate).toHaveBeenCalledTimes(0);
       });
 
-      it('should returns a NotFoundException when no a DUNS number was not found', async () => {
+      it('should return a NotFoundException when no a DUNS number was not found', async () => {
         // Arrage
         when(dunAndBradstreetServiceGetDunsNumber).calledWith(companyRegistrationNumber).mockRejectedValueOnce(new NotFoundException());
 

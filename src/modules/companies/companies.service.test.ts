@@ -36,7 +36,7 @@ describe('CompaniesService', () => {
     jest.spyOn(configService, 'get').mockReset().mockReturnValue({ key: valueGenerator.word() });
 
     companiesHouseServiceGetCompanyByRegistrationNumber = jest.fn<CompaniesHouseService['getCompanyByRegistrationNumber']>();
-    const companiesHouseService = new CompaniesHouseService(null, configService);
+    const companiesHouseService = new CompaniesHouseService(null, configService, null);
     companiesHouseService.getCompanyByRegistrationNumber = companiesHouseServiceGetCompanyByRegistrationNumber;
 
     sectorIndustriesServiceFind = jest.fn<SectorIndustriesService['find']>();
