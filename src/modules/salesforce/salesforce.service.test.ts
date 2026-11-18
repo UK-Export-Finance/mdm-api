@@ -31,8 +31,6 @@ describe('SalesforceService', () => {
     jest.spyOn(configService, 'get').mockReset().mockReturnValue({
       clientId: 'TEST_CLIENT_ID',
       clientSecret: 'TEST_CLIENT_SECRET',
-      username: 'TEST_USERNAME',
-      password: 'TEST_PASSWORD',
       accessUrl: 'TEST_ACCESS_URL',
     });
 
@@ -297,6 +295,41 @@ describe('SalesforceService', () => {
         // Assert
         expect(logger.warn).toHaveBeenCalledWith('Salesforce authentication response did not include an access token');
         expect(logger.info).not.toHaveBeenCalledWith('Received Salesforce access token');
+      });
+
+      it('requests a token using "client credentials" grant and uses it to get Salesforce access token', async () => {
+        // Arrange
+        const returnedAccessToken = 'RETURNED_ACCESS_TOKEN';
+        const getAccessTokenSpy = jest.spyOn(service as any, 'getAccessToken');
+        const createdCustomer = { id: 'customer-id', success: true, errors: null };
+
+        httpServicePost
+          .mockReturnValueOnce(of({ data: { access_token: returnedAccessToken } } as AxiosResponse))
+          .mockReturnValueOnce(of({ data: createdCustomer } as AxiosResponse));
+
+        // Act
+        const response = await service.createCustomer(customer);
+
+        // Assert
+        expect(getAccessTokenSpy).toHaveBeenCalledTimes(1);
+        await expect(getAccessTokenSpy.mock.results[0].value).resolves.toBe(returnedAccessToken);
+        expect(httpServicePost).toHaveBeenCalledTimes(2);
+
+        const [tokenPath, tokenBody, tokenConfig] = httpServicePost.mock.calls[0];
+        expect(tokenPath).toBe('TEST_ACCESS_URL');
+        expect(tokenBody).toEqual({
+          grant_type: 'client_credentials',
+          client_id: 'TEST_CLIENT_ID',
+          client_secret: 'TEST_CLIENT_SECRET',
+        });
+        expect(tokenBody).not.toHaveProperty('username');
+        expect(tokenBody).not.toHaveProperty('password');
+        expect(tokenConfig).toEqual({ headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
+
+        expect(httpServicePost).toHaveBeenNthCalledWith(2, customerBasePath, customer, {
+          headers: { Authorization: `Bearer ${returnedAccessToken}` },
+        });
+        expect(response).toEqual(createdCustomer);
       });
     });
   });
