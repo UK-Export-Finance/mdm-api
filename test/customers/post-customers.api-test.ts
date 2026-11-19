@@ -1,9 +1,20 @@
 import { EXAMPLES } from '@ukef/constants';
+import { salesforceFormattedCurrentDate } from '@ukef/helpers/date-formatter.helper';
 import { IncorrectAuthArg, withClientAuthenticationTests } from '@ukef-test/common-tests/client-authentication-api-tests';
 import { Api } from '@ukef-test/support/api';
-import { accountSoql, mockSalesforceQuery, SALESFORCE_ACCOUNT_RECORD, setSalesforceTestEnvironment } from '@ukef-test/support/salesforce';
+import {
+  accountSoql,
+  legacySoql,
+  mockSalesforceQuery,
+  mockSalesforceLegacyQuery,
+  SALESFORCE_ACCOUNT_RECORD,
+  LEGACY_ACCOUNT_RECORD,
+  setSalesforceTestEnvironment,
+  SALESFORCE_TEST_ORIGIN,
+} from '@ukef-test/support/salesforce';
 import { HttpStatusCode } from 'axios';
 import nock from 'nock';
+import { ENVIRONMENT_VARIABLES } from '@ukef-test/support/environment-variables';
 
 const url = '/api/v1/customers';
 
@@ -133,6 +144,8 @@ describe('POST /customers', () => {
   };
   const accountQuery = accountSoql(`Company_Registration_Number__c = '${EXAMPLES.CUSTOMER.COMPANYREG}'`);
 
+  const legacyAccountQuery = legacySoql(`M2_1_MCD_Company_Reg_Number__c = '${EXAMPLES.CUSTOMER.COMPANYREG}'`);
+
   beforeAll(async () => {
     restoreSalesforceEnvironment = setSalesforceTestEnvironment();
     api = await Api.create();
@@ -196,6 +209,54 @@ describe('POST /customers', () => {
         riskEntity: 'Yes',
         creditClassificationStatus: 'Good',
         creditClassificationDate: '1989-09-20',
+      },
+    ]);
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it(`should return ${HttpStatusCode.Created} when creating a customer with a legacy party URN`, async () => {
+    // Arrange
+    mockSalesforceQuery(accountQuery, []);
+    mockSalesforceLegacyQuery(legacyAccountQuery, [LEGACY_ACCOUNT_RECORD]);
+
+    nock(ENVIRONMENT_VARIABLES.DUN_AND_BRADSTREET_URL).post('/v3/token').reply(HttpStatusCode.Ok, { access_token: 'mock-access-token' });
+
+    nock(ENVIRONMENT_VARIABLES.DUN_AND_BRADSTREET_URL)
+      .get('/v1/match/cleanseMatch')
+      .query({ countryISOAlpha2Code: 'GB', registrationNumber: EXAMPLES.CUSTOMER.COMPANYREG })
+      .reply(HttpStatusCode.Ok, {
+        matchCandidates: [{ organization: { duns: '123456789' } }],
+      });
+
+    nock(SALESFORCE_TEST_ORIGIN).post('/services/oauth2/token').reply(HttpStatusCode.Ok, { access_token: 'TEST_SALESFORCE_ACCESS_TOKEN' });
+
+    nock(SALESFORCE_TEST_ORIGIN).post('/services/data/v53.0/sobjects/Account').reply(HttpStatusCode.Created, {
+      id: '000A000000a1BBbCDE',
+      success: true,
+      errors: [],
+    });
+
+    // Act
+    const { status, body } = await api.post(url, customerPayload);
+
+    // Assert
+    expect(status).toBe(HttpStatusCode.Created);
+    expect(body).toStrictEqual([
+      {
+        partyUrn: '00302069',
+        name: EXAMPLES.CUSTOMER.NAME,
+        sfId: '000A000000a1BBbCDE',
+        companyRegNo: EXAMPLES.CUSTOMER.COMPANYREG,
+        creditClassificationDate: salesforceFormattedCurrentDate(),
+        creditClassificationStatus: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
+        isLegacyRecord: true,
+        probabilityOfDefault: EXAMPLES.CUSTOMER.PROBABILITY_OF_DEFAULT,
+        riskEntity: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
+        subtype: null,
+        type: null,
+        ukEntity: EXAMPLES.CUSTOMER.UK_ENTITY,
+        ukefIndustryName: EXAMPLES.CUSTOMER.UK_INDUSTRY_NAME,
+        ukefSectorName: EXAMPLES.CUSTOMER.UK_INDUSTRY_SECTOR_NAME,
       },
     ]);
     expect(nock.isDone()).toBe(true);

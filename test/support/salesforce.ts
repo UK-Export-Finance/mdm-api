@@ -23,6 +23,16 @@ export const SALESFORCE_ACCOUNT_RECORD = {
   CCM_Watch_List_Date__c: EXAMPLES.CUSTOMER.CREDIT_RISK_RATING_DATE,
 };
 
+export const LEGACY_ACCOUNT_RECORD = {
+  Id: EXAMPLES.CUSTOMER.SALESFORCE_ID,
+  M2_1_MCD_Party_URN__c: EXAMPLES.CUSTOMER.PARTYURN,
+  M2_1_MCD_Party_Name__c: EXAMPLES.CUSTOMER.NAME,
+  M2_1_MCD_Company_Reg_Number__c: EXAMPLES.CUSTOMER.COMPANYREG,
+  M2_1_MCD_UK_or_Overseas__c: EXAMPLES.CUSTOMER.UK_ENTITY,
+  M2_1_MCD_Party_Type__c: EXAMPLES.CUSTOMER.SALESFORCE_TYPE,
+  M2_1_MCD_Party_Sub_Type__c: EXAMPLES.CUSTOMER.SALESFORCE_SUBTYPE,
+};
+
 export const setSalesforceTestEnvironment = (): (() => void) => {
   const originalInstanceUrl = process.env.SALESFORCE_INSTANCE_URL;
   const originalClientId = process.env.SALESFORCE_CLIENT_ID;
@@ -76,6 +86,16 @@ export const legacySoql = (
       LIMIT 200`;
 
 export const mockSalesforceQuery = (soql: string, records: unknown[]): void => {
+  nock(SALESFORCE_TEST_ORIGIN).post('/services/oauth2/token').reply(HttpStatusCode.Ok, { access_token: SALESFORCE_TEST_ACCESS_TOKEN });
+
+  nock(SALESFORCE_TEST_ORIGIN)
+    .get('/services/data/v53.0/query')
+    .query({ q: soql })
+    .matchHeader('authorization', `Bearer ${SALESFORCE_TEST_ACCESS_TOKEN}`)
+    .reply(HttpStatusCode.Ok, { records });
+};
+
+export const mockSalesforceLegacyQuery = (soql: string, records: unknown[]): void => {
   nock(SALESFORCE_TEST_ORIGIN).post('/services/oauth2/token').reply(HttpStatusCode.Ok, { access_token: SALESFORCE_TEST_ACCESS_TOKEN });
 
   nock(SALESFORCE_TEST_ORIGIN)
