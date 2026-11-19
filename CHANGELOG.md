@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.61.3](https://github.com/UK-Export-Finance/mdm-api/compare/v1.61.2...v1.61.3) (2026-11-16)
+
+
+### Bug Fixes
+
+* **APIM-726:** get companies house, D&B data - error handling ([#1953](https://github.com/UK-Export-Finance/mdm-api/issues/1953)) ([87b8eef](https://github.com/UK-Export-Finance/mdm-api/commit/87b8eeffa6e8333968850c383b912eb536eb6e00))
+
 ## [1.61.2](https://github.com/UK-Export-Finance/mdm-api/compare/v1.61.1...v1.61.2) (2026-11-12)
 
 
