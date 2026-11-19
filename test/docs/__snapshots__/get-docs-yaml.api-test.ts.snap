@@ -1729,31 +1729,32 @@ components:
           type: string
           description: The Companies House registration number
           example: '06012345'
+          nullable: true
         creditClassificationDate:
           type: string
           description: Credit Classification Status Date (dd/mm/yyyy)
           example: 01/01/1970
+          nullable: true
         creditClassificationStatus:
           type: string
           description: Credit classification status
           example: Good
+          nullable: true
         customerType:
           type: string
           description: Customer type
-          example: Association
+          example: AIRLINE
           enum:
-            - Association
-            - Corporate Overseas
-            - Corporate UK
+            - COMPANY
+            - COUNTRY
+            - AIRLINE
+            - PROJECT
+            - DUMMY
+            - FOREIGN CONTENT
+            - OPERATING LESSOR
             - ECA
-            - Financial Institution Overseas
-            - Financial Institution UK
-            - Non Corporate Overseas
-            - Non Corporate UK
-            - Overseas Government Dept.
-            - Overseas Public Body
-            - UK Government Dept.
-            - UK Public Body
+            - BANK
+          nullable: true
         isLegacyRecord:
           type: boolean
           description: False for Salesforce account record, True for legacy Party DB record
@@ -1766,14 +1767,17 @@ components:
           type: string
           description: The unique UKEF ID of the customer
           example: '00302069'
+          nullable: true
         probabilityOfDefault:
           type: number
           description: Probability of default of the company
           example: 14.1
+          nullable: true
         riskEntity:
           type: string
           description: Risk entity
           example: Corporate
+          nullable: true
         sfId:
           type: string
           description: The unique Salesforce ID
@@ -1806,6 +1810,7 @@ components:
             - Sole Trader
             - Special Purpose
             - Trade Association
+          nullable: true
         type:
           type: string
           description: Customer company type
@@ -1823,18 +1828,22 @@ components:
             - Overseas Public Body
             - UK Government Dept.
             - UK Public Body
+          nullable: true
         ukEntity:
           type: string
           description: Whether the company is UK based or not
           example: 'Yes'
+          nullable: true
         ukefIndustryName:
           type: string
           description: UKEF industry identifier code
           example: AGRICULTURE, HORTICULTURE & FISHERIES
+          nullable: true
         ukefSectorName:
           type: string
           description: UKEF industry sector identifier code
           example: 'CIVIL: AGRICULTURE, HORTICULTURE & FISHERIES'
+          nullable: true
       required:
         - companyRegNo
         - creditClassificationDate
@@ -1865,7 +1874,7 @@ components:
         customerType:
           type: string
           description: Salesforce customer type
-          example: CUSTOMER
+          example: AIRLINE
         probabilityOfDefault:
           type: number
           description: Probability of default

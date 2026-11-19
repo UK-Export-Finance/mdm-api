@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { EXAMPLES } from '@ukef/constants';
 import { CustomerCompanySubtypesEnum } from '@ukef/constants/enums/customer-company-subtypes';
+import { CustomerCompanyTypesEnum } from '@ukef/constants/enums/customer-company-types';
 import { CustomerTypesEnum } from '@ukef/constants/enums/customer-types';
 
 export type GetCustomersResponse = GetCustomersResponseItem[];
@@ -29,7 +30,7 @@ export class GetCustomersResponseItem {
 
   @ApiProperty({
     description: 'Customer type',
-    example: EXAMPLES.CUSTOMER.SALESFORCE_TYPE,
+    example: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
     enum: CustomerTypesEnum,
     nullable: true,
   })
@@ -85,7 +86,7 @@ export class GetCustomersResponseItem {
   @ApiProperty({
     description: 'Customer company type',
     example: EXAMPLES.CUSTOMER.SALESFORCE_TYPE,
-    enum: CustomerTypesEnum,
+    enum: CustomerCompanyTypesEnum,
     nullable: true,
   })
   readonly type: string | null;

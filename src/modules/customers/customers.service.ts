@@ -166,6 +166,8 @@ export class CustomersService {
     };
 
     try {
+      this.logger.info('Finding customer for company %s in Informatica before Salesforce creation', dtfsCustomerDto.companyRegistrationNumber);
+
       const existingCustomers = await this.getCustomers(query);
 
       // If the customer does exist in Salesforce
