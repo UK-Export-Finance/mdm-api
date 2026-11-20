@@ -119,7 +119,7 @@
     "jest": "30.5.2",
     "jest-when": "4.0.3",
     "lint-staged": "17.6.0",
-    "markdownlint-cli": "0.49.1",
+    "markdownlint-cli": "0.50.0",
     "nock": "15.0.5",
     "prettier": "3.9.9",
     "sort-package-json": "4.0.0",
