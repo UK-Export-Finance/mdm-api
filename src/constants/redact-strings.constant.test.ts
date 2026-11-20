@@ -4,7 +4,7 @@ import { join } from 'path';
 import { jest } from '@jest/globals';
 
 describe('REDACT_STRINGS', () => {
-  const environmentVariableName = 'APIM_INFORMATICA_PASSWORD';
+  const environmentVariableName = 'SALESFORCE_CLIENT_SECRET';
 
   let originalProcessEnv: NodeJS.ProcessEnv;
   let originalCwd: string;

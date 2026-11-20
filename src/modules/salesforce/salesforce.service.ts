@@ -1,12 +1,15 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PinoLogger } from 'nestjs-pino';
 import { HttpClient } from '@ukef/modules/http/http.client';
 
 import { SALESFORCE_CONFIG_KEY, SalesforceConfigType } from '@ukef/config/salesforce.config';
 import { CreateCustomerDto } from '@ukef/modules/customers/dto/create-customer.dto';
+import { GetCustomersQueryDto } from '@ukef/modules/customers/dto/get-customers-query.dto';
 import { CreateCustomerSalesforceResponseDto } from './dto/create-customer-salesforce-response.dto';
+import { GetSalesforceAccountResponseDto } from './dto/get-salesforce-account-response.dto';
+import { GetSalesforceLegacyAccountResponseDto } from './dto/get-salesforce-legacy-account-response.dto';
 import { customerAlreadyExistsSalesforceError } from './known-errors';
 import { createWrapSalesforceHttpGetErrorCallback } from './wrap-salesforce-http-error-callback';
 
@@ -31,6 +34,102 @@ export class SalesforceService {
     this.access_url = accessUrl;
 
     this.httpClient = new HttpClient(httpService);
+  }
+
+  /**
+   * Searches customers using AND-combined filters, with partial matching for names.
+   *
+   * @param {GetCustomersQueryDto} query - The query parameters for search conditions
+   * @returns {Promise<GetCustomersResponse>} A promise that resolves to a list of customer response items
+   */
+  async getCustomers(query: GetCustomersQueryDto): Promise<GetSalesforceAccountResponseDto[]> {
+    const conditions = [
+      { field: 'Company_Registration_Number__c', value: query.companyReg },
+      { field: 'Party_URN__c', value: query.partyUrn },
+      { field: 'Name', value: query.name },
+    ].flatMap(({ field, value }) => {
+      if (!value) {
+        return [];
+      }
+
+      const safeValue = this.sanitizeSalesforceSoqlInput(value);
+      return [field === 'Name' ? `${field} LIKE '%${safeValue}%'` : `${field} = '${safeValue}'`];
+    });
+
+    if (conditions.length === 0) {
+      throw new BadRequestException('At least one search parameter is required');
+    }
+
+    const soql = `SELECT Id, Name, Party_URN__c, Company_Registration_Number__c, CCM_Customer_Type__c, CCM_Probability_of_Default__c, CCM_Citizenship_Class__c, CCM_Industry__c, CCM_Industry_Group__c, Account_Type__c, Account_Sub_Type__c, CCM_Assigned_Rating__c, CCM_Watch_List__c, CCM_Watch_List_Date__c
+      FROM Account
+      WHERE ${conditions.join(' AND ')}
+      LIMIT 100`;
+
+    return (await this.runSoql(soql))['records'];
+  }
+
+  /**
+   * Searches legacy customers using AND-combined filters, with partial matching for names.
+   *
+   * @param {GetCustomersQueryDto} query - The query parameters for search conditions
+   * @returns {Promise<GetCustomersResponse>} A promise that resolves to a list of legacy customer response items
+   */
+  async getLegacyCustomers(query: GetCustomersQueryDto): Promise<GetSalesforceLegacyAccountResponseDto[]> {
+    const conditions = [
+      { field: 'M2_1_MCD_Company_Reg_Number__c', value: query.companyReg },
+      { field: 'M2_1_MCD_Party_URN__c', value: query.partyUrn },
+      { field: 'M2_1_MCD_Party_Name__c', value: query.name },
+    ].flatMap(({ field, value }) => {
+      if (!value) {
+        return [];
+      }
+
+      const safeValue = this.sanitizeSalesforceSoqlInput(value);
+      return [field === 'M2_1_MCD_Party_Name__c' ? `${field} LIKE '%${safeValue}%'` : `${field} = '${safeValue}'`];
+    });
+
+    if (conditions.length === 0) {
+      throw new BadRequestException('At least one search parameter is required');
+    }
+
+    const soql = `SELECT Id, M2_1_MCD_Party_URN__c, M2_1_MCD_Party_Name__c, M2_1_MCD_Company_Reg_Number__c, M2_1_MCD_UK_or_Overseas__c, M2_1_MCD_Party_Type__c, M2_1_MCD_Party_Sub_Type__c
+      FROM M2_1_MCD_Legacy_Data_Party__c
+      WHERE ${conditions.join(' AND ')}
+      LIMIT 200`;
+
+    return (await this.runSoql(soql))['records'];
+  }
+
+  /**
+   * Sanitize SOQL input to prevent injection, escaping backslashes and single quotes
+   * @param value - The input string to sanitize for SOQL.
+   * @returns The sanitized string safe for use in SOQL queries.
+   */
+  private sanitizeSalesforceSoqlInput(value: string): string {
+    return value.replaceAll('\\', '\\\\').replaceAll(`'`, `\\'`);
+  }
+
+  /**
+   * Executes a Salesforce SOQL query and returns the response.
+   *
+   * @param soql - Salesforce query to run
+   * @returns Salesforce response.
+   */
+  private async runSoql(soql: string): Promise<unknown> {
+    const path = `/query?q=${encodeURIComponent(soql)}`;
+    const accessToken = await this.getAccessToken();
+    const { data } = await this.httpClient.get<any>({
+      path,
+      headers: {
+        Authorization: 'Bearer ' + accessToken,
+      },
+      onError: createWrapSalesforceHttpGetErrorCallback({
+        messageForUnknownError: `Failed to get customer in Salesforce`,
+        knownErrors: [],
+      }),
+    });
+
+    return data;
   }
 
   /**

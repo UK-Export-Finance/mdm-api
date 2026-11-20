@@ -141,11 +141,6 @@ jobs:
             "DATABASE_ODS_TENANT_ID=${{ secrets.DATABASE_ODS_TENANT_ID }}" \
             "DATABASE_ODS_CLIENT_SECRET=${{ secrets.DATABASE_ODS_CLIENT_SECRET }}" \
             "DATABASE_ODS_NAME=${{ secrets.DATABASE_ODS_NAME }}" \
-            "APIM_INFORMATICA_URL=${{ secrets.APIM_INFORMATICA_URL }}" \
-            "APIM_INFORMATICA_USERNAME=${{ secrets.APIM_INFORMATICA_USERNAME }}" \
-            "APIM_INFORMATICA_PASSWORD=${{ secrets.APIM_INFORMATICA_PASSWORD }}" \
-            "APIM_INFORMATICA_MAX_REDIRECTS=${{ secrets.APIM_INFORMATICA_MAX_REDIRECTS }}" \
-            "APIM_INFORMATICA_TIMEOUT=${{ secrets.APIM_INFORMATICA_TIMEOUT }}" \
             "API_KEY=${{ secrets.API_KEY }}" \
             "ORDNANCE_SURVEY_URL=${{ secrets.ORDNANCE_SURVEY_URL }}" \
             "ORDNANCE_SURVEY_KEY=${{ secrets.ORDNANCE_SURVEY_KEY }}" \

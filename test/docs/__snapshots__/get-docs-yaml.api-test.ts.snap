@@ -175,7 +175,7 @@ paths:
             The name of the customer to search for, allows partial matches, not
             case sensitive.
           schema:
-            example: Testing Systems Ltd
+            example: Mock name
             type: string
         - name: fallbackToLegacyData
           required: false
@@ -203,8 +203,8 @@ paths:
                 items:
                   $ref: '#/components/schemas/GetCustomersResponseItem'
         '404':
-          description: Customer not found
-      summary: Get customers from Salesforce via Informatica
+          description: Customer not found.
+      summary: Get customers from Salesforce
       tags:
         - customers
     post:
@@ -331,7 +331,7 @@ paths:
             type: string
       responses:
         '200':
-          description: A DOM Business centre
+          description: A DOM business centre
           content:
             application/json:
               schema:
@@ -356,18 +356,37 @@ paths:
           schema:
             example: GH_ACC
             type: string
+        - name: startDate
+          required: false
+          in: query
+          description: >-
+            Optional non-working day start date filter (inclusive) in YYYY-MM-DD
+            format
+          schema:
+            example: '2026-01-01'
+            type: string
+        - name: endDate
+          required: false
+          in: query
+          description: >-
+            Optional non-working day end date filter (inclusive) in YYYY-MM-DD
+            format
+          schema:
+            example: '2026-12-31'
+            type: string
       responses:
         '200':
-          description: A DOM Business centre's non working days
+          description: A DOM business centre's non working days
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: >-
-                    #/components/schemas/GetOdsBusinessCentreOdsResponseNonWorkingDayMappedResponse
+                  $ref: '#/components/schemas/FindOdsBusinessCentreOdsResponseNonWorkingDayMappedResponse'
         '400':
           description: Bad request
+        '404':
+          description: Business centre not found
         '500':
           description: Internal server error
       summary: Get a business centre's non working days from DOM
@@ -393,16 +412,201 @@ paths:
       summary: Get business centres from DOM
       tags:
         - dom
+  /api/v2/dom/business-centres/non-working-days:
+    get:
+      operationId: DomController_findMultipleBusinessCentresNonWorkingDays_v2
+      parameters:
+        - name: centreCodes
+          required: true
+          in: query
+          description: Unique business centre codes - separated by commas
+          schema:
+            example: GH_ACC,AO_LAD
+            type: string
+        - name: startDate
+          required: false
+          in: query
+          description: >-
+            Optional non-working day start date filter (inclusive) in YYYY-MM-DD
+            format
+          schema:
+            example: '2026-01-01'
+            type: string
+        - name: endDate
+          required: false
+          in: query
+          description: >-
+            Optional non-working day end date filter (inclusive) in YYYY-MM-DD
+            format
+          schema:
+            example: '2026-12-31'
+            type: string
+      responses:
+        '200':
+          description: Multiple DOM business centre's non working days
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FindMultipleOdsBusinessCentreOdsResponsesNonWorkingDaysResponse'
+        '400':
+          description: Bad request
+        '404':
+          description: Business centres non working days not found
+        '500':
+          description: Internal server error
+      summary: Get multiple business centre's non working days from DOM
+      tags:
+        - dom
+  /api/v2/dom/credit-risk-ratings:
+    get:
+      operationId: DomController_getCreditRiskRatings_v2
+      parameters: []
+      responses:
+        '200':
+          description: All credit risk ratings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FindCreditRiskRatingDto'
+        '500':
+          description: Internal server error
+      summary: Get all credit risk ratings
+      tags:
+        - dom
+  /api/v2/dom/interest-rate-tickers:
+    get:
+      operationId: DomController_getInterestRateTickers_v2
+      parameters: []
+      responses:
+        '200':
+          description: All interest rate tickers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetDomInterestRateTickersResponseDto'
+        '500':
+          description: Internal server error
+      summary: Get all interest rate tickers
+      tags:
+        - dom
+  /api/v2/dom/currencies:
+    get:
+      operationId: DomController_getCurrencies_v2
+      parameters: []
+      responses:
+        '200':
+          description: All currencies
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetDomCurrencyResponseDto'
+        '500':
+          description: Internal server error
+      summary: Get all currencies
+      tags:
+        - dom
+  /api/v2/dom/interest-rate:
+    get:
+      operationId: DomController_getInterestRates_v2
+      parameters:
+        - name: rateCode
+          required: true
+          in: query
+          description: The code of the interest rate ticker
+          schema:
+            example: EUR002
+            type: string
+        - name: startDate
+          required: false
+          in: query
+          description: >-
+            Optional start date (inclusive) to retrieve interest rates from. If
+            omitted, only the rate for the end date is returned.
+          schema:
+            example: '2026-01-01'
+            type: string
+        - name: endDate
+          required: true
+          in: query
+          description: The end date (inclusive) to retrieve interest rates until
+          schema:
+            example: '2026-12-31'
+            type: string
+      responses:
+        '200':
+          description: DOM interest rates
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetDomInterestRateResponseDto'
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+      summary: Get interest rates for a ticker within a date range from DOM
+      tags:
+        - dom
+  /api/v2/dom/compounding-index:
+    get:
+      operationId: DomController_getCompoundingIndices_v2
+      parameters:
+        - name: rateCode
+          required: true
+          in: query
+          description: The code of the interest rate ticker
+          schema:
+            example: EUR002
+            type: string
+        - name: startDate
+          required: false
+          in: query
+          description: >-
+            Optional start date (inclusive) to retrieve interest rates from. If
+            omitted, only the rate for the end date is returned.
+          schema:
+            example: '2026-01-01'
+            type: string
+        - name: endDate
+          required: true
+          in: query
+          description: The end date (inclusive) to retrieve interest rates until
+          schema:
+            example: '2026-12-31'
+            type: string
+      responses:
+        '200':
+          description: DOM compounding index values
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetDomCompoundingIndexResponseDto'
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+      summary: Get compounding index values for a ticker within a date range from DOM
+      tags:
+        - dom
   /api/v2/dom/product-configuration/{productType}:
     get:
-      operationId: DomController_findProductConfigurations_v2
+      operationId: DomController_findProductConfiguration_v2
       parameters:
         - name: productType
           required: true
           in: path
           description: Unique product type
           schema:
-            example: EXIP
+            example: PRT001
             type: string
       responses:
         '200':
@@ -415,7 +619,7 @@ paths:
           description: Product configuration not found
         '500':
           description: Internal server error
-      summary: Get a product configurations from DOM
+      summary: Get a product configuration from DOM
       tags:
         - dom
   /api/v2/dom/product-configurations:
@@ -434,6 +638,33 @@ paths:
         '500':
           description: Internal server error
       summary: Get all product configurations from DOM
+      tags:
+        - dom
+  /api/v2/dom/product-configurations-by-type:
+    get:
+      operationId: DomController_findMultipleProductConfigurations_v2
+      parameters:
+        - name: productTypes
+          required: true
+          in: query
+          description: Unique product types - separated by commas
+          schema:
+            example: PRT001,PRT002
+            type: string
+      responses:
+        '200':
+          description: Multiple DOM product configurations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FindMultipleProductConfigsResponse'
+        '400':
+          description: Bad request
+        '404':
+          description: Product configurations not found
+        '500':
+          description: Internal server error
+      summary: Get multiple product configurations from DOM
       tags:
         - dom
   /api/v1/emails:
@@ -517,8 +748,7 @@ paths:
           schema:
             minLength: 5
             maxLength: 8
-            pattern: >-
-              ^[A-Za-z]{1,2}[\\dRr][\\dA-Za-z]?\\s?\\d[ABD-HJLNP-UW-Zabd-hjlnp-uw-z]{2}$
+            pattern: ^[A-Za-z]{1,2}[\\dRr][\\dA-Za-z]?\\s?\\d[ABD-HJLNP-UW-Zabd-hjlnp-uw-z]{2}$
             example: SW1A 2AQ
             type: string
       responses:
@@ -543,7 +773,12 @@ paths:
       parameters: []
       responses:
         '200':
-          description: The Health Check is successful
+          description: >-
+            API micro-service health check performs dependent databases
+            connection and memory heap check
+
+
+            The Health Check is successful
           content:
             application/json:
               schema:
@@ -551,12 +786,16 @@ paths:
                 properties:
                   status:
                     type: string
+                    enum:
+                      - ok
+                      - degraded
                     example: ok
                   info:
                     type: object
                     example:
                       database:
                         status: up
+                        responseTime: 12
                     additionalProperties:
                       type: object
                       required:
@@ -564,6 +803,13 @@ paths:
                       properties:
                         status:
                           type: string
+                          enum:
+                            - up
+                            - degraded
+                            - down
+                        responseTime:
+                          type: number
+                          description: Time the health indicator took to respond, in ms
                       additionalProperties: true
                     nullable: true
                   error:
@@ -576,6 +822,13 @@ paths:
                       properties:
                         status:
                           type: string
+                          enum:
+                            - up
+                            - degraded
+                            - down
+                        responseTime:
+                          type: number
+                          description: Time the health indicator took to respond, in ms
                       additionalProperties: true
                     nullable: true
                   details:
@@ -583,6 +836,7 @@ paths:
                     example:
                       database:
                         status: up
+                        responseTime: 12
                     additionalProperties:
                       type: object
                       required:
@@ -590,6 +844,13 @@ paths:
                       properties:
                         status:
                           type: string
+                          enum:
+                            - up
+                            - degraded
+                            - down
+                        responseTime:
+                          type: number
+                          description: Time the health indicator took to respond, in ms
                       additionalProperties: true
         '503':
           description: The Health Check is not successful
@@ -600,12 +861,16 @@ paths:
                 properties:
                   status:
                     type: string
+                    enum:
+                      - error
+                      - shutting_down
                     example: error
                   info:
                     type: object
                     example:
                       database:
                         status: up
+                        responseTime: 12
                     additionalProperties:
                       type: object
                       required:
@@ -613,6 +878,13 @@ paths:
                       properties:
                         status:
                           type: string
+                          enum:
+                            - up
+                            - degraded
+                            - down
+                        responseTime:
+                          type: number
+                          description: Time the health indicator took to respond, in ms
                       additionalProperties: true
                     nullable: true
                   error:
@@ -621,6 +893,7 @@ paths:
                       redis:
                         status: down
                         message: Could not connect
+                        responseTime: 3005
                     additionalProperties:
                       type: object
                       required:
@@ -628,6 +901,13 @@ paths:
                       properties:
                         status:
                           type: string
+                          enum:
+                            - up
+                            - degraded
+                            - down
+                        responseTime:
+                          type: number
+                          description: Time the health indicator took to respond, in ms
                       additionalProperties: true
                     nullable: true
                   details:
@@ -635,9 +915,11 @@ paths:
                     example:
                       database:
                         status: up
+                        responseTime: 12
                       redis:
                         status: down
                         message: Could not connect
+                        responseTime: 3005
                     additionalProperties:
                       type: object
                       required:
@@ -645,6 +927,13 @@ paths:
                       properties:
                         status:
                           type: string
+                          enum:
+                            - up
+                            - degraded
+                            - down
+                        responseTime:
+                          type: number
+                          description: Time the health indicator took to respond, in ms
                       additionalProperties: true
       summary: ready
       tags:
@@ -697,9 +986,234 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MarketEntity'
-      summary: Get all markets (aka countries)
+      summary: Get all markets (AKA countries)
       tags:
         - markets
+  /api/v2/ods/accrual-frequencies:
+    get:
+      operationId: OdsController_getAccrualFrequencies_v2
+      parameters: []
+      responses:
+        '200':
+          description: ODS accrual frequencies
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetAccrualFrequencyResponseDto'
+        '500':
+          description: Internal server error
+      summary: Get accrual frequencies from ODS
+      tags:
+        - ods
+  /api/v2/ods/accrual-frequency/{frequencyCode}:
+    get:
+      operationId: OdsController_findAccrualFrequency_v2
+      parameters:
+        - name: frequencyCode
+          required: true
+          in: path
+          description: Unique accrual frequency code
+          schema:
+            example: FREQ12MON
+            type: string
+      responses:
+        '200':
+          description: ODS frequency
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAccrualFrequencyResponseDto'
+        '400':
+          description: Bad request
+        '404':
+          description: Accrual frequency not found
+        '500':
+          description: Internal server error
+      summary: Get an accrual frequency from ODS
+      tags:
+        - ods
+  /api/v2/ods/accrual-schedules:
+    get:
+      operationId: OdsController_getAccrualSchedules_v2
+      parameters: []
+      responses:
+        '200':
+          description: ODS accrual schedules
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetAccrualScheduleResponseDto'
+        '500':
+          description: Internal server error
+      summary: Get accrual schedules from ODS
+      tags:
+        - ods
+  /api/v2/ods/accrual-schedule/{scheduleCode}:
+    get:
+      operationId: OdsController_findAccrualSchedule_v2
+      parameters:
+        - name: scheduleCode
+          required: true
+          in: path
+          description: Unique accrual schedule code
+          schema:
+            example: CTL01
+            type: string
+      responses:
+        '200':
+          description: ODS accrual schedule
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAccrualScheduleResponseDto'
+        '400':
+          description: Bad request
+        '404':
+          description: Accrual schedule not found
+        '500':
+          description: Internal server error
+      summary: Get an accrual schedule from ODS
+      tags:
+        - ods
+  /api/v2/ods/additional-rates:
+    get:
+      operationId: OdsController_getAdditionalRates_v2
+      parameters: []
+      responses:
+        '200':
+          description: ODS additional rates
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetAdditionalRateResponseDto'
+        '500':
+          description: Internal server error
+      summary: Get additional rates from ODS
+      tags:
+        - ods
+  /api/v2/ods/additional-rate/{rateCode}:
+    get:
+      operationId: OdsController_findAdditionalRate_v2
+      parameters:
+        - name: rateCode
+          required: true
+          in: path
+          description: Unique additional rate code
+          schema:
+            example: ARTCAS
+            type: string
+      responses:
+        '200':
+          description: ODS additional rate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAdditionalRateResponseDto'
+        '400':
+          description: Bad request
+        '404':
+          description: Additional rate not found
+        '500':
+          description: Internal server error
+      summary: Get an additional rate from ODS
+      tags:
+        - ods
+  /api/v2/ods/base-rates:
+    get:
+      operationId: OdsController_getBaseRates_v2
+      parameters: []
+      responses:
+        '200':
+          description: ODS base rates
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetBaseRateResponseDto'
+        '500':
+          description: Internal server error
+      summary: Get base rates from ODS
+      tags:
+        - ods
+  /api/v2/ods/base-rate/{rateCode}:
+    get:
+      operationId: OdsController_findBaseRate_v2
+      parameters:
+        - name: rateCode
+          required: true
+          in: path
+          description: Unique base rate code
+          schema:
+            example: BRTBANK
+            type: string
+      responses:
+        '200':
+          description: ODS base rate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetBaseRateResponseDto'
+        '400':
+          description: Bad request
+        '404':
+          description: Base rate not found
+        '500':
+          description: Internal server error
+      summary: Get a base rate from ODS
+      tags:
+        - ods
+  /api/v2/ods/counterparty-roles:
+    get:
+      operationId: OdsController_getCounterpartyRoles_v2
+      parameters: []
+      responses:
+        '200':
+          description: ODS counterparty roles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetCounterpartyRoleResponseDto'
+        '500':
+          description: Internal server error
+      summary: Get counterparty roles from ODS
+      tags:
+        - ods
+  /api/v2/ods/counterparty-role/{roleType}:
+    get:
+      operationId: OdsController_findCounterpartyRole_v2
+      parameters:
+        - name: roleType
+          required: true
+          in: path
+          description: Unique counterparty role type
+          schema:
+            example: CRT001
+            type: string
+      responses:
+        '200':
+          description: ODS counterparty role
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCounterpartyRoleResponseDto'
+        '400':
+          description: Bad request
+        '404':
+          description: Counterparty role not found
+        '500':
+          description: Internal server error
+      summary: Get a counterparty role from ODS
+      tags:
+        - ods
   /api/v2/ods/customers/{urn}:
     get:
       operationId: OdsController_findCustomer_v2
@@ -720,7 +1234,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetOdsCustomerResponse'
         '400':
-          description: Invalid search parameters provided
+          description: Invalid parameters provided
         '404':
           description: Customer not found
         '500':
@@ -748,12 +1262,257 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetOdsDealResponse'
         '400':
-          description: Invalid search parameters provided
+          description: Invalid parameters provided
         '404':
           description: Deal not found
         '500':
           description: Internal server error
       summary: Get a deal from ODS
+      tags:
+        - ods
+  /api/v2/ods/facility-categories:
+    get:
+      operationId: OdsController_getFacilityCategories_v2
+      parameters: []
+      responses:
+        '200':
+          description: ODS facility categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetFacilityCategoryResponseDto'
+        '500':
+          description: Internal server error
+      summary: Get facility categories from ODS
+      tags:
+        - ods
+  /api/v2/ods/facility-category/{categoryCode}:
+    get:
+      operationId: OdsController_findFacilityCategory_v2
+      parameters:
+        - name: categoryCode
+          required: true
+          in: path
+          description: Unique facility category code
+          schema:
+            example: FCT006
+            type: string
+      responses:
+        '200':
+          description: A facility category matching the provided category code
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetFacilityCategoryResponseDto'
+        '400':
+          description: Invalid parameters provided
+        '404':
+          description: Facility category not found
+        '500':
+          description: Internal server error
+      summary: Get a facility category from ODS
+      tags:
+        - ods
+  /api/v2/ods/fee-types:
+    get:
+      operationId: OdsController_getFeeTypes_v2
+      parameters: []
+      responses:
+        '200':
+          description: ODS fee types
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetFeeTypeResponseDto'
+        '500':
+          description: Internal server error
+      summary: Get fee types from ODS
+      tags:
+        - ods
+  /api/v2/ods/fee-type/{feeTypeCode}:
+    get:
+      operationId: OdsController_findFeeType_v2
+      parameters:
+        - name: feeTypeCode
+          required: true
+          in: path
+          description: Unique fee type code
+          schema:
+            example: CMF
+            type: string
+      responses:
+        '200':
+          description: A fee type matching the provided fee type code
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetFeeTypeResponseDto'
+        '400':
+          description: Invalid parameters provided
+        '404':
+          description: Fee type not found
+        '500':
+          description: Internal server error
+      summary: Get a fee type from ODS
+      tags:
+        - ods
+  /api/v2/ods/obligation-subtypes:
+    get:
+      operationId: OdsController_getObligationSubtypes_v2
+      parameters: []
+      responses:
+        '200':
+          description: ODS obligation subtypes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetObligationSubtypeResponseDto'
+        '500':
+          description: Internal server error
+      summary: Get obligation subtypes from ODS
+      tags:
+        - ods
+  /api/v2/ods/obligation-subtypes/with-product-type-codes:
+    get:
+      operationId: OdsController_getObligationSubtypesWithProductCodes_v2
+      parameters: []
+      responses:
+        '200':
+          description: ODS obligation subtypes with product type codes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ObligationSubtypeWithProductTypeDto'
+        '500':
+          description: Internal server error
+      summary: Get obligation subtypes with product type codes from ODS
+      tags:
+        - ods
+  /api/v2/ods/obligation-subtype/{subtypeCode}:
+    get:
+      operationId: OdsController_findObligationSubtype_v2
+      parameters:
+        - name: subtypeCode
+          required: true
+          in: path
+          description: Unique obligation subtype code
+          schema:
+            example: OST012
+            type: string
+      responses:
+        '200':
+          description: An obligation subtype matching the provided subtype code
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetObligationSubtypeResponseDto'
+        '400':
+          description: Invalid parameters provided
+        '404':
+          description: Obligation subtype not found
+        '500':
+          description: Internal server error
+      summary: Get an obligation subtype from ODS
+      tags:
+        - ods
+  /api/v2/ods/ukef-industries:
+    get:
+      operationId: OdsController_getUkefIndustries_v2
+      parameters: []
+      responses:
+        '200':
+          description: Mapped UKEF industries from ODS
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetIndustryResponseDto'
+        '500':
+          description: Internal server error
+      summary: Get UKEF industries from ODS
+      tags:
+        - ods
+  /api/v2/ods/ukef-industry-codes:
+    get:
+      operationId: OdsController_getUkefIndustryCodes_v2
+      parameters: []
+      responses:
+        '200':
+          description: UKEF industry codes from ODS
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '500':
+          description: Internal server error
+      summary: Get UKEF industry codes from ODS
+      tags:
+        - ods
+  /api/v2/ods/ukef-industry-code/by-companies-house-industry-code/{companiesHouseIndustryCode}:
+    get:
+      operationId: OdsController_findUkefIndustryCode_v2
+      parameters:
+        - name: companiesHouseIndustryCode
+          required: true
+          in: path
+          description: Unique Companies House industry code
+          schema:
+            example: '25920'
+            type: string
+      responses:
+        '200':
+          description: The UKEF industry code from ODS
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetSicCodeToUkefIndustryResponseDto'
+        '400':
+          description: Invalid parameters provided
+        '404':
+          description: UKEF industry not found
+        '500':
+          description: Internal server error
+      summary: >-
+        Get a UKEF industry code by Companies House industry code. Sourced from
+        ODS
+      tags:
+        - ods
+  /api/v2/ods/ukef-industry/{industryCode}:
+    get:
+      operationId: OdsController_findUkefIndustry_v2
+      parameters:
+        - name: industryCode
+          required: true
+          in: path
+          description: Unique UKEF industry code
+          schema:
+            example: '1908'
+            type: string
+      responses:
+        '200':
+          description: Mapped UKEF industry code from ODS
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetIndustryResponseDto'
+        '400':
+          description: Invalid parameters provided
+        '404':
+          description: Industry not found
+        '500':
+          description: Internal server error
+      summary: Get a UKEF industry from ODS
       tags:
         - ods
   /api/v1/premium/schedule:
@@ -771,7 +1530,7 @@ paths:
       responses:
         '201':
           description: ''
-      summary: Create Premium Schedule sequence (aka Income exposure)
+      summary: Create a premium schedule sequence (AKA Income exposure)
       tags:
         - premium-schedules
   /api/v1/premium/segments/{facilityId}:
@@ -795,40 +1554,10 @@ paths:
                 items:
                   $ref: '#/components/schemas/PremiumScheduleEntity'
       summary: >-
-        Return previously generated Premium Schedule sequence/segments (aka
+        Return previously generated premium schedule sequence/segments (AKA
         Income exposures)
       tags:
         - premium-schedules
-  /api/v1/sector-industries:
-    get:
-      operationId: SectorIndustriesController_find_v1
-      parameters:
-        - name: ukefSectorId
-          required: false
-          in: query
-          description: Search by UKEF Sector id, returns multiple Industries
-          schema:
-            example: '1010'
-            type: string
-        - name: ukefIndustryId
-          required: false
-          in: query
-          description: Search by UKEF Industry id, most likely returns 1 result
-          schema:
-            example: '02400'
-            type: string
-      responses:
-        '200':
-          description: UKEF sectors/industries
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/SectorIndustryEntity'
-      summary: Get UKEF Sectors/Industries Mapping To ACBS Sectors/Industries
-      tags:
-        - sector-industries
   /api/v1/yield-rates:
     get:
       operationId: YieldRatesController_find_v1
@@ -996,39 +1725,63 @@ components:
     GetCustomersResponseItem:
       type: object
       properties:
-        partyUrn:
-          type: string
-          description: The unique UKEF ID of the customer
-          example: '00302069'
-        name:
-          type: string
-          description: Customer company name
-          example: Testing Systems Ltd
-        sfId:
-          type: string
-          description: The unique Salesforce ID
-          example: 000A000000a1BBbCDE
         companyRegNo:
           type: string
           description: The Companies House registration number
           example: '06012345'
-        type:
+          nullable: true
+        creditClassificationDate:
           type: string
-          description: Customer company type
-          example: Association
+          description: Credit Classification Status Date (dd/mm/yyyy)
+          example: 01/01/1970
+          nullable: true
+        creditClassificationStatus:
+          type: string
+          description: Credit classification status
+          example: Good
+          nullable: true
+        customerType:
+          type: string
+          description: Customer type
+          example: AIRLINE
           enum:
-            - Association
-            - Corporate Overseas
-            - Corporate UK
+            - COMPANY
+            - COUNTRY
+            - AIRLINE
+            - PROJECT
+            - DUMMY
+            - FOREIGN CONTENT
+            - OPERATING LESSOR
             - ECA
-            - Financial Institution Overseas
-            - Financial Institution UK
-            - Non Corporate Overseas
-            - Non Corporate UK
-            - Overseas Government Dept.
-            - Overseas Public Body
-            - UK Government Dept.
-            - UK Public Body
+            - BANK
+          nullable: true
+        isLegacyRecord:
+          type: boolean
+          description: False for Salesforce account record, True for legacy Party DB record
+          example: false
+        name:
+          type: string
+          description: Customer company name
+          example: Mock name
+        partyUrn:
+          type: string
+          description: The unique UKEF ID of the customer
+          example: '00302069'
+          nullable: true
+        probabilityOfDefault:
+          type: number
+          description: Probability of default of the company
+          example: 14.1
+          nullable: true
+        riskEntity:
+          type: string
+          description: Risk entity
+          example: Corporate
+          nullable: true
+        sfId:
+          type: string
+          description: The unique Salesforce ID
+          example: 000A000000a1BBbCDE
         subtype:
           type: string
           description: Customer company subtype
@@ -1057,55 +1810,56 @@ components:
             - Sole Trader
             - Special Purpose
             - Trade Association
-        isLegacyRecord:
-          type: boolean
-          description: False for Salesforce account record, True for legacy Party DB record
-          example: false
-        probabilityOfDefault:
-          type: number
-          description: Probability of default of the company
-          example: 14.1
+          nullable: true
+        type:
+          type: string
+          description: Customer company type
+          example: Association
+          enum:
+            - Association
+            - Corporate Overseas
+            - Corporate UK
+            - ECA
+            - Financial Institution Overseas
+            - Financial Institution UK
+            - Non Corporate Overseas
+            - Non Corporate UK
+            - Overseas Government Dept.
+            - Overseas Public Body
+            - UK Government Dept.
+            - UK Public Body
+          nullable: true
         ukEntity:
           type: string
           description: Whether the company is UK based or not
           example: 'Yes'
+          nullable: true
         ukefIndustryName:
           type: string
           description: UKEF industry identifier code
           example: AGRICULTURE, HORTICULTURE & FISHERIES
+          nullable: true
         ukefSectorName:
           type: string
           description: UKEF industry sector identifier code
           example: 'CIVIL: AGRICULTURE, HORTICULTURE & FISHERIES'
-        riskEntity:
-          type: string
-          description: Risk entity
-          example:
-            CORPORATE: Corporate
-        creditClassificationStatus:
-          type: string
-          description: Credit classification status
-          example:
-            GOOD: Good
-        creditClassificationDate:
-          type: string
-          description: Credit Classification Status Date (dd/mm/yyyy)
-          example: 01/01/1970
+          nullable: true
       required:
-        - partyUrn
-        - name
-        - sfId
         - companyRegNo
-        - type
-        - subtype
+        - creditClassificationDate
+        - creditClassificationStatus
+        - customerType
         - isLegacyRecord
+        - name
+        - partyUrn
         - probabilityOfDefault
+        - riskEntity
+        - sfId
+        - subtype
+        - type
         - ukEntity
         - ukefIndustryName
         - ukefSectorName
-        - riskEntity
-        - creditClassificationStatus
-        - creditClassificationDate
     DTFSCustomerDto:
       type: object
       properties:
@@ -1116,7 +1870,11 @@ components:
         companyName:
           type: string
           description: Company name
-          example: Testing Systems Ltd
+          example: Mock name
+        customerType:
+          type: string
+          description: Salesforce customer type
+          example: AIRLINE
         probabilityOfDefault:
           type: number
           description: Probability of default
@@ -1136,6 +1894,7 @@ components:
       required:
         - companyRegistrationNumber
         - companyName
+        - customerType
         - probabilityOfDefault
         - ukEntity
         - ukefIndustryName
@@ -1199,12 +1958,22 @@ components:
           example: GH_ACC
         name:
           type: string
-          description: Non working day name
+          description: Business centre name
           example: Accra
+        description:
+          type: string
+          description: Business centre description
+          example: Location
+        isActive:
+          type: boolean
+          description: Business centre active flag
+          example: true
       required:
         - code
         - name
-    GetOdsBusinessCentreOdsResponseNonWorkingDayMappedResponse:
+        - description
+        - isActive
+    FindOdsBusinessCentreOdsResponseNonWorkingDayMappedResponse:
       type: object
       properties:
         code:
@@ -1223,6 +1992,249 @@ components:
         - code
         - name
         - date
+    FindMultipleOdsBusinessCentreOdsResponsesNonWorkingDaysResponse:
+      type: object
+      properties:
+        rawDefinition:
+          description: Multiple business centre's non working days
+          allOf:
+            - $ref: '#/components/schemas/FindOdsBusinessCentreOdsResponseNonWorkingDayMappedResponse'
+      required:
+        - rawDefinition
+    FindCreditRiskRatingDto:
+      type: object
+      properties:
+        id:
+          type: string
+          example: A++
+          description: Credit risk rating ID
+        description:
+          type: string
+          example: A++
+          description: Credit risk rating description
+        createdAt:
+          type: string
+          example: '2017-03-06T16:43:47.000Z'
+          description: Credit risk rating created at
+        updatedAt:
+          type: string
+          example: '2017-03-06T16:43:47.000Z'
+          description: Credit risk rating updated at
+        effectiveFrom:
+          type: string
+          example: '2017-03-06T10:44:47.000Z'
+          description: Credit risk rating effective from
+        effectiveTo:
+          type: string
+          example: 9999-03-0 216T16:20:17.000Z
+          description: Credit risk rating effective to
+      required:
+        - id
+        - description
+        - createdAt
+        - updatedAt
+        - effectiveFrom
+        - effectiveTo
+    GetDomInterestRateTickersResponseDto:
+      type: object
+      properties:
+        code:
+          type: string
+          description: The code of the interest rate ticker
+          example: EUR001
+        name:
+          type: string
+          description: The name of the interest rate ticker
+          example: ESTR Overnight Daily Compounding (5-day lag)
+        type:
+          type: string
+          description: The type of the interest rate ticker
+          example: Compounding Rate
+        frequencyCode:
+          type: string
+          description: The code of the interest rate frequency
+          example: FREQEBD
+        frequencyName:
+          type: string
+          description: The name of the interest rate frequency
+          example: Every Business Day
+        leadDays:
+          type: number
+          description: The number of lead days for the interest rate ticker
+          example: 5
+        currencyCode:
+          type: string
+          description: The code of the currency
+          example: EUR
+        active:
+          type: boolean
+          description: Whether the interest rate ticker is active
+          example: true
+      required:
+        - code
+        - name
+        - type
+        - frequencyCode
+        - frequencyName
+        - leadDays
+        - currencyCode
+        - active
+    GetDomCurrencyResponseDto:
+      type: object
+      properties:
+        code:
+          type: string
+          description: The code of the currency
+          example: USD
+        name:
+          type: string
+          description: The name of the currency
+          example: United States Dollar
+        decimalPlaces:
+          type: number
+          description: The number of decimal places for the currency
+          example: 2
+        calendarCode:
+          type: string
+          description: The code of the rate setting calendar, or null if not provided
+          example: CCYUSD
+          nullable: true
+      required:
+        - code
+        - name
+        - decimalPlaces
+        - calendarCode
+    GetDomInterestRateResponseDto:
+      type: object
+      properties:
+        code:
+          type: string
+          description: The code of the interest rate ticker
+          example: EUR002
+        startDate:
+          type: string
+          description: The start date and time the interest rate is active from
+          example: '2026-07-01T00:00:00'
+        endDate:
+          type: string
+          description: The end date and time the interest rate is active until
+          example: '2026-07-01T23:59:59'
+        rate:
+          type: number
+          description: The interest rate
+          example: 3.25
+        adjustedRate:
+          type: number
+          description: >-
+            The interest rate adjusted so that negative rates are floored at
+            zero
+          example: 3.25
+      required:
+        - code
+        - startDate
+        - endDate
+        - rate
+        - adjustedRate
+    GetDomCompoundingIndexResponseDto:
+      type: object
+      properties:
+        code:
+          type: string
+          description: The code of the interest rate ticker
+          example: EUR001
+        compoundingIndexValue:
+          type: number
+          description: The compounding index value for the interest rate
+          example: 10000.5361111111
+        daysActive:
+          type: number
+          description: The number of days for which the interest rate is active
+          example: 1
+        endDate:
+          type: string
+          description: The end date and time the interest rate is active until
+          example: '2026-07-01T23:59:59'
+        indexEffectiveDate:
+          type: string
+          description: The start date and time the compounding index is effective from
+          example: '2026-07-01T00:00:00'
+        rate:
+          type: number
+          description: The interest rate
+          example: 3.25
+        startDate:
+          type: string
+          description: The start date and time the interest rate is active from
+          example: '2026-07-01T00:00:00'
+      required:
+        - code
+        - compoundingIndexValue
+        - daysActive
+        - endDate
+        - indexEffectiveDate
+        - rate
+        - startDate
+    GetDomProductConfigConfigFees:
+      type: object
+      properties:
+        creation:
+          type: string
+          description: If fees can be added to the product at creation time
+          example: REQUIRED
+        inLife:
+          type: string
+          description: If fees can be added to the product during its lifecycle
+          example: OPTIONAL
+      required:
+        - creation
+        - inLife
+    GetDomProductConfigConfigObligations:
+      type: object
+      properties:
+        creation:
+          type: string
+          description: If obligations can be added to the product at creation time
+          example: REQUIRED
+        inLife:
+          type: string
+          description: If obligations can be added to the product during its lifecycle
+          example: OPTIONAL
+      required:
+        - creation
+        - inLife
+    GetDomProductConfigConfigReinsurance:
+      type: object
+      properties:
+        creation:
+          type: string
+          description: If reinsurance can be added to the product at creation time
+          example: OPTIONAL
+        inLife:
+          type: string
+          description: If reinsurance can be added to the product during its lifecycle
+          example: OPTIONAL
+      required:
+        - creation
+        - inLife
+    GetDomProductConfigConfigLeadDays:
+      type: object
+      properties:
+        repayments:
+          type: number
+          description: The product's 'lead days - repayments'
+          example: 1
+        interestAccruals:
+          type: number
+          description: The product's 'lead days - interest accruals'
+          example: 2
+        accruingFees:
+          type: number
+          description: The product's 'lead days - accruing fees'
+          example: 3
+      required:
+        - repayments
+        - interestAccruals
+        - accruingFees
     GetDomProductConfigConfig:
       type: object
       properties:
@@ -1249,7 +2261,11 @@ components:
         creditType:
           type: string
           description: The product's 'credit type' requirement
-          example: REQUIRED
+          example: TERM
+        instrumentType:
+          type: string
+          description: The product's 'instrument type'
+          example: Insurance
         participations:
           type: string
           description: The product's 'participations' requirement
@@ -1302,6 +2318,39 @@ components:
           type: string
           description: The product's 'bank rate' requirement
           example: OPTIONAL
+        fees:
+          description: The product's 'fees'
+          example:
+            creation: REQUIRED
+            inLife: OPTIONAL
+          allOf:
+            - $ref: '#/components/schemas/GetDomProductConfigConfigFees'
+        obligations:
+          description: The product's 'obligations'
+          example:
+            creation: REQUIRED
+            inLife: OPTIONAL
+          allOf:
+            - $ref: '#/components/schemas/GetDomProductConfigConfigObligations'
+        reinsurance:
+          description: The product's 'reinsurance'
+          example:
+            creation: OPTIONAL
+            inLife: OPTIONAL
+          allOf:
+            - $ref: '#/components/schemas/GetDomProductConfigConfigReinsurance'
+        leadDays:
+          description: The product's 'lead days'
+          example:
+            repayments: 1
+            interestAccruals: 2
+            accruingFees: 3
+          allOf:
+            - $ref: '#/components/schemas/GetDomProductConfigConfigLeadDays'
+        repaymentType:
+          type: string
+          description: The repayment type of the product, Bullet or Scheduled
+          example: Bullet
       required:
         - commitmentDate
         - issuedDate
@@ -1309,6 +2358,7 @@ components:
         - availabilityEndDate
         - expiryDate
         - creditType
+        - instrumentType
         - participations
         - scheduledRepayments
         - nonCashObligations
@@ -1322,13 +2372,40 @@ components:
         - provisionRate
         - forecastYear
         - bankRate
+        - fees
+        - obligations
+        - reinsurance
+        - leadDays
+        - repaymentType
+    GetDomProductConfigAccrualSchedule:
+      type: object
+      properties:
+        code:
+          type: string
+          description: The product's 'accrual schedule - code'
+          example: PAC01
+        cashIndicator:
+          type: boolean
+          description: The product's 'accrual schedule - cash indicator'
+          example: true
+      required:
+        - code
+        - cashIndicator
     GetDomProductConfigResponse:
       type: object
       properties:
         productType:
           type: string
           description: The product type
-          example: EXIP
+          example: PRT001
+        name:
+          type: string
+          description: The product name
+          example: Bond Insurance Product (BIP)
+        shortName:
+          type: string
+          description: The product short name
+          example: BIP
         configuration:
           description: The product's configuration
           example:
@@ -1337,7 +2414,7 @@ components:
             effectiveDate: REQUIRED
             availabilityEndDate: REQUIRED
             expiryDate: REQUIRED
-            creditType: REQUIRED
+            creditType: TERM
             participations: REQUIRED
             scheduledRepayments: REQUIRED
             nonCashObligations: REQUIRED
@@ -1351,19 +2428,74 @@ components:
             provisionRate: REQUIRED
             forecastYear: NOT_APPLICABLE
             bankRate: OPTIONAL
+            instrumentType: Insurance
+            repaymentType: Bullet
+            fees:
+              creation: REQUIRED
+              inLife: OPTIONAL
+            obligations:
+              creation: REQUIRED
+              inLife: OPTIONAL
+            reinsurance:
+              creation: OPTIONAL
+              inLife: OPTIONAL
+            leadDays:
+              repayments: 1
+              interestAccruals: 2
+              accruingFees: 3
           allOf:
             - $ref: '#/components/schemas/GetDomProductConfigConfig'
+        additionalRates:
+          description: The product's additional rates
+          example:
+            - ARTOTH
+          type: array
+          items:
+            type: array
+        accrualSchedules:
+          description: The product's accrual schedule
+          example:
+            - code: PAC01
+              cashIndicator: true
+          type: array
+          items:
+            $ref: '#/components/schemas/GetDomProductConfigAccrualSchedule'
+        baseRates:
+          description: The product's base rates
+          example:
+            - BRTOTH
+          type: array
+          items:
+            type: array
         counterpartyRoleTypes:
-          description: The product's counterparty subtypes
+          description: The product's counterparty role types
           example:
             - BROKER
-            - GUARANTOR
           type: array
           items:
             type: string
         facilityCategoryTypes:
-          description: The product's subtypes
-          example: []
+          description: The product's facility category subtypes
+          example:
+            - FCT001
+            - FCT002
+          type: array
+          items:
+            type: string
+        feeTypes:
+          description: The product's fee types
+          example:
+            - BEX
+            - PLA
+          type: array
+          items:
+            type: string
+        obligationSubtypes:
+          description: The product's obligation subtypes
+          example:
+            - OST001
+            - OST002
+            - OST003
           type: array
           items:
             type: string
@@ -1376,12 +2508,33 @@ components:
           type: array
           items:
             type: string
+        productActive:
+          type: boolean
+          description: Whether the product is available to create new facilities
+          example: true
       required:
         - productType
+        - name
+        - shortName
         - configuration
+        - additionalRates
+        - accrualSchedules
+        - baseRates
         - counterpartyRoleTypes
         - facilityCategoryTypes
+        - feeTypes
+        - obligationSubtypes
         - account
+        - productActive
+    FindMultipleProductConfigsResponse:
+      type: object
+      properties:
+        rawDefinition:
+          description: Multiple product configurations
+          allOf:
+            - $ref: '#/components/schemas/GetDomProductConfigResponse'
+      required:
+        - rawDefinition
     PostEmailsRequestDto:
       type: object
       properties:
@@ -1453,8 +2606,7 @@ components:
           description: Notify's template id
         uri:
           type: string
-          example: >-
-            https://api.notifications.service.gov.uk/services/abc12345-a123-4567-8901-123456789012/templates/tmpl1234-1234-5678-9012-abcd12345678
+          example: https://api.notifications.service.gov.uk/services/abc12345-a123-4567-8901-123456789012/templates/tmpl1234-1234-5678-9012-abcd12345678
           description: Notify's URL to get more information about template
         version:
           type: number
@@ -1486,8 +2638,7 @@ components:
           $ref: '#/components/schemas/PostEmailsResponseDataTemplate'
         uri:
           type: string
-          example: >-
-            https://api.notifications.service.gov.uk/v2/notifications/efd12345-1234-5678-9012-ee123456789f
+          example: https://api.notifications.service.gov.uk/v2/notifications/efd12345-1234-5678-9012-ee123456789f
           description: Notify's URL to get more information about this transaction
       required:
         - content
@@ -1724,6 +2875,166 @@ components:
         - shortTermCoverAvailabilityDesc
         - NBIIssue
         - active
+    GetAccrualFrequencyResponseDto:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Accrual frequency code
+          example: FREQ12MON
+        name:
+          type: string
+          description: Accrual frequency name
+          example: Annually
+        orderId:
+          type: number
+          description: Accrual frequency order ID
+          example: 4
+        frequencyNumberOfUnits:
+          type: number
+          description: Accrual frequency number of units
+          example: 12
+        frequencyUnit:
+          type: string
+          description: Accrual schedule frequency unit
+          example: Months
+        isActive:
+          type: boolean
+          description: Accrual frequency active flag
+          example: true
+      required:
+        - code
+        - name
+        - orderId
+        - frequencyNumberOfUnits
+        - frequencyUnit
+        - isActive
+    GetAccrualScheduleResponseDto:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Accrual schedule code
+          example: CTL01
+        name:
+          type: string
+          description: Accrual schedule name
+          example: Contractual Interest Fixed Rate
+        accrualRateType:
+          type: string
+          description: Accrual schedule rate type
+          example: Fixed
+        balanceCategory:
+          type: string
+          description: Accrual schedule balance category
+          example: Outstanding Balance
+        baseBalanceCategory:
+          type: string
+          description: Accrual schedule base balance category
+          example: On Principal Drawn Amount
+        incomeClassCode:
+          type: string
+          description: Accrual schedule income class code
+          example: Income
+        isActive:
+          type: boolean
+          description: Accrual schedule active flag
+          example: true
+      required:
+        - code
+        - name
+        - accrualRateType
+        - balanceCategory
+        - baseBalanceCategory
+        - incomeClassCode
+        - isActive
+    GetAdditionalRateResponseDto:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Additional rate type
+          example: Additional Rate Type
+        typeCode:
+          type: string
+          description: Additional rate type code
+          example: additionalRateType
+        code:
+          type: string
+          description: Additional rate code
+          example: ARTCAS
+        description:
+          type: string
+          description: Additional rate description
+          example: CAS - Credit Adjustment Spread
+        isActive:
+          type: boolean
+          description: Additional rate active flag
+          example: true
+      required:
+        - type
+        - typeCode
+        - code
+        - description
+        - isActive
+    GetBaseRateResponseDto:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Base rate type
+          example: Base Rate Type
+        typeCode:
+          type: string
+          description: Base rate type code
+          example: baseRateType
+        code:
+          type: string
+          description: Base rate code
+          example: BRTBANK
+        description:
+          type: string
+          description: Base rate description
+          example: Bank Rate
+        isActive:
+          type: boolean
+          description: Base rate active flag
+          example: true
+      required:
+        - type
+        - typeCode
+        - code
+        - description
+        - isActive
+    GetCounterpartyRoleResponseDto:
+      type: object
+      properties:
+        roleType:
+          type: string
+          description: Counterparty role type
+          example: CRT001
+        name:
+          type: string
+          description: Counterparty role name
+          example: Exporter
+        hasSharePercentage:
+          type: boolean
+          description: Counterparty role has share percentage flag
+          example: false
+        hasAssociatedPaymentCode:
+          type: boolean
+          description: Counterparty role has associated payment code
+          example: false
+        isActive:
+          type: boolean
+          description: Counterparty role active flag
+          example: true
+      required:
+        - roleType
+        - name
+        - hasSharePercentage
+        - hasAssociatedPaymentCode
+        - isActive
     GetOdsCustomerResponse:
       type: object
       properties:
@@ -1757,6 +3068,196 @@ components:
         - dealId
         - name
         - description
+    GetFacilityCategoryResponseDto:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Facility classification type
+          example: Facility Category
+        typeCode:
+          type: string
+          description: Facility classification type code
+          example: facilityCategory
+        code:
+          type: string
+          description: Facility classification code
+          example: FCT006
+        description:
+          type: string
+          description: Facility classification description
+          example: 'GEF: Contingent'
+        isActive:
+          type: boolean
+          description: Facility classification active flag
+          example: true
+      required:
+        - type
+        - typeCode
+        - code
+        - description
+        - isActive
+    GetFeeTypeResponseDto:
+      type: object
+      properties:
+        feeType:
+          type: string
+          description: Fee type code
+          example: CMF
+        name:
+          type: string
+          description: Fee type name
+          example: Commitment Fee
+        classification:
+          type: string
+          description: Fee type classification
+          example: Accruing
+        expenseIncome:
+          type: string
+          description: Fee type expense/income
+          example: Income
+        isActive:
+          type: boolean
+          description: Fee type active flag
+          example: true
+        balanceCategory:
+          type: string
+          description: Balance category
+          example: CMF
+          nullable: true
+        baseBalanceCategory:
+          type: string
+          description: Base balance category
+          example: On facility available amount
+          nullable: true
+        nonFacilityCurrencySettlement:
+          type: boolean
+          description: Non-facility currency settlement flag
+          example: false
+        cappedBaseBalance:
+          type: boolean
+          description: If the base balance upon which the fee accrues should be capped
+          example: false
+        effectiveDateDefault:
+          type: string
+          description: >-
+            What the effective date of the fee should default to if not
+            specified
+          example: Facility Signed Date
+          nullable: true
+        maturityDateDefault:
+          type: string
+          description: What the maturity date of the fee should default to if not specified
+          example: Facility Availability End Date
+          nullable: true
+      required:
+        - feeType
+        - name
+        - classification
+        - expenseIncome
+        - isActive
+        - balanceCategory
+        - baseBalanceCategory
+        - nonFacilityCurrencySettlement
+        - cappedBaseBalance
+        - effectiveDateDefault
+        - maturityDateDefault
+    GetObligationSubtypeResponseDto:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Obligation subtype code
+          example: OST012
+        description:
+          type: string
+          description: Obligation subtype description
+          example: BSS Advance Payment Guarantee
+        balanceCategory:
+          type: string
+          description: Obligation subtype balance category
+          example: PRIN1
+        isActive:
+          type: boolean
+          description: Obligation subtype active flag
+          example: true
+      required:
+        - code
+        - description
+        - balanceCategory
+        - isActive
+    ObligationSubtypeWithProductTypeDto:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Obligation subtype code
+          example: OST012
+        description:
+          type: string
+          description: Obligation subtype description
+          example: BSS Advance Payment Guarantee
+        balanceCategory:
+          type: string
+          description: Obligation subtype balance category
+          example: PRIN1
+        isActive:
+          type: boolean
+          description: Obligation subtype active flag
+          example: true
+        productTypeCode:
+          type: string
+          description: The product type code
+          example: PRT001
+      required:
+        - code
+        - description
+        - balanceCategory
+        - isActive
+        - productTypeCode
+    GetIndustryResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Industry ID
+          example: UKEF_1908
+        code:
+          type: string
+          description: Industry code
+          example: '1908'
+        description:
+          type: string
+          description: Industry description
+          example: 'MINING & METALS : MISCELLANEOUS'
+        groupCode:
+          type: string
+          description: Industry group code
+          example: '19'
+        groupDescription:
+          type: string
+          description: Industry group description
+          example: 'CIVIL: MINING & METALS'
+        category:
+          type: string
+          description: Industry category
+          example: UKEF
+      required:
+        - id
+        - code
+        - description
+        - groupCode
+        - groupDescription
+        - category
+    GetSicCodeToUkefIndustryResponseDto:
+      type: object
+      properties:
+        ukefIndustryCode:
+          type: string
+          description: UKEF industry code
+          example: '1908'
+      required:
+        - ukefIndustryCode
     CreatePremiumScheduleDto:
       type: object
       properties:
@@ -1916,7 +3417,7 @@ components:
           example: 3.465
         futureMonthYear:
           type: string
-          example: '      '
+          example: "      "
         sourceErrorCode:
           type: number
           example: 0

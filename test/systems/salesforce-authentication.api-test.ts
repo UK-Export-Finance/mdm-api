@@ -1,41 +1,18 @@
 import { HttpStatusCode } from 'axios';
 import nock from 'nock';
 import { EXAMPLES } from '@ukef/constants';
-import { GetCustomersInformaticaResponseItem } from '@ukef/modules/informatica/dto/get-customers-informatica-response.dto';
 import { Api } from '@ukef-test/support/api';
 import { ENVIRONMENT_VARIABLES } from '@ukef-test/support/environment-variables';
+import { accountSoql, SALESFORCE_ACCOUNT_RECORD } from '@ukef-test/support/salesforce';
 
 const url = '/api/v1/customers';
 
-describe('POST /customers - Salesforce authentication', () => {
+describe('GET /customers - Salesforce authentication', () => {
   let api: Api;
 
-  const companyRegistrationNumber = '07654321';
+  const companyRegistrationNumber = EXAMPLES.CUSTOMER.COMPANYREG;
   const salesforceAccessToken = 'test-salesforce-access-token';
   const salesforceAccessUrl = new URL(ENVIRONMENT_VARIABLES.SALESFORCE_ACCESS_URL);
-  const basicAuth = Buffer.from(`${ENVIRONMENT_VARIABLES.APIM_INFORMATICA_USERNAME}:${ENVIRONMENT_VARIABLES.APIM_INFORMATICA_PASSWORD}`).toString('base64');
-
-  const payload = {
-    companyRegistrationNumber,
-    companyName: EXAMPLES.CUSTOMER.NAME,
-    customerType: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
-    probabilityOfDefault: EXAMPLES.CUSTOMER.PROBABILITY_OF_DEFAULT,
-    ukEntity: EXAMPLES.CUSTOMER.UK_ENTITY,
-    ukefIndustryName: EXAMPLES.CUSTOMER.UK_INDUSTRY_NAME,
-    ukefSectorName: EXAMPLES.CUSTOMER.UK_INDUSTRY_SECTOR_NAME,
-  };
-
-  const existingLegacyCustomer: GetCustomersInformaticaResponseItem[] = [
-    {
-      companyRegNo: companyRegistrationNumber,
-      isLegacyRecord: true,
-      name: EXAMPLES.CUSTOMER.NAME,
-      partyUrn: EXAMPLES.CUSTOMER.PARTYURN,
-      sfId: EXAMPLES.CUSTOMER.SALESFORCE_ID,
-      subtype: null,
-      type: null,
-    },
-  ];
 
   beforeAll(async () => {
     api = await Api.create();
@@ -43,19 +20,6 @@ describe('POST /customers - Salesforce authentication', () => {
 
   afterAll(async () => {
     await api.destroy();
-  });
-
-  beforeEach(() => {
-    nock(ENVIRONMENT_VARIABLES.APIM_INFORMATICA_URL)
-      .get(`/v1/p-sa-impl-get-account-or-legacy?companyreg=${companyRegistrationNumber}`)
-      .matchHeader('authorization', `Basic ${basicAuth}`)
-      .reply(HttpStatusCode.Ok, existingLegacyCustomer);
-
-    nock(ENVIRONMENT_VARIABLES.DUN_AND_BRADSTREET_URL).post('/v3/token').reply(HttpStatusCode.Ok, { access_token: 'test-dun-and-bradstreet-access-token' });
-
-    nock(ENVIRONMENT_VARIABLES.DUN_AND_BRADSTREET_URL)
-      .get(`/v1/match/cleanseMatch?countryISOAlpha2Code=GB&registrationNumber=${companyRegistrationNumber}`)
-      .reply(HttpStatusCode.Ok, { matchCandidates: [{ organization: { duns: EXAMPLES.CUSTOMER.DNB_NUMBER } }] });
   });
 
   afterEach(() => {
@@ -74,18 +38,27 @@ describe('POST /customers - Salesforce authentication', () => {
       .matchHeader('content-type', 'application/x-www-form-urlencoded')
       .reply(HttpStatusCode.Ok, { access_token: salesforceAccessToken });
 
-    const salesforceCreateAccountRequest = nock(ENVIRONMENT_VARIABLES.SALESFORCE_INSTANCE_URL)
-      .post('/sobjects/Account')
+    const salesforceAccountQuery = nock(ENVIRONMENT_VARIABLES.SALESFORCE_INSTANCE_URL)
+      .get('/query')
+      .query({ q: accountSoql(`Company_Registration_Number__c = '${companyRegistrationNumber}'`) })
       .matchHeader('authorization', `Bearer ${salesforceAccessToken}`)
-      .reply(HttpStatusCode.Ok, { id: EXAMPLES.CUSTOMER.SALESFORCE_ID, success: true, errors: [] });
+      .reply(HttpStatusCode.Ok, { records: [SALESFORCE_ACCOUNT_RECORD] });
 
     // Act
-    const { status } = await api.post(url, payload);
+    const { status, body } = await api.get(`${url}?companyReg=${companyRegistrationNumber}&fallbackToLegacyData=no`);
 
     // Assert
-    expect(status).toBe(HttpStatusCode.Created);
+    expect(status).toBe(HttpStatusCode.Ok);
+    expect(body).toMatchObject([
+      {
+        companyRegNo: companyRegistrationNumber,
+        isLegacyRecord: false,
+        name: EXAMPLES.CUSTOMER.NAME,
+        partyUrn: EXAMPLES.CUSTOMER.PARTYURN,
+      },
+    ]);
     expect(salesforceAuthRequest.isDone()).toBe(true);
-    expect(salesforceCreateAccountRequest.isDone()).toBe(true);
+    expect(salesforceAccountQuery.isDone()).toBe(true);
 
     const authParams = Object.fromEntries(new URLSearchParams(salesforceAuthRequestBody));
 

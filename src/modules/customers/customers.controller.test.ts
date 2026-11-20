@@ -20,8 +20,6 @@ const mockResponseObject = {
 } as any as Response;
 
 describe('CustomersController', () => {
-  const valueGenerator = new RandomValueGenerator();
-
   let customersServiceGetCustomers: jest.MockedFunction<CustomersService['getCustomers']>;
   let customersServiceGetOrCreateCustomer: jest.MockedFunction<CustomersService['getOrCreateCustomer']>;
   let customersServiceGetDunAndBradstreetNumber: jest.MockedFunction<CustomersService['getDunAndBradstreetNumber']>;
@@ -29,7 +27,7 @@ describe('CustomersController', () => {
   let controller: CustomersController;
 
   beforeEach(() => {
-    const customersService = new CustomersService(null, null, null, null, null);
+    const customersService = new CustomersService(null, null, null, null);
     customersServiceGetCustomers = jest.fn();
     customersServiceGetOrCreateCustomer = jest.fn();
     customersService.getCustomers = customersServiceGetCustomers;
@@ -79,13 +77,13 @@ describe('CustomersController', () => {
         query: { partyUrn: EXAMPLES.CUSTOMER.PARTYURN },
       },
     ])('get customers with query $query', async ({ query }) => {
-      const { request, informaticaRequest, getCustomersResponse } = new GetCustomersGenerator(valueGenerator).generate({ numberToGenerate: 1, query });
+      const { getCustomersResponse } = new GetCustomersGenerator(new RandomValueGenerator()).generate({ numberToGenerate: 1 });
 
-      when(customersServiceGetCustomers).calledWith(informaticaRequest[0]).mockResolvedValueOnce(getCustomersResponse[0]);
+      when(customersServiceGetCustomers).calledWith(query).mockResolvedValueOnce(getCustomersResponse);
 
-      const customers = await controller.getCustomers(request[0]);
+      const customers = await controller.getCustomers(query);
 
-      expect(customers).toEqual(getCustomersResponse[0]);
+      expect(customers).toEqual(getCustomersResponse);
     });
 
     it.each([
@@ -110,11 +108,11 @@ describe('CustomersController', () => {
       {
         query: { name: EXAMPLES.CUSTOMER.NAME, companyReg: EXAMPLES.CUSTOMER.COMPANYREG, partyUrn: EXAMPLES.CUSTOMER.PARTYURN },
       },
-    ])('throws BadRequestException if there is more than 1 search parameter (name, companyReg, partyUrn)', ({ query }) => {
-      const getCustomers = (queryParam) => () => controller.getCustomers(queryParam);
+    ])('rejects with BadRequestException unless exactly 1 search parameter (name, companyReg, partyUrn) is provided', async ({ query }) => {
+      const getCustomers = controller.getCustomers(query);
 
-      expect(getCustomers(query)).toThrow('One and just one search parameter is required');
-      expect(getCustomers(query)).toThrow(BadRequestException);
+      await expect(getCustomers).rejects.toThrow('One and just one search parameter is required');
+      await expect(getCustomers).rejects.toThrow(BadRequestException);
     });
   });
 
