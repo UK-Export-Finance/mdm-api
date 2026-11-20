@@ -103,11 +103,14 @@ describe('SalesforceService', () => {
     }));
 
     it.each(methodQueries)('builds a SOQL query for $where', async ({ query, where }) => {
+      // Arrange
       const records = [{ Id: 'customer-id' }];
       const runSoqlMock = jest.spyOn(service as any, 'runSoql').mockResolvedValue({ records });
 
+      // Act
       const result = await search(query);
 
+      // Assert
       expect(runSoqlMock).toHaveBeenCalledTimes(1);
       expect(runSoqlMock).toHaveBeenCalledWith(`SELECT ${selectFields}
       FROM ${objectName}
@@ -117,17 +120,22 @@ describe('SalesforceService', () => {
     });
 
     it.each([{}, { companyReg: '', partyUrn: '', name: undefined }])('rejects a query without search parameters: %j', async (query) => {
+      // Arrange
       const runSoqlMock = jest.spyOn(service as any, 'runSoql');
 
+      // Act & Assert
       await expect(search(query)).rejects.toBeInstanceOf(BadRequestException);
       await expect(search(query)).rejects.toThrow('At least one search parameter is required');
+
       expect(runSoqlMock).not.toHaveBeenCalled();
     });
 
     it('propagates SOQL query errors', async () => {
+      // Arrange
       const error = new SalesforceException('Failed to get customer in Salesforce');
       jest.spyOn(service as any, 'runSoql').mockRejectedValue(error);
 
+      // Act & Assert
       await expect(search({ partyUrn: '00312345' })).rejects.toBe(error);
     });
   });

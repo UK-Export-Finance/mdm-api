@@ -118,6 +118,7 @@ export class SalesforceService {
   private async runSoql(soql: string): Promise<unknown> {
     const path = `/query?q=${encodeURIComponent(soql)}`;
     const accessToken = await this.getAccessToken();
+
     const { data } = await this.httpClient.get<any>({
       path,
       headers: {
@@ -143,10 +144,12 @@ export class SalesforceService {
    */
   async createCustomer(createCustomerDto: CreateCustomerDto): Promise<CreateCustomerSalesforceResponseDto> {
     const path = '/sobjects/Account';
-    const accessToken = await this.getAccessToken();
+    const companyNumber = createCustomerDto.Company_Registration_Number__c;
 
     try {
-      this.logger.info('Sending customer creation request to Salesforce %s for company %s', path, createCustomerDto.Company_Registration_Number__c);
+      this.logger.info('Sending customer creation request to Salesforce %s for company %s', path, companyNumber);
+
+      const accessToken = await this.getAccessToken();
 
       const { data } = await this.httpClient.post<CreateCustomerDto, CreateCustomerSalesforceResponseDto>({
         path,
@@ -161,14 +164,14 @@ export class SalesforceService {
       });
 
       if (data?.success) {
-        this.logger.info('Salesforce confirmed customer creation for company %s', createCustomerDto.Company_Registration_Number__c);
+        this.logger.info('Salesforce confirmed customer creation for company %s', companyNumber);
       } else {
-        this.logger.warn('Salesforce did not confirm customer creation for company %s', createCustomerDto.Company_Registration_Number__c);
+        this.logger.warn('Salesforce did not confirm customer creation for company %s', companyNumber);
       }
 
       return data;
     } catch (error) {
-      this.logger.error('Salesforce customer creation request failed for company %s', createCustomerDto.Company_Registration_Number__c);
+      this.logger.error('Salesforce customer creation request failed for company %s', companyNumber);
 
       throw error;
     }
