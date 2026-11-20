@@ -146,10 +146,10 @@ export class SalesforceService {
     const path = '/sobjects/Account';
     const companyNumber = createCustomerDto.Company_Registration_Number__c;
 
+    const accessToken = await this.getAccessToken();
+
     try {
       this.logger.info('Sending customer creation request to Salesforce %s for company %s', path, companyNumber);
-
-      const accessToken = await this.getAccessToken();
 
       const { data } = await this.httpClient.post<CreateCustomerDto, CreateCustomerSalesforceResponseDto>({
         path,
