@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.62.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.61.3...v1.62.0) (2026-11-20)
+
+
+### Features
+
+* **APIM-707:** remove informatica, get customers directly with salesforce ([#1946](https://github.com/UK-Export-Finance/mdm-api/issues/1946)) ([1a7885e](https://github.com/UK-Export-Finance/mdm-api/commit/1a7885e5af370ab77fd1993af10dbbcf1d85a745))
+
 ## [1.61.3](https://github.com/UK-Export-Finance/mdm-api/compare/v1.61.2...v1.61.3) (2026-11-16)
 
 
