@@ -65,7 +65,7 @@ export class NumbersService {
 
       return mapped;
     } catch (error) {
-      this.logger.error('Error finding UKEF ID %s of type %s %o', ukefIdString, type, error);
+      this.logger.error(error, 'Error finding UKEF ID %s of type %s', ukefIdString, type);
 
       if (error instanceof NotFoundException || error instanceof BadRequestException) {
         throw error;
