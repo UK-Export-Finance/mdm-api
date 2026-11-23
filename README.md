@@ -25,7 +25,7 @@ This API provides integrations and endpoints for ranging from counties, currenci
 
 This API provides integrations with the following systems and data sources:
 
-- **CEDAR** - Will be deprecated
+- **CEDAR** - Central Data Resource - Will be deprecated
 - **CIS** - Country Information System
 - **Companies House** - UK company registration and information
 - **Database (data team)** - Data team warehouse
