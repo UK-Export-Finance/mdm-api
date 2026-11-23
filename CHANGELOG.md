@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.63.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.62.0...v1.63.0) (2026-11-23)
+
+
+### Features
+
+* **GIFT-30489:** ods - get fees types - new reinsurerApplicable field ([#1959](https://github.com/UK-Export-Finance/mdm-api/issues/1959)) ([b1726e3](https://github.com/UK-Export-Finance/mdm-api/commit/b1726e38dcb9a4690d1b2d01a9908fdbc41988a4))
+
 ## [1.62.0](https://github.com/UK-Export-Finance/mdm-api/compare/v1.61.3...v1.62.0) (2026-11-20)
 
 
