@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsInt, IsNotEmpty, IsString, Max, MaxLength } from 'class-validator';
 
-export class CreateUkefIdDto {
+export class  CreateUkefIdDto {
   @IsInt()
   @IsNotEmpty()
   @Max(9)

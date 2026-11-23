@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals';
+import { BadRequestException, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 import { PinoLogger } from 'nestjs-pino';
@@ -9,6 +10,9 @@ import { UkefId } from './entities/ukef-id.entity';
 
 describe('NumbersService', () => {
   let service: NumbersService;
+  let numberRepository: jest.Mocked<Repository<UkefId>>;
+  let logger: jest.Mocked<PinoLogger>;
+
   const unSortedUkefIds = [
     {
       id: 201,
@@ -123,29 +127,155 @@ describe('NumbersService', () => {
   };
 
   const repositoryMockFactory = jest.fn(() => ({
-    findOne: jest.fn<Repository<UkefId>['findOne']>(),
+    query: jest.fn<Repository<UkefId>['query']>(),
   }));
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
       providers: [
         NumbersService,
-        PinoLogger,
+        { provide: PinoLogger, useValue: { info: jest.fn(), error: jest.fn(), warn: jest.fn() } },
         { provide: 'pino-params', useValue: {} },
         ConfigService,
         { provide: 'mssql-number-generator_UkefIdRepository', useFactory: repositoryMockFactory },
       ],
     }).compile();
     service = module.get<NumbersService>(NumbersService);
+    numberRepository = module.get<jest.Mocked<Repository<UkefId>>>('mssql-number-generator_UkefIdRepository');
+    logger = module.get<jest.Mocked<PinoLogger>>(PinoLogger);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
 
-  describe('Helper mapFieldsFromDbToApi()', () => {
+  describe('create()', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should create UKEF IDs and return sorted result', async () => {
+      // Arrange
+      const createUkefIdDtos = [
+        { numberTypeId: 1, requestingSystem: 'Jest', createdBy: 'Jest test 1' },
+        { numberTypeId: 2, requestingSystem: 'Jest', createdBy: 'Jest test 2' },
+      ];
+
+      numberRepository.query
+        .mockResolvedValueOnce([{ NBR_GENERATED: '0030000425' }])
+        .mockResolvedValueOnce([{
+          DEAL_FACILITY_ID: 20090248,
+          DEAL_FACILITY_ID_MASK: '0030000425',
+          NBR_TYPE_ID: 1,
+          CREATED_BY_USER: 'Jest test 1',
+          CREATED_DATETIME: '2023-02-17T11:14:04.977Z',
+          REQUESTING_SYSTEM: 'Jest',
+        }])
+        .mockResolvedValueOnce([{ NBR_GENERATED: '0030000426' }])
+        .mockResolvedValueOnce([{
+          PARTY_ID: 20090249,
+          PARTY_ID_MASK: '0030000426',
+          NBR_TYPE_ID: 2,
+          CREATED_BY_USER: 'Jest test 2',
+          CREATED_DATETIME: '2023-02-17T11:14:04.977Z',
+          REQUESTING_SYSTEM: 'Jest',
+        }]);
+
+      // Act
+      const result = await service.create(createUkefIdDtos);
+
+      // Assert
+      expect(result).toBeDefined();
+      expect(result.length).toBe(2);
+      expect(numberRepository.query).toHaveBeenCalledTimes(4);
+    });
+
+    it('should throw error when query fails', async () => {
+      // Arrange
+      const createUkefIdDtos = [{ numberTypeId: 1, requestingSystem: 'Jest', createdBy: 'Jest test 1' }];
+      const error = new Error('Database error');
+
+      numberRepository.query.mockRejectedValueOnce(error);
+
+      // Act & Assert
+      await expect(service.create(createUkefIdDtos)).rejects.toThrow('Error creating new UKEF ID(s)');
+    });
+  });
+
+  describe('findOne()', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should return mapped UKEF ID', async () => {
+      // Arrange
+      const dbRecord = {
+        DEAL_FACILITY_ID: 20090248,
+        DEAL_FACILITY_ID_MASK: '0030000425',
+        NBR_TYPE_ID: 1,
+        CREATED_BY_USER: 'Jest',
+        CREATED_DATETIME: '2023-02-17T11:14:04.977Z',
+        REQUESTING_SYSTEM: 'Jest 1 - Deal',
+      };
+
+      numberRepository.query.mockResolvedValueOnce([dbRecord]);
+
+      // Act
+      const result = await service.findOne(1, '0030000425');
+
+      // Assert
+      expect(result).toEqual({
+        id: 20090248,
+        maskedId: '0030000425',
+        type: 1,
+        createdBy: 'Jest',
+        createdDatetime: '2023-02-17T11:14:04.977Z',
+        requestingSystem: 'Jest 1 - Deal',
+      });
+    });
+
+    it('should throw NotFoundException when UKEF ID is not found', async () => {
+      // Arrange
+      numberRepository.query.mockResolvedValueOnce([]);
+
+      // Act & Assert
+      await expect(service.findOne(1, 'INVALID')).rejects.toBeInstanceOf(NotFoundException);
+    });
+
+    it('should throw BadRequestException for invalid UKEF ID type', async () => {
+      // Arrange
+      const dbRecord = { ERR: 'INVALID NUMBER TYPE' };
+      numberRepository.query.mockResolvedValueOnce([dbRecord]);
+
+      // Act & Assert
+      await expect(service.findOne(999, 'INVALID')).rejects.toBeInstanceOf(BadRequestException);
+    });
+
+    it('should throw InternalServerErrorException for unexpected errors', async () => {
+      // Arrange
+      numberRepository.query.mockRejectedValueOnce(new Error('Unexpected error'));
+
+      // Act & Assert
+      await expect(service.findOne(1, '0030000425')).rejects.toBeInstanceOf(InternalServerErrorException);
+    });
+  });
+
+  describe('mapFieldsFromDbToApi()', () => {
     it('should rename fields', () => {
-      const ukefId = {
+      // Arrange
+      const dbRecord = {
+        DEAL_FACILITY_ID: 20090248,
+        DEAL_FACILITY_ID_MASK: '0030000425',
+        NBR_TYPE_ID: 1,
+        CREATED_BY_USER: 'Jest',
+        CREATED_DATETIME: '2023-02-17T11:14:04.977Z',
+        REQUESTING_SYSTEM: 'Jest 1 - Deal',
+      };
+      const expectedUkefId = {
         id: 20090248,
         maskedId: '0030000425',
         type: 1,
@@ -154,35 +284,41 @@ describe('NumbersService', () => {
         requestingSystem: 'Jest 1 - Deal',
       };
 
-      expect(
-        service.mapFieldsFromDbToApi({
-          DEAL_FACILITY_ID: 20090248,
-          DEAL_FACILITY_ID_MASK: '0030000425',
-          NBR_TYPE_ID: 1,
-          CREATED_BY_USER: 'Jest',
-          CREATED_DATETIME: '2023-02-17T11:14:04.977Z',
-          REQUESTING_SYSTEM: 'Jest 1 - Deal',
-        }),
-      ).toEqual(ukefId);
+      // Act
+      const result = service.mapFieldsFromDbToApi(dbRecord);
+
+      // Assert
+      expect(result).toEqual(expectedUkefId);
     });
   });
 
-  describe('Helper groupIdsByType()', () => {
+  describe('groupIdsByType()', () => {
     it('should group array items', () => {
-      // IDs are not sorted in the output!
-      expect(service.groupIdsByType(unSortedUkefIds)).toEqual(groupedIds);
+      // Act
+      const result = service.groupIdsByType(unSortedUkefIds);
+
+      // Assert
+      expect(result).toEqual(groupedIds);
     });
   });
 
-  describe('Helper sortGroupedByTypeIds()', () => {
+  describe('sortGroupedByTypeIds()', () => {
     it('should sort UKEF IDs and return same structure', () => {
-      expect(service.sortGroupedByTypeIds(groupedIds)).toEqual(groupedAndSortedIds);
+      // Act
+      const result = service.sortGroupedByTypeIds(groupedIds);
+
+      // Assert
+      expect(result).toEqual(groupedAndSortedIds);
     });
   });
 
-  describe('Helper sortIds()', () => {
+  describe('sortIds()', () => {
     it('should sort UKEF IDs in full ukefId entity objects', () => {
-      expect(service.sortIds(unSortedUkefIds)).toEqual(sortedUkefIds);
+      // Act
+      const result = service.sortIds(unSortedUkefIds);
+
+      // Assert
+      expect(result).toEqual(sortedUkefIds);
     });
   });
 });
