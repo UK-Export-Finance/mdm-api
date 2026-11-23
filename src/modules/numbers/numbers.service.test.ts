@@ -141,7 +141,6 @@ describe('NumbersService', () => {
     }).compile();
     service = module.get<NumbersService>(NumbersService);
     numberRepository = module.get<jest.Mocked<Repository<UkefId>>>('mssql-number-generator_UkefIdRepository');
-    logger = module.get<jest.Mocked<PinoLogger>>(PinoLogger);
   });
 
   afterEach(() => {
@@ -152,7 +151,7 @@ describe('NumbersService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('create()', () => {
+  describe('create', () => {
     beforeEach(() => {
       jest.clearAllMocks();
     });
@@ -209,7 +208,7 @@ describe('NumbersService', () => {
     });
   });
 
-  describe('findOne()', () => {
+  describe('findOne', () => {
     beforeEach(() => {
       jest.clearAllMocks();
     });
@@ -267,7 +266,7 @@ describe('NumbersService', () => {
     });
   });
 
-  describe('mapFieldsFromDbToApi()', () => {
+  describe('mapFieldsFromDbToApi', () => {
     it('should rename fields', () => {
       // Arrange
       const dbRecord = {
@@ -295,7 +294,7 @@ describe('NumbersService', () => {
     });
   });
 
-  describe('groupIdsByType()', () => {
+  describe('groupIdsByType', () => {
     it('should group array items', () => {
       // Act
       const result = service.groupIdsByType(unSortedUkefIds);
@@ -305,7 +304,7 @@ describe('NumbersService', () => {
     });
   });
 
-  describe('sortGroupedByTypeIds()', () => {
+  describe('sortGroupedByTypeIds', () => {
     it('should sort UKEF IDs and return same structure', () => {
       // Act
       const result = service.sortGroupedByTypeIds(groupedIds);
@@ -315,7 +314,7 @@ describe('NumbersService', () => {
     });
   });
 
-  describe('sortIds()', () => {
+  describe('sortIds', () => {
     it('should sort UKEF IDs in full ukefId entity objects', () => {
       // Act
       const result = service.sortIds(unSortedUkefIds);
