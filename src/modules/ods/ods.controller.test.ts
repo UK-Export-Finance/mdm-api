@@ -75,6 +75,7 @@ const mockFeeType = {
   cappedBaseBalance: EXAMPLES.FEE_TYPE.CAPPED_BASE_BALANCE,
   effectiveDateDefault: EXAMPLES.FEE_TYPE.EFFECTIVE_DATE_DEFAULT,
   maturityDateDefault: EXAMPLES.FEE_TYPE.MATURITY_DATE_DEFAULT,
+  reinsurerApplicable: EXAMPLES.FEE_TYPE.REINSURER_APPLICABLE,
 };
 const mockFeeTypes = [mockFeeType, mockFeeType];
 

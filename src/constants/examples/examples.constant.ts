@@ -39,6 +39,7 @@ const FEE_TYPE = {
   CAPPED_BASE_BALANCE: false,
   EFFECTIVE_DATE_DEFAULT: 'Facility Signed Date',
   MATURITY_DATE_DEFAULT: 'Facility Availability End Date',
+  REINSURER_APPLICABLE: false,
 };
 
 const INDUSTRY = {
@@ -369,6 +370,7 @@ export const EXAMPLES = {
       feeTypeCappedBaseBalanceIndicator: false,
       feeEffectiveDateDefault: 'Facility Signed Date',
       feeMaturityDateDefault: 'Facility Availability End Date',
+      feeTypeReinsurerApplicable: false,
     },
     CONFIGURATION_FREQUENCY: {
       code: 'FREQ12MON',
