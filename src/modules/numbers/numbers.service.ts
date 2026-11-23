@@ -36,6 +36,11 @@ export class NumbersService {
 
       return sortedIds;
     } catch (error) {
+      // Preserve specific exceptions from findOne (NotFoundException, BadRequestException, InternalServerErrorException)
+      if (error instanceof NotFoundException || error instanceof BadRequestException || error instanceof InternalServerErrorException) {
+        throw error;
+      }
+
       this.logger.error('Failed to create new UKEF ID(s)');
 
       throw new Error(`Error creating new UKEF ID(s)`, { cause: error });
@@ -60,7 +65,7 @@ export class NumbersService {
 
       return mapped;
     } catch (error) {
-      this.logger.error('Error finding UKEF ID %s of type %s', ukefIdString, type);
+      this.logger.error('Error finding UKEF ID %s of type %s %o', ukefIdString, type, error);
 
       if (error instanceof NotFoundException || error instanceof BadRequestException) {
         throw error;

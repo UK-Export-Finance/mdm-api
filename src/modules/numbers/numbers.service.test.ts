@@ -194,6 +194,32 @@ describe('NumbersService', () => {
       expect(result).toBeDefined();
       expect(result.length).toBe(2);
       expect(numberRepository.query).toHaveBeenCalledTimes(4);
+      
+      // Verify generation queries (sp_NUMBER_GENERATOR)
+      expect(numberRepository.query).toHaveBeenNthCalledWith(1, 'sp_NUMBER_GENERATOR @0, @1, @2', [1, 'Jest', 'Jest test 1']);
+      expect(numberRepository.query).toHaveBeenNthCalledWith(3, 'sp_NUMBER_GENERATOR @0, @1, @2', [2, 'Jest', 'Jest test 2']);
+      
+      // Verify lookup queries (USP_STP_GET_AUTONUMBER) with generated IDs
+      expect(numberRepository.query).toHaveBeenNthCalledWith(2, 'USP_STP_GET_AUTONUMBER @0, @1', [1, '0030000425']);
+      expect(numberRepository.query).toHaveBeenNthCalledWith(4, 'USP_STP_GET_AUTONUMBER @0, @1', [2, '0030000426']);
+      
+      // Verify returned IDs
+      expect(result[0]).toEqual({
+        id: 20090248,
+        maskedId: '0030000425',
+        type: 1,
+        createdBy: 'Jest test 1',
+        createdDatetime: '2023-02-17T11:14:04.977Z',
+        requestingSystem: 'Jest',
+      });
+      expect(result[1]).toEqual({
+        id: 20090249,
+        maskedId: '0030000426',
+        type: 2,
+        createdBy: 'Jest test 2',
+        createdDatetime: '2023-02-17T11:14:04.977Z',
+        requestingSystem: 'Jest',
+      });
     });
 
     it('should throw error when query fails', async () => {
@@ -205,6 +231,42 @@ describe('NumbersService', () => {
 
       // Act & Assert
       await expect(service.create(createUkefIdDtos)).rejects.toThrow('Error creating new UKEF ID(s)');
+    });
+
+    it('should preserve NotFoundException from findOne', async () => {
+      // Arrange
+      const createUkefIdDtos = [{ numberTypeId: 1, requestingSystem: 'Jest', createdBy: 'Jest test 1' }];
+
+      numberRepository.query
+        .mockResolvedValueOnce([{ NBR_GENERATED: '0030000425' }])
+        .mockResolvedValueOnce([]); // findOne returns empty, throws NotFoundException
+
+      // Act & Assert
+      await expect(service.create(createUkefIdDtos)).rejects.toThrow(NotFoundException);
+    });
+
+    it('should preserve BadRequestException from findOne', async () => {
+      // Arrange
+      const createUkefIdDtos = [{ numberTypeId: 999, requestingSystem: 'Jest', createdBy: 'Jest test 1' }];
+
+      numberRepository.query
+        .mockResolvedValueOnce([{ NBR_GENERATED: '0030000425' }])
+        .mockResolvedValueOnce([{ ERR: 'INVALID NUMBER TYPE' }]); // findOne finds invalid type
+
+      // Act & Assert
+      await expect(service.create(createUkefIdDtos)).rejects.toThrow(BadRequestException);
+    });
+
+    it('should preserve InternalServerErrorException from findOne', async () => {
+      // Arrange
+      const createUkefIdDtos = [{ numberTypeId: 1, requestingSystem: 'Jest', createdBy: 'Jest test 1' }];
+
+      numberRepository.query
+        .mockResolvedValueOnce([{ NBR_GENERATED: '0030000425' }])
+        .mockRejectedValueOnce(new Error('Unexpected database error')); // findOne query fails unexpectedly
+
+      // Act & Assert
+      await expect(service.create(createUkefIdDtos)).rejects.toThrow(InternalServerErrorException);
     });
   });
 
