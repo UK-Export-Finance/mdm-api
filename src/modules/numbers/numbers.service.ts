@@ -16,25 +16,41 @@ export class NumbersService {
   ) {}
 
   async create(createUkefIdDto: CreateUkefIdDto[]): Promise<UkefId[]> {
-    // TODO: new IDs of type 1 and 2 could be checked if they are used in ACBS. ACBS might be down, but generation still should work.
-    const activeRequests = createUkefIdDto.map((createNumber) =>
-      this.numberRepository
-        .query('sp_NUMBER_GENERATOR @0, @1, @2', [createNumber.numberTypeId, createNumber.requestingSystem, createNumber.createdBy])
-        .then((postNumberGeneratorResponse) => {
-          const ukefIdString = postNumberGeneratorResponse[0].NBR_GENERATED;
+    try {
+      this.logger.info('Creating new UKEF ID(s)');
 
-          return this.findOne(createNumber.numberTypeId, ukefIdString);
-        }),
-    );
+      // TODO: new IDs of type 1 and 2 could be checked if they are used in ACBS. ACBS might be down, but generation still should work.
+      const activeRequests = createUkefIdDto.map((createNumber) =>
+        this.numberRepository
+          .query('sp_NUMBER_GENERATOR @0, @1, @2', [createNumber.numberTypeId, createNumber.requestingSystem, createNumber.createdBy])
+          .then((postNumberGeneratorResponse) => {
+            const ukefIdString = postNumberGeneratorResponse[0].NBR_GENERATED;
 
-    const newIds = await Promise.all(activeRequests);
-    const sortedNewIds = this.sortIds(newIds);
+            return this.findOne(createNumber.numberTypeId, ukefIdString);
+          }),
+      );
 
-    return sortedNewIds;
+      const newIds = await Promise.all(activeRequests);
+
+      const sortedIds = this.sortIds(newIds);
+
+      return sortedIds;
+    } catch (error) {
+      // Preserve specific exceptions from findOne (NotFoundException, BadRequestException, InternalServerErrorException)
+      if (error instanceof NotFoundException || error instanceof BadRequestException || error instanceof InternalServerErrorException) {
+        throw error;
+      }
+
+      this.logger.error('Failed to create new UKEF ID(s)');
+
+      throw new Error(`Error creating new UKEF ID(s)`, { cause: error });
+    }
   }
 
   async findOne(type: number, ukefIdString: string): Promise<UkefId> {
     try {
+      this.logger.info('Finding UKEF ID %s of type %s', ukefIdString, type);
+
       const dbNumber = await this.numberRepository.query('USP_STP_GET_AUTONUMBER @0, @1', [type, ukefIdString]);
 
       if (!dbNumber.length) {
@@ -45,15 +61,17 @@ export class NumbersService {
         throw new BadRequestException('Invalid UKEF ID type');
       }
 
-      return this.mapFieldsFromDbToApi(dbNumber[0]);
+      const mapped = this.mapFieldsFromDbToApi(dbNumber[0]);
+
+      return mapped;
     } catch (error) {
+      this.logger.error(error, 'Error finding UKEF ID %s of type %s', ukefIdString, type);
+
       if (error instanceof NotFoundException || error instanceof BadRequestException) {
-        this.logger.warn(error);
         throw error;
-      } else {
-        this.logger.error(error);
-        throw new InternalServerErrorException();
       }
+
+      throw new InternalServerErrorException();
     }
   }
 
