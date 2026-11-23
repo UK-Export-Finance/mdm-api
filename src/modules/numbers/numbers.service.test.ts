@@ -192,7 +192,7 @@ describe('NumbersService', () => {
 
       // Assert
       expect(result).toBeDefined();
-      expect(result.length).toBe(2);
+      expect(result).toHaveLength(2);
       expect(numberRepository.query).toHaveBeenCalledTimes(4);
       
       // Verify generation queries (sp_NUMBER_GENERATOR)
