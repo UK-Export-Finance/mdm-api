@@ -11,7 +11,6 @@ import { UkefId } from './entities/ukef-id.entity';
 describe('NumbersService', () => {
   let service: NumbersService;
   let numberRepository: jest.Mocked<Repository<UkefId>>;
-  let logger: jest.Mocked<PinoLogger>;
 
   const unSortedUkefIds = [
     {
@@ -167,23 +166,27 @@ describe('NumbersService', () => {
 
       numberRepository.query
         .mockResolvedValueOnce([{ NBR_GENERATED: '0030000425' }])
-        .mockResolvedValueOnce([{
-          DEAL_FACILITY_ID: 20090248,
-          DEAL_FACILITY_ID_MASK: '0030000425',
-          NBR_TYPE_ID: 1,
-          CREATED_BY_USER: 'Jest test 1',
-          CREATED_DATETIME: '2023-02-17T11:14:04.977Z',
-          REQUESTING_SYSTEM: 'Jest',
-        }])
+        .mockResolvedValueOnce([
+          {
+            DEAL_FACILITY_ID: 20090248,
+            DEAL_FACILITY_ID_MASK: '0030000425',
+            NBR_TYPE_ID: 1,
+            CREATED_BY_USER: 'Jest test 1',
+            CREATED_DATETIME: '2023-02-17T11:14:04.977Z',
+            REQUESTING_SYSTEM: 'Jest',
+          },
+        ])
         .mockResolvedValueOnce([{ NBR_GENERATED: '0030000426' }])
-        .mockResolvedValueOnce([{
-          PARTY_ID: 20090249,
-          PARTY_ID_MASK: '0030000426',
-          NBR_TYPE_ID: 2,
-          CREATED_BY_USER: 'Jest test 2',
-          CREATED_DATETIME: '2023-02-17T11:14:04.977Z',
-          REQUESTING_SYSTEM: 'Jest',
-        }]);
+        .mockResolvedValueOnce([
+          {
+            PARTY_ID: 20090249,
+            PARTY_ID_MASK: '0030000426',
+            NBR_TYPE_ID: 2,
+            CREATED_BY_USER: 'Jest test 2',
+            CREATED_DATETIME: '2023-02-17T11:14:04.977Z',
+            REQUESTING_SYSTEM: 'Jest',
+          },
+        ]);
 
       // Act
       const result = await service.create(createUkefIdDtos);
