@@ -33,6 +33,12 @@ export class GetFeeTypeOdsResponseDto {
   readonly feeTypeActive: boolean;
 
   @ApiProperty({
+    description: 'Fee type reinsurer applicable flag',
+    example: EXAMPLES.ODS.CONFIGURATION_FEE.feeTypeReinsurerApplicable,
+  })
+  readonly feeTypeReinsurerApplicable: boolean;
+
+  @ApiProperty({
     description: 'Balance category',
     example: EXAMPLES.ODS.CONFIGURATION_FEE.balanceCategory,
     nullable: true,

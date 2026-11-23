@@ -71,4 +71,10 @@ export class GetFeeTypeResponseDto {
     nullable: true,
   })
   readonly maturityDateDefault: string | null;
+
+  @ApiProperty({
+    description: 'Fee type reinsurer applicable flag',
+    example: EXAMPLES.FEE_TYPE.REINSURER_APPLICABLE,
+  })
+  readonly reinsurerApplicable: boolean;
 }
