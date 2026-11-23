@@ -2,7 +2,7 @@
 
 This MDM micro-service is a centralised API for internal UKEF services.
 
-This API provides integrations and endpoints for ranging from counties, currencies, yield rates, interest rates and much more.
+This API provides integrations and endpoints for data ranging from countries and currencies to yield rates, interest rates and much more.
 
 **Status** 🚦
 
@@ -30,7 +30,6 @@ This API provides integrations with the following systems and data sources:
 - **Companies House** - UK company registration and information
 - **Database (data team)** - Data team warehouse
 - **Dun And Bradstreet** - Business credit and risk information
-- **Estore** - Internal file storage
 - **GOV Notify** - Notification service
 - **Number Generator** - Unique ID generation service
 - **ODS** - Operational Data Store
