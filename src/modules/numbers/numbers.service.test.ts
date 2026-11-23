@@ -163,8 +163,11 @@ describe('NumbersService', () => {
         { numberTypeId: 2, requestingSystem: 'Jest', createdBy: 'Jest test 2' },
       ];
 
+      // `create` maps over the dtos and fires all `sp_NUMBER_GENERATOR` queries synchronously before
+      // any `.then` (which calls `findOne`) resolves, so the real call order is: gen1, gen2, lookup1, lookup2.
       numberRepository.query
         .mockResolvedValueOnce([{ NBR_GENERATED: '0030000425' }])
+        .mockResolvedValueOnce([{ NBR_GENERATED: '0030000426' }])
         .mockResolvedValueOnce([
           {
             DEAL_FACILITY_ID: 20090248,
@@ -175,7 +178,6 @@ describe('NumbersService', () => {
             REQUESTING_SYSTEM: 'Jest',
           },
         ])
-        .mockResolvedValueOnce([{ NBR_GENERATED: '0030000426' }])
         .mockResolvedValueOnce([
           {
             PARTY_ID: 20090249,
@@ -195,12 +197,12 @@ describe('NumbersService', () => {
       expect(result).toHaveLength(2);
       expect(numberRepository.query).toHaveBeenCalledTimes(4);
 
-      // Verify generation queries (sp_NUMBER_GENERATOR)
+      // Verify generation queries (sp_NUMBER_GENERATOR) are issued first, for both items
       expect(numberRepository.query).toHaveBeenNthCalledWith(1, 'sp_NUMBER_GENERATOR @0, @1, @2', [1, 'Jest', 'Jest test 1']);
-      expect(numberRepository.query).toHaveBeenNthCalledWith(3, 'sp_NUMBER_GENERATOR @0, @1, @2', [2, 'Jest', 'Jest test 2']);
+      expect(numberRepository.query).toHaveBeenNthCalledWith(2, 'sp_NUMBER_GENERATOR @0, @1, @2', [2, 'Jest', 'Jest test 2']);
 
       // Verify lookup queries (USP_STP_GET_AUTONUMBER) with generated IDs
-      expect(numberRepository.query).toHaveBeenNthCalledWith(2, 'USP_STP_GET_AUTONUMBER @0, @1', [1, '0030000425']);
+      expect(numberRepository.query).toHaveBeenNthCalledWith(3, 'USP_STP_GET_AUTONUMBER @0, @1', [1, '0030000425']);
       expect(numberRepository.query).toHaveBeenNthCalledWith(4, 'USP_STP_GET_AUTONUMBER @0, @1', [2, '0030000426']);
 
       // Verify returned IDs
