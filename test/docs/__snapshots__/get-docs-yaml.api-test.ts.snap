@@ -3150,6 +3150,10 @@ components:
           description: What the maturity date of the fee should default to if not specified
           example: Facility Availability End Date
           nullable: true
+        reinsurerApplicable:
+          type: boolean
+          description: Fee type reinsurer applicable flag
+          example: false
       required:
         - feeType
         - name
@@ -3162,6 +3166,7 @@ components:
         - cappedBaseBalance
         - effectiveDateDefault
         - maturityDateDefault
+        - reinsurerApplicable
     GetObligationSubtypeResponseDto:
       type: object
       properties:
