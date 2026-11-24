@@ -1,6 +1,8 @@
-# Master Database Management 🚀
+# Master Data Management 🚀
 
-MDM micro-service provides endpoints for internal UKEF applications ranging from counties, currencies, yield rates, interest rates to premium schedule.
+This MDM micro-service is a centralised API for internal UKEF services.
+
+This API provides integrations and endpoints for data ranging from countries and currencies to yield rates, interest rates and much more.
 
 **Status** 🚦
 
@@ -18,6 +20,21 @@ MDM micro-service provides endpoints for internal UKEF applications ranging from
 ![Release](https://github.com/UK-Export-Finance/mdm-api/actions/workflows/deployment.yml/badge.svg?branch=dev)
 ![Release](https://github.com/UK-Export-Finance/mdm-api/actions/workflows/deployment.yml/badge.svg?branch=staging)
 ![Release](https://github.com/UK-Export-Finance/mdm-api/actions/workflows/deployment.yml/badge.svg?branch=production)
+
+## Integrations 🔗
+
+This API provides integrations with the following systems and data sources:
+
+- **CEDAR** - Central Data Resource - Will be deprecated
+- **CIS** - Country Information System
+- **Companies House** - UK company registration and information
+- **Database (data team)** - Data team warehouse
+- **Dun And Bradstreet** - Business credit and risk information
+- **GOV Notify** - Notification service
+- **Number Generator** - Unique ID generation service
+- **ODS** - Operational Data Store
+- **Ordnance Survey** - Geospatial data and mapping services
+- **Salesforce** - Customer Relationship Management (CRM)
 
 ## Install 💻
 
