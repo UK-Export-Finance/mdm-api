@@ -23,6 +23,7 @@ describe('mapFeeType', () => {
       cappedBaseBalance: mockFeeType.feeTypeCappedBaseBalanceIndicator,
       effectiveDateDefault: mockFeeType.feeEffectiveDateDefault,
       maturityDateDefault: mockFeeType.feeMaturityDateDefault,
+      reinsurerApplicable: mockFeeType.feeTypeReinsurerApplicable,
     };
 
     expect(result).toEqual(expected);

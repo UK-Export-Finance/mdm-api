@@ -17,4 +17,5 @@ export const mapFeeType = (feeType: GetFeeTypeOdsResponseDto): GetFeeTypeRespons
   cappedBaseBalance: feeType.feeTypeCappedBaseBalanceIndicator,
   effectiveDateDefault: feeType.feeEffectiveDateDefault ?? null,
   maturityDateDefault: feeType.feeMaturityDateDefault ?? null,
+  reinsurerApplicable: feeType.feeTypeReinsurerApplicable,
 });
