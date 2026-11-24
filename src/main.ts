@@ -12,7 +12,7 @@ const main = async () => {
   const logger = process.env.REDACT_LOGS !== 'false' ? new ConsoleLoggerWithRedact(REDACT_STRINGS) : new NestLogger();
 
   try {
-    const nestApp: NestApplication = await NestFactory.create(MainModule, { logger, bufferLogs: true });
+    const nestApp: NestApplication = await NestFactory.create(MainModule, { logger, bufferLogs: false });
     const app = new App(nestApp);
 
     logger.log(`==========================================================`);
