@@ -82,12 +82,14 @@ export class PostEmailsResponseData {
   })
   public uri: string;
 }
+
 export class PostEmailsResponseDto {
   @ApiProperty({
     example: 201,
     description: 'Http status code',
   })
   status: number;
+
   @ApiProperty({ type: PostEmailsResponseData })
   data: PostEmailsResponseData;
 }

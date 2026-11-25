@@ -3,6 +3,8 @@ import { EXAMPLES } from '@ukef/constants';
 
 import { GetDomProductConfigConfigFees } from './get-dom-product-config-config-fees.dto';
 import { GetDomProductConfigConfigLeadDays } from './get-dom-product-config-config-lead-days.dto';
+import { GetDomProductConfigConfigObligations } from './get-dom-product-config-config-obligations.dto';
+import { GetDomProductConfigConfigReinsurance } from './get-dom-product-config-config-reinsurance.dto';
 
 export class GetDomProductConfigConfig {
   @ApiProperty({
@@ -40,6 +42,12 @@ export class GetDomProductConfigConfig {
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.creditType,
   })
   readonly creditType: string;
+
+  @ApiProperty({
+    description: "The product's 'instrument type'",
+    example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.instrumentType,
+  })
+  readonly instrumentType: string;
 
   @ApiProperty({
     description: "The product's 'participations' requirement",
@@ -126,8 +134,26 @@ export class GetDomProductConfigConfig {
   readonly fees: GetDomProductConfigConfigFees;
 
   @ApiProperty({
+    description: "The product's 'obligations'",
+    example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.obligations,
+  })
+  readonly obligations: GetDomProductConfigConfigObligations;
+
+  @ApiProperty({
+    description: "The product's 'reinsurance'",
+    example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.reinsurance,
+  })
+  readonly reinsurance: GetDomProductConfigConfigReinsurance;
+
+  @ApiProperty({
     description: "The product's 'lead days'",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.leadDays,
   })
   readonly leadDays: GetDomProductConfigConfigLeadDays;
+
+  @ApiProperty({
+    description: 'The repayment type of the product, Bullet or Scheduled',
+    example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.configuration.repaymentType,
+  })
+  readonly repaymentType: string;
 }

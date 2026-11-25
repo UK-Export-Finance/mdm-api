@@ -3,6 +3,4 @@
  * @param {RegExp} Regular expression
  * @returns {string}
  */
-export const regexToString = (regex: RegExp): string => {
-  return regex.source;
-};
+export const regexToString = (regex: RegExp): string => regex.source;

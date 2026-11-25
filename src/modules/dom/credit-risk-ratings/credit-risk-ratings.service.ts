@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DATABASE_NAME } from '@ukef/constants';
 import { PinoLogger } from 'nestjs-pino';
 import { Repository } from 'typeorm';
+import { DATABASE_NAME } from '@ukef/constants';
 
-import { CreditRiskRatingEntity } from '../entities/credit-risk-rating.entity';
+import { CreditRiskRatingEntity } from '@ukef/modules/dom/entities/credit-risk-rating.entity';
 
 @Injectable()
 export class CreditRiskRatingsService {

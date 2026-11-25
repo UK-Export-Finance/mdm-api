@@ -1,5 +1,7 @@
+import { jest } from '@jest/globals';
 import { NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { resetAllWhenMocks, when } from 'jest-when';
 import { CompaniesHouseService } from '@ukef/helper-modules/companies-house/companies-house.service';
 import { CompaniesHouseException } from '@ukef/helper-modules/companies-house/exception/companies-house.exception';
 import { CompaniesHouseInvalidAuthorizationException } from '@ukef/helper-modules/companies-house/exception/companies-house-invalid-authorization.exception';
@@ -7,17 +9,15 @@ import { CompaniesHouseMalformedAuthorizationHeaderException } from '@ukef/helpe
 import { CompaniesHouseNotFoundException } from '@ukef/helper-modules/companies-house/exception/companies-house-not-found.exception';
 import { GetCompanyGenerator } from '@ukef-test/support/generator/get-company-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
-import { resetAllWhenMocks, when } from 'jest-when';
 
-import { SectorIndustriesService } from '../sector-industries/sector-industries.service';
+import { SectorIndustriesService } from '@ukef/modules/sector-industries/sector-industries.service';
 import { CompaniesService } from './companies.service';
 import { GetCompanyResponse } from './dto/get-company-response.dto';
 import { CompaniesOverseasCompanyException } from './exception/companies-overseas-company-exception.exception';
 
 describe('CompaniesService', () => {
-  let configServiceGet: jest.Mock;
-  let companiesHouseServiceGetCompanyByRegistrationNumber: jest.Mock;
-  let sectorIndustriesServiceFind: jest.Mock;
+  let companiesHouseServiceGetCompanyByRegistrationNumber: jest.MockedFunction<CompaniesHouseService['getCompanyByRegistrationNumber']>;
+  let sectorIndustriesServiceFind: jest.MockedFunction<SectorIndustriesService['find']>;
   let service: CompaniesService;
 
   const valueGenerator = new RandomValueGenerator();
@@ -32,14 +32,14 @@ describe('CompaniesService', () => {
 
   beforeAll(() => {
     const configService = new ConfigService();
-    configServiceGet = jest.fn().mockReturnValue({ key: valueGenerator.word() });
-    configService.get = configServiceGet;
 
-    companiesHouseServiceGetCompanyByRegistrationNumber = jest.fn();
-    const companiesHouseService = new CompaniesHouseService(null, configService);
+    jest.spyOn(configService, 'get').mockReset().mockReturnValue({ key: valueGenerator.word() });
+
+    companiesHouseServiceGetCompanyByRegistrationNumber = jest.fn<CompaniesHouseService['getCompanyByRegistrationNumber']>();
+    const companiesHouseService = new CompaniesHouseService(null, configService, null);
     companiesHouseService.getCompanyByRegistrationNumber = companiesHouseServiceGetCompanyByRegistrationNumber;
 
-    sectorIndustriesServiceFind = jest.fn();
+    sectorIndustriesServiceFind = jest.fn<SectorIndustriesService['find']>();
     const sectorIndustriesService = new SectorIndustriesService(null, null);
     sectorIndustriesService.find = sectorIndustriesServiceFind;
 
@@ -53,8 +53,8 @@ describe('CompaniesService', () => {
 
   describe('getCompanyByRegistrationNumber', () => {
     it('calls getCompanyByRegistrationNumber on the CompaniesHouseService with the registration number', async () => {
-      when(companiesHouseServiceGetCompanyByRegistrationNumber).calledWith(testRegistrationNumber).mockReturnValueOnce(getCompanyCompaniesHouseResponse);
-      when(sectorIndustriesServiceFind).calledWith(null, null).mockReturnValueOnce(findSectorIndustriesResponse);
+      when(companiesHouseServiceGetCompanyByRegistrationNumber).calledWith(testRegistrationNumber).mockResolvedValueOnce(getCompanyCompaniesHouseResponse);
+      when(sectorIndustriesServiceFind).calledWith(null, null).mockResolvedValueOnce(findSectorIndustriesResponse);
 
       await service.getCompanyByRegistrationNumber(testRegistrationNumber);
 
@@ -63,8 +63,8 @@ describe('CompaniesService', () => {
     });
 
     it(`calls find on the SectorIndustriesService with both arguments as 'null'`, async () => {
-      when(companiesHouseServiceGetCompanyByRegistrationNumber).calledWith(testRegistrationNumber).mockReturnValueOnce(getCompanyCompaniesHouseResponse);
-      when(sectorIndustriesServiceFind).calledWith(null, null).mockReturnValueOnce(findSectorIndustriesResponse);
+      when(companiesHouseServiceGetCompanyByRegistrationNumber).calledWith(testRegistrationNumber).mockResolvedValueOnce(getCompanyCompaniesHouseResponse);
+      when(sectorIndustriesServiceFind).calledWith(null, null).mockResolvedValueOnce(findSectorIndustriesResponse);
 
       await service.getCompanyByRegistrationNumber(testRegistrationNumber);
 
@@ -73,8 +73,8 @@ describe('CompaniesService', () => {
     });
 
     it('returns a mapped form of the company returned by the CompaniesHouseService', async () => {
-      when(companiesHouseServiceGetCompanyByRegistrationNumber).calledWith(testRegistrationNumber).mockReturnValueOnce(getCompanyCompaniesHouseResponse);
-      when(sectorIndustriesServiceFind).calledWith(null, null).mockReturnValueOnce(findSectorIndustriesResponse);
+      when(companiesHouseServiceGetCompanyByRegistrationNumber).calledWith(testRegistrationNumber).mockResolvedValueOnce(getCompanyCompaniesHouseResponse);
+      when(sectorIndustriesServiceFind).calledWith(null, null).mockResolvedValueOnce(findSectorIndustriesResponse);
 
       const response = await service.getCompanyByRegistrationNumber(testRegistrationNumber);
 
@@ -82,10 +82,12 @@ describe('CompaniesService', () => {
     });
 
     it('returns a mapped form of the company returned by the CompaniesHouseService when it has no type', async () => {
-      const { type: _removed, ...getCompanyCompaniesHouseResponseNoType } = getCompanyCompaniesHouseResponse;
+      const { type: removed, ...getCompanyCompaniesHouseResponseNoType } = getCompanyCompaniesHouseResponse;
 
-      when(companiesHouseServiceGetCompanyByRegistrationNumber).calledWith(testRegistrationNumber).mockReturnValueOnce(getCompanyCompaniesHouseResponseNoType);
-      when(sectorIndustriesServiceFind).calledWith(null, null).mockReturnValueOnce(findSectorIndustriesResponse);
+      when(companiesHouseServiceGetCompanyByRegistrationNumber)
+        .calledWith(testRegistrationNumber)
+        .mockResolvedValueOnce({ ...getCompanyCompaniesHouseResponseNoType, type: undefined });
+      when(sectorIndustriesServiceFind).calledWith(null, null).mockResolvedValueOnce(findSectorIndustriesResponse);
 
       const response = await service.getCompanyByRegistrationNumber(testRegistrationNumber);
 
@@ -93,14 +95,14 @@ describe('CompaniesService', () => {
     });
 
     it('returns a mapped form of the company returned by the CompaniesHouseService when it has no SIC codes', async () => {
-      const { sic_codes: _removed, ...getCompanyCompaniesHouseResponseNoSicCodes } = getCompanyCompaniesHouseResponse;
-      const { industries: _removed2, ...getCompanyResponseNoIndustries } = getCompanyResponse;
+      const { sic_codes: removed, ...getCompanyCompaniesHouseResponseNoSicCodes } = getCompanyCompaniesHouseResponse;
+      const { industries: removed2, ...getCompanyResponseNoIndustries } = getCompanyResponse;
       (getCompanyResponseNoIndustries as GetCompanyResponse).industries = [];
 
       when(companiesHouseServiceGetCompanyByRegistrationNumber)
         .calledWith(testRegistrationNumber)
-        .mockReturnValueOnce(getCompanyCompaniesHouseResponseNoSicCodes);
-      when(sectorIndustriesServiceFind).calledWith(null, null).mockReturnValueOnce(findSectorIndustriesResponse);
+        .mockResolvedValueOnce({ ...getCompanyCompaniesHouseResponseNoSicCodes, sic_codes: undefined });
+      when(sectorIndustriesServiceFind).calledWith(null, null).mockResolvedValueOnce(findSectorIndustriesResponse);
 
       const response = await service.getCompanyByRegistrationNumber(testRegistrationNumber);
 
@@ -108,14 +110,14 @@ describe('CompaniesService', () => {
     });
 
     it('returns a mapped form of the company returned by the CompaniesHouseService when it has no registered office address', async () => {
-      const { registered_office_address: _removed, ...getCompanyCompaniesHouseResponseNoRegisteredOfficeAddress } = getCompanyCompaniesHouseResponse;
-      const { registeredAddress: _removed2, ...getCompanyResponseNoRegisteredAddress } = getCompanyResponse;
+      const { registered_office_address: removed, ...getCompanyCompaniesHouseResponseNoRegisteredOfficeAddress } = getCompanyCompaniesHouseResponse;
+      const { registeredAddress: removed2, ...getCompanyResponseNoRegisteredAddress } = getCompanyResponse;
       (getCompanyResponseNoRegisteredAddress as GetCompanyResponse).registeredAddress = {};
 
       when(companiesHouseServiceGetCompanyByRegistrationNumber)
         .calledWith(testRegistrationNumber)
-        .mockReturnValueOnce(getCompanyCompaniesHouseResponseNoRegisteredOfficeAddress);
-      when(sectorIndustriesServiceFind).calledWith(null, null).mockReturnValueOnce(findSectorIndustriesResponse);
+        .mockResolvedValueOnce({ ...getCompanyCompaniesHouseResponseNoRegisteredOfficeAddress, registered_office_address: undefined });
+      when(sectorIndustriesServiceFind).calledWith(null, null).mockResolvedValueOnce(findSectorIndustriesResponse);
 
       const response = await service.getCompanyByRegistrationNumber(testRegistrationNumber);
 
@@ -139,7 +141,7 @@ describe('CompaniesService', () => {
       );
       when(companiesHouseServiceGetCompanyByRegistrationNumber)
         .calledWith(testRegistrationNumber)
-        .mockReturnValueOnce(getCompanyCompaniesHouseOverseasCompanyResponse);
+        .mockResolvedValueOnce(getCompanyCompaniesHouseOverseasCompanyResponse);
 
       const getCompanyPromise = service.getCompanyByRegistrationNumber(testRegistrationNumber);
 

@@ -1,8 +1,9 @@
+import { jest } from '@jest/globals';
 import { InternalServerErrorException } from '@nestjs/common';
-import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
-import { mapAccrualSchedules } from '@ukef/helpers/map-accrual-schedules';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
+import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
+import { mapAccrualSchedules } from '@ukef/helpers/map-accrual-schedules';
 
 import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { OdsAccrualScheduleService } from './ods-accrual-schedule.service';
@@ -17,43 +18,45 @@ describe('OdsAccrualScheduleService - getAll', () => {
 
   beforeEach(() => {
     mockQueryRunner = {
-      query: jest.fn(),
-      release: jest.fn(),
+      query: jest.fn<QueryRunner['query']>(),
+      release: jest.fn<QueryRunner['release']>(),
     } as unknown as jest.Mocked<QueryRunner>;
 
     mockDataSource = {
-      createQueryRunner: jest.fn().mockReturnValue(mockQueryRunner),
+      createQueryRunner: jest.fn<DataSource['createQueryRunner']>().mockReturnValue(mockQueryRunner),
     } as unknown as jest.Mocked<DataSource>;
 
     odsStoredProcedureService = new OdsStoredProcedureService(mockDataSource);
     service = new OdsAccrualScheduleService(odsStoredProcedureService, mockLogger);
   });
 
-  const mockStoredProcedureOutput = `{
-    "message": "${STORED_PROCEDURE.SUCCESS}",
-    "status": "${STORED_PROCEDURE.SUCCESS}",
-    "total_result_count": 2,
-    "results": [
-      {
-        "code": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.code}",
-        "name": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.name}",
-        "accrualRateType": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.accrualRateType}",
-        "baseBalanceCategory": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.baseBalanceCategory}",
-        "incomeClassCode": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.incomeClassCode}",
-        "accrualScheduleTypeActive": ${EXAMPLES.ODS.ACCRUAL_SCHEDULE.accrualScheduleTypeActive}
-      },
-      {
-        "code": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.code}",
-        "name": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.name}",
-        "accrualRateType": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.accrualRateType}",
-        "baseBalanceCategory": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.baseBalanceCategory}",
-        "incomeClassCode": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.incomeClassCode}",
-        "accrualScheduleTypeActive": ${EXAMPLES.ODS.ACCRUAL_SCHEDULE.accrualScheduleTypeActive}
-      }
-    ]
-  }`;
-
   beforeEach(() => {
+    const mockStoredProcedureOutput = `{
+      "message": "${STORED_PROCEDURE.SUCCESS}",
+      "status": "${STORED_PROCEDURE.SUCCESS}",
+      "total_result_count": 2,
+      "results": [
+        {
+          "code": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.code}",
+          "name": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.name}",
+          "accrualRateType": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.accrualRateType}",
+          "baseBalanceCategory": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.baseBalanceCategory}",
+          "balanceCategory": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.balanceCategory}",
+          "incomeClassCode": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.incomeClassCode}",
+          "accrualScheduleTypeActive": ${EXAMPLES.ODS.ACCRUAL_SCHEDULE.accrualScheduleTypeActive}
+        },
+        {
+          "code": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.code}",
+          "name": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.name}",
+          "accrualRateType": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.accrualRateType}",
+          "baseBalanceCategory": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.baseBalanceCategory}",
+          "balanceCategory": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.balanceCategory}",
+          "incomeClassCode": "${EXAMPLES.ODS.ACCRUAL_SCHEDULE.incomeClassCode}",
+          "accrualScheduleTypeActive": ${EXAMPLES.ODS.ACCRUAL_SCHEDULE.accrualScheduleTypeActive}
+        }
+      ]
+    }`;
+
     jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
   });
 

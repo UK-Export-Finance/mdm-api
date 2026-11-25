@@ -1,11 +1,12 @@
+import { jest } from '@jest/globals';
 import { BadRequestException } from '@nestjs/common';
+import { validate } from 'class-validator';
+import { Response } from 'express';
+import { when } from 'jest-when';
 import { ENUMS, EXAMPLES } from '@ukef/constants';
 import { salesforceFormattedCurrentDate } from '@ukef/helpers/date-formatter.helper';
 import { GetCustomersGenerator } from '@ukef-test/support/generator/get-customers-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
-import { validate } from 'class-validator';
-import { Response } from 'express';
-import { when } from 'jest-when';
 
 import { CustomersController } from './customers.controller';
 import { CustomersService } from './customers.service';
@@ -14,16 +15,14 @@ import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
 import { GetCustomersResponse } from './dto/get-customers-response.dto';
 
 const mockResponseObject = {
-  json: jest.fn(),
-  status: jest.fn().mockReturnThis(),
+  json: jest.fn<Response['json']>(),
+  status: jest.fn<Response['status']>().mockReturnThis(),
 } as any as Response;
 
 describe('CustomersController', () => {
-  const valueGenerator = new RandomValueGenerator();
-
-  let customersServiceGetCustomers: jest.Mock;
-  let customersServiceGetOrCreateCustomer: jest.Mock;
-  let customersServiceGetDunAndBradstreetNumber: jest.Mock;
+  let customersServiceGetCustomers: jest.MockedFunction<CustomersService['getCustomers']>;
+  let customersServiceGetOrCreateCustomer: jest.MockedFunction<CustomersService['getOrCreateCustomer']>;
+  let customersServiceGetDunAndBradstreetNumber: jest.MockedFunction<CustomersService['getDunAndBradstreetNumber']>;
 
   let controller: CustomersController;
 
@@ -33,7 +32,7 @@ describe('CustomersController', () => {
     customersServiceGetOrCreateCustomer = jest.fn();
     customersService.getCustomers = customersServiceGetCustomers;
     customersService.getOrCreateCustomer = customersServiceGetOrCreateCustomer;
-    customersServiceGetDunAndBradstreetNumber = jest.fn();
+    customersServiceGetDunAndBradstreetNumber = jest.fn<CustomersService['getDunAndBradstreetNumber']>();
     customersService.getDunAndBradstreetNumber = customersServiceGetDunAndBradstreetNumber;
 
     controller = new CustomersController(customersService);
@@ -78,13 +77,13 @@ describe('CustomersController', () => {
         query: { partyUrn: EXAMPLES.CUSTOMER.PARTYURN },
       },
     ])('get customers with query $query', async ({ query }) => {
-      const { request, informaticaRequest, getCustomersResponse } = new GetCustomersGenerator(valueGenerator).generate({ numberToGenerate: 1, query });
+      const { getCustomersResponse } = new GetCustomersGenerator(new RandomValueGenerator()).generate({ numberToGenerate: 1 });
 
-      when(customersServiceGetCustomers).calledWith(informaticaRequest[0]).mockResolvedValueOnce(getCustomersResponse[0]);
+      when(customersServiceGetCustomers).calledWith(query).mockResolvedValueOnce(getCustomersResponse);
 
-      const customers = await controller.getCustomers(request[0]);
+      const customers = await controller.getCustomers(query);
 
-      expect(customers).toEqual(getCustomersResponse[0]);
+      expect(customers).toEqual(getCustomersResponse);
     });
 
     it.each([
@@ -109,48 +108,50 @@ describe('CustomersController', () => {
       {
         query: { name: EXAMPLES.CUSTOMER.NAME, companyReg: EXAMPLES.CUSTOMER.COMPANYREG, partyUrn: EXAMPLES.CUSTOMER.PARTYURN },
       },
-    ])('throws BadRequestException if there is more than 1 search parameter (name, companyReg, partyUrn)', ({ query }) => {
-      const getCustomers = (query) => () => controller.getCustomers(query);
+    ])('rejects with BadRequestException unless exactly 1 search parameter (name, companyReg, partyUrn) is provided', async ({ query }) => {
+      const getCustomers = controller.getCustomers(query);
 
-      expect(getCustomers(query)).toThrow('One and just one search parameter is required');
-      expect(getCustomers(query)).toThrow(BadRequestException);
+      await expect(getCustomers).rejects.toThrow('One and just one search parameter is required');
+      await expect(getCustomers).rejects.toThrow(BadRequestException);
     });
   });
 
   describe('getOrCreateCustomer', () => {
-    const DTFSCustomerDtoWithProbabilityOfDefault: DTFSCustomerDto = {
+    const baseDto = {
       companyRegistrationNumber: EXAMPLES.CUSTOMER.COMPANYREG,
-      companyName: 'TEST NAME',
+      companyName: EXAMPLES.CUSTOMER.COMPANY_NAME,
+      customerType: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
+    };
+
+    const DTFSCustomerDtoWithProbabilityOfDefault: DTFSCustomerDto = {
+      ...baseDto,
       probabilityOfDefault: 3,
     };
 
     const DTFSCustomerDtoWithFalsyProbabilityOfDefault: DTFSCustomerDto = {
-      companyRegistrationNumber: EXAMPLES.CUSTOMER.COMPANYREG,
-      companyName: 'TEST NAME',
+      ...baseDto,
       probabilityOfDefault: undefined,
     };
 
-    const DTFSCustomerDtoWithoutProbabilityOfDefault: DTFSCustomerDto = {
-      companyRegistrationNumber: EXAMPLES.CUSTOMER.COMPANYREG,
-      companyName: 'TEST NAME',
-    };
+    const DTFSCustomerDtoWithoutProbabilityOfDefault: DTFSCustomerDto = baseDto;
 
     const getOrCreateCustomerResponse: GetCustomersResponse = [
       {
-        partyUrn: 'string',
-        name: 'string',
-        sfId: 'string',
         companyRegNo: 'string',
+        creditClassificationDate: salesforceFormattedCurrentDate(),
+        creditClassificationStatus: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
+        customerType: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
+        isLegacyRecord: true,
+        name: 'string',
+        partyUrn: 'string',
         probabilityOfDefault: 1,
+        riskEntity: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
+        sfId: 'string',
+        subtype: EXAMPLES.CUSTOMER.SALESFORCE_SUBTYPE,
+        type: EXAMPLES.CUSTOMER.SALESFORCE_TYPE,
         ukEntity: 'Yes',
         ukefIndustryName: 'string',
         ukefSectorName: 'string',
-        type: EXAMPLES.CUSTOMER.SALESFORCE_TYPE,
-        subtype: EXAMPLES.CUSTOMER.SALESFORCE_SUBTYPE,
-        isLegacyRecord: true,
-        riskEntity: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
-        creditClassificationStatus: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
-        creditClassificationDate: salesforceFormattedCurrentDate(),
       },
     ];
 
@@ -199,13 +200,13 @@ describe('CustomersController', () => {
   describe('getDunAndBradstreetNumber', () => {
     it.each([
       {
-        query: { companyRegistrationNumber: 'TEST' },
+        query: { companyRegistrationNumber: 'Mock' },
       },
       {
         query: { companyRegistrationNumber: '' },
       },
       {
-        query: { companyRegistrationNumber: 'more_than_10_chars_long' },
+        query: { companyRegistrationNumber: 'a'.repeat(11) },
       },
     ])('returns false if the request is invalid', async ({ query }) => {
       const dto = new CompanyRegistrationNumberDto();
@@ -218,12 +219,13 @@ describe('CustomersController', () => {
 
     it('calls service method if the request is valid', async () => {
       const query = { companyRegistrationNumber: '12345678' };
-      const duns_number = '56785678';
-      when(customersServiceGetDunAndBradstreetNumber).calledWith(query.companyRegistrationNumber).mockResolvedValueOnce(duns_number);
+      const mockDunsNumber = '56785678';
+
+      when(customersServiceGetDunAndBradstreetNumber).calledWith(query.companyRegistrationNumber).mockResolvedValueOnce(mockDunsNumber);
 
       const response = await controller.getDunAndBradstreetNumber(query);
 
-      expect(response).toEqual(duns_number);
+      expect(response).toEqual(mockDunsNumber);
       expect(customersServiceGetDunAndBradstreetNumber).toHaveBeenCalledWith(query.companyRegistrationNumber);
     });
   });

@@ -1,3 +1,4 @@
+import nock from 'nock';
 import getCompanyCompaniesHouseResponse from '@ukef/helper-modules/companies-house/examples/example-response-for-get-company-by-registration-number.json';
 import getCompanyCompaniesHouseOverseasCompanyResponse from '@ukef/helper-modules/companies-house/examples/example-response-for-get-company-by-registration-number-overseas-company.json';
 import getCompanyResponse from '@ukef/modules/companies/examples/example-response-for-get-company-by-registration-number.json';
@@ -6,7 +7,6 @@ import { Api } from '@ukef-test/support/api';
 import { ENVIRONMENT_VARIABLES } from '@ukef-test/support/environment-variables';
 import { GetCompanyGenerator } from '@ukef-test/support/generator/get-company-generator';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
-import nock from 'nock';
 
 describe('GET /companies?registrationNumber=', () => {
   let api: Api;

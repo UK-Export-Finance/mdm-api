@@ -1,14 +1,20 @@
-import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
+import { jest } from '@jest/globals';
 import { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { when } from 'jest-when';
 import { PinoLogger } from 'nestjs-pino';
+import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 
-import { filterAxiosResponseForLogging } from './filter-axios-response-for-logging.helper';
 import { INCOMING_RESPONSE_LOG_KEY } from './http.constants';
-import { logAxiosResponseErrorWith } from './log-axios-response-error.axios-interceptor';
 import { AxiosResponseErrorInterceptor } from './type/axios-response-error-interceptor.type';
 
-jest.mock('./filter-axios-response-for-logging.helper');
+const filterAxiosResponseForLogging = jest.fn<typeof import('./filter-axios-response-for-logging.helper').filterAxiosResponseForLogging>();
+let logAxiosResponseErrorWith: typeof import('./log-axios-response-error.axios-interceptor').logAxiosResponseErrorWith;
+
+jest.unstable_mockModule('./filter-axios-response-for-logging.helper', () => ({ filterAxiosResponseForLogging }));
+
+beforeAll(async () => {
+  ({ logAxiosResponseErrorWith } = await import('./log-axios-response-error.axios-interceptor.js'));
+});
 
 describe('logAxiosResponseError', () => {
   const valueGenerator = new RandomValueGenerator();
@@ -45,10 +51,10 @@ describe('logAxiosResponseError', () => {
 
   beforeEach(() => {
     mockLogger = new PinoLogger({});
-    mockLogger.warn = jest.fn();
+    mockLogger.warn = jest.fn<PinoLogger['warn']>();
     logAxiosResponseError = logAxiosResponseErrorWith(mockLogger);
 
-    (filterAxiosResponseForLogging as jest.Mock).mockReset();
+    filterAxiosResponseForLogging.mockReset();
     when(filterAxiosResponseForLogging).calledWith(response).mockReturnValueOnce(filteredResponse);
   });
 
@@ -56,7 +62,7 @@ describe('logAxiosResponseError', () => {
     it('logs the full error at warn level', async () => {
       await logAxiosResponseError(errorWithoutResponse).catch(() => {});
 
-      expect(mockLogger.warn).toHaveBeenCalledWith(errorWithoutResponse, 'A HTTP server failed to respond to our request.');
+      expect(mockLogger.warn).toHaveBeenCalledWith('%s %o', 'A HTTP server failed to respond to our request.', errorWithoutResponse);
     });
 
     it('rejects with the original error', async () => {
@@ -70,10 +76,9 @@ describe('logAxiosResponseError', () => {
     it('logs the filtered response at warn level using key INCOMING_RESPONSE_LOG_KEY', async () => {
       await logAxiosResponseError(errorWithResponse).catch(() => {});
 
-      expect(mockLogger.warn).toHaveBeenCalledWith(
-        { [INCOMING_RESPONSE_LOG_KEY]: filteredResponse },
-        'A HTTP server responded to our request with an error response.',
-      );
+      expect(mockLogger.warn).toHaveBeenCalledWith('%s %o', 'A HTTP server responded to our request with an error response.', {
+        [INCOMING_RESPONSE_LOG_KEY]: filteredResponse,
+      });
     });
 
     it('rejects with the original error', async () => {

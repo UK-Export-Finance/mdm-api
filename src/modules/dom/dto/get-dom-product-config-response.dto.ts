@@ -64,6 +64,12 @@ export class GetDomProductConfigResponse {
   readonly facilityCategoryTypes: string[];
 
   @ApiProperty({
+    description: "The product's fee types",
+    example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.feeTypes,
+  })
+  readonly feeTypes: string[];
+
+  @ApiProperty({
     description: "The product's obligation subtypes",
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.obligationSubtypes,
   })
@@ -74,4 +80,10 @@ export class GetDomProductConfigResponse {
     example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.account,
   })
   readonly account: string[];
+
+  @ApiProperty({
+    description: 'Whether the product is available to create new facilities',
+    example: EXAMPLES.DOM.PRODUCT_CONFIG.BIP.productActive,
+  })
+  readonly productActive: boolean;
 }

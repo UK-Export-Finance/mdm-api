@@ -21,6 +21,12 @@ export class GetCounterpartyRoleOdsResponseDto {
   readonly hasSharePercentage: boolean;
 
   @ApiProperty({
+    description: 'Counterparty role has associated payment code',
+    example: EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.hasAssociatedPaymentCode,
+  })
+  readonly hasAssociatedPaymentCode: boolean;
+
+  @ApiProperty({
     description: 'Counterparty role active flag',
     example: EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.counterpartyRoleTypeActive,
   })

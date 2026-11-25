@@ -3,13 +3,13 @@ import request from 'supertest';
 import { withRequiredFieldValidationApiTests } from './partials/require-validation';
 import { withTypeFieldValidationApiTests } from './partials/type-validation';
 
-export interface ObjectFieldValidationApiTests<RequestBodyItem, RequestBodyItemKey extends keyof RequestBodyItem> {
+export type ObjectFieldValidationApiTests<RequestBodyItem, RequestBodyItemKey extends keyof RequestBodyItem> = {
   fieldName: RequestBodyItemKey;
   required?: boolean;
   validRequestBody: RequestBodyItem[] | RequestBodyItem;
   makeRequest: (body: unknown | unknown[]) => request.Test;
   givenAnyRequestBodyWouldSucceed: () => void;
-}
+};
 
 export function withObjectFieldValidationApiTests<RequestBodyItem, RequestBodyItemKey extends keyof RequestBodyItem>({
   fieldName: fieldNameSymbol,
@@ -20,7 +20,7 @@ export function withObjectFieldValidationApiTests<RequestBodyItem, RequestBodyIt
 }: ObjectFieldValidationApiTests<RequestBodyItem, RequestBodyItemKey>): void {
   const fieldName = fieldNameSymbol.toString();
   const typeNameForErrorMessages = 'an object';
-  required = required ?? true;
+  const isRequired = required ?? true;
 
   describe(`${fieldName} validation`, () => {
     beforeEach(() => {
@@ -29,7 +29,7 @@ export function withObjectFieldValidationApiTests<RequestBodyItem, RequestBodyIt
 
     withRequiredFieldValidationApiTests({
       fieldName: fieldNameSymbol,
-      required,
+      required: isRequired,
       validRequestBody,
       makeRequest,
       typeNameForErrorMessages,

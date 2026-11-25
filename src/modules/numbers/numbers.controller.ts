@@ -18,6 +18,7 @@ export class NumbersController {
     if (!createUkefIdDtos.length) {
       throw new BadRequestException('Request payload is empty');
     }
+
     return this.numberService.create(createUkefIdDtos);
   }
 

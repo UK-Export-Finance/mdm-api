@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { REGEX } from '@ukef/constants';
 import { IsNotEmpty, IsString, Matches } from 'class-validator';
 
 export class GetPremiumScheduleParamDto {
@@ -8,6 +9,6 @@ export class GetPremiumScheduleParamDto {
     example: '30000425',
     description: 'UKEF ID for Facility, but without 00 at beginning',
   })
-  @Matches(/^\d{8,10}$/)
+  @Matches(REGEX.EIGHT_TO_TEN_DIGIT_UKEF_ID)
   public facilityId: string;
 }

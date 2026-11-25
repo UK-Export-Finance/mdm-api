@@ -1,4 +1,5 @@
 import { InvalidConfigException } from '@ukef/config/invalid-config.exception';
+import { REGEX } from '@ukef/constants';
 
 import { getIntConfig } from './get-int-config';
 
@@ -21,7 +22,7 @@ describe('getIntConfig', () => {
 
   describe('throws an invalid integer exception', () => {
     it.each(['abc', '12.5', '20th', '0xFF', '0b101'])(`throws InvalidConfigException for "%s" because it is not valid integer`, (value) => {
-      const gettingTheConfig = () => getIntConfig(value as unknown as string);
+      const gettingTheConfig = () => getIntConfig(value);
 
       expect(gettingTheConfig).toThrow(InvalidConfigException);
       expect(gettingTheConfig).toThrow(`Invalid integer value "${value}" for configuration property.`);
@@ -30,11 +31,11 @@ describe('getIntConfig', () => {
 
   describe('throws an InvalidConfigException if environment variable type is not string', () => {
     // Arrange
-    it.each([12, true, null, false, /.*/, {}, [], 0xff, 0b101])(
+    it.each([12, true, null, false, REGEX.TEST.ANY_VALUE, {}, [], 0xff, 0b101])(
       'throws InvalidConfigException for "%s" because environment variable type is not string',
       (value) => {
         // Act
-        const gettingTheConfig = () => getIntConfig(value as unknown as string);
+        const gettingTheConfig = () => getIntConfig(value as string);
 
         // Assert
         expect(gettingTheConfig).toThrow(InvalidConfigException);

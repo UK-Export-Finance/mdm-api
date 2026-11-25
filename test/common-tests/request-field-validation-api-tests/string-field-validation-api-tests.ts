@@ -1,10 +1,10 @@
-import { prepareModifiedRequest } from '@ukef-test/support/helpers/request-field-validation-helper';
 import request from 'supertest';
+import { prepareModifiedRequest } from '@ukef-test/support/helpers/request-field-validation-helper';
 
 import { withRequiredFieldValidationApiTests } from './partials/require-validation';
 import { withTypeFieldValidationApiTests } from './partials/type-validation';
 
-export interface StringFieldValidationApiTestOptions<RequestBodyItem, RequestBodyItemKey extends keyof RequestBodyItem> {
+export type StringFieldValidationApiTestOptions<RequestBodyItem, RequestBodyItemKey extends keyof RequestBodyItem> = {
   fieldName: RequestBodyItemKey;
   length?: number;
   minLength?: number;
@@ -18,7 +18,7 @@ export interface StringFieldValidationApiTestOptions<RequestBodyItem, RequestBod
   validRequestBody: RequestBodyItem[] | RequestBodyItem;
   makeRequest: (body: unknown | unknown[]) => request.Test;
   givenAnyRequestBodyWouldSucceed: () => void;
-}
+};
 
 export function withStringFieldValidationApiTests<RequestBodyItem, RequestBodyItemKey extends keyof RequestBodyItem>({
   fieldName: fieldNameSymbol,
@@ -40,7 +40,7 @@ export function withStringFieldValidationApiTests<RequestBodyItem, RequestBodyIt
   const requestIsAnArray = Array.isArray(validRequestBody);
   const requestBodyItem = requestIsAnArray ? validRequestBody[0] : validRequestBody;
 
-  required = required ?? true;
+  const isRequired = required ?? true;
 
   describe(`${fieldName} validation`, () => {
     beforeEach(() => {
@@ -49,7 +49,7 @@ export function withStringFieldValidationApiTests<RequestBodyItem, RequestBodyIt
 
     withRequiredFieldValidationApiTests({
       fieldName: fieldNameSymbol,
-      required,
+      required: isRequired,
       validRequestBody,
       enum: theEnum,
       makeRequest,
@@ -105,17 +105,15 @@ export function withStringFieldValidationApiTests<RequestBodyItem, RequestBodyIt
           });
         });
       }
-    } else {
-      if (!theEnum) {
-        it(`returns a 2xx response if ${fieldName} is an empty string`, async () => {
-          const requestWithEmptyField = { ...requestBodyItem, [fieldNameSymbol]: '' };
-          const preparedRequestWithEmptyField = prepareModifiedRequest(requestIsAnArray, requestWithEmptyField);
-          const { status } = await makeRequest(preparedRequestWithEmptyField);
+    } else if (!theEnum) {
+      it(`returns a 2xx response if ${fieldName} is an empty string`, async () => {
+        const requestWithEmptyField = { ...requestBodyItem, [fieldNameSymbol]: '' };
+        const preparedRequestWithEmptyField = prepareModifiedRequest(requestIsAnArray, requestWithEmptyField);
+        const { status } = await makeRequest(preparedRequestWithEmptyField);
 
-          expect(status).toBeGreaterThanOrEqual(200);
-          expect(status).toBeLessThan(300);
-        });
-      }
+        expect(status).toBeGreaterThanOrEqual(200);
+        expect(status).toBeLessThan(300);
+      });
     }
 
     if (minLength !== maxLength) {

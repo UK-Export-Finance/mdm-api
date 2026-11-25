@@ -1,18 +1,43 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { COMPANIES, STORED_PROCEDURE } from '@ukef/constants';
-import { mapIndustries, mapIndustry, mapIndustryCodes } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
-
+import { COMPANIES, STORED_PROCEDURE } from '@ukef/constants';
 import {
+  isStoredProcedureResultEmpty,
+  mapBusinessCentre,
+  mapBusinessCentres,
+  mapFeeType,
+  mapFeeTypes,
+  mapIndustries,
+  mapIndustry,
+  mapIndustryCodes,
+} from '@ukef/helpers';
+import { mapDomCompoundingIndices } from '@ukef/helpers/map-dom-compounding-indices';
+import { mapDomCurrencies } from '@ukef/helpers/map-dom-currencies';
+import { mapDomInterestRateTickers } from '@ukef/helpers/map-dom-interest-rate-tickers';
+import { mapDomInterestRates } from '@ukef/helpers/map-dom-interest-rates';
+
+import { FindOdsBusinessCentreOdsResponse } from '@ukef/modules/dom/dto';
+import { GetDomCompoundingIndexOdsResponseDto } from '@ukef/modules/dom/dto/get-dom-compounding-index-ods-response.dto';
+import { GetDomCompoundingIndexResponseDto } from '@ukef/modules/dom/dto/get-dom-compounding-index-response.dto';
+import { GetDomCurrencyOdsResponseDto } from '@ukef/modules/dom/dto/get-dom-currency-ods-response.dto';
+import { GetDomCurrencyResponseDto } from '@ukef/modules/dom/dto/get-dom-currency-response.dto';
+import { GetDomInterestRateOdsResponseDto } from '@ukef/modules/dom/dto/get-dom-interest-rate-ods-response.dto';
+import { GetDomInterestRateResponseDto } from '@ukef/modules/dom/dto/get-dom-interest-rate-response.dto';
+import { GetDomInterestRateTickersDomResponseDto } from '@ukef/modules/dom/dto/get-dom-interest-rate-tickers-dom-response.dto';
+import { GetDomInterestRateTickersResponseDto } from '@ukef/modules/dom/dto/get-dom-interest-rate-tickers-response.dto';
+import {
+  GetFeeTypeOdsResponseDto,
+  GetFeeTypeResponseDto,
   GetIndustryOdsResponseDto,
   GetIndustryResponseDto,
-  GetOdsBusinessCentreNonWorkingDayResponse,
+  GetOdsBusinessCentreOdsResponseNonWorkingDayResponse,
   GetOdsCustomerResponse,
   GetOdsDealResponse,
   GetSicCodeToUkefIndustryOdsResponseDto,
   GetSicCodeToUkefIndustryResponseDto,
   ODS_ENTITIES,
   ODS_QUERY_PARAM_VALUES,
+  OdsBusinessCentreOdsResponse,
   OdsStoredProcedureOutputBody,
 } from './dto';
 import { OdsStoredProcedureService } from './ods-stored-procedure.service';
@@ -52,7 +77,9 @@ export class OdsService {
         throw new InternalServerErrorException(`Error finding customer ${uniqueReferenceNumber} from ODS stored procedure`);
       }
 
-      if (storedProcedureJson?.total_result_count === 0) {
+      if (isStoredProcedureResultEmpty(storedProcedureJson)) {
+        this.logger.error('No customer found %s in ODS', uniqueReferenceNumber);
+
         throw new NotFoundException(`No customer found ${uniqueReferenceNumber} in ODS`);
       }
 
@@ -102,7 +129,9 @@ export class OdsService {
         throw new InternalServerErrorException(`Error finding deal ${id} from ODS stored procedure`);
       }
 
-      if (storedProcedureJson?.total_result_count === 0) {
+      if (isStoredProcedureResultEmpty(storedProcedureJson)) {
+        this.logger.error('No deal found %s in ODS', id);
+
         throw new NotFoundException(`No deal found ${id} in ODS`);
       }
 
@@ -127,12 +156,103 @@ export class OdsService {
   }
 
   /**
+   * Get all Business centres from ODS
+   * @returns {Promise<FindOdsBusinessCentreOdsResponse[]>} Mapped Business centres
+   * @throws {InternalServerErrorException} If there is an error getting Business centres
+   */
+  async getBusinessCentres(): Promise<FindOdsBusinessCentreOdsResponse[]> {
+    try {
+      this.logger.info('Getting business centres from ODS');
+
+      const storedProcedureInput = this.odsStoredProcedureService.createInput({
+        entityToQuery: ODS_ENTITIES.BUSINESS_CENTRE,
+      });
+
+      const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
+
+      const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
+
+      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+        this.logger.error('Error getting business centres from ODS stored procedure, output %o', storedProcedureResult);
+
+        throw new InternalServerErrorException('Error getting business centres from ODS stored procedure');
+      }
+
+      const businessCentres = storedProcedureJson.results as OdsBusinessCentreOdsResponse[];
+
+      const mappedBusinessCentres = mapBusinessCentres(businessCentres);
+
+      return mappedBusinessCentres;
+    } catch (error) {
+      this.logger.error('Error getting business centres %o', error);
+
+      throw new InternalServerErrorException('Error getting business centres from ODS');
+    }
+  }
+
+  /**
+   * Find and map a business centre from ODS
+   * @param {string} centreCode The business centre's code
+   * @returns {Promise<FindOdsBusinessCentreOdsResponse>} Business centre
+   * @throws {InternalServerErrorException} If there is an error finding a business centre
+   */
+  async findBusinessCentre(centreCode: string): Promise<FindOdsBusinessCentreOdsResponse> {
+    try {
+      this.logger.info('Finding business centre %s in ODS', centreCode);
+
+      const storedProcedureInput = this.odsStoredProcedureService.createInput({
+        entityToQuery: ODS_ENTITIES.BUSINESS_CENTRE,
+        queryPageSize: 1,
+        queryParameters: {
+          business_centre_code: centreCode,
+        },
+      });
+
+      const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
+
+      const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
+
+      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+        this.logger.error('Error finding business centre %s from ODS stored procedure, output %o', centreCode, storedProcedureResult);
+
+        throw new InternalServerErrorException(`Error finding business centre ${centreCode} from ODS stored procedure`);
+      }
+
+      if (isStoredProcedureResultEmpty(storedProcedureJson)) {
+        this.logger.error('No business centre found %s in ODS', centreCode);
+
+        throw new NotFoundException(`No business centre ${centreCode} found in ODS`);
+      }
+
+      const businessCentre = storedProcedureJson.results[0] as OdsBusinessCentreOdsResponse;
+
+      const mappedBusinessCentre = mapBusinessCentre(businessCentre);
+
+      return mappedBusinessCentre;
+    } catch (error) {
+      this.logger.error('Finding business centre %s in ODS %o', centreCode, error);
+
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException(`Error finding business centre ${centreCode} in ODS`);
+    }
+  }
+
+  /**
    * Find and map a business centre's non working days from ODS
    * @param {string} centreCode The business centre's code
-   * @returns {Promise<GetOdsBusinessCentreNonWorkingDayResponse[]>} Business centres
+   * @param {string} [startDate] Optional non working day start date filter (inclusive) in YYYY-MM-DD format
+   * @param {string} [endDate] Optional non working day end date filter (inclusive) in YYYY-MM-DD format
+   * @returns {Promise<GetOdsBusinessCentreOdsResponseNonWorkingDayResponse[]>} Business centre's non working days
    * @throws {InternalServerErrorException} If there is an error finding a business centre's non working days
    */
-  async findBusinessCentreNonWorkingDays(centreCode: string): Promise<GetOdsBusinessCentreNonWorkingDayResponse[]> {
+  async findBusinessCentreNonWorkingDays(
+    centreCode: string,
+    startDate?: string,
+    endDate?: string,
+  ): Promise<GetOdsBusinessCentreOdsResponseNonWorkingDayResponse[]> {
     try {
       this.logger.info('Finding business centre %s non working days in ODS', centreCode);
 
@@ -140,6 +260,8 @@ export class OdsService {
         entityToQuery: ODS_ENTITIES.BUSINESS_CENTRE_NON_WORKING_DAY,
         queryParameters: {
           business_centre_code: centreCode,
+          ...(startDate ? { non_working_day_start_date: startDate } : {}),
+          ...(endDate ? { non_working_day_end_date: endDate } : {}),
         },
       });
 
@@ -153,11 +275,13 @@ export class OdsService {
         throw new InternalServerErrorException(`Error finding business centre ${centreCode} non working days from ODS stored procedure`);
       }
 
-      if (storedProcedureJson?.total_result_count === 0) {
+      if (isStoredProcedureResultEmpty(storedProcedureJson)) {
+        this.logger.error('No business centre %s non working days found in ODS', centreCode);
+
         throw new NotFoundException(`No business centre ${centreCode} non working days found in ODS`);
       }
 
-      const nonWorkingDays = storedProcedureJson.results as GetOdsBusinessCentreNonWorkingDayResponse[];
+      const nonWorkingDays = storedProcedureJson.results as GetOdsBusinessCentreOdsResponseNonWorkingDayResponse[];
 
       return nonWorkingDays;
     } catch (error) {
@@ -168,6 +292,89 @@ export class OdsService {
       }
 
       throw new InternalServerErrorException(`Error finding business centre ${centreCode} non working days in ODS`);
+    }
+  }
+
+  /**
+   * Find a fee type by fee type code
+   * @param {string} feeTypeCode: Fee type code
+   * @returns {Promise<GetFeeTypeResponseDto>}
+   * @throws {NotFoundException} If no fee type is found
+   */
+  async findFeeType(feeTypeCode: string): Promise<GetFeeTypeResponseDto> {
+    try {
+      this.logger.info('Finding fee type in ODS %s', feeTypeCode);
+
+      const storedProcedureInput = this.odsStoredProcedureService.createInput({
+        entityToQuery: ODS_ENTITIES.CONFIGURATION_FEE,
+        queryPageSize: 1,
+        queryParameters: {
+          feeType: feeTypeCode,
+        },
+      });
+
+      const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
+
+      const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
+
+      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+        this.logger.error('Error finding fee type %s from ODS stored procedure, output %o', feeTypeCode, storedProcedureResult);
+
+        throw new Error(`Error finding fee type ${feeTypeCode} from ODS stored procedure`);
+      }
+
+      if (isStoredProcedureResultEmpty(storedProcedureJson)) {
+        this.logger.error('No fee type found %s in ODS', feeTypeCode);
+
+        throw new NotFoundException(`No fee type ${feeTypeCode} found in ODS`);
+      }
+
+      const feeType = storedProcedureJson.results[0] as GetFeeTypeOdsResponseDto;
+
+      return mapFeeType(feeType);
+    } catch (error) {
+      this.logger.error('Error finding fee type in ODS %s %o', feeTypeCode, error);
+
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException(`Error finding fee type ${feeTypeCode} in ODS`, { cause: error });
+    }
+  }
+
+  /**
+   * Get all fee types from ODS
+   * @returns {Promise<GetFeeTypeResponseDto[]>} Fee types
+   * @throws {InternalServerErrorException} If there is an error getting fee types from ODS
+   */
+  async getFeeTypes(): Promise<GetFeeTypeResponseDto[]> {
+    try {
+      this.logger.info('Getting fee types from ODS');
+
+      const storedProcedureInput = this.odsStoredProcedureService.createInput({
+        entityToQuery: ODS_ENTITIES.CONFIGURATION_FEE,
+      });
+
+      const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
+
+      const storedProcedureJson: OdsStoredProcedureOutputBody = JSON.parse(storedProcedureResult);
+
+      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+        this.logger.error('Error getting fee types from ODS stored procedure, output %o', storedProcedureResult);
+
+        throw new InternalServerErrorException('Error getting fee types from ODS stored procedure');
+      }
+
+      const feeTypes = storedProcedureJson.results as GetFeeTypeOdsResponseDto[];
+
+      const mappedFeeTypes = mapFeeTypes(feeTypes);
+
+      return mappedFeeTypes;
+    } catch (error) {
+      this.logger.error('Error getting fee types from ODS %o', error);
+
+      throw new InternalServerErrorException('Error getting fee types from ODS');
     }
   }
 
@@ -200,7 +407,9 @@ export class OdsService {
         throw new Error(`Error finding UKEF industry ${industryCode} from ODS stored procedure`);
       }
 
-      if (storedProcedureJson?.total_result_count === 0) {
+      if (isStoredProcedureResultEmpty(storedProcedureJson)) {
+        this.logger.error('No UKEF industry found %s in ODS', industryCode);
+
         throw new NotFoundException(`No UKEF industry ${industryCode} found in ODS`);
       }
 
@@ -336,7 +545,9 @@ export class OdsService {
         throw new Error(`Error finding UKEF industry code by Companies House industry code ${industryCode} in ODS stored procedure`);
       }
 
-      if (storedProcedureJson?.total_result_count === 0) {
+      if (isStoredProcedureResultEmpty(storedProcedureJson)) {
+        this.logger.error('No UKEF industry by Companies House industry code %s found in ODS', industryCode);
+
         throw new NotFoundException(`No UKEF industry by Companies House industry code ${industryCode} found in ODS`);
       }
 
@@ -353,6 +564,160 @@ export class OdsService {
       }
 
       throw new InternalServerErrorException(`Error finding UKEF industry code by Companies House industry code ${industryCode} in ODS`, { cause: error });
+    }
+  }
+
+  /**
+   * Get all interest rate tickers from ODS
+   * @returns {Promise<GetDomInterestRateTickersResponseDto[]>} Mapped interest rate tickers
+   * @throws {InternalServerErrorException} If there is an error getting interest rate tickers
+   */
+  async getInterestRateTickers(): Promise<GetDomInterestRateTickersResponseDto[]> {
+    try {
+      this.logger.info('Getting interest rate tickers from ODS');
+
+      const storedProcedureInput = this.odsStoredProcedureService.createInput({
+        entityToQuery: ODS_ENTITIES.INTEREST_RATE_TICKER,
+      });
+
+      const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
+
+      const storedProcedureJson: OdsStoredProcedureOutputBody<GetDomInterestRateTickersDomResponseDto[]> = JSON.parse(storedProcedureResult);
+
+      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+        this.logger.error('Error getting interest rate tickers from ODS stored procedure, output %o', storedProcedureResult);
+
+        throw new Error('Error getting interest rate tickers from ODS stored procedure');
+      }
+
+      return mapDomInterestRateTickers(storedProcedureJson.results);
+    } catch (error) {
+      this.logger.error('Error getting interest rate tickers from ODS %o', error);
+
+      throw new InternalServerErrorException('Error getting interest rate tickers from ODS', { cause: error });
+    }
+  }
+
+  /**
+   * Get all currencies from ODS
+   * @returns {Promise<GetDomCurrencyResponseDto[]>} Mapped currencies
+   * @throws {InternalServerErrorException} If there is an error getting currencies
+   */
+  async getCurrencies(): Promise<GetDomCurrencyResponseDto[]> {
+    try {
+      this.logger.info('Getting currencies from ODS');
+
+      const storedProcedureInput = this.odsStoredProcedureService.createInput({
+        entityToQuery: ODS_ENTITIES.CURRENCY,
+        queryPageSize: 100,
+      });
+
+      const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
+
+      const storedProcedureJson: OdsStoredProcedureOutputBody<GetDomCurrencyOdsResponseDto[]> = JSON.parse(storedProcedureResult);
+
+      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+        this.logger.error('Error getting currencies from ODS stored procedure, output %o', storedProcedureResult);
+
+        throw new Error('Error getting currencies from ODS stored procedure');
+      }
+
+      return mapDomCurrencies(storedProcedureJson.results);
+    } catch (error) {
+      this.logger.error('Error getting currencies from ODS %o', error);
+
+      throw new InternalServerErrorException('Error getting currencies from ODS', { cause: error });
+    }
+  }
+
+  /**
+   * Gets interest rates for a ticker within a date range from ODS
+   * @param {string} rateCode The interest rate ticker code to query
+   * @param {string} endDate The end date (inclusive) to retrieve interest rates until
+   * @param {string} startDate Optional start date (inclusive) to retrieve interest rates from. If omitted, only the rate for the end date is returned.
+   *
+   * @returns {Promise<GetDomInterestRateResponseDto[]>} The interest rates
+   * @throws {InternalServerErrorException} If there is an error trying to get the interest rates
+   */
+  async getInterestRates(rateCode: string, endDate: string, startDate?: string): Promise<GetDomInterestRateResponseDto[]> {
+    try {
+      this.logger.info('Getting interest rates for %s from ODS', rateCode);
+
+      const storedProcedureInput = this.odsStoredProcedureService.createInput({
+        entityToQuery: ODS_ENTITIES.INTEREST_RATE,
+        queryParameters: {
+          interest_rate_ticker_code: rateCode,
+          interest_rate_datetime: endDate,
+          ...(startDate && { interest_rate_start_datetime: startDate }),
+        },
+      });
+
+      const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
+
+      const storedProcedureJson: OdsStoredProcedureOutputBody<GetDomInterestRateOdsResponseDto[]> = JSON.parse(storedProcedureResult);
+
+      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+        this.logger.error('Error getting interest rates for %s from ODS stored procedure, output %o', rateCode, storedProcedureResult);
+
+        throw new Error(`Error getting interest rates for ${rateCode} from ODS stored procedure`);
+      }
+
+      if (isStoredProcedureResultEmpty(storedProcedureJson) || storedProcedureJson?.results === undefined) {
+        this.logger.error('Error getting interest rates for %s from ODS stored procedure - empty/undefined, output %o', rateCode, storedProcedureResult);
+
+        return [];
+      }
+
+      return mapDomInterestRates(storedProcedureJson.results);
+    } catch (error) {
+      this.logger.error('Error getting interest rates for %s from ODS %o', rateCode, error);
+
+      throw new InternalServerErrorException(`Error getting interest rates for ${rateCode} from ODS`, { cause: error });
+    }
+  }
+
+  /**
+   * Gets compounding index values for a ticker within a date range from ODS.
+   * @param {string} rateCode The code of the interest rate ticker.
+   * @param {string} endDate The end date for the compounding index query.
+   * @param {string} [startDate] The optional start date for the compounding index query.
+   *
+   * @returns {Promise<GetDomCompoundingIndexResponseDto[]>} An array of compounding index values for the specified ticker and date range.
+   * @throws {InternalServerErrorException} When there is an error retrieving compounding indices from ODS.
+   */
+  async getCompoundingIndices(rateCode: string, endDate: string, startDate?: string): Promise<GetDomCompoundingIndexResponseDto[]> {
+    try {
+      this.logger.info('Getting compounding indices for %s from ODS', rateCode);
+
+      const storedProcedureInput = this.odsStoredProcedureService.createInput({
+        entityToQuery: ODS_ENTITIES.COMPOUNDING_INTEREST_RATE,
+        queryParameters: {
+          interest_rate_ticker_code: rateCode,
+          interest_rate_datetime: endDate,
+          ...(startDate && { interest_rate_start_datetime: startDate }),
+        },
+      });
+
+      const storedProcedureResult = await this.odsStoredProcedureService.call(storedProcedureInput);
+      const storedProcedureJson: OdsStoredProcedureOutputBody<GetDomCompoundingIndexOdsResponseDto[]> = JSON.parse(storedProcedureResult);
+
+      if (storedProcedureJson?.status !== STORED_PROCEDURE.SUCCESS) {
+        this.logger.error('Error getting compounding indices for %s from ODS stored procedure, output %o', rateCode, storedProcedureResult);
+
+        throw new Error(`Error getting compounding indices for ${rateCode} from ODS stored procedure`);
+      }
+
+      if (isStoredProcedureResultEmpty(storedProcedureJson) || storedProcedureJson?.results === undefined) {
+        this.logger.error('Error getting compounding indices for %s from ODS stored procedure - empty/undefined, output %o', rateCode, storedProcedureResult);
+
+        return [];
+      }
+
+      return mapDomCompoundingIndices(storedProcedureJson.results);
+    } catch (error) {
+      this.logger.error('Error getting compounding indices for %s from ODS %o', rateCode, error);
+
+      throw new InternalServerErrorException(`Error getting compounding indices for ${rateCode} from ODS`, { cause: error });
     }
   }
 }

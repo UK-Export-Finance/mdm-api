@@ -1,8 +1,9 @@
+import { jest } from '@jest/globals';
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
-import { mapCounterpartyRole } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
+import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
+import { mapCounterpartyRole } from '@ukef/helpers';
 
 import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { OdsCounterpartyRoleService } from './ods-counterparty-role.service';
@@ -17,12 +18,12 @@ describe('OdsCounterpartyRoleService - findOne', () => {
 
   beforeEach(() => {
     mockQueryRunner = {
-      query: jest.fn(),
-      release: jest.fn(),
+      query: jest.fn<QueryRunner['query']>(),
+      release: jest.fn<QueryRunner['release']>(),
     } as unknown as jest.Mocked<QueryRunner>;
 
     mockDataSource = {
-      createQueryRunner: jest.fn().mockReturnValue(mockQueryRunner),
+      createQueryRunner: jest.fn<DataSource['createQueryRunner']>().mockReturnValue(mockQueryRunner),
     } as unknown as jest.Mocked<DataSource>;
 
     odsStoredProcedureService = new OdsStoredProcedureService(mockDataSource);
@@ -38,6 +39,7 @@ describe('OdsCounterpartyRoleService - findOne', () => {
         "counterpartyRoleType": "${EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.counterpartyRoleType}",
         "name": "${EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.name}",
         "hasSharePercentage": ${EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.hasSharePercentage},
+        "hasAssociatedPaymentCode": ${EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.hasAssociatedPaymentCode},
         "counterpartyRoleTypeActive": ${EXAMPLES.ODS.CONFIGURATION_COUNTERPARTY_ROLE.counterpartyRoleTypeActive}
       }
     ]
@@ -80,14 +82,14 @@ describe('OdsCounterpartyRoleService - findOne', () => {
   describe('when a counterparty role is not found', () => {
     it('should throw an error', async () => {
       // Arrange
-      const mockStoredProcedureOutput = `{
+      const localMockStoredProcedureOutput = `{
         "message": "${STORED_PROCEDURE.SUCCESS}",
         "status": "${STORED_PROCEDURE.SUCCESS}",
         "total_result_count": 0,
         "results": []
       }`;
 
-      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
+      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(localMockStoredProcedureOutput);
 
       // Act & Assert
       const promise = service.findOne(EXAMPLES.COUNTERPARTY_ROLE.ROLE_TYPE);
@@ -103,9 +105,9 @@ describe('OdsCounterpartyRoleService - findOne', () => {
   describe(`when the response from ODS does not have status as ${STORED_PROCEDURE.SUCCESS}`, () => {
     it('should throw an error', async () => {
       // Arrange
-      const mockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
+      const localMockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
 
-      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
+      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(localMockStoredProcedureOutput);
 
       // Act
       const promise = service.findOne(EXAMPLES.COUNTERPARTY_ROLE.ROLE_TYPE);
@@ -125,9 +127,9 @@ describe('OdsCounterpartyRoleService - findOne', () => {
   describe('when the method goes into the catch handler', () => {
     it('should throw an error', async () => {
       // Arrange
-      const mockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
+      const localMockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
 
-      jest.spyOn(odsStoredProcedureService, 'call').mockRejectedValue(mockStoredProcedureOutput);
+      jest.spyOn(odsStoredProcedureService, 'call').mockRejectedValue(localMockStoredProcedureOutput);
 
       // Act
       const promise = service.findOne(EXAMPLES.COUNTERPARTY_ROLE.ROLE_TYPE);
@@ -137,7 +139,7 @@ describe('OdsCounterpartyRoleService - findOne', () => {
 
       await expect(promise).rejects.toMatchObject({
         message: `Error finding counterparty role ${EXAMPLES.COUNTERPARTY_ROLE.ROLE_TYPE} in ODS`,
-        cause: mockStoredProcedureOutput,
+        cause: localMockStoredProcedureOutput,
       });
     });
   });

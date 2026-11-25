@@ -1,7 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { KEY as ORDNANCE_SURVEY_CONFIG_KEY, OrdnanceSurveyConfig } from '@ukef/config/ordnance-survey.config';
+import { ORDNANCE_SURVEY_CONFIG_KEY, OrdnanceSurveyConfigType } from '@ukef/config/ordnance-survey.config';
 import { GEOSPATIAL } from '@ukef/constants';
 import { HttpClient } from '@ukef/modules/http/http.client';
 
@@ -11,11 +11,12 @@ import { OrdnanceSurveyException } from './exception/ordnance-survey.exception';
 @Injectable()
 export class OrdnanceSurveyService {
   private readonly httpClient: HttpClient;
+
   private readonly key: string;
 
   constructor(httpService: HttpService, configService: ConfigService) {
     this.httpClient = new HttpClient(httpService);
-    const { key } = configService.get<OrdnanceSurveyConfig>(ORDNANCE_SURVEY_CONFIG_KEY);
+    const { key } = configService.get<OrdnanceSurveyConfigType>(ORDNANCE_SURVEY_CONFIG_KEY);
     this.key = key;
   }
 
@@ -28,6 +29,7 @@ export class OrdnanceSurveyService {
         throw new OrdnanceSurveyException('Failed to get response from Ordnance Survey API.', error);
       },
     });
+
     return data;
   }
 }

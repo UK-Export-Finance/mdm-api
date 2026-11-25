@@ -1,5 +1,5 @@
 import { HttpStatus } from '@nestjs/common';
-import AppConfig from '@ukef/config/app.config';
+import { AppConfig } from '@ukef/config/app.config';
 import { EXAMPLES } from '@ukef/constants/examples/examples.constant';
 import { Api } from '@ukef-test/support/api';
 
@@ -34,6 +34,7 @@ describe('/ods - Accrual schedules', () => {
           code: expect.any(String),
           name: expect.any(String),
           accrualRateType: expect.any(String),
+          balanceCategory: expect.any(String),
           baseBalanceCategory: expect.any(String),
           incomeClassCode: expect.any(String),
           isActive: expect.any(Boolean),
@@ -59,6 +60,7 @@ describe('/ods - Accrual schedules', () => {
         code: expect.any(String),
         name: expect.any(String),
         accrualRateType: expect.any(String),
+        balanceCategory: expect.any(String),
         baseBalanceCategory: expect.any(String),
         incomeClassCode: expect.any(String),
         isActive: expect.any(Boolean),

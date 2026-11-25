@@ -15,6 +15,7 @@ describe('mapAccrualSchedule', () => {
       code: mockSchedule.code,
       name: mockSchedule.name,
       accrualRateType: mockSchedule.accrualRateType,
+      balanceCategory: mockSchedule.balanceCategory,
       baseBalanceCategory: mockSchedule.baseBalanceCategory,
       incomeClassCode: mockSchedule.incomeClassCode,
       isActive: mockSchedule.accrualScheduleTypeActive,

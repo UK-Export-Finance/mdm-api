@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 
-import { MsSqlOdsDatabaseModule } from '../database/mssql-ods-database.module';
+import { MsSqlOdsDatabaseModule } from '@ukef/modules/database/mssql-ods-database.module';
 import { OdsController } from './ods.controller';
 import { OdsService } from './ods.service';
 import { OdsAccrualScheduleService } from './ods-accrual-schedule.service';

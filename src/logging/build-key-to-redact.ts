@@ -6,5 +6,6 @@ export const buildKeyToRedact = (parts: string[]): string => {
   if (!parts.length) {
     return '';
   }
+
   return `${prefix}${parts.join(joinSeparator)}${suffix}`;
 };

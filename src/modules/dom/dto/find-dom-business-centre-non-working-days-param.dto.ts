@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { EXAMPLES } from '@ukef/constants';
-import { IsString } from 'class-validator';
+import { IsDateString, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+import { BUSINESS_CENTRE, EXAMPLES } from '@ukef/constants';
 
-export class FindDomBusinessCentreNonWorkingDaysParamDto {
+export class FindOdsBusinessCentreOdsResponseNonWorkingDaysParamDto {
   @ApiProperty({
     required: true,
     example: EXAMPLES.BUSINESS_CENTRE.CODE,
@@ -10,4 +10,26 @@ export class FindDomBusinessCentreNonWorkingDaysParamDto {
   })
   @IsString()
   public centreCode: string;
+
+  @IsDateString({ strict: true })
+  @MinLength(BUSINESS_CENTRE.DATE_QUERY_PARAM.MIN_LENGTH)
+  @MaxLength(BUSINESS_CENTRE.DATE_QUERY_PARAM.MAX_LENGTH, { message: '$property should use format YYYY-MM-DD' })
+  @IsOptional()
+  @ApiProperty({
+    example: EXAMPLES.DATE_START,
+    description: 'Optional non-working day start date filter (inclusive) in YYYY-MM-DD format',
+    required: false,
+  })
+  public startDate?: string;
+
+  @IsDateString({ strict: true })
+  @MinLength(BUSINESS_CENTRE.DATE_QUERY_PARAM.MIN_LENGTH)
+  @MaxLength(BUSINESS_CENTRE.DATE_QUERY_PARAM.MAX_LENGTH, { message: '$property should use format YYYY-MM-DD' })
+  @IsOptional()
+  @ApiProperty({
+    example: EXAMPLES.DATE_END,
+    description: 'Optional non-working day end date filter (inclusive) in YYYY-MM-DD format',
+    required: false,
+  })
+  public endDate?: string;
 }

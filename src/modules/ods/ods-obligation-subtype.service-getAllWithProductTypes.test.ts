@@ -1,7 +1,8 @@
+import { jest } from '@jest/globals';
 import { InternalServerErrorException } from '@nestjs/common';
-import { mapObligationSubtypesWithProductCode } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
+import { mapObligationSubtypesWithProductCode } from '@ukef/helpers';
 
 import { OdsObligationSubtypeService } from './ods-obligation-subtype.service';
 import { OdsProductConfigService } from './ods-product-config.service';
@@ -18,12 +19,12 @@ describe('OdsObligationSubtypeService - getAllWithProductTypes', () => {
 
   beforeEach(() => {
     mockQueryRunner = {
-      query: jest.fn(),
-      release: jest.fn(),
+      query: jest.fn<QueryRunner['query']>(),
+      release: jest.fn<QueryRunner['release']>(),
     } as unknown as jest.Mocked<QueryRunner>;
 
     mockDataSource = {
-      createQueryRunner: jest.fn().mockReturnValue(mockQueryRunner),
+      createQueryRunner: jest.fn<DataSource['createQueryRunner']>().mockReturnValue(mockQueryRunner),
     } as unknown as jest.Mocked<DataSource>;
 
     odsStoredProcedureService = new OdsStoredProcedureService(mockDataSource);

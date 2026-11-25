@@ -1,6 +1,8 @@
-# Master Database Management 🚀
+# Master Data Management 🚀
 
-MDM micro-service provides endpoints for internal UKEF applications ranging from counties, currencies, yield rates, interest rates to premium schedule.
+This MDM micro-service is a centralised API for internal UKEF services.
+
+This API provides integrations and endpoints for data ranging from countries and currencies to yield rates, interest rates and much more.
 
 **Status** 🚦
 
@@ -19,13 +21,28 @@ MDM micro-service provides endpoints for internal UKEF applications ranging from
 ![Release](https://github.com/UK-Export-Finance/mdm-api/actions/workflows/deployment.yml/badge.svg?branch=staging)
 ![Release](https://github.com/UK-Export-Finance/mdm-api/actions/workflows/deployment.yml/badge.svg?branch=production)
 
+## Integrations 🔗
+
+This API provides integrations with the following systems and data sources:
+
+- **CEDAR** - Central Data Resource - Will be deprecated
+- **CIS** - Country Information System
+- **Companies House** - UK company registration and information
+- **Database (data team)** - Data team warehouse
+- **Dun And Bradstreet** - Business credit and risk information
+- **GOV Notify** - Notification service
+- **Number Generator** - Unique ID generation service
+- **ODS** - Operational Data Store
+- **Ordnance Survey** - Geospatial data and mapping services
+- **Salesforce** - Customer Relationship Management (CRM)
+
 ## Install 💻
 
 ```bash
-npm install --legacy-peer-deps
+npm install
 ```
 
-When commiting changes - If the pre-commit hook does not run, execute the following:
+When commiting changes - If the pre-commit hook does not run, execute the following command:
 
 ```bash
 npx husky
@@ -106,6 +123,23 @@ $ npm run api-test
 # api tests with nock debugging (very useful if tests are failing)
 $ DEBUG=nock.* npm run api-test
 ```
+
+Tests run as native ES modules using Jest's `--experimental-vm-modules` runtime and `tsconfig.test.json`.
+The application build continues to use its existing module format.
+
+Import the Jest runtime in each file that uses it and type mocks against the functions they replace:
+
+```typescript
+import { jest } from '@jest/globals';
+
+const getCustomers = jest.fn<SalesforceService['getCustomers']>();
+```
+
+Use typed `jest.spyOn` calls for generic or overloaded methods, and `mockResolvedValue` for asynchronous return values.
+
+ES module mocks are not hoisted. Register them with `jest.unstable_mockModule`, then dynamically import the module under test in an asynchronous
+`beforeAll` hook. Use `.js` extensions in relative dynamic imports; Jest maps these to the TypeScript sources.
+CommonJS dependencies can still use `jest.mock`, but must also be imported after registering their mocks.
 
 ### Snapshot
 

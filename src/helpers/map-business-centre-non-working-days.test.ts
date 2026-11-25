@@ -1,8 +1,8 @@
-import { GetOdsBusinessCentreNonWorkingDayResponse } from '@ukef/modules/ods/dto';
+import { GetOdsBusinessCentreOdsResponseNonWorkingDayResponse } from '@ukef/modules/ods/dto';
 
 import { mapBusinessCentreNonWorkingDays } from './map-business-centre-non-working-days';
 
-const mockNonWorkingDays: GetOdsBusinessCentreNonWorkingDayResponse[] = [
+const mockNonWorkingDays: GetOdsBusinessCentreOdsResponseNonWorkingDayResponse[] = [
   {
     business_centre_code: 'A',
     non_working_day_name: 'Business centre A',

@@ -1,15 +1,19 @@
+import { jest } from '@jest/globals';
 import { HttpStatus } from '@nestjs/common';
-import { isAxiosError } from 'axios';
 
-import { messageCheck, statusCheck } from './response-status.helper';
+const isAxiosError = jest.fn<typeof import('axios').isAxiosError>();
+let messageCheck: typeof import('./response-status.helper').messageCheck;
+let statusCheck: typeof import('./response-status.helper').statusCheck;
 
-jest.mock('axios', () => ({
-  isAxiosError: jest.fn(),
-}));
+jest.unstable_mockModule('axios', () => ({ isAxiosError }));
+
+beforeAll(async () => {
+  ({ messageCheck, statusCheck } = await import('./response-status.helper.js'));
+});
 
 describe('statusCheck', () => {
   beforeEach(() => {
-    (isAxiosError as unknown as jest.Mock).mockReturnValue(true);
+    isAxiosError.mockReturnValue(true);
   });
 
   it('should return true when isAxiosError is true and status matches', () => {
@@ -56,7 +60,7 @@ describe('statusCheck', () => {
       message: 'Bad request',
     } as Error;
 
-    (isAxiosError as unknown as jest.Mock).mockReturnValue(false);
+    isAxiosError.mockReturnValue(false);
 
     // Act
     const result = statusCheck({ error, status: HttpStatus.BAD_REQUEST });
@@ -78,7 +82,7 @@ describe('statusCheck', () => {
 
 describe('messageCheck', () => {
   beforeEach(() => {
-    (isAxiosError as unknown as jest.Mock).mockReturnValue(true);
+    isAxiosError.mockReturnValue(true);
   });
 
   it('should return true when isAxiosError is true and message contains search string', () => {
@@ -162,7 +166,7 @@ describe('messageCheck', () => {
       message: 'Error',
     } as Error;
 
-    (isAxiosError as unknown as jest.Mock).mockReturnValue(false);
+    isAxiosError.mockReturnValue(false);
 
     // Act
     const result = messageCheck({ error, search: 'Invalid Authorization header' });

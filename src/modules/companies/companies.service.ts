@@ -4,8 +4,8 @@ import { CompaniesHouseService } from '@ukef/helper-modules/companies-house/comp
 import { GetCompanyCompaniesHouseResponse } from '@ukef/helper-modules/companies-house/dto/get-company-companies-house-response.dto';
 import { CompaniesHouseNotFoundException } from '@ukef/helper-modules/companies-house/exception/companies-house-not-found.exception';
 
-import { SectorIndustryEntity } from '../sector-industries/entities/sector-industry.entity';
-import { SectorIndustriesService } from '../sector-industries/sector-industries.service';
+import { SectorIndustryEntity } from '@ukef/modules/sector-industries/entities/sector-industry.entity';
+import { SectorIndustriesService } from '@ukef/modules/sector-industries/sector-industries.service';
 import { GetCompanyResponse, Industry } from './dto/get-company-response.dto';
 import { CompaniesOverseasCompanyException } from './exception/companies-overseas-company-exception.exception';
 

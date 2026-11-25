@@ -1,7 +1,8 @@
+import { jest } from '@jest/globals';
 import { InternalServerErrorException } from '@nestjs/common';
-import { STORED_PROCEDURE } from '@ukef/constants';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
+import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
 
 import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { OdsProductConfigService } from './ods-product-config.service';
@@ -17,26 +18,26 @@ describe('OdsProductConfigService - getAll', () => {
 
   beforeEach(() => {
     mockQueryRunner = {
-      query: jest.fn(),
-      release: jest.fn(),
+      query: jest.fn<QueryRunner['query']>(),
+      release: jest.fn<QueryRunner['release']>(),
     } as unknown as jest.Mocked<QueryRunner>;
 
     mockDataSource = {
-      createQueryRunner: jest.fn().mockReturnValue(mockQueryRunner),
+      createQueryRunner: jest.fn<DataSource['createQueryRunner']>().mockReturnValue(mockQueryRunner),
     } as unknown as jest.Mocked<DataSource>;
 
     odsStoredProcedureService = new OdsStoredProcedureService(mockDataSource);
     service = new OdsProductConfigService(odsStoredProcedureService, mockLogger);
   });
 
-  const mockStoredProcedureOutput = JSON.stringify({
-    message: STORED_PROCEDURE.SUCCESS,
-    status: STORED_PROCEDURE.SUCCESS,
-    total_result_count: mockProductConfigs.length,
-    results: mockProductConfigs,
-  });
-
   beforeEach(() => {
+    const mockStoredProcedureOutput = JSON.stringify({
+      message: STORED_PROCEDURE.SUCCESS,
+      status: STORED_PROCEDURE.SUCCESS,
+      total_result_count: mockProductConfigs.length,
+      results: mockProductConfigs,
+    });
+
     jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
   });
 
@@ -58,7 +59,14 @@ describe('OdsProductConfigService - getAll', () => {
     const result = await service.getAll();
 
     // Assert
-    expect(result).toEqual(mockProductConfigs);
+    const expected = [
+      ...mockProductConfigs,
+      EXAMPLES.DOM.PRODUCT_CONFIG.ALL_REQUIRED_INSURANCE,
+      EXAMPLES.DOM.PRODUCT_CONFIG.ALL_REQUIRED_GUARANTEE,
+      EXAMPLES.DOM.PRODUCT_CONFIG.ALL_DISABLED,
+    ];
+
+    expect(result).toEqual(expected);
   });
 
   describe(`when the response from ODS does not have status as ${STORED_PROCEDURE.SUCCESS}`, () => {

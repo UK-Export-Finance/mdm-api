@@ -1,73 +1,59 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { DOM_BUSINESS_CENTRES, DOM_TO_ODS_BUSINESS_CENTRES_MAPPING } from '@ukef/constants';
-import PRODUCT_CONFIG from '@ukef/helper-modules/dom/dom-product-config.json';
-import { mapBusinessCentre, mapBusinessCentreNonWorkingDays, mapBusinessCentres } from '@ukef/helpers';
+import { BadRequestException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { PinoLogger } from 'nestjs-pino';
+import { mapBusinessCentreNonWorkingDays, mapProductConfig } from '@ukef/helpers';
 
-import { OdsService } from '../ods/ods.service';
+import { OdsService } from '@ukef/modules/ods/ods.service';
+import { OdsProductConfigService } from '@ukef/modules/ods/ods-product-config.service';
 import {
-  FindDomBusinessCentreNonWorkingDayMappedResponse,
-  FindDomBusinessCentreResponse,
-  FindMultipleDomBusinessCentresNonWorkingDaysResponse,
+  FindMultipleOdsBusinessCentreOdsResponsesNonWorkingDaysResponse,
   FindMultipleProductConfigsResponse,
+  FindOdsBusinessCentreOdsResponseNonWorkingDayMappedResponse,
+  GetDomCompoundingIndexResponseDto,
+  GetDomInterestRateResponseDto,
   GetDomProductConfigResponse,
 } from './dto';
 
 /**
  * DOM service.
  * This is responsible for all DOM operations.
- * NOTE: This service does not actually call DOM, all data is stored in APIM MDM.
- * In the future, this will be updated to call DOM.
  */
 @Injectable()
 export class DomService {
   constructor(
     private readonly odsService: OdsService,
+    private readonly odsProductConfigService: OdsProductConfigService,
     private readonly logger: PinoLogger,
   ) {}
 
   /**
-   * Find a business centre in DOM
-   * @returns {FindDomBusinessCentreResponse}
-   * @throws {NotFoundException} If no business centre is found
-   */
-  findBusinessCentre(centreCode: string): FindDomBusinessCentreResponse {
-    this.logger.info('Finding DOM business centre %s', centreCode);
-
-    const centre = DOM_BUSINESS_CENTRES[`${centreCode}`];
-
-    if (centre) {
-      return mapBusinessCentre(centre);
-    }
-
-    throw new NotFoundException(`No business centre found ${centreCode}`);
-  }
-
-  /**
    * Find a business centre's non working days in DOM
    * @param {string} domCentreCode: DOM business centre code
-   * @returns {Promise<FindDomBusinessCentreNonWorkingDayMappedResponse[]>}
+   * @param {string} startDate: Optional non working day start date filter (inclusive) in YYYY-MM-DD format
+   * @param {string} endDate: Optional non working day end date filter (inclusive) in YYYY-MM-DD format
+   * @returns {Promise<FindOdsBusinessCentreOdsResponseNonWorkingDayMappedResponse[]>}
    * @throws {NotFoundException} If no business centre is found
    */
-  async findBusinessCentreNonWorkingDays(domCentreCode: string): Promise<FindDomBusinessCentreNonWorkingDayMappedResponse[]> {
+  async findBusinessCentreNonWorkingDays(
+    domCentreCode: string,
+    startDate?: string,
+    endDate?: string,
+  ): Promise<FindOdsBusinessCentreOdsResponseNonWorkingDayMappedResponse[]> {
     try {
       this.logger.info('Finding DOM business centre %s non working days', domCentreCode);
 
-      // get the business centre's ODS code from DOM code
-      const odsCentreCode = DOM_TO_ODS_BUSINESS_CENTRES_MAPPING[`${domCentreCode}`];
-
-      if (!odsCentreCode) {
-        throw new NotFoundException(`No DOM to ODS business centre code found ${domCentreCode}`);
-      }
-
-      // get the non working days from ODS
-      const nonWorkingDays = await this.odsService.findBusinessCentreNonWorkingDays(odsCentreCode);
+      const nonWorkingDays = await this.odsService.findBusinessCentreNonWorkingDays(domCentreCode, startDate, endDate);
 
       return mapBusinessCentreNonWorkingDays(nonWorkingDays, domCentreCode);
     } catch (error) {
-      if (error instanceof NotFoundException) {
-        this.logger.warn(error);
-        throw error;
+      const errorWithStatus = error as { status?: number; statusCode?: number };
+
+      const isNotFoundError =
+        error instanceof NotFoundException || errorWithStatus?.status === HttpStatus.NOT_FOUND || errorWithStatus?.statusCode === HttpStatus.NOT_FOUND;
+
+      if (isNotFoundError) {
+        this.logger.warn('DOM business centre %s non working days not found %o', domCentreCode, error);
+
+        throw new NotFoundException(`No DOM business centre non working days found ${domCentreCode}`);
       }
 
       this.logger.error('Error finding DOM business centre %s non working days %o', domCentreCode, error);
@@ -77,24 +63,18 @@ export class DomService {
   }
 
   /**
-   * Get all business centres
-   * @returns {FindDomBusinessCentreResponse[]}
-   */
-  getBusinessCentres(): FindDomBusinessCentreResponse[] {
-    this.logger.info('Getting DOM business centres');
-
-    const odsBusinessCentres = Object.values(DOM_BUSINESS_CENTRES);
-
-    return mapBusinessCentres(odsBusinessCentres);
-  }
-
-  /**
    * Find multiple business centre's non working days in DOM
    * @param {string} centreCodes: DOM business centre codes, comma separated
-   * @returns {Promise<FindMultipleDomBusinessCentresNonWorkingDaysResponse>}
+   * @param {string} startDate: Optional non working day start date filter (inclusive) in YYYY-MM-DD format
+   * @param {string} endDate: Optional non working day end date filter (inclusive) in YYYY-MM-DD format
+   * @returns {Promise<FindMultipleOdsBusinessCentreOdsResponsesNonWorkingDaysResponse>}
    * @throws {NotFoundException} If no business centre is found
    */
-  async findMultipleBusinessCentresNonWorkingDays(centreCodes: string): Promise<FindMultipleDomBusinessCentresNonWorkingDaysResponse> {
+  async findMultipleBusinessCentresNonWorkingDays(
+    centreCodes: string,
+    startDate?: string,
+    endDate?: string,
+  ): Promise<FindMultipleOdsBusinessCentreOdsResponsesNonWorkingDaysResponse> {
     try {
       this.logger.info(`Finding multiple DOM business centres non working days %s`, centreCodes);
 
@@ -104,7 +84,7 @@ export class DomService {
         const centreCodesArray = centreCodes.split(',');
 
         for (const domCentreCode of centreCodesArray) {
-          mappedCentres[`${domCentreCode}`] = await this.findBusinessCentreNonWorkingDays(domCentreCode);
+          mappedCentres[domCentreCode] = await this.findBusinessCentreNonWorkingDays(domCentreCode, startDate, endDate);
         }
       }
 
@@ -123,18 +103,27 @@ export class DomService {
   /**
    * Find a product configuration
    * @param {string} productType: Product type
-   * @returns {GetDomProductConfigResponse}
+   * @returns {Promise<GetDomProductConfigResponse>}
+   * @throws {NotFoundException} If no product configuration is found
    */
-  findProductConfiguration(productType: string): GetDomProductConfigResponse {
-    this.logger.info('Finding DOM product configuration %s', productType);
+  async findProductConfiguration(productType: string): Promise<GetDomProductConfigResponse> {
+    try {
+      this.logger.info('Finding DOM product configuration %s', productType);
 
-    const productConfig = PRODUCT_CONFIG.find((config: GetDomProductConfigResponse) => config.productType === productType);
+      const odsProductConfig = await this.odsProductConfigService.findOne(productType);
 
-    if (productConfig) {
-      return productConfig;
+      return mapProductConfig(odsProductConfig);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        this.logger.warn('DOM product configuration %s not found %o', productType, error);
+
+        throw new NotFoundException(`No DOM product configuration found ${productType}`);
+      }
+
+      this.logger.error('Error finding DOM product configuration %s %o', productType, error);
+
+      throw new Error(`Error finding DOM product configuration ${productType}`, { cause: error });
     }
-
-    throw new NotFoundException(`No DOM product configuration found ${productType}`);
   }
 
   /**
@@ -153,7 +142,7 @@ export class DomService {
         const productTypesArray = productTypes.split(',');
 
         for (const productType of productTypesArray) {
-          mappedConfigs[`${productType}`] = await this.findProductConfiguration(productType);
+          mappedConfigs[productType] = await this.findProductConfiguration(productType);
         }
       }
 
@@ -171,11 +160,65 @@ export class DomService {
 
   /**
    * Get all product configurations
-   * @returns {GetDomProductConfigResponse[]}
+   * @returns {Promise<GetDomProductConfigResponse[]>}
    */
-  getProductConfigurations(productTypes?: string): GetDomProductConfigResponse[] {
-    this.logger.info('Getting product configurations %s', productTypes);
+  async getProductConfigurations(): Promise<GetDomProductConfigResponse[]> {
+    try {
+      this.logger.info('Getting product configurations');
 
-    return PRODUCT_CONFIG;
+      const odsProductConfigs = await this.odsProductConfigService.getAll();
+
+      return odsProductConfigs.map(mapProductConfig);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        this.logger.warn('DOM product configurations not found %o', error);
+
+        throw new NotFoundException(`No DOM product configurations found`, error);
+      }
+
+      this.logger.error('Error getting DOM product configurations %o', error);
+
+      throw new Error(`Error getting DOM product configurations`, { cause: error });
+    }
+  }
+
+  /**
+   * Get interest rates for a ticker within a date range from DOM
+   * @param {string} rateCode: Interest rate ticker code
+   * @param {string} endDate: End date (inclusive) to retrieve interest rates until
+   * @param {string} startDate: Optional start date (inclusive) to retrieve interest rates from. If omitted, only the rate for the end date is returned.
+   * @returns {Promise<GetDomInterestRateResponseDto[]>}
+   * @throws {BadRequestException} If the start date is not before the end date
+   */
+  getInterestRates(rateCode: string, endDate: string, startDate?: string): Promise<GetDomInterestRateResponseDto[]> {
+    this.logger.info('Getting DOM interest rates for %s', rateCode);
+
+    if (startDate && new Date(startDate) > new Date(endDate)) {
+      this.logger.warn('Unable to get DOM interest rates: start date is after end date %s > %s', startDate, endDate);
+
+      throw new BadRequestException('The start date must be on or before the end date');
+    }
+
+    return this.odsService.getInterestRates(rateCode, endDate, startDate);
+  }
+
+  /**
+   * Get compounding index values for a ticker within a date range from DOM.
+   * @param {string} rateCode: Compounding index ticker code
+   * @param {string} endDate: End date (inclusive) to retrieve compounding indices until
+   * @param {string} startDate: Optional start date (inclusive) to retrieve compounding indices from. If omitted, only the index for the end date is returned.
+   * @returns {Promise<GetDomCompoundingIndexResponseDto[]>}
+   * @throws {BadRequestException} If the start date is not before the end date
+   */
+  getCompoundingIndices(rateCode: string, endDate: string, startDate?: string): Promise<GetDomCompoundingIndexResponseDto[]> {
+    this.logger.info('Getting DOM compounding indices for %s', rateCode);
+
+    if (startDate && new Date(startDate) > new Date(endDate)) {
+      this.logger.warn('Unable to get DOM compounding indices: start date is after end date %s > %s', startDate, endDate);
+
+      throw new BadRequestException('The start date must be on or before the end date');
+    }
+
+    return this.odsService.getCompoundingIndices(rateCode, endDate, startDate);
   }
 }

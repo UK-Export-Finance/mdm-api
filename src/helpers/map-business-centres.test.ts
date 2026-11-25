@@ -1,4 +1,4 @@
-import { DOM_BUSINESS_CENTRES } from '@ukef/constants';
+import { EXAMPLES } from '@ukef/constants';
 
 import { mapBusinessCentre } from './map-business-centre';
 import { mapBusinessCentres } from './map-business-centres';
@@ -6,13 +6,13 @@ import { mapBusinessCentres } from './map-business-centres';
 describe('mapBusinessCentres', () => {
   it('should return an array of mapped DOM business centres', () => {
     // Arrange
-    const businessCentres = Object.values(DOM_BUSINESS_CENTRES);
+    const mockBusinessCentres = EXAMPLES.DOM.BUSINESS_CENTRES;
 
     // Act
-    const result = mapBusinessCentres(businessCentres);
+    const result = mapBusinessCentres(mockBusinessCentres);
 
     // Assert
-    const expected = businessCentres.map((centre) => mapBusinessCentre(centre));
+    const expected = mockBusinessCentres.map((centre) => mapBusinessCentre(centre));
 
     expect(result).toEqual(expected);
   });

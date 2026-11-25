@@ -1,10 +1,10 @@
+import { jest } from '@jest/globals';
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
-import { mapOdsClassification } from '@ukef/helpers';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
+import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
 
-import { ODS_ENTITIES, ODS_QUERY_PARAM_VALUES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
+import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { OdsObligationSubtypeService } from './ods-obligation-subtype.service';
 import { OdsProductConfigService } from './ods-product-config.service';
 import { OdsStoredProcedureService } from './ods-stored-procedure.service';
@@ -19,12 +19,12 @@ describe('OdsObligationSubtypeService - findOne', () => {
 
   beforeEach(() => {
     mockQueryRunner = {
-      query: jest.fn(),
-      release: jest.fn(),
+      query: jest.fn<QueryRunner['query']>(),
+      release: jest.fn<QueryRunner['release']>(),
     } as unknown as jest.Mocked<QueryRunner>;
 
     mockDataSource = {
-      createQueryRunner: jest.fn().mockReturnValue(mockQueryRunner),
+      createQueryRunner: jest.fn<DataSource['createQueryRunner']>().mockReturnValue(mockQueryRunner),
     } as unknown as jest.Mocked<DataSource>;
 
     odsStoredProcedureService = new OdsStoredProcedureService(mockDataSource);
@@ -33,22 +33,21 @@ describe('OdsObligationSubtypeService - findOne', () => {
     service = new OdsObligationSubtypeService(odsStoredProcedureService, odsProductConfigService, mockLogger);
   });
 
-  const mockStoredProcedureOutput = `{
-    "message": "${STORED_PROCEDURE.SUCCESS}",
-    "status": "${STORED_PROCEDURE.SUCCESS}",
-    "total_result_count": 1,
-    "results": [
-      {
-        "classification_type": "${EXAMPLES.ODS.OBLIGATION_CLASSIFICATION.classification_type}",
-        "classification_type_code": "${EXAMPLES.ODS.OBLIGATION_CLASSIFICATION.classification_type_code}",
-        "classification_code": "${EXAMPLES.ODS.OBLIGATION_CLASSIFICATION.classification_code}",
-        "classification_description": "${EXAMPLES.ODS.OBLIGATION_CLASSIFICATION.classification_description}",
-        "classification_active_flag": ${EXAMPLES.ODS.OBLIGATION_CLASSIFICATION.classification_active_flag}
-      }
-    ]
-  }`;
-
   beforeEach(() => {
+    const mockStoredProcedureOutput = `{
+      "message": "${STORED_PROCEDURE.SUCCESS}",
+      "status": "${STORED_PROCEDURE.SUCCESS}",
+      "total_result_count": 1,
+      "results": [
+        {
+          "code": "${EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.code}",
+          "name": "${EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.name}",
+          "balanceCategory": "${EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.balanceCategory}",
+          "obligationSubtypeActive": ${EXAMPLES.ODS.CONFIGURATION_OBLIGATION_SUBTYPE.obligationSubtypeActive}
+        }
+      ]
+    }`;
+
     jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
   });
 
@@ -58,11 +57,10 @@ describe('OdsObligationSubtypeService - findOne', () => {
 
     // Assert
     const expectedStoredProcedureInput: OdsStoredProcedureInput = odsStoredProcedureService.createInput({
-      entityToQuery: ODS_ENTITIES.OBLIGATION_CLASSIFICATION,
+      entityToQuery: ODS_ENTITIES.CONFIGURATION_OBLIGATION_SUBTYPE,
       queryPageSize: 1,
       queryParameters: {
-        classification_type_code: ODS_QUERY_PARAM_VALUES.OBLIGATION_SUBTYPE,
-        classification_code: EXAMPLES.OBLIGATION_SUBTYPE.CODE,
+        code: EXAMPLES.OBLIGATION_SUBTYPE.CODE,
       },
     });
 
@@ -75,10 +73,12 @@ describe('OdsObligationSubtypeService - findOne', () => {
     const result = await service.findOne(EXAMPLES.OBLIGATION_SUBTYPE.CODE);
 
     // Assert
-    const { results } = JSON.parse(mockStoredProcedureOutput);
-    const [jsonResult] = results;
-
-    const expected = mapOdsClassification(jsonResult);
+    const expected = {
+      code: 'OST012',
+      description: 'BSS Advance Payment Guarantee',
+      balanceCategory: 'PRIN1',
+      isActive: true,
+    };
 
     expect(result).toEqual(expected);
   });

@@ -1,18 +1,19 @@
-import { PostEmailsGenerator } from '@ukef-test/support/generator/post-emails-generator';
-import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
+import { jest } from '@jest/globals';
 import { when } from 'jest-when';
 import { PinoLogger } from 'nestjs-pino';
+import { PostEmailsGenerator } from '@ukef-test/support/generator/post-emails-generator';
+import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 
-import { GovukNotifyService } from '../../helper-modules/govuk-notify/govuk-notify.service';
+import { GovukNotifyService } from '@ukef/helper-modules/govuk-notify/govuk-notify.service';
 import { EmailsService } from './emails.service';
 
 describe('EmailsService', () => {
   const valueGenerator = new RandomValueGenerator();
 
   const loggerMock = {} as PinoLogger;
-  loggerMock.error = jest.fn();
+  loggerMock.error = jest.fn<PinoLogger['error']>();
 
-  const govukNotifyServiceSendEmail = jest.fn();
+  const govukNotifyServiceSendEmail = jest.fn<GovukNotifyService['sendEmail']>();
   const govukNotifyService = new GovukNotifyService(loggerMock);
   govukNotifyService.sendEmail = govukNotifyServiceSendEmail;
   const service = new EmailsService(govukNotifyService);

@@ -21,6 +21,12 @@ export class GetAccrualScheduleBaseDto {
   readonly accrualRateType: string;
 
   @ApiProperty({
+    description: 'Accrual schedule balance category',
+    example: EXAMPLES.ODS.ACCRUAL_SCHEDULE.balanceCategory,
+  })
+  readonly balanceCategory: string;
+
+  @ApiProperty({
     description: 'Accrual schedule base balance category',
     example: EXAMPLES.ODS.ACCRUAL_SCHEDULE.baseBalanceCategory,
   })

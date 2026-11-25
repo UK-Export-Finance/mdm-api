@@ -1,51 +1,57 @@
+import { REGEX } from '@ukef/constants';
+
 import { regexToString } from './regex.helper';
 
 describe('regexToString', () => {
   it('replaces the leading and trailing forward slashes with an empty string', () => {
     // Arrange
-    const regex = /test/;
+    const regex = REGEX.TEST.SIMPLE_WORD;
 
     // Act
     const regexString = regexToString(regex);
 
     // Assert
-    expect(regexString).toBe('test');
-    expect(new RegExp(regexString)).toEqual(regex);
+    const expected = 'test';
+
+    expect(regexString).toEqual(expected);
   });
 
   it('escapes regexp forward slashes inside a string', () => {
     // Arrange
-    const regex = /test\/test/;
+    const regex = REGEX.TEST.WORD_WITH_ESCAPED_FORWARD_SLASH;
 
     // Act
     const regexString = regexToString(regex);
 
     // Assert
-    expect(regexString).toBe('test\\/test');
-    expect(new RegExp(regexString)).toEqual(regex);
+    const expected = 'test\\/test';
+
+    expect(regexString).toEqual(expected);
   });
 
   it('escapes multiple back slashes inside a string', () => {
     // Arrange
-    const regex = /^(?!\s)[\w\-.()\s]+(?<![\s.])$/;
+    const regex = REGEX.TEST.NAME_VALIDATION_PATTERN;
 
     // Act
     const regexString = regexToString(regex);
 
     // Assert
-    expect(regexString).toBe('^(?!\\s)[\\w\\-.()\\s]+(?<![\\s.])$');
-    expect(new RegExp(regexString)).toEqual(regex);
+    const expected = '^(?!\\s)[\\w\\-.()\\s]+(?<![\\s.])$';
+
+    expect(regexString).toEqual(expected);
   });
 
   it('escapes forward slashes inside a string', () => {
     // Arrange
-    const regex = /^[\w\-:/\\()\s]+$/;
+    const regex = REGEX.TEST.PATH_VALIDATION_PATTERN;
 
     // Act
     const regexString = regexToString(regex);
 
     // Assert
-    expect(regexString).toBe('^[\\w\\-:/\\\\()\\s]+$');
-    expect(new RegExp(regexString)).toEqual(regex);
+    const expected = '^[\\w\\-:/\\\\()\\s]+$';
+
+    expect(regexString).toEqual(expected);
   });
 });

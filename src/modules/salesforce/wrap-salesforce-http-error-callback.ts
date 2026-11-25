@@ -1,4 +1,4 @@
-import { AxiosError } from 'axios';
+import { isAxiosError } from 'axios';
 import { ObservableInput, throwError } from 'rxjs';
 
 import { SalesforceException } from './exception/salesforce.exception';
@@ -10,19 +10,26 @@ export const createWrapSalesforceHttpGetErrorCallback =
   ({ messageForUnknownError, knownErrors }: { messageForUnknownError: string; knownErrors: KnownErrors }): SalesforceHttpErrorCallback =>
   (error: Error) => {
     let errorString;
-    if (error instanceof AxiosError && error.response) {
+
+    /**
+     * Use the isAxiosError type guard rather than `instanceof AxiosError`: @nestjs/axios is ESM and loads its own
+     * copy of axios, so an error it throws is not an `instanceof` the AxiosError class imported here via CJS.
+     */
+    if (isAxiosError(error) && error.response) {
       if (typeof error.response.data === 'object') {
         errorString = JSON.stringify(error.response.data);
       }
+
       if (typeof error.response.data === 'string') {
         errorString = error.response.data;
       }
+
       if (errorString) {
         const errorStringInLowerCase = errorString.toLowerCase();
 
-        knownErrors.forEach(({ caseInsensitiveSubstringToFind, throwError }) => {
+        knownErrors.forEach(({ caseInsensitiveSubstringToFind, throwError: throwKnownError }) => {
           if (errorStringInLowerCase.includes(caseInsensitiveSubstringToFind.toLowerCase())) {
-            return throwError(error);
+            throwKnownError(error);
           }
         });
       }

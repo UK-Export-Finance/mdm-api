@@ -1,20 +1,25 @@
+import { jest } from '@jest/globals';
+import { AxiosError, AxiosResponse } from 'axios';
+import { PinoLogger } from 'nestjs-pino';
+import type { NotifyClient as NotifyClientType } from 'notifications-node-client';
 import { BadRequestException, ForbiddenException, InternalServerErrorException, UnauthorizedException, UnprocessableEntityException } from '@nestjs/common';
 import { GOVUK_NOTIFY } from '@ukef/constants';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
-import { AxiosError, AxiosResponse } from 'axios';
-import { PinoLogger } from 'nestjs-pino';
-import { NotifyClient } from 'notifications-node-client';
 
-import { convertStringToBuffer } from '../../helpers';
-import { PostEmailsRequestDto } from '../../modules/emails/dto/post-emails-request.dto';
+import { convertStringToBuffer } from '@ukef/helpers';
+import { PostEmailsRequestDto } from '@ukef/modules/emails/dto/post-emails-request.dto';
 import expectedSendEmailsResponse from './examples/example-response-for-send-emails.json';
-import { GovukNotifyService } from './govuk-notify.service';
+import type { GovukNotifyService } from './govuk-notify.service';
 
 jest.mock('notifications-node-client');
 
 describe('GovukNotifyService', () => {
+  let NotifyClient: typeof NotifyClientType;
+  let sendEmailMethodMock: jest.SpiedFunction<NotifyClientType['sendEmail']>;
+  let prepareUploadMethodMock: jest.SpiedFunction<NotifyClientType['prepareUpload']>;
+  let service: GovukNotifyService;
   const valueGenerator = new RandomValueGenerator();
-  const loggerError = jest.fn();
+  const loggerError = jest.fn<PinoLogger['error']>();
 
   const govUkNotifyKey = valueGenerator.string({ length: 10 });
   const sendToEmailAddress = valueGenerator.email();
@@ -39,6 +44,7 @@ describe('GovukNotifyService', () => {
     config: {} as AxiosResponse['config'],
     data: expectedSendEmailsResponse,
   };
+
   const mockPrepareUploadResponse = {
     file: 'https://example.gov.uk/file.csv',
     filename: 'file.csv',
@@ -46,13 +52,16 @@ describe('GovukNotifyService', () => {
     retention_period: null,
   };
 
-  const sendEmailMethodMock = jest.spyOn(NotifyClient.prototype, 'sendEmail').mockImplementation(() => Promise.resolve(mockSendEmailResponse));
-
-  const prepareUploadMethodMock = jest.spyOn(NotifyClient.prototype, 'prepareUpload').mockImplementation(() => mockPrepareUploadResponse);
-
   const logger = new PinoLogger({});
   logger.error = loggerError;
-  const service = new GovukNotifyService(logger);
+
+  beforeAll(async () => {
+    ({ NotifyClient } = await import('notifications-node-client'));
+    sendEmailMethodMock = jest.spyOn(NotifyClient.prototype, 'sendEmail').mockImplementation(() => Promise.resolve(mockSendEmailResponse));
+    prepareUploadMethodMock = jest.spyOn(NotifyClient.prototype, 'prepareUpload').mockImplementation(() => mockPrepareUploadResponse);
+    const { GovukNotifyService } = await import('./govuk-notify.service.js');
+    service = new GovukNotifyService(logger);
+  });
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -74,31 +83,34 @@ describe('GovukNotifyService', () => {
       return new AxiosError(`Request failed with status code ${status}`, status.toString(), null, null, response);
     };
 
-    it('calls GOV.UK Notify client constructor with the correct argument', async () => {
+    it('should call GOV.UK Notify client constructor with the correct argument', async () => {
+      // Act
       await service.sendEmail(govUkNotifyKey, { sendToEmailAddress, templateId, personalisation });
 
+      // Assert
       expect(NotifyClient).toHaveBeenCalledTimes(1);
       expect(NotifyClient).toHaveBeenCalledWith(govUkNotifyKey);
     });
 
-    it('calls GOV.UK Notify client sendEmail function with the correct arguments', async () => {
+    it('should call GOV.UK Notify client sendEmail function with the correct arguments', async () => {
+      // Act
       await service.sendEmail(govUkNotifyKey, { sendToEmailAddress, templateId, personalisation, reference });
 
+      // Assert
       expect(sendEmailMethodMock).toHaveBeenCalledTimes(1);
       expect(sendEmailMethodMock).toHaveBeenCalledWith(templateId, sendToEmailAddress, { personalisation, reference });
     });
 
     describe('when a file property is provided', () => {
-      it('calls GOV.UK Notify client prepareUpload function with the correct arguments', async () => {
+      it('should call GOV.UK Notify client prepareUpload function with the correct arguments', async () => {
         // Arrange
         const mockParams: PostEmailsRequestDto = {
           sendToEmailAddress,
           templateId,
           personalisation: filePersonalisation,
           reference,
-          file: filePersonalisation.file,
         };
-        const buffer = convertStringToBuffer(mockParams.file);
+        const buffer = convertStringToBuffer(filePersonalisation.file);
 
         // Act
         await service.sendEmail(govUkNotifyKey, mockParams);
@@ -108,23 +120,36 @@ describe('GovukNotifyService', () => {
         expect(prepareUploadMethodMock).toHaveBeenCalledWith(buffer, { confirmEmailBeforeDownload: true });
       });
 
-      it('calls GOV.UK Notify client sendEmail function with the correct arguments', async () => {
+      it('should call GOV.UK Notify client sendEmail function with the correct arguments', async () => {
         await service.sendEmail(govUkNotifyKey, { sendToEmailAddress, templateId, personalisation: filePersonalisation, reference });
 
         expect(sendEmailMethodMock).toHaveBeenCalledTimes(1);
 
+        const { file, ...personalisationWithoutFile } = filePersonalisation;
         const expectedPersonalisation = {
-          ...filePersonalisation,
-          linkToFile: mockPrepareUploadResponse.file,
+          ...personalisationWithoutFile,
+          linkToFile: mockPrepareUploadResponse,
         };
 
         expect(sendEmailMethodMock).toHaveBeenCalledWith(templateId, sendToEmailAddress, { personalisation: expectedPersonalisation, reference });
       });
+
+      it('should remove the raw file property from the personalisation sent to GOV.UK Notify', async () => {
+        // Act
+        await service.sendEmail(govUkNotifyKey, { sendToEmailAddress, templateId, personalisation: filePersonalisation, reference });
+
+        // Assert
+        const [, , { personalisation: sentPersonalisation }] = sendEmailMethodMock.mock.calls[0];
+
+        expect(sentPersonalisation).not.toHaveProperty('file');
+      });
     });
 
-    it('returns a 201 response from GOV.UK Notify when sending the email is successful', async () => {
+    it('should return a 201 response from GOV.UK Notify when sending the email is successful', async () => {
+      // Act
       const response = await service.sendEmail(govUkNotifyKey, { sendToEmailAddress, templateId, personalisation });
 
+      // Assert
       expect(response).toEqual({ status: 201, data: expectedSendEmailsResponse });
     });
 
@@ -132,72 +157,96 @@ describe('GovukNotifyService', () => {
       {
         exceptionClass: BadRequestException,
         status: 400,
+        error: 'Bad Request',
       },
       {
         exceptionClass: UnauthorizedException,
         status: 401,
+        error: 'Unauthorized',
       },
       {
         exceptionClass: ForbiddenException,
         status: 403,
+        error: 'Forbidden',
       },
       {
         exceptionClass: InternalServerErrorException,
         status: 500,
+        error: 'Internal Server Error',
       },
-    ])('throws exception $exceptionName for unexpected $status', async ({ exceptionClass, status }) => {
+    ])('should throw $error exception for unexpected $status', async ({ exceptionClass, status, error }) => {
+      // Arrange
       const notifyError = generateNotifyError(status, errorMessage);
       jest.mocked(sendEmailMethodMock).mockImplementation(() => Promise.reject(notifyError));
 
+      // Act
       const resultPromise = service.sendEmail(govUkNotifyKey, { sendToEmailAddress, templateId, personalisation });
 
+      // Assert
       expect(sendEmailMethodMock).toHaveBeenCalledTimes(1);
+
       await expect(resultPromise).rejects.toBeInstanceOf(exceptionClass);
       await expect(resultPromise).rejects.toThrow(errorMessage);
       await expect(resultPromise).rejects.toHaveProperty('status', status);
       await expect(resultPromise).rejects.toHaveProperty('cause', notifyError);
-      await expect(resultPromise).rejects.toHaveProperty('response', { message: errorMessage, statusCode: status });
+      await expect(resultPromise).rejects.toHaveProperty('response', { message: errorMessage, statusCode: status, error });
+
       expect(loggerError).toHaveBeenCalledTimes(1);
       expect(loggerError).toHaveBeenCalledWith(notifyError);
     });
 
-    it('throws generic Error exception for unexpected status', async () => {
+    it('should throw generic Error exception for unexpected status', async () => {
+      // Arrange
       const unexpectedStatus = valueGenerator.integer({ min: 900, max: 999 });
       const notifyError = generateNotifyError(unexpectedStatus, errorMessage);
       jest.mocked(sendEmailMethodMock).mockImplementation(() => Promise.reject(notifyError));
 
+      // Act
       const resultPromise = service.sendEmail(govUkNotifyKey, { sendToEmailAddress, templateId, personalisation });
 
+      // Assert
       expect(sendEmailMethodMock).toHaveBeenCalledTimes(1);
+
       await expect(resultPromise).rejects.toBeInstanceOf(Error);
       await expect(resultPromise).rejects.toThrow(errorMessage);
       await expect(resultPromise).rejects.toHaveProperty('message', errorMessage);
+
       expect(loggerError).toHaveBeenCalledTimes(1);
       expect(loggerError).toHaveBeenCalledWith(notifyError);
     });
 
-    it('throws generic Error exception for error without error message', async () => {
+    it('should throw generic Error exception for error without error message', async () => {
+      // Arrange
       const notifyError = generateNotifyError(400);
       jest.mocked(sendEmailMethodMock).mockImplementation(() => Promise.reject(notifyError));
 
+      // Act
       const resultPromise = service.sendEmail(govUkNotifyKey, { sendToEmailAddress, templateId, personalisation });
 
+      // Assert
       expect(sendEmailMethodMock).toHaveBeenCalledTimes(1);
+
       await expect(resultPromise).rejects.toBeInstanceOf(Error);
       await expect(resultPromise).rejects.toThrow('NotifyClient failed with unexpected error %o');
       await expect(resultPromise).rejects.toHaveProperty('message', 'NotifyClient failed with unexpected error %o');
+
       expect(loggerError).toHaveBeenCalledTimes(1);
       expect(loggerError).toHaveBeenCalledWith(notifyError);
     });
 
-    it('throws exception UnprocessableEntityException for empty response from GOV.UK Notify client', async () => {
+    it('should throw exception UnprocessableEntityException for empty response from GOV.UK Notify client', async () => {
+      // Arrange
       jest.mocked(sendEmailMethodMock).mockImplementation(() => Promise.resolve(undefined as unknown as AxiosResponse));
 
+      // Act
       const resultPromise = service.sendEmail(govUkNotifyKey, { sendToEmailAddress, templateId, personalisation });
 
+      // Assert
       expect(sendEmailMethodMock).toHaveBeenCalledTimes(1);
+
       await expect(resultPromise).rejects.toBeInstanceOf(UnprocessableEntityException);
       await expect(resultPromise).rejects.toThrow('No GOV.UK Notify response');
+
       expect(loggerError).toHaveBeenCalledTimes(1);
       expect(loggerError).toHaveBeenCalledWith('Empty response from GOV.UK Notify');
     });

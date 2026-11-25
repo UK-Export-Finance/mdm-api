@@ -1,3 +1,4 @@
+import { REGEX } from '@ukef/constants';
 import { Api } from '@ukef-test/support/api';
 
 describe('Numbers', () => {
@@ -38,7 +39,7 @@ describe('Numbers', () => {
     expect(postResponse.status).toBe(201);
 
     // Act - get the number
-    const getResponse = await api.get('/api/v1/numbers?type=' + postResponse.body[0].type + '&ukefId=' + postResponse.body[0].maskedId);
+    const getResponse = await api.get(`/api/v1/numbers?type=${postResponse.body[0].type}&ukefId=${postResponse.body[0].maskedId}`);
 
     // Assert
     expect(getResponse.status).toBe(200);
@@ -123,7 +124,7 @@ describe('Numbers', () => {
     expect(status).toBe(201);
     expect(body).toHaveLength(1);
     expect(body[0].id).toBeDefined();
-    expect(body[0].maskedId).toMatch(/^\d*$/);
+    expect(body[0].maskedId).toMatch(REGEX.TEST.NUMERIC_VALUE);
     expect(body[0].type).toBe(1);
     expect(body[0].createdBy).toBe('Jest');
     expect(body[0].createdDatetime).toBeDefined();
@@ -147,7 +148,7 @@ describe('Numbers', () => {
     expect(status).toBe(201);
     expect(body).toHaveLength(1);
     expect(body[0].id).toBeDefined();
-    expect(body[0].maskedId).toMatch(/^\d*$/);
+    expect(body[0].maskedId).toMatch(REGEX.TEST.NUMERIC_VALUE);
     expect(body[0].type).toBe(1);
     expect(body[0].createdBy).toBe('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mau');
     expect(body[0].createdDatetime).toBeDefined();
@@ -273,13 +274,13 @@ describe('Numbers', () => {
     expect(status).toBe(201);
     expect(body).toHaveLength(4);
 
-    body.forEach((responseUkefIdRecord, i) => {
+    body.forEach((responseUkefIdRecord, index) => {
       expect(responseUkefIdRecord.id).toBeDefined();
-      expect(responseUkefIdRecord.maskedId).toMatch(/^\d*$/);
-      expect(responseUkefIdRecord.type).toEqual(payload[`${i}`].numberTypeId);
-      expect(responseUkefIdRecord.createdBy).toEqual(payload[`${i}`].createdBy);
+      expect(responseUkefIdRecord.maskedId).toMatch(REGEX.TEST.NUMERIC_VALUE);
+      expect(responseUkefIdRecord.type).toEqual(payload[`${index}`].numberTypeId);
+      expect(responseUkefIdRecord.createdBy).toEqual(payload[`${index}`].createdBy);
       expect(responseUkefIdRecord.createdDatetime).toBeDefined();
-      expect(responseUkefIdRecord.requestingSystem).toEqual(payload[`${i}`].requestingSystem);
+      expect(responseUkefIdRecord.requestingSystem).toEqual(payload[`${index}`].requestingSystem);
     });
   });
 
@@ -322,17 +323,19 @@ describe('Numbers', () => {
 
     // Go through results, group by type and validate the order.
     body.reduce((previousValues, newUkefId) => {
+      const modifiedPreviousValues = previousValues;
+
       if (!previousValues[newUkefId.type]) {
         // First call for this type, initialize.
-        previousValues[newUkefId.type] = '';
+        modifiedPreviousValues[newUkefId.type] = '';
       }
 
       // Comparing two strings
-      expect(previousValues[newUkefId.type] < newUkefId.maskedId).toBeTruthy();
+      expect(modifiedPreviousValues[newUkefId.type] < newUkefId.maskedId).toBeTruthy();
 
-      previousValues[newUkefId.type] = newUkefId.maskedId;
+      modifiedPreviousValues[newUkefId.type] = newUkefId.maskedId;
 
-      return previousValues;
+      return modifiedPreviousValues;
     }, Object.create(null));
   });
 });

@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { Test, TestingModule } from '@nestjs/testing';
 import Chance from 'chance';
 import { Response } from 'express';
@@ -11,7 +12,7 @@ const chance = new Chance();
 // Minimal mock of express Response. "as any" is required to get around Typescript type check.
 // TODO: this can be rewritten to use mock library.
 const mockResponseObject = {
-  set: jest.fn().mockReturnValue({}),
+  set: jest.fn<Response['set']>().mockReturnThis(),
 } as any as Response;
 
 describe('PremiumSchedulesController', () => {
@@ -26,24 +27,24 @@ describe('PremiumSchedulesController', () => {
         {
           provide: PremiumSchedulesService,
           useValue: {
-            find: jest.fn().mockResolvedValue([
+            find: jest.fn<PremiumSchedulesService['find']>().mockResolvedValue([
               {
                 id: chance.natural(),
                 facilityURN: chance.natural({ min: 10000000, max: 99999999 }).toString(),
-                calculationDate: chance.word(),
+                calculationDate: chance.date(),
                 income: chance.natural(),
-                incomePerDay: chance.word(),
-                exposure: chance.currency().code,
+                incomePerDay: chance.natural(),
+                exposure: chance.natural(),
                 period: chance.natural(),
-                daysInPeriod: chance.word(),
-                effectiveFrom: chance.date({ string: true }),
-                effectiveTo: chance.date({ string: true }),
-                created: chance.date({ string: true }),
-                updated: chance.date({ string: true }),
+                daysInPeriod: chance.natural(),
+                effectiveFrom: chance.date(),
+                effectiveTo: chance.date().toISOString(),
+                created: chance.date(),
+                updated: chance.date(),
                 isActive: 'Y',
               },
             ]),
-            create: jest.fn().mockResolvedValue({}),
+            create: jest.fn<PremiumSchedulesService['create']>().mockResolvedValue([]),
           },
         },
       ],

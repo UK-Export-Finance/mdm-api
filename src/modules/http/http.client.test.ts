@@ -1,21 +1,22 @@
+import { jest } from '@jest/globals';
 import { HttpService } from '@nestjs/axios';
-import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { when } from 'jest-when';
 import { ObservableInput, of, throwError } from 'rxjs';
+import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 
 import { HttpClient } from './http.client';
 
 describe('HttpClient', () => {
   const valueGenerator = new RandomValueGenerator();
 
-  let httpServiceGet: jest.Mock;
+  let httpServiceGet: jest.SpiedFunction<HttpService['get']>;
   let client: HttpClient;
 
   beforeEach(() => {
     const httpService = new HttpService();
-    httpServiceGet = jest.fn();
-    httpService.get = httpServiceGet;
+
+    httpServiceGet = jest.spyOn(httpService, 'get').mockReset();
 
     client = new HttpClient(httpService);
   });
@@ -45,7 +46,7 @@ describe('HttpClient', () => {
     let onError: (error: Error) => ObservableInput<never>;
 
     beforeEach(() => {
-      onError = jest.fn();
+      onError = jest.fn<typeof onError>();
     });
 
     describe('when the HttpService succeeds', () => {

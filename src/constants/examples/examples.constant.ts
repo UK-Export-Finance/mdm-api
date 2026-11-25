@@ -1,17 +1,45 @@
-import { DOM_BUSINESS_CENTRES } from '../dom.constant';
-import { ODS_BUSINESS_CENTRES, ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES } from '../ods.constant';
+import { ODS_SCHEDULE_CLASSIFICATION_TYPE_CODES } from '@ukef/constants/ods.constant';
+import { PRODUCT_CONFIG, PRODUCT_TYPES } from './product-config.examples.constant';
 
 const BUSINESS_CENTRE = {
-  ...DOM_BUSINESS_CENTRES.GH_ACC,
+  CODE: 'GH_ACC',
+  NAME: 'Accra',
+  DESCRIPTION: 'Location',
+  IS_ACTIVE: true,
   NON_WORKING_DAY: {
     NAME: 'Weekend',
     DATE: '2025-07-05',
   },
 };
 
-const COUNTERPARTY_ROLE_TYPES = {
-  BROKER: 'BROKER',
-  GUARANTOR: 'GUARANTOR',
+const BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE = {
+  CODE: 'AO_LAD',
+  NAME: 'Luanda',
+  DESCRIPTION: 'Location',
+  IS_ACTIVE: true,
+  NON_WORKING_DAY: {
+    NAME: 'Weekend',
+    DATE: '2026-03-04',
+  },
+};
+
+const DATE_START = '2026-01-01';
+const DATE_END = '2026-12-31';
+const CUSTOMER_SALESFORCE_ID = '000A000000a1BBbCDE';
+
+const FEE_TYPE = {
+  FEE_TYPE: 'CMF',
+  NAME: 'Commitment Fee',
+  CLASSIFICATION: 'Accruing',
+  EXPENSE_INCOME: 'Income',
+  IS_ACTIVE: true,
+  BALANCE_CATEGORY: 'CMF',
+  BASE_BALANCE_CATEGORY: 'On facility available amount',
+  NON_FACILITY_CURRENCY_SETTLEMENT: false,
+  CAPPED_BASE_BALANCE: false,
+  EFFECTIVE_DATE_DEFAULT: 'Facility Signed Date',
+  MATURITY_DATE_DEFAULT: 'Facility Availability End Date',
+  REINSURER_APPLICABLE: false,
 };
 
 const INDUSTRY = {
@@ -24,24 +52,26 @@ const INDUSTRY = {
 };
 
 const OBLIGATION_SUBTYPE = {
-  TYPE: 'Obligation Sub-Type',
-  TYPE_CODE: 'obligationSubtype',
   CODE: 'OST012',
   DESCRIPTION: 'BSS Advance Payment Guarantee',
+  BALANCE_CATEGORY: 'PRIN1',
   IS_ACTIVE: true,
 };
 
-const PRODUCT_CONFIG_REQUIREMENT = {
-  NOT_APPLICABLE: 'NOT_APPLICABLE',
-  OPTIONAL: 'OPTIONAL',
-  REQUIRED: 'REQUIRED',
+const ODS_CREDIT_TYPES = {
+  TERM: 'Term',
+  REVOLVER: 'Revolver',
 };
 
-const PRODUCT_TYPES = {
-  BIP: 'PRT001',
-  EXIP: 'PRT002',
-  BSS: 'PRT003',
-  GEF: 'PRT004',
+const CURRENCIES = {
+  USD: {
+    ISO_CODE: 'USD',
+    NAME: 'United States Dollar',
+  },
+  JPY: {
+    ISO_CODE: 'JPY',
+    NAME: 'Japanese Yen',
+  },
 };
 
 export const EXAMPLES = {
@@ -57,6 +87,7 @@ export const EXAMPLES = {
     CODE: 'CTL01',
     NAME: 'Contractual Interest Fixed Rate',
     ACCRUAL_RATE_TYPE: 'Fixed',
+    BALANCE_CATEGORY: 'Int',
     BASE_BALANCE_CATEGORY: 'On Principal Drawn Amount',
     INCOME_CLASS_CODE: 'Income',
     IS_ACTIVE: true,
@@ -78,6 +109,7 @@ export const EXAMPLES = {
     },
   },
   BUSINESS_CENTRE,
+  BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE,
   COMPANIES_HOUSE_REGISTRATION_NUMBER: '00000001',
   COMPANIES_HOUSE_INDUSTRY_CODE: '25920',
   COMPANIES_HOUSE_INDUSTRY_CODE_FOUR_DIGITS: '1001',
@@ -85,6 +117,7 @@ export const EXAMPLES = {
     ROLE_TYPE: 'CRT001',
     NAME: 'Exporter',
     HAS_SHARE_PERCENTAGE: false,
+    HAS_ASSOCIATED_PAYMENT_CODE: false,
     IS_ACTIVE: true,
   },
   CREDIT_RISK_RATINGS: [
@@ -108,6 +141,7 @@ export const EXAMPLES = {
     },
   ],
   CUSTOMER: {
+    COMPANY_NAME: 'Mock testing LTD',
     COMPANYREG: '06012345',
     CREDIT_CLASSIFICATION_STATUS: {
       GOOD: 'Good',
@@ -115,15 +149,16 @@ export const EXAMPLES = {
     CREDIT_CLASSIFICATION_DATE: '01/01/1970',
     CREDIT_RISK_RATING: 'B+',
     CREDIT_RISK_RATING_DATE: '1989-09-20',
+    CUSTOMER_TYPE: 'AIRLINE',
     DNB_NUMBER: '12341234',
-    NAME: 'Testing Systems Ltd',
+    NAME: 'Mock name',
     PARTYURN: '00302069',
     PROBABILITY_OF_DEFAULT: 14.1,
     RISK_ENTITY: {
       CORPORATE: 'Corporate',
     },
     LOSS_GIVEN_DEFAULT: 50,
-    SALESFORCE_ID: '000A000000a1BBbCDE',
+    SALESFORCE_ID: CUSTOMER_SALESFORCE_ID,
     SALESFORCE_IS_LEGACY: false,
     SALESFORCE_SUBTYPE: 'Alternative Finance Provider',
     SALESFORCE_TYPE: 'Association',
@@ -131,6 +166,47 @@ export const EXAMPLES = {
     UK_INDUSTRY_NAME: 'AGRICULTURE, HORTICULTURE & FISHERIES',
     UK_INDUSTRY_SECTOR_NAME: 'CIVIL: AGRICULTURE, HORTICULTURE & FISHERIES',
   },
+  SALESFORCE_ACCOUNT: {
+    ATTRIBUTES_TYPE: 'Account',
+    ATTRIBUTES_URL: `/services/data/v53.0/sobjects/Account/${CUSTOMER_SALESFORCE_ID}`,
+    BILLING_ADDRESS: {
+      CITY: 'Shenzhen',
+      COUNTRY: 'China',
+      COUNTRY_CODE: 'CN',
+      POSTAL_CODE: '518101',
+      STATE: 'Guangdong',
+      STATE_CODE: '44',
+      STREET: 'Kind Glacier Building',
+    },
+    PHOTO_URL: `/services/images/photo/${CUSTOMER_SALESFORCE_ID}`,
+    CURRENCY_ISO_CODE: 'GBP',
+    OWNER_ID: '0054K000004ruN8QAI',
+    CREATED_DATE: '2022-11-07T11:52:41.000+0000',
+    CREATED_BY_ID: '0054K000004ruN8QAI',
+    LAST_MODIFIED_DATE: '2026-08-27T15:00:34.000+0000',
+    LAST_MODIFIED_BY_ID: '0053L000004brHOWAY',
+    SYSTEM_MODSTAMP: '2026-08-27T15:00:34.000+0000',
+  },
+  SALESFORCE_LEGACY_ACCOUNT: {
+    ATTRIBUTES: {
+      TYPE: 'M2_1_MCD_Legacy_Data_Party__c',
+      URL: '/services/data/v53.0/sobjects/M2_1_MCD_Legacy_Data_Party__c/a0J3L000001qmOuUAI',
+    },
+    OWNER_ID: '0056700000Ax3PLAZA',
+    IS_DELETED: false,
+    NAME: 'LD-25202',
+    CURRENCY_ISO_CODE: 'GBP',
+    CREATED_DATE: '2023-11-11T12:14:58.000+0000',
+    CREATED_BY_ID: '0056700000Ax3PLAZA',
+    LAST_MODIFIED_DATE: '2023-11-11T12:14:59.000+0000',
+    LAST_MODIFIED_BY_ID: '0056700000Ax3PLAZA',
+    SYSTEM_MODSTAMP: '2023-11-11T12:15:01.000+0000',
+    ACCOUNT_ID: '0013L00000LZiAtQAL',
+    HQ_COUNTRY: 'Turkey',
+    PARTY_STATUS: 'Duplicate',
+  },
+  DATE_START,
+  DATE_END,
   DEAL: {
     ID: '0030000321',
     NAME: 'ABC PARIS CLUB 01',
@@ -143,102 +219,67 @@ export const EXAMPLES = {
     DESCRIPTION: 'GEF: Contingent',
     IS_ACTIVE: true,
   },
+  FEE_TYPE,
   INDUSTRY,
   DOM: {
     BUSINESS_CENTRES: [
       {
-        code: DOM_BUSINESS_CENTRES.AE_DXB.CODE,
-        name: DOM_BUSINESS_CENTRES.AE_DXB.NAME,
+        business_centre_code: BUSINESS_CENTRE.CODE,
+        business_centre_name: BUSINESS_CENTRE.NAME,
+        business_centre_type_description: BUSINESS_CENTRE.DESCRIPTION,
+        business_centre_active_flag: BUSINESS_CENTRE.IS_ACTIVE,
       },
       {
-        code: DOM_BUSINESS_CENTRES.CM_YAO.CODE,
-        name: DOM_BUSINESS_CENTRES.CM_YAO.NAME,
-      },
-      {
-        code: DOM_BUSINESS_CENTRES.JO_AMM.CODE,
-        name: DOM_BUSINESS_CENTRES.JO_AMM.NAME,
+        business_centre_code: BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.CODE,
+        business_centre_name: BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.NAME,
+        business_centre_type_description: BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.DESCRIPTION,
+        business_centre_active_flag: BUSINESS_CENTRE_ALTERNATIVE_EXAMPLE.IS_ACTIVE,
       },
     ],
     BUSINESS_CENTRES_NON_WORKING_DAYS: [
       {
-        code: DOM_BUSINESS_CENTRES.AE_DXB.CODE,
-        date: BUSINESS_CENTRE.NON_WORKING_DAY.DATE,
-        name: DOM_BUSINESS_CENTRES.AE_DXB.NAME,
-      },
-      {
-        code: DOM_BUSINESS_CENTRES.CM_YAO.CODE,
-        date: BUSINESS_CENTRE.NON_WORKING_DAY.DATE,
-        name: DOM_BUSINESS_CENTRES.CM_YAO.NAME,
+        business_centre_code: BUSINESS_CENTRE.CODE,
+        business_centre_name: BUSINESS_CENTRE.NAME,
+        non_working_day_date: BUSINESS_CENTRE.NON_WORKING_DAY.DATE,
       },
     ],
-    PRODUCT_CONFIG: {
-      BIP: {
-        productType: PRODUCT_TYPES.BIP,
-        name: 'Bond Insurance Product (BIP)',
-        shortName: 'BIP',
-        productActive: true,
-        configuration: {
-          commitmentDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          issuedDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          effectiveDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          availabilityEndDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          expiryDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          creditType: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          participations: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          scheduledRepayments: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          nonCashObligations: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          cashObligations: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          accrualSchedule: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          pimOwner: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          riskRating: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          preCreditPeriod: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          creditPeriod: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          lossGivenDefault: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          provisionRate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          forecastYear: PRODUCT_CONFIG_REQUIREMENT.NOT_APPLICABLE,
-          bankRate: PRODUCT_CONFIG_REQUIREMENT.OPTIONAL,
-          fees: {
-            creation: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-            inLife: PRODUCT_CONFIG_REQUIREMENT.OPTIONAL,
-          },
-          leadDays: {
-            repayments: 1,
-            interestAccruals: 2,
-            accruingFees: 3,
-          },
-        },
-        additionalRates: ['ARTOTH'],
-        accrualSchedules: [
-          {
-            code: 'PAC01',
-            cashIndicator: true,
-          },
-        ],
-        baseRates: ['BRTOTH'],
-        counterpartyRoleTypes: [COUNTERPARTY_ROLE_TYPES.BROKER],
-        facilityCategoryTypes: ['FCT001', 'FCT002'],
-        obligationSubtypes: ['OST001', 'OST002', 'OST003'],
-        additionalRateTypes: [],
-        baseRateTypes: [],
-        accrualScheduleTypes: [],
-        account: ['1', '2', '3'],
+    INTEREST_RATE_TICKERS: [
+      {
+        code: 'EUR001',
+        name: 'ESTR Overnight Daily Compounding (5-day lag)',
+        type: 'Compounding Rate',
+        frequencyCode: 'FREQEBD',
+        frequencyName: 'Every Business Day',
+        leadDays: 5,
+        currencyCode: 'EUR',
+        active: true,
       },
-      EXIP: {
-        productType: PRODUCT_TYPES.EXIP,
-        name: 'Export Insurance Product (EXIP)',
-        shortName: 'EXIP',
-        productActive: true,
-        configuration: {
-          commitmentDate: PRODUCT_CONFIG_REQUIREMENT.REQUIRED,
-          issuedDate: PRODUCT_CONFIG_REQUIREMENT.NOT_APPLICABLE,
-          effectiveDate: PRODUCT_CONFIG_REQUIREMENT.OPTIONAL,
-        },
-        counterpartyRoleTypes: [COUNTERPARTY_ROLE_TYPES.BROKER, COUNTERPARTY_ROLE_TYPES.GUARANTOR],
-        facilityCategoryTypes: ['FCT001', 'FCT002'],
-        obligationSubtypes: ['OST001', 'OST002', 'OST003'],
-        account: ['1', '2', '3'],
+    ],
+    CURRENCIES: [
+      {
+        code: CURRENCIES.USD.ISO_CODE,
+        name: CURRENCIES.USD.NAME,
+        decimalPlaces: 2,
+        calendarCode: 'CCYUSD',
       },
-    },
+      {
+        code: CURRENCIES.JPY.ISO_CODE,
+        name: CURRENCIES.JPY.NAME,
+        decimalPlaces: 0,
+        calendarCode: null,
+      },
+    ],
+    INTEREST_RATES: [
+      {
+        code: 'EUR002',
+        startDate: '2026-07-01T00:00:00',
+        endDate: '2026-07-01T23:59:59',
+        rate: 3.25,
+        adjustedRate: 3.25,
+        compoundingIndexValue: 10000.5361111111,
+      },
+    ],
+    PRODUCT_CONFIG,
   },
   GEOSPATIAL: {
     ENGLISH_POSTCODE: 'SW1A 2AQ',
@@ -273,6 +314,7 @@ export const EXAMPLES = {
       code: 'CTL01',
       name: 'Contractual Interest Fixed Rate',
       accrualRateType: 'Fixed',
+      balanceCategory: 'Outstanding Balance',
       baseBalanceCategory: 'On Principal Drawn Amount',
       incomeClassCode: 'Income',
       accrualScheduleTypeActive: true,
@@ -297,15 +339,15 @@ export const EXAMPLES = {
     },
     BUSINESS_CENTRES: [
       {
-        business_centre_code: ODS_BUSINESS_CENTRES.AaB,
+        business_centre_code: 'AaB',
         business_centre_name: 'Mock name AaB',
       },
       {
-        business_centre_code: ODS_BUSINESS_CENTRES.JoB,
+        business_centre_code: 'JoB',
         business_centre_name: 'Mock name JoB',
       },
       {
-        business_centre_code: ODS_BUSINESS_CENTRES.StB,
+        business_centre_code: 'StB',
         business_centre_name: 'Mock name StB',
       },
     ],
@@ -313,7 +355,22 @@ export const EXAMPLES = {
       counterpartyRoleType: 'CRT001',
       name: 'Exporter',
       hasSharePercentage: false,
+      hasAssociatedPaymentCode: false,
       counterpartyRoleTypeActive: true,
+    },
+    CONFIGURATION_FEE: {
+      feeType: 'CMF',
+      name: 'Commitment Fee Accruing',
+      feeTypeClassification: 'Accruing',
+      feeTypeExpenseIncome: 'Income',
+      feeTypeActive: true,
+      balanceCategory: 'CMF',
+      baseBalanceCategory: 'On Principal Drawn Amount',
+      nonFacilityCurrencySettlement: false,
+      feeTypeCappedBaseBalanceIndicator: false,
+      feeEffectiveDateDefault: 'Facility Signed Date',
+      feeMaturityDateDefault: 'Facility Availability End Date',
+      feeTypeReinsurerApplicable: false,
     },
     CONFIGURATION_FREQUENCY: {
       code: 'FREQ12MON',
@@ -323,6 +380,30 @@ export const EXAMPLES = {
       frequencyUnits: 'Months',
       frequencyActive: true,
     },
+    CONFIGURATION_OBLIGATION_SUBTYPE: {
+      code: 'OST012',
+      name: 'BSS Advance Payment Guarantee',
+      balanceCategory: 'PRIN1',
+      obligationSubtypeActive: true,
+    },
+    CREDIT_TYPE: ODS_CREDIT_TYPES.TERM,
+    CURRENCIES: [
+      {
+        currency_code: CURRENCIES.USD.ISO_CODE,
+        currency_iso_code: CURRENCIES.USD.ISO_CODE,
+        currency_name: CURRENCIES.USD.NAME,
+        currency_decimal_place: 2,
+        rate_setting_calendar_code: 'CCYUSD',
+        currency_active_flag: true,
+      },
+      {
+        currency_code: CURRENCIES.JPY.ISO_CODE,
+        currency_iso_code: CURRENCIES.JPY.ISO_CODE,
+        currency_name: CURRENCIES.JPY.NAME,
+        currency_decimal_place: 0,
+        currency_active_flag: true,
+      },
+    ],
     FACILITY_CLASSIFICATION: {
       classification_type: 'Facility Category',
       classification_type_code: 'facilityCategory',
@@ -337,6 +418,16 @@ export const EXAMPLES = {
       industry_group_code: INDUSTRY.GROUP_CODE,
       industry_group_description: INDUSTRY.GROUP_DESCRIPTION,
       industry_category: INDUSTRY.CATEGORY,
+    },
+    INTEREST_RATE: {
+      interest_rate_ticker_code: 'EUR002',
+      interest_rate_start_datetime: '2026-07-01T00:00:00',
+      interest_rate_end_datetime: '2026-07-01T23:59:59',
+      interest_rate: 2.183,
+      interest_rate_adjusted: 2.183,
+      interest_rate_source: 'Bloomberg',
+      interest_rate_source_ticker_value: 'ESTRON',
+      interest_rate_source_ticker_name: 'ESTR Volume Weighted Trimmed M',
     },
     OBLIGATION_CLASSIFICATION: {
       classification_type: 'Obligation Sub-Type',

@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { ConsoleLogger } from '@nestjs/common';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 

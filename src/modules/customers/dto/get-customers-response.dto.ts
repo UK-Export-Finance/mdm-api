@@ -1,48 +1,40 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { EXAMPLES } from '@ukef/constants';
-import { CustomerSubtypesEnum } from '@ukef/constants/enums/customer-subtypes';
+import { CustomerCompanySubtypesEnum } from '@ukef/constants/enums/customer-company-subtypes';
+import { CustomerCompanyTypesEnum } from '@ukef/constants/enums/customer-company-types';
 import { CustomerTypesEnum } from '@ukef/constants/enums/customer-types';
 
 export type GetCustomersResponse = GetCustomersResponseItem[];
 
 export class GetCustomersResponseItem {
   @ApiProperty({
-    description: 'The unique UKEF ID of the customer',
-    example: EXAMPLES.CUSTOMER.PARTYURN,
-  })
-  readonly partyUrn: string | null;
-
-  @ApiProperty({
-    description: 'Customer company name',
-    example: EXAMPLES.CUSTOMER.NAME,
-  })
-  readonly name: string;
-
-  @ApiProperty({
-    description: 'The unique Salesforce ID',
-    example: EXAMPLES.CUSTOMER.SALESFORCE_ID,
-  })
-  readonly sfId: string;
-
-  @ApiProperty({
     description: 'The Companies House registration number',
     example: EXAMPLES.CUSTOMER.COMPANYREG,
+    nullable: true,
   })
   readonly companyRegNo: string | null;
 
   @ApiProperty({
-    description: 'Customer company type',
-    example: EXAMPLES.CUSTOMER.SALESFORCE_TYPE,
-    enum: CustomerTypesEnum,
+    description: 'Credit Classification Status Date (dd/mm/yyyy)',
+    example: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_DATE,
+    nullable: true,
   })
-  readonly type: string | null;
+  readonly creditClassificationDate: string | null;
 
   @ApiProperty({
-    description: 'Customer company subtype',
-    example: EXAMPLES.CUSTOMER.SALESFORCE_SUBTYPE,
-    enum: CustomerSubtypesEnum,
+    description: 'Credit classification status',
+    example: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS.GOOD,
+    nullable: true,
   })
-  readonly subtype: string | null;
+  readonly creditClassificationStatus: string | null;
+
+  @ApiProperty({
+    description: 'Customer type',
+    example: EXAMPLES.CUSTOMER.CUSTOMER_TYPE,
+    enum: CustomerTypesEnum,
+    nullable: true,
+  })
+  readonly customerType: string | null;
 
   @ApiProperty({
     description: 'False for Salesforce account record, True for legacy Party DB record',
@@ -51,44 +43,72 @@ export class GetCustomersResponseItem {
   readonly isLegacyRecord: boolean;
 
   @ApiProperty({
+    description: 'Customer company name',
+    example: EXAMPLES.CUSTOMER.NAME,
+  })
+  readonly name: string;
+
+  @ApiProperty({
+    description: 'The unique UKEF ID of the customer',
+    example: EXAMPLES.CUSTOMER.PARTYURN,
+    nullable: true,
+  })
+  readonly partyUrn: string | null;
+
+  @ApiProperty({
     description: 'Probability of default of the company',
     example: EXAMPLES.CUSTOMER.PROBABILITY_OF_DEFAULT,
+    nullable: true,
   })
-  readonly probabilityOfDefault?: number;
+  readonly probabilityOfDefault: number | null;
+
+  @ApiProperty({
+    description: 'Risk entity',
+    example: EXAMPLES.CUSTOMER.RISK_ENTITY.CORPORATE,
+    nullable: true,
+  })
+  readonly riskEntity: string | null;
+
+  @ApiProperty({
+    description: 'The unique Salesforce ID',
+    example: EXAMPLES.CUSTOMER.SALESFORCE_ID,
+  })
+  readonly sfId: string;
+
+  @ApiProperty({
+    description: 'Customer company subtype',
+    example: EXAMPLES.CUSTOMER.SALESFORCE_SUBTYPE,
+    enum: CustomerCompanySubtypesEnum,
+    nullable: true,
+  })
+  readonly subtype: string | null;
+
+  @ApiProperty({
+    description: 'Customer company type',
+    example: EXAMPLES.CUSTOMER.SALESFORCE_TYPE,
+    enum: CustomerCompanyTypesEnum,
+    nullable: true,
+  })
+  readonly type: string | null;
 
   @ApiProperty({
     description: 'Whether the company is UK based or not',
     example: EXAMPLES.CUSTOMER.UK_ENTITY,
+    nullable: true,
   })
-  readonly ukEntity?: string;
+  readonly ukEntity: string | null;
 
   @ApiProperty({
     description: 'UKEF industry identifier code',
     example: EXAMPLES.CUSTOMER.UK_INDUSTRY_NAME,
+    nullable: true,
   })
-  readonly ukefIndustryName?: string;
+  readonly ukefIndustryName: string | null;
 
   @ApiProperty({
     description: 'UKEF industry sector identifier code',
     example: EXAMPLES.CUSTOMER.UK_INDUSTRY_SECTOR_NAME,
+    nullable: true,
   })
-  readonly ukefSectorName?: string;
-
-  @ApiProperty({
-    description: 'Risk entity',
-    example: EXAMPLES.CUSTOMER.RISK_ENTITY,
-  })
-  readonly riskEntity?: string;
-
-  @ApiProperty({
-    description: 'Credit classification status',
-    example: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_STATUS,
-  })
-  readonly creditClassificationStatus?: string;
-
-  @ApiProperty({
-    description: 'Credit Classification Status Date (dd/mm/yyyy)',
-    example: EXAMPLES.CUSTOMER.CREDIT_CLASSIFICATION_DATE,
-  })
-  readonly creditClassificationDate?: string;
+  readonly ukefSectorName: string | null;
 }

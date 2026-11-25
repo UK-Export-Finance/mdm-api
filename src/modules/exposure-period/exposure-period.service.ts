@@ -1,8 +1,8 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
-import { DATABASE_NAME } from '@ukef/constants';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource } from 'typeorm';
+import { DATABASE_NAME } from '@ukef/constants';
 
 import { ExposurePeriodDto } from './dto/exposure-period.dto';
 

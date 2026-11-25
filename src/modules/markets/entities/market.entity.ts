@@ -1,7 +1,7 @@
 import { ClassSerializerInterceptor, UseInterceptors } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
-import { DATE } from '@ukef/constants';
 import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { DATE } from '@ukef/constants';
 
 @Entity({
   name: 'CIS_USP_READ_MARKETS',

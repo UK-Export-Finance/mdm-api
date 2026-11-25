@@ -9,8 +9,8 @@ import {
 import { PinoLogger } from 'nestjs-pino';
 import { NotifyClient } from 'notifications-node-client';
 
-import { convertStringToBuffer } from '../../helpers';
-import { PostEmailsRequestDto } from '../../modules/emails/dto/post-emails-request.dto';
+import { convertStringToBuffer } from '@ukef/helpers';
+import { PostEmailsRequestDto } from '@ukef/modules/emails/dto/post-emails-request.dto';
 import { PostEmailsResponseDto } from './dto/post-emails-response.dto';
 
 @Injectable()
@@ -37,11 +37,22 @@ export class GovukNotifyService {
 
     const reference = postEmailsRequest.reference || `${postEmailsRequest.templateId}-${Date.now()}`;
 
-    const { personalisation } = postEmailsRequest;
+    let { personalisation } = postEmailsRequest;
 
     if (personalisation?.file) {
-      const buffer = convertStringToBuffer(personalisation.file.toString());
-      personalisation.linkToFile = notifyClient.prepareUpload(buffer, { confirmEmailBeforeDownload: true }).file;
+      const { file, ...personalisationWithoutFile } = personalisation;
+
+      const buffer = convertStringToBuffer(file.toString());
+
+      personalisation = {
+        ...personalisationWithoutFile,
+        /**
+         * The whole object returned by prepareUpload (not just the `file` property) must be passed as the
+         * personalisation value. GOV.UK Notify uses this structure to recognise it as a document upload
+         * and replace it with a secure download link when the email is rendered.
+         */
+        linkToFile: notifyClient.prepareUpload(buffer, { confirmEmailBeforeDownload: true }),
+      };
     }
 
     const notifyResponse = await notifyClient
@@ -52,6 +63,7 @@ export class GovukNotifyService {
       .then((response: any) => response)
       .catch((err) => {
         this.logger.error(err);
+
         if (err?.response?.data?.errors[0].message) {
           switch (err.response.data.status_code) {
             case 400:

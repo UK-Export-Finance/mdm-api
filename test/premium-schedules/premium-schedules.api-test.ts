@@ -1,6 +1,6 @@
+import Chance from 'chance';
 import { PRODUCTS } from '@ukef/constants';
 import { Api } from '@ukef-test/support/api';
-import Chance from 'chance';
 
 const chance = new Chance();
 
@@ -89,7 +89,7 @@ describe('Premium schedules', () => {
     expect(postResponse.status).toBe(201);
 
     // Test
-    const getResponse = await api.get('/api/v1/premium/segments/' + postResponse.body[0].facilityURN);
+    const getResponse = await api.get(`/api/v1/premium/segments/${postResponse.body[0].facilityURN}`);
 
     expect(getResponse.status).toBe(200);
     expect(getResponse.body).toHaveLength(16);

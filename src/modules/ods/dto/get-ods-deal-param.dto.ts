@@ -1,15 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { EXAMPLES, UKEF_ID } from '@ukef/constants';
-import { regexToString } from '@ukef/helpers/regex.helper';
 import { Matches } from 'class-validator';
+import { EXAMPLES, REGEX } from '@ukef/constants';
+import { regexToString } from '@ukef/helpers/regex.helper';
 
 export class GetOdsDealParamDto {
   @ApiProperty({
     required: true,
     example: EXAMPLES.DEAL.ID,
     description: 'Unique UKEF deal ID',
-    pattern: regexToString(UKEF_ID.MAIN_ID.TEN_DIGIT_REGEX),
+    pattern: regexToString(REGEX.TEN_DIGIT_UKEF_ID),
   })
-  @Matches(UKEF_ID.MAIN_ID.TEN_DIGIT_REGEX)
+  @Matches(REGEX.TEN_DIGIT_UKEF_ID)
   public id: string;
 }

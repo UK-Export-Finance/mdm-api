@@ -1,7 +1,8 @@
+import { jest } from '@jest/globals';
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
 import { PinoLogger } from 'nestjs-pino';
 import { DataSource, QueryRunner } from 'typeorm';
+import { EXAMPLES, STORED_PROCEDURE } from '@ukef/constants';
 
 import { ODS_ENTITIES, OdsStoredProcedureInput } from './dto/ods-payloads.dto';
 import { OdsService } from './ods.service';
@@ -16,12 +17,12 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
 
   beforeEach(() => {
     mockQueryRunner = {
-      query: jest.fn(),
-      release: jest.fn(),
+      query: jest.fn<QueryRunner['query']>(),
+      release: jest.fn<QueryRunner['release']>(),
     } as unknown as jest.Mocked<QueryRunner>;
 
     mockDataSource = {
-      createQueryRunner: jest.fn().mockReturnValue(mockQueryRunner),
+      createQueryRunner: jest.fn<DataSource['createQueryRunner']>().mockReturnValue(mockQueryRunner),
     } as unknown as jest.Mocked<DataSource>;
 
     odsStoredProcedureService = new OdsStoredProcedureService(mockDataSource);
@@ -66,6 +67,30 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
     expect(odsStoredProcedureService.call).toHaveBeenCalledWith(expectedStoredProcedureInput);
   });
 
+  describe('when optional non working day start and end dates are provided', () => {
+    it('should include optional non working day start and end dates in the query', async () => {
+      // Arrange
+      const startDate = '2026-01-01';
+      const endDate = '2026-12-31';
+
+      // Act
+      await service.findBusinessCentreNonWorkingDays(EXAMPLES.BUSINESS_CENTRE.CODE, startDate, endDate);
+
+      // Assert
+      const expectedStoredProcedureInput: OdsStoredProcedureInput = odsStoredProcedureService.createInput({
+        entityToQuery: ODS_ENTITIES.BUSINESS_CENTRE_NON_WORKING_DAY,
+        queryParameters: {
+          business_centre_code: EXAMPLES.BUSINESS_CENTRE.CODE,
+          non_working_day_start_date: startDate,
+          non_working_day_end_date: endDate,
+        },
+      });
+
+      expect(odsStoredProcedureService.call).toHaveBeenCalledTimes(1);
+      expect(odsStoredProcedureService.call).toHaveBeenCalledWith(expectedStoredProcedureInput);
+    });
+  });
+
   it('should return mapped non working days', async () => {
     // Act
     const result = await service.findBusinessCentreNonWorkingDays(EXAMPLES.BUSINESS_CENTRE.CODE);
@@ -79,9 +104,9 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
   describe(`when the response from ODS does not have status as ${STORED_PROCEDURE.SUCCESS}`, () => {
     it('should throw an error', async () => {
       // Arrange
-      const mockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
+      const localMockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
 
-      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
+      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(localMockStoredProcedureOutput);
 
       // Act & Assert
       const promise = service.findBusinessCentreNonWorkingDays(EXAMPLES.BUSINESS_CENTRE.CODE);
@@ -97,9 +122,9 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
   describe('when the response from ODS has total_result_count as 0', () => {
     it('should throw an error', async () => {
       // Arrange
-      const mockStoredProcedureOutput = `{ "status": "${STORED_PROCEDURE.SUCCESS}", "total_result_count": 0 }`;
+      const localMockStoredProcedureOutput = `{ "status": "${STORED_PROCEDURE.SUCCESS}", "total_result_count": 0 }`;
 
-      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
+      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(localMockStoredProcedureOutput);
 
       const expected = new Error(`No business centre ${EXAMPLES.BUSINESS_CENTRE.CODE} non working days found in ODS`);
 
@@ -115,9 +140,9 @@ describe('OdsService - findBusinessCentreNonWorkingDays', () => {
   describe('when the method goes into the catch handler', () => {
     it('should throw an error', async () => {
       // Arrange
-      const mockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
+      const localMockStoredProcedureOutput = `{ "status": "NOT ${STORED_PROCEDURE.SUCCESS}" }`;
 
-      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(mockStoredProcedureOutput);
+      jest.spyOn(odsStoredProcedureService, 'call').mockResolvedValue(localMockStoredProcedureOutput);
 
       // Act & Assert
       const promise = service.findBusinessCentreNonWorkingDays(EXAMPLES.BUSINESS_CENTRE.CODE);

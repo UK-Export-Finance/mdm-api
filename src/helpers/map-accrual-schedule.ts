@@ -9,6 +9,7 @@ export const mapAccrualSchedule = (schedule: GetAccrualScheduleOdsResponseDto): 
   code: schedule.code,
   name: schedule.name,
   accrualRateType: schedule.accrualRateType,
+  balanceCategory: schedule.balanceCategory,
   baseBalanceCategory: schedule.baseBalanceCategory,
   incomeClassCode: schedule.incomeClassCode,
   isActive: schedule.accrualScheduleTypeActive,

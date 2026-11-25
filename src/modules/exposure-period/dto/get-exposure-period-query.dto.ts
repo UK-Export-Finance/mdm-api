@@ -1,10 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ENUMS } from '@ukef/constants';
 import { IsDateString, IsEnum, IsString, MaxLength } from 'class-validator';
+import { ENUMS } from '@ukef/constants';
 
 export class GetExposurePeriodQueryDto {
   @IsDateString({ strict: true })
-  // Max length validation blocks dates with time.
   @MaxLength(10, { message: '$property should use format YYYY-MM-DD' })
   @ApiProperty({
     example: '2017-07-04',
@@ -13,7 +12,6 @@ export class GetExposurePeriodQueryDto {
   public startdate: string;
 
   @IsDateString({ strict: true })
-  // Max length validation blocks dates with time.
   @MaxLength(10, { message: '$property should use format YYYY-MM-DD' })
   @ApiProperty({
     example: '2018-07-04',

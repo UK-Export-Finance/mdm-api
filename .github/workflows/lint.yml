@@ -20,7 +20,7 @@
 # Sets the timezone using the specified value.
 # Checks out the repository code.
 # Sets up the specified Node.js version.
-# Installs dependencies using npm ci --legacy-peer-deps.
+# Installs dependencies using npm ci.
 # Runs linting using the command npm run lint:all.
 #
 # Key Points:
@@ -71,16 +71,16 @@ jobs:
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
       - name: Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
       - name: Dependencies
         working-directory: ./
-        run: npm ci --legacy-peer-deps
+        run: npm ci
 
       - name: Linting
         working-directory: ./
@@ -99,16 +99,16 @@ jobs:
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
       - name: Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
       - name: Dependencies
         working-directory: ./
-        run: npm ci --legacy-peer-deps
+        run: npm ci
 
       - name: Linting
         working-directory: ./
@@ -127,16 +127,16 @@ jobs:
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
       - name: Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
       - name: Dependencies
         working-directory: ./
-        run: npm ci --legacy-peer-deps
+        run: npm ci
 
       - name: Validate
         working-directory: ./
@@ -155,16 +155,16 @@ jobs:
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
       - name: Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
       - name: Dependencies
         working-directory: ./
-        run: npm ci --legacy-peer-deps
+        run: npm ci
 
       - name: Validate
         working-directory: ./
@@ -183,16 +183,16 @@ jobs:
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
       - name: Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
       - name: Dependencies
         working-directory: ./
-        run: npm ci --legacy-peer-deps
+        run: npm ci
 
       - name: Validate
         working-directory: ./

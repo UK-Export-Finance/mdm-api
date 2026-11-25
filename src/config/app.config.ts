@@ -10,7 +10,7 @@ const { NAME, VERSION_PREFIX } = APPLICATION;
 
 const validLogLevels = ['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent'];
 
-export interface AppConfig {
+export type AppConfigType = {
   apiKey: string;
   apiKeyStrategy: string;
   env: string;
@@ -26,14 +26,16 @@ export interface AppConfig {
   port: number;
   redactLogs: boolean;
   singleLineLogFormat: boolean;
+  usePinoPrettyLogFormatter: boolean;
   versioning: {
     enable: boolean;
     prefix: string;
     version: string;
+    prefixAndVersion: string;
   };
-}
+};
 
-export default registerAs('app', (): Record<string, any> => {
+export const AppConfig = registerAs('app', (): AppConfigType => {
   const logLevel = process.env.LOG_LEVEL || 'info';
 
   if (!validLogLevels.includes(logLevel)) {

@@ -1,8 +1,8 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DATABASE_NAME, DATE } from '@ukef/constants';
 import { PinoLogger } from 'nestjs-pino';
 import { Equal, Repository } from 'typeorm';
+import { DATABASE_NAME, DATE } from '@ukef/constants';
 
 import { SectorIndustryEntity } from './entities/sector-industry.entity';
 

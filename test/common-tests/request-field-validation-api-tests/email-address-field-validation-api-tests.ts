@@ -1,17 +1,17 @@
+import request from 'supertest';
 import { RandomValueGenerator } from '@ukef-test/support/generator/random-value-generator';
 import { prepareModifiedRequest } from '@ukef-test/support/helpers/request-field-validation-helper';
-import request from 'supertest';
 
 import { withRequiredFieldValidationApiTests } from './partials/require-validation';
 import { withTypeFieldValidationApiTests } from './partials/type-validation';
 
-export interface EmailFieldValidationApiTestOptions<RequestBodyItem, RequestBodyItemKey extends keyof RequestBodyItem> {
+export type EmailFieldValidationApiTestOptions<RequestBodyItem, RequestBodyItemKey extends keyof RequestBodyItem> = {
   fieldName: RequestBodyItemKey;
   required?: boolean;
   validRequestBody: RequestBodyItem[] | RequestBodyItem;
   makeRequest: (body: unknown | unknown[]) => request.Test;
   givenAnyRequestBodyWouldSucceed: () => void;
-}
+};
 
 export const withEmailFieldValidationApiTests = <RequestBodyItem, RequestBodyItemKey extends keyof RequestBodyItem>({
   fieldName: fieldNameSymbol,
@@ -25,7 +25,7 @@ export const withEmailFieldValidationApiTests = <RequestBodyItem, RequestBodyIte
   const requestBodyItem = requestIsAnArray ? validRequestBody[0] : validRequestBody;
   const fieldName = fieldNameSymbol.toString();
   const typeNameForErrorMessages = 'an email';
-  required = required ?? true;
+  const isRequired = required ?? true;
 
   describe(`${fieldName} validation`, () => {
     beforeEach(() => {
@@ -87,7 +87,7 @@ export const withEmailFieldValidationApiTests = <RequestBodyItem, RequestBodyIte
 
     withRequiredFieldValidationApiTests({
       fieldName: fieldNameSymbol,
-      required,
+      required: isRequired,
       validRequestBody,
       makeRequest,
       typeNameForErrorMessages,

@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { Test, TestingModule } from '@nestjs/testing';
 import Chance from 'chance';
 
@@ -19,22 +20,22 @@ describe('SectorIndustriesController', () => {
         {
           provide: SectorIndustriesService,
           useValue: {
-            find: jest.fn().mockResolvedValue([
+            find: jest.fn<SectorIndustriesService['find']>().mockResolvedValue([
               {
                 id: chance.natural(),
                 ukefSectorId: chance.natural(),
                 ukefSectorName: chance.sentence({ words: 5 }),
                 internalNo: null,
-                ukefIndustryId: chance.natural(),
+                ukefIndustryId: chance.natural().toString(),
                 ukefIndustryName: chance.sentence({ words: 5 }),
-                acbsSectorId: chance.natural(),
+                acbsSectorId: chance.natural().toString(),
                 acbsSectorName: chance.sentence({ words: 5 }),
-                acbsIndustryId: chance.natural(),
+                acbsIndustryId: chance.natural().toString(),
                 acbsIndustryName: chance.sentence({ words: 5 }),
-                created: chance.date({ string: true }),
-                updated: chance.date({ string: true }),
-                effectiveFrom: chance.date({ string: true }),
-                effectiveTo: chance.date({ string: true }),
+                created: chance.date(),
+                updated: chance.date(),
+                effectiveFrom: chance.date(),
+                effectiveTo: chance.date(),
               },
             ]),
           },

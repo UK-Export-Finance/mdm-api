@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
@@ -28,9 +29,8 @@ describe('AuthService', () => {
   });
 
   beforeEach(() => {
-    configService = {
-      get: jest.fn().mockReturnValue(API_KEY),
-    } as any;
+    configService = new ConfigService();
+    jest.spyOn(configService, 'get').mockReturnValue(API_KEY);
 
     authService = new AuthService(configService);
   });
@@ -59,9 +59,8 @@ describe('AuthService', () => {
   describe('when configured API key is missing', () => {
     it('should return false', () => {
       // Arrange
-      configService = {
-        get: jest.fn().mockReturnValue(undefined),
-      } as any;
+      configService = new ConfigService();
+      jest.spyOn(configService, 'get').mockReturnValue(undefined);
 
       authService = new AuthService(configService);
 
@@ -79,9 +78,8 @@ describe('AuthService', () => {
       const configuredKey = 'very-long-configured-api-key-value';
       const providedKey = 'short';
 
-      configService = {
-        get: jest.fn().mockReturnValue(configuredKey),
-      } as any;
+      configService = new ConfigService();
+      jest.spyOn(configService, 'get').mockReturnValue(configuredKey);
 
       authService = new AuthService(configService);
 
@@ -99,9 +97,8 @@ describe('AuthService', () => {
       const configuredKey = 'abc123xyz';
       const providedKey = 'xyz123abc';
 
-      configService = {
-        get: jest.fn().mockReturnValue(configuredKey),
-      } as any;
+      configService = new ConfigService();
+      jest.spyOn(configService, 'get').mockReturnValue(configuredKey);
 
       authService = new AuthService(configService);
 
@@ -117,12 +114,11 @@ describe('AuthService', () => {
 describe('ApiKeyStrategy', () => {
   let strategy: ApiKeyStrategy;
   let authService: AuthService;
-  let configService: jest.Mocked<ConfigService>;
+  let configService: ConfigService;
 
   beforeEach(() => {
-    configService = {
-      get: jest.fn().mockReturnValue(API_KEY),
-    } as any;
+    configService = new ConfigService();
+    jest.spyOn(configService, 'get').mockReturnValue(API_KEY);
 
     authService = new AuthService(configService);
     strategy = new ApiKeyStrategy(authService, configService);

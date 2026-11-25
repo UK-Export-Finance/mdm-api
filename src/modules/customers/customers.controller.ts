@@ -1,9 +1,7 @@
-import { BadRequestException, Body, Controller, Get, Post, Query, Res } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, NotFoundException, Post, Query, Res } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOperation, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
-
-import { GetCustomersInformaticaQueryDto } from '../informatica/dto/get-customers-informatica-query.dto';
 import { CustomersService } from './customers.service';
 import { CompanyRegistrationNumberDto } from './dto/company-registration-number.dto';
 import { DTFSCustomerDto } from './dto/dtfs-customer.dto';
@@ -17,7 +15,7 @@ export class CustomersController {
 
   @Get()
   @ApiOperation({
-    summary: 'Get customers from Salesforce via Informatica',
+    summary: 'Get customers from Salesforce',
   })
   @ApiResponse({
     status: HttpStatusCode.Ok,
@@ -25,17 +23,17 @@ export class CustomersController {
     type: [GetCustomersResponseItem],
   })
   @ApiNotFoundResponse({
-    description: 'Customer not found',
+    description: 'Customer not found.',
   })
-  getCustomers(@Query() query: GetCustomersQueryDto): Promise<GetCustomersResponse> {
+  async getCustomers(@Query() query: GetCustomersQueryDto): Promise<GetCustomersResponse> {
     this.ensureOneIsNotEmpty(query.companyReg, query.name, query.partyUrn);
-    const backendQuery: GetCustomersInformaticaQueryDto = {
-      ...(query.companyReg ? { companyreg: query.companyReg } : {}),
-      ...(query.name ? { name: query.name } : {}),
-      ...(query.partyUrn ? { partyUrn: query.partyUrn } : {}),
-      ...{ includeLegacyData: query.fallbackToLegacyData },
-    };
-    return this.customersService.getCustomers(backendQuery);
+    const customers = await this.customersService.getCustomers(query);
+
+    if (!customers.length) {
+      throw new NotFoundException('Customer not found.');
+    }
+
+    return customers;
   }
 
   @Post()
@@ -57,8 +55,8 @@ export class CustomersController {
   @ApiUnauthorizedResponse({
     description: 'Failed to get access token',
   })
-  getOrCreateCustomer(@Res() res: Response, @Body() DTFSCustomerDto: DTFSCustomerDto): Promise<GetCustomersResponse> {
-    return this.customersService.getOrCreateCustomer(res, DTFSCustomerDto);
+  getOrCreateCustomer(@Res({ passthrough: true }) res: Response, @Body() dtfsCustomerDto: DTFSCustomerDto): Promise<GetCustomersResponse> {
+    return this.customersService.getOrCreateCustomer(res, dtfsCustomerDto);
   }
 
   @Get('dun-bradstreet')
