@@ -168,6 +168,7 @@ jobs:
 
              az apim api import \
              --path '${{ env.NAME }}' \
+             --api-id "${{ env.API_ID }}" \
              --service-name ${{ env.APIM }} \
              --specification-format OpenApi \
              --api-type http \
