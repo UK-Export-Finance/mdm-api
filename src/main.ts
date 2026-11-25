@@ -33,6 +33,10 @@ const main = async () => {
 
   try {
     const nestApp: NestApplication = await NestFactory.create(MainModule, { logger, bufferLogs: true });
+
+    // Clear the log buffer flush interval once the app has been successfully created.
+    clearInterval(logBufferFlushInterval);
+
     const app = new App(nestApp);
 
     logger.log(`==========================================================`);
