@@ -14,7 +14,7 @@
 # Execution
 # *********
 # GHA is only invoked when following conditions are satisfied:
-# 1. Push to the `dev`, `staging` and `production` branches only.
+# 1. Push to the `dev`, `dev1`, `staging` and `production` branches only.
 # 2. Any modifications to atleast one of the `paths` targets.
 
 name: Deployment 🚀
