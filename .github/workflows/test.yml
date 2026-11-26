@@ -16,6 +16,9 @@ on:
       - main
       - 'release-*'
 
+permissions:
+  contents: read
+
 env:
   environment: 'qa'
   TIMEZONE: ${{ vars.TIMEZONE }}
