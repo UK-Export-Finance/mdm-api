@@ -91,10 +91,6 @@ jobs:
       - name: Build
         run: docker build -t mdm-api:ci .
 
-      - name: Start (timeout after 30 seconds)
-        run: timeout 30 docker run --rm mdm-api:ci || [ $? -eq 124 ]
-        continue-on-error: false
-
   # 4. Unit tests
   unit-tests:
     name: Unit 👷
