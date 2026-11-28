@@ -107,7 +107,7 @@
     "@typescript-eslint/parser": "8.74.0",
     "@ukef/eslint-local-rules": "1.0.0",
     "chance": "1.1.13",
-    "cspell": "10.5.2",
+    "cspell": "10.6.0",
     "eslint": "9.39.4",
     "eslint-config-prettier": "9.1.2",
     "eslint-plugin-check-file": "3.3.2",
